@@ -1,5 +1,5 @@
 import RESTUser from "./RESTUser";
-import type { ModifySelfUser, RawRESTSelfUser } from "../../routes/Users";
+import type { EditSelfUserOptions, RawRESTSelfUser } from "../../routes/Users";
 import type RESTClient from "../../RESTClient";
 
 /** Represents the currently authenticated user. */
@@ -31,7 +31,7 @@ export default class RESTSelfUser extends RESTUser {
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
 	 * @returns {Promise<RESTSelfUser>}
 	 */
-	async edit(options: ModifySelfUser) {
+	async edit(options: EditSelfUserOptions) {
 		return this._client.users.modifySelf(options);
 	}
 }

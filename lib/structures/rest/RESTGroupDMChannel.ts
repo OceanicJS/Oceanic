@@ -1,10 +1,11 @@
-import RESTBase from "./RESTBase";
 import RESTPartialUser from "./RESTPartialUser";
-import type { RawRESTGroupChannel } from "../../routes/Channels";
+import RESTChannel from "./RESTChannel";
+import type { EditGroupDMOptions, RawRESTGroupChannel } from "../../routes/Channels";
 import type RESTClient from "../../RESTClient";
 import type { ChannelTypes } from "../../Constants";
 
-export default class RestGroupChannel extends RESTBase {
+/** Represents a group direct message. */
+export default class RestGroupDMChannel extends RESTChannel {
 	applicationID: string;
 	icon: string | null;
 	managed: boolean;
@@ -14,7 +15,7 @@ export default class RestGroupChannel extends RESTBase {
 	recipients: Array<RESTPartialUser>;
 	type: ChannelTypes.GROUP_DM;
 	constructor(data: RawRESTGroupChannel, client: RESTClient) {
-		super(data.id, client);
+		super(data, client);
 		this.applicationID = data.application_id;
 		this.icon          = data.icon;
 		this.managed       = data.managed;
@@ -23,5 +24,16 @@ export default class RestGroupChannel extends RESTBase {
 		this.ownerID       = data.owner_id;
 		this.recipients    = data.recipients.map(user => new RESTPartialUser(user, client));
 		this.type          = data.type;
+	}
+
+	/**
+	 * Edit this channel.
+	 *
+	 * @param {?String} [options.icon] - The icon of the channel.
+	 * @param {String} [options.name] - The name of the channel.
+	 * @returns {Promise<RestGroupDMChannel>}
+	 */
+	async edit(options: EditGroupDMOptions, reason?: string) {
+		return this._client.channels.edit<RestGroupDMChannel>(this.id, options, reason);
 	}
 }

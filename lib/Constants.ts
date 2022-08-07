@@ -175,6 +175,12 @@ export enum ChannelTypes {
 	GUILD_FORUM          = 15
 }
 
+export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS;
+export type ThreadChannelTypes = ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;
+export type VoiceChannelTypes = ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
+export type GuildChannelTypes =
+	ChannelTypes.GUILD_CATEGORY | ChannelTypes.GUILD_DIRECTORY | ChannelTypes.GUILD_FORUM |
+	TextChannelTypes | ThreadChannelTypes | VoiceChannelTypes;
 export enum OverwriteTypes {
 	ROLE   = 0,
 	MEMBER = 1
@@ -227,4 +233,103 @@ export type IntegrationType = typeof IntegrationTypes[number];
 export enum IntegrationExpireBehaviors {
 	REMOVE_ROLE = 0,
 	KICK        = 1
+}
+
+// values won't be statically typed if we use bit shifting
+export const Permissions = {
+	CREATE_INSTANT_INVITE:      1n,
+	KICK_MEMBERS:               2n,
+	BAN_MEMBERS:                4n,
+	ADMINISTRATOR:              8n,
+	MANAGE_CHANNELS:            16n,
+	MANAGE_GUILD:               32n,
+	ADD_REACTIONS:              64n,
+	VIEW_AUDIT_LOG:             128n,
+	PRIORITY_SPEAKER:           256n,
+	STREAM:                     512n,
+	VIEW_CHANNEL:               1024n,
+	SEND_MESSAGES:              2048n,
+	SEND_TTS_MESSAGES:          4096n,
+	MANAGE_MESSAGES:            8192n,
+	EMBED_LINKS:                16384n,
+	ATTACH_FILES:               32768n,
+	READ_MESSAGE_HISTORY:       65536n,
+	MENTION_EVERYONE:           131072n,
+	USE_EXTERNAL_EMOJIS:        262144n,
+	VIEW_GUILD_INSIGHTS:        524288n,
+	CONNECT:                    1048576n,
+	SPEAK:                      2097152n,
+	MUTE_MEMBERS:               4194304n,
+	DEAFEN_MEMBERS:             8388608n,
+	MOVE_MEMBERS:               16777216n,
+	USE_VAD:                    33554432n,
+	CHANGE_NICKNAME:            67108864n,
+	MANAGE_NICKNAMES:           134217728n,
+	MANAGE_ROLES:               268435456n,
+	MANAGE_WEBHOOKS:            536870912n,
+	MANAGE_EMOJIS_AND_STICKERS: 1073741824n,
+	USE_APPLICATION_COMMANDS:   2147483648n,
+	REQUEST_TO_SPEAK:           4294967296n,
+	MANAGE_EVENTS:              8589934592n,
+	MANAGE_THREADS:             17179869184n,
+	CREATE_PUBLIC_THREADS:      34359738368n,
+	CREATE_PRIVATE_THREADS:     68719476736n,
+	USE_EXTERNAL_STICKERS:      137438953472n,
+	SEND_MESSAGES_IN_THREADS:   274877906944n,
+	USE_EMBEDDED_ACTIVITIES:    549755813888n,
+	MODERATE_MEMBERS:           1099511627776n
+} as const;
+export type Permission = keyof typeof Permissions;
+export const AllGuildPermissions = Permissions.KICK_MEMBERS |
+	Permissions.BAN_MEMBERS |
+	Permissions.ADMINISTRATOR |
+	Permissions.MANAGE_CHANNELS |
+	Permissions.MANAGE_GUILD |
+	Permissions.VIEW_AUDIT_LOG |
+	Permissions.VIEW_GUILD_INSIGHTS |
+	Permissions.CHANGE_NICKNAME |
+	Permissions.MANAGE_NICKNAMES |
+	Permissions.MANAGE_ROLES |
+	Permissions.MANAGE_WEBHOOKS |
+	Permissions.MANAGE_EMOJIS_AND_STICKERS |
+	Permissions.MANAGE_EVENTS |
+	Permissions.MODERATE_MEMBERS;
+export const AllTextPermissions = Permissions.CREATE_INSTANT_INVITE |
+	Permissions.MANAGE_CHANNELS |
+	Permissions.ADD_REACTIONS |
+	Permissions.VIEW_CHANNEL |
+	Permissions.SEND_MESSAGES |
+	Permissions.SEND_TTS_MESSAGES |
+	Permissions.MANAGE_MESSAGES |
+	Permissions.EMBED_LINKS |
+	Permissions.ATTACH_FILES |
+	Permissions.READ_MESSAGE_HISTORY |
+	Permissions.MENTION_EVERYONE |
+	Permissions.USE_EXTERNAL_EMOJIS |
+	Permissions.MANAGE_ROLES |
+	Permissions.MANAGE_WEBHOOKS |
+	Permissions.USE_APPLICATION_COMMANDS |
+	Permissions.MANAGE_THREADS |
+	Permissions.CREATE_PUBLIC_THREADS |
+	Permissions.CREATE_PRIVATE_THREADS |
+	Permissions.USE_EXTERNAL_STICKERS |
+	Permissions.SEND_MESSAGES_IN_THREADS;
+export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
+	Permissions.MANAGE_CHANNELS |
+	Permissions.PRIORITY_SPEAKER |
+	Permissions.STREAM |
+	Permissions.VIEW_CHANNEL |
+	Permissions.CONNECT |
+	Permissions.SPEAK |
+	Permissions.MUTE_MEMBERS |
+	Permissions.DEAFEN_MEMBERS |
+	Permissions.MOVE_MEMBERS |
+	Permissions.USE_VAD |
+	Permissions.MANAGE_ROLES |
+	Permissions.REQUEST_TO_SPEAK |
+	Permissions.USE_EMBEDDED_ACTIVITIES;
+export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
+
+export enum ChannelFlags {
+	PINNED = 1 << 1
 }

@@ -8,9 +8,8 @@ import RESTSelfUser from "../structures/rest/RESTSelfUser";
 import RESTGuild from "../structures/rest/RESTGuild";
 import RESTMember from "../structures/rest/RESTMember";
 import RESTDMChannel from "../structures/rest/RESTDMChannel";
-import RestGroupChannel from "../structures/rest/RESTGroupChannel";
+import RestGroupDMChannel from "../structures/rest/RESTGroupDMChannel";
 
-const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 export default class Users extends BaseRoute {
 	/**
 	 * Create a direct message.
@@ -29,13 +28,13 @@ export default class Users extends BaseRoute {
 	 *
 	 * @param {String[]} accessTokens - An array of access tokens with the `gdm.join` scope.
 	 * @param {Object} [nicks] - A dictionary of ids to nicknames, looks unused.
-	 * @returns {Promise<RestGroupChannel>}
+	 * @returns {Promise<RestGroupDMChannel>}
 	 */
 	async createGroupDM(accessTokens: Array<string>, nicks?: Record<string, string>) {
 		return this._client.authRequest<RawRESTGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
 			access_tokens: accessTokens,
 			nicks
-		}).then(data => new RestGroupChannel(data, this._client));
+		}).then(data => new RestGroupDMChannel(data, this._client));
 	}
 
 	/**
@@ -111,21 +110,13 @@ export default class Users extends BaseRoute {
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
 	 * @returns {Promise<RESTSelfUser>}
 	 */
-	async modifySelf(options: ModifySelfUser) {
+	async modifySelf(options: EditSelfUserOptions) {
 		if (options.avatar) {
-			if (Buffer.isBuffer(options.avatar)) {
-				const b64 = options.avatar.toString("base64");
-				let mime: string | undefined;
-				const magic = [...new Uint8Array(options.avatar.subarray(0, 4))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
-				switch (magic) {
-					case "47494638": mime = "image/gif"; break;
-					case "89504E47": mime = "image/png"; break;
-					case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": mime = "image/jpeg"; break;
-				}
-				if (!mime) throw new Error(`Failed to determine image format. (magic: ${magic})`);
-				options.avatar = `data:${mime};base64,${b64}`;
+			try {
+				options.avatar = this._client._convertImage(options.avatar);
+			} catch (err) {
+				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
 			}
-			if (!BASE64URL_REGEX.test(options.avatar)) throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.");
 		}
 		return this._client.authRequest<RawRESTSelfUser>("PATCH", Routes.USER("@me"), options)
 			.then(data => new RESTSelfUser(data, this._client));
@@ -154,7 +145,7 @@ export type RawPartialUser = Required<Pick<RawUser, "id" | "username" | "avatar"
 export type RawRESTUser = Pick<RawUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RawUser, "banner" | "accent_color" | "public_flags">>;
 export type RawRESTSelfUser = Pick<RawUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RawUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
 
-export interface ModifySelfUser {
+export interface EditSelfUserOptions {
 	avatar?: Buffer | string | null;
 	username?: string;
 }
