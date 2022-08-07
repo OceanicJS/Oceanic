@@ -1,0 +1,12 @@
+{
+	"extends": "@uwu-codes/tsconfig",
+	"compilerOptions": {
+		"outDir": "./build",
+		"baseUrl": "./lib",
+		"strictPropertyInitialization": false,
+		"skipLibCheck": true,
+		"inlineSourceMap": true
+	},
+	"include": ["lib/**/*.ts", "test/*.ts"],
+	"exclude": ["node_modules", "build"]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "oceanic",
+  "version": "0.0.0",
+  "description": "A nodejs library for interfacing with Discord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonovanDMC/Oceanic.git"
+  },
+  "keywords": [
+    "discord",
+    "library",
+    "discord-api",
+    "api"
+  ],
+  "author": "Donovan Daniels <hewwo@yiff.rocks>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DonovanDMC/Oceanic/issues"
+  },
+  "homepage": "https://github.com/DonovanDMC/Oceanic#readme",
+  "devDependencies": {
+    "@types/node": "^18.6.4",
+    "@types/ws": "^8.5.3",
+    "@uwu-codes/eslint-config": "^1.0.55",
+    "@uwu-codes/tsconfig": "^1.0.1",
+    "eslint": "^8.21.0",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.23.10",
+    "typedoc-plugin-rename-defaults": "^0.6.4"
+  },
+  "dependencies": {
+    "@augu/collections": "^1.1.0",
+    "tsafe": "^0.10.1",
+    "undici": "^5.8.1",
+    "ws": "^8.8.1"
+  },
+  "engines": {
+    "node": ">=16.16.0"
+  }
+}
