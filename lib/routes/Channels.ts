@@ -22,7 +22,7 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<boolean>}
 	 */
 	async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions) {
-		return this._client.rest.authRequest<null>("PUT", Routes.GROUP_RECIPIENT(groupID, options.userID), {
+		return this._manager.authRequest<null>("PUT", Routes.GROUP_RECIPIENT(groupID, options.userID), {
 			access_token: options.accessToken,
 			nick:         options.nick
 		}).then(res => res === null);
@@ -36,7 +36,7 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<void>}
 	 */
 	async delete(id: string, reason?: string) {
-		await this._client.rest.authRequest<RawChannel>("DELETE", Routes.CHANNEL(id), undefined, undefined, reason);
+		await this._manager.authRequest<RawChannel>("DELETE", Routes.CHANNEL(id), undefined, undefined, reason);
 	}
 
 	/**
@@ -75,7 +75,7 @@ export default class Channels extends BaseRoute {
 				throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
 			}
 		}
-		return this._client.rest.authRequest<RawChannel>("PATCH", Routes.CHANNEL(id), {
+		return this._manager.authRequest<RawChannel>("PATCH", Routes.CHANNEL(id), {
 			archived:                      options.archived,
 			auto_archive_duration:         options.autoArchiveDuration,
 			bitrate:                       options.bitrate,
@@ -99,7 +99,7 @@ export default class Channels extends BaseRoute {
 	}
 
 	async get(id: string) {
-		return this._client.rest.authRequest<RawChannel>("GET", Routes.CHANNEL(id)).then(data => Channel.from(data, this._client));
+		return this._manager.authRequest<RawChannel>("GET", Routes.CHANNEL(id)).then(data => Channel.from(data, this._client));
 	}
 
 	/**
@@ -110,7 +110,7 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<void>}
 	 */
 	async removeGroupRecipient(groupID: string, userID: string) {
-		return this._client.rest.authRequest<null>("DELETE", Routes.GROUP_RECIPIENT(groupID, userID)).then(res => res === null);
+		return this._manager.authRequest<null>("DELETE", Routes.GROUP_RECIPIENT(groupID, userID)).then(res => res === null);
 	}
 }
 

@@ -18,7 +18,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<PrivateChannel>}
 	 */
 	async createDM(recipient: string) {
-		return this._client.rest.authRequest<RawPrivateChannel>("POST", Routes.OAUTH_CHANNELS, {
+		return this._manager.authRequest<RawPrivateChannel>("POST", Routes.OAUTH_CHANNELS, {
 			recipient_id: recipient
 		}).then(data => this._client.privateChannels.update(data));
 	}
@@ -32,7 +32,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<GroupChannel>}
 	 */
 	async createGroupDM(options: CreateGroupChannelOptions) {
-		return this._client.rest.authRequest<RawGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
+		return this._manager.authRequest<RawGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
 			access_tokens: options.accessTokens,
 			nicks:         options.nicks
 		}).then(data => this._client.groupChannels.update(data));
@@ -45,7 +45,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<User>}
 	 */
 	async get(id: string) {
-		return this._client.rest.authRequest<RawUser>("GET", Routes.USER(id))
+		return this._manager.authRequest<RawUser>("GET", Routes.USER(id))
 			.then(data => this._client.users.update(data));
 	}
 
@@ -57,7 +57,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Connection>}
 	 */
 	async getCurrentConnections() {
-		return this._client.rest.authRequest<Connection>("GET", Routes.OAUTH_CONNECTIONS);
+		return this._manager.authRequest<Connection>("GET", Routes.OAUTH_CONNECTIONS);
 	}
 
 	/**
@@ -69,7 +69,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Member>}
 	 */
 	async getCurrentGuildMember(guild: string) {
-		return this._client.rest.authRequest<RawMember>("GET", Routes.OAUTH_GUILD_MEMBER(guild))
+		return this._manager.authRequest<RawMember>("GET", Routes.OAUTH_GUILD_MEMBER(guild))
 			.then(data => new Member(data, this._client, guild));
 	}
 
@@ -79,7 +79,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Guild[]>}
 	 */
 	async getCurrentGuilds() {
-		return this._client.rest.authRequest<Array<RawGuild>>("GET", Routes.OAUTH_GUILDS)
+		return this._manager.authRequest<Array<RawGuild>>("GET", Routes.OAUTH_GUILDS)
 			.then(data => data.map(d => new Guild(d, this._client)));
 	}
 
@@ -89,7 +89,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<ExtendedUser>}
 	 */
 	async getCurrentUser() {
-		return this._client.rest.authRequest<RawExtendedUser>("GET", Routes.OAUTH_CURRENT_USER)
+		return this._manager.authRequest<RawExtendedUser>("GET", Routes.OAUTH_CURRENT_USER)
 			.then(data => new ExtendedUser(data, this._client));
 	}
 
@@ -100,7 +100,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Boolean>}
 	 */
 	async leaveGuild(id: string) {
-		return this._client.rest.authRequest<null>("DELETE", Routes.OAUTH_GUILD(id)).then(res => res === null);
+		return this._manager.authRequest<null>("DELETE", Routes.OAUTH_GUILD(id)).then(res => res === null);
 	}
 
 	/**
@@ -119,7 +119,7 @@ export default class Users extends BaseRoute {
 				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
 			}
 		}
-		return this._client.rest.authRequest<RawExtendedUser>("PATCH", Routes.USER("@me"), options)
+		return this._manager.authRequest<RawExtendedUser>("PATCH", Routes.USER("@me"), options)
 			.then(data => new ExtendedUser(data, this._client));
 	}
 }
