@@ -1,7 +1,12 @@
-import RESTBase from "./RESTBase";
-import RESTRole from "./RESTRole";
-import type RESTClient from "../../RESTClient";
-import type { GuildEmoji, RawRESTGuild, Sticker, WelcomeScreen } from "../../routes/Guilds";
+import Role from "./Role";
+import Base from "./Base";
+import type {
+	GuildEmoji,
+	RawGuild,
+	RawRole,
+	Sticker,
+	WelcomeScreen
+} from "../routes/Guilds";
 import type {
 	DefaultMessageNotificationLevels,
 	ExplicitContentFilterLevels,
@@ -11,10 +16,12 @@ import type {
 	MFALevels,
 	PremiumTiers,
 	VerificationLevels
-} from "../../Constants";
-import * as Routes from "../../util/Routes";
+} from "../Constants";
+import * as Routes from "../util/Routes";
+import type Client from "../Client";
+import Collection from "../util/Collection";
 
-export default class RESTGuild extends RESTBase {
+export default class Guild extends Base {
 	/** The id of this guild's AFK channel. */
 	afkChannelID: string | null;
 	/** The seconds after which voice users will be moved to the afk channel. */
@@ -76,7 +83,7 @@ export default class RESTGuild extends RESTBase {
 	 */
 	region?: string | null;
 	/** The roles in this guild. */
-	roles: Array<RESTRole>;
+	roles: Collection<string, RawRole, Role, [guildID: string]>;
 	/** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
 	rulesChannelID: string | null;
 	/** The invite splash hash of this guild. */
@@ -97,8 +104,14 @@ export default class RESTGuild extends RESTBase {
 	widgetChannelID?: string | null;
 	/** If the widget is enabled. */
 	widgetEnabled?: boolean;
-	constructor(data: RawRESTGuild, client: RESTClient) {
+	constructor(data: RawGuild, client: Client) {
 		super(data.id, client);
+		this.roles = new Collection(Role, client);
+		data.roles.map(role => this.roles.update(role, data.id));
+		this.update(data);
+	}
+
+	protected update(data: RawGuild) {
 		this.afkChannelID                = data.afk_channel_id;
 		this.afkTimeout                  = data.afk_timeout;
 		this.applicationID               = data.application_id;
@@ -125,7 +138,6 @@ export default class RESTGuild extends RESTBase {
 		this.premiumTier                 = data.premium_tier;
 		this.publicUpdatesChannelID      = data.public_updates_channel_id;
 		this.region                      = data.region;
-		this.roles                       = data.roles.map(r => new RESTRole(r, client, this.id));
 		this.rulesChannelID              = data.rules_channel_id;
 		this.splash                      = data.splash;
 		this.stickers                    = data.stickers;

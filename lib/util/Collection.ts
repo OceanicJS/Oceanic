@@ -3,7 +3,7 @@ import type Client from "../Client";
 import Base from "../structures/Base";
 import { Collection as PolarCollection } from "@augu/collections";
 
-export type AnyClass<T, I, E extends Array<unknown>> = new(client: Client, data: T, ...extra: E) => I;
+export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Client, ...extra: E) => I;
 export default class Collection<K extends string | number, M extends { id: K; }, C extends Base, E extends Array<unknown> = []> extends PolarCollection<K, C> {
 	protected _baseObject: AnyClass<M, C, E>;
 	protected _client: Client;

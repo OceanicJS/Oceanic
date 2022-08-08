@@ -1,17 +1,18 @@
-import RESTGuildChannel from "./RESTGuildChannel";
-import type RESTClient from "../../RESTClient";
-import type { EditVoiceChannelOptions as EditVoiceChannelOptions, RawOverwrite, RawRESTVoiceChannel } from "../../routes/Channels";
-import type { ChannelTypes, VideoQualityModes } from "../../Constants";
-import PermissionOverwrite from "../PermissionOverwrite";
+import GuildChannel from "./GuildChannel";
+import type PermissionOverwrite from "./PermissionOverwrite";
+import type { EditVoiceChannelOptions, RawOverwrite, RawVoiceChannel } from "../routes/Channels";
+import type { ChannelTypes, VideoQualityModes } from "../Constants";
+import type Client from "../Client";
+import type Collection from "../util/Collection";
 
 /** Represents a guild voice channel. */
-export default class RESTVoiceChannel extends RESTGuildChannel {
+export default class VoiceChannel extends GuildChannel {
 	/** The bitrate of the voice channel. */
 	bitrate: number;
 	/** If this channel is age gated. */
 	nsfw: boolean;
 	/** The permission overwrites of this channel. */
-	permissionOverwrites: Array<PermissionOverwrite>;
+	permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
 	/** The position of this channel on the sidebar. */
 	position: number;
 	/** The id of the voice region of the channel, `null` is automatic. */
@@ -21,15 +22,19 @@ export default class RESTVoiceChannel extends RESTGuildChannel {
 	declare type: ChannelTypes.GUILD_VOICE;
 	/** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
 	videoQualityMode: VideoQualityModes;
-	constructor(data: RawRESTVoiceChannel, client: RESTClient) {
+	constructor(data: RawVoiceChannel, client: Client) {
 		super(data, client);
+	}
+
+	protected update(data: RawVoiceChannel) {
+		super.update(data);
 		this.bitrate              = data.bitrate;
 		this.nsfw                 = data.nsfw;
-		this.permissionOverwrites = data.permission_overwrites.map(overwrite => new PermissionOverwrite(overwrite));
 		this.position             = data.position;
 		this.rtcRegion            = data.rtc_region;
 		this.topic                = data.topic;
 		this.videoQualityMode     = data.video_quality_mode;
+		data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
 	}
 
 	/**
@@ -45,9 +50,9 @@ export default class RESTVoiceChannel extends RESTGuildChannel {
 	 * @param {?Number} [options.userLimit] - The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTVoiceChannel>}
+	 * @returns {Promise<VoiceChannel>}
 	 */
 	async edit(options: EditVoiceChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTVoiceChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<VoiceChannel>(this.id, options, reason);
 	}
 }

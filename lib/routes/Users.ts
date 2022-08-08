@@ -1,26 +1,26 @@
 import BaseRoute from "./BaseRoute";
-import type { RawIntegration, RawRESTGuild, RawRESTMember } from "./Guilds";
-import type { RawRESTDMChannel, RawRESTGroupChannel } from "./Channels";
+import type { RawIntegration, RawGuild, RawMember } from "./Guilds";
+import type { RawPrivateChannel, RawGroupChannel } from "./Channels";
 import type { ConnectionService, PremiumTypes, VisibilityTypes } from "../Constants";
 import * as Routes from "../util/Routes";
-import RESTUser from "../structures/rest/RESTUser";
-import RESTSelfUser from "../structures/rest/RESTSelfUser";
-import RESTGuild from "../structures/rest/RESTGuild";
-import RESTMember from "../structures/rest/RESTMember";
-import RESTDMChannel from "../structures/rest/RESTDMChannel";
-import RestGroupDMChannel from "../structures/rest/RESTGroupDMChannel";
+import Guild from "../structures/Guild";
+import Member from "../structures/Member";
+import PrivateChannel from "../structures/PrivateChannel";
+import GroupChannel from "../structures/GroupChannel";
+import User from "../structures/User";
+import ExtendedUser from "../structures/ExtendedUser";
 
 export default class Users extends BaseRoute {
 	/**
 	 * Create a direct message.
 	 *
 	 * @param {String} recipient - The id of the recipient of the direct message.
-	 * @returns {Promise<RESTDMChannel>}
+	 * @returns {Promise<PrivateChannel>}
 	 */
 	async createDM(recipient: string) {
-		return this._client.authRequest<RawRESTDMChannel>("POST", Routes.OAUTH_CHANNELS, {
+		return this._client.rest.authRequest<RawPrivateChannel>("POST", Routes.OAUTH_CHANNELS, {
 			recipient_id: recipient
-		}).then(data => new RESTDMChannel(data, this._client));
+		}).then(data => this._client.privateChannels.update(data));
 	}
 
 	/**
@@ -28,24 +28,24 @@ export default class Users extends BaseRoute {
 	 *
 	 * @param {String[]} accessTokens - An array of access tokens with the `gdm.join` scope.
 	 * @param {Object} [nicks] - A dictionary of ids to nicknames, looks unused.
-	 * @returns {Promise<RestGroupDMChannel>}
+	 * @returns {Promise<GroupChannel>}
 	 */
 	async createGroupDM(accessTokens: Array<string>, nicks?: Record<string, string>) {
-		return this._client.authRequest<RawRESTGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
+		return this._client.rest.authRequest<RawGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
 			access_tokens: accessTokens,
 			nicks
-		}).then(data => new RestGroupDMChannel(data, this._client));
+		}).then(data => this._client.groupChannels.update(data));
 	}
 
 	/**
 	 * Get a user by their id
 	 *
 	 * @param {String} id - the id of the user
-	 * @returns {Promise<RESTUser>}
+	 * @returns {Promise<User>}
 	 */
 	async get(id: string) {
-		return this._client.authRequest<RawRESTUser>("GET", Routes.USER(id))
-			.then(data => new RESTUser(data, this._client));
+		return this._client.rest.authRequest<RawUser>("GET", Routes.USER(id))
+			.then(data => this._client.users.update(data));
 	}
 
 	/**
@@ -56,7 +56,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Connection>}
 	 */
 	async getCurrentConnections() {
-		return this._client.authRequest<Connection>("GET", Routes.OAUTH_CONNECTIONS);
+		return this._client.rest.authRequest<Connection>("GET", Routes.OAUTH_CONNECTIONS);
 	}
 
 	/**
@@ -65,31 +65,31 @@ export default class Users extends BaseRoute {
 	 * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
 	 *
 	 * @param {String} guild - the id of the guild
-	 * @returns {Promise<RESTMember>}
+	 * @returns {Promise<Member>}
 	 */
 	async getCurrentGuildMember(guild: string) {
-		return this._client.authRequest<RawRESTMember>("GET", Routes.OAUTH_GUILD_MEMBER(guild))
-			.then(data => new RESTMember(data, this._client, guild));
+		return this._client.rest.authRequest<RawMember>("GET", Routes.OAUTH_GUILD_MEMBER(guild))
+			.then(data => new Member(data, this._client, guild));
 	}
 
 	/**
 	 * Get the currently authenticated user's guilds.
 	 *
-	 * @returns {Promise<RESTGuild[]>}
+	 * @returns {Promise<Guild[]>}
 	 */
 	async getCurrentGuilds() {
-		return this._client.authRequest<Array<RawRESTGuild>>("GET", Routes.OAUTH_GUILDS)
-			.then(data => data.map(d => new RESTGuild(d, this._client)));
+		return this._client.rest.authRequest<Array<RawGuild>>("GET", Routes.OAUTH_GUILDS)
+			.then(data => data.map(d => new Guild(d, this._client)));
 	}
 
 	/**
 	 * Get the currently authenticated user's information.
 	 *
-	 * @returns {Promise<RESTSelfUser>}
+	 * @returns {Promise<ExtendedUser>}
 	 */
 	async getCurrentUser() {
-		return this._client.authRequest<RawRESTSelfUser>("GET", Routes.OAUTH_CURRENT_USER)
-			.then(data => new RESTSelfUser(data, this._client));
+		return this._client.rest.authRequest<RawExtendedUser>("GET", Routes.OAUTH_CURRENT_USER)
+			.then(data => new ExtendedUser(data, this._client));
 	}
 
 	/**
@@ -99,7 +99,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Boolean>}
 	 */
 	async leaveGuild(id: string) {
-		return this._client.authRequest<null>("DELETE", Routes.OAUTH_GUILD(id)).then(res => res === null);
+		return this._client.rest.authRequest<null>("DELETE", Routes.OAUTH_GUILD(id)).then(res => res === null);
 	}
 
 	/**
@@ -108,7 +108,7 @@ export default class Users extends BaseRoute {
 	 * @param {Object} options
 	 * @param {String} [options.username] - The new username
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
-	 * @returns {Promise<RESTSelfUser>}
+	 * @returns {Promise<ExtendedUser>}
 	 */
 	async modifySelf(options: EditSelfUserOptions) {
 		if (options.avatar) {
@@ -118,13 +118,13 @@ export default class Users extends BaseRoute {
 				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
 			}
 		}
-		return this._client.authRequest<RawRESTSelfUser>("PATCH", Routes.USER("@me"), options)
-			.then(data => new RESTSelfUser(data, this._client));
+		return this._client.rest.authRequest<RawExtendedUser>("PATCH", Routes.USER("@me"), options)
+			.then(data => new ExtendedUser(data, this._client));
 	}
 }
 
 // avatar_decoration, (self) bio
-export interface RawUser {
+export interface RESTUser {
 	accent_color?: number | null;
 	avatar: string | null;
 	banner?: string | null;
@@ -141,9 +141,8 @@ export interface RawUser {
 	username: string;
 	verified?: boolean;
 }
-export type RawPartialUser = Required<Pick<RawUser, "id" | "username" | "avatar" | "discriminator" | "public_flags">> & Pick<RawUser, "bot" | "system">;
-export type RawRESTUser = Pick<RawUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RawUser, "banner" | "accent_color" | "public_flags">>;
-export type RawRESTSelfUser = Pick<RawUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RawUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
+export type RawUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system" | "banner" | "accent_color"> & Required<Pick<RESTUser, "public_flags">>;
+export type RawExtendedUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
 
 export interface EditSelfUserOptions {
 	avatar?: Buffer | string | null;

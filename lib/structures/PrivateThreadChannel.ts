@@ -1,17 +1,16 @@
-import type { PrivateThreadmetadata } from "./RESTThreadChannel";
-import RESTThreadChannel from "./RESTThreadChannel";
-import type { EditPrivateThreadChannelOptions, RawRESTPrivateThreadChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import type { ChannelTypes, ThreadAutoArchiveDuration } from "../../Constants";
+import type { PrivateThreadmetadata } from "./ThreadChannel";
+import ThreadChannel from "./ThreadChannel";
+import type { EditPrivateThreadChannelOptions, RawPrivateThreadChannel } from "../routes/Channels";
+import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
+import type Client from "../Client";
 
 /** Represents a guild thread channel. */
-export default class RESTPrivateThreadChannel extends RESTThreadChannel {
+export default class PrivateThreadChannel extends ThreadChannel {
 	declare threadMetadata: PrivateThreadmetadata;
 	declare type: ChannelTypes.GUILD_PRIVATE_THREAD;
-	constructor(data: RawRESTPrivateThreadChannel, client: RESTClient) {
+	constructor(data: RawPrivateThreadChannel, client: Client) {
 		super(data, client);
 	}
-
 
 	/**
 	 * Edit a channel.
@@ -26,9 +25,9 @@ export default class RESTPrivateThreadChannel extends RESTThreadChannel {
 	 * @param {String} [options.name] - The name of the channel.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTPrivateThreadChannel>}
+	 * @returns {Promise<PrivateThreadChannel>}
 	 */
 	override async edit(options: EditPrivateThreadChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTPrivateThreadChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<PrivateThreadChannel>(this.id, options, reason);
 	}
 }

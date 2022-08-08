@@ -1,5 +1,5 @@
 import BaseRoute from "./BaseRoute";
-import type { RawPartialUser } from "./Users";
+import type { RawUser } from "./Users";
 import type {
 	ChannelTypes,
 	GuildChannelTypes,
@@ -8,7 +8,7 @@ import type {
 	VideoQualityModes
 } from "../Constants";
 import * as Routes from "../util/Routes";
-import RESTChannel from "../structures/rest/RESTChannel";
+import Channel from "../structures/Channel";
 
 export default class Channels extends BaseRoute {
 	/**
@@ -19,12 +19,13 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<void>}
 	 */
 	async delete(id: string, reason?: string) {
-		await this._client.authRequest<RawChannel>("DELETE", Routes.CHANNEL(id), undefined, undefined, reason);
+		await this._client.rest.authRequest<RawChannel>("DELETE", Routes.CHANNEL(id), undefined, undefined, reason);
 	}
 
 	/**
 	 * Edit a channel.
 	 *
+	 * @template T
 	 * @param {String} id - The id of the channel to edit.
 	 * @param {Object} options
 	 * @param {Boolean} [options.archived] - [Thread] If the thread is archived.
@@ -47,9 +48,9 @@ export default class Channels extends BaseRoute {
 	 * @param {?Number} [options.userLimit] - [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTChannel>}
+	 * @returns {Promise<T>}
 	 */
-	async edit<T extends RESTChannel = RESTChannel>(id: string, options: EditChannelOptions, reason?: string) {
+	async edit<T extends Channel = Channel>(id: string, options: EditChannelOptions, reason?: string) {
 		if (options.icon) {
 			try {
 				options.icon = this._client._convertImage(options.icon);
@@ -57,7 +58,7 @@ export default class Channels extends BaseRoute {
 				throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
 			}
 		}
-		return this._client.authRequest<RawChannel>("PATCH", Routes.CHANNEL(id), {
+		return this._client.rest.authRequest<RawChannel>("PATCH", Routes.CHANNEL(id), {
 			archived:                      options.archived,
 			auto_archive_duration:         options.autoArchiveDuration,
 			bitrate:                       options.bitrate,
@@ -77,11 +78,11 @@ export default class Channels extends BaseRoute {
 			type:                          options.type,
 			user_limit:                    options.userLimit,
 			video_quality_mode:            options.videoQualityMode
-		}, undefined, reason).then(data => RESTChannel.from(data, this._client) as T);
+		}, undefined, reason).then(data => Channel.from(data, this._client) as T);
 	}
 
 	async get(id: string) {
-		return this._client.authRequest<RawChannel>("GET", Routes.CHANNEL(id)).then(data => RESTChannel.from(data, this._client));
+		return this._client.rest.authRequest<RawChannel>("GET", Routes.CHANNEL(id)).then(data => Channel.from(data, this._client));
 	}
 }
 
@@ -106,7 +107,7 @@ export interface RawChannel {
 	permissions?: string;
 	position?: number;
 	rate_limit_per_user?: number;
-	recipients?: Array<RawPartialUser>;
+	recipients?: Array<RawUser>;
 	rtc_region?: string | null;
 	thread_metadata?: RawThreadMetadata;
 	topic?: string | null;
@@ -115,19 +116,19 @@ export interface RawChannel {
 	user_limit?: number;
 	video_quality_mode?: VideoQualityModes;
 }
-export type RawRESTGuildChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> & { name: string; type: GuildChannelTypes; };
-export type RawRESTDMChannel = Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> & { type: ChannelTypes.DM; };
+export type RawGuildChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> & { name: string; type: GuildChannelTypes; };
+export type RawPrivateChannel = Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> & { type: ChannelTypes.DM; };
 // managed and nicks are undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export type RawRESTGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw">> & { managed: boolean; name: string; nicks?: Record<"id" | "nick", string>; type: ChannelTypes.GROUP_DM; };
-export type RawRESTTextChannel = Omit<RawRESTGuildChannel, "type"> & Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_TEXT; };
-export type RawRESTCategoryChannel = Omit<RawRESTGuildChannel, "type"> & Required<Pick<RawChannel,  "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_CATEGORY; };
-export type RawRESTNewsChannel = Omit<RawRESTTextChannel, "type"> & { type: ChannelTypes.GUILD_NEWS; };
-export type RawRESTVoiceChannel = Omit<RawRESTGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_VOICE; };
-export type RawRESTStageChannel = Omit<RawRESTGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "rtc_region" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_STAGE_VOICE; };
-export type RawRESTThreadChannel = RawRESTNewsThreadChannel | RawRESTPublicThreadChannel | RawRESTPrivateThreadChannel;
-export type RawRESTNewsThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent">> & { member?: RawChannel["member"]; name: string; type: ChannelTypes.GUILD_NEWS_THREAD; };
-export type RawRESTPublicThreadChannel = Omit<RawRESTNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PUBLIC_THREAD; };
-export type RawRESTPrivateThreadChannel = Omit<RawRESTNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PRIVATE_THREAD; };
+export type RawGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw">> & { managed: boolean; name: string; nicks?: Record<"id" | "nick", string>; type: ChannelTypes.GROUP_DM; };
+export type RawTextChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_TEXT; };
+export type RawCategoryChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel,  "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_CATEGORY; };
+export type RawNewsChannel = Omit<RawTextChannel, "type"> & { type: ChannelTypes.GUILD_NEWS; };
+export type RawVoiceChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_VOICE; };
+export type RawStageChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "rtc_region" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_STAGE_VOICE; };
+export type RawThreadChannel = RawNewsThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
+export type RawNewsThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent">> & { member?: RawChannel["member"]; name: string; type: ChannelTypes.GUILD_NEWS_THREAD; };
+export type RawPublicThreadChannel = Omit<RawNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PUBLIC_THREAD; };
+export type RawPrivateThreadChannel = Omit<RawNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PRIVATE_THREAD; };
 
 export interface RawOverwrite {
 	allow: string;

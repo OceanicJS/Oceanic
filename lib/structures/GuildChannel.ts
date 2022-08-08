@@ -1,15 +1,20 @@
-import RESTChannel from "./RESTChannel";
-import type { EditGuildChannelOptions, RawOverwrite, RawRESTGuildChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import { ChannelTypes, ThreadAutoArchiveDuration, VideoQualityModes } from "../../Constants";
+import Channel from "./Channel";
+import type { EditGuildChannelOptions, RawOverwrite, RawGuildChannel } from "../routes/Channels";
+import { ChannelTypes, ThreadAutoArchiveDuration, VideoQualityModes } from "../Constants";
+import type Client from "../Client";
 
 /** Represents a guild channel. */
-export default class RESTGuildChannel extends RESTChannel {
+export default class GuildChannel extends Channel {
 	guildID: string;
 	name: string;
 	parentID: string | null;
-	constructor(data: RawRESTGuildChannel, client: RESTClient) {
+	constructor(data: RawGuildChannel, client: Client) {
 		super(data, client);
+		this.update(data);
+	}
+
+	protected update(data: RawGuildChannel) {
+		super.update(data);
 		this.guildID  = data.guild_id;
 		this.name     = data.name;
 		this.parentID = data.parent_id;
@@ -38,9 +43,9 @@ export default class RESTGuildChannel extends RESTChannel {
 	 * @param {?Number} [options.userLimit] - [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTGuildChannel>}
+	 * @returns {Promise<GuildChannel>}
 	 */
 	async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTGuildChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<GuildChannel>(this.id, options, reason);
 	}
 }

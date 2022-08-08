@@ -1,11 +1,11 @@
-import RESTGuildChannel from "./RESTGuildChannel";
-import type { EditThreadChannelOptions, RawRESTThreadChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../../Constants";
-import { ChannelTypes } from "../../Constants";
+import GuildChannel from "./GuildChannel";
+import type { EditThreadChannelOptions, RawThreadChannel } from "../routes/Channels";
+import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../Constants";
+import { ChannelTypes } from "../Constants";
+import type Client from "../Client";
 
 /** Represents a guild thread channel. */
-export default class RESTThreadChannel extends RESTGuildChannel {
+export default class ThreadChannel extends GuildChannel {
 	/** The [flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) for this thread channel. */
 	flags: number;
 	/** The id of the last message sent in this channel. */
@@ -23,8 +23,12 @@ export default class RESTThreadChannel extends RESTGuildChannel {
 	/** The total number of messages ever sent in the thread. Includes deleted messages. */
 	totalMessageSent: number;
 	declare type: ThreadChannelTypes;
-	constructor(data: RawRESTThreadChannel, client: RESTClient) {
+	constructor(data: RawThreadChannel, client: Client) {
 		super(data, client);
+		this.update(data);
+	}
+
+	protected update(data: RawThreadChannel) {
 		this.flags            = data.flags;
 		this.lastMessageID    = data.last_message_id;
 		this.memberCount      = data.member_count;
@@ -38,10 +42,9 @@ export default class RESTThreadChannel extends RESTGuildChannel {
 			createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
 			locked:		            !!data.thread_metadata.locked
 		};
-		if (data.type === ChannelTypes.GUILD_PRIVATE_THREAD) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+		if (data.type === ChannelTypes.GUILD_PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
 		this.totalMessageSent  = data.total_message_sent;
 	}
-
 
 	/**
 	 * Edit a channel.
@@ -56,10 +59,10 @@ export default class RESTThreadChannel extends RESTGuildChannel {
 	 * @param {String} [options.name] - The name of the channel.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTThreadChannel>}
+	 * @returns {Promise<ThreadChannel>}
 	 */
 	override async edit(options: EditThreadChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTThreadChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<ThreadChannel>(this.id, options, reason);
 	}
 }
 

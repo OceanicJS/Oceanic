@@ -1,12 +1,12 @@
 import SequentialBucket from "./SequentialBucket";
 import DiscordRESTError from "./DiscordRESTError";
 import DiscordHTTPError from "./DiscordHTTPError";
-import type RESTClient from "../RESTClient";
 import type { RESTMethod } from "../Constants";
 import { BASE_URL, RESTMethods, USER_AGENT } from "../Constants";
 import TypedEmitter from "../util/TypedEmitter";
 import Base from "../structures/Base";
 import Properties from "../util/Properties";
+import type Client from "../Client";
 import type { Agent } from "undici";
 import { FormData, fetch, File as UFile } from "undici";
 import { assert } from "tsafe";
@@ -17,7 +17,7 @@ import { assert } from "tsafe";
  */
 
 export default class RequestHandler extends TypedEmitter<RequestEvents> {
-	private _client: RESTClient;
+	private _client: Client;
 	globalBlock = false;
 	latencyRef: LatencyRef;
 	options: InstanceOptions;
@@ -28,7 +28,7 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 	 *
 	 * @param {RequestHandlerOptions} options - the options for the request handler
 	 */
-	constructor(client: RESTClient, options: RequestHandlerOptions = {}) {
+	constructor(client: Client, options: RequestHandlerOptions = {}) {
 		super();
 		if (options && options.baseURL && options.baseURL.endsWith("/")) options.baseURL = options.baseURL.slice(0, -1);
 		Properties.new(this)

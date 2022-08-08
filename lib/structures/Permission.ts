@@ -13,6 +13,7 @@ export default class Permission {
 		Properties.define(this, "_json", undefined, true);
 	}
 
+	/** A key-value map of permission to if it's been allowed or denied (not present if neither) */
 	get json() {
 		if (!this._json) {
 			const json = {} as Record<keyof typeof Permissions, boolean>;

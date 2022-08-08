@@ -1,9 +1,9 @@
-import RESTUser from "./RESTUser";
-import type { EditSelfUserOptions, RawRESTSelfUser } from "../../routes/Users";
-import type RESTClient from "../../RESTClient";
+import User from "./User";
+import type { EditSelfUserOptions, RawExtendedUser } from "../routes/Users";
+import type Client from "../Client";
 
 /** Represents the currently authenticated user. */
-export default class RESTSelfUser extends RESTUser {
+export default class ExtendedUser extends User {
 	/** The user's email. (always null for bots) */
 	email: string | null;
 	/** The flags of the user. */
@@ -14,8 +14,13 @@ export default class RESTSelfUser extends RESTUser {
 	mfaEnabled: boolean;
 	/** If this user's email is verified. (always true for bots) */
 	verified: boolean;
-	constructor(data: RawRESTSelfUser, client: RESTClient) {
+	constructor(data: RawExtendedUser, client: Client) {
 		super(data, client);
+		this.update(data);
+	}
+
+	protected update(data: RawExtendedUser) {
+		super.update(data);
 		this.email      = data.email;
 		this.flags      = data.flags;
 		this.locale     = data.locale;
@@ -29,9 +34,9 @@ export default class RESTSelfUser extends RESTUser {
 	 * @param {Object} options
 	 * @param {String} [options.username] - The new username
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
-	 * @returns {Promise<RESTSelfUser>}
+	 * @returns {Promise<ExtendedUser>}
 	 */
 	async edit(options: EditSelfUserOptions) {
-		return this._client.users.modifySelf(options);
+		return this._client.rest.users.modifySelf(options);
 	}
 }

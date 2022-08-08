@@ -1,13 +1,14 @@
-import RESTBase from "./RESTBase";
-import RESTPartialUser from "./RESTPartialUser";
-import type RESTClient from "../../RESTClient";
-import type { RawRESTMember } from "../../routes/Guilds";
-import type { ImageFormat } from "../../Constants";
+import Base from "./Base";
+import type User from "./User";
+import type { RawMember } from "../routes/Guilds";
+import type { ImageFormat } from "../Constants";
+import type Client from "../Client";
+import { assert } from "tsafe";
 
-export default class RESTMember extends RESTBase {
+export default class Member extends Base {
 	/** The member's avatar hash, if they have set a guild avatar. */
 	avatar: string | null;
-	communicationDisabledUntil: string | null;
+	communicationDisabledUntil: Date | null;
 	deaf: boolean;
 	flags: number;
 	guildID: string;
@@ -18,15 +19,19 @@ export default class RESTMember extends RESTBase {
 	pending: boolean;
 	premiumSince: Date;
 	roles: Array<string>;
-	/** The user associated with this member. */
-	user: RESTPartialUser;
-	constructor(data: RawRESTMember, client: RESTClient, guildID: string) {
+	user: User;
+	constructor(data: RawMember, client: Client, guildID: string) {
+		assert(data.user, "Member recieved without accompanying user.");
 		super(data.user.id, client);
+		this.guildID = guildID;
+		this.update(data);
+	}
+
+	protected update(data: RawMember) {
 		this.avatar                     = data.user.avatar;
-		this.communicationDisabledUntil = data.communication_disabled_until;
+		this.communicationDisabledUntil = !data.communication_disabled_until ? null : new Date(data.communication_disabled_until);
 		this.deaf                       = data.deaf;
 		this.flags                      = data.flags;
-		this.guildID                    = guildID;
 		this.isPending                  = data.is_pending;
 		this.joinedAt                   = new Date(data.joined_at);
 		this.mute                       = data.mute;
@@ -34,7 +39,7 @@ export default class RESTMember extends RESTBase {
 		this.pending                    = data.pending;
 		this.premiumSince               = new Date(data.premium_since);
 		this.roles                      = data.roles;
-		this.user                       = new RESTPartialUser(data.user, client);
+		this.user                       = this._client.users.update(data.user);
 	}
 
 	/** If the member associated with the user is a bot. */

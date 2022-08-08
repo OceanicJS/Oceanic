@@ -1,14 +1,15 @@
-import RESTGuildChannel from "./RESTGuildChannel";
-import type RESTNewsChannel from "./RESTNewsChannel";
-import type RESTTextChannel from "./RESTTextChannel";
-import type { EditGuildChannelOptions, RawOverwrite, RawRESTNewsChannel, RawRESTTextChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import type { TextChannelTypes, ThreadAutoArchiveDuration } from "../../Constants";
-import { ChannelTypes } from "../../Constants";
-import PermissionOverwrite from "../PermissionOverwrite";
+import GuildChannel from "./GuildChannel";
+import type NewsChannel from "./NewsChannel";
+import type TextChannel from "./TextChannel";
+import type PermissionOverwrite from "./PermissionOverwrite";
+import type { EditGuildChannelOptions, RawOverwrite, RawNewsChannel, RawTextChannel } from "../routes/Channels";
+import type { TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
+import { ChannelTypes } from "../Constants";
+import type Client from "../Client";
+import type Collection from "../util/Collection";
 
 /** Represents a guild text channel. */
-export default class RESTTextableChannel extends RESTGuildChannel {
+export default class RESTTextableChannel extends GuildChannel {
 	/** The default auto archive duration for threads created in this channel. */
 	defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
 	/** The id of the last message sent in this channel. */
@@ -16,7 +17,7 @@ export default class RESTTextableChannel extends RESTGuildChannel {
 	/** If this channel is age gated. */
 	nsfw: boolean;
 	/** The permission overwrites of this channel. */
-	permissionOverwrites: Array<PermissionOverwrite>;
+	permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
 	/** The position of this channel on the sidebar. */
 	position: number;
 	/** The amount of seconds between non-moderators sending messages. */
@@ -24,15 +25,20 @@ export default class RESTTextableChannel extends RESTGuildChannel {
 	/** The topic of the channel. */
 	topic: string | null;
 	declare type: TextChannelTypes;
-	constructor(data: RawRESTTextChannel | RawRESTNewsChannel, client: RESTClient) {
+	constructor(data: RawTextChannel | RawNewsChannel, client: Client) {
 		super(data, client);
+		this.update(data);
+	}
+
+	protected update(data: RawTextChannel | RawNewsChannel) {
+		super.update(data);
 		this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
 		this.lastMessageID              = data.last_message_id;
 		this.nsfw                       = data.nsfw;
-		this.permissionOverwrites       = data.permission_overwrites.map(overwrite => new PermissionOverwrite(overwrite));
 		this.position                   = data.position;
 		this.rateLimitPerUser           = data.rate_limit_per_user;
 		this.topic                      = data.topic;
+		data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
 	}
 
 	/**
@@ -40,7 +46,7 @@ export default class RESTTextableChannel extends RESTGuildChannel {
 	 *
 	 * [News] Convert this news channel to a text channel.
 	 *
-	 * @returns {Promise<RESTTextChannel | RESTNewsChannel>}
+	 * @returns {Promise<TextChannel | NewsChannel>}
 	 */
 	async convert() {
 		return this.edit({ type: this.type === ChannelTypes.GUILD_TEXT ? ChannelTypes.GUILD_NEWS : ChannelTypes.GUILD_TEXT });
@@ -60,9 +66,9 @@ export default class RESTTextableChannel extends RESTGuildChannel {
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTGuildChannel>}
+	 * @returns {Promise<GuildChannel>}
 	 */
 	async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTTextChannel | RESTNewsChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<TextChannel | NewsChannel>(this.id, options, reason);
 	}
 }

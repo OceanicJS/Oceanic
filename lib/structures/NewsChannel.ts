@@ -1,26 +1,25 @@
-import RESTGuildChannel from "./RESTGuildChannel";
-import RESTTextableChannel from "./RESTTextableChannel";
-import type RESTTextChannel from "./RESTTextChannel";
-import type { EditGuildChannelOptions, RawOverwrite, RawRESTNewsChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import type { ThreadAutoArchiveDuration, ChannelTypes } from "../../Constants";
+import TextableChannel from "./TextableChannel";
+import type TextChannel from "./TextChannel";
+import type { EditGuildChannelOptions, RawOverwrite, RawNewsChannel } from "../routes/Channels";
+import type { ThreadAutoArchiveDuration, ChannelTypes } from "../Constants";
+import type Client from "../Client";
 
 /** Represents a guild news channel. */
-export default class RESTNewsChannel extends RESTTextableChannel {
+export default class NewsChannel extends TextableChannel {
 	/** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
 	declare rateLimitPerUser: 0;
 	declare type: ChannelTypes.GUILD_NEWS;
-	constructor(data: RawRESTNewsChannel, client: RESTClient) {
+	constructor(data: RawNewsChannel, client: Client) {
 		super(data, client);
 	}
 
 	/**
 	 * Convert this news channel to a text channel.
 	 *
-	 * @returns {Promise<RESTTextChannel>}
+	 * @returns {Promise<TextChannel>}
 	 */
 	async convert() {
-		return super.convert() as unknown as RESTTextChannel;
+		return super.convert() as unknown as TextChannel;
 	}
 
 	/**
@@ -36,9 +35,9 @@ export default class RESTNewsChannel extends RESTTextableChannel {
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTGuildChannel>}
+	 * @returns {Promise<NewsChannel>}
 	 */
 	override async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTNewsChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<NewsChannel>(this.id, options, reason);
 	}
 }

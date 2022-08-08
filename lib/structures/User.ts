@@ -1,13 +1,17 @@
-import RESTBase from "./RESTBase";
-import type { RawPartialUser } from "../../routes/Users";
-import type { ImageFormat } from "../../Constants";
-import type RESTClient from "../../RESTClient";
-import * as Routes from "../../util/Routes";
+import Base from "./Base";
+import type { RawUser } from "../routes/Users";
+import type { ImageFormat } from "../Constants";
+import * as Routes from "../util/Routes";
+import type Client from "../Client";
 
-/** Represents a partial user retrieved via the REST api. */
-export default class RESTPartialUser extends RESTBase {
+/** Represents a user. */
+export default class User extends Base {
+	/** The user's banner color. */
+	accentColor?: number | null;
 	/** The user's avatar hash. */
 	avatar: string | null;
+	/** The user's banner hash. */
+	banner?: string | null;
 	/** If this user is a bot. */
 	bot: boolean;
 	/** The 4 digits after the user's username. */
@@ -18,9 +22,15 @@ export default class RESTPartialUser extends RESTBase {
 	system: boolean;
 	/** The user's username. */
 	username: string;
-	constructor(data: RawPartialUser, client: RESTClient) {
+	constructor(data: RawUser, client: Client) {
 		super(data.id, client);
+		this.update(data);
+	}
+
+	protected update(data: RawUser) {
+		this.accentColor   = data.accent_color;
 		this.avatar        = data.avatar;
+		this.banner        = data.banner;
 		this.bot		   = !!data.bot;
 		this.discriminator = data.discriminator;
 		this.publicFlags   = data.public_flags;

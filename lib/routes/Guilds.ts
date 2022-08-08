@@ -1,5 +1,5 @@
 import BaseRoute from "./BaseRoute";
-import type { RawPartialUser } from "./Users";
+import type { RawUser } from "./Users";
 import * as Routes from "../util/Routes";
 import type {
 	DefaultMessageNotificationLevels,
@@ -14,16 +14,16 @@ import type {
 	StickerTypes,
 	VerificationLevels
 } from "../Constants";
-import RESTGuild from "../structures/rest/RESTGuild";
+import Guild from "../structures/Guild";
 
 export default class Guilds extends BaseRoute {
 	async get(id: string) {
-		return this._client.authRequest<RawRESTGuild>("GET", Routes.GUILD(id))
-			.then(data => new RESTGuild(data, this._client));
+		return this._client.rest.authRequest<RawGuild>("GET", Routes.GUILD(id))
+			.then(data => new Guild(data, this._client));
 	}
 }
 
-export interface RawGuild {
+export interface RESTGuild {
 	afk_channel_id: string | null;
 	afk_timeout: number;
 	application_id: string | null;
@@ -67,7 +67,7 @@ export interface RawGuild {
 	widget_channel_id?: string | null;
 	widget_enabled?: boolean;
 }
-export type RawRESTGuild = Omit<RawGuild, "owner" | "permissions" | "icon_hash">;
+export type RawGuild = Omit<RESTGuild, "owner" | "permissions" | "icon_hash">;
 
 export interface RawRole {
 	color: number;
@@ -95,7 +95,7 @@ export interface RawEmoji {
 	name: string | null; // null in reaction emoji objects?
 	require_colons?: boolean;
 	roles?: Array<string>;
-	user?: RawPartialUser;
+	user?: RawUser;
 }
 export type GuildEmoji = Omit<RawEmoji, "name"> & { name: string; };
 export interface WelcomeScreen {
@@ -121,10 +121,10 @@ export interface Sticker {
 	sort_value?: number;
 	tags: string;
 	type: StickerTypes;
-	user?: RawPartialUser;
+	user?: RawUser;
 }
 
-export interface RawMember {
+export interface RESTMember {
 	avatar?: string | null;
 	communication_disabled_until?: string | null;
 	deaf: boolean;
@@ -139,9 +139,9 @@ export interface RawMember {
 	permissions?: string;
 	premium_since?: string;
 	roles: Array<string>;
-	user?: RawPartialUser;
+	user?: RawUser;
 }
-export type RawRESTMember = Required<Omit<RawMember, "permissions">>;
+export type RawMember = Required<Omit<RESTMember, "permissions">>;
 
 export interface RawIntegration {
 	account: IntegrationAccount;
@@ -158,7 +158,7 @@ export interface RawIntegration {
 	synced_at?: string;
 	syncing?: boolean;
 	type: IntegrationType;
-	user?: RawPartialUser;
+	user?: RawUser;
 }
 
 export interface IntegrationAccount {
@@ -167,7 +167,7 @@ export interface IntegrationAccount {
 }
 
 export interface IntegrationApplication { // @TODO application class
-	bot?: RawPartialUser;
+	bot?: RawUser;
 	description: string;
 	icon: string | null;
 	id: string;

@@ -35,7 +35,7 @@ export default abstract class Base {
 		return copy;
 	}
 
-	toJSON<T extends Record<string, unknown> = Record<string, unknown>>(props: Array<string> = []) {
+	toJSON(props: Array<string> = []) {
 		const json: Record<string, unknown> = {};
 		if (this.id) {
 			json.id = this.id;
@@ -52,7 +52,7 @@ export default abstract class Base {
 			else if (type === "object") json[prop] = value;
 
 		}
-		return json as T;
+		return json;
 	}
 
 	toString() {

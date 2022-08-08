@@ -1,17 +1,16 @@
-import type { ThreadMetadata } from "./RESTThreadChannel";
-import RESTThreadChannel from "./RESTThreadChannel";
-import type { EditPublicThreadChannelOptions, RawRESTNewsThreadChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import type { ChannelTypes, ThreadAutoArchiveDuration } from "../../Constants";
+import type { ThreadMetadata } from "./ThreadChannel";
+import ThreadChannel from "./ThreadChannel";
+import type { EditPublicThreadChannelOptions, RawPublicThreadChannel } from "../routes/Channels";
+import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
+import type Client from "../Client";
 
 /** Represents a guild thread channel. */
-export default class RESTNewsThreadChannel extends RESTThreadChannel {
+export default class PublicThreadChannel extends ThreadChannel {
 	declare threadMetadata: ThreadMetadata;
-	declare type: ChannelTypes.GUILD_NEWS_THREAD;
-	constructor(data: RawRESTNewsThreadChannel, client: RESTClient) {
+	declare type: ChannelTypes.GUILD_PUBLIC_THREAD;
+	constructor(data: RawPublicThreadChannel, client: Client) {
 		super(data, client);
 	}
-
 
 	/**
 	 * Edit a channel.
@@ -25,9 +24,9 @@ export default class RESTNewsThreadChannel extends RESTThreadChannel {
 	 * @param {String} [options.name] - The name of the channel.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTNewsThreadChannel>}
+	 * @returns {Promise<PublicThreadChannel>}
 	 */
 	override async edit(options: EditPublicThreadChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTNewsThreadChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<PublicThreadChannel>(this.id, options, reason);
 	}
 }

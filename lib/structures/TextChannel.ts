@@ -1,25 +1,24 @@
-import RESTGuildChannel from "./RESTGuildChannel";
-import RESTTextableChannel from "./RESTTextableChannel";
-import type RESTNewsChannel from "./RESTNewsChannel";
-import type { EditGuildChannelOptions, RawOverwrite, RawRESTNewsChannel } from "../../routes/Channels";
-import type RESTClient from "../../RESTClient";
-import type { ThreadAutoArchiveDuration } from "../../Constants";
-import { ChannelTypes } from "../../Constants";
+import TextableChannel from "./TextableChannel";
+import type NewsChannel from "./NewsChannel";
+import type { EditTextChannelOptions, RawOverwrite, RawTextChannel } from "../routes/Channels";
+import type { ThreadAutoArchiveDuration } from "../Constants";
+import { ChannelTypes } from "../Constants";
+import type Client from "../Client";
 
 /** Represents a guild text channel. */
-export default class RESTTextChannel extends RESTTextableChannel {
+export default class TextChannel extends TextableChannel {
 	declare type: ChannelTypes.GUILD_TEXT;
-	constructor(data: RawRESTNewsChannel, client: RESTClient) {
+	constructor(data: RawTextChannel, client: Client) {
 		super(data, client);
 	}
 
 	/**
 	 * Convert this text channel to a news channel.
 	 *
-	 * @returns {Promise<RESTNewsChannel>}
+	 * @returns {Promise<NewsChannel>}
 	 */
 	async convert() {
-		return this.edit({ type: ChannelTypes.GUILD_NEWS })  as unknown as RESTNewsChannel;
+		return this.edit({ type: ChannelTypes.GUILD_NEWS })  as unknown as NewsChannel;
 	}
 
 	/**
@@ -36,9 +35,9 @@ export default class RESTTextChannel extends RESTTextableChannel {
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
 	 * @param {String} [reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<RESTGuildChannel>}
+	 * @returns {Promise<TextChannel>}
 	 */
-	override async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.channels.edit<RESTNewsChannel>(this.id, options, reason);
+	override async edit(options: EditTextChannelOptions, reason?: string) {
+		return this._client.rest.channels.edit<TextChannel>(this.id, options, reason);
 	}
 }
