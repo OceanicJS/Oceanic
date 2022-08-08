@@ -1,8 +1,9 @@
 import Channel from "./Channel";
-import type { EditGroupDMOptions, RawGroupChannel } from "../routes/Channels";
-import type { ChannelTypes } from "../Constants";
+import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../routes/Channels";
+import type { ChannelTypes, ImageFormat } from "../Constants";
 import type Client from "../Client";
 import Properties from "../util/Properties";
+import * as Routes from "../util/Routes";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
@@ -40,7 +41,20 @@ export default class GroupChannel extends Channel {
 	}
 
 	/** The users in this group channel. */
-	get recipients() { return this._recipients.map(user => this._client.users.get(user)!);}
+	get recipients() { return this._recipients.map(user => this._client.users.get(user)!); }
+
+	/**
+	 * Add a user to this channel.
+	 *
+	 * @param {Object} options
+	 * @param {String} options.accessToken - The access token of the user to add.
+	 * @param {String} [options.nick] - The nickname of the user to add.
+	 * @param {String} options.userID - The id of the user to add.
+	 * @returns {Promise<boolean>}
+	 */
+	async addRecipient(options: AddGroupRecipientOptions) {
+		return this._client.rest.channels.addGroupRecipient(this.id, options);
+	}
 
 	/**
 	 * Edit this channel.
@@ -51,5 +65,19 @@ export default class GroupChannel extends Channel {
 	 */
 	async edit(options: EditGroupDMOptions, reason?: string) {
 		return this._client.rest.channels.edit<GroupChannel>(this.id, options, reason);
+	}
+
+	iconURL(format?: ImageFormat, size?: number) {
+		return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_ICON(this.applicationID, this.icon), format, size);
+	}
+
+	/**
+	 * Remove a user from this channel.
+	 *
+	 * @param {String} userID - The id of the user to remove.
+	 * @returns {Promise<boolean>}
+	 */
+	async removeGroupRecipient(userID: string) {
+		return this._client.rest.channels.removeGroupRecipient(this.id, userID);
 	}
 }

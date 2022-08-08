@@ -26,14 +26,15 @@ export default class Users extends BaseRoute {
 	/**
 	 * Create a group dm.
 	 *
-	 * @param {String[]} accessTokens - An array of access tokens with the `gdm.join` scope.
-	 * @param {Object} [nicks] - A dictionary of ids to nicknames, looks unused.
+	 * @param {Object} options
+	 * @param {String[]} options.accessTokens - An array of access tokens with the `gdm.join` scope.
+	 * @param {Object} [options.nicks] - A dictionary of ids to nicknames, looks unused.
 	 * @returns {Promise<GroupChannel>}
 	 */
-	async createGroupDM(accessTokens: Array<string>, nicks?: Record<string, string>) {
+	async createGroupDM(options: CreateGroupChannelOptions) {
 		return this._client.rest.authRequest<RawGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
-			access_tokens: accessTokens,
-			nicks
+			access_tokens: options.accessTokens,
+			nicks:         options.nicks
 		}).then(data => this._client.groupChannels.update(data));
 	}
 
@@ -159,4 +160,10 @@ export interface Connection {
 	type: ConnectionService;
 	verified: boolean;
 	visibility: VisibilityTypes;
+}
+
+
+export interface CreateGroupChannelOptions {
+	accessTokens: Array<string>;
+	nicks?: Record<string, string>;
 }

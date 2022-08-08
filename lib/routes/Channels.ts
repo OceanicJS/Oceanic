@@ -12,6 +12,23 @@ import Channel from "../structures/Channel";
 
 export default class Channels extends BaseRoute {
 	/**
+	 * Add a user to a group channel.
+	 *
+	 * @param {String} groupID - The id of the group to add the user to.
+	 * @param {Object} options
+	 * @param {String} options.accessToken - The access token of the user to add.
+	 * @param {String} [options.nick] - The nickname of the user to add.
+	 * @param {String} options.userID - The id of the user to add.
+	 * @returns {Promise<boolean>}
+	 */
+	async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions) {
+		return this._client.rest.authRequest<null>("PUT", Routes.GROUP_RECIPIENT(groupID, options.userID), {
+			access_token: options.accessToken,
+			nick:         options.nick
+		}).then(res => res === null);
+	}
+
+	/**
 	 * Delete or close a channel.
 	 *
 	 * @param {String} id - The ID of the channel to delete or close.
@@ -83,6 +100,17 @@ export default class Channels extends BaseRoute {
 
 	async get(id: string) {
 		return this._client.rest.authRequest<RawChannel>("GET", Routes.CHANNEL(id)).then(data => Channel.from(data, this._client));
+	}
+
+	/**
+	 * Remove a user from the group channel.
+	 *
+	 * @param {String} groupID - The id of the group to remove the user from.
+	 * @param {String} userID - The id of the user to remove.
+	 * @returns {Promise<void>}
+	 */
+	async removeGroupRecipient(groupID: string, userID: string) {
+		return this._client.rest.authRequest<null>("DELETE", Routes.GROUP_RECIPIENT(groupID, userID)).then(res => res === null);
 	}
 }
 
@@ -188,3 +216,9 @@ export type EditStageChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuil
 export type EditThreadChannelOptions = EditPublicThreadChannelOptions | EditPrivateThreadChannelOptions;
 export type EditPublicThreadChannelOptions = Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags">;
 export type EditPrivateThreadChannelOptions = EditPublicThreadChannelOptions & Pick<EditGuildChannelOptions, "invitable">;
+
+export interface AddGroupRecipientOptions {
+	accessToken: string;
+	nick?: string;
+	userID: string;
+}

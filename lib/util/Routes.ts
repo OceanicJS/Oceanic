@@ -10,7 +10,8 @@ export const USER = (userID: string) => `/users/${userID}` as const;
 
 export const GUILD = (userID: string, withCounts = false) => `/guilds/${userID}?with_counts=${String(withCounts)}` as const;
 
-export const CHANNEL = (channelID: string) => `/channels/${channelID}` as const;
+export const CHANNEL         = (channelID: string) => `/channels/${channelID}` as const;
+export const GROUP_RECIPIENT = (channelID: string, userID: string) => `/channels/${channelID}/recipients/${userID}` as const;
 
 // OAuth
 export const OAUTH_CURRENT_USER = USER("@me");
