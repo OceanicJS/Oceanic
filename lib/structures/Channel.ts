@@ -15,16 +15,6 @@ import type {
 } from "../routes/Channels";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type ITextChannel from "./TextChannel";
-import type IPrivateChannel from "./PrivateChannel";
-import type IVoiceChannel from "./VoiceChannel";
-import type ICategoryChannel from "./CategoryChannel";
-import type IGroupChannel from "./GroupChannel";
-import type INewsChannel from "./NewsChannel";
-import type IPublicThreadChannel from "./PublicThreadChannel";
-import type IPrivateThreadChannel from "./PrivateThreadChannel";
-import type INewsThreadChannel from "./NewsThreadChannel";
-import type IStageChannel from "./StageChannel";
 
 export default class Channel extends Base {
 	type: ChannelTypes;
@@ -69,14 +59,14 @@ export default class Channel extends Base {
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
 /* eslint-disable */
-const TextChannel = require("./TextChannel") as typeof ITextChannel;
-const PrivateChannel = require("./PrivateChannel") as typeof IPrivateChannel;
-const VoiceChannel = require("./VoiceChannel") as typeof IVoiceChannel;
-const CategoryChannel = require("./CategoryChannel") as typeof ICategoryChannel;
-const GroupChannel = require("./GroupChannel") as typeof IGroupChannel;
-const NewsChannel = require("./NewsChannel") as typeof INewsChannel;
-const PublicThreadChannel = require("./PublicThreadChannel") as typeof IPublicThreadChannel;
-const PrivateThreadChannel = require("./PrivateThreadChannel") as typeof IPrivateThreadChannel;
-const NewsThreadChannel = require("./NewsThreadChannel") as typeof INewsThreadChannel;
-const StageChannel = require("./StageChannel") as typeof IStageChannel;
-/* eslint-disable */
+const TextChannel = require("./TextChannel") as typeof import("./TextChannel").default;
+const PrivateChannel = require("./PrivateChannel") as typeof  import("./PrivateChannel").default;
+const VoiceChannel = require("./VoiceChannel") as typeof  import("./VoiceChannel").default;
+const CategoryChannel = require("./CategoryChannel") as typeof  import("./CategoryChannel").default;
+const GroupChannel = require("./GroupChannel") as typeof  import("./GroupChannel").default;
+const NewsChannel = require("./NewsChannel") as typeof  import("./NewsChannel").default;
+const PublicThreadChannel = require("./PublicThreadChannel") as typeof  import("./PublicThreadChannel").default;
+const PrivateThreadChannel = require("./PrivateThreadChannel") as typeof  import("./PrivateThreadChannel").default;
+const NewsThreadChannel = require("./NewsThreadChannel") as typeof  import("./NewsThreadChannel").default;
+const StageChannel = require("./StageChannel") as typeof  import("./StageChannel").default;
+/* eslint-enable */
