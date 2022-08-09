@@ -22,9 +22,13 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<boolean>}
 	 */
 	async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions) {
-		return this._manager.authRequest<null>("PUT", Routes.GROUP_RECIPIENT(groupID, options.userID), {
-			access_token: options.accessToken,
-			nick:         options.nick
+		return this._manager.authRequest<null>({
+			method: "PUT",
+			path:   Routes.GROUP_RECIPIENT(groupID, options.userID),
+			json:   {
+				access_token: options.accessToken,
+				nick:         options.nick
+			}
 		}).then(res => res === null);
 	}
 
@@ -36,7 +40,11 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<void>}
 	 */
 	async delete(id: string, reason?: string) {
-		await this._manager.authRequest<RawChannel>("DELETE", Routes.CHANNEL(id), undefined, undefined, reason);
+		await this._manager.authRequest<RawChannel>({
+			method: "DELETE",
+			path:   Routes.CHANNEL(id),
+			reason
+		});
 	}
 
 	/**
@@ -72,34 +80,43 @@ export default class Channels extends BaseRoute {
 			try {
 				options.icon = this._client._convertImage(options.icon);
 			} catch (err) {
-				throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
+				throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
 			}
 		}
-		return this._manager.authRequest<RawChannel>("PATCH", Routes.CHANNEL(id), {
-			archived:                      options.archived,
-			auto_archive_duration:         options.autoArchiveDuration,
-			bitrate:                       options.bitrate,
-			default_auto_archive_duration: options.defaultAutoArchiveDuration,
-			flags:                         options.flags,
-			icon:                          options.icon,
-			invitable:                     options.invitable,
-			locked:                        options.locked,
-			name:                          options.name,
-			nsfw:                          options.nsfw,
-			parent_id:                     options.parentID,
-			permission_overwrites:         options.permissionOverwrites,
-			position:                      options.position,
-			rate_limit_per_user:           options.rateLimitPerUser,
-			rtc_region:                    options.rtcRegion,
-			topic:                         options.topic,
-			type:                          options.type,
-			user_limit:                    options.userLimit,
-			video_quality_mode:            options.videoQualityMode
-		}, undefined, reason).then(data => Channel.from(data, this._client) as T);
+
+		return this._manager.authRequest<RawChannel>({
+			method: "PATCH",
+			path:   Routes.CHANNEL(id),
+			json:   {
+				archived:                      options.archived,
+				auto_archive_duration:         options.autoArchiveDuration,
+				bitrate:                       options.bitrate,
+				default_auto_archive_duration: options.defaultAutoArchiveDuration,
+				flags:                         options.flags,
+				icon:                          options.icon,
+				invitable:                     options.invitable,
+				locked:                        options.locked,
+				name:                          options.name,
+				nsfw:                          options.nsfw,
+				parent_id:                     options.parentID,
+				permission_overwrites:         options.permissionOverwrites,
+				position:                      options.position,
+				rate_limit_per_user:           options.rateLimitPerUser,
+				rtc_region:                    options.rtcRegion,
+				topic:                         options.topic,
+				type:                          options.type,
+				user_limit:                    options.userLimit,
+				video_quality_mode:            options.videoQualityMode
+			},
+			reason
+		}).then(data => Channel.from(data, this._client) as T);
 	}
 
 	async get(id: string) {
-		return this._manager.authRequest<RawChannel>("GET", Routes.CHANNEL(id)).then(data => Channel.from(data, this._client));
+		return this._manager.authRequest<RawChannel>({
+			method: "GET",
+			path:   Routes.CHANNEL(id)
+		}).then(data => Channel.from(data, this._client));
 	}
 
 	/**
@@ -110,7 +127,10 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<void>}
 	 */
 	async removeGroupRecipient(groupID: string, userID: string) {
-		return this._manager.authRequest<null>("DELETE", Routes.GROUP_RECIPIENT(groupID, userID)).then(res => res === null);
+		return this._manager.authRequest<null>({
+			method: "DELETE",
+			path:   Routes.GROUP_RECIPIENT(groupID, userID)
+		}).then(res => res === null);
 	}
 }
 

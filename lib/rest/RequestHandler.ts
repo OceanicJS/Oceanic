@@ -1,15 +1,14 @@
 import SequentialBucket from "./SequentialBucket";
 import DiscordRESTError from "./DiscordRESTError";
 import DiscordHTTPError from "./DiscordHTTPError";
+import type RESTManager from "./RESTManager";
 import type { RESTMethod } from "../Constants";
-import { BASE_URL, RESTMethods, USER_AGENT } from "../Constants";
+import { API_URL, RESTMethods, USER_AGENT } from "../Constants";
 import TypedEmitter from "../util/TypedEmitter";
 import Base from "../structures/Base";
 import Properties from "../util/Properties";
-import type Client from "../Client";
-import type { Agent } from "undici";
+import type { RESTOptions } from "../Client";
 import { FormData, fetch, File as UFile } from "undici";
-import { assert } from "tsafe";
 
 /**
  * Latency & ratelimit related things lovingly borrowed from eris
@@ -17,7 +16,7 @@ import { assert } from "tsafe";
  */
 
 export default class RequestHandler extends TypedEmitter<RequestEvents> {
-	private _client: Client;
+	private _manager: RESTManager;
 	globalBlock = false;
 	latencyRef: LatencyRef;
 	options: InstanceOptions;
@@ -26,18 +25,18 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 	/**
 	 * Construct an instance of RequestHandler
 	 *
-	 * @param {RequestHandlerOptions} options - the options for the request handler
+	 * @param {RESTOptions} options - the options for the request handler
 	 */
-	constructor(client: Client, options: RequestHandlerOptions = {}) {
+	constructor(manager: RESTManager, options: RESTOptions = {}) {
 		super();
 		if (options && options.baseURL && options.baseURL.endsWith("/")) options.baseURL = options.baseURL.slice(0, -1);
 		Properties.new(this)
-			.define("_client", client)
+			.define("_manager", manager)
 			.define("options", {
 				agent:                      options.agent,
-				baseURL:                    options.baseURL || BASE_URL,
+				baseURL:                    options.baseURL || API_URL,
 				disableLatencyCompensation: !!options.disableLatencyCompensation,
-				host:                       options.host || options.baseURL ? new URL(this.options.baseURL).host : new URL(BASE_URL).host,
+				host:                       options.host || options.baseURL ? new URL(this.options.baseURL).host : new URL(API_URL).host,
 				latencyThreshold:           options.latencyThreshold ?? 30000,
 				ratelimiterOffset:          options.ratelimiterOffset ?? 0,
 				requestTimeout:             options.requestTimeout ?? 15000,
@@ -80,74 +79,75 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 	}
 
 	/** same as `request`, but with `auth` always set to `true`. */
-	async authRequest<T = unknown>(method: RESTMethod, path: string, body?: unknown, files?: Array<File>, reason?: string, priority = false, route?: string) {
-		return this.request<T>(method, path, body, files, reason, true, priority, route);
+	async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
+		return this.request<T>({
+			...options,
+			auth: true
+		});
 	}
 
 	/**
 	 * Make a request
 	 *
 	 * @template T
-	 * @param {RESTMethod} method - he method of this request
-	 * @param {String} path - the path of this request - will be combined with baseURL
-	 * @param {Object} [body] - the body to send with the request
-	 * @param {File[]} [files] - the files to send with this request
-	 * @param {String} [reason] - the value to pass in `X-Audit-Log-Reason`, if applicable
-	 * @param {(Boolean | String)} [auth=false] - true to use global auth if specified, false for no auth, and a string value for specific authorization (must be prefixed)
-	 * @param {Boolean} [priority=false] - if this request should be considered a priority
-	 * @param {String} [route] - the route path (with placeholders)
+	 * @param {Object} options
+	 * @param {(Boolean | String)} [options.auth=false] - True to use global auth if specified, false for no auth, and a string value for specific authorization (must be prefixed).
+	 * @param {File[]} [options.files] - The files to send with this request.
+	 * @param {FormData} [options.form] - The form body to send with the request. Mutually exclusive with `json`.
+	 * @param {Object} [options.json] - The json body to send with the request. Mutually exclusive with `form`.
+	 * @param {RESTMethod} options.method - The method of this request.
+	 * @param {String} options.path - The path of this request - will be combined with baseURL.
+	 * @param {Boolean} [options.priority=false] - If this request should be considered a priority.
+	 * @param {String} [options.reason] - The value to pass in `X-Audit-Log-Reason`, if applicable.
+	 * @param {String} [options.route] - The route path (with placeholders).
 	 * @returns {Promise<T>} - The result body, null if no content
 	 */
-	async request<T = unknown>(method: RESTMethod, path: string, body?: unknown, files?: Array<File>, reason?: string, auth: boolean | string = false, priority = false, route?: string) {
-		// eslint-disable-next-line prefer-rest-params
-		const args = [...arguments] as Parameters<RequestHandler["request"]>;
-		assert(method && typeof method === "string", "method is required for RequestHandler#reqest");
-		method = method.toUpperCase() as RESTMethod;
-		if (!RESTMethods.includes(method)) throw new Error(`Invalid method "${method}.`);
-		assert(path, "path is required for RequestHandler#reqest");
+	async request<T = unknown>(options: RequestOptions) {
+		options.method = options.method.toUpperCase() as RESTMethod;
+		if (!RESTMethods.includes(options.method)) throw new Error(`Invalid method "${options.method}.`);
 		const _stackHolder = {};
 		Error.captureStackTrace(_stackHolder);
-		if (!path.startsWith("/")) path = `/${path}`;
-		if (!route) route = this.getRoute(path, method);
+		if (!options.path.startsWith("/")) options.path = `/${options.path}`;
+		const route = options.route || this.getRoute(options.path, options.method);
 		if (!this.ratelimits[route]) this.ratelimits[route] = new SequentialBucket(1, this.latencyRef);
 		let attempts = 0;
 		return new Promise<T>((resolve, reject) => {
 			async function attempt(this: RequestHandler, cb: () => void) {
 				const headers: Record<string, string> = {};
 				try {
-					if (typeof auth === "string") headers.Authorization = auth;
-					else if (auth && this._client.options.auth) headers.Authorization = this._client.options.auth;
-					if (reason) headers["X-Audit-Log-Reason"] = encodeURIComponent(reason);
+					if (typeof options.auth === "string") headers.Authorization = options.auth;
+					else if (options.auth && this._manager.client.options.auth) headers.Authorization = this._manager.client.options.auth;
+					if (options.reason) headers["X-Audit-Log-Reason"] = encodeURIComponent(options.reason);
 
 					let reqBody: string | FormData | undefined;
-					if (method !== "GET") {
+					if (options.method !== "GET") {
 						let stringBody: string | undefined;
-						if (body) stringBody = JSON.stringify(body, (k, v: unknown) => typeof v === "bigint" ? v.toString() : v);
-						if (files && files.length > 0) {
+						if (options.json) stringBody = JSON.stringify(options.json, (k, v: unknown) => typeof v === "bigint" ? v.toString() : v);
+						if (options.files && options.files.length > 0) {
 							const data = new FormData();
-							files.forEach((file, index) => {
+							options.files.forEach((file, index) => {
 								if (!file.contents) return;
 								data.set(`files[${index}]`, new UFile([file.contents], file.name));
 							});
 							if (stringBody) data.set("payload_json", stringBody);
 							reqBody = data;
-						} else if (body) {
+						} else if (options.json) {
 							reqBody = stringBody;
 							headers["Content-Type"] = "application/json";
 						}
 					}
 
 					if (this.options.host) headers.Host = this.options.host;
-					const url = `${this.options.baseURL}${path}`;
+					const url = `${this.options.baseURL}${options.path}`;
 					let latency = Date.now();
 					const controller = new AbortController();
 					let timeout: NodeJS.Timeout | undefined;
 					if (this.options.requestTimeout > 0 && this.options.requestTimeout !== Infinity) timeout = setTimeout(() => controller.abort(), this.options.requestTimeout);
 					const res = await fetch(url, {
-						method,
+						method:     options.method,
 						headers,
 						body:       reqBody,
-						dispatcher: this.options.agent,
+						dispatcher: this.options.agent || undefined,
 						signal:     controller.signal
 					});
 					if (timeout) clearTimeout(timeout);
@@ -169,13 +169,12 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 							}
 						} else resBody = b;
 					}
-					assert(route);
 					if (this.listeners("request").length) {
 						this.emit("request", {
-							method,
-							path,
+							method:       options.method,
+							path:         options.path,
 							route,
-							withAuth:     !!auth,
+							withAuth:     !!options.auth,
 							requestBody:  reqBody,
 							responseBody: resBody
 						});
@@ -191,9 +190,9 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 						this.latencyRef.timeOffsets.push(timeOffset);
 					}
 					if (res.headers.has("x-ratelimit-limit")) this.ratelimits[route].limit = Number(res.headers.get("x-ratelimit-limit"));
-					if (method !== "GET" && (!res.headers.has("x-ratelimit-remaining") || !res.headers.has("x-ratelimit-limit")) && this.ratelimits[route].limit !== 1) {
+					if (options.method !== "GET" && (!res.headers.has("x-ratelimit-remaining") || !res.headers.has("x-ratelimit-limit")) && this.ratelimits[route].limit !== 1) {
 						this.emit("debug", [`Missing ratelimit headers for SequentialBucket(${this.ratelimits[route].remaining}/${this.ratelimits[route].limit}) with non-default limit\n`,
-							`${res.status} ${res.headers.get("content-type")!}: ${method} ${route} | ${res.headers.get("cf-ray")!}\n`,
+							`${res.status} ${res.headers.get("content-type")!}: ${options.method} ${route} | ${res.headers.get("cf-ray")!}\n`,
 							`content-type = ${res.headers.get("content-type")!}\n`,
 							`x-ratelimit-remaining = " + ${res.headers.get("x-ratelimit-remaining")!}\n`,
 							`x-ratelimit-limit = " + ${res.headers.get("x-ratelimit-limit")!}\n`,
@@ -228,16 +227,16 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 								setTimeout(() => {
 									cb();
 									// eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, prefer-spread
-									this.request<T>(...args).then(resolve).catch(reject);
+									this.request<T>(options).then(resolve).catch(reject);
 								}, delay);
 							} else {
 								cb();
-								this.request<T>(...args).then(resolve).catch(reject);
+								this.request<T>(options).then(resolve).catch(reject);
 							}
 						} else if (res.status === 502 && ++attempts < 4) {
-							this.emit("debug", `Unexpected 502 on ${method} ${route}`);
+							this.emit("debug", `Unexpected 502 on ${options.method} ${route}`);
 							setTimeout(() => {
-								this.request<T>(...args).then(resolve).catch(reject);
+								this.request<T>(options).then(resolve).catch(reject);
 							}, Math.floor(Math.random() * 1900 + 100));
 							return cb();
 						}
@@ -246,9 +245,9 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 						if (stack.startsWith("Error\n")) stack = stack.substring(6);
 						let err;
 						if (resBody && typeof resBody === "object" && "code" in resBody) {
-							err = new DiscordRESTError(res, resBody, method, stack);
+							err = new DiscordRESTError(res, resBody, options.method, stack);
 						} else {
-							err = new DiscordHTTPError(res, resBody, method, stack);
+							err = new DiscordHTTPError(res, resBody, options.method, stack);
 						}
 						reject(err);
 						return;
@@ -259,42 +258,33 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 				} catch (err) {
 					if (err instanceof Error && err.constructor.name === "DOMException" && err.name === "AbortError") {
 						cb();
-						reject(new Error(`Request Timed Out (>${this.options.requestTimeout}ms) on ${method} ${path}`));
+						reject(new Error(`Request Timed Out (>${this.options.requestTimeout}ms) on ${options.method} ${options.path}`));
 					}
 					this.emit("error", err as Error);
 				}
 			}
-			if (this.globalBlock && auth) {
-				(priority ? this.readyQueue.unshift.bind(this.readyQueue) : this.readyQueue.push.bind(this.readyQueue))(() => {
-					this.ratelimits[route!].queue(attempt.bind(this), priority);
+			if (this.globalBlock && options.auth) {
+				(options.priority ? this.readyQueue.unshift.bind(this.readyQueue) : this.readyQueue.push.bind(this.readyQueue))(() => {
+					this.ratelimits[route].queue(attempt.bind(this), options.priority);
 				});
-			} else this.ratelimits[route!].queue(attempt.bind(this), priority);
+			} else this.ratelimits[route].queue(attempt.bind(this), options.priority);
 		});
 	}
 }
 
-
-export interface RequestHandlerOptions {
-	agent?: Agent | null;
-	/** the base url for requests - must be fully qualified (default: `https://discord.com/api/v[REST_VERSION]`) */
-	baseURL?: string;
-	/** If the built in latency compensator should be disabled (default: false) */
-	disableLatencyCompensation?: boolean;
-	/** the host to use with requests (default: domain from `baseURL`) */
-	host?: string;
-	/** in milliseconds, the average request latency at which to start emitting latency errors (default: 30000) */
-	latencyThreshold?: number;
-	/** in milliseconds, the time to offset ratelimit calculations by (default: 0) */
-	ratelimiterOffset?: number;
-	/** in milliseconds, how long to wait until a request is timed out (default: 15000) */
-	requestTimeout?: number;
-	/** the user agent to use for requests (default: `Oceanic/VERSION (https://github.com/DonovanDMC/Oceanic)`) */
-	userAgent?: string;
-}
-
 // internal use
-interface InstanceOptions extends Required<Omit<RequestHandlerOptions, "agent">> {
-	agent?: Agent;
+type InstanceOptions = Required<Omit<RESTOptions, "agent">> & Pick<RESTOptions, "agent">;
+
+export interface RequestOptions {
+	auth?: boolean | string;
+	files?: Array<File>;
+	form?: FormData;
+	json?: unknown;
+	method: RESTMethod;
+	path: string;
+	priority?: boolean;
+	reason?: string;
+	route?: string;
 }
 
 export interface File {

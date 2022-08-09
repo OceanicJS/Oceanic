@@ -28,7 +28,7 @@ export default class Collection<K extends string | number, M extends { id: K; },
 
 	update(value: M, ...extra: E) {
 		const item = this.get(value.id);
-		if (!item) this.add(new this._baseObject(this._client, value, ...extra));
+		if (!item) this.add(new this._baseObject(value, this._client, ...extra));
 		else item["update"](value);
 		return this.get(value.id)!;
 	}

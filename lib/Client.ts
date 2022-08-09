@@ -1,4 +1,3 @@
-import type { RequestHandlerOptions } from "./rest/RequestHandler";
 import Properties from "./util/Properties";
 import type { ImageFormat } from "./Constants";
 import { MAX_IMAGE_SIZE, MIN_IMAGE_SIZE, ImageFormats } from "./Constants";
@@ -10,18 +9,7 @@ import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import type { RawUser } from "./routes/Users";
 import type User from "./structures/User";
-
-export interface ClientOptions {
-	/** Fully qualified authorization string (e.x. Bot [TOKEN]) - you MUST prefix it yourself */
-	auth?: string | null;
-	/** The default image format to use. */
-	defaultImageFormat?: ImageFormat;
-	/** The default image size to use. */
-	defaultImageSize?: number;
-	/** The options to pass to the request handler. */
-	rest?: RequestHandlerOptions;
-}
-type InstanceOptions = Required<Omit<ClientOptions, "rest">>;
+import type { Agent } from "undici";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** A REST based client, nothing will be cached. */
@@ -40,7 +28,7 @@ export default class Client {
 			})
 			.define("groupChannels", new Collection(GroupChannel, this))
 			.define("privateChannels", new Collection(PrivateChannel, this))
-			.define("rest", new RESTManager(this));
+			.define("rest", new RESTManager(this, options?.rest));
 	}
 
 	/** @hidden intentionally not documented - this is an internal function */
@@ -67,4 +55,34 @@ export default class Client {
 		if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.options.defaultImageSize;
 		return `${CDN_URL}${url}.${format}?size=${size}`;
 	}
+}
+
+export interface ClientOptions {
+	/** Fully qualified authorization string (e.x. Bot [TOKEN]) - you MUST prefix it yourself */
+	auth?: string | null;
+	/** The default image format to use. */
+	defaultImageFormat?: ImageFormat;
+	/** The default image size to use. */
+	defaultImageSize?: number;
+	/** The options to pass to the request handler. */
+	rest?: RESTOptions;
+}
+type InstanceOptions = Required<Omit<ClientOptions, "rest">>;
+
+export interface RESTOptions {
+	agent?: Agent | null;
+	/** the base url for requests - must be fully qualified (default: `https://discord.com/api/v[REST_VERSION]`) */
+	baseURL?: string;
+	/** If the built in latency compensator should be disabled (default: false) */
+	disableLatencyCompensation?: boolean;
+	/** the host to use with requests (default: domain from `baseURL`) */
+	host?: string;
+	/** in milliseconds, the average request latency at which to start emitting latency errors (default: 30000) */
+	latencyThreshold?: number;
+	/** in milliseconds, the time to offset ratelimit calculations by (default: 0) */
+	ratelimiterOffset?: number;
+	/** in milliseconds, how long to wait until a request is timed out (default: 15000) */
+	requestTimeout?: number;
+	/** the user agent to use for requests (default: `Oceanic/VERSION (https://github.com/DonovanDMC/Oceanic)`) */
+	userAgent?: string;
 }

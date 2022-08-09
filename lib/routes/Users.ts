@@ -1,10 +1,7 @@
 import BaseRoute from "./BaseRoute";
-import type { RawIntegration, RawGuild, RawMember } from "./Guilds";
 import type { RawPrivateChannel, RawGroupChannel } from "./Channels";
-import type { ConnectionService, PremiumTypes, VisibilityTypes } from "../Constants";
+import type { PremiumTypes } from "../Constants";
 import * as Routes from "../util/Routes";
-import Guild from "../structures/Guild";
-import Member from "../structures/Member";
 import PrivateChannel from "../structures/PrivateChannel";
 import GroupChannel from "../structures/GroupChannel";
 import User from "../structures/User";
@@ -18,9 +15,13 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<PrivateChannel>}
 	 */
 	async createDM(recipient: string) {
-		return this._manager.authRequest<RawPrivateChannel>("POST", Routes.OAUTH_CHANNELS, {
-			recipient_id: recipient
-		}).then(data => this._client.privateChannels.update(data));
+		return this._manager.authRequest<RawPrivateChannel>({
+			method: "POST",
+			path:   Routes.OAUTH_CHANNELS,
+			json:   {
+				recipient_id: recipient
+			} }
+		).then(data => this._client.privateChannels.update(data));
 	}
 
 	/**
@@ -32,10 +33,13 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<GroupChannel>}
 	 */
 	async createGroupDM(options: CreateGroupChannelOptions) {
-		return this._manager.authRequest<RawGroupChannel>("POST", Routes.OAUTH_CHANNELS, {
-			access_tokens: options.accessTokens,
-			nicks:         options.nicks
-		}).then(data => this._client.groupChannels.update(data));
+		return this._manager.authRequest<RawGroupChannel>({
+			method: "POST",
+			path:   Routes.OAUTH_CHANNELS,
+			json:   {
+				access_tokens: options.accessTokens,
+				nicks:         options.nicks
+			} }).then(data => this._client.groupChannels.update(data));
 	}
 
 	/**
@@ -45,42 +49,10 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<User>}
 	 */
 	async get(id: string) {
-		return this._manager.authRequest<RawUser>("GET", Routes.USER(id))
-			.then(data => this._client.users.update(data));
-	}
-
-	/**
-	 * Get the connections of the currently authenticated user.
-	 *
-	 * Note: Requires the `connections` scope when using oauth.
-	 *
-	 * @returns {Promise<Connection>}
-	 */
-	async getCurrentConnections() {
-		return this._manager.authRequest<Connection>("GET", Routes.OAUTH_CONNECTIONS);
-	}
-
-	/**
-	 * Get the guild member information about the currently authenticated user.
-	 *
-	 * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
-	 *
-	 * @param {String} guild - the id of the guild
-	 * @returns {Promise<Member>}
-	 */
-	async getCurrentGuildMember(guild: string) {
-		return this._manager.authRequest<RawMember>("GET", Routes.OAUTH_GUILD_MEMBER(guild))
-			.then(data => new Member(data, this._client, guild));
-	}
-
-	/**
-	 * Get the currently authenticated user's guilds.
-	 *
-	 * @returns {Promise<Guild[]>}
-	 */
-	async getCurrentGuilds() {
-		return this._manager.authRequest<Array<RawGuild>>("GET", Routes.OAUTH_GUILDS)
-			.then(data => data.map(d => new Guild(d, this._client)));
+		return this._manager.authRequest<RawUser>({
+			method: "GET",
+			path:   Routes.USER(id)
+		}).then(data => this._client.users.update(data));
 	}
 
 	/**
@@ -89,8 +61,10 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<ExtendedUser>}
 	 */
 	async getCurrentUser() {
-		return this._manager.authRequest<RawExtendedUser>("GET", Routes.OAUTH_CURRENT_USER)
-			.then(data => new ExtendedUser(data, this._client));
+		return this._manager.authRequest<RawExtendedUser>({
+			method: "GET",
+			path:   Routes.OAUTH_CURRENT_USER
+		}).then(data => new ExtendedUser(data, this._client));
 	}
 
 	/**
@@ -100,7 +74,10 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<Boolean>}
 	 */
 	async leaveGuild(id: string) {
-		return this._manager.authRequest<null>("DELETE", Routes.OAUTH_GUILD(id)).then(res => res === null);
+		return this._manager.authRequest<null>({
+			method: "DELETE",
+			path:   Routes.OAUTH_GUILD(id)
+		}).then(res => res === null);
 	}
 
 	/**
@@ -116,11 +93,14 @@ export default class Users extends BaseRoute {
 			try {
 				options.avatar = this._client._convertImage(options.avatar);
 			} catch (err) {
-				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
+				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
 			}
 		}
-		return this._manager.authRequest<RawExtendedUser>("PATCH", Routes.USER("@me"), options)
-			.then(data => new ExtendedUser(data, this._client));
+		return this._manager.authRequest<RawExtendedUser>({
+			method: "PATCH",
+			path:   Routes.USER("@me"),
+			json:   options
+		}).then(data => new ExtendedUser(data, this._client));
 	}
 }
 
@@ -149,19 +129,6 @@ export interface EditSelfUserOptions {
 	avatar?: Buffer | string | null;
 	username?: string;
 }
-
-export interface Connection {
-	friend_sync: boolean;
-	id: string;
-	integrations?: Array<RawIntegration>;
-	name: string;
-	revoked?: boolean;
-	show_activity: boolean;
-	type: ConnectionService;
-	verified: boolean;
-	visibility: VisibilityTypes;
-}
-
 
 export interface CreateGroupChannelOptions {
 	accessTokens: Array<string>;
