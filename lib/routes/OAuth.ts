@@ -1,6 +1,7 @@
 import BaseRoute from "./BaseRoute";
 import type { RawUser } from "./Users";
 import type { RawGuild, RawIntegration, RawMember } from "./Guilds";
+import type { OAuthWebhook } from "./Webhooks";
 import * as Routes from "../util/Routes";
 import type { ConnectionService, Permission, TeamMembershipState, VisibilityTypes } from "../Constants";
 import { BASE_URL } from "../Constants";
@@ -9,6 +10,7 @@ import { PartialApplication } from "../structures/PartialApplication";
 import type User from "../structures/User";
 import Member from "../structures/Member";
 import Guild from "../structures/Guild";
+import Webhook from "../structures/Webhook";
 import { FormData } from "undici";
 
 export default class OAuth extends BaseRoute {
@@ -189,7 +191,8 @@ export default class OAuth extends BaseRoute {
 			expiresIn:    data.expires_in,
 			refreshToken: data.refresh_token,
 			scopes:       data.scope.split(" "),
-			tokenType:    data.token_type
+			tokenType:    data.token_type,
+			webhook: 	    !data.webhook ? undefined : new Webhook(data.webhook, this._client)
 		}) as ExchangeCodeResponse);
 	}
 
@@ -312,6 +315,7 @@ export interface RawExchangeCodeResponse {
 	refresh_token: string;
 	scope: string;
 	token_type: "Bearer";
+	webhook?: OAuthWebhook;
 }
 
 export interface ExchangeCodeResponse {
@@ -320,6 +324,7 @@ export interface ExchangeCodeResponse {
 	refreshToken: string;
 	scopes: Array<string>;
 	tokenType: "Bearer";
+	webhook?: Webhook;
 }
 
 export interface RefreshTokenOptions {
@@ -334,8 +339,6 @@ export interface clientCredentialsTokenOptions {
 
 export type RawClientCredentialsTokenResponse = Omit<RawExchangeCodeResponse, "refresh_token">;
 export type ClientCredentialsTokenResponse = Omit<ExchangeCodeResponse, "refreshToken">;
-
-// @TODO `webhook.incoming` scope response
 
 export interface RevokeTokenOptions {
 	clientID: string;
