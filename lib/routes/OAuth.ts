@@ -19,7 +19,7 @@ export default class OAuth extends BaseRoute {
 	 * @param {string[]} options.scopes - The [scopes](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes) to request.
 	 * @returns {Promise<ClientCredentialsTokenResponse>}
 	 */
-	async clientCredentialsToken(options: clientCredentialsTokenOptions) {
+	async clientCredentialsGrant(options: clientCredentialsTokenOptions) {
 		const form = new FormData();
 		form.append("grant_type", "client_credentials");
 		form.append("scope", options.scopes.join(" "));
@@ -192,6 +192,27 @@ export default class OAuth extends BaseRoute {
 			tokenType:    data.token_type
 		}) as ExchangeCodeResponse);
 	}
+
+
+	/**
+	 * Revoke an access token.
+	 *
+	 * @param {Object} options.clientID - The id of the client the authorization was performed with.
+	 * @param {Object} options.clientSecret - The secret of the client the authorization was performed with.
+	 * @param {Object} options.token - The access token to revoke.
+	 * @returns {Promise<void>}
+	 */
+	async revokeToken(options: RevokeTokenOptions) {
+		const form = new FormData();
+		form.append("client_id", options.clientID);
+		form.append("client_secret", options.clientSecret);
+		form.append("token", options.token);
+		await this._manager.authRequest<null>({
+			method: "POST",
+			path:   Routes.OAUTH_TOKEN_REVOKE,
+			form
+		});
+	}
 }
 
 export interface RawApplication {
@@ -314,4 +335,10 @@ export interface clientCredentialsTokenOptions {
 export type RawClientCredentialsTokenResponse = Omit<RawExchangeCodeResponse, "refresh_token">;
 export type ClientCredentialsTokenResponse = Omit<ExchangeCodeResponse, "refreshToken">;
 
-// @TODO token revocation, `webhook.incoming` response
+// @TODO `webhook.incoming` scope response
+
+export interface RevokeTokenOptions {
+	clientID: string;
+	clientSecret: string;
+	token: string;
+}
