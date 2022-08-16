@@ -123,8 +123,9 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 					if (options.method !== "GET") {
 						let stringBody: string | undefined;
 						if (options.json) stringBody = JSON.stringify(options.json, (k, v: unknown) => typeof v === "bigint" ? v.toString() : v);
+						if (options.form) reqBody = options.form;
 						if (options.files && options.files.length > 0) {
-							const data = new FormData();
+							const data = reqBody && reqBody instanceof FormData ? reqBody : new FormData();
 							options.files.forEach((file, index) => {
 								if (!file.contents) return;
 								data.set(`files[${index}]`, new UFile([file.contents], file.name));
