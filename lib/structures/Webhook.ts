@@ -31,6 +31,7 @@ export default class Webhook extends Base {
 	user?: User;
 	constructor(data: RawWebhook, client: Client) {
 		super(data.id, client);
+		this.update(data);
 	}
 
 	protected update(data: RawWebhook) {

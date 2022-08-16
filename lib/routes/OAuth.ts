@@ -91,7 +91,8 @@ export default class OAuth extends BaseRoute {
 			expiresIn:    data.expires_in,
 			refreshToken: data.refresh_token,
 			scopes:       data.scope.split(" "),
-			tokenType:    data.token_type
+			tokenType:    data.token_type,
+			webhook:      !data.webhook ? null : new Webhook(data.webhook, this._client)
 		}) as ExchangeCodeResponse);
 	}
 
@@ -324,7 +325,7 @@ export interface ExchangeCodeResponse {
 	refreshToken: string;
 	scopes: Array<string>;
 	tokenType: "Bearer";
-	webhook?: Webhook;
+	webhook: Webhook | null;
 }
 
 export interface RefreshTokenOptions {
