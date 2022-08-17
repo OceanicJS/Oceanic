@@ -1,5 +1,6 @@
 import BaseRoute from "./BaseRoute";
 import type { RawPrivateChannel, RawGroupChannel } from "./Channels";
+import type { RawMember } from "./Guilds";
 import type { PremiumTypes } from "../Constants";
 import * as Routes from "../util/Routes";
 import PrivateChannel from "../structures/PrivateChannel";
@@ -84,8 +85,8 @@ export default class Users extends BaseRoute {
 	 * Modify the currently authenticated user.
 	 *
 	 * @param {Object} options
-	 * @param {String} [options.username] - The new username
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
+	 * @param {String} [options.username] - The new username
 	 * @returns {Promise<ExtendedUser>}
 	 */
 	async modifySelf(options: EditSelfUserOptions) {
@@ -115,6 +116,7 @@ export interface RESTUser {
 	flags?: number;
 	id: string;
 	locale?: string;
+	member?: RawMember;
 	mfa_enabled?: boolean;
 	premium_type?: PremiumTypes;
 	public_flags?: number;
@@ -123,6 +125,7 @@ export interface RESTUser {
 	verified?: boolean;
 }
 export type RawUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system" | "banner" | "accent_color"> & Required<Pick<RESTUser, "public_flags">>;
+export type RawUserWithMember = RawUser & Pick<RESTUser, "member">;
 export type RawExtendedUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
 
 export interface EditSelfUserOptions {

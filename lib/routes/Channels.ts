@@ -1,14 +1,35 @@
 import BaseRoute from "./BaseRoute";
-import type { RawUser } from "./Users";
+import type { RawUser, RawUserWithMember } from "./Users";
+import type { PartialEmoji, RawMember } from "./Guilds";
+import type { RawApplication } from "./OAuth";
 import type {
+	ButtonStyles,
 	ChannelTypes,
+	ComponentTypes,
 	GuildChannelTypes,
+	InteractionTypes,
+	MessageActivityTypes,
+	MessageTypes,
 	OverwriteTypes,
+	StickerFormatTypes,
+	TextInputStyles,
 	ThreadAutoArchiveDuration,
 	VideoQualityModes
 } from "../Constants";
 import * as Routes from "../util/Routes";
 import Channel from "../structures/Channel";
+import type User from "../structures/User";
+import type Member from "../structures/Member";
+import type TextChannel from "../structures/TextChannel";
+import type PrivateChannel from "../structures/PrivateChannel";
+import type VoiceChannel from "../structures/VoiceChannel";
+import type GroupChannel from "../structures/GroupChannel";
+import type CategoryChannel from "../structures/CategoryChannel";
+import type NewsChannel from "../structures/NewsChannel";
+import type NewsThreadChannel from "../structures/NewsThreadChannel";
+import type PublicThreadChannel from "../structures/PublicThreadChannel";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
+import type StageChannel from "../structures/StageChannel";
 
 export default class Channels extends BaseRoute {
 	/**
@@ -109,7 +130,7 @@ export default class Channels extends BaseRoute {
 				video_quality_mode:            options.videoQualityMode
 			},
 			reason
-		}).then(data => Channel.from(data, this._client) as T);
+		}).then(data => Channel.from(data, this._client));
 	}
 
 	async get(id: string) {
@@ -242,3 +263,290 @@ export interface AddGroupRecipientOptions {
 	nick?: string;
 	userID: string;
 }
+
+export interface CreateMessageOptions {
+	allowedMentions?: AllowedMentions;
+	attachments?: Array<MessageAttachment>;
+	components?: Array<MessageActionRow>;
+	content?: string;
+	embeds?: Array<EmbedOptions>;
+	flags?: number;
+	messageReference?: MessageReference;
+	stickerIDs?: Array<string>;
+	tts?: boolean;
+}
+
+export interface EmbedOptions {
+	author?: EmbedAuthorOptions;
+	color?: number;
+	description?: string;
+	fields?: Array<EmbedField>;
+	footer?: EmbedFooterOptions;
+	image?: EmbedImageOptions;
+	thumbnail?: EmbedThumbnailOptions;
+	timestamp?: string;
+	title?: string;
+	url?: string;
+}
+export interface Embed {
+	author?: EmbedAuthor;
+	color?: number;
+	description?: string;
+	fields?: Array<EmbedField>;
+	footer?: EmbedFooter;
+	image?: EmbedImage;
+	provider?: EmbedProvider;
+	thumbnail?: EmbedThumbnail;
+	timestamp?: string;
+	title?: string;
+	type?: EmbedType;
+	url?: string;
+	video?: EmbedVideo;
+}
+export type EmbedType = "rich" | "image" | "video" | "gifv" | "article" | "link";
+
+export interface EmbedFooterOptions {
+	icon_url?: string;
+	text: string;
+}
+export interface EmbedImageOptions {
+	url: string;
+}
+
+export interface EmbedThumbnailOptions {
+	url: string;
+}
+
+export interface EmbedAuthorOptions {
+	icon_url?: string;
+	name: string;
+	url?: string;
+}
+
+export interface EmbedField {
+	inline?: boolean;
+	name: string;
+	value: string;
+}
+export interface EmbedFooter extends EmbedFooterOptions {
+	proxy_icon_url?: string;
+}
+export interface EmbedImage extends EmbedImageOptions {
+	height?: number;
+	proxy_url?: string;
+	width?: number;
+}
+
+export interface EmbedThumbnail extends EmbedThumbnailOptions {
+	height?: number;
+	proxy_url?: string;
+	width?: number;
+}
+
+export interface EmbedVideo {
+	height?: number;
+	proxy_url?: string;
+	url?: string;
+	width?: number;
+}
+
+export interface EmbedProvider {
+	name?: string;
+	url?: string;
+}
+export interface EmbedAuthor extends EmbedAuthorOptions {
+	proxy_icon_url?: string;
+}
+
+export interface AllowedMentions {
+	everyone?: boolean;
+	repliedUser?: boolean;
+	roles?: boolean | Array<string>;
+	users?: boolean | Array<string>;
+}
+
+export interface MessageReference {
+	channelID?: string;
+	failIfNotExists?: boolean;
+	guildID?: string;
+	messageID?: string;
+}
+
+export type Component = MessageComponent | ModalComponent;
+export type MessageComponent = ButtonComponent | SelectMenu;
+export type ModalComponent = TextInput;
+export type ButtonComponent = TextButton | URLButton;
+export interface ActionRowBase {
+	components: Array<Component>;
+	type: ComponentTypes.ACTION_ROW;
+}
+
+export interface MessageActionRow extends ActionRowBase {
+	components: Array<MessageComponent>;
+}
+
+export interface ModalActionRow extends ActionRowBase {
+	components: Array<ModalComponent>;
+}
+
+export interface ButtonBase {
+	disabled?: boolean;
+	emoji?: PartialEmoji;
+	label?: string;
+	style: ButtonStyles;
+	type: ComponentTypes.BUTTON;
+}
+
+export interface TextButton extends ButtonBase {
+	custom_id: string;
+	style: ButtonStyles.PRIMARY | ButtonStyles.SECONDARY | ButtonStyles.SUCCESS | ButtonStyles.DANGER;
+}
+
+export interface URLButton extends ButtonBase {
+	style: ButtonStyles.LINK;
+	url: string;
+}
+
+export interface SelectMenu {
+	custom_id: string;
+	disabled?: boolean;
+	max_values?: number;
+	min_values?: number;
+	options: Array<SelectOption>;
+	placeholder?: string;
+	type: ComponentTypes.SELECT_MENU;
+}
+
+export interface SelectOption {
+	default?: boolean;
+	description?: string;
+	emoji?: PartialEmoji;
+	label: string;
+	value: string;
+}
+
+export interface TextInput {
+	custom_id: string;
+	label: string;
+	max_length?: boolean;
+	min_length?: number;
+	placeholder?: string;
+	required?: boolean;
+	style: TextInputStyles;
+	type: ComponentTypes.TEXT_INPUT;
+	value?: string;
+}
+
+export interface RawAttachment {
+	content_type?: string;
+	description?: string;
+	ephemeral?: boolean;
+	filename: string;
+	height?: number;
+	id: string;
+	proxy_url: string;
+	size: number;
+	url: string;
+	width?: number;
+}
+// @TODO verify what can be sent with `attachments` in message creation/deletion, this is an assumption
+export type MessageAttachment = Pick<RawAttachment, "id"> & Partial<Pick<RawAttachment, "description" | "filename">>;
+
+export interface RawAllowedMentions {
+	parse: Array<"everyone" | "roles" | "users">;
+	replied_user?: boolean;
+	roles?: Array<string>;
+	users?: Array<string>;
+}
+
+export interface RawMessage {
+	activity?: MessageActivity;
+	application?: RawApplication; // @TODO specific properties sent
+	application_id?: string;
+	attachments: Array<RawAttachment>;
+	author: RawUser; // this can be an invalid user if `webhook_id` is set
+	channel_id: string;
+	components?: Array<MessageActionRow>;
+	content: string;
+	edited_timestamp: string | null;
+	embeds: Array<Embed>;
+	flags?: number;
+	id: string;
+	interaction?: RawMessageInteraction;
+	mention_channels?: Array<ChannelMention>;
+	mention_everyone: boolean;
+	mention_roles: Array<string>;
+	mentions: Array<RawUserWithMember>;
+	message_reference?: RawMessageReference;
+	nonce?: number | string;
+	pinned: boolean;
+	position?: number;
+	reactions?: Array<MessageReaction>;
+	referenced_message?: RawMessage | null;
+	// stickers exists, but is deprecated
+	sticker_items?: Array<StickerItem>;
+	thread?: RawChannel;
+	timestamp: string;
+	tts: boolean;
+	type: MessageTypes;
+	webhook_id?: string;
+}
+
+export interface ChannelMention {
+	guild_id: string;
+	id: string;
+	name: string;
+	type: ChannelTypes;
+}
+
+export interface MessageReaction {
+	count: number;
+	emoji: PartialEmoji;
+	me: boolean;
+}
+
+export interface MessageActivity {
+	party_id?: string;
+	type: MessageActivityTypes;
+}
+
+
+export interface RawMessageReference {
+	channel_id: string;
+	fail_if_not_exists: boolean;
+	guild_id: string;
+	message_id: string;
+}
+
+export interface RawMessageInteraction {
+	id: string;
+	member?: RawMember;
+	name: string;
+	type: InteractionTypes;
+	user: RawUser;
+}
+
+export interface MessageInteraction {
+	id: string;
+	member?: Member;
+	name: string;
+	type: InteractionTypes;
+	user: User;
+}
+
+
+export interface StickerItem {
+	format_type: StickerFormatTypes;
+	id: string;
+	name: string;
+}
+
+
+// @TODO directory & forum
+export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel;
+export type AnyPrivateChannel = PrivateChannel | GroupChannel;
+export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
+export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
+export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
+export type AnyThreadChannel = NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
+export type AnyVoiceChannel = VoiceChannel | StageChannel;

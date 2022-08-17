@@ -176,12 +176,14 @@ export enum ChannelTypes {
 	GUILD_FORUM          = 15
 }
 
-export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS;
+export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY | ChannelTypes.GUILD_FORUM;
+export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
+export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
+export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.DM | ChannelTypes.GROUP_DM | ChannelTypes.GUILD_NEWS | ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;
+export type GuildTextChannelTypes = Exclude<TextChannelTypes, PrivateChannelTypes>;
 export type ThreadChannelTypes = ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;
 export type VoiceChannelTypes = ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
-export type GuildChannelTypes =
-	ChannelTypes.GUILD_CATEGORY | ChannelTypes.GUILD_DIRECTORY | ChannelTypes.GUILD_FORUM |
-	TextChannelTypes | ThreadChannelTypes | VoiceChannelTypes;
+
 export enum OverwriteTypes {
 	ROLE   = 0,
 	MEMBER = 1
@@ -396,4 +398,79 @@ export enum OAuthScopes {
 	VOICE = "voice",
 	/** this generates a webhook that is returned in the oauth token response for authorization code grants */
 	WEBHOOK_INCOMING = "webhook.incoming"
+}
+
+export enum ComponentTypes {
+	ACTION_ROW  = 1,
+	BUTTON      = 2,
+	SELECT_MENU = 3,
+	TEXT_INPUT  = 4
+}
+
+export enum ButtonStyles {
+	PRIMARY   = 1,
+	SECONDARY = 2,
+	SUCCESS   = 3,
+	DANGER    = 4,
+	LINK      = 5
+}
+
+export enum TextInputStyles {
+	SHORT     = 1,
+	PARAGRAPH = 2
+}
+
+export enum MessageFlags {
+	CROSSPOSTED                            = 1,
+	IS_CROSSPOST                           = 2,
+	SUPPRESS_EMBEDS                        = 4,
+	SOURCE_MESSAGE_DELETED                 = 8,
+	URGENT                                 = 16,
+	HAS_THREAD                             = 32,
+	EPHEMERAL                              = 64,
+	LOADING                                = 128,
+	FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 256,
+}
+
+export enum MessageTypes {
+	DEFAULT                                      = 0,
+	RECIPIENT_ADD                                = 1,
+	RECIPIENT_REMOVE                             = 2,
+	CALL                                         = 3,
+	CHANNEL_NAME_CHANGE                          = 4,
+	CHANNEL_ICON_CHANGE                          = 5,
+	CHANNEL_PINNED_MESSAGE                       = 6,
+	USER_JOIN                                    = 7,
+	GUILD_BOOST                                  = 8,
+	GUILD_BOOST_TIER_1	                         = 9,
+	GUILD_BOOST_TIER_2	                         = 10,
+	GUILD_BOOST_TIER_3	                         = 11,
+	CHANNEL_FOLLOW_ADD	                         = 12,
+
+	GUILD_DISCOVERY_DISQUALIFIED                 = 14,
+	GUILD_DISCOVERY_REQUALIFIED	                 = 15,
+	GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING = 16,
+	GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING   = 17,
+	THREAD_CREATED                               = 18,
+	REPLY                                        = 19,
+	CHAT_INPUT_COMMAND                           = 20,
+	THREAD_STARTER_MESSAGE                       = 21,
+	GUILD_INVITE_REMINDER                        = 22,
+	CONTEXT_MENU_COMMAND                         = 23,
+	AUTO_MODERATION_ACTION                       = 24
+}
+
+export enum MessageActivityTypes {
+	JOIN         = 1,
+	SPECTATE     = 2,
+	LISTEN       = 3,
+	JOIN_REQUEST = 5
+}
+
+export enum InteractionTypes {
+	PING                             = 1,
+	APPLICATION_COMMAND              = 2,
+	MESSAGE_COMPONENT                = 3,
+	APPLICATION_COMMAND_AUTOCOMPLETE = 4,
+	MODAL_SUBMIT                     = 5
 }

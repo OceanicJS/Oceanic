@@ -20,6 +20,9 @@ export default class GuildChannel extends Channel {
 		this.parentID = data.parent_id;
 	}
 
+	/** The guild associated with this channel. This will almost always be present when the channel is recieved from the gateway. */
+	get guild() { return this._client.guilds.get(this.guildID); } // @TODO do something so this isn't possibly undefined - we could do some interface overloading or lie to the user like eris does
+
 	/**
 	 * Edit this channel.
 	 *

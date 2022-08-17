@@ -4,7 +4,7 @@ import Properties from "../util/Properties";
 export default abstract class BaseRoute {
 	protected _manager: RESTManager;
 	constructor(manager: RESTManager) {
-		Properties.define(this, "_manager", manager);
+		Properties.looseDefine(this, "_manager", manager);
 	}
 
 	// client is private, so we have to use [] to access it

@@ -7,7 +7,7 @@ export default abstract class Base {
 	id: string;
 	constructor(id: string, client: Client) {
 		this.id = id;
-		Properties.define(this, "_client", client);
+		Properties.looseDefine(this, "_client", client);
 	}
 
 	static getCreatedAt(id: string) {

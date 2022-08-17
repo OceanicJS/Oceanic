@@ -2,11 +2,21 @@ import GuildChannel from "./GuildChannel";
 import type NewsChannel from "./NewsChannel";
 import type TextChannel from "./TextChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
-import type { EditGuildChannelOptions, RawOverwrite, RawNewsChannel, RawTextChannel } from "../routes/Channels";
+import Message from "./Message";
+import ThreadChannel from "./ThreadChannel";
+import type {
+	EditGuildChannelOptions,
+	RawOverwrite,
+	RawNewsChannel,
+	RawTextChannel,
+	RawMessage,
+	RawThreadChannel,
+	AnyThreadChannel
+} from "../routes/Channels";
 import type { TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type Collection from "../util/Collection";
+import Collection from "../util/Collection";
 
 /** Represents a guild text channel. */
 export default class RESTTextableChannel extends GuildChannel {
@@ -14,6 +24,8 @@ export default class RESTTextableChannel extends GuildChannel {
 	defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
 	/** The id of the last message sent in this channel. */
 	lastMessageID: string | null;
+	/** The cached messages in this channel. */
+	messages: Collection<string, RawMessage, Message>;
 	/** If this channel is age gated. */
 	nsfw: boolean;
 	/** The permission overwrites of this channel. */
@@ -22,11 +34,14 @@ export default class RESTTextableChannel extends GuildChannel {
 	position: number;
 	/** The amount of seconds between non-moderators sending messages. */
 	rateLimitPerUser: number;
+	threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
 	/** The topic of the channel. */
 	topic: string | null;
 	declare type: TextChannelTypes;
 	constructor(data: RawTextChannel | RawNewsChannel, client: Client) {
 		super(data, client);
+		this.messages = new Collection(Message, client);
+		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
 		this.update(data);
 	}
 

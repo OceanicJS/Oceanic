@@ -1,13 +1,12 @@
 import Channel from "./Channel";
+import type User from "./User";
 import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../routes/Channels";
 import type { ChannelTypes, ImageFormat } from "../Constants";
 import type Client from "../Client";
-import Properties from "../util/Properties";
 import * as Routes from "../util/Routes";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
-	private _recipients: Array<string>;
 	/** The id of the application that made this group channel. */
 	applicationID: string;
 	/** The icon hash of this group, if any. */
@@ -20,10 +19,15 @@ export default class GroupChannel extends Channel {
 	nicks?: Record<"id" | "nick", string>;
 	/** The id of the owner of this group channel. */
 	ownerID: string;
+	/** The other recipients in this group channel. */
+	recipients: Array<User>;
 	declare type: ChannelTypes.GROUP_DM;
 	constructor(data: RawGroupChannel, client: Client) {
 		super(data, client);
-		Properties.define(this, "_recipients", data.recipients.map(user => user.id), true);
+		Object.defineProperty(this, "_recipients", {
+			value:    data.recipients.map(user => user.id),
+			writable: true
+		});
 		this.update(data);
 	}
 
@@ -36,12 +40,8 @@ export default class GroupChannel extends Channel {
 		this.nicks         = data.nicks;
 		this.ownerID       = data.owner_id;
 		this.type          = data.type;
-		data.recipients.map(user => this._client.users.update(user));
-		this._recipients = data.recipients.map(user => user.id);
+		this.recipients    = data.recipients.map(user => this._client.users.update(user));
 	}
-
-	/** The users in this group channel. */
-	get recipients() { return this._recipients.map(user => this._client.users.get(user)!); }
 
 	/**
 	 * Add a user to this channel.

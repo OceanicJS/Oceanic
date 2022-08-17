@@ -1,8 +1,11 @@
 import Role from "./Role";
 import Base from "./Base";
+import GuildChannel from "./GuildChannel";
+import Member from "./Member";
 import type {
 	GuildEmoji,
 	RawGuild,
+	RawMember,
 	RawRole,
 	Sticker,
 	WelcomeScreen
@@ -20,6 +23,7 @@ import type {
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import Collection from "../util/Collection";
+import type { RawGuildChannel } from "../routes/Channels";
 
 export default class Guild extends Base {
 	/** The id of this guild's AFK channel. */
@@ -34,6 +38,8 @@ export default class Guild extends Base {
 	approximatePresenceCount?: number;
 	/** The hash of this guild's banner. */
 	banner: string | null;
+	/** The channels in this guild.w */
+	channels: Collection<string, RawGuildChannel, GuildChannel>;
 	/** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
 	defaultMessageNotifications: DefaultMessageNotificationLevels;
 	/** The description of this guild. */
@@ -54,6 +60,8 @@ export default class Guild extends Base {
 	maxPresences?: number;
 	/** The maximum amount of users that can be present in a video channel. */
 	maxVideoChannelUsers?: number;
+	/** The cached members in this guild. */
+	members: Collection<string, RawMember & { id: string; }, Member, [guildID: string]>;
 	/** The required [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) for moderators of this guild. */
 	mfaLevel: MFALevels;
 	/** The name of this guild. */
@@ -106,6 +114,8 @@ export default class Guild extends Base {
 	widgetEnabled?: boolean;
 	constructor(data: RawGuild, client: Client) {
 		super(data.id, client);
+		this.channels = new Collection(GuildChannel, client);
+		this.members = new Collection<string, RawMember & { id: string; }, Member, [guildID: string]>(Member, client);
 		this.roles = new Collection(Role, client);
 		data.roles.map(role => this.roles.update(role, data.id));
 		this.update(data);

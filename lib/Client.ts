@@ -4,31 +4,51 @@ import { MAX_IMAGE_SIZE, MIN_IMAGE_SIZE, ImageFormats } from "./Constants";
 import { CDN_URL } from "./util/Routes";
 import RESTManager from "./rest/RESTManager";
 import Collection from "./util/Collection";
-import type { RawPrivateChannel as RawPrivateChannel, RawGroupChannel } from "./routes/Channels";
+import type {
+	RawPrivateChannel,
+	RawGroupChannel,
+	RawAllowedMentions,
+	AllowedMentions,
+	AnyChannel
+} from "./routes/Channels";
 import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import type { RawUser } from "./routes/Users";
-import type User from "./structures/User";
+import User from "./structures/User";
+import type { RawGuild } from "./routes/Guilds";
+import Guild from "./structures/Guild";
+import type Channel from "./structures/Channel";
 import type { Agent } from "undici";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** A REST based client, nothing will be cached. */
 export default class Client {
+	channelGuildMap: Map<string, string>;
 	groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
+	guilds: Collection<string, RawGuild, Guild>;
 	options: InstanceOptions;
+	privateChannelMap: Map<string, string>;
 	privateChannels: Collection<string, RawPrivateChannel, PrivateChannel>;
 	rest: RESTManager;
 	users: Collection<string, RawUser, User>;
 	constructor(options?: ClientOptions) {
 		Properties.new(this)
 			.define("options", {
+				allowedMentions: options?.allowedMentions || {
+					users: true,
+					roles: true
+				},
 				auth:               options?.auth || null,
 				defaultImageFormat: options?.defaultImageFormat || "png",
 				defaultImageSize:   options?.defaultImageSize || 4096
 			})
+			.define("channelGuildMap", new Map())
 			.define("groupChannels", new Collection(GroupChannel, this))
+			.define("guilds", new Collection(Guild, this))
+			.define("privateChannelMap", new Map())
 			.define("privateChannels", new Collection(PrivateChannel, this))
-			.define("rest", new RESTManager(this, options?.rest));
+			.define("rest", new RESTManager(this, options?.rest))
+			.define("users", new Collection(User, this));
 	}
 
 	/** @hidden intentionally not documented - this is an internal function */
@@ -50,14 +70,42 @@ export default class Client {
 	}
 
 	/** @hidden intentionally not documented - this is an internal function */
+	_formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {
+		const result: RawAllowedMentions = {
+			parse: []
+		};
+
+		if (!allowed) return this._formatAllowedMentions(this.options.allowedMentions);
+
+		if (allowed.everyone === true) result.parse.push("everyone");
+
+		if (allowed.roles === true) result.parse.push("roles");
+		else if (Array.isArray(allowed.roles)) result.roles = allowed.roles;
+
+		if (allowed.users === true) result.parse.push("users");
+		else if (Array.isArray(allowed.users)) result.users = allowed.users;
+
+		if (allowed.repliedUser === true) result.replied_user = true;
+
+		return result;
+	}
+
+	/** @hidden intentionally not documented - this is an internal function */
 	_formatImage(url: string, format?: ImageFormat, size?: number) {
 		if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) format = url.includes("/a_") ? "gif" : this.options.defaultImageFormat;
 		if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.options.defaultImageSize;
 		return `${CDN_URL}${url}.${format}?size=${size}`;
 	}
+
+	getChannel<T extends Channel = AnyChannel>(id: string): T | undefined {
+		if (this.channelGuildMap.has(id)) return this.guilds.get(this.channelGuildMap.get(id)!)?.channels.get(id) as unknown as T;
+		return (this.privateChannels.get(id) || this.groupChannels.get(id)) as unknown as T;
+	}
 }
 
 export interface ClientOptions {
+	/** The default allowed mentions. */
+	allowedMentions?: AllowedMentions;
 	/** Fully qualified authorization string (e.x. Bot [TOKEN]) - you MUST prefix it yourself */
 	auth?: string | null;
 	/** The default image format to use. */

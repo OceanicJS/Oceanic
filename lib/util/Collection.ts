@@ -11,8 +11,8 @@ export default class Collection<K extends string | number, M extends { id: K; },
 		super();
 		if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");
 		Properties.new(this)
-			.define("_baseObject", baseObject)
-			.define("_client", client);
+			.looseDefine("_baseObject", baseObject)
+			.looseDefine("_client", client);
 	}
 
 	add(value: C) {

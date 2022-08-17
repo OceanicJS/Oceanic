@@ -31,7 +31,7 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 		super();
 		if (options && options.baseURL && options.baseURL.endsWith("/")) options.baseURL = options.baseURL.slice(0, -1);
 		Properties.new(this)
-			.define("_manager", manager)
+			.looseDefine("_manager", manager)
 			.define("options", {
 				agent:                      options.agent,
 				baseURL:                    options.baseURL || API_URL,
@@ -43,11 +43,10 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 				userAgent:                  options.userAgent || USER_AGENT
 			})
 			.define("latencyRef", {
-
 				lastTimeOffsetCheck: 0,
-				latency:             options.ratelimiterOffset,
-				raw:                 new Array(10).fill(options.ratelimiterOffset),
-				timeOffsets:         new Array(10).fill(0),
+				latency:             options.ratelimiterOffset || 0,
+				raw:                 new Array(10).fill(options.ratelimiterOffset) as Array<number>,
+				timeOffsets:         new Array(10).fill(0) as Array<number>,
 				timeoffset:          0
 			});
 
@@ -139,7 +138,9 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 					}
 
 					if (this.options.host) headers.Host = this.options.host;
-					const url = `${this.options.baseURL}${options.path}`;
+					const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length > 0 ? `?${options.query.toString(
+
+					)}` : ""}`;
 					let latency = Date.now();
 					const controller = new AbortController();
 					let timeout: NodeJS.Timeout | undefined;
@@ -284,6 +285,7 @@ export interface RequestOptions {
 	method: RESTMethod;
 	path: string;
 	priority?: boolean;
+	query?: URLSearchParams;
 	reason?: string;
 	route?: string;
 }

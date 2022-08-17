@@ -1,14 +1,17 @@
 import GuildChannel from "./GuildChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
-import type { EditVoiceChannelOptions, RawOverwrite, RawVoiceChannel } from "../routes/Channels";
+import Message from "./Message";
+import type { EditVoiceChannelOptions, RawMessage, RawOverwrite, RawVoiceChannel } from "../routes/Channels";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
-import type Collection from "../util/Collection";
+import Collection from "../util/Collection";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends GuildChannel {
 	/** The bitrate of the voice channel. */
 	bitrate: number;
+	/** The cached messages in this channel. */
+	messages: Collection<string, RawMessage, Message>;
 	/** If this channel is age gated. */
 	nsfw: boolean;
 	/** The permission overwrites of this channel. */
@@ -24,6 +27,8 @@ export default class VoiceChannel extends GuildChannel {
 	videoQualityMode: VideoQualityModes;
 	constructor(data: RawVoiceChannel, client: Client) {
 		super(data, client);
+		this.messages = new Collection(Message, client);
+		this.update(data);
 	}
 
 	protected update(data: RawVoiceChannel) {

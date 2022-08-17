@@ -89,7 +89,7 @@ export interface RoleTags {
 	integration_id?: string;
 	premium_subscriber?: null;
 }
-export interface RawEmoji {
+export interface Emoji {
 	animated?: boolean;
 	available?: boolean;
 	id: string;
@@ -99,7 +99,7 @@ export interface RawEmoji {
 	roles?: Array<string>;
 	user?: RawUser;
 }
-export type GuildEmoji = Omit<RawEmoji, "name"> & { name: string; };
+export type GuildEmoji = Omit<Emoji, "name"> & { name: string; };
 export interface WelcomeScreen {
 	description: string | null;
 	welcome_channels: Array<WelcomeScreenChannel>;
@@ -175,3 +175,5 @@ export interface IntegrationApplication { // @TODO application class
 	id: string;
 	name: string;
 }
+
+export type PartialEmoji = Pick<Emoji, "id" | "name" | "animated">;

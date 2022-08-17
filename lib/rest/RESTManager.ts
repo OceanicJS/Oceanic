@@ -7,6 +7,7 @@ import Users from "../routes/Users";
 import Properties from "../util/Properties";
 import OAuth from "../routes/OAuth";
 import type { RESTOptions } from "../Client";
+import Webhooks from "../routes/Webhooks";
 
 export default class RESTManager {
 	private _client: Client;
@@ -15,14 +16,16 @@ export default class RESTManager {
 	guilds: Guilds;
 	oauth: OAuth;
 	users: Users;
+	webhooks: Webhooks;
 	constructor(client: Client, options?: RESTOptions) {
 		Properties.new(this)
-			.define("_client", client)
-			.define("_handler", new RequestHandler(this, options))
+			.looseDefine("_client", client)
+			.looseDefine("_handler", new RequestHandler(this, options))
 			.define("channels", new Channels(this))
 			.define("guilds", new Guilds(this))
 			.define("oauth", new OAuth(this))
-			.define("users", new Users(this));
+			.define("users", new Users(this))
+			.define("webhooks", new Webhooks(this));
 	}
 
 	get client() { return this._client; }

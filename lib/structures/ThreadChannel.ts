@@ -1,8 +1,10 @@
 import GuildChannel from "./GuildChannel";
-import type { EditThreadChannelOptions, RawThreadChannel } from "../routes/Channels";
+import Message from "./Message";
+import type { EditThreadChannelOptions, RawMessage, RawThreadChannel } from "../routes/Channels";
 import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
+import Collection from "../util/Collection";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel extends GuildChannel {
@@ -14,6 +16,8 @@ export default class ThreadChannel extends GuildChannel {
 	memberCount: number;
 	/** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
 	messageCount: number;
+	/** The cached messages in this channel. */
+	messages: Collection<string, RawMessage, Message>;
 	/** The creator of this thread. */
 	ownerID: string;
 	/** The amount of seconds between non-moderators sending messages. */
@@ -25,6 +29,7 @@ export default class ThreadChannel extends GuildChannel {
 	declare type: ThreadChannelTypes;
 	constructor(data: RawThreadChannel, client: Client) {
 		super(data, client);
+		this.messages = new Collection(Message, client);
 		this.update(data);
 	}
 

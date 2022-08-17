@@ -10,7 +10,7 @@ export default class PermissionOverwrite extends Base {
 	type: OverwriteTypes;
 	constructor(data: RawOverwrite, client: Client) {
 		super(data.id, client);
-		Properties.define(this, "_client", client);
+		Properties.looseDefine(this, "_client", client);
 		this.permission = new Permission(data.allow, data.deny);
 		this.type = data.type;
 		this.update(data);
