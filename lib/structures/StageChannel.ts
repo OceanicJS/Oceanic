@@ -1,9 +1,9 @@
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
-import type { EditStageChannelOptions, RawOverwrite, RawStageChannel } from "../routes/Channels";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
+import type { EditStageChannelOptions, RawOverwrite, RawStageChannel } from "../types/channels";
 
 /** Represents a guild stage channel. */
 export default class StageChannel extends GuildChannel {

@@ -1,9 +1,9 @@
 import Channel from "./Channel";
 import type User from "./User";
-import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../routes/Channels";
 import type { ChannelTypes, ImageFormat } from "../Constants";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
+import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../types/channels";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {

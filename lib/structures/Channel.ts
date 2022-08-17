@@ -1,21 +1,21 @@
 /* eslint-disable import/order */
 import Base from "./Base";
+import { ChannelTypes } from "../Constants";
+import type Client from "../Client";
 import type {
-	RawChannel,
+	AnyChannel,
 	RawCategoryChannel,
-	RawPrivateChannel,
+	RawChannel,
 	RawGroupChannel,
 	RawNewsChannel,
 	RawNewsThreadChannel,
+	RawPrivateChannel,
 	RawPrivateThreadChannel,
 	RawPublicThreadChannel,
 	RawStageChannel,
 	RawTextChannel,
-	RawVoiceChannel,
-	AnyChannel
-} from "../routes/Channels";
-import { ChannelTypes } from "../Constants";
-import type Client from "../Client";
+	RawVoiceChannel
+} from "../types/channels";
 
 export default class Channel extends Base {
 	type: ChannelTypes;

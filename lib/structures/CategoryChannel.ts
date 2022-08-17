@@ -2,8 +2,8 @@ import PermissionOverwrite from "./PermissionOverwrite";
 import Channel from "./Channel";
 import type Client from "../Client";
 import type { ChannelTypes } from "../Constants";
-import type { EditAnyGuildChannelOptions, RawOverwrite, RawCategoryChannel } from "../routes/Channels";
 import Collection from "../util/Collection";
+import type { EditAnyGuildChannelOptions, RawCategoryChannel, RawOverwrite } from "../types/channels";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends Channel {

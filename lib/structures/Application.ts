@@ -3,8 +3,8 @@ import type User from "./User";
 import Team from "./Team";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
-import type { InstallParams, RESTApplication } from "../routes/OAuth";
 import * as Routes from "../util/Routes";
+import type { InstallParams, RESTApplication } from "../types/oauth";
 
 export default class Application extends PartialApplication {
 	coverImage: string | null;

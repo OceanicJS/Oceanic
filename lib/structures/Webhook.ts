@@ -1,12 +1,12 @@
 import Base from "./Base";
 import type User from "./User";
 import type Client from "../Client";
-import type { RawWebhook } from "../routes/Webhooks";
-import type { RawChannel } from "../routes/Channels";
-import type { RawGuild } from "../routes/Guilds";
 import type { ImageFormat, WebhookTypes } from "../Constants";
 import { BASE_URL } from "../Constants";
 import * as Routes from "../util/Routes";
+import type { RawChannel } from "../types/channels";
+import type { RawGuild } from "../types/guilds";
+import type { RawWebhook } from "../types/webhooks";
 
 export default class Webhook extends Base {
 	/** The id of the application associatd with this webhook. */

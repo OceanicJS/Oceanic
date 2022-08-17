@@ -3,14 +3,6 @@ import Base from "./Base";
 import GuildChannel from "./GuildChannel";
 import Member from "./Member";
 import type {
-	GuildEmoji,
-	RawGuild,
-	RawMember,
-	RawRole,
-	Sticker,
-	WelcomeScreen
-} from "../routes/Guilds";
-import type {
 	DefaultMessageNotificationLevels,
 	ExplicitContentFilterLevels,
 	GuildFeature,
@@ -23,7 +15,15 @@ import type {
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { RawGuildChannel } from "../routes/Channels";
+import type { RawGuildChannel } from "../types/channels";
+import type {
+	GuildEmoji,
+	RawGuild,
+	RawMember,
+	RawRole,
+	Sticker,
+	WelcomeScreen
+} from "../types/guilds";
 
 export default class Guild extends Base {
 	/** The id of this guild's AFK channel. */

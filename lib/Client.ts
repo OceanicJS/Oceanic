@@ -4,20 +4,20 @@ import { MAX_IMAGE_SIZE, MIN_IMAGE_SIZE, ImageFormats } from "./Constants";
 import { CDN_URL } from "./util/Routes";
 import RESTManager from "./rest/RESTManager";
 import Collection from "./util/Collection";
-import type {
-	RawPrivateChannel,
-	RawGroupChannel,
-	RawAllowedMentions,
-	AllowedMentions,
-	AnyChannel
-} from "./routes/Channels";
 import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
-import type { RawUser } from "./routes/Users";
 import User from "./structures/User";
-import type { RawGuild } from "./routes/Guilds";
 import Guild from "./structures/Guild";
 import type Channel from "./structures/Channel";
+import type {
+	AllowedMentions,
+	AnyChannel,
+	RawAllowedMentions,
+	RawGroupChannel,
+	RawPrivateChannel
+} from "./types/channels";
+import type { RawGuild } from "./types/guilds";
+import type { RawUser } from "./types/users";
 import type { Agent } from "undici";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;

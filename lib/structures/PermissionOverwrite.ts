@@ -1,9 +1,9 @@
 import Base from "./Base";
 import Permission from "./Permission";
-import type { RawOverwrite } from "../routes/Channels";
 import type { OverwriteTypes, Permission as PermissionNames } from "../Constants";
 import type Client from "../Client";
 import Properties from "../util/Properties";
+import type { RawOverwrite } from "../types/channels";
 
 export default class PermissionOverwrite extends Base {
 	permission: Permission;

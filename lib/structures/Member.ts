@@ -1,8 +1,8 @@
 import Base from "./Base";
 import type User from "./User";
-import type { RawMember } from "../routes/Guilds";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
+import type { RawMember } from "../types/guilds";
 import { assert } from "tsafe";
 
 export default class Member extends Base {

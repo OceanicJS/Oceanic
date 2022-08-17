@@ -1,32 +1,20 @@
 import BaseRoute from "./BaseRoute";
-import type { RawUser } from "./Users";
-import type { RawGuild } from "./Guilds";
-import type { CreateMessageOptions, RawChannel, RawMessage } from "./Channels";
-import type { WebhookTypes } from "../Constants";
+import type {
+	CreateWebhookOptions,
+	DeleteWebhookMessageOptions,
+	EditWebhookMessageOptions,
+	EditWebhookOptions,
+	EditWebhookTokenOptions,
+	ExecuteWebhookOptions,
+	ExecuteWebhookWaitOptions,
+	GetWebhookMessageOptions,
+	RawWebhook
+} from "../types/webhooks";
+import type { RawMessage } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import type { File } from "../rest/RequestHandler";
 import Message from "../structures/Message";
-
-export interface RawWebhook {
-	application_id: string | null;
-	avatar: string | null;
-	channel_id: string | null;
-	guild_id?: string | null;
-	id: string;
-	name: string | null;
-	source_channel?: Pick<RawChannel, "id" | "name">;
-	source_guild?: Pick<RawGuild, "id" | "name" | "icon">;
-	token?: string;
-	type: WebhookTypes;
-	url?: string;
-	user?: RawUser;
-}
-export type BasicWebhook = Pick<RawWebhook, "type" | "id" | "name" | "avatar" | "channel_id" | "guild_id" | "application_id">;
-export type OAuthWebhook = Required<BasicWebhook & Pick<RawWebhook, "url" | "token">>;
-export type GuildWebhook = BasicWebhook & Pick<RawWebhook, "user" | "token">;
-export type ApplicationWebhook = Pick<RawWebhook, "type" | "id" | "name" | "avatar" | "channel_id" | "guild_id" | "application_id"> & Required<Pick<RawWebhook, "token">>;
-export type ChannelFollowerWebhook = BasicWebhook & Required<Pick<RawWebhook, "source_guild" | "source_channel">> & Pick<RawWebhook, "user">;
 
 export default class Webhooks extends BaseRoute {
 	/**
@@ -359,37 +347,4 @@ export default class Webhooks extends BaseRoute {
 			path:   Routes.WEBHOOK_MESSAGE(id, token, options.messageID)
 		}).then(data => new Message(data, this._client));
 	}
-}
-
-export interface CreateWebhookOptions {
-	avatar?: Buffer | string | null;
-	name?: string;
-}
-
-export interface EditWebhookTokenOptions  {
-	avatar?: Buffer | string | null;
-	name?: string;
-}
-export interface EditWebhookOptions extends EditWebhookTokenOptions {
-	channelID?: string;
-}
-
-export type ExecuteWebhookOptions = Pick<CreateMessageOptions, "content" | "tts" | "embeds" | "allowedMentions" | "components" | "attachments" | "flags"> & {
-	avatarURL?: string;
-	threadID?: string;
-	threadName?: string;
-	username?: string;
-	wait?: boolean;
-};
-export type ExecuteWebhookWaitOptions = Omit<ExecuteWebhookOptions, "wait">  & { wait: true; };
-
-export interface GetWebhookMessageOptions {
-	messageID: string;
-	threadID?: string;
-}
-
-export type EditWebhookMessageOptions = Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID">;
-
-export interface DeleteWebhookMessageOptions {
-	threadID?: string;
 }

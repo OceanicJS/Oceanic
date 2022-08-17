@@ -1,10 +1,10 @@
 import GuildChannel from "./GuildChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
-import type { EditVoiceChannelOptions, RawMessage, RawOverwrite, RawVoiceChannel } from "../routes/Channels";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
+import type { EditVoiceChannelOptions, RawMessage, RawOverwrite, RawVoiceChannel } from "../types/channels";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends GuildChannel {

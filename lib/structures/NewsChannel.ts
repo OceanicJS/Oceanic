@@ -1,8 +1,8 @@
 import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
-import type { EditGuildChannelOptions, RawOverwrite, RawNewsChannel } from "../routes/Channels";
 import type { ThreadAutoArchiveDuration, ChannelTypes } from "../Constants";
 import type Client from "../Client";
+import type { EditGuildChannelOptions, RawNewsChannel, RawOverwrite } from "../types/channels";
 
 /** Represents a guild news channel. */
 export default class NewsChannel extends TextableChannel {

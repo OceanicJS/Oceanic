@@ -1,6 +1,6 @@
 import Base from "./Base";
 import type Client from "../Client";
-import type { RawAttachment } from "../routes/Channels";
+import type { RawAttachment } from "../types/channels";
 
 export default class Attachment extends Base {
 	contentType?: string;

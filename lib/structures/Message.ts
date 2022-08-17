@@ -4,6 +4,9 @@ import User from "./User";
 import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import type Client from "../Client";
+import Collection from "../util/Collection";
+import type { MessageTypes } from "../Constants";
+import type { Partial as PartialChannel } from "../types/shared";
 import type {
 	AnyGuildTextChannel,
 	AnyThreadChannel,
@@ -17,13 +20,10 @@ import type {
 	RawAttachment,
 	RawMessage,
 	StickerItem
-} from "../routes/Channels";
-import type { RawApplication } from "../routes/OAuth";
-import Collection from "../util/Collection";
-import type { MessageTypes } from "../Constants";
-import type { RawMember } from "../routes/Guilds";
-import type { Partial as PartialChannel } from "../util/shared";
-import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../routes/Webhooks";
+} from "../types/channels";
+import type { RawApplication } from "../types/oauth";
+import type { RawMember } from "../types/guilds";
+import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 
 export default class Message<T extends AnyGuildTextChannel = AnyGuildTextChannel> extends Base {
 	/** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */

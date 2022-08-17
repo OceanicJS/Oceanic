@@ -1,8 +1,8 @@
 import type { PrivateThreadmetadata } from "./ThreadChannel";
 import ThreadChannel from "./ThreadChannel";
-import type { EditPrivateThreadChannelOptions, RawPrivateThreadChannel } from "../routes/Channels";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
+import type { EditPrivateThreadChannelOptions, RawPrivateThreadChannel } from "../types/channels";
 
 /** Represents a guild thread channel. */
 export default class PrivateThreadChannel extends ThreadChannel {

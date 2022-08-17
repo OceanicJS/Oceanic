@@ -1,7 +1,7 @@
 import Base from "./Base";
 import Permission from "./Permission";
 import type Client from "../Client";
-import type { RawRole, RoleTags } from "../routes/Guilds";
+import type { RawRole, RoleTags } from "../types/guilds";
 
 export default class Role extends Base {
 	/** The color of this role. */

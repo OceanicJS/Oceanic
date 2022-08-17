@@ -1,7 +1,7 @@
 import Channel from "./Channel";
-import type { EditGuildChannelOptions, RawOverwrite, RawGuildChannel } from "../routes/Channels";
 import { ChannelTypes, ThreadAutoArchiveDuration, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
+import type { EditGuildChannelOptions, RawGuildChannel, RawOverwrite } from "../types/channels";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {

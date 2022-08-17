@@ -1,8 +1,8 @@
 import type { ThreadMetadata } from "./ThreadChannel";
 import ThreadChannel from "./ThreadChannel";
-import type { EditPublicThreadChannelOptions, RawNewsThreadChannel } from "../routes/Channels";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
+import type { EditPublicThreadChannelOptions, RawNewsThreadChannel } from "../types/channels";
 
 /** Represents a guild thread channel. */
 export default class NewsThreadChannel extends ThreadChannel {

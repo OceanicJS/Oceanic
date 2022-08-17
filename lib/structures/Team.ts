@@ -1,8 +1,8 @@
 import Base from "./Base";
 import type User from "./User";
 import type Client from "../Client";
-import type { RawTeam } from "../routes/OAuth";
 import type { TeamMembershipState } from "../Constants";
+import type { RawTeam } from "../types/oauth";
 
 export default class Team extends Base {
 	icon: string | null;

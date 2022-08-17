@@ -1,8 +1,8 @@
 import Base from "./Base";
 import type Client from "../Client";
-import type { RawPartialApplication } from "../routes/OAuth";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
+import type { RawPartialApplication } from "../types/oauth";
 
 export class PartialApplication extends Base {
 	botPublic: boolean;

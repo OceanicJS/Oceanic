@@ -1,9 +1,9 @@
 
 import Channel from "./Channel";
 import type User from "./User";
-import type { RawPrivateChannel } from "../routes/Channels";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
+import type { RawPrivateChannel } from "../types/channels";
 
 /** Represents a direct message with a user. */
 export default class PrivateChannel extends Channel {

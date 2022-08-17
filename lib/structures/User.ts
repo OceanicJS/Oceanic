@@ -1,8 +1,8 @@
 import Base from "./Base";
-import type { RawUser } from "../routes/Users";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
+import type { RawUser } from "../types/users";
 
 /** Represents a user. */
 export default class User extends Base {

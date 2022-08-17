@@ -1,10 +1,10 @@
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
-import type { EditThreadChannelOptions, RawMessage, RawThreadChannel } from "../routes/Channels";
 import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
+import type { EditThreadChannelOptions, RawMessage, RawThreadChannel } from "../types/channels";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel extends GuildChannel {

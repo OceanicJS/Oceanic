@@ -4,7 +4,7 @@
 		"outDir": "./build",
 		"baseUrl": "./lib",
 		"strictPropertyInitialization": false,
-		"skipLibCheck": true,
+		"skipLibCheck": false,
 		"inlineSourceMap": true
 	},
 	"include": ["lib/**/*.ts", "test/*.ts"],

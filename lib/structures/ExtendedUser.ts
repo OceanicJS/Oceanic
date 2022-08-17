@@ -1,6 +1,6 @@
 import User from "./User";
-import type { EditSelfUserOptions, RawExtendedUser } from "../routes/Users";
 import type Client from "../Client";
+import type { EditSelfUserOptions, RawExtendedUser } from "../types/users";
 
 /** Represents the currently authenticated user. */
 export default class ExtendedUser extends User {

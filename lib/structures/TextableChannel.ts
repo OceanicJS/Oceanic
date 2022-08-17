@@ -4,19 +4,19 @@ import type TextChannel from "./TextChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
 import ThreadChannel from "./ThreadChannel";
-import type {
-	EditGuildChannelOptions,
-	RawOverwrite,
-	RawNewsChannel,
-	RawTextChannel,
-	RawMessage,
-	RawThreadChannel,
-	AnyThreadChannel
-} from "../routes/Channels";
 import type { TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
+import type {
+	AnyThreadChannel,
+	EditGuildChannelOptions,
+	RawMessage,
+	RawNewsChannel,
+	RawOverwrite,
+	RawTextChannel,
+	RawThreadChannel
+} from "../types/channels";
 
 /** Represents a guild text channel. */
 export default class RESTTextableChannel extends GuildChannel {
