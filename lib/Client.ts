@@ -18,7 +18,7 @@ import type {
 } from "./types/channels";
 import type { RawGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
-import type { Agent } from "undici";
+import type { ClientInstanceOptions, ClientOptions } from "./types/client";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** A REST based client, nothing will be cached. */
@@ -26,7 +26,7 @@ export default class Client {
 	channelGuildMap: Map<string, string>;
 	groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
 	guilds: Collection<string, RawGuild, Guild>;
-	options: InstanceOptions;
+	options: ClientInstanceOptions;
 	privateChannelMap: Map<string, string>;
 	privateChannels: Collection<string, RawPrivateChannel, PrivateChannel>;
 	rest: RESTManager;
@@ -101,36 +101,4 @@ export default class Client {
 		if (this.channelGuildMap.has(id)) return this.guilds.get(this.channelGuildMap.get(id)!)?.channels.get(id) as unknown as T;
 		return (this.privateChannels.get(id) || this.groupChannels.get(id)) as unknown as T;
 	}
-}
-
-export interface ClientOptions {
-	/** The default allowed mentions. */
-	allowedMentions?: AllowedMentions;
-	/** Fully qualified authorization string (e.x. Bot [TOKEN]) - you MUST prefix it yourself */
-	auth?: string | null;
-	/** The default image format to use. */
-	defaultImageFormat?: ImageFormat;
-	/** The default image size to use. */
-	defaultImageSize?: number;
-	/** The options to pass to the request handler. */
-	rest?: RESTOptions;
-}
-type InstanceOptions = Required<Omit<ClientOptions, "rest">>;
-
-export interface RESTOptions {
-	agent?: Agent | null;
-	/** the base url for requests - must be fully qualified (default: `https://discord.com/api/v[REST_VERSION]`) */
-	baseURL?: string;
-	/** If the built in latency compensator should be disabled (default: false) */
-	disableLatencyCompensation?: boolean;
-	/** the host to use with requests (default: domain from `baseURL`) */
-	host?: string;
-	/** in milliseconds, the average request latency at which to start emitting latency errors (default: 30000) */
-	latencyThreshold?: number;
-	/** in milliseconds, the time to offset ratelimit calculations by (default: 0) */
-	ratelimiterOffset?: number;
-	/** in milliseconds, how long to wait until a request is timed out (default: 15000) */
-	requestTimeout?: number;
-	/** the user agent to use for requests (default: `Oceanic/VERSION (https://github.com/DonovanDMC/Oceanic)`) */
-	userAgent?: string;
 }

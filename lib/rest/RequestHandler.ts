@@ -7,7 +7,14 @@ import { API_URL, RESTMethods, USER_AGENT } from "../Constants";
 import TypedEmitter from "../util/TypedEmitter";
 import Base from "../structures/Base";
 import Properties from "../util/Properties";
-import type { RESTOptions } from "../Client";
+import type {
+	File,
+	LatencyRef,
+	RequestEvents,
+	RequestHandlerInstanceOptions,
+	RequestOptions
+} from "../types/request-handler";
+import type { RESTOptions } from "../types/client";
 import { FormData, fetch, File as UFile } from "undici";
 
 /**
@@ -19,7 +26,7 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 	private _manager: RESTManager;
 	globalBlock = false;
 	latencyRef: LatencyRef;
-	options: InstanceOptions;
+	options: RequestHandlerInstanceOptions;
 	ratelimits: Record<string, SequentialBucket> = {};
 	readyQueue: Array<() => void> = [];
 	/**
@@ -272,57 +279,4 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 			} else this.ratelimits[route].queue(attempt.bind(this), options.priority);
 		});
 	}
-}
-
-// internal use
-type InstanceOptions = Required<Omit<RESTOptions, "agent">> & Pick<RESTOptions, "agent">;
-
-export interface RequestOptions {
-	auth?: boolean | string;
-	files?: Array<File>;
-	form?: FormData;
-	json?: unknown;
-	method: RESTMethod;
-	path: string;
-	priority?: boolean;
-	query?: URLSearchParams;
-	reason?: string;
-	route?: string;
-}
-
-export interface File {
-	/** the contents of the file */
-	contents: Buffer;
-	/** the name of the file */
-	name: string;
-}
-
-export interface RawRequest {
-	/** the method of the request */
-	method: RESTMethod;
-	/** the path of the request */
-	path: string;
-	/** the body sent with the request */
-	requestBody: string | FormData | undefined;
-	/** the body we recieved */
-	responseBody: string | Record<string, unknown> | null;
-	/** the name of the route used in the request */
-	route: string;
-	/** if the request used authorization */
-	withAuth: boolean;
-}
-
-export interface RequestEvents {
-	debug: [info: string];
-	error: [err: Error];
-	request: [rawRequest: RawRequest];
-	warn: [info: string];
-}
-
-export interface LatencyRef {
-	lastTimeOffsetCheck: number;
-	latency: number;
-	raw: Array<number>;
-	timeOffsets: Array<number>;
-	timeoffset: number;
 }
