@@ -26,6 +26,7 @@ export type ChannelFollowerWebhook = BasicWebhook & Required<Pick<RawWebhook, "s
 export interface CreateWebhookOptions {
 	avatar?: Buffer | string | null;
 	name?: string;
+	reason?: string;
 }
 
 export interface EditWebhookTokenOptions  {
@@ -34,9 +35,10 @@ export interface EditWebhookTokenOptions  {
 }
 export interface EditWebhookOptions extends EditWebhookTokenOptions {
 	channelID?: string;
+	reason?: string;
 }
 
-export type ExecuteWebhookOptions = Pick<CreateMessageOptions, "content" | "tts" | "embeds" | "allowedMentions" | "components" | "attachments" | "flags"> & {
+export type ExecuteWebhookOptions = Pick<CreateMessageOptions, "content" | "tts" | "embeds" | "allowedMentions" | "components" | "attachments" | "flags" | "files"> & {
 	avatarURL?: string;
 	threadID?: string;
 	threadName?: string;
@@ -50,7 +52,7 @@ export interface GetWebhookMessageOptions {
 	threadID?: string;
 }
 
-export type EditWebhookMessageOptions = Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID">;
+export type EditWebhookMessageOptions = Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID" | "files">;
 
 export interface DeleteWebhookMessageOptions {
 	threadID?: string;

@@ -24,10 +24,10 @@ export default class Webhooks extends BaseRoute {
 	 * @param {Object} options
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
 	 * @param {String} options.name - The name of the webhook.
-	 * @param {String} [reason] - The reason for creating this webhook.
+	 * @param {String} [options.reason] - The reason for creating this webhook.
 	 * @returns {Promise<Webhook>}
 	 */
-	async create(channelID: string, options: CreateWebhookOptions, reason?: string) {
+	async create(channelID: string, options: CreateWebhookOptions) {
 		if (options.avatar) {
 			try {
 				options.avatar = this._client._convertImage(options.avatar);
@@ -42,7 +42,7 @@ export default class Webhooks extends BaseRoute {
 				avatar: options.avatar,
 				name:   options.name
 			},
-			reason
+			reason: options.reason
 		}).then(data => new Webhook(data, this._client));
 	}
 
@@ -102,10 +102,10 @@ export default class Webhooks extends BaseRoute {
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
 	 * @param {String} [options.channelID] - The id of the channel to move this webhook to.
 	 * @param {String} [options.name] - The name of the webhook.
-	 * @param {String} [reason] - The reason for editing this webhook.
+	 * @param {String} [options.reason] - The reason for editing this webhook.
 	 * @returns {Promise<Webhook>}
 	 */
-	async edit(id: string, options: EditWebhookOptions, reason?: string) {
+	async edit(id: string, options: EditWebhookOptions) {
 		if (options.avatar) {
 			try {
 				options.avatar = this._client._convertImage(options.avatar);
@@ -121,7 +121,7 @@ export default class Webhooks extends BaseRoute {
 				channel_id: options.channelID,
 				name:       options.name
 			},
-			reason
+			reason: options.reason
 		}).then(data => new Webhook(data, this._client));
 	}
 
@@ -141,10 +141,11 @@ export default class Webhooks extends BaseRoute {
 	 * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
 	 * @param {String} [options.content] - The content of the message.
 	 * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
+	 * @param {File[]} [options.files] - The files to send.
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
 	 * @returns {Promise<Message>}
 	 */
-	async editMessage(id: string, token: string,messageID: string, options: EditWebhookMessageOptions, files?: Array<File>) {
+	async editMessage(id: string, token: string,messageID: string, options: EditWebhookMessageOptions) {
 		const query = new URLSearchParams();
 		if (options.threadID) query.set("thread_id", options.threadID);
 		return this._manager.authRequest<RawMessage>({
@@ -158,7 +159,7 @@ export default class Webhooks extends BaseRoute {
 				embeds:           options.embeds
 			},
 			query,
-			files
+			files: options.files
 		}).then(data => new Message(data, this._client));
 	}
 
@@ -205,18 +206,18 @@ export default class Webhooks extends BaseRoute {
 	 * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
 	 * @param {String} [options.content] - The content of the message.
 	 * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
+	 * @param {File[]} [options.files] - The files to send.
 	 * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
 	 * @param {String} [options.threadName] - The name of the thread to create (forum channels).
 	 * @param {Boolean} [options.tts] - If the message should be spoken aloud.
 	 * @param {String} [options.username] - The username of the webhook.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
-	 * @param {File[]} [files] - The files to send.
 	 * @returns {Promise<Message | void>}
 	 */
-	async execute(id: string, token: string, options: ExecuteWebhookWaitOptions, files?: Array<File>): Promise<Message>;
-	async execute(id: string, token: string, options: ExecuteWebhookOptions, files?: Array<File>): Promise<void>;
-	async execute(id: string, token: string, options: ExecuteWebhookOptions, files?: Array<File>): Promise<Message | void> {
+	async execute(id: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message>;
+	async execute(id: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
+	async execute(id: string, token: string, options: ExecuteWebhookOptions): Promise<Message | void> {
 		const query = new URLSearchParams();
 		if (options.wait) query.set("wait", "true");
 		if (options.threadID) query.set("thread_id", options.threadID);
@@ -236,7 +237,7 @@ export default class Webhooks extends BaseRoute {
 				tts:              options.tts,
 				username:         options.username
 			},
-			files
+			files: options.files
 		}).then(res => {
 			if (options.wait && res !== null) return new Message(res, this._client);
 		});

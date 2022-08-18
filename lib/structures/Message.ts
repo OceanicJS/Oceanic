@@ -24,6 +24,7 @@ import type {
 import type { RawApplication } from "../types/oauth";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
+import { File } from "../rest/RequestHandler";
 
 export default class Message<T extends AnyGuildTextChannel = AnyGuildTextChannel> extends Base {
 	/** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
@@ -190,6 +191,7 @@ export default class Message<T extends AnyGuildTextChannel = AnyGuildTextChannel
 	 * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
 	 * @param {String} [options.content] - The content of the message.
 	 * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
+	 * @param {File[]} [options.files] - The files to send.
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
 	 * @returns {Promise<Message>}
 	 */

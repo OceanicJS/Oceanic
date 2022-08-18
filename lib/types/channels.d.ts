@@ -27,6 +27,7 @@ import type StageChannel from "../structures/StageChannel";
 import type TextChannel from "../structures/TextChannel";
 import type User from "../structures/User";
 import type VoiceChannel from "../structures/VoiceChannel";
+import type { File } from "../rest/RequestHandler";
 
 export interface RawChannel {
 	application_id?: string;
@@ -143,6 +144,7 @@ export interface CreateMessageOptions {
 	components?: Array<MessageActionRow>;
 	content?: string;
 	embeds?: Array<EmbedOptions>;
+	files?: Array<File>;
 	flags?: number;
 	messageReference?: MessageReference;
 	stickerIDs?: Array<string>;

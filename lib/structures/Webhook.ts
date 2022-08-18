@@ -113,11 +113,11 @@ export default class Webhook extends Base {
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
 	 * @param {String} [options.channelID] - The id of the channel to move this webhook to.
 	 * @param {String} [options.name] - The name of the webhook.
-	 * @param {String} [reason] - The reason for editing this webhook.
+	 * @param {String} [options.reason] - The reason for editing this webhook.
 	 * @returns {Promise<Webhook>}
 	 */
-	async edit(options: EditWebhookOptions, reason?: string) {
-		return this._client.rest.webhooks.edit(this.id, options, reason);
+	async edit(options: EditWebhookOptions) {
+		return this._client.rest.webhooks.edit(this.id, options);
 	}
 
 	/**
@@ -149,6 +149,7 @@ export default class Webhook extends Base {
 	 * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
 	 * @param {String} [options.content] - The content of the message.
 	 * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
+	 * @param {File[]} [options.files] - The files to send.
 	 * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
 	 * @param {String} [options.threadName] - The name of the thread to create (forum channels).
@@ -156,16 +157,15 @@ export default class Webhook extends Base {
 	 * @param {Boolean} [options.tts] - If the message should be spoken aloud.
 	 * @param {String} [options.username] - The username of the webhook.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
-	 * @param {File[]} [files] - The files to send.
 	 * @returns {Promise<Message | void>}
 	 */
-	async execute(options: ExecuteWebhookWaitOptions & { token?: string; }, files?: Array<File>): Promise<Message>;
-	async execute(options: ExecuteWebhookOptions & { token?: string; }, files?: Array<File>): Promise<void>;
-	async execute(options: ExecuteWebhookOptions & { token?: string; }, files?: Array<File>): Promise<Message | void> {
+	async execute(options: ExecuteWebhookWaitOptions & { token?: string; }): Promise<Message>;
+	async execute(options: ExecuteWebhookOptions & { token?: string; }): Promise<void>;
+	async execute(options: ExecuteWebhookOptions & { token?: string; }): Promise<Message | void> {
 		const token = this.token || options?.token;
 		if (!token) throw new Error("Token is not present on webhook, and was not provided in options.");
 		if (options?.token) delete options.token;
-		return this._client.rest.webhooks.execute(this.id, token, options, files);
+		return this._client.rest.webhooks.execute(this.id, token, options);
 	}
 
 	/**
