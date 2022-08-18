@@ -24,18 +24,18 @@ export default class Channel extends Base {
 		this.type = data.type;
 	}
 
-	static from<T extends Channel = AnyChannel>(data: RawChannel, client: Client): T {
+	static from<T extends AnyChannel = AnyChannel>(data: RawChannel, client: Client): T {
 		switch (data.type) {
-			case ChannelTypes.GUILD_TEXT: return new TextChannel(data as RawTextChannel, client) as unknown as T;
-			case ChannelTypes.DM: return new PrivateChannel(data as RawPrivateChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_VOICE: return new VoiceChannel(data as RawVoiceChannel, client) as unknown as T;
-			case ChannelTypes.GROUP_DM: return new GroupChannel(data as RawGroupChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_CATEGORY: return new CategoryChannel(data as RawCategoryChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_NEWS: return new NewsChannel(data as RawNewsChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_NEWS_THREAD: return new NewsThreadChannel(data as RawNewsThreadChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_PUBLIC_THREAD: return new PublicThreadChannel(data as RawPublicThreadChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_PRIVATE_THREAD: return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as unknown as T;
-			case ChannelTypes.GUILD_STAGE_VOICE: return new StageChannel(data as RawStageChannel, client) as unknown as T;
+			case ChannelTypes.GUILD_TEXT: return new TextChannel(data as RawTextChannel, client) as T;
+			case ChannelTypes.DM: return new PrivateChannel(data as RawPrivateChannel, client) as T;
+			case ChannelTypes.GUILD_VOICE: return new VoiceChannel(data as RawVoiceChannel, client) as T;
+			case ChannelTypes.GROUP_DM: return new GroupChannel(data as RawGroupChannel, client) as T;
+			case ChannelTypes.GUILD_CATEGORY: return new CategoryChannel(data as RawCategoryChannel, client) as T;
+			case ChannelTypes.GUILD_NEWS: return new NewsChannel(data as RawNewsChannel, client) as T;
+			case ChannelTypes.GUILD_NEWS_THREAD: return new NewsThreadChannel(data as RawNewsThreadChannel, client) as T;
+			case ChannelTypes.GUILD_PUBLIC_THREAD: return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
+			case ChannelTypes.GUILD_PRIVATE_THREAD: return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
+			case ChannelTypes.GUILD_STAGE_VOICE: return new StageChannel(data as RawStageChannel, client) as T;
 			default: return new Channel(data, client) as T;
 		}
 	}

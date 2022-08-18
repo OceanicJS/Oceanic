@@ -1,19 +1,22 @@
-import type { PartialEmoji, RawMember } from "./guilds";
-import type { RawApplication } from "./oauth";
+import type { PartialEmoji, PartialGuild, RawMember } from "./guilds";
+import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
+import type { RawScheduledEvent } from "./scheduled-events";
 import type {
 	ButtonStyles,
 	ChannelTypes,
 	ComponentTypes,
 	GuildChannelTypes,
 	InteractionTypes,
+	InviteTargetTypes,
 	MessageActivityTypes,
 	MessageTypes,
 	OverwriteTypes,
 	StickerFormatTypes,
 	TextInputStyles,
 	ThreadAutoArchiveDuration,
+	ThreadChannelTypes,
 	VideoQualityModes
 } from "../Constants";
 import type CategoryChannel from "../structures/CategoryChannel";
@@ -73,6 +76,8 @@ export type RawNewsThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" |
 export type RawPublicThreadChannel = Omit<RawNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PUBLIC_THREAD; };
 export type RawPrivateThreadChannel = Omit<RawNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PRIVATE_THREAD; };
 
+export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
+
 export interface RawOverwrite {
 	allow: string;
 	deny: string;
@@ -96,6 +101,17 @@ export interface RawThreadMember {
 	user_id?: string;
 }
 export type RawRESTThreadMember = Required<RawThreadMember>;
+
+export interface RESTThreadMember {
+	flags: number;
+	id: string;
+	joinTimestamp: Date;
+	userID: string;
+}
+export interface GatewayThreadMember {
+	flags: number;
+	joinTimestamp: Date;
+}
 export interface EditGroupDMOptions {
 	icon?: string | Buffer;
 	name?: string;
@@ -425,3 +441,132 @@ export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | Group
 export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
 export type AnyThreadChannel = NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyVoiceChannel = VoiceChannel | StageChannel;
+export type InviteChannel = Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>;
+
+export interface PartialInviteChannel {
+	icon?: string | null;
+	id: string;
+	name: string | null;
+	type: Exclude<ChannelTypes, ChannelTypes.GUILD_CATEGORY>;
+}
+
+export interface GetChannelMessagesOptions {
+	after?: string;
+	around?: string;
+	before?: string;
+	limit?: number;
+}
+
+export interface GetReactionsOptions {
+	after?: string;
+	limit?: number;
+}
+
+export type EditMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags">;
+
+export interface EditPermissionOptions {
+	allow?: bigint | string;
+	deny?: bigint | string;
+	reason?: string;
+	type: OverwriteTypes;
+}
+
+export interface RawInvite {
+	approximate_member_count?: number;
+	approximate_presence_count?: number;
+	channel?: PartialChannel;
+	code: string;
+	expires_at?: string;
+	guild?: PartialGuild;
+	guild_scheduled_event?: RawScheduledEvent;
+	inviter?: RawUser;
+	/** @deprecated */
+	stage_instance?: RawInviteStageInstance;
+	target_application?: RawPartialApplication;
+	target_type?: InviteTargetTypes;
+	target_user?: RawUser;
+}
+
+export interface RawInviteWithMetadata extends RawInvite {
+	created_at: string;
+	max_age: number;
+	max_uses: number;
+	temporary: boolean;
+	uses: number;
+}
+
+
+export interface RawInviteStageInstance {
+	members: Array<RawMember>;
+	participant_count: number;
+	speaker_count: number;
+	topic: string;
+}
+
+
+export interface InviteStageInstance {
+	members: Array<Member>;
+	participantCount: number;
+	speakerCount: number;
+	topic: string;
+}
+
+export interface CreateInviteOptions {
+	maxAge?: number;
+	maxUses?: number;
+	reason?: string;
+	targetApplicationID?: string;
+	targetType?: InviteTargetTypes;
+	targetUserID?: string;
+	temporary?: boolean;
+	unique?: boolean;
+}
+
+export interface FollowNewsOptions {
+	webhookChannelID: string;
+}
+
+export interface RawFollowedChannel {
+	channel_id: string;
+	webhook_id: string;
+}
+
+export interface FollowedChannel {
+	channelID: string;
+	webhookID: string;
+}
+
+export interface StartThreadFromMessageOptions {
+	autoArchiveDuration?: ThreadAutoArchiveDuration;
+	name: string;
+	rateLimitPerUser?: number | null;
+	reason?: string;
+}
+
+export interface StartThreadWithoutMessageOptions extends StartThreadFromMessageOptions {
+	invitable?: boolean;
+	type: ThreadChannelTypes;
+}
+
+export interface StartThreadInForumOptions extends StartThreadFromMessageOptions {
+	message: ForumThreadStarterMessageOptions;
+}
+
+export type ForumThreadStarterMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "stickerIDs" | "attachments" | "flags">;
+
+export interface GetArchivedThreadsOptions {
+	before?: string;
+	limit?: number;
+}
+
+export interface RawArchivedThreads<T extends RawNewsThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel> {
+	has_more: boolean;
+	members: Array<RawRESTThreadMember>;
+	threads: Array<T>;
+}
+
+export interface ArchivedThreads<T extends NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel> {
+	hasMore: boolean;
+	members: Array<RESTThreadMember>;
+	threads: Array<T>;
+}

@@ -11,7 +11,7 @@ export default abstract class Base {
 	}
 
 	static getCreatedAt(id: string) {
-		return Base.getDiscordEpoch(id) + 1420070400000;
+		return new Date(Base.getDiscordEpoch(id) + 1420070400000);
 	}
 
 	static getDiscordEpoch(id: string) {

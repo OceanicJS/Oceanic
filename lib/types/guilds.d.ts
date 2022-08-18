@@ -51,13 +51,14 @@ export interface RESTGuild {
 	stickers?: Array<Sticker>;
 	system_channel_flags: number;
 	system_channel_id: string | null;
-	venity_url_code: string | null;
+	vanity_url_code: string | null;
 	verification_level: VerificationLevels;
 	welcome_screen?: WelcomeScreen;
 	widget_channel_id?: string | null;
 	widget_enabled?: boolean;
 }
 export type RawGuild = Omit<RESTGuild, "owner" | "permissions" | "icon_hash">;
+export type PartialGuild = Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level">;
 
 export interface RawRole {
 	color: number;

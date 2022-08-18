@@ -3,11 +3,11 @@ import type NewsChannel from "./NewsChannel";
 import type { ThreadAutoArchiveDuration } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditTextChannelOptions, RawTextChannel } from "../types/channels";
+import type { EditTextChannelOptions, FollowedChannel, FollowNewsOptions, RawTextChannel } from "../types/channels";
 import { RawOverwrite } from "../types/channels";
 
 /** Represents a guild text channel. */
-export default class TextChannel extends TextableChannel {
+export default class TextChannel extends TextableChannel<TextChannel> {
 	declare type: ChannelTypes.GUILD_TEXT;
 	constructor(data: RawTextChannel, client: Client) {
 		super(data, client);
@@ -40,5 +40,16 @@ export default class TextChannel extends TextableChannel {
 	 */
 	override async edit(options: EditTextChannelOptions, reason?: string) {
 		return this._client.rest.channels.edit<TextChannel>(this.id, options, reason);
+	}
+
+	/**
+	 * Follow a news channel to this channel.
+	 *
+	 * @param {Object} options
+	 * @param {String} [options.webhookChannelID] - The id of the channel to follow.
+	 * @returns {Promise<FollowedChannel>}
+	 */
+	async followNews(options?: FollowNewsOptions) {
+		return this._client.rest.channels.followNews(this.id, options);
 	}
 }

@@ -5,7 +5,7 @@ import type Client from "../Client";
 import type { EditPublicThreadChannelOptions, RawNewsThreadChannel } from "../types/channels";
 
 /** Represents a guild thread channel. */
-export default class NewsThreadChannel extends ThreadChannel {
+export default class NewsThreadChannel extends ThreadChannel<NewsThreadChannel> {
 	declare threadMetadata: ThreadMetadata;
 	declare type: ChannelTypes.GUILD_NEWS_THREAD;
 	constructor(data: RawNewsThreadChannel, client: Client) {

@@ -5,7 +5,7 @@ import type Client from "../Client";
 import type { EditPrivateThreadChannelOptions, RawPrivateThreadChannel } from "../types/channels";
 
 /** Represents a guild thread channel. */
-export default class PrivateThreadChannel extends ThreadChannel {
+export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadChannel> {
 	declare threadMetadata: PrivateThreadmetadata;
 	declare type: ChannelTypes.GUILD_PRIVATE_THREAD;
 	constructor(data: RawPrivateThreadChannel, client: Client) {

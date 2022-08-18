@@ -1,17 +1,42 @@
 export const CDN_URL = "https://cdn.discordapp.com";
 
+// Webhooks
 export const CHANNEL_WEBHOOKS = (channelID: string) => `/channels/${channelID}/webhooks` as const;
 export const GUILD_WEBHOOKS   = (guildID: string) => `/guilds/${guildID}/webhooks` as const;
 export const WEBHOOK          = (webhookID: string, webhookToken?: string) => (!webhookToken ? `/webhooks/${webhookID}` : `/webhooks/${webhookID}/${webhookToken}`) as `/webhooks/${string}` | `/webhooks/${string}/${string}`;
 export const WEBHOOK_MESSAGE  = (webhookID: string, webhookToken: string, messageID: string) => `/webhooks/${webhookID}/${webhookToken}/messages/${messageID}` as const;
 export const WEBHOOK_PLATFORM = (webhookID: string, webhookToken: string, platform: "github" | "slack") => `/webhooks/${webhookID}/${webhookToken}/${platform}` as const;
 
+// Users
 export const USER = (userID: string) => `/users/${userID}` as const;
 
+// Guilds
 export const GUILD = (userID: string, withCounts = false) => `/guilds/${userID}?with_counts=${String(withCounts)}` as const;
 
-export const CHANNEL         = (channelID: string) => `/channels/${channelID}` as const;
-export const GROUP_RECIPIENT = (channelID: string, userID: string) => `/channels/${channelID}/recipients/${userID}` as const;
+// Channels
+export const CHANNEL           = (channelID: string) => `/channels/${channelID}` as const;
+export const CHANNEL_MESSAGE   = (channelID: string, messageID: string) => `/channels/${channelID}/messages/${messageID}` as const;
+export const CHANNEL_MESSAGES  = (channelID: string) => `/channels/${channelID}/messages` as const;
+export const CHANNEL_MESSAGES_CROSSPOST = (channelID: string, messageID: string) => `/channels/${channelID}/messages/${messageID}/crosspost` as const;
+export const CHANNEL_BULK_DELETE_MESSAGES = (channelID: string) => `/channels/${channelID}/messages/bulk-delete` as const;
+export const GROUP_RECIPIENT   = (channelID: string, userID: string) => `/channels/${channelID}/recipients/${userID}` as const;
+export const CHANNEL_REACTION_USER  = (channelID: string, messageID: string, reaction: string, user: string) => `/channels/${channelID}/messages/${messageID}/reactions/${reaction}/${user}` as const;
+export const CHANNEL_REACTION = (channelID: string, messageID: string, reaction: string) => `/channels/${channelID}/messages/${messageID}/reactions/${reaction}` as const;
+export const CHANNEL_REACTIONS = (channelID: string, messageID: string) => `/channels/${channelID}/messages/${messageID}/reactions` as const;
+export const CHANNEL_PERMISSION = (channelID: string, overwriteID: string) => `/channels/${channelID}/permissions/${overwriteID}` as const;
+export const CHANNEL_PERMISSIONS = (channelID: string) => `/channels/${channelID}/permissions` as const;
+export const CHANNEL_INVITES = (channelID: string) => `/channels/${channelID}/invites` as const;
+export const CHANNEL_FOLLOWERS = (channelID: string) => `/channels/${channelID}/followers` as const;
+export const CHANNEL_TYPING = (channelID: string) => `/channels/${channelID}/typing` as const;
+export const CHANNEL_PINS = (channelID: string) => `/channels/${channelID}/pins` as const;
+export const CHANNEL_PINNED_MESSAGE = (channelID: string, messageID: string) => `/channels/${channelID}/pins/${messageID}` as const;
+export const CHANNEL_MESSAGE_THREADS = (channelID: string, messageID: string) => `/channels/${channelID}/messages/${messageID}/threads` as const;
+export const CHANNEL_THREADS = (channelID: string) => `/channels/${channelID}/threads` as const;
+export const CHANNEL_THREAD_MEMBER = (channelID: string, userID: string) => `/channels/${channelID}/thread-members/${userID}` as const;
+export const CHANNEL_THREAD_MEMBERS = (channelID: string) => `/channels/${channelID}/thread-members` as const;
+export const CHANNEL_PUBLIC_ARCHIVED_THREADS = (channelID: string) => `/channels/${channelID}/threads/archived/public` as const;
+export const CHANNEL_PRIVATE_ARCHIVED_THREADS = (channelID: string) => `/channels/${channelID}/threads/archived/private` as const;
+export const CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS = (channelID: string) => `/channels/${channelID}/users/@me/threads/archived/private` as const;
 
 // OAuth
 export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;

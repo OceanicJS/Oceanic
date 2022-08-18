@@ -1,9 +1,16 @@
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
-import type { ChannelTypes } from "../Constants";
+import Invite from "./Invite";
+import type { ChannelTypes, InviteTargetTypes, OverwriteTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { EditStageChannelOptions, RawOverwrite, RawStageChannel } from "../types/channels";
+import type {
+	CreateInviteOptions,
+	EditPermissionOptions,
+	EditStageChannelOptions,
+	RawOverwrite,
+	RawStageChannel
+} from "../types/channels";
 
 /** Represents a guild stage channel. */
 export default class StageChannel extends GuildChannel {
@@ -33,6 +40,35 @@ export default class StageChannel extends GuildChannel {
 	}
 
 	/**
+	 * Create an invite for this channel.
+	 *
+	 * @param {Object} options
+	 * @param {Number} [options.maxAge] - How long the invite should last.
+	 * @param {Number} [options.maxUses] - How many times the invite can be used.
+	 * @param {String} [options.reason] - The reason for creating the invite.
+	 * @param {String} [options.targetApplicationID] - The id of the embedded application to open for this invite.
+	 * @param {InviteTargetTypes} [options.targetType] - The [type of target](https://discord.com/developers/docs/resources/channel#invite-target-types) for the invite.
+	 * @param {String} [options.targetUserID] - The id of the user whose stream to display for this invite.
+	 * @param {Boolean} [options.temporary] - If the invite should be temporary.
+	 * @param {Boolean} [options.unique] - If the invite should be unique.
+	 * @returns {Promise<Invite<StageChannel>>}
+	 */
+	async createInvite(options: CreateInviteOptions) {
+		return this._client.rest.channels.createInvite(this.id, options);
+	}
+
+	/**
+	 * Delete a permission overwrite on this channel.
+	 *
+	 * @param {String} overwriteID - The id of the permission overwrite to delete.
+	 * @param {String} reason - The reason for deleting the permission overwrite.
+	 * @returns {Promise<void>}
+	 */
+	async deletePermission(overwriteID: string, reason?: string) {
+		return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
+	}
+
+	/**
 	 * Edit this channel.
 	 *
 	 * @param {Object} options
@@ -45,5 +81,20 @@ export default class StageChannel extends GuildChannel {
 	 */
 	async edit(options: EditStageChannelOptions, reason?: string) {
 		return this._client.rest.channels.edit<StageChannel>(this.id, options, reason);
+	}
+
+	/**
+	 * Edit a permission overwrite on this channel.
+	 *
+	 * @param {String} overwriteID - The id of the permission overwrite to edit.
+	 * @param {Object} options
+	 * @param {(BigInt | String)} [options.allow] - The permissions to allow.
+	 * @param {(BigInt | String)} [options.deny] - The permissions to deny.
+	 * @param {String} [options.reason] - The reason for editing the permission.
+	 * @param {OverwriteTypes} [options.type] - The type of the permission overwrite.
+	 * @returns {Promise<void>}
+	 */
+	async editPermission(overwriteID: string, options: EditPermissionOptions) {
+		return this._client.rest.channels.editPermission(this.id, overwriteID, options);
 	}
 }

@@ -2,6 +2,8 @@ import Role from "./Role";
 import Base from "./Base";
 import GuildChannel from "./GuildChannel";
 import Member from "./Member";
+import type ScheduledEvent from "./ScheduledEvent";
+import ThreadChannel from "./ThreadChannel";
 import type {
 	DefaultMessageNotificationLevels,
 	ExplicitContentFilterLevels,
@@ -15,7 +17,7 @@ import type {
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { RawGuildChannel } from "../types/channels";
+import type { AnyThreadChannel, RawGuildChannel, RawThreadChannel } from "../types/channels";
 import type {
 	GuildEmoji,
 	RawGuild,
@@ -24,6 +26,7 @@ import type {
 	Sticker,
 	WelcomeScreen
 } from "../types/guilds";
+import type { RawScheduledEvent } from "../types/scheduled-events";
 
 export default class Guild extends Base {
 	/** The id of this guild's AFK channel. */
@@ -38,7 +41,7 @@ export default class Guild extends Base {
 	approximatePresenceCount?: number;
 	/** The hash of this guild's banner. */
 	banner: string | null;
-	/** The channels in this guild.w */
+	/** The channels in this guild. */
 	channels: Collection<string, RawGuildChannel, GuildChannel>;
 	/** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
 	defaultMessageNotifications: DefaultMessageNotificationLevels;
@@ -84,16 +87,14 @@ export default class Guild extends Base {
 	premiumTier: PremiumTiers;
 	/** The id of the channel where notices from Discord are recieved. Only present in guilds with the `COMMUNITY` feature. */
 	publicUpdatesChannelID: string | null;
-	/**
-	 * The region of this guild.
-	 *
-	 * @deprecated
-	 */
+	/** @deprecated The region of this guild.*/
 	region?: string | null;
 	/** The roles in this guild. */
 	roles: Collection<string, RawRole, Role, [guildID: string]>;
 	/** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
 	rulesChannelID: string | null;
+	/** The scheduled events in this guild. */
+	scheduledEvents: Collection<string, RawScheduledEvent, ScheduledEvent>;
 	/** The invite splash hash of this guild. */
 	splash: string | null;
 	/** The custom stickers of this guild. */
@@ -102,8 +103,10 @@ export default class Guild extends Base {
 	systemChannelFlags: number;
 	/** The id of the channel where welcome messages and boosts notices are posted. */
 	systemChannelID: string | null;
+	/** The threads in this guild. */
+	threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
 	/** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
-	venityURLCode: string | null;
+	vanityURLCode: string | null;
 	/** The [verfication level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
 	verificationLevel: VerificationLevels;
 	/** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
@@ -115,6 +118,7 @@ export default class Guild extends Base {
 	constructor(data: RawGuild, client: Client) {
 		super(data.id, client);
 		this.channels = new Collection(GuildChannel, client);
+		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
 		this.members = new Collection<string, RawMember & { id: string; }, Member, [guildID: string]>(Member, client);
 		this.roles = new Collection(Role, client);
 		data.roles.map(role => this.roles.update(role, data.id));
@@ -153,7 +157,7 @@ export default class Guild extends Base {
 		this.stickers                    = data.stickers;
 		this.systemChannelFlags          = data.system_channel_flags;
 		this.systemChannelID             = data.system_channel_id;
-		this.venityURLCode               = data.venity_url_code;
+		this.vanityURLCode               = data.vanity_url_code;
 		this.verificationLevel           = data.verification_level;
 		this.welcomeScreen               = data.welcome_screen;
 		this.widgetChannelID             = data.widget_channel_id;

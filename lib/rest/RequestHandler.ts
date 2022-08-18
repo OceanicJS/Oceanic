@@ -65,7 +65,7 @@ export default class RequestHandler extends TypedEmitter<RequestEvents> {
 		}).replace(/\/reactions\/[^/]+/g, "/reactions/:id").replace(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/, "/webhooks/$1/:token");
 		if (method === "DELETE" && route.endsWith("/messages/:id")) {
 			const messageID = path.slice(path.lastIndexOf("/") + 1);
-			const createdAt = Base.getCreatedAt(messageID);
+			const createdAt = Base.getCreatedAt(messageID).getTime();
 			if (Date.now() - this.latencyRef.latency - createdAt >= 1000 * 60 * 60 * 24 * 14) method += "_OLD";
 			else if (Date.now() - this.latencyRef.latency - createdAt <= 1000 * 10) method += "_NEW";
 			route = method + route;

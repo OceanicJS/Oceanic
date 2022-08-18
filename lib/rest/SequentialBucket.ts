@@ -3,7 +3,8 @@
  * https://github.com/abalabahaha/eris/blob/dev/lib/util/SequentialBucket.js
  */
 
-import type { LatencyRef } from "./RequestHandler";
+import type { LatencyRef } from "../types/request-handler";
+
 
 export default class SequentialBucket {
 	private _queue: Array<(cb: () => void) => void> = [];

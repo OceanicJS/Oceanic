@@ -1,7 +1,7 @@
 import Channel from "./Channel";
 import { ChannelTypes, ThreadAutoArchiveDuration, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
-import type { EditGuildChannelOptions, RawGuildChannel, RawOverwrite } from "../types/channels";
+import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel, RawOverwrite } from "../types/channels";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
@@ -49,6 +49,6 @@ export default class GuildChannel extends Channel {
 	 * @returns {Promise<GuildChannel>}
 	 */
 	async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<GuildChannel>(this.id, options, reason);
+		return this._client.rest.channels.edit<AnyGuildChannel>(this.id, options, reason);
 	}
 }

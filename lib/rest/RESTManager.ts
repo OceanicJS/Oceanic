@@ -1,4 +1,3 @@
-import type { RequestOptions } from "./RequestHandler";
 import RequestHandler from "./RequestHandler";
 import type Client from "../Client";
 import Channels from "../routes/Channels";
@@ -6,8 +5,9 @@ import Guilds from "../routes/Guilds";
 import Users from "../routes/Users";
 import Properties from "../util/Properties";
 import OAuth from "../routes/OAuth";
-import type { RESTOptions } from "../Client";
 import Webhooks from "../routes/Webhooks";
+import type { RESTOptions } from "../types/client";
+import type { RequestOptions } from "../types/request-handler";
 
 export default class RESTManager {
 	private _client: Client;

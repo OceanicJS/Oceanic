@@ -1,11 +1,12 @@
 import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
+import Message from "./Message";
 import type { ThreadAutoArchiveDuration, ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditGuildChannelOptions, RawNewsChannel, RawOverwrite } from "../types/channels";
 
 /** Represents a guild news channel. */
-export default class NewsChannel extends TextableChannel {
+export default class NewsChannel extends TextableChannel<NewsChannel> {
 	/** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
 	declare rateLimitPerUser: 0;
 	declare type: ChannelTypes.GUILD_NEWS;
@@ -20,6 +21,16 @@ export default class NewsChannel extends TextableChannel {
 	 */
 	async convert() {
 		return super.convert() as unknown as TextChannel;
+	}
+
+	/**
+	 * Crosspost a message in this channel.
+	 *
+	 * @param {String} messageID - The id of the message to crosspost.
+	 * @returns {Promise<Message<NewsChannel>>}
+	 */
+	async crosspostMessage(messageID: string) {
+		return this._client.rest.channels.crosspostMessage(this.id, messageID);
 	}
 
 	/**

@@ -474,3 +474,31 @@ export enum InteractionTypes {
 	APPLICATION_COMMAND_AUTOCOMPLETE = 4,
 	MODAL_SUBMIT                     = 5
 }
+
+export enum InviteTargetTypes {
+	STREAM               = 1,
+	EMBEDDED_APPLICATION = 2,
+}
+
+export enum ScheduledEventPrivacyLevels {
+	GUILD_ONLY = 2
+}
+
+export enum ScheduledEventStatuses {
+	SCHEDULED = 1,
+	ACTIVE    = 2,
+	COMPLETED = 3,
+	CANCELLED = 4
+}
+
+export enum ScheduledEventEntityTypes {
+	STAGE_INSTANCE = 1,
+	VOICE          = 2,
+	EXTERNAL       = 3
+}
+
+export enum StageInstancePrivacyLevels {
+	/** @deprecated */
+	PUBLIC     = 1,
+	GUILD_ONLY = 2
+}

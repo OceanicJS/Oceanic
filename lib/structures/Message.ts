@@ -3,12 +3,14 @@ import Attachment from "./Attachment";
 import User from "./User";
 import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
+import GuildChannel from "./GuildChannel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { MessageTypes } from "../Constants";
 import type { Partial as PartialChannel } from "../types/shared";
 import type {
 	AnyGuildTextChannel,
+	AnyTextChannel,
 	AnyThreadChannel,
 	ChannelMention,
 	Embed,
@@ -24,9 +26,9 @@ import type {
 import type { RawApplication } from "../types/oauth";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
-import { File } from "../rest/RequestHandler";
+import { File } from "../types/request-handler";
 
-export default class Message<T extends AnyGuildTextChannel = AnyGuildTextChannel> extends Base {
+export default class Message<T extends AnyTextChannel = AnyTextChannel> extends Base {
 	/** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
 	activity?: MessageActivity;
 	application?: RawApplication; // @TODO specific properties sent
@@ -124,7 +126,7 @@ export default class Message<T extends AnyGuildTextChannel = AnyGuildTextChannel
 			};
 			this.interaction = {
 				id:     data.interaction.id,
-				member: this.channel instanceof Channel && this.channel.guild && member ? this.channel.guild.members.update(member, this.channel.guild.id) : undefined,
+				member: this.channel instanceof GuildChannel && this.channel.guild && member ? this.channel.guild.members.update(member, this.channel.guild.id) : undefined,
 				name:   data.interaction.name,
 				type:   data.interaction.type,
 				user:   this._client.users.update(data.interaction.user)
@@ -151,12 +153,12 @@ export default class Message<T extends AnyGuildTextChannel = AnyGuildTextChannel
 		this.pinned = data.pinned;
 		this.position = data.position;
 		if (data.referenced_message) {
-			if (this.channel instanceof Channel) this.referencedMessage = this.channel.messages.update(data.referenced_message);
+			if ("messages" in this.channel) this.referencedMessage = this.channel.messages.update(data.referenced_message);
 			else this.referencedMessage = new Message(data.referenced_message, this._client);
 		}
 		this.stickerItems = data.sticker_items;
 		if (data.thread) {
-			if (this.channel && "threads" in this.channel) this.thread = this.channel.threads.add(Channel.from<AnyThreadChannel>(data.thread, this._client));
+			if ("threads" in this.channel) this.thread = this.channel.threads.add(Channel.from<AnyThreadChannel>(data.thread, this._client));
 			else this.thread = Channel.from<AnyThreadChannel>(data.thread, this._client);
 		}
 		this.timestamp = new Date(data.timestamp);

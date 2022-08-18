@@ -1,12 +1,20 @@
 import PermissionOverwrite from "./PermissionOverwrite";
 import Channel from "./Channel";
+import GuildChannel from "./GuildChannel";
 import type Client from "../Client";
-import type { ChannelTypes } from "../Constants";
+import type { ChannelTypes, OverwriteTypes } from "../Constants";
 import Collection from "../util/Collection";
-import type { EditAnyGuildChannelOptions, RawCategoryChannel, RawOverwrite } from "../types/channels";
+import type {
+	EditAnyGuildChannelOptions,
+	EditPermissionOptions,
+	RawCategoryChannel,
+	RawGuildChannel,
+	RawOverwrite
+} from "../types/channels";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends Channel {
+	channels: Collection<string, RawGuildChannel, GuildChannel>;
 	/** The permission overwrites of this channel. */
 	permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
 	/** The position of this channel on the sidebar. */
@@ -14,6 +22,7 @@ export default class CategoryChannel extends Channel {
 	declare type: ChannelTypes.GUILD_CATEGORY;
 	constructor(data: RawCategoryChannel, client: Client) {
 		super(data, client);
+		this.channels = new Collection(GuildChannel, client);
 		this.permissionOverwrites = new Collection(PermissionOverwrite, client);
 		this.update(data);
 	}
@@ -22,6 +31,17 @@ export default class CategoryChannel extends Channel {
 		super.update(data);
 		this.position = data.position;
 		data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+	}
+
+	/**
+	 * Delete a permission overwrite on this channel.
+	 *
+	 * @param {String} overwriteID - The id of the permission overwrite to delete.
+	 * @param {String} reason - The reason for deleting the permission overwrite.
+	 * @returns {Promise<void>}
+	 */
+	async deletePermission(overwriteID: string, reason?: string) {
+		return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
 	}
 
 	/**
@@ -36,5 +56,20 @@ export default class CategoryChannel extends Channel {
 	 */
 	async edit(options: EditAnyGuildChannelOptions, reason?: string) {
 		return this._client.rest.channels.edit<CategoryChannel>(this.id, options, reason);
+	}
+
+	/**
+	 * Edit a permission overwrite on this channel.
+	 *
+	 * @param {String} overwriteID - The id of the permission overwrite to edit.
+	 * @param {Object} options
+	 * @param {(BigInt | String)} [options.allow] - The permissions to allow.
+	 * @param {(BigInt | String)} [options.deny] - The permissions to deny.
+	 * @param {String} [options.reason] - The reason for editing the permission.
+	 * @param {OverwriteTypes} [options.type] - The type of the permission overwrite.
+	 * @returns {Promise<void>}
+	 */
+	async editPermission(overwriteID: string, options: EditPermissionOptions) {
+		return this._client.rest.channels.editPermission(this.id, overwriteID, options);
 	}
 }

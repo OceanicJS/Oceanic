@@ -8,7 +8,6 @@ import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import User from "./structures/User";
 import Guild from "./structures/Guild";
-import type Channel from "./structures/Channel";
 import type {
 	AllowedMentions,
 	AnyChannel,
@@ -30,6 +29,7 @@ export default class Client {
 	privateChannelMap: Map<string, string>;
 	privateChannels: Collection<string, RawPrivateChannel, PrivateChannel>;
 	rest: RESTManager;
+	threadGuildMap: Map<string, string>;
 	users: Collection<string, RawUser, User>;
 	constructor(options?: ClientOptions) {
 		Properties.new(this)
@@ -48,6 +48,7 @@ export default class Client {
 			.define("privateChannelMap", new Map())
 			.define("privateChannels", new Collection(PrivateChannel, this))
 			.define("rest", new RESTManager(this, options?.rest))
+			.define("threadGuildMap", new Map())
 			.define("users", new Collection(User, this));
 	}
 
@@ -97,8 +98,8 @@ export default class Client {
 		return `${CDN_URL}${url}.${format}?size=${size}`;
 	}
 
-	getChannel<T extends Channel = AnyChannel>(id: string): T | undefined {
-		if (this.channelGuildMap.has(id)) return this.guilds.get(this.channelGuildMap.get(id)!)?.channels.get(id) as unknown as T;
-		return (this.privateChannels.get(id) || this.groupChannels.get(id)) as unknown as T;
+	getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined {
+		if (this.channelGuildMap.has(id)) return this.guilds.get(this.channelGuildMap.get(id)!)?.channels.get(id) as T;
+		return (this.privateChannels.get(id) || this.groupChannels.get(id)) as T;
 	}
 }
