@@ -50,6 +50,7 @@ export default class Webhooks extends BaseRoute {
 	 * Delete a webhook.
 	 *
 	 * @param {String} id - The id of the webhook.
+	 * @param {String} [reason] - The reason for deleting the webhook.
 	 * @returns {Promise<Boolean>}
 	 */
 	async delete(id: string, reason?: string) {
@@ -168,10 +169,9 @@ export default class Webhooks extends BaseRoute {
 	 * @param {Object} options
 	 * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
 	 * @param {String} [options.name] - The name of the webhook.
-	 * @param {String} [reason] - The reason for editing this webhook.
 	 * @returns {Promise<Webhook>}
 	 */
-	async editToken(id: string, token: string, options: EditWebhookTokenOptions, reason?: string) {
+	async editToken(id: string, token: string, options: EditWebhookTokenOptions) {
 		if (options.avatar) {
 			try {
 				options.avatar = this._client._convertImage(options.avatar);
@@ -185,8 +185,7 @@ export default class Webhooks extends BaseRoute {
 			json:   {
 				avatar: options.avatar,
 				name:   options.name
-			},
-			reason
+			}
 		}).then(data => new Webhook(data, this._client));
 	}
 
@@ -213,7 +212,7 @@ export default class Webhooks extends BaseRoute {
 	 * @param {String} [options.username] - The username of the webhook.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
 	 * @param {File[]} [files] - The files to send.
-	 * @returns {Promise<Message>}
+	 * @returns {Promise<Message | void>}
 	 */
 	async execute(id: string, token: string, options: ExecuteWebhookWaitOptions, files?: Array<File>): Promise<Message>;
 	async execute(id: string, token: string, options: ExecuteWebhookOptions, files?: Array<File>): Promise<void>;
@@ -250,6 +249,7 @@ export default class Webhooks extends BaseRoute {
 	 * @param {String} token - The token of the webhook.
 	 * @param {Object} options - The options to send. See Github's documentation for more information.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
+	 * @return {Promise<Message | void>}
 	 */
 	async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait: true; }): Promise<Message>;
 	async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait?: false; }): Promise<void>;
@@ -273,6 +273,7 @@ export default class Webhooks extends BaseRoute {
 	 * @param {String} token - The token of the webhook.
 	 * @param {Object} options - The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
+	 * @return {Promise<Message | void>}
 	 */
 	async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait: true; }): Promise<Message>;
 	async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait?: false; }): Promise<void>;
