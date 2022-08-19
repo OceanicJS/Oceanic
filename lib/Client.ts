@@ -20,7 +20,7 @@ import type { RawUser } from "./types/users";
 import type { ClientInstanceOptions, ClientOptions } from "./types/client";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
-/** A REST based client, nothing will be cached. */
+/** The primary class for interfacing with Discord. */
 export default class Client {
 	channelGuildMap: Map<string, string>;
 	groupChannels: Collection<string, RawGroupChannel, GroupChannel>;

@@ -13,8 +13,8 @@ import type {
 import type { RawMessage } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
-import type { File } from "../rest/RequestHandler";
 import Message from "../structures/Message";
+import { File } from "../types/request-handler";
 
 export default class Webhooks extends BaseRoute {
 	/**

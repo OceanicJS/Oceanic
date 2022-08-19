@@ -1,3 +1,3 @@
-import RESTClient from "./RESTClient";
+import Client from "./Client";
 
-export { RESTClient };
+export { Client };

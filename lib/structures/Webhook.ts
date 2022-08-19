@@ -15,7 +15,7 @@ import type {
 	GetWebhookMessageOptions,
 	RawWebhook
 } from "../types/webhooks";
-import type { File } from "../rest/RequestHandler";
+import { File } from "../types/request-handler";
 
 export default class Webhook extends Base {
 	/** The id of the application associatd with this webhook. */
