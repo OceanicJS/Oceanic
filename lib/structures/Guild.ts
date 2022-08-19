@@ -23,6 +23,8 @@ import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { AnyThreadChannel, RawGuildChannel, RawThreadChannel } from "../types/channels";
 import type {
+	CreateEmojiOptions,
+	EditEmojiOptions,
 	GuildEmoji,
 	RawGuild,
 	RawMember,
@@ -140,7 +142,10 @@ export default class Guild extends Base {
 		this.defaultMessageNotifications = data.default_message_notifications;
 		this.description                 = data.description;
 		this.discoverySplash             = data.discovery_splash;
-		this.emojis                      = data.emojis;
+		this.emojis                      = data.emojis.map(e => ({
+			...e,
+			user: !e.user ? undefined : this._client.users.update(e.user)
+		}));
 		this.explicitContentFilter       = data.explicit_content_filter;
 		this.features                    = data.features;
 		this.icon                        = data.icon;
@@ -206,6 +211,20 @@ export default class Guild extends Base {
 	}
 
 	/**
+	 * Create an emoji in this guild.
+	 *
+	 * @param {Object} options
+	 * @param {String} options.name - The name of the emoji.
+	 * @param {(Buffer | String)} options.image - The image (buffer, or full data url).
+	 * @param {String} [options.reason] - The reason for creating the emoji.
+	 * @param {String[]} [options.roles] - The roles to restrict the emoji to.
+	 * @returns {Promise<GuildEmoji>}
+	 */
+	async createEmoji(options: CreateEmojiOptions) {
+		return this._client.rest.guilds.createEmoji(this.id, options);
+	}
+
+	/**
 	 * Delete an auto moderation rule in this guild.
 	 *
 	 * @param {String} ruleID - The ID of the rule to delete.
@@ -214,6 +233,17 @@ export default class Guild extends Base {
 	 */
 	async deleteAutoModerationRule(ruleID: string, reason?: string) {
 		return this._client.rest.guilds.deleteAutoModerationRule(this.id, ruleID, reason);
+	}
+
+	/**
+	 * Delete an emoji in this guild.
+	 *
+	 * @param {String} emojiID - The ID of the emoji.
+	 * @param {String} [reason] - The reason for deleting the emoji.
+	 * @returns {Promise<void>}
+	 */
+	async deleteEmoji(emojiID: string, reason?: string) {
+		return this._client.rest.guilds.deleteEmoji(this.id, emojiID, reason);
 	}
 
 	/**
@@ -242,6 +272,19 @@ export default class Guild extends Base {
 	}
 
 	/**
+	 * Edit an existing emoji in this guild.
+	 *
+	 * @param {Object} options
+	 * @param {String} [options.name] - The name of the emoji.
+	 * @param {String} [options.reason] - The reason for creating the emoji.
+	 * @param {String[]} [options.roles] - The roles to restrict the emoji to.
+	 * @returns {Promise<GuildEmoji>}
+	 */
+	async editEmoji(emojiID: string, options: EditEmojiOptions) {
+		return this._client.rest.guilds.editEmoji(this.id, emojiID, options);
+	}
+
+	/**
 	 * Get an auto moderation rule for this guild.
 	 *
 	 * @param {String} ruleID - The ID of the rule to get.
@@ -258,6 +301,25 @@ export default class Guild extends Base {
 	 */
 	async getAutoModerationRules() {
 		return this._client.rest.guilds.getAutoModerationRules(this.id);
+	}
+
+	/**
+	 * Get an emoji in this guild.
+	 *
+	 * @param {String} emojiID - The ID of the emoji to get.
+	 * @returns {Promise<GuildEmoji>}
+	 */
+	async getEmoji(emojiID: string) {
+		return this._client.rest.guilds.getEmoji(this.id, emojiID);
+	}
+
+	/**
+	 * Get the emojis in this guild.
+	 *
+	 * @returns {Promise<GuildEmoji[]>}
+	 */
+	async getEmojis() {
+		return this._client.rest.guilds.getEmojis(this.id);
 	}
 
 	/**

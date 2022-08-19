@@ -14,6 +14,8 @@ export const USER = (userID: string) => `/users/${userID}` as const;
 export const GUILD               = (userID: string, withCounts = false) => `/guilds/${userID}?with_counts=${String(withCounts)}` as const;
 export const GUILD_AUTOMOD_RULE  = (guildID: string, autoModerationRuleID: string) => `/guilds/${guildID}/auto-moderation/rules/${autoModerationRuleID}` as const;
 export const GUILD_AUTOMOD_RULES = (guildID: string) => `/guilds/${guildID}/auto-moderation/rules` as const;
+export const GUILD_EMOJI         = (guildID: string, emojiID: string) => `/guilds/${guildID}/emojis/${emojiID}` as const;
+export const GUILD_EMOJIS        = (guildID: string) => `/guilds/${guildID}/emojis` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;

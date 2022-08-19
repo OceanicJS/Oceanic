@@ -12,6 +12,7 @@ import type {
 	StickerTypes,
 	VerificationLevels
 } from "../Constants";
+import type User from "../structures/User";
 
 export interface RESTGuild {
 	afk_channel_id: string | null;
@@ -23,7 +24,7 @@ export interface RESTGuild {
 	default_message_notifications: DefaultMessageNotificationLevels;
 	description: string | null;
 	discovery_splash: string | null;
-	emojis: Array<GuildEmoji>;
+	emojis: Array<RawGuildEmoji>;
 	explicit_content_filter: ExplicitContentFilterLevels;
 	features: Array<GuildFeature>;
 	icon: string | null;
@@ -88,7 +89,8 @@ export interface Emoji {
 	roles?: Array<string>;
 	user?: RawUser;
 }
-export type GuildEmoji = Omit<Emoji, "name"> & { name: string; };
+export type RawGuildEmoji = Required<Omit<Emoji, "name" | "user">> & { name: string; user?: RawUser; };
+export type GuildEmoji = Omit<RawGuildEmoji, "user"> & { user?: User; };
 export interface WelcomeScreen {
 	description: string | null;
 	welcome_channels: Array<WelcomeScreenChannel>;
@@ -166,3 +168,16 @@ export interface IntegrationApplication { // @TODO application class
 }
 
 export type PartialEmoji = Pick<Emoji, "id" | "name" | "animated">;
+
+export interface CreateEmojiOptions {
+	image: Buffer | string;
+	name: string;
+	reason?: string;
+	roles?: Array<string>;
+}
+
+export interface EditEmojiOptions {
+	name?: string;
+	reason?: string;
+	roles?: Array<string> | null;
+}

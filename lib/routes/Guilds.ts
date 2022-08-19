@@ -1,5 +1,11 @@
 import BaseRoute from "./BaseRoute";
-import type { RawGuild } from "../types/guilds";
+import type {
+	CreateEmojiOptions,
+	EditEmojiOptions,
+	GuildEmoji,
+	RawGuild,
+	RawGuildEmoji
+} from "../types/guilds";
 import * as Routes from "../util/Routes";
 import Guild from "../structures/Guild";
 import type { AutoModerationRule, CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -84,6 +90,40 @@ export default class Guilds extends BaseRoute {
 	}
 
 	/**
+	 * Create an emoji in a guild.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {Object} options
+	 * @param {String} options.name - The name of the emoji.
+	 * @param {(Buffer | String)} options.image - The image (buffer, or full data url).
+	 * @param {String} [options.reason] - The reason for creating the emoji.
+	 * @param {String[]} [options.roles] - The roles to restrict the emoji to.
+	 * @returns {Promise<GuildEmoji>}
+	 */
+	async createEmoji(id: string, options: CreateEmojiOptions) {
+		if (options.image) {
+			try {
+				options.image = this._client._convertImage(options.image);
+			} catch (err) {
+				throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
+			}
+		}
+		return this._manager.authRequest<RawGuildEmoji>({
+			method: "POST",
+			path:   Routes.GUILD_EMOJIS(id),
+			json:   {
+				image: options.image,
+				name:  options.name,
+				roles: options.roles
+			},
+			reason: options.reason
+		}).then(data => ({
+			...data,
+			user: !data.user ? undefined : this._client.users.update(data.user)
+		}));
+	}
+
+	/**
 	 * Delete an auto moderation rule.
 	 *
 	 * @param {String} id - The ID of the guild.
@@ -95,6 +135,22 @@ export default class Guilds extends BaseRoute {
 		await this._manager.authRequest<null>({
 			method: "DELETE",
 			path:   Routes.GUILD_AUTOMOD_RULE(id, ruleID),
+			reason
+		});
+	}
+
+	/**
+	 * Delete an emoji.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {String} emojiID - The ID of the emoji.
+	 * @param {String} [reason] - The reason for deleting the emoji.
+	 * @returns {Promise<void>}
+	 */
+	async deleteEmoji(id: string, emojiID: string, reason?: string) {
+		await this._manager.authRequest<null>({
+			method: "DELETE",
+			path:   Routes.GUILD_EMOJI(id, emojiID),
 			reason
 		});
 	}
@@ -148,6 +204,31 @@ export default class Guilds extends BaseRoute {
 		}).then(data => this._formatAutoModRule(data));
 	}
 
+	/**
+	 * Edit an existing emoji.
+	 *
+	 * @param {String} id - The ID of the guild the emoji is in.
+	 * @param {Object} options
+	 * @param {String} [options.name] - The name of the emoji.
+	 * @param {String} [options.reason] - The reason for creating the emoji.
+	 * @param {String[]} [options.roles] - The roles to restrict the emoji to.
+	 * @returns {Promise<GuildEmoji>}
+	 */
+	async editEmoji(id: string, emojiID: string, options: EditEmojiOptions) {
+		return this._manager.authRequest<RawGuildEmoji>({
+			method: "POST",
+			path:   Routes.GUILD_EMOJI(id, emojiID),
+			json:   {
+				name:  options.name,
+				roles: options.roles
+			},
+			reason: options.reason
+		}).then(data => ({
+			...data,
+			user: !data.user ? undefined : this._client.users.update(data.user)
+		}));
+	}
+
 	async get(id: string) {
 		return this._manager.authRequest<RawGuild>({
 			method: "GET",
@@ -180,5 +261,38 @@ export default class Guilds extends BaseRoute {
 			method: "GET",
 			path:   Routes.GUILD_AUTOMOD_RULES(id)
 		}).then(data => data.map(d => this._formatAutoModRule(d)));
+	}
+
+	/**
+	 * Get an emoji in a guild.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {String} emojiID - The ID of the emoji to get.
+	 * @returns {Promise<GuildEmoji>}
+	 */
+	async getEmoji(id: string, emojiID: string) {
+		return this._manager.authRequest<RawGuildEmoji>({
+			method: "GET",
+			path:   Routes.GUILD_EMOJI(id, emojiID)
+		}).then(data => ({
+			...data,
+			user: !data.user ? undefined : this._client.users.update(data.user)
+		}) as GuildEmoji);
+	}
+
+	/**
+	 * Get the emojis in a guild.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @returns {Promise<GuildEmoji[]>}
+	 */
+	async getEmojis(id: string) {
+		return this._manager.authRequest<Array<RawGuildEmoji>>({
+			method: "GET",
+			path:   Routes.GUILD_EMOJIS(id)
+		}).then(data => data.map(d => ({
+			...d,
+			user: !d.user ? undefined : this._client.users.update(d.user)
+		}) as GuildEmoji));
 	}
 }
