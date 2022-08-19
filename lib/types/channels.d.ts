@@ -131,6 +131,7 @@ export interface EditGuildChannelOptions {
 	permissionOverwrites?: Array<RawOverwrite> | null;
 	position?: number | null;
 	rateLimitPerUser?: number | null;
+	reason?: string;
 	rtcRegion?: string | null;
 	topic?: string | null;
 	type?: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS;
@@ -552,7 +553,7 @@ export interface StartThreadInForumOptions extends StartThreadFromMessageOptions
 	message: ForumThreadStarterMessageOptions;
 }
 
-export type ForumThreadStarterMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "stickerIDs" | "attachments" | "flags">;
+export type ForumThreadStarterMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "stickerIDs" | "attachments" | "flags" | "files">;
 
 export interface GetArchivedThreadsOptions {
 	before?: string;

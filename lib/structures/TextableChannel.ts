@@ -202,13 +202,13 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - Channel or category specific permissions
 	 * @param {?Number} [options.position] - The position of the channel in the channel list.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<GuildChannel>}
 	 */
-	async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<TextChannel | NewsChannel>(this.id, options, reason);
+	async edit(options: EditGuildChannelOptions) {
+		return this._client.rest.channels.edit<TextChannel | NewsChannel>(this.id, options);
 	}
 
 	/**

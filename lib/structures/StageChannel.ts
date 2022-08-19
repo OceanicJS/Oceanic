@@ -75,12 +75,12 @@ export default class StageChannel extends GuildChannel {
 	 * @param {String} [options.name] - [All] The name of the channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<StageChannel>}
 	 */
-	async edit(options: EditStageChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<StageChannel>(this.id, options, reason);
+	async edit(options: EditStageChannelOptions) {
+		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 
 	/**

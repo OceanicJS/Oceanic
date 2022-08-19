@@ -43,12 +43,12 @@ export default class NewsChannel extends TextableChannel<NewsChannel> {
 	 * @param {?String} [options.parentID] - The id of the parent category channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - Channel or category specific permissions
 	 * @param {?Number} [options.position] - The position of the channel in the channel list.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<NewsChannel>}
 	 */
-	override async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<NewsChannel>(this.id, options, reason);
+	override async edit(options: EditGuildChannelOptions) {
+		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 }

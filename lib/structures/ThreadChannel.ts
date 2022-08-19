@@ -169,11 +169,11 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	 * @param {Boolean} [options.locked] - If the thread should be locked.
 	 * @param {String} [options.name] - The name of the channel.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<AnyThreadChannel>}
 	 */
-	override async edit(options: EditThreadChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<AnyThreadChannel>(this.id, options, reason);
+	override async edit(options: EditThreadChannelOptions) {
+		return this._client.rest.channels.edit<AnyThreadChannel>(this.id, options);
 	}
 
 	/**

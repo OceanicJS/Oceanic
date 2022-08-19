@@ -103,6 +103,8 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<Invite>}
 	 */
 	async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawInvite>({
 			method: "POST",
 			path:   Routes.CHANNEL_INVITES(id),
@@ -115,7 +117,7 @@ export default class Channels extends BaseRoute {
 				temporary:             options.temporary,
 				unique:                options.unique
 			},
-			reason: options.reason
+			reason
 		}).then(data => new Invite<T, CH>(data, this._client));
 	}
 
@@ -146,6 +148,8 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async createMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, options: CreateMessageOptions) {
+		const files = options.files;
+		if (options.files) delete options.files;
 		return this._manager.authRequest<RawMessage>({
 			method: "POST",
 			path:   Routes.CHANNEL_MESSAGES(id),
@@ -165,7 +169,7 @@ export default class Channels extends BaseRoute {
 				},
 				tts: options.tts
 			},
-			files: options.files
+			files
 		}).then(data => new Message<T>(data, this._client));
 	}
 
@@ -317,15 +321,17 @@ export default class Channels extends BaseRoute {
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
 	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text, News] The seconds between sending messages for users. Between 0 and 21600.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
 	 * @param {?String} [options.topic] - [Text, News] The topic of the channel.
 	 * @param {ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS} [options.type] - [Text, News] Provide the opposite type to convert the channel.
 	 * @param {?Number} [options.userLimit] - [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<AnyChannel>}
 	 */
-	async edit<T extends AnyChannel = AnyChannel>(id: string, options: EditChannelOptions, reason?: string) {
+	async edit<T extends AnyChannel = AnyChannel>(id: string, options: EditChannelOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		if (options.icon) {
 			try {
 				options.icon = this._client._convertImage(options.icon);
@@ -382,6 +388,8 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async editMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string, options: EditMessageOptions) {
+		const files = options.files;
+		if (options.files) delete options.files;
 		return this._manager.authRequest<RawMessage>({
 			method: "PATCH",
 			path:   Routes.CHANNEL_MESSAGE(id, messageID),
@@ -392,7 +400,8 @@ export default class Channels extends BaseRoute {
 				content:          options.content,
 				embeds:           options.embeds,
 				flags:            options.flags
-			}
+			},
+			files
 		}).then(data => new Message<T>(data, this._client));
 	}
 
@@ -409,6 +418,8 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<void>}
 	 */
 	async editPermission(id: string, overwriteID: string, options: EditPermissionOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		await this._manager.authRequest<null>({
 			method: "PUT",
 			path:   Routes.CHANNEL_PERMISSION(id, overwriteID),
@@ -417,7 +428,7 @@ export default class Channels extends BaseRoute {
 				deny:  options.deny,
 				type:  options.type
 			},
-			reason: options.reason
+			reason
 		});
 	}
 
@@ -765,6 +776,8 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<T>}
 	 */
 	async startThreadFromMessage<T extends NewsThreadChannel | PublicThreadChannel = NewsThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawChannel>({
 			method: "POST",
 			path:   Routes.CHANNEL_MESSAGE_THREADS(id, messageID),
@@ -773,7 +786,7 @@ export default class Channels extends BaseRoute {
 				name:                  options.name,
 				rate_limit_per_user:   options.rateLimitPerUser
 			},
-			reason: options.reason
+			reason
 		}).then(data => Channel.from<T>(data, this._client));
 	}
 
@@ -802,6 +815,10 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<PublicThreadChannel>}
 	 */
 	async startThreadInForum(id: string, options: StartThreadInForumOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
+		const files = options.message.files;
+		if (options.message.files) delete options.message.files;
 		return this._manager.authRequest<RawChannel>({
 			method: "POST",
 			path:   Routes.CHANNEL_THREADS(id),
@@ -819,7 +836,8 @@ export default class Channels extends BaseRoute {
 				name:                options.name,
 				rate_limit_per_user: options.rateLimitPerUser
 			},
-			reason: options.reason
+			reason,
+			files
 		}).then(data => Channel.from<PublicThreadChannel>(data, this._client));
 	}
 
@@ -838,6 +856,8 @@ export default class Channels extends BaseRoute {
 	 * @returns {Promise<T>}
 	 */
 	async startThreadWithoutMessage<T extends NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel = NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawChannel>({
 			method: "POST",
 			path:   Routes.CHANNEL_THREADS(id),
@@ -848,7 +868,7 @@ export default class Channels extends BaseRoute {
 				rate_limit_per_user:   options.rateLimitPerUser,
 				type:                  options.type
 			},
-			reason: options.reason
+			reason
 		}).then(data => Channel.from<T>(data, this._client));
 	}
 

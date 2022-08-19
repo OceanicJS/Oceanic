@@ -33,13 +33,13 @@ export default class TextChannel extends TextableChannel<TextChannel> {
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - Channel or category specific permissions
 	 * @param {?Number} [options.position] - The position of the channel in the channel list.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<TextChannel>}
 	 */
-	override async edit(options: EditTextChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<TextChannel>(this.id, options, reason);
+	override async edit(options: EditTextChannelOptions) {
+		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 
 	/**

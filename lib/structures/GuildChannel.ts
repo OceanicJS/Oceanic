@@ -40,15 +40,15 @@ export default class GuildChannel extends Channel {
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All] The position of the channel in the channel list.
 	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text, News] The seconds between sending messages for users. Between 0 and 21600.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
 	 * @param {?String} [options.topic] - [Text, News] The topic of the channel.
 	 * @param {ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS} [options.type] - [Text, News] Provide the opposite type to convert the channel.
 	 * @param {?Number} [options.userLimit] - [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<GuildChannel>}
 	 */
-	async edit(options: EditGuildChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<AnyGuildChannel>(this.id, options, reason);
+	async edit(options: EditGuildChannelOptions) {
+		return this._client.rest.channels.edit<AnyGuildChannel>(this.id, options);
 	}
 }

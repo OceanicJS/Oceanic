@@ -51,11 +51,11 @@ export default class CategoryChannel extends Channel {
 	 * @param {String} [options.name] - [All] The name of the channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
+	 * @param {String} [roptions.eason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<CategoryChannel>}
 	 */
-	async edit(options: EditAnyGuildChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<CategoryChannel>(this.id, options, reason);
+	async edit(options: EditAnyGuildChannelOptions) {
+		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 
 	/**

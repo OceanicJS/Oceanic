@@ -24,10 +24,10 @@ export default class NewsThreadChannel extends ThreadChannel<NewsThreadChannel> 
 	 * @param {Boolean} [options.locked] - If the thread should be locked.
 	 * @param {String} [options.name] - The name of the channel.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<NewsThreadChannel>}
 	 */
-	override async edit(options: EditPublicThreadChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<NewsThreadChannel>(this.id, options, reason);
+	override async edit(options: EditPublicThreadChannelOptions) {
+		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 }

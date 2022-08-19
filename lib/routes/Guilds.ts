@@ -62,6 +62,8 @@ export default class Guilds extends BaseRoute {
 	 * @returns {Promise<AutoModerationRule>}
 	 */
 	async createAutoModerationRule(id: string, options: CreateAutoModerationRuleOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawAutoModerationRule>({
 			method: "POST",
 			path:   Routes.GUILD_AUTOMOD_RULES(id),
@@ -85,7 +87,7 @@ export default class Guilds extends BaseRoute {
 				},
 				trigger_type: options.triggerType
 			},
-			reason: options.reason
+			reason
 		}).then(data => this._formatAutoModRule(data));
 	}
 
@@ -101,6 +103,8 @@ export default class Guilds extends BaseRoute {
 	 * @returns {Promise<GuildEmoji>}
 	 */
 	async createEmoji(id: string, options: CreateEmojiOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		if (options.image) {
 			try {
 				options.image = this._client._convertImage(options.image);
@@ -116,7 +120,7 @@ export default class Guilds extends BaseRoute {
 				name:  options.name,
 				roles: options.roles
 			},
-			reason: options.reason
+			reason
 		}).then(data => ({
 			...data,
 			user: !data.user ? undefined : this._client.users.update(data.user)
@@ -178,6 +182,8 @@ export default class Guilds extends BaseRoute {
 	 * @returns {Promise<AutoModerationRule>}
 	 */
 	async editAutoModerationRule(id: string, ruleID: string, options: EditAutoModerationRuleOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawAutoModerationRule>({
 			method: "PATCH",
 			path:   Routes.GUILD_AUTOMOD_RULE(id, ruleID),
@@ -200,7 +206,7 @@ export default class Guilds extends BaseRoute {
 					presets:             options.triggerMetadata.presets
 				}
 			},
-			reason: options.reason
+			reason
 		}).then(data => this._formatAutoModRule(data));
 	}
 
@@ -215,6 +221,8 @@ export default class Guilds extends BaseRoute {
 	 * @returns {Promise<GuildEmoji>}
 	 */
 	async editEmoji(id: string, emojiID: string, options: EditEmojiOptions) {
+		const reason = options.reason;
+		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawGuildEmoji>({
 			method: "POST",
 			path:   Routes.GUILD_EMOJI(id, emojiID),
@@ -222,7 +230,7 @@ export default class Guilds extends BaseRoute {
 				name:  options.name,
 				roles: options.roles
 			},
-			reason: options.reason
+			reason
 		}).then(data => ({
 			...data,
 			user: !data.user ? undefined : this._client.users.update(data.user)
