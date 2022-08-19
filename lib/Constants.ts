@@ -502,3 +502,27 @@ export enum StageInstancePrivacyLevels {
 	PUBLIC     = 1,
 	GUILD_ONLY = 2
 }
+
+export enum AutoModerationEventTypes {
+	MESSAGE_SEND = 1
+}
+
+export enum AutoModerationTriggerTypes {
+	KEYWORD        = 1,
+	HARMFUL_LINK   = 2,
+	SPAM           = 3,
+	KEYWORD_PRESET = 4,
+	MENTION_SPAM   = 5
+}
+
+export enum AutoModerationKeywordPresetTypes {
+	PROFANITY = 1,
+	SEXUAL_CONTENT = 2,
+	SLURS = 3
+}
+
+export enum AutoModerationActionTypes {
+	BLOCK_MESSAGE      = 1,
+	SEND_ALERT_MESSAGE = 2,
+	TIMEOUT            = 3
+}
