@@ -5,6 +5,7 @@ import Member from "./Member";
 import type ScheduledEvent from "./ScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
 import type {
+	AuditLogActionTypes,
 	AutoModerationActionTypes,
 	AutoModerationEventTypes,
 	AutoModerationKeywordPresetTypes,
@@ -34,6 +35,8 @@ import type {
 } from "../types/guilds";
 import type { RawScheduledEvent } from "../types/scheduled-events";
 import type { AutoModerationRule, CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions } from "../types/auto-moderation";
+import type { GetAuditLogOptions } from "../types/audit-log";
+import { AuditLog } from "../types/audit-log";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
@@ -284,6 +287,22 @@ export default class Guild extends Base {
 	 */
 	async editEmoji(emojiID: string, options: EditEmojiOptions) {
 		return this._client.rest.guilds.editEmoji(this.id, emojiID, options);
+	}
+
+	/**
+	 * Get this guild's audit log.
+	 *
+	 * Note: everything under the `entries` key is raw from Discord. See [their documentation](https://discord.com/developers/docs/resources/audit-log#audit-logs) for structure and other information. (`audit_log_entries`)
+	 *
+	 * @param {Object} [options]
+	 * @param {AuditLogActionTypes} [options.actionType] - The action type to filter by.
+	 * @param {Number} [options.before] - The ID of the entry to get entries before.
+	 * @param {Number} [options.limit] - The maximum number of entries to get.
+	 * @param {String} [options.userID] - The ID of the user to filter by.
+	 * @returns {Promise<AuditLog>}
+	 */
+	async getAuditLog(options?: GetAuditLogOptions) {
+		return this._client.rest.guilds.getAuditLog(this.id, options);
 	}
 
 	/**

@@ -16,7 +16,7 @@ export const GUILD_AUTOMOD_RULE  = (guildID: string, autoModerationRuleID: strin
 export const GUILD_AUTOMOD_RULES = (guildID: string) => `/guilds/${guildID}/auto-moderation/rules` as const;
 export const GUILD_EMOJI         = (guildID: string, emojiID: string) => `/guilds/${guildID}/emojis/${emojiID}` as const;
 export const GUILD_EMOJIS        = (guildID: string) => `/guilds/${guildID}/emojis` as const;
-
+export const GUILD_AUDIT_LOG    = (guildID: string) => `/guilds/${guildID}/audit-logs` as const;
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;
 export const CHANNEL_BULK_DELETE_MESSAGES            = (channelID: string) => `/channels/${channelID}/messages/bulk-delete` as const;

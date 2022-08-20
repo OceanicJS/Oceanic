@@ -9,7 +9,17 @@ import type {
 import * as Routes from "../util/Routes";
 import Guild from "../structures/Guild";
 import type { AutoModerationRule, CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
+import {
+	AuditLogActionTypes,
+	AutoModerationActionTypes,
+	AutoModerationEventTypes,
+	AutoModerationKeywordPresetTypes,
+	AutoModerationTriggerTypes
+} from "../Constants";
+import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
+import ScheduledEvent from "../structures/ScheduledEvent";
+import Channel from "../structures/Channel";
+import Webhook from "../structures/Webhook";
 
 export default class Guilds extends BaseRoute {
 	private _formatAutoModRule(data: RawAutoModerationRule) {
@@ -237,11 +247,51 @@ export default class Guilds extends BaseRoute {
 		}));
 	}
 
+	/**
+	 * Get a guild.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @returns {Promise<Guild>}
+	 */
 	async get(id: string) {
 		return this._manager.authRequest<RawGuild>({
 			method: "GET",
 			path:   Routes.GUILD(id)
 		}).then(data => new Guild(data, this._client));
+	}
+
+	/**
+	 * Get a guild's audit log.
+	 *
+	 * Note: everything under the `entries` key is raw from Discord. See [their documentation](https://discord.com/developers/docs/resources/audit-log#audit-logs) for structure and other information. (`audit_log_entries`)
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {Object} [options]
+	 * @param {AuditLogActionTypes} [options.actionType] - The action type to filter by.
+	 * @param {Number} [options.before] - The ID of the entry to get entries before.
+	 * @param {Number} [options.limit] - The maximum number of entries to get.
+	 * @param {String} [options.userID] - The ID of the user to filter by.
+	 * @returns {Promise<AuditLog>}
+	 */
+	async getAuditLog(id: string, options?: GetAuditLogOptions) {
+		const query = new URLSearchParams();
+		if (options?.actionType) query.set("action_type", options.actionType.toString());
+		if (options?.before) query.set("before", options.before);
+		if (options?.limit) query.set("limit", options.limit.toString());
+		if (options?.userID) query.set("user_id", options.userID);
+		return this._manager.authRequest<RawAuditLog>({
+			method: "GET",
+			path:   Routes.GUILD_AUDIT_LOG(id),
+			query
+		}).then(data => ({
+			autoModerationRules:  data.auto_moderation_rules.map(rule => this._formatAutoModRule(rule)),
+			entries:              data.audit_log_entries,
+			guildScheduledEvents: data.guild_scheduled_events.map(event => new ScheduledEvent(event, this._client)),
+			integrations:         data.integrations,
+			threads:              data.threads.map(thread => Channel.from(thread, this._client)),
+			users:                data.users.map(user => this._client.users.update(user)),
+			webhooks:             data.webhooks.map(webhook => new Webhook(webhook, this._client))
+		}) as AuditLog);
 	}
 
 	/**
