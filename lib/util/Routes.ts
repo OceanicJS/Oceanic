@@ -11,18 +11,19 @@ export const WEBHOOK_PLATFORM = (webhookID: string, webhookToken: string, platfo
 export const USER = (userID: string) => `/users/${userID}` as const;
 
 // Guilds
-export const GUILD               = (userID: string, withCounts = false) => `/guilds/${userID}?with_counts=${String(withCounts)}` as const;
-export const GUILD_AUTOMOD_RULE  = (guildID: string, autoModerationRuleID: string) => `/guilds/${guildID}/auto-moderation/rules/${autoModerationRuleID}` as const;
-export const GUILD_AUTOMOD_RULES = (guildID: string) => `/guilds/${guildID}/auto-moderation/rules` as const;
-export const GUILD_EMOJI         = (guildID: string, emojiID: string) => `/guilds/${guildID}/emojis/${emojiID}` as const;
-export const GUILD_EMOJIS        = (guildID: string) => `/guilds/${guildID}/emojis` as const;
-export const GUILD_AUDIT_LOG    = (guildID: string) => `/guilds/${guildID}/audit-logs` as const;
-export const GUILD_SCHEDULED_EVENT  = (guildID: string, eventID: string) => `/guilds/${guildID}/scheduled-events/${eventID}` as const;
-export const GUILD_SCHEDULED_EVENTS = (guildID: string) => `/guilds/${guildID}/scheduled-events` as const;
+export const GUILD                       = (userID: string, withCounts = false) => `/guilds/${userID}?with_counts=${String(withCounts)}` as const;
+export const GUILD_AUTOMOD_RULE          = (guildID: string, autoModerationRuleID: string) => `/guilds/${guildID}/auto-moderation/rules/${autoModerationRuleID}` as const;
+export const GUILD_AUTOMOD_RULES         = (guildID: string) => `/guilds/${guildID}/auto-moderation/rules` as const;
+export const GUILD_EMOJI                 = (guildID: string, emojiID: string) => `/guilds/${guildID}/emojis/${emojiID}` as const;
+export const GUILD_EMOJIS                = (guildID: string) => `/guilds/${guildID}/emojis` as const;
+export const GUILD_AUDIT_LOG             = (guildID: string) => `/guilds/${guildID}/audit-logs` as const;
+export const GUILD_SCHEDULED_EVENT       = (guildID: string, eventID: string) => `/guilds/${guildID}/scheduled-events/${eventID}` as const;
+export const GUILD_SCHEDULED_EVENTS      = (guildID: string) => `/guilds/${guildID}/scheduled-events` as const;
 export const GUILD_SCHEDULED_EVENT_USERS = (guildID: string, eventID: string) => `/guilds/${guildID}/scheduled-events/${eventID}/users` as const;
-export const GUILD_TEMPLATE_CODE = (code: string) => `/guilds/templates/${code}` as const;
-export const GUILD_TEMPLATE = (guildID: string, templateID: string) => `/guilds/${guildID}/templates/${templateID}` as const;
-export const GUILD_TEMPLATES = (guildID: string) => `/guilds/${guildID}/templates` as const;
+export const GUILD_TEMPLATE_CODE         = (code: string) => `/guilds/templates/${code}` as const;
+export const GUILD_TEMPLATE              = (guildID: string, templateID: string) => `/guilds/${guildID}/templates/${templateID}` as const;
+export const GUILD_TEMPLATES             = (guildID: string) => `/guilds/${guildID}/templates` as const;
+export const GUILD_PREVIEW               = (guildID: string) => `/guilds/${guildID}/preview` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;

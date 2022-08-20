@@ -7,16 +7,27 @@ import type { Uncached } from "../types/shared";
 
 export default class GuildTemplate {
 	protected _client: Client;
+	/** The code of the template. */
 	code: string;
+	/** When this template was created. */
 	createdAt: Date;
+	/** The creator of this template. */
 	creator: User;
+	/** The description of this template. */
 	description: string | null;
+	/** If this template has unsynced changes. */
 	isDirty: boolean | null;
+	/** The name of this template. */
 	name: string;
+	/** A snapshot of the guild. */
 	serializedSourceGuild: Partial<RawGuild>;
+	/** The source guild of this template. */
 	sourceGuild: Guild | Uncached;
+	/** When this template was last updated. */
 	updatedAt: Date;
+	/** The amount of times this template has been used. */
 	usageCount: number;
+	/** @hideconstructor */
 	constructor(data: RawGuildTemplate, client: Client) {
 		this._client = client;
 		this.update(data);

@@ -158,9 +158,9 @@ export default class Guild extends Base {
 		this.defaultMessageNotifications = data.default_message_notifications;
 		this.description                 = data.description;
 		this.discoverySplash             = data.discovery_splash;
-		this.emojis                      = data.emojis.map(e => ({
-			...e,
-			user: !e.user ? undefined : this._client.users.update(e.user)
+		this.emojis                      = data.emojis.map(emoji => ({
+			...emoji,
+			user: !emoji.user ? undefined : this._client.users.update(emoji.user)
 		}));
 		this.explicitContentFilter       = data.explicit_content_filter;
 		this.features                    = data.features;

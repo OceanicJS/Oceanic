@@ -5,6 +5,7 @@ import type {
 	GuildEmoji,
 	RawGuild,
 	RawGuildEmoji,
+	RawGuildPreview,
 	RawMember
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
@@ -35,6 +36,7 @@ import type {
 import Member from "../structures/Member";
 import GuildTemplate from "../structures/GuildTemplate";
 import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
+import GuildPreview from "../structures/GuildPreview";
 
 export default class Guilds extends BaseRoute {
 	private _formatAutoModRule(data: RawAutoModerationRule) {
@@ -564,6 +566,19 @@ export default class Guilds extends BaseRoute {
 			...d,
 			user: !d.user ? undefined : this._client.users.update(d.user)
 		}) as GuildEmoji));
+	}
+
+	/**
+	 * Get a preview of a guild. If the client is not already in this guild, the guild musy be lurkable.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @returns {Promise<GuildPreview>}
+	 */
+	async getPreview(id: string) {
+		return this._manager.authRequest<RawGuildPreview>({
+			method: "GET",
+			path:   Routes.GUILD_PREVIEW(id)
+		}).then(data => new GuildPreview(data, this._client));
 	}
 
 	/**
