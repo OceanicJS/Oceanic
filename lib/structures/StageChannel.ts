@@ -25,6 +25,7 @@ export default class StageChannel extends GuildChannel {
 	/** The topic of the channel. */
 	topic: string | null;
 	declare type: ChannelTypes.GUILD_STAGE_VOICE;
+	/** @hideconstructor */
 	constructor(data: RawStageChannel, client: Client) {
 		super(data, client);
 		this.permissionOverwrites = new Collection(PermissionOverwrite, client);

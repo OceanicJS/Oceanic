@@ -3,6 +3,7 @@ import Properties from "../util/Properties";
 
 export default abstract class BaseRoute {
 	protected _manager: RESTManager;
+	/** @hideconstructor */
 	constructor(manager: RESTManager) {
 		Properties.looseDefine(this, "_manager", manager);
 	}

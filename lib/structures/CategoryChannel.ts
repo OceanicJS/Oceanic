@@ -14,12 +14,14 @@ import type {
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends Channel {
+	/** The channels in this category. */
 	channels: Collection<string, RawGuildChannel, GuildChannel>;
 	/** The permission overwrites of this channel. */
 	permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
 	/** The position of this channel on the sidebar. */
 	position: number;
 	declare type: ChannelTypes.GUILD_CATEGORY;
+	/** @hideconstructor */
 	constructor(data: RawCategoryChannel, client: Client) {
 		super(data, client);
 		this.channels = new Collection(GuildChannel, client);

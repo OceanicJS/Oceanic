@@ -6,6 +6,7 @@ export default class DiscordHTTPError extends Error {
 	name = "DiscordHTTPError";
 	resBody: unknown | null;
 	response: Response;
+	/** @hideconstructor */
 	constructor(res: Response, resBody: unknown | null, method: string, stack?: string) {
 		super();
 

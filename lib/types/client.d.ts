@@ -1,4 +1,5 @@
 import type { AllowedMentions } from "./channels";
+import type { RawRequest } from "./request-handler";
 import type { ImageFormat } from "../Constants";
 import type { Agent } from "undici";
 
@@ -32,4 +33,11 @@ export interface RESTOptions {
 	requestTimeout?: number;
 	/** the user agent to use for requests (default: `Oceanic/VERSION (https://github.com/DonovanDMC/Oceanic)`) */
 	userAgent?: string;
+}
+
+export interface ClientEvents {
+	debug: [info: string, shard?: number];
+	error: [info: Error | string, shard?: number];
+	request: [rawRequest: RawRequest];
+	warn: [info: string, shard?: number];
 }

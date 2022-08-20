@@ -10,6 +10,7 @@ export default class NewsChannel extends TextableChannel<NewsChannel> {
 	/** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
 	declare rateLimitPerUser: 0;
 	declare type: ChannelTypes.GUILD_NEWS;
+	/** @hideconstructor */
 	constructor(data: RawNewsChannel, client: Client) {
 		super(data, client);
 	}

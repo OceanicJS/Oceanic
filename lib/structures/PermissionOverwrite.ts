@@ -6,8 +6,11 @@ import Properties from "../util/Properties";
 import type { RawOverwrite } from "../types/channels";
 
 export default class PermissionOverwrite extends Base {
+	/** The permissions of this overwrite. */
 	permission: Permission;
+	/** The type of this overwrite. `0` for role, `1` for user. */
 	type: OverwriteTypes;
+	/** @hideconstructor */
 	constructor(data: RawOverwrite, client: Client) {
 		super(data.id, client);
 		Properties.looseDefine(this, "_client", client);

@@ -5,8 +5,11 @@ import Properties from "../util/Properties";
 
 export default class Permission {
 	private _json: Record<keyof typeof Permissions, boolean> | undefined;
+	/** The allowed permissions for this permission instance. */
 	allow: bigint;
+	/** The denied permissions for this permission instance. */
 	deny: bigint;
+	/** @hideconstructor */
 	constructor(allow: bigint | string, deny: bigint | string = 0n) {
 		this.allow = BigInt(allow);
 		this.deny = BigInt(deny);

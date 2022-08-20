@@ -5,7 +5,7 @@
 
 import type { LatencyRef } from "../types/request-handler";
 
-
+/** A ratelimit bucket. */
 export default class SequentialBucket {
 	private _queue: Array<(cb: () => void) => void> = [];
 	last: number;
@@ -14,6 +14,7 @@ export default class SequentialBucket {
 	processing: NodeJS.Timeout | boolean = false;
 	remaining: number;
 	reset = 0;
+	/** @hideconstructor */
 	constructor(limit: number, latencyRef: LatencyRef) {
 		this.limit = this.remaining = limit;
 		this.latencyRef = latencyRef;

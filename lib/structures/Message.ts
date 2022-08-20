@@ -31,7 +31,9 @@ import { File } from "../types/request-handler";
 export default class Message<T extends AnyTextChannel = AnyTextChannel> extends Base {
 	/** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
 	activity?: MessageActivity;
+	/** If the message was from an interaction or application owned webhook, some information about the application. */
 	application?: RawApplication; // @TODO specific properties sent
+	/** If the message was from an interaction or application owned webhook, the id of that application. */
 	applicationID?: string;
 	/** The attachments on this message. */
 	attachments: Collection<string, RawAttachment, Attachment>;
@@ -89,6 +91,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	type: MessageTypes;
 	/** The id of the webhook associated with this message, if sent via a webhook. */
 	webhookID?: string;
+	/** @hideconstructor */
 	constructor(data: RawMessage, client: Client) {
 		super(data.id, client);
 		this.attachments = new Collection(Attachment, client);

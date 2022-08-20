@@ -16,6 +16,7 @@ export default class StageInstance extends Base {
 	privacyLevel: StageInstancePrivacyLevels;
 	/** The topic of this stage instance. */
 	topic: string;
+	/** @hideconstructor */
 	constructor(data: RawStageInstance, client: Client) {
 		super(data.id, client);
 		this.update(data);

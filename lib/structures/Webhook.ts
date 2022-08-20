@@ -38,6 +38,7 @@ export default class Webhook extends Base {
 	type: WebhookTypes;
 	/** The user that created this webhook. */
 	user?: User;
+	/** @hideconstructor */
 	constructor(data: RawWebhook, client: Client) {
 		super(data.id, client);
 		this.update(data);

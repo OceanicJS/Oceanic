@@ -40,13 +40,6 @@ export interface RawRequest {
 	withAuth: boolean;
 }
 
-export interface RequestEvents {
-	debug: [info: string];
-	error: [err: Error];
-	request: [rawRequest: RawRequest];
-	warn: [info: string];
-}
-
 export interface LatencyRef {
 	lastTimeOffsetCheck: number;
 	latency: number;

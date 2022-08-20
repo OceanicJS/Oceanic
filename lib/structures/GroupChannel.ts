@@ -34,6 +34,7 @@ export default class GroupChannel extends Channel {
 	/** The other recipients in this group channel. */
 	recipients: Array<User>;
 	declare type: ChannelTypes.GROUP_DM;
+	/** @hideconstructor */
 	constructor(data: RawGroupChannel, client: Client) {
 		super(data, client);
 		Object.defineProperty(this, "_recipients", {
@@ -154,8 +155,8 @@ export default class GroupChannel extends Channel {
 	 * @param {String} [options.name] - The name of the channel.
 	 * @returns {Promise<GroupChannel>}
 	 */
-	async edit(options: EditGroupDMOptions, reason?: string) {
-		return this._client.rest.channels.edit<GroupChannel>(this.id, options, reason);
+	async edit(options: EditGroupDMOptions) {
+		return this._client.rest.channels.edit<GroupChannel>(this.id, options);
 	}
 
 	/**

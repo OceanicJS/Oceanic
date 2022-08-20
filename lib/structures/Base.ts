@@ -2,9 +2,11 @@ import type Client from "../Client";
 import Properties from "../util/Properties";
 import { inspect } from "util";
 
+/** A base class which most other classes extend. */
 export default abstract class Base {
 	protected _client: Client;
 	id: string;
+	/** @hideconstructor */
 	constructor(id: string, client: Client) {
 		this.id = id;
 		Properties.looseDefine(this, "_client", client);

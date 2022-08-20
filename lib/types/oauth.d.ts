@@ -30,7 +30,7 @@ export interface RawApplication {
 	verify_key: string;
 }
 export type RawPartialApplication = Pick<RawApplication, "id" | "name" | "icon" | "description" | "bot_public" | "bot_require_code_grant" | "verify_key">;
-export type RESTApplication = Omit<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins"> & Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">>;
+export type RESTApplication = Omit<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins"> & Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">>;
 
 export interface RawTeam {
 	icon: string | null;

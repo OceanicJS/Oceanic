@@ -8,6 +8,7 @@ export default class GuildChannel extends Channel {
 	guildID: string;
 	name: string;
 	parentID: string | null;
+	/** @hideconstructor */
 	constructor(data: RawGuildChannel, client: Client) {
 		super(data, client);
 		this.update(data);

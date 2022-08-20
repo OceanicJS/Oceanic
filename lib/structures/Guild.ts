@@ -35,6 +35,7 @@ import type {
 import type { RawScheduledEvent } from "../types/scheduled-events";
 import type { AutoModerationRule, CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions } from "../types/auto-moderation";
 
+/** Represents a Discord server. */
 export default class Guild extends Base {
 	/** The id of this guild's AFK channel. */
 	afkChannelID: string | null;
@@ -122,6 +123,7 @@ export default class Guild extends Base {
 	widgetChannelID?: string | null;
 	/** If the widget is enabled. */
 	widgetEnabled?: boolean;
+	/** @hideconstructor */
 	constructor(data: RawGuild, client: Client) {
 		super(data.id, client);
 		this.channels = new Collection(GuildChannel, client);

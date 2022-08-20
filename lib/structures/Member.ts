@@ -5,21 +5,35 @@ import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
 import { assert } from "tsafe";
 
+/** Represents a member of a guild. */
 export default class Member extends Base {
 	/** The member's avatar hash, if they have set a guild avatar. */
 	avatar: string | null;
+	/** When the member's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire, if active. */
 	communicationDisabledUntil: Date | null;
+	/** If this member is server deafened. */
 	deaf: boolean;
-	flags: number;
+	/** Undocumented. */
+	flags?: number;
+	/** The id of the guild this member is for. */
 	guildID: string;
-	isPending: boolean;
+	/** Undocumented. */
+	isPending?: boolean;
+	/** The date at which this member joined the guild. */
 	joinedAt: Date;
+	/** If this member is server muted. */
 	mute: boolean;
+	/** This member's nickname, if any. */
 	nick: string | null;
+	/** If this member has not passed the guild's [membership screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) requirements. */
 	pending: boolean;
-	premiumSince: Date;
+	/** The date at which this member started boosting the guild, if applicable. */
+	premiumSince: Date | null;
+	/** The roles this member has. */
 	roles: Array<string>;
+	/** The user associated with this member. */
 	user: User;
+	/** @hideconstructor */
 	constructor(data: RawMember, client: Client, guildID: string) {
 		assert(data.user, "Member recieved without accompanying user.");
 		super(data.user.id, client);
@@ -28,18 +42,18 @@ export default class Member extends Base {
 	}
 
 	protected update(data: RawMember) {
-		this.avatar                     = data.user.avatar;
+		this.avatar                     = data.avatar || null;
 		this.communicationDisabledUntil = !data.communication_disabled_until ? null : new Date(data.communication_disabled_until);
 		this.deaf                       = data.deaf;
 		this.flags                      = data.flags;
 		this.isPending                  = data.is_pending;
 		this.joinedAt                   = new Date(data.joined_at);
 		this.mute                       = data.mute;
-		this.nick                       = data.nick;
-		this.pending                    = data.pending;
-		this.premiumSince               = new Date(data.premium_since);
+		this.nick                       = data.nick ?? null;
+		this.pending                    = data.pending ?? false;
+		this.premiumSince               = !data.premium_since ? null : new Date(data.premium_since);
 		this.roles                      = data.roles;
-		this.user                       = this._client.users.update(data.user);
+		this.user = this._client.users.update(data.user!);
 	}
 
 	/** If the member associated with the user is a bot. */

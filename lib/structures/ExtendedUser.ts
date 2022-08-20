@@ -14,6 +14,7 @@ export default class ExtendedUser extends User {
 	mfaEnabled: boolean;
 	/** If this user's email is verified. (always true for bots) */
 	verified: boolean;
+	/** @hideconstructor */
 	constructor(data: RawExtendedUser, client: Client) {
 		super(data, client);
 		this.update(data);

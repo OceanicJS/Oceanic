@@ -8,6 +8,7 @@ import type { EditPublicThreadChannelOptions, RawNewsThreadChannel } from "../ty
 export default class NewsThreadChannel extends ThreadChannel<NewsThreadChannel> {
 	declare threadMetadata: ThreadMetadata;
 	declare type: ChannelTypes.GUILD_NEWS_THREAD;
+	/** @hideconstructor */
 	constructor(data: RawNewsThreadChannel, client: Client) {
 		super(data, client);
 	}

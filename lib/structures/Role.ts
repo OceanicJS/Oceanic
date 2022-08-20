@@ -3,6 +3,7 @@ import Permission from "./Permission";
 import type Client from "../Client";
 import type { RawRole, RoleTags } from "../types/guilds";
 
+/** Represents a role in a guild. */
 export default class Role extends Base {
 	/** The color of this role. */
 	color: number;
@@ -26,6 +27,7 @@ export default class Role extends Base {
 	tags: RoleTags;
 	/** The unicode emoji of this role. */
 	unicodeEmoji: string | null;
+	/** @hideconstructor */
 	constructor(data: RawRole, client: Client, guildID: string) {
 		super(data.id, client);
 		this.guildID = guildID;

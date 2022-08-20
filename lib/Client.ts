@@ -17,11 +17,12 @@ import type {
 } from "./types/channels";
 import type { RawGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
-import type { ClientInstanceOptions, ClientOptions } from "./types/client";
+import type { ClientEvents, ClientInstanceOptions, ClientOptions } from "./types/client";
+import TypedEmitter from "./util/TypedEmitter";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** The primary class for interfacing with Discord. */
-export default class Client {
+export default class Client extends TypedEmitter<ClientEvents> {
 	channelGuildMap: Map<string, string>;
 	groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
 	guilds: Collection<string, RawGuild, Guild>;
@@ -32,6 +33,7 @@ export default class Client {
 	threadGuildMap: Map<string, string>;
 	users: Collection<string, RawUser, User>;
 	constructor(options?: ClientOptions) {
+		super();
 		Properties.new(this)
 			.define("options", {
 				allowedMentions: options?.allowedMentions || {
@@ -97,6 +99,18 @@ export default class Client {
 		if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.options.defaultImageSize;
 		return `${CDN_URL}${url}.${format}?size=${size}`;
 	}
+
+	/* _showDeprecation(type: Deprecations, detail?: string) {
+		let name: string;
+		switch (type) {
+			default: name = "UnknownDeprecation";
+		}
+
+		process.emitWarning(name, {
+			type,
+			detail
+		});
+	} */
 
 	getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined {
 		if (this.channelGuildMap.has(id)) return this.guilds.get(this.channelGuildMap.get(id)!)?.channels.get(id) as T;

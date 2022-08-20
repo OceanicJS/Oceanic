@@ -6,6 +6,7 @@ export default class DiscordRESTError extends Error {
 	name = "DiscordRESTError";
 	resBody: Record<string, unknown>;
 	response: Response;
+	/** @hideconstructor */
 	constructor(res: Response, resBody: Record<string, unknown>, method: string, stack?: string) {
 		super();
 

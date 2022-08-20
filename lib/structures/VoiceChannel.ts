@@ -39,6 +39,7 @@ export default class VoiceChannel extends GuildChannel {
 	declare type: ChannelTypes.GUILD_VOICE;
 	/** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
 	videoQualityMode: VideoQualityModes;
+	/** @hideconstructor */
 	constructor(data: RawVoiceChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);
@@ -178,14 +179,14 @@ export default class VoiceChannel extends GuildChannel {
 	 * @param {?String} [options.parentID] - The id of the parent category channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - The position of the channel in the channel list.
+	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - The voice region id of the channel, null for automatic.
 	 * @param {?Number} [options.userLimit] - The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
-	 * @param {String} [reason] - The reason to be displayed in the audit log.
 	 * @returns {Promise<VoiceChannel>}
 	 */
-	async edit(options: EditVoiceChannelOptions, reason?: string) {
-		return this._client.rest.channels.edit<this>(this.id, options, reason);
+	async edit(options: EditVoiceChannelOptions) {
+		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 
 	/**

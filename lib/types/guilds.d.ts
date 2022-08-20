@@ -117,7 +117,7 @@ export interface Sticker {
 	user?: RawUser;
 }
 
-export interface RESTMember {
+export interface RawMember {
 	avatar?: string | null;
 	communication_disabled_until?: string | null;
 	deaf: boolean;
@@ -134,7 +134,7 @@ export interface RESTMember {
 	roles: Array<string>;
 	user?: RawUser;
 }
-export type RawMember = Required<Omit<RESTMember, "permissions">>;
+export type RESTMember = Required<Omit<RawMember, "permissions">>;
 
 export interface RawIntegration {
 	account: IntegrationAccount;

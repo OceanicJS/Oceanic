@@ -6,21 +6,37 @@ import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
 
 export default class ScheduledEvent extends Base {
+	/** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
 	channelID: string | null;
+	/** The creator of the event. Not present on events created before October 25th, 2021. */
 	creator?: User;
+	/** The id of the creator of the event. Not present on events created before October 25th, 2021. */
 	creatorID?: string | null;
+	/** The description of the event. */
 	description?: string | null;
+	/** The id of the entity associated with the event. */
 	entityID: string | null;
+	/** The [metadata](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-field-requirements-by-entity-type) associated with the event. */
 	entityMetadata: ScheduledEventEntityMetadata | null;
+	/** The [entity type](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types) of the event */
 	entityType: ScheduledEventEntityTypes;
+	/** The id of the guild that the scheduled event belongs to. */
 	guildID: string;
+	/** The cover */
 	image?: string | null;
+	/** The name of the event. */
 	name: string;
+	/** The [privacy level](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level) of the event. */
 	privacyLevel: ScheduledEventPrivacyLevels;
+	/** The time at which the event will end. Required if entityType is `EXTERNAL`. */
 	scheduledEndTime: Date | null;
+	/** The time at which the event will start. */
 	scheduledStartTime: Date;
+	/** The [status](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status) of the event. */
 	status: ScheduledEventStatuses;
+	/** The number of users subscribed to the event. */
 	userCount?: number;
+	/** @hideconstructor */
 	constructor(data: RawScheduledEvent, client: Client) {
 		super(data.id, client);
 		this.update(data);

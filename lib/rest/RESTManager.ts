@@ -17,6 +17,7 @@ export default class RESTManager {
 	oauth: OAuth;
 	users: Users;
 	webhooks: Webhooks;
+	/** @hideconstructor */
 	constructor(client: Client, options?: RESTOptions) {
 		Properties.new(this)
 			.looseDefine("_client", client)

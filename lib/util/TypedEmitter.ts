@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
 import EventEmitter from "events";
 
 declare interface TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
@@ -17,6 +17,11 @@ declare interface TypedEmitter<Events extends Record<string | symbol, any>> exte
 	/* eventNames is excluded */
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {}
+class TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
+	emit<K extends keyof Events>(eventName: K, ...args: Events[K]) {
+		if (this.listenerCount(eventName) === 0) return false;
+		return super.emit(eventName as string, ...args as Array<any>);
+	}
+}
 
 export default TypedEmitter;
