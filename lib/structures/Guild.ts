@@ -17,6 +17,9 @@ import type {
 	ImageFormat,
 	MFALevels,
 	PremiumTiers,
+	ScheduledEventEntityTypes,
+	ScheduledEventPrivacyLevels,
+	ScheduledEventStatuses,
 	VerificationLevels
 } from "../Constants";
 import * as Routes from "../util/Routes";
@@ -33,7 +36,13 @@ import type {
 	Sticker,
 	WelcomeScreen
 } from "../types/guilds";
-import type { RawScheduledEvent } from "../types/scheduled-events";
+import type {
+	CreateScheduledEventOptions,
+	EditScheduledEventOptions,
+	GetScheduledEventUsersOptions,
+	RawScheduledEvent,
+	ScheduledEventUser
+} from "../types/scheduled-events";
 import type { AutoModerationRule, CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions } from "../types/auto-moderation";
 import type { GetAuditLogOptions } from "../types/audit-log";
 import { AuditLog } from "../types/audit-log";
@@ -230,6 +239,27 @@ export default class Guild extends Base {
 	}
 
 	/**
+	 * Create a scheduled event in this guild.
+	 *
+	 * @param {Object} options
+	 * @param {String} [options.channelID] - The ID of the stage channel the event is taking place in. Optional if `entityType` is `EXTERNAL`.
+	 * @param {String} [options.description] - The description of the event.
+	 * @param {Object} [options.entityMetadata]
+	 * @param {String} [options.entityMetadata.location] - The location of the event. Required if `entityType` is `EXTERNAL`.
+	 * @param {ScheduledEventEntityTypes} options.entityType - The type of the event.
+	 * @param {(Buffer | String)} [options.image] - The cover image of the event.
+	 * @param {String} options.name - The name of the scheduled event.
+	 * @param {ScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
+	 * @param {String} [options.reason] - The reason for creating the scheduled event.
+	 * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if `entityType` is `EXTERNAL`.
+	 * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
+	 * @returns {Promise<ScheduledEvent>}
+	 */
+	async createScheduledEvent(options: CreateScheduledEventOptions) {
+		return this._client.rest.guilds.createScheduledEvent(this.id, options);
+	}
+
+	/**
 	 * Delete an auto moderation rule in this guild.
 	 *
 	 * @param {String} ruleID - The ID of the rule to delete.
@@ -249,6 +279,17 @@ export default class Guild extends Base {
 	 */
 	async deleteEmoji(emojiID: string, reason?: string) {
 		return this._client.rest.guilds.deleteEmoji(this.id, emojiID, reason);
+	}
+
+	/**
+	 * Delete a scheduled event.
+	 *
+	 * @param {String} eventID - The ID of the scheduled event.
+	 * @param {String} reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
+	 * @returns {Promise<void>}
+	 */
+	async deleteScheduledEvent(eventID: string, reason?: string) {
+		return this._client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
 	}
 
 	/**
@@ -287,6 +328,28 @@ export default class Guild extends Base {
 	 */
 	async editEmoji(emojiID: string, options: EditEmojiOptions) {
 		return this._client.rest.guilds.editEmoji(this.id, emojiID, options);
+	}
+
+	/**
+	 * Edit an existing scheduled event in this guild.
+	 *
+	 * @param {Object} options
+	 * @param {?String} [options.channelID] - The ID of the stage channel the event is taking place in. Required to be `null` if changing `entityType` to `EXTERNAL`.
+	 * @param {String} [options.description] - The description of the event.
+	 * @param {Object} [options.entityMetadata]
+	 * @param {String} [options.entityMetadata.location] - The location of the event. Required if changing `entityType` to `EXTERNAL`.
+	 * @param {ScheduledEventEntityTypes} options.entityType - The type of the event.
+	 * @param {(Buffer | String)} [options.image] - The cover image of the event.
+	 * @param {String} options.name - The name of the scheduled event.
+	 * @param {ScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
+	 * @param {String} [options.reason] - The reason for creating the scheduled event.
+	 * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if changing `entityType` to `EXTERNAL`.
+	 * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
+	 * @param {ScheduledEventStatuses} [options.status] - The status of the event.
+	 * @returns {Promise<ScheduledEvent>}
+	 */
+	async editScheduledEvent(options: EditScheduledEventOptions) {
+		return this._client.rest.guilds.editScheduledEvent(this.id, options);
 	}
 
 	/**
@@ -341,6 +404,42 @@ export default class Guild extends Base {
 	 */
 	async getEmojis() {
 		return this._client.rest.guilds.getEmojis(this.id);
+	}
+
+	/**
+	 * Get a scheduled event.
+	 *
+	 * @param {String} eventID - The ID of the scheduled event to get.
+	 * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
+	 * @returns {Promise<ScheduledEvent>}
+	 */
+	async getScheduledEvent(eventID: string, withUserCount?: number) {
+		return this._client.rest.guilds.getScheduledEvent(this.id, eventID, withUserCount);
+	}
+
+	/**
+	 * Get the users subscribed to a scheduled event.
+	 *
+	 * @param {String} eventID
+	 * @param {Object} options
+	 * @param {String} [options.after] - The ID of the entry to get entries after.
+	 * @param {String} [options.before] - The ID of the entry to get entries before.
+	 * @param {Number} [options.limit] - The maximum number of entries to get.
+	 * @param {Boolean} [options.withMember] - If the member object should be included.
+	 * @returns {Promise<ScheduledEventUser[]>}
+	 */
+	async getScheduledEventUsers(eventID: string, options?: GetScheduledEventUsersOptions) {
+		return this._client.rest.guilds.getScheduledEventUsers(this.id, eventID, options);
+	}
+
+	/**
+	 * Get this guild's scheduled events
+	 *
+	 * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
+	 * @returns {Promise<ScheduledEvent[]>}
+	 */
+	async getScheduledEvents(withUserCount?: number) {
+		return this._client.rest.guilds.getScheduledEvents(this.id, withUserCount);
 	}
 
 	/**

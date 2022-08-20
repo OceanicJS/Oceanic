@@ -1,5 +1,8 @@
 import type { RawUser } from "./users";
+import type { RawMember } from "./guilds";
 import type { ScheduledEventEntityTypes, ScheduledEventPrivacyLevels, ScheduledEventStatuses } from "../Constants";
+import type Member from "../structures/Member";
+import type User from "../structures/User";
 
 export interface RawScheduledEvent {
 	channel_id: string | null;
@@ -22,4 +25,44 @@ export interface RawScheduledEvent {
 
 export interface ScheduledEventEntityMetadata {
 	location?: string;
+}
+
+export interface CreateScheduledEventOptions {
+	channelID?: string;
+	description?: string;
+	entityMetadata?: {
+		location?: string;
+	};
+	entityType: ScheduledEventEntityTypes;
+	image?: Buffer | string;
+	name: string;
+	privacyLevel: ScheduledEventPrivacyLevels;
+	reason?: string;
+	scheduledEndTime?: string;
+	scheduledStartTime: string;
+}
+
+
+export interface EditScheduledEventOptions extends Omit<Partial<CreateScheduledEventOptions>, "channelID"> {
+	channelID?: string | null;
+	status?: ScheduledEventStatuses;
+}
+
+export interface GetScheduledEventUsersOptions {
+	after?: string;
+	before?: string;
+	limit?: number;
+	withMember?: boolean;
+}
+
+export interface RawScheduledEventUser {
+	guild_scheduled_event_id: string;
+	member?: RawMember;
+	user: RawUser;
+}
+
+export interface ScheduledEventUser {
+	guildScheduledEventID: string;
+	member?: Member;
+	user: User;
 }
