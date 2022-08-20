@@ -48,6 +48,7 @@ export const CHANNEL_THREAD_MEMBER                   = (channelID: string, userI
 export const CHANNEL_THREAD_MEMBERS                  = (channelID: string) => `/channels/${channelID}/thread-members` as const;
 export const CHANNEL_TYPING                          = (channelID: string) => `/channels/${channelID}/typing` as const;
 export const GROUP_RECIPIENT                         = (channelID: string, userID: string) => `/channels/${channelID}/recipients/${userID}` as const;
+export const VOICE_REGIONS						     = "/voice/regions" as const;
 
 // OAuth
 export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;

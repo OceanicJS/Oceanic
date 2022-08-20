@@ -50,6 +50,7 @@ import type NewsThreadChannel from "../structures/NewsThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type NewsChannel from "../structures/NewsChannel";
+import type { VoiceRegion } from "../types/voice";
 
 export default class Channels extends BaseRoute {
 	/**
@@ -679,6 +680,17 @@ export default class Channels extends BaseRoute {
 		}) as RESTThreadMember));
 	}
 
+	/**
+	 * Get the list of usable voice regions.
+	 *
+	 * @returns {Promise<VoiceRegion[]>}
+	 */
+	async getVoiceRegions() {
+		return this._manager.authRequest<Array<VoiceRegion>>({
+			method: "GET",
+			path:   Routes.VOICE_REGIONS
+		});
+	}
 	/**
 	 * Join a thread.
 	 *
