@@ -33,6 +33,8 @@ import type {
 	ScheduledEventUser
 } from "../types/scheduled-events";
 import Member from "../structures/Member";
+import GuildTemplate from "../structures/GuildTemplate";
+import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 
 export default class Guilds extends BaseRoute {
 	private _formatAutoModRule(data: RawAutoModerationRule) {
@@ -151,6 +153,33 @@ export default class Guilds extends BaseRoute {
 	}
 
 	/**
+	 * Create a guild from a template. This can only be used by bots in less than 10 guilds.
+	 *
+	 * @param {String} code - The code of the template to use.
+	 * @param {Object} options
+	 * @param {(Buffer | String)} [options.icon] - The icon for the created guild (buffer, or full data url).
+	 * @param {String} options.name - The name of the guild.
+	 * @returns {Promise<Guild>}
+	 */
+	async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions) {
+		if (options.icon) {
+			try {
+				options.icon = this._client._convertImage(options.icon);
+			} catch (err) {
+				throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
+			}
+		}
+		return this._manager.authRequest<RawGuild>({
+			method: "POST",
+			path:   Routes.GUILD_TEMPLATE_CODE(code),
+			json:   {
+				icon: options.icon,
+				name: options.name
+			}
+		}).then(data => this._client.guilds.update(data));
+	}
+
+	/**
 	 * Create a scheduled event in a guild.
 	 *
 	 * @param {String} id - The ID of the guild.
@@ -199,6 +228,26 @@ export default class Guilds extends BaseRoute {
 	}
 
 	/**
+	 * Create a guild template.
+	 *
+	 * @param {String} id - The ID of the guild to create a template from.
+	 * @param {Object} options
+	 * @param {String} [options.description] - The description of the template.
+	 * @param {String} options.name - The name of the template.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async createTemplate(id: string, options: CreateTemplateOptions) {
+		return this._manager.authRequest<RawGuildTemplate>({
+			method: "POST",
+			path:   Routes.GUILD_TEMPLATES(id),
+			json:   {
+				description: options.description,
+				name:        options.name
+			}
+		}).then(data => new GuildTemplate(data, this._client));
+	}
+
+	/**
 	 * Delete an auto moderation rule.
 	 *
 	 * @param {String} id - The ID of the guild.
@@ -243,6 +292,20 @@ export default class Guilds extends BaseRoute {
 			method: "DELETE",
 			path:   Routes.GUILD_SCHEDULED_EVENT(id, eventID),
 			reason
+		});
+	}
+
+	/**
+	 * Delete a template.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {String} code - The code of the template.
+	 * @returns {Promise<void>}
+	 */
+	async deleteTemplate(id: string, code: string) {
+		await this._manager.authRequest<null>({
+			method: "DELETE",
+			path:   Routes.GUILD_TEMPLATE(id, code)
 		});
 	}
 
@@ -372,6 +435,28 @@ export default class Guilds extends BaseRoute {
 			},
 			reason
 		}).then(data => new ScheduledEvent(data, this._client));
+	}
+
+	/**
+	 * Edit a guild template.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {String} code - The code of the template.
+	 * @param {Object} options
+	 * @param {String} [options.description] - The description of the template.
+	 * @param {String} [options.name] - The name of the template.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async editTemplate(id: string, code: string, options: EditGuildTemplateOptions) {
+		return this._manager.authRequest<RawGuildTemplate>({
+			method: "POST",
+			path:   Routes.GUILD_TEMPLATE(id, code),
+			json:   {
+				code,
+				description: options.description,
+				name:        options.name
+			}
+		}).then(data => new GuildTemplate(data, this._client));
 	}
 
 	/**
@@ -547,5 +632,45 @@ export default class Guilds extends BaseRoute {
 			path:   Routes.GUILD_SCHEDULED_EVENTS(id),
 			query
 		}).then(data => data.map(d => new ScheduledEvent(d, this._client)));
+	}
+
+	/**
+	 * Get a guild template.
+	 *
+	 * @param {String} code - The code of the template to get.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async getTemplate(code: string) {
+		return this._manager.authRequest<RawGuildTemplate>({
+			method: "GET",
+			path:   Routes.GUILD_TEMPLATE_CODE(code)
+		}).then(data => new GuildTemplate(data, this._client));
+	}
+
+	/**
+	 * Get a guild's templates.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @returns {Promise<GuildTemplate[]>}
+	 */
+	async getTemplates(id: string) {
+		return this._manager.authRequest<Array<RawGuildTemplate>>({
+			method: "GET",
+			path:   Routes.GUILD_TEMPLATES(id)
+		}).then(data => data.map(d => new GuildTemplate(d, this._client)));
+	}
+
+	/**
+	 * Sync a guild template.
+	 *
+	 * @param {String} id - The ID of the guild.
+	 * @param {String} code - The code of the template to sync.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async syncTemplate(id: string, code: string) {
+		return this._manager.authRequest<RawGuildTemplate>({
+			method: "POST",
+			path:   Routes.GUILD_TEMPLATE(id, code)
+		}).then(data => new GuildTemplate(data, this._client));
 	}
 }

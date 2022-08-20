@@ -1,3 +1,3 @@
-export interface Partial {
+export interface Uncached {
 	id: string;
 }

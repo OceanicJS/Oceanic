@@ -4,6 +4,7 @@ import GuildChannel from "./GuildChannel";
 import Member from "./Member";
 import type ScheduledEvent from "./ScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
+import GuildTemplate from "./GuildTemplate";
 import type {
 	AuditLogActionTypes,
 	AutoModerationActionTypes,
@@ -46,6 +47,7 @@ import type {
 import type { AutoModerationRule, CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions } from "../types/auto-moderation";
 import type { GetAuditLogOptions } from "../types/audit-log";
 import { AuditLog } from "../types/audit-log";
+import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
@@ -260,6 +262,18 @@ export default class Guild extends Base {
 	}
 
 	/**
+	 * Create a guild template.
+	 *
+	 * @param {Object} options
+	 * @param {String} [options.description] - The description of the template.
+	 * @param {String} options.name - The name of the template.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async createTemplate(options: CreateTemplateOptions) {
+		return this._client.rest.guilds.createTemplate(this.id, options);
+	}
+
+	/**
 	 * Delete an auto moderation rule in this guild.
 	 *
 	 * @param {String} ruleID - The ID of the rule to delete.
@@ -290,6 +304,16 @@ export default class Guild extends Base {
 	 */
 	async deleteScheduledEvent(eventID: string, reason?: string) {
 		return this._client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
+	}
+
+	/**
+	 * Delete a template.
+	 *
+	 * @param {String} code - The code of the template.
+	 * @returns {Promise<void>}
+	 */
+	async deleteTemplate(code: string) {
+		return this._client.rest.guilds.deleteTemplate(this.id, code);
 	}
 
 	/**
@@ -350,6 +374,19 @@ export default class Guild extends Base {
 	 */
 	async editScheduledEvent(options: EditScheduledEventOptions) {
 		return this._client.rest.guilds.editScheduledEvent(this.id, options);
+	}
+
+	/**
+	 * Edit a template.
+	 *
+	 * @param {String} code - The code of the template.
+	 * @param {Object} options
+	 * @param {String} [options.description] - The description of the template.
+	 * @param {String} [options.name] - The name of the template.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async editTemplate(code: string, options: EditGuildTemplateOptions) {
+		return this._client.rest.guilds.editTemplate(this.id, code, options);
 	}
 
 	/**
@@ -443,6 +480,15 @@ export default class Guild extends Base {
 	}
 
 	/**
+	 * Get this guild's templates.
+	 *
+	 * @returns {Promise<GuildTemplate[]>}
+	 */
+	async getTemplates() {
+		return this._client.rest.guilds.getTemplates(this.id);
+	}
+
+	/**
 	 * The url of this guild's icon.
 	 *
 	 * @param {ImageFormat} format - The format the url should be.
@@ -451,5 +497,15 @@ export default class Guild extends Base {
 	 */
 	iconURL(format?: ImageFormat, size?: number) {
 		return this.icon === null ? null : this._client._formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
+	}
+
+	/**
+	 * Sync a guild template.
+	 *
+	 * @param {String} code - The code of the template to sync.
+	 * @returns {Promise<GuildTemplate>}
+	 */
+	async syncTemplate(code: string) {
+		return this._client.rest.guilds.syncTemplate(this.id, code);
 	}
 }

@@ -7,7 +7,7 @@ import GuildChannel from "./GuildChannel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { MessageTypes } from "../Constants";
-import type { Partial as PartialChannel } from "../types/shared";
+import type { Uncached as PartialChannel } from "../types/shared";
 import type {
 	AnyGuildTextChannel,
 	AnyTextChannel,

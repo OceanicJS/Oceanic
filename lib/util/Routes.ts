@@ -20,6 +20,9 @@ export const GUILD_AUDIT_LOG    = (guildID: string) => `/guilds/${guildID}/audit
 export const GUILD_SCHEDULED_EVENT  = (guildID: string, eventID: string) => `/guilds/${guildID}/scheduled-events/${eventID}` as const;
 export const GUILD_SCHEDULED_EVENTS = (guildID: string) => `/guilds/${guildID}/scheduled-events` as const;
 export const GUILD_SCHEDULED_EVENT_USERS = (guildID: string, eventID: string) => `/guilds/${guildID}/scheduled-events/${eventID}/users` as const;
+export const GUILD_TEMPLATE_CODE = (code: string) => `/guilds/templates/${code}` as const;
+export const GUILD_TEMPLATE = (guildID: string, templateID: string) => `/guilds/${guildID}/templates/${templateID}` as const;
+export const GUILD_TEMPLATES = (guildID: string) => `/guilds/${guildID}/templates` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;
