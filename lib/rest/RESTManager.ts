@@ -8,10 +8,12 @@ import OAuth from "../routes/OAuth";
 import Webhooks from "../routes/Webhooks";
 import type { RESTOptions } from "../types/client";
 import type { RequestOptions } from "../types/request-handler";
+import ApplicationCommands from "../routes/ApplicationCommands";
 
 export default class RESTManager {
 	private _client: Client;
 	private _handler: RequestHandler;
+	applicationCommands: ApplicationCommands;
 	channels: Channels;
 	guilds: Guilds;
 	oauth: OAuth;
@@ -22,6 +24,7 @@ export default class RESTManager {
 		Properties.new(this)
 			.looseDefine("_client", client)
 			.looseDefine("_handler", new RequestHandler(this, options))
+			.define("applicationCommands", new ApplicationCommands(this))
 			.define("channels", new Channels(this))
 			.define("guilds", new Guilds(this))
 			.define("oauth", new OAuth(this))

@@ -594,3 +594,29 @@ export enum AuditLogActionTypes {
 	AUTO_MODERATION_RULE_DELETE   = 142,
 	AUTO_MODERATION_BLOCK_MESSAGE = 143
 }
+
+export enum ApplicationCommandTypes {
+	CHAT_INPUT = 1,
+	USER       = 2,
+	MESSAGE    = 3
+}
+
+export enum ApplicationCommandOptionTypes {
+	SUB_COMMAND       = 1,
+	SUB_COMMAND_GROUP = 2,
+	STRING            = 3,
+	INTEGER		      = 4,
+	BOOLEAN           = 5,
+	USER			  = 6,
+	CHANNEL			  = 7,
+	ROLE			  = 8,
+	MENTIONABLE		  = 9,
+	NUMBER			  = 10,
+	ATTACHMENT		  = 11
+}
+
+export enum ApplicationCommandPermissionTypes {
+	ROLE    = 1,
+	USER    = 2,
+	CHANNEL = 3
+}
