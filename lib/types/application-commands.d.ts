@@ -98,6 +98,7 @@ interface ApplicationCommandOptionsChoices<T extends ApplicationCommandOptionsTy
 
 interface ApplicationCommandOptionsChoice<T extends ApplicationCommandOptionsTypesWithChoices = ApplicationCommandOptionsTypesWithChoices> {
 	name: string;
+	nameLocalizations?: Record<string, string>;
 	value:
 	T extends ApplicationCommandOptionTypes.STRING ? string :
 		T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER ? number :

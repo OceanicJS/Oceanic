@@ -135,6 +135,7 @@ export interface RawMember {
 	user?: RawUser;
 }
 export type RESTMember = Required<Omit<RawMember, "permissions">>;
+export type InteractionMember = Required<RawMember>;
 
 export interface RawIntegration {
 	account: IntegrationAccount;

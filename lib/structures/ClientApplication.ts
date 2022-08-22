@@ -25,12 +25,12 @@ export default class ClientApplication extends Base {
 	 *
 	 * @param {Object[]} options
 	 * @param {String?} [options[].defaultMemberPermissions] - The default member permissions for the command.
-	 * @param {String} [options[].description] - The description of the command. `CHAT_INPUT only.
-	 * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT only.
+	 * @param {String} [options[].description] - The description of the command. `CHAT_INPUT` only.
+	 * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
 	 * @param {Boolean?} [options[].dmPermission] - If the command can be used in a DM.
 	 * @param {String} options[].name - The name of the command.
 	 * @param {Object?} [options[].nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-	 * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT only.
+	 * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
 	 * @param {ApplicationCommandTypes} options.type - The type of the command.
 	 * @returns {Promise<ApplicationCommand[]>}
 	 */
@@ -45,12 +45,12 @@ export default class ClientApplication extends Base {
 	 * @param {String} guildID - The id of the guild.
 	 * @param {Object[]} options
 	 * @param {String?} [options[].defaultMemberPermissions] - The default member permissions for the command.
-	 * @param {String} [options[].description] - The description of the command. `CHAT_INPUT only.
-	 * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT only.
+	 * @param {String} [options[].description] - The description of the command. `CHAT_INPUT` only.
+	 * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
 	 * @param {Boolean?} [options[].dmPermission] - If the command can be used in a DM.
 	 * @param {String} options[].name - The name of the command.
 	 * @param {Object?} [options[].nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-	 * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT only.
+	 * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
 	 * @param {ApplicationCommandTypes} options.type - The type of the command.
 	 * @returns {Promise<ApplicationCommand[]>}
 	 */
@@ -63,12 +63,12 @@ export default class ClientApplication extends Base {
 	 *
 	 * @param {Object} options
 	 * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT only.
-	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT only.
+	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
+	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
 	 * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
 	 * @param {String} options.name - The name of the command.
 	 * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT only.
+	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
 	 * @param {ApplicationCommandTypes} options.type - The type of the command.
 	 * @returns {Promise<ApplicationCommand>}
 	 */
@@ -82,12 +82,12 @@ export default class ClientApplication extends Base {
 	 * @param {String} guildID - The id of the guild.
 	 * @param {Object} options
 	 * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT only.
-	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT only.
+	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
+	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
 	 * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
 	 * @param {String} options.name - The name of the command.
 	 * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT only.
+	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
 	 * @param {ApplicationCommandTypes} options.type - The type of the command.
 	 * @returns {Promise<ApplicationCommand>}
 	 */
@@ -122,12 +122,12 @@ export default class ClientApplication extends Base {
 	 * @param {String} commandID - The id of the command.
 	 * @param {Object} options
 	 * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT only.
-	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT only.
+	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
+	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
 	 * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
 	 * @param {String} [options.name] - The name of the command.
 	 * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT only.
+	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
 	 * @returns {Promise<ApplicationCommand>}
 	 */
 	async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(commandID: string, options: T) {
@@ -141,12 +141,12 @@ export default class ClientApplication extends Base {
 	 * @param {String} commandID - The id of the command.
 	 * @param {Object} options
 	 * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT only.
-	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT only.
+	 * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
+	 * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
 	 * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
 	 * @param {String} [options.name] - The name of the command.
 	 * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT only.
+	 * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
 	 * @returns {Promise<ApplicationCommand>}
 	 */
 	async editGuildCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(guildID: string, commandID: string, options: T) {

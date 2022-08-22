@@ -20,7 +20,8 @@ export default abstract class Base {
 		return Number(BigInt(id) / 4194304n);
 	}
 
-	protected abstract update(data: unknown): void;
+	// eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+	protected update(data: unknown) {}
 
 	get createdAt() {
 		return Base.getCreatedAt(this.id);

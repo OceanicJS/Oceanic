@@ -175,7 +175,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	 * @param {String} token - The token of the webhook.
 	 * @param {Object} [options]
 	 * @param {String} [options.threadID] - The id of the thread the message is in.
-	 * @returns {Promise<Boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async deleteWebhook(token: string, options: DeleteWebhookMessageOptions) {
 		if (!this.webhookID) throw new Error("This message is not a webhook message.");

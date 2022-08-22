@@ -7,10 +7,9 @@ import type {
 	EditWebhookTokenOptions,
 	ExecuteWebhookOptions,
 	ExecuteWebhookWaitOptions,
-	GetWebhookMessageOptions,
 	RawWebhook
 } from "../types/webhooks";
-import type { RawMessage } from "../types/channels";
+import type { AnyGuildTextChannel, RawMessage } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
@@ -53,14 +52,14 @@ export default class Webhooks extends BaseRoute {
 	 *
 	 * @param {String} id - The id of the webhook.
 	 * @param {String} [reason] - The reason for deleting the webhook.
-	 * @returns {Promise<Boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async delete(id: string, reason?: string) {
-		return this._manager.authRequest<null>({
+		await this._manager.authRequest<null>({
 			method: "DELETE",
 			path:   Routes.WEBHOOK(id),
 			reason
-		}).then(res => res === null);
+		});
 	}
 
 	/**
@@ -71,15 +70,15 @@ export default class Webhooks extends BaseRoute {
 	 * @param {String} messageID - The id of the message.
 	 * @param {Object} [options]
 	 * @param {String} [options.threadID] - The id of the thread the message is in.
-	 * @returns {Promise<Boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async deleteMessage(id: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions) {
 		const query = new URLSearchParams();
 		if (options?.threadID) query.set("thread_id", options.threadID);
-		return this._manager.authRequest<null>({
+		await this._manager.authRequest<null>({
 			method: "DELETE",
 			path:   Routes.WEBHOOK_MESSAGE(id, token, messageID)
-		}).then(res => res === null);
+		});
 	}
 
 	/**
@@ -87,13 +86,13 @@ export default class Webhooks extends BaseRoute {
 	 *
 	 * @param {String} id - The id of the webhook.
 	 * @param {String} token - The token of the webhook.
-	 * @returns {Promise<Boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async deleteToken(id: string, token: string) {
-		return this._manager.authRequest<null>({
+		await this._manager.authRequest<null>({
 			method: "DELETE",
 			path:   Routes.WEBHOOK(id, token)
-		}).then(res => res === null);
+		});
 	}
 
 	/**
@@ -132,6 +131,7 @@ export default class Webhooks extends BaseRoute {
 	/**
 	 * Edit a webhook message.
 	 *
+	 * @template {AnyGuildTextChannel} T
 	 * @param {String} id - The id of the webhook.
 	 * @param {String} token - The token of the webhook.
 	 * @param {String} messageID - The id of the message to edit.
@@ -147,9 +147,9 @@ export default class Webhooks extends BaseRoute {
 	 * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
 	 * @param {File[]} [options.files] - The files to send.
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
-	 * @returns {Promise<Message>}
+	 * @returns {Promise<Message<T>>}
 	 */
-	async editMessage(id: string, token: string,messageID: string, options: EditWebhookMessageOptions) {
+	async editMessage<T extends AnyGuildTextChannel>(id: string, token: string,messageID: string, options: EditWebhookMessageOptions) {
 		const files = options.files;
 		if (options.files) delete options.files;
 		const query = new URLSearchParams();
@@ -166,7 +166,7 @@ export default class Webhooks extends BaseRoute {
 			},
 			query,
 			files
-		}).then(data => new Message(data, this._client));
+		}).then(data => new Message<T>(data, this._client));
 	}
 
 	/**
@@ -199,6 +199,7 @@ export default class Webhooks extends BaseRoute {
 	/**
 	 * Execute a webhook.
 	 *
+	 * @template {AnyGuildTextChannel} T
 	 * @param {String} id - The id of the webhook.
 	 * @param {String} token - The token of the webhook.
 	 * @param {Object} options
@@ -219,11 +220,11 @@ export default class Webhooks extends BaseRoute {
 	 * @param {Boolean} [options.tts] - If the message should be spoken aloud.
 	 * @param {String} [options.username] - The username of the webhook.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
-	 * @returns {Promise<Message | void>}
+	 * @returns {Promise<Message<T> | void>}
 	 */
-	async execute(id: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message>;
+	async execute<T extends AnyGuildTextChannel>(id: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
 	async execute(id: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
-	async execute(id: string, token: string, options: ExecuteWebhookOptions): Promise<Message | void> {
+	async execute<T extends AnyGuildTextChannel>(id: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
 		const files = options.files;
 		if (options.files) delete options.files;
 		const query = new URLSearchParams();
@@ -254,15 +255,16 @@ export default class Webhooks extends BaseRoute {
 	/**
 	 * Execute a github compabible webhook.
 	 *
+	 * @template {AnyGuildTextChannel} T
 	 * @param {String} id - The id of the webhook.
 	 * @param {String} token - The token of the webhook.
 	 * @param {Object} options - The options to send. See Github's documentation for more information.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
-	 * @return {Promise<Message | void>}
+	 * @return {Promise<Message<T> | void>}
 	 */
-	async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait: true; }): Promise<Message>;
-	async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait?: false; }): Promise<void>;
-	async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message | void> {
+	async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
+	async executeGithub<T extends AnyGuildTextChannel>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
+	async executeGithub<T extends AnyGuildTextChannel>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
 		const query = new URLSearchParams();
 		if (options.wait) query.set("wait", "true");
 		return this._manager.authRequest<RawMessage | null>({
@@ -278,15 +280,16 @@ export default class Webhooks extends BaseRoute {
 	/**
 	 * Execute a slack compabible webhook.
 	 *
+	 * @template {AnyGuildTextChannel} T
 	 * @param {String} id - The id of the webhook.
 	 * @param {String} token - The token of the webhook.
 	 * @param {Object} options - The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
 	 * @param {Boolean} [options.wait] - If the created message should be returned.
-	 * @return {Promise<Message | void>}
+	 * @return {Promise<Message<T> | void>}
 	 */
-	async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait: true; }): Promise<Message>;
-	async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait?: false; }): Promise<void>;
-	async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message | void> {
+	async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
+	async executeSlack<T extends AnyGuildTextChannel>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
+	async executeSlack<T extends AnyGuildTextChannel>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
 		const query = new URLSearchParams();
 		if (options.wait) query.set("wait", "true");
 		return this._manager.authRequest<RawMessage | null>({
@@ -342,19 +345,19 @@ export default class Webhooks extends BaseRoute {
 	/**
 	 * Get a webhook message.
 	 *
-	 * @param {String} id - The id of the webhook.
+	 * @template {AnyGuildTextChannel} T
+	 * @param {String} id - The ID of the webhook.
 	 * @param {String} token - The token of the webhook.
-	 * @param {Object} options
-	 * @param {String} options.messageID - The id of the message.
-	 * @param {String} [options.threadID] - The id of the thread the message is in.
-	 * @returns {Promise<Message>}
+	 * @param {String} messageID - The ID of the message.
+	 * @param {String} [threadID] - The ID of the thread the message is in.
+	 * @returns {Promise<Message<T>>}
 	 */
-	async getMessage(id: string, token: string, options: GetWebhookMessageOptions) {
+	async getMessage<T extends AnyGuildTextChannel>(id: string, token: string, messageID: string, threadID?: string) {
 		const query = new URLSearchParams();
-		if (options.threadID) query.set("thread_id", options.threadID);
+		if (threadID) query.set("thread_id", threadID);
 		return this._manager.authRequest<RawMessage>({
 			method: "GET",
-			path:   Routes.WEBHOOK_MESSAGE(id, token, options.messageID)
-		}).then(data => new Message(data, this._client));
+			path:   Routes.WEBHOOK_MESSAGE(id, token, messageID)
+		}).then(data => new Message<T>(data, this._client));
 	}
 }

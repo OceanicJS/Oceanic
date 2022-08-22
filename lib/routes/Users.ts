@@ -71,13 +71,13 @@ export default class Users extends BaseRoute {
 	 * Leave a guild.
 	 *
 	 * @param {String} id - The id of the guild to leave.
-	 * @returns {Promise<Boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async leaveGuild(id: string) {
-		return this._manager.authRequest<null>({
+		await this._manager.authRequest<null>({
 			method: "DELETE",
 			path:   Routes.OAUTH_GUILD(id)
-		}).then(res => res === null);
+		});
 	}
 
 	/**

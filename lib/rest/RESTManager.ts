@@ -9,6 +9,7 @@ import Webhooks from "../routes/Webhooks";
 import type { RESTOptions } from "../types/client";
 import type { RequestOptions } from "../types/request-handler";
 import ApplicationCommands from "../routes/ApplicationCommands";
+import Interactions from "../routes/Interactions";
 
 export default class RESTManager {
 	private _client: Client;
@@ -16,6 +17,7 @@ export default class RESTManager {
 	applicationCommands: ApplicationCommands;
 	channels: Channels;
 	guilds: Guilds;
+	interactions: Interactions;
 	oauth: OAuth;
 	users: Users;
 	webhooks: Webhooks;
@@ -27,6 +29,7 @@ export default class RESTManager {
 			.define("applicationCommands", new ApplicationCommands(this))
 			.define("channels", new Channels(this))
 			.define("guilds", new Guilds(this))
+			.define("interactions", new Interactions(this))
 			.define("oauth", new OAuth(this))
 			.define("users", new Users(this))
 			.define("webhooks", new Webhooks(this));

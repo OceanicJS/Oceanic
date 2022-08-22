@@ -63,7 +63,7 @@ export default class GroupChannel extends Channel {
 	 * @param {String} options.accessToken - The access token of the user to add.
 	 * @param {String} [options.nick] - The nickname of the user to add.
 	 * @param {String} options.userID - The id of the user to add.
-	 * @returns {Promise<boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async addRecipient(options: AddGroupRecipientOptions) {
 		return this._client.rest.channels.addGroupRecipient(this.id, options);
@@ -246,7 +246,7 @@ export default class GroupChannel extends Channel {
 	 * Remove a user from this channel.
 	 *
 	 * @param {String} userID - The id of the user to remove.
-	 * @returns {Promise<boolean>}
+	 * @returns {Promise<void>}
 	 */
 	async removeRecipient(userID: string) {
 		return this._client.rest.channels.removeGroupRecipient(this.id, userID);
