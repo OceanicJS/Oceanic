@@ -25,7 +25,6 @@ export default class GuildPreview extends Base {
 	splash: string | null;
 	/** The stickers in this guild. */
 	stickers: Array<Sticker>;
-	/** @hideconstructor */
 	constructor(data: RawGuildPreview, client: Client) {
 		super(data.id, client);
 		this.update(data);

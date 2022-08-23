@@ -9,6 +9,7 @@ import type {
 	OAuthURLOption,
 	RawAuthorizationInformation,
 	RawClientCredentialsTokenResponse,
+	RawConnection,
 	RawExchangeCodeResponse,
 	RefreshTokenOptions,
 	RESTApplication,
@@ -22,6 +23,7 @@ import { PartialApplication } from "../structures/PartialApplication";
 import Member from "../structures/Member";
 import Guild from "../structures/Guild";
 import Webhook from "../structures/Webhook";
+import Integration from "../structures/Integration";
 import { FormData } from "undici";
 
 export default class OAuth extends BaseRoute {
@@ -143,13 +145,23 @@ export default class OAuth extends BaseRoute {
 	 *
 	 * Note: Requires the `connections` scope when using oauth.
 	 *
-	 * @returns {Promise<Connection>}
+	 * @returns {Promise<Connection[]>}
 	 */
 	async getCurrentConnections() {
-		return this._manager.authRequest<Connection>({
+		return this._manager.authRequest<Array<RawConnection>>({
 			method: "GET",
 			path:   Routes.OAUTH_CONNECTIONS
-		});
+		}).then(data => data.map(connection => ({
+			friendSync:   connection.friend_sync,
+			id: 	         connection.id,
+			integrations: connection.integrations?.map(integration => new Integration(integration, this._client)),
+			name:         connection.name,
+			revoked:      connection.revoked,
+			showActivity: connection.show_activity,
+			type:         connection.type,
+			verified:     connection.verified,
+			visibility:   connection.visibility
+		})));
 	}
 
 	/**

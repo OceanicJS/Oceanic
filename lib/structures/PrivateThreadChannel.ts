@@ -8,7 +8,6 @@ import type { EditPrivateThreadChannelOptions, RawPrivateThreadChannel } from ".
 export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadChannel> {
 	declare threadMetadata: PrivateThreadmetadata;
 	declare type: ChannelTypes.GUILD_PRIVATE_THREAD;
-	/** @hideconstructor */
 	constructor(data: RawPrivateThreadChannel, client: Client) {
 		super(data, client);
 	}

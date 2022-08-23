@@ -23,7 +23,6 @@ export default class RequestHandler {
 	options: RequestHandlerInstanceOptions;
 	ratelimits: Record<string, SequentialBucket> = {};
 	readyQueue: Array<() => void> = [];
-	/** @hideconstructor */
 	constructor(manager: RESTManager, options: RESTOptions = {}) {
 		if (options && options.baseURL && options.baseURL.endsWith("/")) options.baseURL = options.baseURL.slice(0, -1);
 		Properties.new(this)
@@ -154,18 +153,18 @@ export default class RequestHandler {
 						this.latencyRef.raw.push(latency);
 						this.latencyRef.latency = this.latencyRef.latency - ~~(this.latencyRef.raw.shift()! / 10) + ~~(latency / 10);
 					}
-					let resBody: string | Record<string, unknown> | null;
+					let resBody: Buffer | string | Record<string, unknown> | null;
 					if (res.status === 204) resBody = null;
 					else {
-						const b = await res.text();
 						if (res.headers.get("content-type") === "application/json") {
+							const b = await res.text();
 							try {
 								resBody = JSON.parse(b) as Record<string, unknown>;
 							} catch (err) {
 								this._manager.client.emit("error", err as Error);
 								resBody = b;
 							}
-						} else resBody = b;
+						} else resBody = Buffer.from(await res.arrayBuffer());
 					}
 					this._manager.client.emit("request", {
 						method:       options.method,

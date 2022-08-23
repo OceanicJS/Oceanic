@@ -7,7 +7,6 @@ import type Client from "../Client";
 /** Represents a PING interaction. This will not be recieved over a gateway connection. */
 export default class PingInteraction extends Interaction {
 	declare type: InteractionTypes.PING;
-	/** @hideconstructor */
 	constructor(data: RawPingInteraction, client: Client) {
 		super(data, client);
 	}

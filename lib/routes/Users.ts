@@ -89,13 +89,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<ExtendedUser>}
 	 */
 	async modifySelf(options: EditSelfUserOptions) {
-		if (options.avatar) {
-			try {
-				options.avatar = this._client._convertImage(options.avatar);
-			} catch (err) {
-				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
-			}
-		}
+		if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
 		return this._manager.authRequest<RawExtendedUser>({
 			method: "PATCH",
 			path:   Routes.USER("@me"),

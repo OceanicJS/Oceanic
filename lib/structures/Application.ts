@@ -46,7 +46,6 @@ export default class Application extends ClientApplication {
 	termsOfServiceURL?: string;
 	/** The bot's hex encoded public key. */
 	verifyKey: string;
-	/** @hideconstructor */
 	constructor(data: RESTApplication, client: Client) {
 		super(data, client);
 		this.update(data);

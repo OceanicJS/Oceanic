@@ -17,7 +17,6 @@ export default class PrivateChannel extends Channel {
 	/** The other user in this direct message. */
 	recipient: User;
 	declare type: ChannelTypes.DM;
-	/** @hideconstructor */
 	constructor(data: RawPrivateChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);

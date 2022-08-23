@@ -1,7 +1,10 @@
 import type { RawUser } from "./users";
+import type { AnyThreadChannel, OverwriteOptions, RawChannel, RESTThreadMember } from "./channels";
 import type {
+	ChannelTypes,
 	DefaultMessageNotificationLevels,
 	ExplicitContentFilterLevels,
+	GuildChannelTypesWithoutThreads,
 	GuildFeature,
 	GuildNSFWLevels,
 	IntegrationExpireBehaviors,
@@ -10,7 +13,9 @@ import type {
 	PremiumTiers,
 	StickerFormatTypes,
 	StickerTypes,
-	VerificationLevels
+	ThreadAutoArchiveDuration,
+	VerificationLevels,
+	VideoQualityModes
 } from "../Constants";
 import type User from "../structures/User";
 
@@ -54,7 +59,7 @@ export interface RESTGuild {
 	system_channel_id: string | null;
 	vanity_url_code: string | null;
 	verification_level: VerificationLevels;
-	welcome_screen?: WelcomeScreen;
+	welcome_screen?: RawWelcomeScreen;
 	widget_channel_id?: string | null;
 	widget_enabled?: boolean;
 }
@@ -91,15 +96,25 @@ export interface Emoji {
 }
 export type RawGuildEmoji = Required<Omit<Emoji, "name" | "user">> & { name: string; user?: RawUser; };
 export type GuildEmoji = Omit<RawGuildEmoji, "user"> & { user?: User; };
-export interface WelcomeScreen {
+export interface RawWelcomeScreen {
 	description: string | null;
-	welcome_channels: Array<WelcomeScreenChannel>;
+	welcome_channels: Array<RawWelcomeScreenChannel>;
 }
-export interface WelcomeScreenChannel {
+export interface RawWelcomeScreenChannel {
 	channel_id: string;
 	description: string;
 	emoji_id: string | null;
 	emoji_name: string | null;
+}
+export interface WelcomeScreen {
+	description: string | null;
+	welcomeChannels: Array<WelcomeScreenChannel>;
+}
+export interface WelcomeScreenChannel {
+	channelID: string;
+	description: string;
+	emojiID: string | null;
+	emojiName: string | null;
 }
 export interface Sticker {
 	/** @deprecated */
@@ -139,7 +154,7 @@ export type InteractionMember = Required<RawMember>;
 
 export interface RawIntegration {
 	account: IntegrationAccount;
-	application?: IntegrationApplication;
+	application?: RawIntegrationApplication;
 	enable_emoticons?: boolean;
 	enabled?: boolean;
 	expire_behavior?: IntegrationExpireBehaviors;
@@ -160,7 +175,7 @@ export interface IntegrationAccount {
 	name: string;
 }
 
-export interface IntegrationApplication { // @TODO application class
+export interface RawIntegrationApplication {
 	bot?: RawUser;
 	description: string;
 	icon: string | null;
@@ -195,4 +210,233 @@ export interface RawGuildPreview {
 	name: string;
 	splash: string | null;
 	stickers: Array<Sticker>;
+}
+
+export interface CreateGuildOptions {
+	afkChannelID?: string;
+	afkTimeout?: number;
+	channels?: Array<CreateChannelOptions>;
+	defaultMessageNotifications?: DefaultMessageNotificationLevels;
+	explicitContentFilter?: ExplicitContentFilterLevels;
+	icon?: Buffer | string;
+	name: string;
+	/** @deprecated */
+	region?: string | null;
+	roles?: Array<Omit<CreateRoleOptions, "reason">>;
+	systemChannelFlags?: number;
+	systemChannelID?: string;
+	verificationLevel?: VerificationLevels;
+}
+
+export interface EditGuildOptions {
+	afkChannelID?: string | null;
+	afkTimeout?: number;
+	banner?: Buffer | string | null;
+	defaultMessageNotifications?: DefaultMessageNotificationLevels;
+	description?: string | null;
+	discoverySplash?: Buffer | string | null;
+	explicitContentFilter?: ExplicitContentFilterLevels;
+	features?: Array<GuildFeature>;
+	icon?: Buffer | string | null;
+	name?: string;
+	ownerID?: string;
+	preferredLocale?: string | null;
+	premiumProgressBarEnabled?: boolean;
+	publicUpdatesChannelID?: string | null;
+	reason?: string;
+	/** @deprecated */
+	region?: string | null;
+	rulesChannelID?: string | null;
+	splash?: Buffer | string | null;
+	systemChannelFlags?: number;
+	systemChannelID?: string | null;
+	verificationLevel?: VerificationLevels;
+}
+
+export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
+	defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
+	name: string;
+	nsfw?: boolean;
+	parentID?: string;
+	permissionOverwrites?: Array<OverwriteOptions>;
+	position?: number;
+	rateLimitPerUser?: number;
+	reason?: string;
+	rtcRegion?: string;
+	topic?: string;
+	type: T;
+	userLimit?: number;
+	videoQualityMode?: VideoQualityModes;
+}
+
+export type CreateTextChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_TEXT>, "rtcRegion" | "userLimit" | "videoQualityMode">;
+export type CreateVoiceChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_VOICE>, "defaultAutoArchiveDuration" | "topic">;
+export type CreateCategoryChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_CATEGORY>, "defaultAutoArchiveDuration" | "nsfw" | "parentID" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode">;
+export type CreateNewsChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_NEWS>, "rtcRegion" | "userLimit" | "videoQualityMode">;
+export type CreateStageChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_STAGE_VOICE>, "defaultAutoArchiveDuration" | "nsfw" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode">;
+
+export interface CreateRoleOptions {
+	color?: number;
+	hoist?: boolean;
+	icon?: Buffer | string | null;
+	mentionable?: boolean;
+	name?: string;
+	permissions?: string;
+	reason?: string;
+	unicodeEmoji?: string | null;
+}
+
+export interface ModifyChannelPositionsEntry {
+	id: string;
+	lockPermissions?: boolean;
+	parentID?: string;
+	position?: number;
+}
+
+export interface GetActiveThreadsResponse {
+	members: Array<RESTThreadMember>;
+	threads: Array<AnyThreadChannel>;
+}
+
+export interface GetMembersOptions {
+	after?: string;
+	limit?: number;
+}
+
+export interface SearchMembersOptions {
+	limit?: number;
+	query: string;
+}
+
+export interface AddMemberOptions {
+	accessToken: string;
+	deaf?: boolean;
+	mute?: boolean;
+	nick?: string;
+	roles?: Array<string>;
+}
+
+export interface EditMemberOptions {
+	channelID?: string | null;
+	communicationDisabledUntil?: string | null;
+	deaf?: boolean;
+	mute?: boolean;
+	nick?: string | null;
+	reason?: string;
+	roles?: string;
+}
+
+export type EditCurrentMemberOptions = Pick<EditMemberOptions, "nick" | "reason">;
+
+export interface GetBansOptions {
+	after?: string;
+	before?: string;
+	limit?: number;
+}
+
+export interface RawBan {
+	reason: string | null;
+	user: RawUser;
+}
+
+export interface Ban {
+	reason: string | null;
+	user: User;
+}
+
+export interface CreateBanOptions {
+	deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+	deleteMessageSeconds?: number;
+	reason?: string;
+}
+
+export interface EditRolePositionsEntry {
+	id: string;
+	position?: number | null;
+}
+
+export type EditRoleOptions = CreateRoleOptions;
+
+export interface GetPruneCountOptions {
+	days?: number;
+	includeRoles?: Array<string>;
+}
+
+export interface BeginPruneOptions extends GetPruneCountOptions {
+	computePruneCount?: boolean;
+	reason?: string;
+}
+
+export interface RawWidgetSettings {
+	channel_id: string;
+	enabled: boolean;
+}
+
+export interface WidgetSettings {
+	channelID: string;
+	enabled: boolean;
+}
+
+export interface GetVanityURLResponse {
+	code: string | null;
+	uses: number;
+}
+
+export interface RawWidget {
+	channels: Array<Required<Pick<RawChannel, "id" | "name" | "position">>>;
+	id: string;
+	instant_invite: string | null;
+	members: Array<RawWidgetUser>;
+	name: string;
+	presence_count: number;
+}
+
+export interface Widget {
+	channels: Array<Required<Pick<RawChannel, "id" | "name" | "position">>>;
+	id: string;
+	instantInvite: string | null;
+	members: Array<WidgetUser>;
+	name: string;
+	presenceCount: number;
+}
+
+export interface RawWidgetUser {
+	activity?: {
+		name: string;
+	};
+	avatar: null;
+	avatar_url: string;
+	discriminator: string;
+	id: string;
+	status: "online" | "idle" | "dnd";
+	username: string;
+}
+
+export interface WidgetUser {
+	activity?: {
+		name: string;
+	};
+	avatar: null;
+	avatarURL: string;
+	discriminator: string;
+	id: string;
+	status: "online" | "idle" | "dnd";
+	tag: string;
+	username: string;
+}
+
+export type WidgetImageStyle = "shield" | "banner1" | "banner2" | "banner3" | "banner4";
+
+export interface EditWelcomeScreenOptions extends WelcomeScreen {
+	enabled?: boolean;
+	reason?: string;
+}
+
+export interface EditUserVoiceStateOptions {
+	channelID: string;
+	suppress?: boolean;
+}
+
+export interface EditCurrentUserVoiceStateOptions extends EditUserVoiceStateOptions {
+	requestToSpeakTimestamp?: string | null;
 }

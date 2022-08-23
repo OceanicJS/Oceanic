@@ -85,6 +85,20 @@ export interface RawOverwrite {
 	type: OverwriteTypes;
 }
 
+export interface Overwrite {
+	allow: string | bigint;
+	deny: string | bigint;
+	id: string;
+	type: OverwriteTypes;
+}
+
+export interface OverwriteOptions {
+	allow?: string | bigint;
+	deny?: string | bigint;
+	id: string;
+	type: OverwriteTypes;
+}
+
 export interface RawThreadMetadata {
 	archive_timestamp: string;
 	archived: boolean;
@@ -438,6 +452,7 @@ export interface StickerItem {
 export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel;
 export type AnyPrivateChannel = PrivateChannel | GroupChannel;
 export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
+export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
 export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
 export type AnyThreadChannel = NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
@@ -570,4 +585,30 @@ export interface ArchivedThreads<T extends NewsThreadChannel | PublicThreadChann
 	hasMore: boolean;
 	members: Array<RESTThreadMember>;
 	threads: Array<T>;
+}
+
+export interface GetInviteOptions {
+	guildScheduledEventID?: string;
+	withCounts?: boolean;
+	withExpiration?: boolean;
+}
+
+export interface GetInviteWithCountsOptions extends Omit<GetInviteOptions, "withCounts"> {
+	withCounts: true;
+}
+
+export interface GetInviteWithExpirationOptions extends Omit<GetInviteOptions, "withExpiration"> {
+	withExpiration: true;
+}
+
+
+export interface GetInviteWithCountsAndExpirationOptions extends Omit<GetInviteOptions, "withCounts" | "withExpiration"> {
+	withCounts: true;
+	withExpiration: true;
+}
+
+
+export interface GetInviteWithNoneOptions extends Omit<GetInviteOptions, "withCounts" | "withExpiration"> {
+	withCounts?: false;
+	withExpiration?: false;
 }

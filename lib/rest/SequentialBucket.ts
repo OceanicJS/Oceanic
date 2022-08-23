@@ -14,7 +14,6 @@ export default class SequentialBucket {
 	processing: NodeJS.Timeout | boolean = false;
 	remaining: number;
 	reset = 0;
-	/** @hideconstructor */
 	constructor(limit: number, latencyRef: LatencyRef) {
 		this.limit = this.remaining = limit;
 		this.latencyRef = latencyRef;

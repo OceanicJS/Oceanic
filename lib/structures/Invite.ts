@@ -56,7 +56,6 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 	temporary: T extends "withMetadata" ? boolean : never;
 	/** The number of times this invite has been used. */
 	uses: T extends "withMetadata" ? number : never;
-	/** @hideconstructor */
 	constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
 		// technical constraint, easier to pretend `code` is an id rather than make id optional
 		super(data.code, client);
@@ -111,4 +110,14 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
 	// @ts-expect-error Base has a `createdAt` getter
 	override get createdAt(): T extends "withMetadata" ? Date : undefined { return this._createdAt as never; }
+
+	/**
+	 * Delete this invite.
+	 *
+	 * @param {String} [reason] - The reason for deleting this invite.
+	 * @returns {Promise<Invite>}
+	 */
+	async deleteInvite(reason?: string) {
+		return this._client.rest.channels.deleteInvite<CH>(this.code, reason);
+	}
 }

@@ -21,7 +21,6 @@ export default class CategoryChannel extends Channel {
 	/** The position of this channel on the sidebar. */
 	position: number;
 	declare type: ChannelTypes.GUILD_CATEGORY;
-	/** @hideconstructor */
 	constructor(data: RawCategoryChannel, client: Client) {
 		super(data, client);
 		this.channels = new Collection(GuildChannel, client);

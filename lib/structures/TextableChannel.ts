@@ -61,7 +61,6 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	/** The topic of the channel. */
 	topic: string | null;
 	declare type: TextChannelTypes;
-	/** @hideconstructor */
 	constructor(data: RawTextChannel | RawNewsChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);

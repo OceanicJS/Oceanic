@@ -21,7 +21,6 @@ export default class RESTManager {
 	oauth: OAuth;
 	users: Users;
 	webhooks: Webhooks;
-	/** @hideconstructor */
 	constructor(client: Client, options?: RESTOptions) {
 		Properties.new(this)
 			.looseDefine("_client", client)
@@ -36,6 +35,15 @@ export default class RESTManager {
 	}
 
 	get client() { return this._client; }
+
+	/** @hidden intentionally not documented - this is an internal function */
+	_convertImage(image: Buffer | string, name: string) {
+		try {
+			return this._client._convertImage(image);
+		} catch (err) {
+			throw new Error(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
+		}
+	}
 
 	/** Alias for {@link RequestHandler#authRequest} */
 	async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {

@@ -1,4 +1,5 @@
 import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
+import type AutoModerationRule from "../structures/AutoModerationRule";
 
 export interface RawAutoModerationRule {
 	actions: Array<RawAutoModerationAction>;
@@ -35,20 +36,6 @@ export interface RawActionMetadata {
 	channel_id: string;
 	/** TIMEOUT */
 	duration_seconds: number;
-}
-
-export interface AutoModerationRule {
-	actions: Array<AutoModerationAction>; //
-	creatorID: string;
-	enabled: boolean;//
-	eventType: AutoModerationEventTypes;//
-	exemptChannels: Array<string>;//
-	exemptRoles: Array<string>;//
-	guildID: string;
-	id: string;
-	name: string;//
-	triggerMetadata: TriggerMetadata;//
-	triggerType: AutoModerationTriggerTypes;//
 }
 
 export interface TriggerMetadata {

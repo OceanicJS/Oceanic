@@ -28,7 +28,12 @@ import type {
 	RESTThreadMember,
 	StartThreadFromMessageOptions,
 	StartThreadInForumOptions,
-	StartThreadWithoutMessageOptions
+	StartThreadWithoutMessageOptions,
+	GetInviteOptions,
+	GetInviteWithCountsAndExpirationOptions,
+	GetInviteWithCountsOptions,
+	GetInviteWithExpirationOptions,
+	GetInviteWithNoneOptions
 } from "../types/channels";
 import type {
 	ChannelTypes,
@@ -220,6 +225,21 @@ export default class Channels extends BaseRoute {
 	}
 
 	/**
+	 * Delete an invite.
+	 *
+	 * @param {String} code - The code of the invite to delete.
+	 * @param {String} [reason] - The reason for deleting the invite.
+	 * @returns {Promise<Invite>}
+	 */
+	async deleteInvite<T extends InviteChannel = InviteChannel>(code: string, reason?: string) {
+		return this._manager.authRequest<RawInvite>({
+			method: "DELETE",
+			path:   Routes.INVITE(code),
+			reason
+		}).then(data => new Invite<"withMetadata", T>(data, this._client));
+	}
+
+	/**
 	 * Delete a message.
 	 *
 	 * @param {String} id - The id of the channel to delete the message in.
@@ -321,7 +341,7 @@ export default class Channels extends BaseRoute {
 	 * @param {?String} [options.parentID] - [Text, Voice, News] The id of the parent category channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
-	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text, News] The seconds between sending messages for users. Between 0 and 21600.
+	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text] The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
 	 * @param {?String} [options.topic] - [Text, News] The topic of the channel.
@@ -463,6 +483,32 @@ export default class Channels extends BaseRoute {
 			method: "GET",
 			path:   Routes.CHANNEL(id)
 		}).then(data => Channel.from<T>(data, this._client));
+	}
+
+	/**
+	 * Get an invite.
+	 *
+	 * @param {String} code - The code of the invite to get.
+	 * @param {Object} [options]
+	 * @param {String} [options.guildScheduledEventID] - The id of the guild scheduled event to include with the invite.
+	 * @param {Boolean} [options.withCounts] - If the invite should contain approximate member counts.
+	 * @param {Boolean} [options.withExpiration] - If the invite should contain expiration data.
+	 * @returns {Promise<Invite>}
+	 */
+	async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
+	async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
+	async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
+	async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
+	async getInvite<T extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions) {
+		const query = new URLSearchParams();
+		if (options?.guildScheduledEventID) query.set("guild_scheduled_event_id", options.guildScheduledEventID);
+		if (options?.withCounts) query.set("with_counts", "true");
+		if (options?.withExpiration) query.set("with_expiration", "true");
+		return this._manager.authRequest<RawInvite>({
+			method: "GET",
+			path:   Routes.INVITE(code),
+			query
+		}).then(data => new Invite<never, T>(data, this._client));
 	}
 
 	/**
@@ -691,6 +737,7 @@ export default class Channels extends BaseRoute {
 			path:   Routes.VOICE_REGIONS
 		});
 	}
+
 	/**
 	 * Join a thread.
 	 *

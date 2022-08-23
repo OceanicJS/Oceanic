@@ -40,7 +40,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	/** The total number of messages ever sent in the thread. Includes deleted messages. */
 	totalMessageSent: number;
 	declare type: ThreadChannelTypes;
-	/** @hideconstructor */
 	constructor(data: RawThreadChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);

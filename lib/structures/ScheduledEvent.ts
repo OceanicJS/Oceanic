@@ -37,7 +37,6 @@ export default class ScheduledEvent extends Base {
 	status: ScheduledEventStatuses;
 	/** The number of users subscribed to the event. */
 	userCount?: number;
-	/** @hideconstructor */
 	constructor(data: RawScheduledEvent, client: Client) {
 		super(data.id, client);
 		if (data.creator) this.creator = this._client.users.update(data.creator);
@@ -58,6 +57,16 @@ export default class ScheduledEvent extends Base {
 		if (data.scheduled_start_time !== undefined) this.scheduledStartTime = new Date(data.scheduled_start_time);
 		if (data.status !== undefined) this.status = data.status;
 		if (data.user_count !== undefined) this.userCount = data.user_count;
+	}
+
+	/**
+	 * Delete this scheduled event.
+	 *
+	 * @param {String} reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
+	 * @returns {Promise<void>}
+	 */
+	async deleteScheduledEvent(reason?: string) {
+		return this._client.rest.guilds.deleteScheduledEvent(this.guild.id, this.id, reason);
 	}
 
 	/**

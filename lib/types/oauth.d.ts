@@ -1,10 +1,11 @@
-import type { RawIntegration } from "./guilds";
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
+import type { RawIntegration } from "./guilds";
 import type { ConnectionService, Permission, TeamMembershipState, VisibilityTypes } from "../Constants";
 import type { PartialApplication } from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
+import type Integration from "../structures/Integration";
 
 export interface RawApplication {
 	bot_public: boolean;
@@ -29,7 +30,7 @@ export interface RawApplication {
 	terms_of_service_url?: string;
 	verify_key: string;
 }
-export type RawPartialApplication = Pick<RawApplication, "id" | "name" | "icon" | "description" | "bot_public" | "bot_require_code_grant" | "verify_key">;
+export type RawPartialApplication = Pick<RawApplication, "id" | "name" | "icon" | "description"> & Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">>;
 export type RESTApplication = Omit<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins"> & Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">>;
 export type RawClientApplication = Required<Pick<RawApplication, "id" | "flags">>;
 
@@ -67,13 +68,25 @@ export interface AuthorizationInformation {
 	user: User;
 }
 
-export interface Connection {
+export interface RawConnection {
 	friend_sync: boolean;
 	id: string;
 	integrations?: Array<RawIntegration>;
 	name: string;
 	revoked?: boolean;
 	show_activity: boolean;
+	type: ConnectionService;
+	verified: boolean;
+	visibility: VisibilityTypes;
+}
+
+export interface Connection {
+	friendSync: boolean;
+	id: string;
+	integrations?: Array<Integration>;
+	name: string;
+	revoked?: boolean;
+	showActivity: boolean;
 	type: ConnectionService;
 	verified: boolean;
 	visibility: VisibilityTypes;

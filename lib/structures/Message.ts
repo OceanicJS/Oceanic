@@ -8,16 +8,22 @@ import Guild from "./Guild";
 import type Member from "./Member";
 import { PartialApplication } from "./PartialApplication";
 import type ClientApplication from "./ClientApplication";
+import type NewsChannel from "./NewsChannel";
+import type NewsThreadChannel from "./NewsThreadChannel";
+import type PublicThreadChannel from "./PublicThreadChannel";
+import type TextChannel from "./TextChannel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { MessageTypes } from "../Constants";
-import type { Uncached as PartialChannel, Uncached } from "../types/shared";
+import type { MessageTypes, ThreadAutoArchiveDuration } from "../Constants";
+import type { Uncached } from "../types/shared";
 import type {
 	AnyGuildTextChannel,
 	AnyTextChannel,
 	AnyThreadChannel,
 	ChannelMention,
+	EditMessageOptions,
 	Embed,
+	GetReactionsOptions,
 	MessageActionRow,
 	MessageActivity,
 	MessageInteraction,
@@ -25,6 +31,7 @@ import type {
 	MessageReference,
 	RawAttachment,
 	RawMessage,
+	StartThreadFromMessageOptions,
 	StickerItem
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
@@ -43,9 +50,9 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	/** The attachments on this message. */
 	attachments: Collection<string, RawAttachment, Attachment>;
 	/** The author of this message. */
-	author: User; // this can be an invalid user if `webhook_id` is set
-	/** The channel this message was created in. */
-	channel: T | PartialChannel;
+	author: User;
+	/** The channel this message was created in. This can be a partial object with only an `id` property. */
+	channel: T | Uncached;
 	/** The components on this message. */
 	components?: Array<MessageActionRow>;
 	/** The content of this message. */
@@ -96,9 +103,8 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	tts: boolean;
 	/** The [type](https://discord.com/developers/docs/resources/channel#message-object-message-types) of this message. */
 	type: MessageTypes;
-	/** The id of the webhook associated with this message, if sent via a webhook. */
-	webhookID?: string;
-	/** @hideconstructor */
+	/** The webhook associated with this message, if sent via a webhook. This only has an `id` property. */
+	webhook?: Uncached;
 	constructor(data: RawMessage, client: Client) {
 		super(data.id, client);
 		this.attachments = new Collection(Attachment, client);
@@ -122,7 +128,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		this.timestamp = new Date(data.timestamp);
 		this.tts = data.tts;
 		this.type = data.type;
-		this.webhookID = data.webhook_id;
+		this.webhook = data.webhook_id === undefined ? undefined : { id: data.webhook_id };
 		this.update(data);
 	}
 
@@ -190,6 +196,57 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 			else this.thread = Channel.from<AnyThreadChannel>(data.thread, this._client);
 		}
 	}
+
+	/**
+	 * Add a reaction to this message.
+	 *
+	 * @param {String} emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+	 * @returns {Promise<void>}
+	 */
+	async createReaction(emoji: string) {
+		return this._client.rest.channels.createReaction(this.channel.id, this.id, emoji);
+	}
+
+	/**
+	 * Crosspost this message in a news channel.
+	 *
+	 * @returns {Promise<Message<NewsChannel>>}
+	 */
+	async crosspost() {
+		return this._client.rest.channels.crosspostMessage(this.channel.id, this.id);
+	}
+
+	/**
+	 * Delete this message.
+	 *
+	 * @param {String} [reason] - The reason for deleting the message.
+	 * @returns {Promise<void>}
+	 */
+	async deleteMessage(reason?: string) {
+		return this._client.rest.channels.deleteMessage(this.channel.id, this.id, reason);
+	}
+
+	/**
+	 * Remove a reaction from this message.
+	 *
+	 * @param {String} emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+	 * @param {String} [user="@me"] - The user to remove the reaction from, `@me` for the current user (default).
+	 * @returns {Promise<void>}
+	 */
+	async deleteReaction(emoji: string, user = "@me") {
+		return this._client.rest.channels.deleteReaction(this.channel.id, this.id, emoji, user);
+	}
+
+	/**
+	 * Remove all, or a specific emoji's reactions from this message.
+	 *
+	 * @param {String} [emoji] - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+	 * @returns {Promise<void>}
+	 */
+	async deleteReactions(emoji?: string) {
+		return this._client.rest.channels.deleteReactions(this.channel.id, this.id, emoji);
+	}
+
 	/**
 	 * Delete this message as a webhook.
 	 *
@@ -199,8 +256,29 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	 * @returns {Promise<void>}
 	 */
 	async deleteWebhook(token: string, options: DeleteWebhookMessageOptions) {
-		if (!this.webhookID) throw new Error("This message is not a webhook message.");
-		return this._client.rest.webhooks.deleteMessage(this.webhookID, token, this.id, options);
+		if (!this.webhook?.id) throw new Error("This message is not a webhook message.");
+		return this._client.rest.webhooks.deleteMessage(this.webhook.id, token, this.id, options);
+	}
+
+	/**
+	 * Edit this message.
+	 *
+	 * @template {AnyTextChannel} T
+	 * @param {Object} options
+	 * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
+	 * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
+	 * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
+	 * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
+	 * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
+	 * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
+	 * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
+	 * @param {String} [options.content] - The content of the message.
+	 * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
+	 * @param {File[]} [options.files] - The files to send.
+	 * @returns {Promise<Message<T>>}
+	 */
+	async edit(options: EditMessageOptions) {
+		return this._client.rest.channels.editMessage<T>(this.channel.id, this.id, options);
 	}
 
 	/**
@@ -222,7 +300,55 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	 * @returns {Promise<Message>}
 	 */
 	async editWebhook(token: string, options: EditWebhookMessageOptions) {
-		if (!this.webhookID) throw new Error("This message is not a webhook message.");
-		return this._client.rest.webhooks.editMessage(this.webhookID, token, this.id, options);
+		if (!this.webhook?.id) throw new Error("This message is not a webhook message.");
+		return this._client.rest.webhooks.editMessage(this.webhook.id, token, this.id, options);
+	}
+
+	/**
+	 * Get the users who reacted with a specific emoji on this message.
+	 *
+	 * @param {String} emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+	 * @param {Object} [options] - Options for the request.
+	 * @param {String} [options.after] - Get users after this user id.
+	 * @param {Number} [options.limit] - The maximum amount of users to get.
+	 * @returns {Promise<User[]>}
+	 */
+	async getReactions(emoji: string, options?: GetReactionsOptions) {
+		return this._client.rest.channels.getReactions(this.channel.id, this.id, emoji, options);
+	}
+
+	/**
+	 * Pin this message.
+	 *
+	 * @param {String} [reason] - The reason for pinning the message.
+	 * @returns {Promise<void>}
+	 */
+	async pin(reason?: string) {
+		return this._client.rest.channels.pinMessage(this.channel.id, this.id, reason);
+	}
+
+	/**
+	 * Create a thread from this message.
+	 *
+	 * @template {(NewsThreadChannel | PublicThreadChannel)} T
+	 * @param {Object} options
+	 * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration of no activity after which this thread will be automatically archived.
+	 * @param {String} options.name - The name of the thread.
+	 * @param {Number?} [options.rateLimitPerUser] - The amount of seconds a user has to wait before sending another message.
+	 * @param {String} [options.reason] - The reason for creating the thread.
+	 * @returns {Promise<T>}
+	 */
+	async startThread(options: StartThreadFromMessageOptions) {
+		return this._client.rest.channels.startThreadFromMessage<T extends NewsChannel ? NewsThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
+	}
+
+	/**
+	 * Unpin this message.
+	 *
+	 * @param {String} [reason] - The reason for unpinning the message.
+	 * @returns {Promise<void>}
+	 */
+	async unpin(reason?: string) {
+		return this._client.rest.channels.unpinMessage(this.channel.id, this.id, reason);
 	}
 }

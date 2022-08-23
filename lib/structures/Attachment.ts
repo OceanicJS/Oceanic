@@ -22,7 +22,6 @@ export default class Attachment extends Base {
 	url: string;
 	/** The width of this attachment, if an image. */
 	width?: number;
-	/** @hideconstructor */
 	constructor(data: RawAttachment, client: Client) {
 		super(data.id, client);
 		this.contentType = data.content_type;

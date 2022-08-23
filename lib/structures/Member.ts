@@ -1,8 +1,10 @@
 import Base from "./Base";
 import type User from "./User";
+import type Guild from "./Guild";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
-import type { RawMember } from "../types/guilds";
+import type { CreateBanOptions, EditMemberOptions, EditUserVoiceStateOptions, RawMember } from "../types/guilds";
+import type { Uncached } from "../types/shared";
 import { assert } from "tsafe";
 
 /** Represents a member of a guild. */
@@ -15,8 +17,8 @@ export default class Member extends Base {
 	deaf: boolean;
 	/** Undocumented. */
 	flags?: number;
-	/** The id of the guild this member is for. */
-	guildID: string;
+	/** The guild this member is for. This can be a partial object with just an `id` property. */
+	guild: Guild | Uncached;
 	/** Undocumented. */
 	isPending?: boolean;
 	/** The date at which this member joined the guild. */
@@ -33,7 +35,6 @@ export default class Member extends Base {
 	roles: Array<string>;
 	/** The user associated with this member. */
 	user: User;
-	/** @hideconstructor */
 	constructor(data: RawMember, client: Client, guildID: string) {
 		assert(data.user, "Member recieved without accompanying user.");
 		super(data.user.id, client);
@@ -42,7 +43,7 @@ export default class Member extends Base {
 		this.nick = null;
 		this.pending = false;
 		this.premiumSince = null;
-		this.guildID = guildID;
+		this.guild = this._client.guilds.get(guildID) || { id: guildID };
 		this.update(data);
 	}
 
@@ -77,6 +78,17 @@ export default class Member extends Base {
 	get username() { return this.user.username; }
 
 	/**
+	 * Add a role to this member.
+	 *
+	 * @param {String} roleID - The ID of the role to add.
+	 * @param {String} [reason] - The reason for adding the role.
+	 * @returns {Promise<void>}
+	 */
+	async addRole(roleID: string, reason?: string) {
+		await this._client.rest.guilds.addMemberRole(this.guild.id, this.id, roleID, reason);
+	}
+
+	/**
 	 * The url of this user's guild avatar (or their user avatar if no guild avatar is set, or their default avatar if none apply).
 	 *
 	 * @param {ImageFormat} format - The format the url should be.
@@ -85,5 +97,77 @@ export default class Member extends Base {
 	 */
 	avatarURL(format?: ImageFormat, size?: number) {
 		return this.avatar === null ? this.user.avatarURL(format, size) : this._client._formatImage(this.avatar, format, size);
+	}
+
+	/**
+	 * Create a bon for this member.
+	 *
+	 * @param {Object} [options]
+	 * @param {Number} [options.deleteMessageDays] - The number of days to delete messages from. Technically DEPRECTED. This is internally converted in to `deleteMessageSeconds`.
+	 * @param {Number} [options.deleteMessageSeconds] - The number of seconds to delete messages from. Takes precedence over `deleteMessageDays`.
+	 * @param {String} [options.reason] - The reason for creating the bon.
+	 * @returns {Promise<void>}
+	 */
+	async ban(options?: CreateBanOptions) {
+		await this._client.rest.guilds.createBan(this.guild.id, this.id, options);
+	}
+
+	/**
+	 * Edit this member.
+	 *
+	 * @param {Object} options
+	 * @param {String?} [options.channelID] - The ID of the channel to move the member to. `null` to disconnect.
+	 * @param {String?} [options.communicationDisabledUntil] - An ISO8601 timestamp to disable communication until. `null` to reset.
+	 * @param {Boolean} [options.deaf] - If the member should be deafened.
+	 * @param {Boolean} [options.mute] - If the member should be muted.
+	 * @param {String} [options.nick] - The new nickname of the member. `null` to reset.
+	 * @param {String} [options.reason] - The reason for editing the member.
+	 * @param {String[]} [options.roles] - The new roles of the member.
+	 * @returns {Promise<Member>}
+	 */
+	async edit(options: EditMemberOptions) {
+		return this._client.rest.guilds.editMember(this.guild.id, this.id, options);
+	}
+
+	/**
+	 * Edit this guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
+	 *
+	 * @param {Object} options
+	 * @param {String} options.channelID - The ID of the stage channel the member is in.
+	 * @param {Boolean} [options.suppress] - If the user should be suppressed.
+	 * @returns {Promise<void>}
+	 */
+	async editVoiceState(options: EditUserVoiceStateOptions) {
+		return this._client.rest.guilds.editUserVoiceState(this.guild.id, this.id, options);
+	}
+
+	/**
+	 * Remove a member from the guild.
+	 *
+	 * @param {String} reason - The reason for the removal.
+	 * @returns {Promise<void>}
+	 */
+	async kick(reason?: string) {
+		await this._client.rest.guilds.removeMember(this.guild.id, this.id, reason);
+	}
+
+	/**
+	 * remove a role from this member.
+	 *
+	 * @param {String} roleID - The ID of the role to remove.
+	 * @param {String} [reason] - The reason for removing the role.
+	 * @returns {Promise<void>}
+	 */
+	async removeRole(roleID: string, reason?: string) {
+		await this._client.rest.guilds.removeMemberRole(this.guild.id, this.id, roleID, reason);
+	}
+
+	/**
+	 * Remove a ban for this member.
+	 *
+	 * @param {String} [reason] - The reason for removing the ban.
+	 */
+	async unban(reason?: string) {
+		await this._client.rest.guilds.removeBan(this.guild.id, this.id, reason);
 	}
 }

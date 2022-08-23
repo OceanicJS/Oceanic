@@ -1,4 +1,4 @@
-import type { AutoModerationRule, RawAutoModerationRule } from "./auto-moderation";
+import type { RawAutoModerationRule } from "./auto-moderation";
 import type { RawNewsThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels";
 import type { RawIntegration } from "./guilds";
 import type { RawScheduledEvent } from "./scheduled-events";
@@ -11,6 +11,8 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
+import type Integration from "../structures/Integration";
+import type AutoModerationRule from "../structures/AutoModerationRule";
 
 export interface RawAuditLog {
 	audit_log_entries: Array<AuditLogEntry>;
@@ -26,7 +28,7 @@ export interface AuditLog {
 	autoModerationRules: Array<AutoModerationRule>;
 	entries: Array<AuditLogEntry>;
 	guildScheduledEvents: Array<ScheduledEvent>;
-	integrations: Array<RawIntegration>;
+	integrations: Array<Integration>;
 	threads: Array<NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel>;
 	users: Array<User>;
 	webhooks: Array<Webhook>;

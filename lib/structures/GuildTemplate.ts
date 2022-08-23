@@ -27,7 +27,6 @@ export default class GuildTemplate {
 	updatedAt: Date;
 	/** The amount of times this template has been used. */
 	usageCount: number;
-	/** @hideconstructor */
 	constructor(data: RawGuildTemplate, client: Client) {
 		this._client = client;
 		this.code = data.code;

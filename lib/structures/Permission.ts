@@ -9,7 +9,6 @@ export default class Permission {
 	allow: bigint;
 	/** The denied permissions for this permission instance. */
 	deny: bigint;
-	/** @hideconstructor */
 	constructor(allow: bigint | string, deny: bigint | string = 0n) {
 		this.allow = BigInt(allow);
 		this.deny = BigInt(deny);

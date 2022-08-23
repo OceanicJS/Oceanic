@@ -9,7 +9,6 @@ import { RawOverwrite } from "../types/channels";
 /** Represents a guild text channel. */
 export default class TextChannel extends TextableChannel<TextChannel> {
 	declare type: ChannelTypes.GUILD_TEXT;
-	/** @hideconstructor */
 	constructor(data: RawTextChannel, client: Client) {
 		super(data, client);
 	}

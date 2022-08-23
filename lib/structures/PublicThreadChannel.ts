@@ -8,7 +8,6 @@ import type { EditPublicThreadChannelOptions, RawPublicThreadChannel } from "../
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {
 	declare threadMetadata: ThreadMetadata;
 	declare type: ChannelTypes.GUILD_PUBLIC_THREAD;
-	/** @hideconstructor */
 	constructor(data: RawPublicThreadChannel, client: Client) {
 		super(data, client);
 	}

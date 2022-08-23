@@ -37,7 +37,6 @@ export default class GroupChannel extends Channel {
 	/** The other recipients in this group channel. */
 	recipients: Collection<string, RawUser, User>;
 	declare type: ChannelTypes.GROUP_DM;
-	/** @hideconstructor */
 	constructor(data: RawGroupChannel, client: Client) {
 		super(data, client);
 		this.recipients = new Collection(User, client);

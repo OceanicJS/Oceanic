@@ -179,6 +179,7 @@ export enum ChannelTypes {
 export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY | ChannelTypes.GUILD_FORUM;
 export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
 export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
+export type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
 export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.DM | ChannelTypes.GROUP_DM | ChannelTypes.GUILD_NEWS | ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;
 export type GuildTextChannelTypes = Exclude<TextChannelTypes, PrivateChannelTypes>;
 export type ThreadChannelTypes = ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;

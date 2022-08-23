@@ -6,7 +6,6 @@ import { inspect } from "util";
 export default abstract class Base {
 	protected _client: Client;
 	id: string;
-	/** @hideconstructor */
 	constructor(id: string, client: Client) {
 		this.id = id;
 		Properties.looseDefine(this, "_client", client);

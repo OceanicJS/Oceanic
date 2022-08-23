@@ -22,7 +22,6 @@ export default class User extends Base {
 	system: boolean;
 	/** The user's username. */
 	username: string;
-	/** @hideconstructor */
 	constructor(data: RawUser, client: Client) {
 		super(data.id, client);
 		this.bot = !!data.bot;

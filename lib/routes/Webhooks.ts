@@ -29,13 +29,7 @@ export default class Webhooks extends BaseRoute {
 	async create(channelID: string, options: CreateWebhookOptions) {
 		const reason = options.reason;
 		if (options.reason) delete options.reason;
-		if (options.avatar) {
-			try {
-				options.avatar = this._client._convertImage(options.avatar);
-			} catch (err) {
-				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
-			}
-		}
+		if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
 		return this._manager.authRequest<RawWebhook>({
 			method: "POST",
 			path:   Routes.CHANNEL_WEBHOOKS(channelID),
@@ -109,13 +103,7 @@ export default class Webhooks extends BaseRoute {
 	async edit(id: string, options: EditWebhookOptions) {
 		const reason = options.reason;
 		if (options.reason) delete options.reason;
-		if (options.avatar) {
-			try {
-				options.avatar = this._client._convertImage(options.avatar);
-			} catch (err) {
-				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
-			}
-		}
+		if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
 		return this._manager.authRequest<RawWebhook>({
 			method: "PATCH",
 			path:   Routes.WEBHOOK(id),
@@ -179,13 +167,7 @@ export default class Webhooks extends BaseRoute {
 	 * @returns {Promise<Webhook>}
 	 */
 	async editToken(id: string, token: string, options: EditWebhookTokenOptions) {
-		if (options.avatar) {
-			try {
-				options.avatar = this._client._convertImage(options.avatar);
-			} catch (err) {
-				throw new Error("Invalid avatar provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
-			}
-		}
+		if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
 		return this._manager.authRequest<RawWebhook>({
 			method: "PATCH",
 			path:   Routes.WEBHOOK(id, token),

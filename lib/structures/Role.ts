@@ -1,14 +1,16 @@
 import Base from "./Base";
 import Permission from "./Permission";
+import type Guild from "./Guild";
 import type Client from "../Client";
 import type { RawRole, RoleTags } from "../types/guilds";
+import type { Uncached } from "../types/shared";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
 	/** The color of this role. */
 	color: number;
-	/** The id of the guild this role is in. */
-	guildID: string;
+	/** The guild this role is in. This can be a partial object with just an `id` property. */
+	guild: Guild | Uncached;
 	/** If this role is hoisted. */
 	hoist: boolean;
 	/** The icon has of this role. */
@@ -27,10 +29,9 @@ export default class Role extends Base {
 	tags: RoleTags;
 	/** The unicode emoji of this role. */
 	unicodeEmoji: string | null;
-	/** @hideconstructor */
 	constructor(data: RawRole, client: Client, guildID: string) {
 		super(data.id, client);
-		this.guildID = guildID;
+		this.guild = this._client.guilds.get(guildID) || { id: guildID };
 		this.managed = data.managed;
 		this.update(data);
 	}
@@ -50,5 +51,15 @@ export default class Role extends Base {
 	/** A string that will mention this role. */
 	get mention() {
 		return `<@&${this.id}>`;
+	}
+
+	/**
+	 * Delete this role.
+	 *
+	 * @param {String} [reason] - The reason for deleting the role.
+	 * @returns {Promise<void>}
+	 */
+	async deleteRole(reason?: string) {
+		return this._client.rest.guilds.deleteRole(this.guild.id, this.id, reason);
 	}
 }

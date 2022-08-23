@@ -14,7 +14,6 @@ export default class GuildChannel extends Channel {
 	name: string;
 	/** The parent category of this channel. This can be a partial object with only an `id` property. */
 	parent: CategoryChannel | Uncached | null;
-	/** @hideconstructor */
 	constructor(data: RawGuildChannel, client: Client) {
 		super(data, client);
 		this.parent = null;
@@ -44,7 +43,7 @@ export default class GuildChannel extends Channel {
 	 * @param {?String} [options.parentID] - [Text, Voice, News] The id of the parent category channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All] The position of the channel in the channel list.
-	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text, News] The seconds between sending messages for users. Between 0 and 21600.
+	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text] The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
 	 * @param {?String} [options.topic] - [Text, News] The topic of the channel.

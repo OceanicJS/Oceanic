@@ -10,7 +10,6 @@ import { ApplicationCommandPermission, GuildApplicationCommandPermissions } from
 export default class ClientApplication extends Base {
 	/** This application's [public flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
 	flags: number;
-	/** @hideconstructor */
 	constructor(data: RawClientApplication, client: Client) {
 		super(data.id, client);
 		this.update(data);

@@ -13,7 +13,6 @@ export default class Team extends Base {
 	name: string;
 	/** The id of the owner of this team. */
 	ownerUserID: string;
-	/** @hideconstructor */
 	constructor(data: RawTeam, client: Client) {
 		super(data.id, client);
 		this.members = [];

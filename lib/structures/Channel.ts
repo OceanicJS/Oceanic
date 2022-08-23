@@ -21,7 +21,6 @@ import type {
 export default class Channel extends Base {
 	/** The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of this channel. */
 	type: ChannelTypes;
-	/** @hideconstructor */
 	constructor(data: RawChannel, client: Client) {
 		super(data.id, client);
 		this.type = data.type;

@@ -39,7 +39,6 @@ export default class VoiceChannel extends GuildChannel {
 	declare type: ChannelTypes.GUILD_VOICE;
 	/** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
 	videoQualityMode: VideoQualityModes;
-	/** @hideconstructor */
 	constructor(data: RawVoiceChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);
