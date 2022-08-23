@@ -25,18 +25,18 @@ export default class User extends Base {
 	/** @hideconstructor */
 	constructor(data: RawUser, client: Client) {
 		super(data.id, client);
+		this.bot = !!data.bot;
+		this.system = !!data.system;
 		this.update(data);
 	}
 
-	protected update(data: RawUser) {
-		this.accentColor   = data.accent_color;
-		this.avatar        = data.avatar;
-		this.banner        = data.banner;
-		this.bot		   = !!data.bot;
-		this.discriminator = data.discriminator;
-		this.publicFlags   = data.public_flags;
-		this.system        = !!data.system;
-		this.username      = data.username;
+	protected update(data: Partial<RawUser>) {
+		if (data.accent_color !== undefined) this.accentColor = data.accent_color;
+		if (data.avatar !== undefined) this.avatar = data.avatar;
+		if (data.banner !== undefined) this.banner = data.banner;
+		if (data.discriminator !== undefined) this.discriminator = data.discriminator;
+		if (data.public_flags !== undefined) this.publicFlags = data.public_flags;
+		if (data.username !== undefined) this.username = data.username;
 	}
 
 	/** The default avatar value of this user (discriminator modulo 5). */

@@ -1,5 +1,5 @@
 import Channel from "./Channel";
-import type User from "./User";
+import User from "./User";
 import Invite from "./Invite";
 import Message from "./Message";
 import type { ChannelTypes, ImageFormat, InviteTargetTypes } from "../Constants";
@@ -15,12 +15,15 @@ import type {
 	GetReactionsOptions,
 	RawGroupChannel
 } from "../types/channels";
+import type { RawUser } from "../types/users";
+import Collection from "../util/Collection";
+import type { Uncached } from "../types/shared";
 import { File } from "undici";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
-	/** The id of the application that made this group channel. */
-	applicationID: string;
+	/** The application that made this group channel. This will only have an `id` property. */
+	application: Uncached;
 	/** The icon hash of this group, if any. */
 	icon: string | null;
 	/** If this group channel is managed by an application. */
@@ -32,28 +35,34 @@ export default class GroupChannel extends Channel {
 	/** The id of the owner of this group channel. */
 	ownerID: string;
 	/** The other recipients in this group channel. */
-	recipients: Array<User>;
+	recipients: Collection<string, RawUser, User>;
 	declare type: ChannelTypes.GROUP_DM;
 	/** @hideconstructor */
 	constructor(data: RawGroupChannel, client: Client) {
 		super(data, client);
-		Object.defineProperty(this, "_recipients", {
-			value:    data.recipients.map(user => user.id),
-			writable: true
-		});
+		this.recipients = new Collection(User, client);
+		data.recipients.forEach(r => this.recipients.add(this._client.users.update(r)));
 		this.update(data);
 	}
 
-	protected update(data: RawGroupChannel) {
+	protected update(data: Partial<RawGroupChannel>) {
 		super.update(data);
-		this.applicationID = data.application_id;
-		this.icon          = data.icon;
-		this.managed       = data.managed;
-		this.name          = data.name;
-		this.nicks         = data.nicks;
-		this.ownerID       = data.owner_id;
-		this.type          = data.type;
-		this.recipients    = data.recipients.map(user => this._client.users.update(user));
+		if (data.application_id !== undefined) this.application = { id: data.application_id } ;
+		if (data.icon !== undefined) this.icon = data.icon;
+		if (data.managed !== undefined) this.managed = data.managed;
+		if (data.name !== undefined) this.name = data.name;
+		if (data.nicks !== undefined) this.nicks = data.nicks;
+		if (data.owner_id !== undefined) this.ownerID = data.owner_id;
+		if (data.type !== undefined) this.type = data.type;
+		if (data.recipients !== undefined) {
+			for (const id of this.recipients.keys()) {
+				if (!data.recipients.find(r => r.id === id)) this.recipients.delete(id);
+			}
+
+			for (const r of data.recipients) {
+				if (!this.recipients.has(r.id)) this.recipients.add(this._client.users.update(r));
+			}
+		}
 	}
 
 	/**
@@ -228,7 +237,7 @@ export default class GroupChannel extends Channel {
 	}
 
 	iconURL(format?: ImageFormat, size?: number) {
-		return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_ICON(this.applicationID, this.icon), format, size);
+		return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_ICON(this.application.id, this.icon), format, size);
 	}
 
 	/**

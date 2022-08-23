@@ -29,15 +29,16 @@ export default class StageChannel extends GuildChannel {
 	constructor(data: RawStageChannel, client: Client) {
 		super(data, client);
 		this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+		this.update(data);
 	}
 
-	protected update(data: RawStageChannel): void {
+	protected update(data: Partial<RawStageChannel>) {
 		super.update(data);
-		this.bitrate   = data.bitrate;
-		this.position  = data.position;
-		this.rtcRegion = data.rtc_region;
-		this.topic     = data.topic;
-		data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+		if (data.bitrate !== undefined) this.bitrate = data.bitrate;
+		if (data.position !== undefined) this.position = data.position;
+		if (data.rtc_region !== undefined) this.rtcRegion = data.rtc_region;
+		if (data.topic !== undefined) this.topic = data.topic;
+		if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
 	}
 
 	/**

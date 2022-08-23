@@ -1,5 +1,7 @@
 import Base from "./Base";
 import Permission from "./Permission";
+import type Guild from "./Guild";
+import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import { ApplicationCommandTypes } from "../Constants";
 import type {
@@ -12,10 +14,11 @@ import type {
 	RawApplicationCommandOption,
 	TypeToEdit
 } from "../types/application-commands";
+import type { Uncached } from "../types/shared";
 
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
-	/** The id of the application this command is for. */
-	applicationID: string;
+	/** The the application this command is for. This can be a partial object with only an `id` property. */
+	application: ClientApplication | Uncached;
 	/** The default permissions for this command. */
 	defaultMemberPermissions: Permission | null;
 	/** The description of this command. Empty string for non `CHAT_INPUT` commands. */
@@ -24,8 +27,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	descriptionLocalizations?: Record<string, string> | null;
 	/** If this command can be used in direct messages (global commands only). */
 	dmPermission?: boolean;
-	/** The id of the guild this command is in (guild commands only). */
-	guildID?: string;
+	/** The guild this command is in (guild commands only). This can be a partial object with only an `id` property. */
+	guild?: Guild | Uncached;
 	/** The name of this command. */
 	name: string;
 	/** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
@@ -38,7 +41,17 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	version: string;
 	constructor(data: RawApplicationCommand, client: Client) {
 		super(data.id, client);
-		this.update(data);
+		this.application = this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
+		this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
+		this.description = data.description as never;
+		this.descriptionLocalizations = data.description_localizations;
+		this.dmPermission = data.dm_permission;
+		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		this.name = data.name;
+		this.nameLocalizations = data.name_localizations;
+		this.options = data.options?.map(o => ApplicationCommand._convertOption(o, "parsed"));
+		this.type = (data.type || ApplicationCommandTypes.CHAT_INPUT) as T;
+		this.version = data.version;
 	}
 
 	protected static _convertOption(option: RawApplicationCommandOption, to: "parsed"): ApplicationCommandOptions;
@@ -83,27 +96,13 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 		}
 	}
 
-	protected update(data: RawApplicationCommand) {
-		this.applicationID = data.application_id;
-		this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
-		this.description = data.description as never;
-		this.descriptionLocalizations = data.description_localizations;
-		this.dmPermission = data.dm_permission;
-		this.guildID = data.guild_id;
-		this.name = data.name;
-		this.nameLocalizations = data.name_localizations;
-		this.options = data.options?.map(o => ApplicationCommand._convertOption(o, "parsed"));
-		this.type = (data.type || ApplicationCommandTypes.CHAT_INPUT) as T;
-		this.version = data.version;
-	}
-
 	/**
 	 * Delete this command.
 	 *
 	 * @returns {Promise<void>}
 	 */
 	async delete() {
-		return this.guildID ? this._client.rest.applicationCommands.deleteGuildCommand(this.applicationID, this.guildID, this.id) : this._client.rest.applicationCommands.deleteGlobalCommand(this.applicationID, this.id);
+		return this.guild ? this._client.rest.applicationCommands.deleteGuildCommand(this.application.id, this.guild.id, this.id) : this._client.rest.applicationCommands.deleteGlobalCommand(this.application.id, this.id);
 	}
 
 	/**
@@ -120,7 +119,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	 * @returns {Promise<ApplicationCommand>}
 	 */
 	async edit(options: TypeToEdit<T>) {
-		return this.guildID ? this._client.rest.applicationCommands.editGuildCommand(this.applicationID, this.guildID, this.id, options) : this._client.rest.applicationCommands.editGlobalCommand(this.applicationID, this.id, options);
+		return this.guild ? this._client.rest.applicationCommands.editGuildCommand(this.application.id, this.guild.id, this.id, options) : this._client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
 	}
 
 	/**
@@ -132,8 +131,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	 * @returns {Promise<GuildApplicationCommandPermissions>}
 	 */
 	async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions) {
-		if (!this.guildID) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
-		return this._client.rest.applicationCommands.editGuildCommandPermissions(this.applicationID, this.guildID, this.id, options);
+		if (!this.guild) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
+		return this._client.rest.applicationCommands.editGuildCommandPermissions(this.application.id, this.guild.id, this.id, options);
 	}
 
 	/**
@@ -142,7 +141,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	 * @returns {Promise<GuildApplicationCommandPermissions>}
 	 */
 	async getGuildPermission() {
-		if (!this.guildID) throw new Error("getGuildPermission cannot be used on global commands.");
-		return this._client.rest.applicationCommands.getGuildPermission(this.applicationID, this.guildID, this.id);
+		if (!this.guild) throw new Error("getGuildPermission cannot be used on global commands.");
+		return this._client.rest.applicationCommands.getGuildPermission(this.application.id, this.guild.id, this.id);
 	}
 }

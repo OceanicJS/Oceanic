@@ -60,15 +60,15 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 	constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
 		// technical constraint, easier to pretend `code` is an id rather than make id optional
 		super(data.code, client);
-		this.update(data);
-	}
-
-	protected update(data: RawInvite | RawInviteWithMetadata) {
-		this.approximateMemberCount = data.approximate_member_count;
-		this.approximatePresenceCount = data.approximate_presence_count;
 		this.code = data.code;
 		this.expiresAt = (!data.expires_at ? undefined : new Date(data.expires_at)) as never;
 		this.targetType = data.target_type;
+		this.update(data);
+	}
+
+	protected update(data: Partial<RawInvite> | Partial<RawInviteWithMetadata>) {
+		if (data.approximate_member_count !== undefined) this.approximateMemberCount = data.approximate_member_count;
+		if (data.approximate_presence_count !== undefined) this.approximatePresenceCount = data.approximate_presence_count;
 
 		let guild: Guild | undefined;
 		if (data.guild) {
@@ -97,15 +97,15 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 			speakerCount:     data.stage_instance.speaker_count,
 			topic:            data.stage_instance.topic
 		};
-		if (data.target_application) this.targetApplication = new PartialApplication(data.target_application, this._client);
-		if (data.guild_scheduled_event) this.guildScheduledEvent = guild!.scheduledEvents.update(data.guild_scheduled_event);
-		if (data.target_user) this.targetUser = this._client.users.update(data.target_user);
+		if (data.target_application !== undefined) this.targetApplication = new PartialApplication(data.target_application, this._client);
+		if (data.guild_scheduled_event !== undefined) this.guildScheduledEvent = guild!.scheduledEvents.update(data.guild_scheduled_event);
+		if (data.target_user !== undefined) this.targetUser = this._client.users.update(data.target_user);
 		if ("created_at" in data) {
-			this._createdAt = new Date(data.created_at);
-			this.uses = data.uses as never;
-			this.maxUses = data.max_uses as never;
-			this.maxAge = data.max_age as never;
-			this.temporary = data.temporary as never;
+			if (data.created_at !== undefined) this._createdAt = new Date(data.created_at);
+			if (data.uses !== undefined) this.uses = data.uses as never;
+			if (data.max_uses !== undefined) this.maxUses = data.max_uses as never;
+			if (data.max_age !== undefined) this.maxAge = data.max_age as never;
+			if (data.temporary !== undefined) this.temporary = data.temporary as never;
 		}
 	}
 

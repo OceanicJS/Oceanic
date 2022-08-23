@@ -1,4 +1,5 @@
 import Base from "./Base";
+import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import type {
 	AnyRawInteraction,
@@ -11,11 +12,12 @@ import type {
 } from "../types/interactions";
 import { InteractionTypes } from "../Constants";
 import Properties from "../util/Properties";
+import type { Uncached } from "../types/shared";
 
 export default class Interaction extends Base {
 	protected acknowledged: boolean;
-	/** The ID of the application this interaction is for. */
-	applicationID: string;
+	/** The application this interaction is for. This can be a partial object with only an `id` property. */
+	application: ClientApplication | Uncached;
 	/** The token of this interaction. */
 	token: string;
 	/** The [type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type) of this interaction. */
@@ -25,7 +27,7 @@ export default class Interaction extends Base {
 	constructor(data: AnyRawInteraction, client: Client) {
 		super(data.id, client);
 		Properties.looseDefine(this, "acknowledged", false, true);
-		this.applicationID = data.application_id;
+		this.application = this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
 		this.token = data.token;
 		this.type = data.type;
 		this.version = data.version;

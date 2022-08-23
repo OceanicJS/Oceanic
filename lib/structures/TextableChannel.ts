@@ -39,13 +39,14 @@ import type {
 	StartThreadWithoutMessageOptions
 } from "../types/channels";
 import { File } from "../types/request-handler";
+import type { Uncached } from "../types/shared";
 
 /** Represents a guild text channel. */
 export default class TextableChannel<T extends TextChannel | NewsChannel = TextChannel | NewsChannel> extends GuildChannel {
 	/** The default auto archive duration for threads created in this channel. */
 	defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
-	/** The id of the last message sent in this channel. */
-	lastMessageID: string | null;
+	/** The last message sent in this channel. This can be a partial object with only an `id` property. */
+	lastMessage: Message | Uncached | null;
 	/** The cached messages in this channel. */
 	messages: Collection<string, RawMessage, Message>;
 	/** If this channel is age gated. */
@@ -68,15 +69,15 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 		this.update(data);
 	}
 
-	protected update(data: RawTextChannel | RawNewsChannel) {
+	protected update(data: Partial<RawTextChannel> | Partial<RawNewsChannel>) {
 		super.update(data);
-		this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-		this.lastMessageID              = data.last_message_id;
-		this.nsfw                       = data.nsfw;
-		this.position                   = data.position;
-		this.rateLimitPerUser           = data.rate_limit_per_user;
-		this.topic                      = data.topic;
-		data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+		if (data.default_auto_archive_duration !== undefined) this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+		if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+		if (data.nsfw !== undefined) this.nsfw = data.nsfw;
+		if (data.position !== undefined) this.position = data.position;
+		if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
+		if (data.topic !== undefined) this.topic = data.topic;
+		if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
 	}
 
 	/**

@@ -4,10 +4,14 @@ import User from "./User";
 import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import GuildChannel from "./GuildChannel";
+import Guild from "./Guild";
+import type Member from "./Member";
+import { PartialApplication } from "./PartialApplication";
+import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { MessageTypes } from "../Constants";
-import type { Uncached as PartialChannel } from "../types/shared";
+import type { Uncached as PartialChannel, Uncached } from "../types/shared";
 import type {
 	AnyGuildTextChannel,
 	AnyTextChannel,
@@ -23,7 +27,6 @@ import type {
 	RawMessage,
 	StickerItem
 } from "../types/channels";
-import type { RawApplication } from "../types/oauth";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import { File } from "../types/request-handler";
@@ -31,10 +34,12 @@ import { File } from "../types/request-handler";
 export default class Message<T extends AnyTextChannel = AnyTextChannel> extends Base {
 	/** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
 	activity?: MessageActivity;
-	/** If the message was from an interaction or application owned webhook, some information about the application. */
-	application?: RawApplication; // @TODO specific properties sent
-	/** If the message was from an interaction or application owned webhook, the id of that application. */
-	applicationID?: string;
+	/**
+	 * This can be present in two scenarios:
+	 * * If the message was from an interaction or application owned webhook (`ClientApplication` if client, only `id` otherwise).
+	 * * If the message has a rich presence embed (`PartialApplication`)
+	 */
+	application?: PartialApplication | ClientApplication | Uncached;
 	/** The attachments on this message. */
 	attachments: Collection<string, RawAttachment, Attachment>;
 	/** The author of this message. */
@@ -61,6 +66,8 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		channels: Array<string>;
 		/** If @everyone/@here is mentioned in this message. */
 		everyone: boolean;
+		/** The members mentioned in this message. */
+		members: Array<Member>;
 		/** The ids of the roles mentioned in this message. */
 		roles: Array<string>;
 		/** The users mentioned in this message. */
@@ -76,7 +83,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	position?: number;
 	/** The reactions on this message. */
 	reactions?: Array<MessageReaction>;
-	/** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`,  */
+	/** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, */
 	referencedMessage?: Message | null;
 	// stickers exists, but is deprecated
 	/** The sticker items on this message. */
@@ -97,31 +104,55 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		this.attachments = new Collection(Attachment, client);
 		if (data.author.discriminator !== "0000") this.author = this._client.users.update(data.author);
 		else this.author = new User(data.author, this._client);
+		if (data.application !== undefined) this.application = new PartialApplication(data.application, this._client);
+		else if (data.application_id !== undefined) this.application = { id: data.application_id };
 		if (data.attachments) {
 			for (const attachment of data.attachments) this.attachments.update(attachment);
 		}
 		this.channel = this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
 			id: data.channel_id
 		};
+		this.mentions = {
+			channels: [],
+			everyone: false,
+			members:  [],
+			roles:    [],
+			users:    []
+		};
+		this.timestamp = new Date(data.timestamp);
+		this.tts = data.tts;
+		this.type = data.type;
+		this.webhookID = data.webhook_id;
 		this.update(data);
 	}
 
-	protected update(data: RawMessage) {
-		this.activity = data.activity;
-		this.application = data.application;
-		this.applicationID = data.application_id;
-		if (data.attachments) {
+	protected update(data: Partial<RawMessage>) {
+		if (data.mention_everyone !== undefined) this.mentions.everyone = data.mention_everyone;
+		if (data.mention_roles !== undefined) this.mentions.roles = data.mention_roles;
+		if (data.mentions !== undefined) {
+			const members: Array<Member> = [];
+			this.mentions.users = data.mentions.map(user => {
+				if (user.member && "guild" in this.channel && this.channel.guild instanceof Guild) members.push(this.channel.guild.members.update({ ...user.member, id: user.id }, this.channel.guild.id));
+				return this._client.users.update(user);
+			});
+			this.mentions.members = members;
+		}
+		if (data.activity !== undefined) this.activity = data.activity;
+		if (data.attachments !== undefined) {
 			for (const id of this.attachments.keys()) {
 				if (!data.attachments.some(attachment => attachment.id === id)) this.attachments.delete(id);
 			}
 			for (const attachment of data.attachments) this.attachments.update(attachment);
 		}
-		this.components = data.components;
-		this.content = data.content;
-		this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
-		this.embeds = data.embeds;
-		this.flags = data.flags;
-		if (data.interaction) {
+		if (data.components !== undefined) this.components = data.components;
+		if (data.content !== undefined) {
+			this.content = data.content;
+			this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1));
+		}
+		if (data.edited_timestamp !== undefined) this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
+		if (data.embeds !== undefined) this.embeds = data.embeds;
+		if (data.flags !== undefined) this.flags = data.flags;
+		if (data.interaction !== undefined) {
 			let member: RawMember & { id: string; } | undefined;
 			if (data.interaction.member) member = {
 				...data.interaction.member,
@@ -129,21 +160,12 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 			};
 			this.interaction = {
 				id:     data.interaction.id,
-				member: this.channel instanceof GuildChannel && this.channel.guild && member ? this.channel.guild.members.update(member, this.channel.guild.id) : undefined,
+				member: this.channel instanceof GuildChannel && this.channel.guild instanceof Guild && member ? this.channel.guild.members.update(member, this.channel.guild.id) : undefined,
 				name:   data.interaction.name,
 				type:   data.interaction.type,
 				user:   this._client.users.update(data.interaction.user)
 			};
 		}
-		this.mentions = {
-			channels: (this.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1)),
-			everyone: data.mention_everyone,
-			roles:    data.mention_roles,
-			users:    data.mentions.map(user => {
-				if (user.member && "guild" in this.channel && this.channel.guild) this.channel.guild.members.update({ ...user.member, id: user.id }, this.channel.guild.id);
-				return this._client.users.update(user);
-			})
-		};
 		if (data.message_reference) {
 			this.messageReference = {
 				channelID:       data.message_reference.channel_id,
@@ -152,22 +174,21 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 				messageID:       data.message_reference.message_id
 			};
 		}
-		this.nonce = data.nonce;
-		this.pinned = data.pinned;
-		this.position = data.position;
-		if (data.referenced_message) {
-			if ("messages" in this.channel) this.referencedMessage = this.channel.messages.update(data.referenced_message);
-			else this.referencedMessage = new Message(data.referenced_message, this._client);
+		if (data.nonce !== undefined) this.nonce = data.nonce;
+		if (data.pinned !== undefined) this.pinned = data.pinned;
+		if (data.position !== undefined) this.position = data.position;
+		if (data.referenced_message !== undefined) {
+			if (data.referenced_message === null) this.referencedMessage = null;
+			else {
+				if ("messages" in this.channel) this.referencedMessage = this.channel.messages.update(data.referenced_message);
+				else this.referencedMessage = new Message(data.referenced_message, this._client);
+			}
 		}
-		this.stickerItems = data.sticker_items;
-		if (data.thread) {
+		if (data.sticker_items !== undefined) this.stickerItems = data.sticker_items;
+		if (data.thread !== undefined) {
 			if ("threads" in this.channel) this.thread = this.channel.threads.add(Channel.from<AnyThreadChannel>(data.thread, this._client));
 			else this.thread = Channel.from<AnyThreadChannel>(data.thread, this._client);
 		}
-		this.timestamp = new Date(data.timestamp);
-		this.tts = data.tts;
-		this.type = data.type;
-		this.webhookID = data.webhook_id;
 	}
 	/**
 	 * Delete this message as a webhook.

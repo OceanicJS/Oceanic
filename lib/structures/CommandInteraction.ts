@@ -21,11 +21,11 @@ import { File } from "../types/request-handler";
 export default class CommandInteraction extends Interaction {
 	/** The permissions the bot has in the channel this interaction was sent from. */
 	appPermissions?: Permission;
-	/** The channel this interaction was sent from. This can be a partial with only an `id`. */
+	/** The channel this interaction was sent from. This can be a partial object with only an `id`. */
 	channel: AnyTextChannel | Uncached;
 	/** The data associated with the interaction. */
 	data: ApplicationCommandInteractionData;
-	/** The guild this interaction was sent from, if applicable. This can be a partial with only an `id`. */
+	/** The guild this interaction was sent from, if applicable. This can be a partial object with only an `id`. */
 	guild?: Guild | Uncached;
 	/** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
 	guildLocale?: string;
@@ -50,7 +50,7 @@ export default class CommandInteraction extends Interaction {
 				channels:	   new Collection(Channel, this._client) as Collection<string, RawChannel, AnyChannel>,
 				members:	    new Collection<string, RawMember & { id: string; }, Member, [guildID: string]>(Member, this._client),
 				messages:	   new Collection(Message, this._client),
-				roles:  	    new Collection(Role, this._client),
+				roles: 	     new Collection(Role, this._client),
 				users:		     new Collection(User, this._client)
 			},
 			targetID: data.data.target_id,
@@ -106,7 +106,7 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent) {
-		return this._client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
+		return this._client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
 	}
 
 	/**
@@ -167,7 +167,7 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<void>}
 	 */
 	async deleteFollowup(messageID: string) {
-		return this._client.rest.interactions.deleteFollowupMessage(this.applicationID, this.token, messageID);
+		return this._client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
 	}
 
 	/**
@@ -176,7 +176,7 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<void>}
 	 */
 	async deleteOriginal() {
-		return this._client.rest.interactions.deleteOriginalMessage(this.applicationID, this.token);
+		return this._client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
 	}
 
 	/**
@@ -200,7 +200,7 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent) {
-		return this._client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
+		return this._client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
 	}
 
 	/**
@@ -223,7 +223,7 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent) {
-		return this._client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
+		return this._client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
 	}
 
 	/**
@@ -234,7 +234,7 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async getFollowup<T extends AnyGuildTextChannel>(messageID: string) {
-		return this._client.rest.interactions.getFollowupMessage<T>(this.applicationID, this.token, messageID);
+		return this._client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
 	}
 
 	/**
@@ -244,6 +244,6 @@ export default class CommandInteraction extends Interaction {
 	 * @returns {Promise<Message<T>>}
 	 */
 	async getOriginal<T extends AnyGuildTextChannel>() {
-		return this._client.rest.interactions.getOriginalMessage<T>(this.applicationID, this.token);
+		return this._client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
 	}
 }

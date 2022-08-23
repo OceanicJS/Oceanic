@@ -20,16 +20,16 @@ export class PartialApplication extends Base {
 	/** @hideconstructor */
 	constructor(data: RawPartialApplication, client: Client) {
 		super(data.id, client);
+		this.verifyKey = data.verify_key;
 		this.update(data);
 	}
 
 	protected update(data: RawPartialApplication) {
-		this.botPublic           = data.bot_public;
-		this.botRequireCodeGrant = data.bot_require_code_grant;
-		this.description         = data.description;
-		this.icon                = data.icon;
-		this.name                = data.name;
-		this.verifyKey           = data.verify_key;
+		if (data.bot_public !== undefined) this.botPublic = data.bot_public;
+		if (data.bot_require_code_grant !== undefined) this.botRequireCodeGrant = data.bot_require_code_grant;
+		if (data.description !== undefined) this.description = data.description;
+		if (data.icon !== undefined) this.icon = data.icon;
+		if (data.name !== undefined) this.name = data.name;
 	}
 
 	/**

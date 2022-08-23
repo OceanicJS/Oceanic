@@ -1,19 +1,23 @@
 import Base from "./Base";
+import type StageChannel from "./StageChannel";
+import Guild from "./Guild";
+import type ScheduledEvent from "./ScheduledEvent";
 import type { RawStageInstance } from "../types/stage-instances";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
+import type { Uncached } from "../types/shared";
 
 export default class StageInstance extends Base {
-	/** The id of the associated stage channel. */
-	channelID: string;
+	/** The associated stage channel. This can be a partial with just an `id` property. */
+	channel: StageChannel | Uncached;
 	/** @deprecated If the stage channel is discoverable */
 	discoverableDisabled: boolean;
-	/** The guild id of the associated stage channel. */
-	guildID: string;
-	/** The id of scheduled event for this stage instance. */
-	guildScheduledEventID?: string;
+	/** The guild of the associated stage channel. This can be a partial with just an `id` property. */
+	guild: Guild | Uncached;
 	/** The [privacy level](https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level) of this stage instance. */
 	privacyLevel: StageInstancePrivacyLevels;
+	/** The scheduled event for this stage instance. This can be a partial with just an `id` property. */
+	scheduledEvent?: ScheduledEvent | Uncached;
 	/** The topic of this stage instance. */
 	topic: string;
 	/** @hideconstructor */
@@ -22,12 +26,12 @@ export default class StageInstance extends Base {
 		this.update(data);
 	}
 
-	protected update(data: RawStageInstance) {
-		this.channelID             = data.channel_id;
-		this.discoverableDisabled  = data.discoverable_disabled;
-		this.guildID               = data.guild_id;
-		this.guildScheduledEventID = data.guild_scheduled_event_id;
-		this.privacyLevel          = data.privacy_level;
-		this.topic                 = data.topic;
+	protected update(data: Partial<RawStageInstance>) {
+		if (data.channel_id !== undefined) this.channel = this._client.getChannel(data.channel_id) || { id: data.channel_id } ;
+		if (data.discoverable_disabled !== undefined) this.discoverableDisabled = data.discoverable_disabled;
+		if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		if (data.guild_scheduled_event_id !== undefined) this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined) || { id: data.guild_scheduled_event_id };
+		if (data.privacy_level !== undefined) this.privacyLevel = data.privacy_level;
+		if (data.topic !== undefined) this.topic = data.topic;
 	}
 }

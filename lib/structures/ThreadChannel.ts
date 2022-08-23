@@ -1,6 +1,6 @@
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
-import User from "./User";
+import type User from "./User";
 import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -17,13 +17,14 @@ import type {
 	RESTThreadMember
 } from "../types/channels";
 import { File } from "../types/request-handler";
+import type { Uncached } from "../types/shared";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel> extends GuildChannel {
 	/** The [flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) for this thread channel. */
 	flags: number;
-	/** The id of the last message sent in this channel. */
-	lastMessageID: string | null;
+	/** The last message sent in this channel. This can be a partial object with only an `id` property. */
+	lastMessage: Message | Uncached | null;
 	/** The approximate number of members in this thread. Stops counting after 50. */
 	memberCount: number;
 	/** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
@@ -31,7 +32,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	/** The cached messages in this channel. */
 	messages: Collection<string, RawMessage, Message>;
 	/** The creator of this thread. */
-	ownerID: string;
+	owner: User | Uncached;
 	/** The amount of seconds between non-moderators sending messages. */
 	rateLimitPerUser: number;
 	/** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this thread. */
@@ -46,22 +47,25 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 		this.update(data);
 	}
 
-	protected update(data: RawThreadChannel) {
-		this.flags            = data.flags;
-		this.lastMessageID    = data.last_message_id;
-		this.memberCount      = data.member_count;
-		this.messageCount     = data.message_count;
-		this.ownerID          = data.owner_id;
-		this.rateLimitPerUser = data.rate_limit_per_user;
-		this.threadMetadata   = {
-			archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
-			archived:            !!data.thread_metadata.archived,
-			autoArchiveDuration: data.thread_metadata.auto_archive_duration,
-			createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
-			locked:		            !!data.thread_metadata.locked
-		};
-		if (data.type === ChannelTypes.GUILD_PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
-		this.totalMessageSent  = data.total_message_sent;
+	protected update(data: Partial<RawThreadChannel>) {
+		if (data.flags !== undefined) this.flags = data.flags;
+		if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+		if (data.member_count !== undefined) this.memberCount = data.member_count;
+		if (data.message_count !== undefined) this.messageCount = data.message_count;
+		if (data.owner_id !== undefined) this.owner = this._client.users.get(data.owner_id) || { id: data.owner_id };
+		if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
+		if (data.thread_metadata !== undefined) {
+			this.threadMetadata = {
+				archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
+				archived:            !!data.thread_metadata.archived,
+				autoArchiveDuration: data.thread_metadata.auto_archive_duration,
+				createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
+				locked:		            !!data.thread_metadata.locked
+			};
+			if (data.type === ChannelTypes.GUILD_PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+
+		}
+		if (data.total_message_sent !== undefined) this.totalMessageSent = data.total_message_sent;
 	}
 
 	/**

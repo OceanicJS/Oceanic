@@ -16,8 +16,8 @@ export default class ClientApplication extends Base {
 		this.update(data);
 	}
 
-	protected update(data: RawClientApplication): void {
-		this.flags = data.flags;
+	protected update(data: Partial<RawClientApplication>): void {
+		if (typeof data.flags !== "undefined") this.flags = data.flags;
 	}
 
 	/**

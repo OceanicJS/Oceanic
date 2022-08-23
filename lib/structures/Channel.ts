@@ -44,7 +44,7 @@ export default class Channel extends Base {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-	protected update(data: RawChannel) {}
+	protected update(data: Partial<RawChannel>) {}
 
 	/** A string that will mention this channel. */
 	get mention() {

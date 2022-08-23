@@ -25,19 +25,15 @@ export default class Attachment extends Base {
 	/** @hideconstructor */
 	constructor(data: RawAttachment, client: Client) {
 		super(data.id, client);
-		this.update(data);
-	}
-
-	protected update(data: RawAttachment) {
 		this.contentType = data.content_type;
 		this.description = data.description;
-		this.ephemeral   = data.ephemeral;
-		this.filename    = data.filename;
-		this.height      = data.height;
-		this.proxyURL    = data.proxy_url;
-		this.size        = data.size;
-		this.url         = data.url;
-		this.width       = data.width;
+		this.ephemeral = data.ephemeral;
+		this.filename = data.filename;
+		this.height = data.height;
+		this.proxyURL = data.proxy_url;
+		this.size = data.size;
+		this.url = data.url;
+		this.width = data.width;
 	}
 
 	toJSON(props = []) {

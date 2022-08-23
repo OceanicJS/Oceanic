@@ -30,20 +30,20 @@ export default class GuildTemplate {
 	/** @hideconstructor */
 	constructor(data: RawGuildTemplate, client: Client) {
 		this._client = client;
+		this.code = data.code;
+		this.createdAt = new Date(data.created_at);
+		this.creator = this._client.users.update(data.creator);
 		this.update(data);
 	}
 
-	protected update(data: RawGuildTemplate) {
-		this.code                  = data.code;
-		this.createdAt             = new Date(data.created_at);
-		this.creator               = this._client.users.update(data.creator);
-		this.description           = data.description;
-		this.isDirty               = data.is_dirty;
-		this.name                  = data.name;
-		this.serializedSourceGuild = data.serialized_source_guild;
-		this.sourceGuild           = this._client.guilds.get(data.source_guild_id) || { id: data.source_guild_id };
-		this.updatedAt             = new Date(data.updated_at);
-		this.usageCount            = data.usage_count;
+	protected update(data: Partial<RawGuildTemplate>) {
+		if (data.description !== undefined) this.description = data.description;
+		if (data.is_dirty !== undefined) this.isDirty = data.is_dirty;
+		if (data.name !== undefined) this.name = data.name;
+		if (data.serialized_source_guild !== undefined) this.serializedSourceGuild = data.serialized_source_guild;
+		if (data.source_guild_id !== undefined) this.sourceGuild = this._client.guilds.get(data.source_guild_id) || { id: data.source_guild_id };
+		if (data.updated_at !== undefined) this.updatedAt = new Date(data.updated_at);
+		if (data.usage_count !== undefined) this.usageCount = data.usage_count;
 	}
 
 	/**

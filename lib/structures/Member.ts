@@ -37,23 +37,28 @@ export default class Member extends Base {
 	constructor(data: RawMember, client: Client, guildID: string) {
 		assert(data.user, "Member recieved without accompanying user.");
 		super(data.user.id, client);
+		this.avatar = null;
+		this.communicationDisabledUntil = null;
+		this.nick = null;
+		this.pending = false;
+		this.premiumSince = null;
 		this.guildID = guildID;
 		this.update(data);
 	}
 
-	protected update(data: RawMember) {
-		this.avatar                     = data.avatar || null;
-		this.communicationDisabledUntil = !data.communication_disabled_until ? null : new Date(data.communication_disabled_until);
-		this.deaf                       = data.deaf;
-		this.flags                      = data.flags;
-		this.isPending                  = data.is_pending;
-		this.joinedAt                   = new Date(data.joined_at);
-		this.mute                       = data.mute;
-		this.nick                       = data.nick ?? null;
-		this.pending                    = data.pending ?? false;
-		this.premiumSince               = !data.premium_since ? null : new Date(data.premium_since);
-		this.roles                      = data.roles;
-		this.user = this._client.users.update(data.user!);
+	protected update(data: Partial<RawMember>) {
+		if (data.avatar !== undefined) this.avatar = data.avatar;
+		if (data.communication_disabled_until !== undefined) this.communicationDisabledUntil = data.communication_disabled_until === null ? null : new Date(data.communication_disabled_until);
+		if (data.deaf !== undefined) this.deaf = data.deaf;
+		if (data.flags !== undefined) this.flags = data.flags;
+		if (data.is_pending !== undefined) this.isPending = data.is_pending;
+		if (data.joined_at !== undefined) this.joinedAt = new Date(data.joined_at);
+		if (data.mute !== undefined) this.mute = data.mute;
+		if (data.nick !== undefined) this.nick = data.nick;
+		if (data.pending !== undefined) this.pending = data.pending;
+		if (data.premium_since !== undefined) this.premiumSince = new Date(data.premium_since);
+		if (data.roles !== undefined) this.roles = data.roles;
+		if (data.user !== undefined) this.user = this._client.users.update(data.user);
 	}
 
 	/** If the member associated with the user is a bot. */

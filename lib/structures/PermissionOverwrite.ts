@@ -16,11 +16,7 @@ export default class PermissionOverwrite extends Base {
 		Properties.looseDefine(this, "_client", client);
 		this.permission = new Permission(data.allow, data.deny);
 		this.type = data.type;
-		this.update(data);
 	}
-
-	// eslint-disable-next-line @typescript-eslint/no-empty-function,, @typescript-eslint/no-unused-vars
-	protected update(data: RawOverwrite) { }
 
 	/** A key-value map of permission to if it's been allowed or denied (not present if neither) */
 	get json() { return this.permission.json; }

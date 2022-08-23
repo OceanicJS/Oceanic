@@ -29,10 +29,10 @@ export default class CategoryChannel extends Channel {
 		this.update(data);
 	}
 
-	protected update(data: RawCategoryChannel) {
+	protected update(data: Partial<RawCategoryChannel>) {
 		super.update(data);
-		this.position = data.position;
-		data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+		if (data.position !== undefined) this.position = data.position;
+		if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
 	}
 
 	/**

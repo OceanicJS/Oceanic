@@ -5,7 +5,7 @@ import type { GuildEmoji, RawGuildPreview, Sticker } from "../types/guilds";
 
 /** A preview of a guild. */
 export default class GuildPreview extends Base {
-	/** The approximate number of members in this guild.  */
+	/** The approximate number of members in this guild. */
 	approximateMemberCount: number;
 	/** The approximate number of online members in this guild. */
 	approximatePresenceCount: number;
@@ -32,18 +32,18 @@ export default class GuildPreview extends Base {
 	}
 
 	protected update(data: RawGuildPreview) {
-		this.approximateMemberCount   = data.approximate_member_count;
-		this.approximatePresenceCount = data.approximate_presence_count;
-		this.description              = data.description;
-		this.discoverySplash          = data.discovery_splash;
-		this.emojis                   = data.emojis.map(emoji => ({
+		if (data.approximate_member_count !== undefined) this.approximateMemberCount = data.approximate_member_count;
+		if (data.approximate_presence_count !== undefined) this.approximatePresenceCount = data.approximate_presence_count;
+		if (data.description !== undefined) this.description = data.description;
+		if (data.discovery_splash !== undefined) this.discoverySplash = data.discovery_splash;
+		if (data.emojis !== undefined) this.emojis = data.emojis.map(emoji => ({
 			...emoji,
 			user: !emoji.user ? undefined : this._client.users.update(emoji.user)
 		}));
-		this.features                 = data.features;
-		this.icon                     = data.icon;
-		this.name                     = data.name;
-		this.splash                   = data.splash;
-		this.stickers                 = data.stickers;
+		if (data.features !== undefined) this.features = data.features;
+		if (data.icon !== undefined) this.icon = data.icon;
+		if (data.name !== undefined) this.name = data.name;
+		if (data.splash !== undefined) this.splash = data.splash;
+		if (data.stickers !== undefined) this.stickers = data.stickers;
 	}
 }

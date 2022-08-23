@@ -29,7 +29,7 @@ export default class Permission {
 	}
 
 	/**
-	 *Check if this permissions instance has the given permissions allowed
+	 * Check if this permissions instance has the given permissions allowed
 	 *
 	 * @param {...PermissionNames} permissions - The permissions to check for.
 	 * @returns {Boolean}

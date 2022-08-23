@@ -19,10 +19,12 @@ import type { RawGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
 import type { ClientEvents, ClientInstanceOptions, ClientOptions } from "./types/client";
 import TypedEmitter from "./util/TypedEmitter";
+import type ClientApplication from "./structures/ClientApplication";
 
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
+	application?: ClientApplication;
 	channelGuildMap: Map<string, string>;
 	groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
 	guilds: Collection<string, RawGuild, Guild>;

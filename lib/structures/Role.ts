@@ -31,20 +31,20 @@ export default class Role extends Base {
 	constructor(data: RawRole, client: Client, guildID: string) {
 		super(data.id, client);
 		this.guildID = guildID;
+		this.managed = data.managed;
 		this.update(data);
 	}
 
-	protected update(data: RawRole) {
-		this.color        = data.color;
-		this.hoist        = data.hoist;
-		this.icon         = data.icon || null;
-		this.managed      = data.managed;
-		this.mentionable  = data.mentionable;
-		this.name         = data.name;
-		this.permissions  = new Permission(data.permissions);
-		this.position     = data.position;
-		this.tags         = data.tags || {};
-		this.unicodeEmoji = data.unicode_emoji || null;
+	protected update(data: Partial<RawRole>) {
+		if (data.color !== undefined) this.color = data.color;
+		if (data.hoist !== undefined) this.hoist = data.hoist;
+		if (data.icon !== undefined) this.icon = data.icon || null;
+		if (data.mentionable !== undefined) this.mentionable = data.mentionable;
+		if (data.name !== undefined) this.name = data.name;
+		if (data.permissions !== undefined) this.permissions = new Permission(data.permissions);
+		if (data.position !== undefined) this.position = data.position;
+		if (data.tags !== undefined) this.tags = data.tags || {};
+		if (data.unicode_emoji !== undefined) this.unicodeEmoji = data.unicode_emoji || null;
 	}
 
 	/** A string that will mention this role. */

@@ -1,6 +1,7 @@
 import Base from "./Base";
 import type User from "./User";
 import type Message from "./Message";
+import type Guild from "./Guild";
 import type Client from "../Client";
 import type { ImageFormat, WebhookTypes } from "../Constants";
 import { BASE_URL } from "../Constants";
@@ -16,16 +17,17 @@ import type {
 	RawWebhook
 } from "../types/webhooks";
 import { File } from "../types/request-handler";
+import type { Uncached } from "../types/shared";
 
 export default class Webhook extends Base {
 	/** The id of the application associatd with this webhook. */
 	applicationID: string | null;
 	/** The hash of this webhook's avatar. */
 	avatar: string | null;
-	/** The id of the channel this webhook is for, if any. */
-	channelID: string | null;
-	/** The id of the guild this webhook is for, if any. */
-	guildID: string | null;
+	/** The channel this webhook is for, if any. This can be a partial object with only an `id` property. */
+	channel: AnyGuildTextChannel | Uncached | null;
+	/** The guild this webhook is for, if any. This can be a partial object with only an `id` property. */
+	guild: Guild | Uncached | null;
 	/** The username of this webhook, if any. */
 	name: string | null;
 	/** The source channel for this webhook (channel follower only). */
@@ -44,16 +46,17 @@ export default class Webhook extends Base {
 		this.update(data);
 	}
 
-	protected update(data: RawWebhook) {
-		this.applicationID = data.application_id;
-		this.avatar        = data.avatar;
-		this.channelID     = data.channel_id;
-		this.name          = data.name;
-		this.sourceChannel = data.source_channel;
-		this.sourceGuild   = data.source_guild;
-		this.token         = data.token;
-		this.type          = data.type;
-		if (data.user) this.user = this._client.users.update(data.user);
+	protected update(data: Partial<RawWebhook>) {
+		if (data.application_id !== undefined) this.applicationID = data.application_id;
+		if (data.avatar !== undefined) this.avatar = data.avatar;
+		if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id };
+		if (data.guild_id !== undefined) this.guild = data.guild_id === null ? null : this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		if (data.name !== undefined) this.name = data.name;
+		if (data.source_channel !== undefined) this.sourceChannel = data.source_channel;
+		if (data.source_guild !== undefined) this.sourceGuild = data.source_guild;
+		if (data.token !== undefined) this.token = data.token;
+		if (data.type !== undefined) this.type = data.type;
+		if (data.user !== undefined) this.user = this._client.users.update(data.user);
 	}
 
 	get url() { return `${BASE_URL}${Routes.WEBHOOK(this.id, this.token)}`; }

@@ -17,16 +17,16 @@ export default class ExtendedUser extends User {
 	/** @hideconstructor */
 	constructor(data: RawExtendedUser, client: Client) {
 		super(data, client);
+		this.verified = !!data.verified;
+		this.mfaEnabled = !!data.mfa_enabled;
 		this.update(data);
 	}
 
-	protected update(data: RawExtendedUser) {
+	protected update(data: Partial<RawExtendedUser>) {
 		super.update(data);
-		this.email      = data.email;
-		this.flags      = data.flags;
-		this.locale     = data.locale;
-		this.mfaEnabled = !!data.mfa_enabled;
-		this.verified   = !!data.verified;
+		if (data.email !== undefined) this.email = data.email;
+		if (data.flags !== undefined) this.flags = data.flags;
+		if (data.locale !== undefined) this.locale = data.locale;
 	}
 
 	/**

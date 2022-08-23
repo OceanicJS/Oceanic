@@ -1,28 +1,32 @@
 import Channel from "./Channel";
+import type Guild from "./Guild";
+import type CategoryChannel from "./CategoryChannel";
 import { ChannelTypes, ThreadAutoArchiveDuration, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel, RawOverwrite } from "../types/channels";
+import type { Uncached } from "../types/shared";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
-	guildID: string;
+	/** The guild associated with this channel. This can be a partial object with only an `id` property. */
+	guild: Guild | Uncached;
+	/** The name of this channel. */
 	name: string;
-	parentID: string | null;
+	/** The parent category of this channel. This can be a partial object with only an `id` property. */
+	parent: CategoryChannel | Uncached | null;
 	/** @hideconstructor */
 	constructor(data: RawGuildChannel, client: Client) {
 		super(data, client);
+		this.parent = null;
 		this.update(data);
 	}
 
-	protected update(data: RawGuildChannel) {
+	protected update(data: Partial<RawGuildChannel>) {
 		super.update(data);
-		this.guildID  = data.guild_id;
-		this.name     = data.name;
-		this.parentID = data.parent_id;
+		if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		if (data.name !== undefined) this.name = data.name;
+		if (data.parent_id !== undefined) this.parent = data.parent_id === null ? null : this._client.getChannel(data.parent_id) || { id: data.parent_id };
 	}
-
-	/** The guild associated with this channel. This will almost always be present when the channel is recieved from the gateway. */
-	get guild() { return this._client.guilds.get(this.guildID); } // @TODO do something so this isn't possibly undefined - we could do some interface overloading or lie to the user like eris does
 
 	/**
 	 * Edit this channel.
