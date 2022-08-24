@@ -166,11 +166,11 @@ export enum ChannelTypes {
 	GUILD_VOICE          = 2,
 	GROUP_DM             = 3,
 	GUILD_CATEGORY       = 4,
-	GUILD_NEWS           = 5,
+	GUILD_ANNOUNCEMENT   = 5,
 
-	GUILD_NEWS_THREAD    = 10,
-	GUILD_PUBLIC_THREAD  = 11,
-	GUILD_PRIVATE_THREAD = 12,
+	ANNOUNCEMENT_THREAD  = 10,
+	PUBLIC_THREAD        = 11,
+	PRIVATE_THREAD       = 12,
 	GUILD_STAGE_VOICE    = 13,
 	GUILD_DIRECTORY      = 14,
 	GUILD_FORUM          = 15
@@ -180,9 +180,9 @@ export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY | ChannelT
 export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
 export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
 export type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
-export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.DM | ChannelTypes.GROUP_DM | ChannelTypes.GUILD_NEWS | ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;
+export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.DM | ChannelTypes.GROUP_DM | ChannelTypes.GUILD_ANNOUNCEMENT | ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD;
 export type GuildTextChannelTypes = Exclude<TextChannelTypes, PrivateChannelTypes>;
-export type ThreadChannelTypes = ChannelTypes.GUILD_NEWS_THREAD | ChannelTypes.GUILD_PUBLIC_THREAD | ChannelTypes.GUILD_PRIVATE_THREAD;
+export type ThreadChannelTypes = ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD;
 export type VoiceChannelTypes = ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
 
 export enum OverwriteTypes {

@@ -22,8 +22,8 @@ import type {
 import type CategoryChannel from "../structures/CategoryChannel";
 import type GroupChannel from "../structures/GroupChannel";
 import type Member from "../structures/Member";
-import type NewsChannel from "../structures/NewsChannel";
-import type NewsThreadChannel from "../structures/NewsThreadChannel";
+import type AnnouncementChannel from "../structures/AnnouncementChannel";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
@@ -68,13 +68,13 @@ export type RawPrivateChannel = Required<Pick<RawChannel, "id" | "last_message_i
 export type RawGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw">> & { managed: boolean; name: string; nicks?: Record<"id" | "nick", string>; type: ChannelTypes.GROUP_DM; };
 export type RawTextChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_TEXT; };
 export type RawCategoryChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel,  "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_CATEGORY; };
-export type RawNewsChannel = Omit<RawTextChannel, "type"> & { type: ChannelTypes.GUILD_NEWS; };
+export type RawAnnouncementChannel = Omit<RawTextChannel, "type"> & { type: ChannelTypes.GUILD_ANNOUNCEMENT; };
 export type RawVoiceChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_VOICE; };
 export type RawStageChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "rtc_region" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_STAGE_VOICE; };
-export type RawThreadChannel = RawNewsThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
-export type RawNewsThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent">> & { member?: RawChannel["member"]; name: string; type: ChannelTypes.GUILD_NEWS_THREAD; };
-export type RawPublicThreadChannel = Omit<RawNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PUBLIC_THREAD; };
-export type RawPrivateThreadChannel = Omit<RawNewsThreadChannel, "type"> & { type: ChannelTypes.GUILD_PRIVATE_THREAD; };
+export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
+export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent">> & { member?: RawChannel["member"]; name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
+export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; };
+export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PRIVATE_THREAD; };
 
 export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
 
@@ -148,15 +148,15 @@ export interface EditGuildChannelOptions {
 	reason?: string;
 	rtcRegion?: string | null;
 	topic?: string | null;
-	type?: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS;
+	type?: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
 	userLimit?: number | null;
 	videoQualityMode?: VideoQualityModes | null;
 }
 
 export type EditChannelOptions = EditGroupDMOptions & EditGuildChannelOptions;
 export type EditAnyGuildChannelOptions = Pick<EditGuildChannelOptions, "name" | "position" | "permissionOverwrites">;
-export type EditTextChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "topic" | "nsfw" | "rateLimitPerUser" | "parentID" | "defaultAutoArchiveDuration"> & { type?: ChannelTypes.GUILD_NEWS; };
-export type EditNewsChannelOptions = Omit<EditTextChannelOptions, "rateLimitPerUser"> & { type?: ChannelTypes.GUILD_TEXT; };
+export type EditTextChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "topic" | "nsfw" | "rateLimitPerUser" | "parentID" | "defaultAutoArchiveDuration"> & { type?: ChannelTypes.GUILD_ANNOUNCEMENT; };
+export type EditAnnouncementChannelOptions = Omit<EditTextChannelOptions, "rateLimitPerUser"> & { type?: ChannelTypes.GUILD_TEXT; };
 export type EditVoiceChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "nsfw" | "bitrate" | "userLimit" | "parentID" | "rtcRegion" | "videoQualityMode">;
 export type EditStageChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "bitrate" | "rtcRegion">;
 export type EditThreadChannelOptions = EditPublicThreadChannelOptions | EditPrivateThreadChannelOptions;
@@ -449,13 +449,13 @@ export interface StickerItem {
 
 
 // @TODO directory & forum
-export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel;
+export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel;
 export type AnyPrivateChannel = PrivateChannel | GroupChannel;
 export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
 export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
-export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
+export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
-export type AnyThreadChannel = NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel;
+export type AnyThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyVoiceChannel = VoiceChannel | StageChannel;
 export type InviteChannel = Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>;
 
@@ -538,7 +538,7 @@ export interface CreateInviteOptions {
 	unique?: boolean;
 }
 
-export interface FollowNewsOptions {
+export interface FollowAnnouncementChannelOptions {
 	webhookChannelID: string;
 }
 
@@ -575,13 +575,13 @@ export interface GetArchivedThreadsOptions {
 	limit?: number;
 }
 
-export interface RawArchivedThreads<T extends RawNewsThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel> {
+export interface RawArchivedThreads<T extends RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel> {
 	has_more: boolean;
 	members: Array<RawRESTThreadMember>;
 	threads: Array<T>;
 }
 
-export interface ArchivedThreads<T extends NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel> {
+export interface ArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel> {
 	hasMore: boolean;
 	members: Array<RESTThreadMember>;
 	threads: Array<T>;

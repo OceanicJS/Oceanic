@@ -1,5 +1,5 @@
 import GuildChannel from "./GuildChannel";
-import type NewsChannel from "./NewsChannel";
+import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
@@ -7,7 +7,7 @@ import ThreadChannel from "./ThreadChannel";
 import Invite from "./Invite";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
-import type NewsThreadChannel from "./NewsThreadChannel";
+import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import User from "./User";
 import type {
 	InviteTargetTypes,
@@ -31,7 +31,7 @@ import type {
 	GetChannelMessagesOptions,
 	GetReactionsOptions,
 	RawMessage,
-	RawNewsChannel,
+	RawAnnouncementChannel,
 	RawOverwrite,
 	RawTextChannel,
 	RawThreadChannel,
@@ -42,7 +42,7 @@ import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
 
 /** Represents a guild text channel. */
-export default class TextableChannel<T extends TextChannel | NewsChannel = TextChannel | NewsChannel> extends GuildChannel {
+export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {
 	/** The default auto archive duration for threads created in this channel. */
 	defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
 	/** The last message sent in this channel. This can be a partial object with only an `id` property. */
@@ -61,14 +61,14 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	/** The topic of the channel. */
 	topic: string | null;
 	declare type: TextChannelTypes;
-	constructor(data: RawTextChannel | RawNewsChannel, client: Client) {
+	constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);
 		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
 		this.update(data);
 	}
 
-	protected update(data: Partial<RawTextChannel> | Partial<RawNewsChannel>) {
+	protected update(data: Partial<RawTextChannel> | Partial<RawAnnouncementChannel>) {
 		super.update(data);
 		if (data.default_auto_archive_duration !== undefined) this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
 		if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
@@ -80,14 +80,14 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	}
 
 	/**
-	 * [Text] Convert this text channel to a news channel.
+	 * [Text] Convert this text channel to a announcement channel.
 	 *
-	 * [News] Convert this news channel to a text channel.
+	 * [Announcement] Convert this announcement channel to a text channel.
 	 *
-	 * @returns {Promise<TextChannel | NewsChannel>}
+	 * @returns {Promise<TextChannel | AnnouncementChannel>}
 	 */
 	async convert() {
-		return this.edit({ type: this.type === ChannelTypes.GUILD_TEXT ? ChannelTypes.GUILD_NEWS : ChannelTypes.GUILD_TEXT });
+		return this.edit({ type: this.type === ChannelTypes.GUILD_TEXT ? ChannelTypes.GUILD_ANNOUNCEMENT : ChannelTypes.GUILD_TEXT });
 	}
 
 	/**
@@ -205,11 +205,11 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
-	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
+	 * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
 	 * @returns {Promise<GuildChannel>}
 	 */
 	async edit(options: EditGuildChannelOptions) {
-		return this._client.rest.channels.edit<TextChannel | NewsChannel>(this.id, options);
+		return this._client.rest.channels.edit<TextChannel | AnnouncementChannel>(this.id, options);
 	}
 
 	/**
@@ -323,7 +323,7 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	 * @returns {Promise<ArchivedThreads>}
 	 */
 	async getPublicArchivedThreads(options?: GetArchivedThreadsOptions) {
-		return this._client.rest.channels.getPublicArchivedThreads<T extends TextChannel ? PublicThreadChannel : NewsThreadChannel>(this.id, options);
+		return this._client.rest.channels.getPublicArchivedThreads<T extends TextChannel ? PublicThreadChannel : AnnouncementThreadChannel>(this.id, options);
 	}
 
 	/**
@@ -363,7 +363,7 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	/**
 	 * Create a thread from an existing message in this channel.
 	 *
-	 * @template {(NewsThreadChannel | PublicThreadChannel)} T
+	 * @template {(AnnouncementThreadChannel | PublicThreadChannel)} T
 	 * @param {String} messageID
 	 * @param {Object} options
 	 * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration of no activity after which this thread will be automatically archived.
@@ -373,13 +373,13 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	 * @returns {Promise<T>}
 	 */
 	async startThreadFromMessage(messageID: string, options: StartThreadFromMessageOptions) {
-		return this._client.rest.channels.startThreadFromMessage<T extends TextChannel ? NewsThreadChannel : PublicThreadChannel>(this.id, messageID, options);
+		return this._client.rest.channels.startThreadFromMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, messageID, options);
 	}
 
 	/**
 	 * Create a thread without an existing message in this channel.
 	 *
-	 * @template {(NewsThreadChannel | PublicThreadChannel)} T
+	 * @template {(AnnouncementThreadChannel | PublicThreadChannel)} T
 	 * @param {Object} options
 	 * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration of no activity after which this thread will be automatically archived.
 	 * @param {Boolean} [options.invitable] - [Private] If non-moderators can add other non-moderators to the thread.
@@ -390,7 +390,7 @@ export default class TextableChannel<T extends TextChannel | NewsChannel = TextC
 	 * @returns {Promise<T>}
 	 */
 	async startThreadWithoutMessage(options: StartThreadWithoutMessageOptions) {
-		return this._client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? NewsThreadChannel : PublicThreadChannel>(this.id, options);
+		return this._client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, options);
 	}
 
 	/**

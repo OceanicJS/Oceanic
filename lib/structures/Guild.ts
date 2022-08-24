@@ -10,7 +10,7 @@ import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
-import type NewsChannel from "./NewsChannel";
+import type AnnouncementChannel from "./AnnouncementChannel";
 import type StageChannel from "./StageChannel";
 import Integration from "./Integration";
 import Invite from "./Invite";
@@ -57,7 +57,7 @@ import type {
 	CreateCategoryChannelOptions,
 	CreateChannelOptions,
 	CreateEmojiOptions,
-	CreateNewsChannelOptions,
+	CreateAnnouncementChannelOptions,
 	CreateRoleOptions,
 	CreateStageChannelOptions,
 	CreateTextChannelOptions,
@@ -353,9 +353,9 @@ export default class Guild extends Base {
 	 *
 	 * @template {AnyGuildChannel} T
 	 * @param {Object} options
-	 * @param {ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, News] The default auto archive duration for the channel.
+	 * @param {ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, Announcement] The default auto archive duration for the channel.
 	 * @param {String} options.name - The name of the channel.
-	 * @param {Boolean} [options.nsfw] - [Text, Voice, News] If the channel is age restricted.
+	 * @param {Boolean} [options.nsfw] - [Text, Voice, Announcement] If the channel is age restricted.
 	 * @param {String} [options.parentID] - The ID of the category to put this channel in.
 	 * @param {Object[]} [options.permissionOverwrites] - The permission overwrites to apply to the channel.
 	 * @param {(BigInt | String)} [options.permissionOverwrites[].allow] - The permissions to allow.
@@ -374,7 +374,7 @@ export default class Guild extends Base {
 	async createChannel(options: CreateTextChannelOptions): Promise<TextChannel>;
 	async createChannel(options: CreateVoiceChannelOptions): Promise<VoiceChannel>;
 	async createChannel(options: CreateCategoryChannelOptions): Promise<CategoryChannel>;
-	async createChannel(options: CreateNewsChannelOptions): Promise<NewsChannel>;
+	async createChannel(options: CreateAnnouncementChannelOptions): Promise<AnnouncementChannel>;
 	async createChannel(options: CreateStageChannelOptions): Promise<StageChannel>;
 	async createChannel(options: CreateChannelOptions) {
 		return this._client.rest.guilds.createChannel(this.id, options as never) as unknown as AnyGuildChannel;

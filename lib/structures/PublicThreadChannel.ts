@@ -7,7 +7,7 @@ import type { EditPublicThreadChannelOptions, RawPublicThreadChannel } from "../
 /** Represents a guild thread channel. */
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {
 	declare threadMetadata: ThreadMetadata;
-	declare type: ChannelTypes.GUILD_PUBLIC_THREAD;
+	declare type: ChannelTypes.PUBLIC_THREAD;
 	constructor(data: RawPublicThreadChannel, client: Client) {
 		super(data, client);
 	}

@@ -10,7 +10,7 @@ import type {
 	EditMessageOptions,
 	EditPermissionOptions,
 	FollowedChannel,
-	FollowNewsOptions,
+	FollowAnnouncementChannelOptions,
 	GetChannelMessagesOptions,
 	GetArchivedThreadsOptions,
 	GetReactionsOptions,
@@ -20,7 +20,7 @@ import type {
 	RawFollowedChannel,
 	RawInvite,
 	RawMessage,
-	RawNewsThreadChannel,
+	RawAnnouncementThreadChannel,
 	RawOverwrite,
 	RawPrivateThreadChannel,
 	RawPublicThreadChannel,
@@ -51,10 +51,10 @@ import type { RawUser } from "../types/users";
 import User from "../structures/User";
 import type { InviteInfoTypes } from "../structures/Invite";
 import Invite from "../structures/Invite";
-import type NewsThreadChannel from "../structures/NewsThreadChannel";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type NewsChannel from "../structures/NewsChannel";
+import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
 
 export default class Channels extends BaseRoute {
@@ -196,17 +196,17 @@ export default class Channels extends BaseRoute {
 	}
 
 	/**
-	 * Crosspost a message in a news channel.
+	 * Crosspost a message in an announcement channel.
 	 *
 	 * @param {String} id - The id of the channel to crosspost the message in.
 	 * @param {String} messageID - The id of the message to crosspost.
-	 * @returns {Promise<Message<NewsChannel>>}
+	 * @returns {Promise<Message<AnnouncementChannel>>}
 	 */
 	async crosspostMessage(id: string, messageID: string) {
 		return this._manager.authRequest<RawMessage>({
 			method: "POST",
 			path:   Routes.CHANNEL_MESSAGES_CROSSPOST(id, messageID)
-		}).then(data => new Message<NewsChannel>(data, this._client));
+		}).then(data => new Message<AnnouncementChannel>(data, this._client));
 	}
 
 	/**
@@ -331,21 +331,21 @@ export default class Channels extends BaseRoute {
 	 * @param {Boolean} [options.archived] - [Thread] If the thread is archived.
 	 * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - [Thread] The duration after which the thread will be archived.
 	 * @param {?Number} [options.bitrate] - [Voice, Stage] The bitrate of the channel. Minimum 8000.
-	 * @param {?ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, News] The default auto archive duration for threads made in this channel.
+	 * @param {?ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, Announcement] The default auto archive duration for threads made in this channel.
 	 * @param {Number} [options.flags] - [Thread] The [channel flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) to set on the channel.
 	 * @param {?String} [options.icon] - [Group DM] The icon of the channel.
 	 * @param {Boolean} [options.invitable] - [Private Thread] If non-moderators can add other non-moderators to the thread. Private threads only.
 	 * @param {Boolean} [options.locked] - [Thread] If the thread should be locked.
 	 * @param {String} [options.name] - [All] The name of the channel.
-	 * @param {?Boolean} [options.nsfw] -[Text, Voice, News] - If the channel is age gated.
-	 * @param {?String} [options.parentID] - [Text, Voice, News] The id of the parent category channel.
+	 * @param {?Boolean} [options.nsfw] -[Text, Voice, Announcement] - If the channel is age gated.
+	 * @param {?String} [options.parentID] - [Text, Voice, Announcement] The id of the parent category channel.
 	 * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
 	 * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
 	 * @param {?Number} [options.rateLimitPerUser] - [Thread, Text] The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
-	 * @param {?String} [options.topic] - [Text, News] The topic of the channel.
-	 * @param {ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_NEWS} [options.type] - [Text, News] Provide the opposite type to convert the channel.
+	 * @param {?String} [options.topic] - [Text, Announcement] The topic of the channel.
+	 * @param {ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - [Text, Announcement] Provide the opposite type to convert the channel.
 	 * @param {?Number} [options.userLimit] - [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99.
 	 * @param {?VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel.
 	 * @returns {Promise<AnyChannel>}
@@ -454,14 +454,14 @@ export default class Channels extends BaseRoute {
 	}
 
 	/**
-	 * Follow a news channel.
+	 * Follow an announcement channel.
 	 *
-	 * @param {String} id - The id of the channel to follow the news channel to.
+	 * @param {String} id - The id of the channel to follow the announcement channel to.
 	 * @param {Object} options
 	 * @param {String} [options.webhookChannelID] - The id of the channel to follow.
 	 * @returns {Promise<FollowedChannel>}
 	 */
-	async followNews(id: string, options?: FollowNewsOptions) {
+	async followAnnouncement(id: string, options?: FollowAnnouncementChannelOptions) {
 		return this._manager.authRequest<RawFollowedChannel>({
 			method: "POST",
 			path:   Routes.CHANNEL_FOLLOWERS(id),
@@ -639,15 +639,15 @@ export default class Channels extends BaseRoute {
 	/**
 	 * Get the public archived threads in a channel.
 	 *
-	 * @template {(NewsThreadChannel | PublicThreadChannel)} T
+	 * @template {(AnnouncementThreadChannel | PublicThreadChannel)} T
 	 * @param {String} id - The id of the channel to get the archived threads from.
 	 * @param {Object} [options]
 	 * @param {String} [options.before] - A **timestamp** to get threads before.
 	 * @param {Number} [options.limit] - The maximum amount of threads to get.
 	 * @returns {Promise<ArchivedThreads<T>>}
 	 */
-	async getPublicArchivedThreads<T extends NewsThreadChannel | PublicThreadChannel = NewsThreadChannel | PublicThreadChannel>(id: string, options?: GetArchivedThreadsOptions) {
-		return this._manager.authRequest<RawArchivedThreads<RawNewsThreadChannel | RawPublicThreadChannel>>({
+	async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, options?: GetArchivedThreadsOptions) {
+		return this._manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
 			method: "GET",
 			path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(id),
 			json:   {
@@ -824,7 +824,7 @@ export default class Channels extends BaseRoute {
 	/**
 	 * Create a thread from an existing message.
 	 *
-	 * @template {(NewsThreadChannel | PublicThreadChannel)} T
+	 * @template {(AnnouncementThreadChannel | PublicThreadChannel)} T
 	 * @param {String} id - The id of the channel to create the thread in.
 	 * @param {String} messageID - The id of the message to create the thread from.
 	 * @param {Object} options
@@ -834,7 +834,7 @@ export default class Channels extends BaseRoute {
 	 * @param {String} [options.reason] - The reason for creating the thread.
 	 * @returns {Promise<T>}
 	 */
-	async startThreadFromMessage<T extends NewsThreadChannel | PublicThreadChannel = NewsThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions) {
+	async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions) {
 		const reason = options.reason;
 		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawChannel>({
@@ -903,7 +903,7 @@ export default class Channels extends BaseRoute {
 	/**
 	 * Create a thread without an existing message.
 	 *
-	 * @template {(NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel)} T
+	 * @template {(AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel)} T
 	 * @param {String} id
 	 * @param {Object} options
 	 * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration of no activity after which this thread will be automatically archived.
@@ -914,7 +914,7 @@ export default class Channels extends BaseRoute {
 	 * @param {ThreadChannelTypes} [options.type] - The type of thread to create.
 	 * @returns {Promise<T>}
 	 */
-	async startThreadWithoutMessage<T extends NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel = NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions) {
+	async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions) {
 		const reason = options.reason;
 		if (options.reason) delete options.reason;
 		return this._manager.authRequest<RawChannel>({

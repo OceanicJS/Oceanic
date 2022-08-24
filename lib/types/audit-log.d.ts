@@ -1,12 +1,12 @@
 import type { RawAutoModerationRule } from "./auto-moderation";
-import type { RawNewsThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels";
+import type { RawAnnouncementThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels";
 import type { RawIntegration } from "./guilds";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawUser } from "./users";
 import type { RawWebhook } from "./webhooks";
 import type { AuditLogActionTypes } from "../Constants";
 import type ScheduledEvent from "../structures/ScheduledEvent";
-import type NewsThreadChannel from "../structures/NewsThreadChannel";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type User from "../structures/User";
@@ -19,7 +19,7 @@ export interface RawAuditLog {
 	auto_moderation_rules: Array<RawAutoModerationRule>;
 	guild_scheduled_events: Array<RawScheduledEvent>;
 	integrations: Array<RawIntegration>;
-	threads: Array<RawNewsThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel>;
+	threads: Array<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel>;
 	users: Array<RawUser>;
 	webhooks: Array<RawWebhook>;
 }
@@ -29,7 +29,7 @@ export interface AuditLog {
 	entries: Array<AuditLogEntry>;
 	guildScheduledEvents: Array<ScheduledEvent>;
 	integrations: Array<Integration>;
-	threads: Array<NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel>;
+	threads: Array<AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>;
 	users: Array<User>;
 	webhooks: Array<Webhook>;
 }

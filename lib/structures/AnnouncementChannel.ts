@@ -3,14 +3,14 @@ import type TextChannel from "./TextChannel";
 import Message from "./Message";
 import type { ThreadAutoArchiveDuration, ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditGuildChannelOptions, RawNewsChannel, RawOverwrite } from "../types/channels";
+import type { EditGuildChannelOptions, RawAnnouncementChannel, RawOverwrite } from "../types/channels";
 
 /** Represents a guild news channel. */
 export default class NewsChannel extends TextableChannel<NewsChannel> {
 	/** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
 	declare rateLimitPerUser: 0;
-	declare type: ChannelTypes.GUILD_NEWS;
-	constructor(data: RawNewsChannel, client: Client) {
+	declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
+	constructor(data: RawAnnouncementChannel, client: Client) {
 		super(data, client);
 	}
 
@@ -45,7 +45,7 @@ export default class NewsChannel extends TextableChannel<NewsChannel> {
 	 * @param {?Number} [options.position] - The position of the channel in the channel list.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
-	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
+	 * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
 	 * @returns {Promise<NewsChannel>}
 	 */
 	override async edit(options: EditGuildChannelOptions) {

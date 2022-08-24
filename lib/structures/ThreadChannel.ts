@@ -61,7 +61,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 				createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
 				locked:		            !!data.thread_metadata.locked
 			};
-			if (data.type === ChannelTypes.GUILD_PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+			if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
 
 		}
 		if (data.total_message_sent !== undefined) this.totalMessageSent = data.total_message_sent;

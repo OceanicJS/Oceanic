@@ -1,9 +1,9 @@
 import TextableChannel from "./TextableChannel";
-import type NewsChannel from "./NewsChannel";
+import type AnnouncementChannel from "./AnnouncementChannel";
 import type { ThreadAutoArchiveDuration } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditTextChannelOptions, FollowedChannel, FollowNewsOptions, RawTextChannel } from "../types/channels";
+import type { EditTextChannelOptions, FollowedChannel, FollowAnnouncementChannelOptions, RawTextChannel } from "../types/channels";
 import { RawOverwrite } from "../types/channels";
 
 /** Represents a guild text channel. */
@@ -14,12 +14,12 @@ export default class TextChannel extends TextableChannel<TextChannel> {
 	}
 
 	/**
-	 * Convert this text channel to a news channel.
+	 * Convert this text channel to a announcement channel.
 	 *
-	 * @returns {Promise<NewsChannel>}
+	 * @returns {Promise<AnnouncementChannel>}
 	 */
 	async convert() {
-		return this.edit({ type: ChannelTypes.GUILD_NEWS })  as unknown as NewsChannel;
+		return this.edit({ type: ChannelTypes.GUILD_ANNOUNCEMENT })  as unknown as AnnouncementChannel;
 	}
 
 	/**
@@ -35,7 +35,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
-	 * @param {ChannelTypes.GUILD_NEWS} [options.type] - Provide the opposite type to convert the channel.
+	 * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
 	 * @returns {Promise<TextChannel>}
 	 */
 	override async edit(options: EditTextChannelOptions) {
@@ -43,13 +43,13 @@ export default class TextChannel extends TextableChannel<TextChannel> {
 	}
 
 	/**
-	 * Follow a news channel to this channel.
+	 * Follow an announcement channel to this channel.
 	 *
 	 * @param {Object} options
 	 * @param {String} [options.webhookChannelID] - The id of the channel to follow.
 	 * @returns {Promise<FollowedChannel>}
 	 */
-	async followNews(options?: FollowNewsOptions) {
-		return this._client.rest.channels.followNews(this.id, options);
+	async followAnnouncement(options?: FollowAnnouncementChannelOptions) {
+		return this._client.rest.channels.followAnnouncement(this.id, options);
 	}
 }

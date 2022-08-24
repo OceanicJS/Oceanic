@@ -272,7 +272,7 @@ export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads 
 export type CreateTextChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_TEXT>, "rtcRegion" | "userLimit" | "videoQualityMode">;
 export type CreateVoiceChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_VOICE>, "defaultAutoArchiveDuration" | "topic">;
 export type CreateCategoryChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_CATEGORY>, "defaultAutoArchiveDuration" | "nsfw" | "parentID" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode">;
-export type CreateNewsChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_NEWS>, "rtcRegion" | "userLimit" | "videoQualityMode">;
+export type CreateAnnouncementChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_ANNOUNCEMENT>, "rtcRegion" | "userLimit" | "videoQualityMode">;
 export type CreateStageChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_STAGE_VOICE>, "defaultAutoArchiveDuration" | "nsfw" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode">;
 
 export interface CreateRoleOptions {

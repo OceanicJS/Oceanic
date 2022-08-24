@@ -8,8 +8,8 @@ import Guild from "./Guild";
 import type Member from "./Member";
 import { PartialApplication } from "./PartialApplication";
 import type ClientApplication from "./ClientApplication";
-import type NewsChannel from "./NewsChannel";
-import type NewsThreadChannel from "./NewsThreadChannel";
+import type AnnouncementChannel from "./AnnouncementChannel";
+import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
 import type Client from "../Client";
@@ -208,9 +208,9 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	}
 
 	/**
-	 * Crosspost this message in a news channel.
+	 * Crosspost this message in a announcement channel.
 	 *
-	 * @returns {Promise<Message<NewsChannel>>}
+	 * @returns {Promise<Message<AnnouncementChannel>>}
 	 */
 	async crosspost() {
 		return this._client.rest.channels.crosspostMessage(this.channel.id, this.id);
@@ -330,7 +330,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	/**
 	 * Create a thread from this message.
 	 *
-	 * @template {(NewsThreadChannel | PublicThreadChannel)} T
+	 * @template {(AnnouncementThreadChannel | PublicThreadChannel)} T
 	 * @param {Object} options
 	 * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration of no activity after which this thread will be automatically archived.
 	 * @param {String} options.name - The name of the thread.
@@ -339,7 +339,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	 * @returns {Promise<T>}
 	 */
 	async startThread(options: StartThreadFromMessageOptions) {
-		return this._client.rest.channels.startThreadFromMessage<T extends NewsChannel ? NewsThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
+		return this._client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
 	}
 
 	/**

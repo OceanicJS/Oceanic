@@ -2,13 +2,13 @@ import type { ThreadMetadata } from "./ThreadChannel";
 import ThreadChannel from "./ThreadChannel";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
-import type { EditPublicThreadChannelOptions, RawNewsThreadChannel } from "../types/channels";
+import type { EditPublicThreadChannelOptions, RawAnnouncementThreadChannel } from "../types/channels";
 
 /** Represents a guild thread channel. */
-export default class NewsThreadChannel extends ThreadChannel<NewsThreadChannel> {
+export default class AnnouncementThreadChannel extends ThreadChannel<AnnouncementThreadChannel> {
 	declare threadMetadata: ThreadMetadata;
-	declare type: ChannelTypes.GUILD_NEWS_THREAD;
-	constructor(data: RawNewsThreadChannel, client: Client) {
+	declare type: ChannelTypes.ANNOUNCEMENT_THREAD;
+	constructor(data: RawAnnouncementThreadChannel, client: Client) {
 		super(data, client);
 	}
 
@@ -25,7 +25,7 @@ export default class NewsThreadChannel extends ThreadChannel<NewsThreadChannel> 
 	 * @param {String} [options.name] - The name of the channel.
 	 * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
-	 * @returns {Promise<NewsThreadChannel>}
+	 * @returns {Promise<AnnouncementThreadChannel>}
 	 */
 	override async edit(options: EditPublicThreadChannelOptions) {
 		return this._client.rest.channels.edit<this>(this.id, options);

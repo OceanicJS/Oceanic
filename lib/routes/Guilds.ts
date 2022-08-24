@@ -4,7 +4,7 @@ import type {
 	CreateChannelOptions,
 	CreateEmojiOptions,
 	CreateGuildOptions,
-	CreateNewsChannelOptions,
+	CreateAnnouncementChannelOptions,
 	CreateStageChannelOptions,
 	CreateTextChannelOptions,
 	CreateVoiceChannelOptions,
@@ -98,7 +98,7 @@ import type StageChannel from "../structures/StageChannel";
 import type TextChannel from "../structures/TextChannel";
 import type VoiceChannel from "../structures/VoiceChannel";
 import type CategoryChannel from "../structures/CategoryChannel";
-import type NewsChannel from "../structures/NewsChannel";
+import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import Role from "../structures/Role";
 import type { VoiceRegion } from "../types/voice";
 import Invite from "../structures/Invite";
@@ -305,9 +305,9 @@ export default class Guilds extends BaseRoute {
 	 * @template {AnyGuildChannel} T
 	 * @param {String} id - The ID of the guild.
 	 * @param {Object} options
-	 * @param {ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, News] The default auto archive duration for the channel.
+	 * @param {ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, Announcement] The default auto archive duration for the channel.
 	 * @param {String} options.name - The name of the channel.
-	 * @param {Boolean} [options.nsfw] - [Text, Voice, News] If the channel is age restricted.
+	 * @param {Boolean} [options.nsfw] - [Text, Voice, Announcement] If the channel is age restricted.
 	 * @param {String} [options.parentID] - The ID of the category to put this channel in.
 	 * @param {Object[]} [options.permissionOverwrites] - The permission overwrites to apply to the channel.
 	 * @param {(BigInt | String)} [options.permissionOverwrites[].allow] - The permissions to allow.
@@ -326,7 +326,7 @@ export default class Guilds extends BaseRoute {
 	async createChannel(id: string, options: CreateTextChannelOptions): Promise<TextChannel>;
 	async createChannel(id: string, options: CreateVoiceChannelOptions): Promise<VoiceChannel>;
 	async createChannel(id: string, options: CreateCategoryChannelOptions): Promise<CategoryChannel>;
-	async createChannel(id: string, options: CreateNewsChannelOptions): Promise<NewsChannel>;
+	async createChannel(id: string, options: CreateAnnouncementChannelOptions): Promise<AnnouncementChannel>;
 	async createChannel(id: string, options: CreateStageChannelOptions): Promise<StageChannel>;
 	async createChannel(id: string, options: CreateChannelOptions) {
 		const reason = options.reason;

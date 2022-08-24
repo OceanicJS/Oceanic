@@ -7,8 +7,8 @@ import type {
 	RawCategoryChannel,
 	RawChannel,
 	RawGroupChannel,
-	RawNewsChannel,
-	RawNewsThreadChannel,
+	RawAnnouncementChannel,
+	RawAnnouncementThreadChannel,
 	RawPrivateChannel,
 	RawPrivateThreadChannel,
 	RawPublicThreadChannel,
@@ -33,10 +33,10 @@ export default class Channel extends Base {
 			case ChannelTypes.GUILD_VOICE: return new VoiceChannel(data as RawVoiceChannel, client) as T;
 			case ChannelTypes.GROUP_DM: return new GroupChannel(data as RawGroupChannel, client) as T;
 			case ChannelTypes.GUILD_CATEGORY: return new CategoryChannel(data as RawCategoryChannel, client) as T;
-			case ChannelTypes.GUILD_NEWS: return new NewsChannel(data as RawNewsChannel, client) as T;
-			case ChannelTypes.GUILD_NEWS_THREAD: return new NewsThreadChannel(data as RawNewsThreadChannel, client) as T;
-			case ChannelTypes.GUILD_PUBLIC_THREAD: return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
-			case ChannelTypes.GUILD_PRIVATE_THREAD: return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
+			case ChannelTypes.GUILD_ANNOUNCEMENT: return new AnnouncementChannel(data as RawAnnouncementChannel, client) as T;
+			case ChannelTypes.ANNOUNCEMENT_THREAD: return new AnnouncementThreadChannel(data as RawAnnouncementThreadChannel, client) as T;
+			case ChannelTypes.PUBLIC_THREAD: return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
+			case ChannelTypes.PRIVATE_THREAD: return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
 			case ChannelTypes.GUILD_STAGE_VOICE: return new StageChannel(data as RawStageChannel, client) as T;
 			default: return new Channel(data, client) as T;
 		}
@@ -67,9 +67,9 @@ const PrivateChannel = require("./PrivateChannel") as typeof import("./PrivateCh
 const VoiceChannel = require("./VoiceChannel") as typeof import("./VoiceChannel").default;
 const CategoryChannel = require("./CategoryChannel") as typeof import("./CategoryChannel").default;
 const GroupChannel = require("./GroupChannel") as typeof import("./GroupChannel").default;
-const NewsChannel = require("./NewsChannel") as typeof import("./NewsChannel").default;
+const AnnouncementChannel = require("./AnnouncementChannel") as typeof import("./AnnouncementChannel").default;
 const PublicThreadChannel = require("./PublicThreadChannel") as typeof import("./PublicThreadChannel").default;
 const PrivateThreadChannel = require("./PrivateThreadChannel") as typeof import("./PrivateThreadChannel").default;
-const NewsThreadChannel = require("./NewsThreadChannel") as typeof import("./NewsThreadChannel").default;
+const AnnouncementThreadChannel = require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel").default;
 const StageChannel = require("./StageChannel") as typeof import("./StageChannel").default;
 /* eslint-enable */
