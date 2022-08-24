@@ -58,6 +58,13 @@ export default class Channel extends Base {
 	async delete() {
 		await this._client.rest.channels.delete(this.id);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"type",
+			...props
+		]);
+	}
 }
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.

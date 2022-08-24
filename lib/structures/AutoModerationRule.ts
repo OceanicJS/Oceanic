@@ -6,16 +6,27 @@ import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModera
 import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 
+/** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
+	/** The actions that will execute when this rule is triggered. */
 	actions: Array<AutoModerationAction>;
+	/** The creator of this rule. This can be a partial object with just an `id` property. */
 	creator: User | Uncached;
+	/** If this rule is enabled. */
 	enabled: boolean;
+	/** The [event type](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types) of this rule. */
 	eventType: AutoModerationEventTypes;
+	/** The channels that are exempt from this rile. */
 	exemptChannels: Array<string>;
+	/** The roles that are exempt from this rule. */
 	exemptRoles: Array<string>;
+	/** The guild this rule is in. This can be a partial object with just an `id` property. */
 	guild: Guild | Uncached;
+	/** The name of this rule */
 	name: string;
+	/** The metadata of this rule's trigger.  */
 	triggerMetadata: TriggerMetadata;
+	/** This rule's [trigger type](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-types). */
 	triggerType: AutoModerationTriggerTypes;
 	constructor(data: RawAutoModerationRule, client: Client) {
 		super(data.id, client);
@@ -78,5 +89,21 @@ export default class AutoModerationRule extends Base {
 	 */
 	async edit(options: EditAutoModerationRuleOptions) {
 		return this._client.rest.guilds.editAutoModerationRule(this.guild.id, this.id, options);
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"actions",
+			"creator",
+			"enabled",
+			"eventType",
+			"exemptChannels",
+			"exemptRoles",
+			"guild",
+			"name",
+			"triggerMetadata",
+			"triggerType",
+			...props
+		]);
 	}
 }

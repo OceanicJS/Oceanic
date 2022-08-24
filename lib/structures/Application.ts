@@ -83,4 +83,28 @@ export default class Application extends ClientApplication {
 	coverImageURL(format?: ImageFormat, size?: number) {
 		return this.coverImage === null ? null : this._client._formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"botPublic",
+			"botRequireCodeGrant",
+			"coverImage",
+			"customInstallURL",
+			"description",
+			"guild",
+			"icon",
+			"installParams",
+			"name",
+			"owner",
+			"primarySKUID",
+			"privacyPolicyURL",
+			"rpcOrigins",
+			"slug",
+			"tags",
+			"team",
+			"termsOfServiceURL",
+			"verifyKey",
+			...props
+		]);
+	}
 }

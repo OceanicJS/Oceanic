@@ -6,11 +6,11 @@ import type { RawUser } from "../types/users";
 
 /** Represents a user. */
 export default class User extends Base {
-	/** The user's banner color. */
+	/** The user's banner color. If this member was recived via the gateway, this will never be present. */
 	accentColor?: number | null;
 	/** The user's avatar hash. */
 	avatar: string | null;
-	/** The user's banner hash. */
+	/** The user's banner hash. If this member was recived via the gateway, this will never be present. */
 	banner?: string | null;
 	/** If this user is a bot. */
 	bot: boolean;
@@ -71,5 +71,19 @@ export default class User extends Base {
 	 */
 	defaultAvatarURL() {
 		return this._client._formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"accentColor",
+			"avatar",
+			"banner",
+			"bot",
+			"discriminator",
+			"publicFlags",
+			"system",
+			"username",
+			...props
+		]);
 	}
 }

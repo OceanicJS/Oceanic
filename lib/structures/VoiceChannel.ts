@@ -300,6 +300,20 @@ export default class VoiceChannel extends GuildChannel {
 		return this._client.rest.channels.sendTyping(this.id);
 	}
 
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"bitrate",
+			"messages",
+			"nsfw",
+			"permissionOverwrites",
+			"position",
+			"rtcRegion",
+			"topic",
+			"videoQualityMode",
+			...props
+		]);
+	}
+
 	/**
 	 * Unpin a message in this channel.
 	 *

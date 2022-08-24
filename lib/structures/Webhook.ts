@@ -2,6 +2,7 @@ import Base from "./Base";
 import type User from "./User";
 import type Message from "./Message";
 import type Guild from "./Guild";
+import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import type { ImageFormat, WebhookTypes } from "../Constants";
 import { BASE_URL } from "../Constants";
@@ -20,8 +21,8 @@ import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
 
 export default class Webhook extends Base {
-	/** The id of the application associatd with this webhook. */
-	applicationID: string | null;
+	/** The application associatd with this webhook. This can be a partial object with only an `id` property. */
+	application: ClientApplication | Uncached | null;
 	/** The hash of this webhook's avatar. */
 	avatar: string | null;
 	/** The channel this webhook is for, if any. This can be a partial object with only an `id` property. */
@@ -46,7 +47,7 @@ export default class Webhook extends Base {
 	}
 
 	protected update(data: Partial<RawWebhook>) {
-		if (data.application_id !== undefined) this.applicationID = data.application_id;
+		if (data.application_id !== undefined) this.application = data.application_id === null ? null : this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
 		if (data.avatar !== undefined) this.avatar = data.avatar;
 		if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id };
 		if (data.guild_id !== undefined) this.guild = data.guild_id === null ? null : this._client.guilds.get(data.guild_id) || { id: data.guild_id };
@@ -255,5 +256,21 @@ export default class Webhook extends Base {
 	 */
 	sourceGuildIconURL(format?: ImageFormat, size?: number) {
 		return !this.sourceGuild?.icon ? null : this._client._formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"application",
+			"avatar",
+			"channel",
+			"guild",
+			"name",
+			"sourceChannel",
+			"sourceGuild",
+			"token",
+			"type",
+			"user",
+			...props
+		]);
 	}
 }

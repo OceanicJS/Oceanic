@@ -33,4 +33,16 @@ export default class StageInstance extends Base {
 		if (data.privacy_level !== undefined) this.privacyLevel = data.privacy_level;
 		if (data.topic !== undefined) this.topic = data.topic;
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"channel",
+			"discoverableDisabled",
+			"guild",
+			"privacyLevel",
+			"scheduledEvent",
+			"topic",
+			...props
+		]);
+	}
 }

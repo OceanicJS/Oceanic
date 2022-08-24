@@ -55,4 +55,13 @@ export default class GuildChannel extends Channel {
 	async edit(options: EditGuildChannelOptions) {
 		return this._client.rest.channels.edit<AnyGuildChannel>(this.id, options);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"guild",
+			"name",
+			"parent",
+			...props
+		]);
+	}
 }

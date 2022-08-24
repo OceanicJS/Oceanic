@@ -98,4 +98,15 @@ export default class StageChannel extends GuildChannel {
 	async editPermission(overwriteID: string, options: EditPermissionOptions) {
 		return this._client.rest.channels.editPermission(this.id, overwriteID, options);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"bitrate",
+			"permissionOverwrites",
+			"position",
+			"rtcRegion",
+			"topic",
+			...props
+		]);
+	}
 }

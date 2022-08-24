@@ -45,4 +45,20 @@ export default class GuildPreview extends Base {
 		if (data.splash !== undefined) this.splash = data.splash;
 		if (data.stickers !== undefined) this.stickers = data.stickers;
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"approximateMemberCount",
+			"approximatePresenceCount",
+			"description",
+			"discoverySplash",
+			"emojis",
+			"features",
+			"icon",
+			"name",
+			"splash",
+			"stickers",
+			...props
+		]);
+	}
 }

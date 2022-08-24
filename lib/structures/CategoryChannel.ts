@@ -73,4 +73,13 @@ export default class CategoryChannel extends Channel {
 	async editPermission(overwriteID: string, options: EditPermissionOptions) {
 		return this._client.rest.channels.editPermission(this.id, overwriteID, options);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"channels",
+			"permissionOverwrites",
+			"position",
+			...props
+		]);
+	}
 }

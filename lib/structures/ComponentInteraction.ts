@@ -252,4 +252,19 @@ export default class ComponentInteraction extends Interaction {
 	async getOriginal<T extends AnyGuildTextChannel>() {
 		return this._client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"appPermissions",
+			"channel",
+			"data",
+			"guild",
+			"guildLocale",
+			"locale",
+			"member",
+			"message",
+			"user",
+			...props
+		]);
+	}
 }

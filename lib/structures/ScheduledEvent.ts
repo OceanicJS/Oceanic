@@ -79,4 +79,24 @@ export default class ScheduledEvent extends Base {
 	imageURL(format?: ImageFormat, size?: number) {
 		return !this.image ? null : this._client._formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"channel",
+			"creator",
+			"description",
+			"entityID",
+			"entityMetadata",
+			"entityType",
+			"guild",
+			"image",
+			"name",
+			"privacyLevel",
+			"scheduledEndTime",
+			"scheduledStartTime",
+			"status",
+			"userCount",
+			...props
+		]);
+	}
 }

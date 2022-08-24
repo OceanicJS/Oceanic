@@ -3,6 +3,7 @@ import type User from "./User";
 import type Client from "../Client";
 import type { TeamMembershipState } from "../Constants";
 import type { RawTeam } from "../types/oauth";
+import type { Uncached } from "../types/shared";
 
 export default class Team extends Base {
 	/** The icon hash of this team. */
@@ -11,8 +12,8 @@ export default class Team extends Base {
 	members: Array<TeamMember>;
 	/** The name of this team. */
 	name: string;
-	/** The id of the owner of this team. */
-	ownerUserID: string;
+	/** The owner of this team. This can be a partial object with just an `id` property. */
+	ownerUser: User | Uncached;
 	constructor(data: RawTeam, client: Client) {
 		super(data.id, client);
 		this.members = [];
@@ -22,7 +23,7 @@ export default class Team extends Base {
 	protected update(data: Partial<RawTeam>) {
 		if (data.icon !== undefined) this.icon = data.icon;
 		if (data.name !== undefined) this.name = data.name;
-		if (data.owner_user_id !== undefined) this.ownerUserID = data.owner_user_id;
+		if (data.owner_user_id !== undefined) this.ownerUser = this._client.users.get(data.owner_user_id) || { id: data.owner_user_id };
 		if (data.members !== undefined) {
 			for (const member of this.members) {
 				if (!data.members.find(m => m.user.id === member.user.id)) this.members.splice(this.members.indexOf(member), 1);
@@ -38,6 +39,16 @@ export default class Team extends Base {
 				}
 			}
 		}
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"icon",
+			"members",
+			"name",
+			"ownerUser",
+			...props
+		]);
 	}
 }
 

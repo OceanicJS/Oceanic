@@ -144,4 +144,21 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 		if (!this.guild) throw new Error("getGuildPermission cannot be used on global commands.");
 		return this._client.rest.applicationCommands.getGuildPermission(this.application.id, this.guild.id, this.id);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"application",
+			"defaultMemberPermissions",
+			"description",
+			"descriptionLocalizations",
+			"dmPermission",
+			"guild",
+			"name",
+			"nameLocalizations",
+			"options",
+			"type",
+			"version",
+			...props
+		]);
+	}
 }

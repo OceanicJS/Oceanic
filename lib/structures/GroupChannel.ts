@@ -2,6 +2,7 @@ import Channel from "./Channel";
 import User from "./User";
 import Invite from "./Invite";
 import Message from "./Message";
+import type ClientApplication from "./ClientApplication";
 import type { ChannelTypes, ImageFormat, InviteTargetTypes } from "../Constants";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
@@ -22,8 +23,8 @@ import { File } from "undici";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
-	/** The application that made this group channel. This will only have an `id` property. */
-	application: Uncached;
+	/** The application that made this group channel. This can be a partial object with just an `id` property. */
+	application: ClientApplication | Uncached;
 	/** The icon hash of this group, if any. */
 	icon: string | null;
 	/** If this group channel is managed by an application. */
@@ -32,8 +33,8 @@ export default class GroupChannel extends Channel {
 	name: string | null;
 	/** The nicknames used when creating this group channel. */
 	nicks?: Record<"id" | "nick", string>;
-	/** The id of the owner of this group channel. */
-	ownerID: string;
+	/** The owner of this group channel. This can be a partial object with just an `id`. */
+	owner: User | Uncached;
 	/** The other recipients in this group channel. */
 	recipients: Collection<string, RawUser, User>;
 	declare type: ChannelTypes.GROUP_DM;
@@ -46,12 +47,12 @@ export default class GroupChannel extends Channel {
 
 	protected update(data: Partial<RawGroupChannel>) {
 		super.update(data);
-		if (data.application_id !== undefined) this.application = { id: data.application_id } ;
+		if (data.application_id !== undefined) this.application = this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id } ;
 		if (data.icon !== undefined) this.icon = data.icon;
 		if (data.managed !== undefined) this.managed = data.managed;
 		if (data.name !== undefined) this.name = data.name;
 		if (data.nicks !== undefined) this.nicks = data.nicks;
-		if (data.owner_id !== undefined) this.ownerID = data.owner_id;
+		if (data.owner_id !== undefined) this.owner = this._client.users.get(data.owner_id) || { id: data.owner_id };
 		if (data.type !== undefined) this.type = data.type;
 		if (data.recipients !== undefined) {
 			for (const id of this.recipients.keys()) {
@@ -120,7 +121,7 @@ export default class GroupChannel extends Channel {
 	 * @returns {Promise<Message<GroupChannel>>}
 	 */
 	async createMessage(options: CreateMessageOptions) {
-		return this._client.rest.channels.createMessage<GroupChannel>(this.id, options);
+		return this._client.rest.channels.createMessage<this>(this.id, options);
 	}
 
 	/**
@@ -267,6 +268,19 @@ export default class GroupChannel extends Channel {
 	 */
 	async sendTyping() {
 		return this._client.rest.channels.sendTyping(this.id);
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"application",
+			"icon",
+			"managed",
+			"name",
+			"nicks",
+			"owner",
+			"recipients",
+			...props
+		]);
 	}
 
 	/**

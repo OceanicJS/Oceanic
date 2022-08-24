@@ -41,4 +41,18 @@ export default class ModalSubmitInteraction extends Interaction {
 		this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guild.id) : new Member(data.member, this._client, this.guild!.id) : undefined;
 		this.user = this._client.users.update((data.user || data.member!.user)!);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"appPermissions",
+			"channel",
+			"data",
+			"guild",
+			"guildLocale",
+			"locale",
+			"member",
+			"user",
+			...props
+		]);
+	}
 }

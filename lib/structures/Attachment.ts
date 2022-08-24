@@ -35,7 +35,7 @@ export default class Attachment extends Base {
 		this.width = data.width;
 	}
 
-	toJSON(props = []) {
+	toJSON(props: Array<string> = []) {
 		return super.toJSON([
 			"contentType",
 			"description",

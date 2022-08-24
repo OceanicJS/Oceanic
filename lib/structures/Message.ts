@@ -342,6 +342,37 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		return this._client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
 	}
 
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"activity",
+			"application",
+			"attachments",
+			"author",
+			"channel",
+			"components",
+			"content",
+			"editedTimestamp",
+			"embeds",
+			"flags",
+			"interaction",
+			"mentionChannels",
+			"mentions",
+			"messageReference",
+			"nonce",
+			"pinned",
+			"position",
+			"reactions",
+			"referencedMessage",
+			"stickerItems",
+			"thread",
+			"timestamp",
+			"tts",
+			"type",
+			"webhook",
+			...props
+		]);
+	}
+
 	/**
 	 * Unpin this message.
 	 *

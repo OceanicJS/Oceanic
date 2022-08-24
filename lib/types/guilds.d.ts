@@ -19,7 +19,7 @@ import type {
 } from "../Constants";
 import type User from "../structures/User";
 
-export interface RESTGuild {
+export interface RawGuild {
 	afk_channel_id: string | null;
 	afk_timeout: number;
 	application_id: string | null;
@@ -63,7 +63,6 @@ export interface RESTGuild {
 	widget_channel_id?: string | null;
 	widget_enabled?: boolean;
 }
-export type RawGuild = Omit<RESTGuild, "owner" | "permissions" | "icon_hash">;
 export type PartialGuild = Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level">;
 
 export interface RawRole {

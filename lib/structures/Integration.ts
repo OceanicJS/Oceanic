@@ -55,4 +55,24 @@ export default class Integration extends Base {
 		if (data.type !== undefined) this.type = data.type;
 		if (data.user !== undefined) this.user = new User(data.user, this._client);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"account",
+			"application",
+			"enableEmoticons",
+			"enabled",
+			"expireBehavior",
+			"expireGracePeriod",
+			"name",
+			"revoked",
+			"roleID",
+			"subscriberCount",
+			"syncedAt",
+			"syncing",
+			"type",
+			"user",
+			...props
+		]);
+	}
 }

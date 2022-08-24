@@ -39,4 +39,15 @@ export default class ExtendedUser extends User {
 	async edit(options: EditSelfUserOptions) {
 		return this._client.rest.users.modifySelf(options);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"email",
+			"flags",
+			"locale",
+			"mfaEnabled",
+			"verified",
+			...props
+		]);
+	}
 }

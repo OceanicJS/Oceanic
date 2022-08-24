@@ -1,4 +1,5 @@
 import type { RESTMethod } from "../Constants";
+import Base from "../structures/Base";
 import type { Response } from "undici";
 
 export default class DiscordRESTError extends Error {
@@ -45,4 +46,15 @@ export default class DiscordRESTError extends Error {
 	get path() { return new URL(this.response.url).pathname; }
 	get status() { return this.response.status; }
 	get statusText() { return this.response.statusText; }
+
+	toJSON(props: Array<string> = []) {
+		return Base.prototype.toJSON.call(this, [
+			"message",
+			"method",
+			"name",
+			"stack",
+			"resBody",
+			...props
+		]);
+	}
 }

@@ -1,5 +1,6 @@
 import type Guild from "./Guild";
 import type User from "./User";
+import Base from "./Base";
 import type Client from "../Client";
 import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
@@ -85,5 +86,21 @@ export default class GuildTemplate {
 	 */
 	async syncTemplate() {
 		return this._client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);
+	}
+
+	toJSON(props: Array<string> = []) {
+		return Base.prototype.toJSON.call(this, [
+			"code",
+			"createdAt",
+			"creator",
+			"description",
+			"isDirty",
+			"name",
+			"serializedSourceGuild",
+			"sourceGuild",
+			"updatedAt",
+			"usageCount",
+			...props
+		]);
 	}
 }

@@ -31,6 +31,10 @@ export default class PermissionOverwrite extends Base {
 	}
 
 	override toJSON(props: Array<string> = []) {
-		return super.toJSON(["type", ...props]);
+		return super.toJSON([
+			"permission",
+			"type",
+			...props
+		]);
 	}
 }

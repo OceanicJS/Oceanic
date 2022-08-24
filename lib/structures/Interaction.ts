@@ -43,6 +43,16 @@ export default class Interaction extends Base {
 			default: return new Interaction(data, client) as never;
 		}
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"application",
+			"token",
+			"type",
+			"version",
+			...props
+		]);
+	}
 }
 
 

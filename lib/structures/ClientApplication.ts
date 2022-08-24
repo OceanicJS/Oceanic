@@ -230,4 +230,11 @@ export default class ClientApplication extends Base {
 	async getGuildPermissions(guildID: string) {
 		return this._client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"flags",
+			...props
+		]);
+	}
 }

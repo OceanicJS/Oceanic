@@ -315,6 +315,21 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 		return this._client.rest.channels.sendTyping(this.id);
 	}
 
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"flags",
+			"lastMessage",
+			"memberCount",
+			"messageCount",
+			"messages",
+			"owner",
+			"rateLimitPerUser",
+			"threadMetadata",
+			"totalMessageSent",
+			...props
+		]);
+	}
+
 	/**
 	 * Unpin a message in this thread.
 	 *

@@ -1,10 +1,10 @@
-import Base from "./Base";
 import Channel from "./Channel";
 import Guild from "./Guild";
 import type ScheduledEvent from "./ScheduledEvent";
 import type User from "./User";
 import { PartialApplication } from "./PartialApplication";
 import type CategoryChannel from "./CategoryChannel";
+import Base from "./Base";
 import type {
 	AnyGuildChannel,
 	AnyThreadChannel,
@@ -18,12 +18,13 @@ import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type { RawGuild, RawMember } from "../types/guilds";
+import Properties from "../util/Properties";
 
 // for the love of god find a way to make this not so shit
 export type InviteInfoTypes = "withMetadata" | "withCounts" | "withoutCounts" | "withExpiration" | "withoutExpiration";
 /** Represents an invite. */
-export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> extends Base {
-	private _createdAt?: Date;
+export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> {
+	protected _client: Client;
 	/** The approximate number of total members in the guild this invite leads to. */
 	approximateMemberCount?: number;
 	/** The approximate number of online members in the guild this invite leads to. */
@@ -32,6 +33,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 	channel?: CH | PartialInviteChannel;
 	/** The code of this invite. */
 	code: string;
+	/** When this invite was created. */
+	createdAt: T extends "withMetadata" ? Date : undefined;
 	/** The date at which this invite expires. */
 	expiresAt?: T extends "withMetadata" | "withoutExpiration" ? never : Date;
 	/** The guild this invite leads to. */
@@ -57,8 +60,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 	/** The number of times this invite has been used. */
 	uses: T extends "withMetadata" ? number : never;
 	constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
-		// technical constraint, easier to pretend `code` is an id rather than make id optional
-		super(data.code, client);
+		Properties.looseDefine(this, "_client", client);
 		this.code = data.code;
 		this.expiresAt = (!data.expires_at ? undefined : new Date(data.expires_at)) as never;
 		this.targetType = data.target_type;
@@ -100,16 +102,13 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 		if (data.guild_scheduled_event !== undefined) this.guildScheduledEvent = guild!.scheduledEvents.update(data.guild_scheduled_event);
 		if (data.target_user !== undefined) this.targetUser = this._client.users.update(data.target_user);
 		if ("created_at" in data) {
-			if (data.created_at !== undefined) this._createdAt = new Date(data.created_at);
+			if (data.created_at !== undefined) this.createdAt = new Date(data.created_at) as never;
 			if (data.uses !== undefined) this.uses = data.uses as never;
 			if (data.max_uses !== undefined) this.maxUses = data.max_uses as never;
 			if (data.max_age !== undefined) this.maxAge = data.max_age as never;
 			if (data.temporary !== undefined) this.temporary = data.temporary as never;
 		}
 	}
-
-	// @ts-expect-error Base has a `createdAt` getter
-	override get createdAt(): T extends "withMetadata" ? Date : undefined { return this._createdAt as never; }
 
 	/**
 	 * Delete this invite.
@@ -119,5 +118,28 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 	 */
 	async deleteInvite(reason?: string) {
 		return this._client.rest.channels.deleteInvite<CH>(this.code, reason);
+	}
+
+	toJSON(props: Array<string> = []) {
+		return Base.prototype.toJSON.call(this, [
+			"approximateMemberCount",
+			"approximatePresenceCount",
+			"channel",
+			"code",
+			"createdAt",
+			"expiresAt",
+			"guild",
+			"guildScheduledEvent",
+			"inviter",
+			"maxAge",
+			"maxUses",
+			"stageInstance",
+			"targetApplication",
+			"targetType",
+			"targetUser",
+			"temporary",
+			"uses",
+			...props
+		]);
 	}
 }

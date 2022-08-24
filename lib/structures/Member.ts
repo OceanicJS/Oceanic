@@ -162,6 +162,25 @@ export default class Member extends Base {
 		await this._client.rest.guilds.removeMemberRole(this.guild.id, this.id, roleID, reason);
 	}
 
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"avatar",
+			"communicationDisabledUntil",
+			"deaf",
+			"flags",
+			"guild",
+			"isPending",
+			"joinedAt",
+			"mute",
+			"nick",
+			"pending",
+			"premiumSince",
+			"roles",
+			"user",
+			...props
+		]);
+	}
+
 	/**
 	 * Remove a ban for this member.
 	 *

@@ -41,4 +41,16 @@ export class PartialApplication extends Base {
 	iconURL(format?: ImageFormat, size?: number) {
 		return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"botPublic",
+			"botRequireCodeGrant",
+			"description",
+			"icon",
+			"name",
+			"verifyKey",
+			...props
+		]);
+	}
 }

@@ -60,4 +60,18 @@ export default class AutocompleteInteraction extends Interaction {
 		this.acknowledged = true;
 		return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: choices });
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"appPermissions",
+			"channel",
+			"data",
+			"guild",
+			"guildLocale",
+			"locale",
+			"member",
+			"user",
+			...props
+		]);
+	}
 }

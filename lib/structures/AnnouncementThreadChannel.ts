@@ -30,4 +30,11 @@ export default class AnnouncementThreadChannel extends ThreadChannel<Announcemen
 	override async edit(options: EditPublicThreadChannelOptions) {
 		return this._client.rest.channels.edit<this>(this.id, options);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"threadMetadata",
+			...props
+		]);
+	}
 }

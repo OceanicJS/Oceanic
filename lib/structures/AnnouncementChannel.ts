@@ -51,4 +51,11 @@ export default class NewsChannel extends TextableChannel<NewsChannel> {
 	override async edit(options: EditGuildChannelOptions) {
 		return this._client.rest.channels.edit<this>(this.id, options);
 	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"rateLimitPerUser",
+			...props
+		]);
+	}
 }

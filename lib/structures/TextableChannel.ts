@@ -57,6 +57,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	position: number;
 	/** The amount of seconds between non-moderators sending messages. */
 	rateLimitPerUser: number;
+	/** The threads in this channel. */
 	threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
 	/** The topic of the channel. */
 	topic: string | null;
@@ -391,6 +392,21 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 */
 	async startThreadWithoutMessage(options: StartThreadWithoutMessageOptions) {
 		return this._client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, options);
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"defaultAutoArchiveDuration",
+			"lastMessage",
+			"messages",
+			"msfw",
+			"permissionOverwrites",
+			"position",
+			"rateLimitPerUser",
+			"threads",
+			"topic",
+			...props
+		]);
 	}
 
 	/**

@@ -41,7 +41,11 @@ export default class Permission {
 	}
 
 	toJSON(props: Array<string> = []) {
-		return Base.prototype.toJSON.call(this, ["allow", "deny", ...props]);
+		return Base.prototype.toJSON.call(this, [
+			"allow",
+			"deny",
+			...props
+		]);
 	}
 
 	toString() {

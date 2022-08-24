@@ -16,6 +16,7 @@ import Integration from "./Integration";
 import Invite from "./Invite";
 import GuildPreview from "./GuildPreview";
 import AutoModerationRule from "./AutoModerationRule";
+import Permission from "./Permission";
 import type {
 	AuditLogActionTypes,
 	AutoModerationActionTypes,
@@ -154,7 +155,7 @@ export default class Guild extends Base {
 	/** The id of the owner of this guild. */
 	owner: User | Uncached;
 	/** The permissions of the current user in this guild (only present when getting the current user's guilds). */
-	permissions?: string;
+	permissions?: Permission;
 	/** The [preferred locale](https://discord.com/developers/docs/reference#locales) of this guild. */
 	preferredLocale: string;
 	/** If this guild has the boost progress bar enabled. */
@@ -200,7 +201,7 @@ export default class Guild extends Base {
 		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
 		this.members = new Collection<string, RawMember & { id: string; }, Member, [guildID: string]>(Member, client);
 		this.roles = new Collection(Role, client);
-		data.roles.map(role => this.roles.update(role, data.id));
+		data.roles.forEach(role => this.roles.update(role, data.id));
 		this.update(data);
 	}
 
@@ -227,7 +228,9 @@ export default class Guild extends Base {
 		if (data.mfa_level !== undefined) this.mfaLevel = data.mfa_level;
 		if (data.name !== undefined) this.name = data.name;
 		if (data.nsfw_level !== undefined) this.nsfwLevel = data.nsfw_level;
+		if (data.owner !== undefined) this.oauthOwner = data.owner;
 		if (data.owner_id !== undefined) this.owner = this._client.users.get(data.owner_id) || { id: data.owner_id };
+		if (data.permissions !== undefined) this.permissions = new Permission(data.permissions);
 		if (data.preferred_locale !== undefined) this.preferredLocale = data.preferred_locale;
 		if (data.premium_progress_bar_enabled !== undefined) this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
 		if (data.premium_subscription_count !== undefined) this.premiumSubscriptionCount = data.premium_subscription_count;
@@ -1097,5 +1100,41 @@ export default class Guild extends Base {
 	 */
 	async syncTemplate(code: string) {
 		return this._client.rest.guilds.syncTemplate(this.id, code);
+	}
+
+	override toJSON(props: Array<string> = []) {
+		return super.toJSON([
+			"afkChannel",
+			"afkTimeout",
+			"application",
+			"approximateMemberCount",
+			"approximatePresenceCount",
+			"autoModerationRules",
+			"banner",
+			"channels",
+			"defaultMessageNotifications",
+			"description",
+			"discoverySplash",
+			"emojis",
+			"explicitContentFilter",
+			"features",
+			"icon",
+			"maxMembers",
+			"maxPresences",
+			"maxVideoChannelUsers",
+			"members",
+			"mfaLevel",
+			"name",
+			"nsfwLevel",
+			"oauthOwner",
+			"owner",
+			"permissions",
+			"preferredLocale",
+			"premiumProgressBarEnabled",
+			"premiumSubscriptionCount",
+			"premiumTier",
+			"publicUpdatesChannel",
+			...props
+		]);
 	}
 }
