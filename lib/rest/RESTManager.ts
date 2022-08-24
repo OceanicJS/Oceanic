@@ -10,6 +10,8 @@ import type { RESTOptions } from "../types/client";
 import type { RequestOptions } from "../types/request-handler";
 import ApplicationCommands from "../routes/ApplicationCommands";
 import Interactions from "../routes/Interactions";
+import * as Routes from "../util/Routes";
+import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/misc";
 
 export default class RESTManager {
 	private _client: Client;
@@ -48,6 +50,39 @@ export default class RESTManager {
 	/** Alias for {@link RequestHandler#authRequest} */
 	async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
 		return this._handler.authRequest<T>(options);
+	}
+
+	/**
+	 * Get the gateway information related to your bot client.
+	 *
+	 * @returns {Promise<GetBotGatewayResponse>}
+	 */
+	async getBotGateway() {
+		return this.request<RawGetBotGatewayResponse>({
+			method: "GET",
+			path:   Routes.GATEWAY
+		}).then(data => ({
+			url:               data.url,
+			shards:            data.shards,
+			sessionStartLimit: {
+				total:          data.session_start_limit.total,
+				remaining:      data.session_start_limit.remaining,
+				resetAfter:     data.session_start_limit.reset_after,
+				maxConcurrency: data.session_start_limit.max_concurrency
+			}
+		}) as GetBotGatewayResponse);
+	}
+
+	/**
+	 * Get the gateway information.
+	 *
+	 * @returns {Promise<GetGatewayResponse>}
+	 */
+	async getGateway() {
+		return this.request<GetGatewayResponse>({
+			method: "GET",
+			path:   Routes.GATEWAY
+		});
 	}
 
 	/** Alias for {@link RequestHandler#request} */

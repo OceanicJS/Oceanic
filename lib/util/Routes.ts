@@ -7,9 +7,6 @@ export const WEBHOOK          = (webhookID: string, webhookToken?: string) => (!
 export const WEBHOOK_MESSAGE  = (webhookID: string, webhookToken: string, messageID: string) => `/webhooks/${webhookID}/${webhookToken}/messages/${messageID}` as const;
 export const WEBHOOK_PLATFORM = (webhookID: string, webhookToken: string, platform: "github" | "slack") => `/webhooks/${webhookID}/${webhookToken}/${platform}` as const;
 
-// Users
-export const USER = (userID: string) => `/users/${userID}` as const;
-
 // Guilds
 export const GUILD                       = (userID: string) => `/guilds/${userID}` as const;
 export const GUILDS                      = "/guilds" as const;
@@ -79,7 +76,7 @@ export const INVITE 								 = (code: string) => `/invites/${code}` as const;
 export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;
 export const OAUTH_AUTHORIZE    = "/oauth2/authorize" as const;
 export const OAUTH_INFO         = "/oauth2/@me" as const;
-export const OAUTH_CURRENT_USER = USER("@me") as "/user/@me";
+export const OAUTH_CURRENT_USER = "/user/@me" as const;
 export const OAUTH_CHANNELS     = `${OAUTH_CURRENT_USER}/channels` as const;
 export const OAUTH_CONNECTIONS  = `${OAUTH_CURRENT_USER}/connections` as const;
 export const OAUTH_GUILD        = (guildID: string) => `${OAUTH_CURRENT_USER}/guilds/${guildID}` as const;
@@ -116,3 +113,8 @@ export const GUILD_APPLICATION_COMMANDS = (applicationID: string, guildID: strin
 export const GUILD_APPLICATION_COMMAND_PERMISSION = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions` as const;
 export const GUILD_APPLICATION_COMMAND_PERMISSIONS  = (applicationID: string, guildID: string) => `/applications/${applicationID}/guilds/${guildID}commands/permissions` as const;
 export const INTERACTION_CALLBACK = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
+
+// Misc
+export const GATEWAY = "/gateway" as const;
+export const GATEWAY_BOYCAR = "/gateway/bot" as const;
+export const USER = (userID: string) => `/users/${userID}` as const;
