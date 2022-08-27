@@ -4,7 +4,6 @@ import Guild from "./Guild";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
 import type { CreateBanOptions, EditMemberOptions, EditUserVoiceStateOptions, RawMember } from "../types/guilds";
-import type { Uncached } from "../types/shared";
 import type { JSONMember } from "../types/json";
 import type { Presence } from "../types/gateway";
 import { assert } from "tsafe";
@@ -19,8 +18,8 @@ export default class Member extends Base {
 	deaf: boolean;
 	/** Undocumented. */
 	flags?: number;
-	/** The guild this member is for. This can be a partial object with just an `id` property. */
-	guild: Guild | Uncached;
+	/** The guild this member is for. */
+	guild: Guild;
 	/** Undocumented. */
 	isPending?: boolean;
 	/** The date at which this member joined the guild. */
@@ -47,7 +46,7 @@ export default class Member extends Base {
 		this.nick = null;
 		this.pending = false;
 		this.premiumSince = null;
-		this.guild = this._client.guilds.get(guildID) || { id: guildID };
+		this.guild = this._client.guilds.get(guildID)!;
 		this.update(data);
 	}
 

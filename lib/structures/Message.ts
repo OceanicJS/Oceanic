@@ -108,14 +108,6 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	constructor(data: RawMessage, client: Client) {
 		super(data.id, client);
 		this.attachments = new Collection(Attachment, client);
-		if (data.author.discriminator !== "0000") this.author = this._client.users.update(data.author);
-		else this.author = new User(data.author, this._client);
-		if (data.application !== undefined) this.application = new PartialApplication(data.application, this._client);
-		else if (data.application_id !== undefined) this.application = { id: data.application_id };
-		if (data.attachments) {
-			for (const attachment of data.attachments) this.attachments.update(attachment);
-		}
-		if (data.member) this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, id: data.member.user!.id }, this.channel.guild.id) : undefined;
 		this.channel = this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
 			id: data.channel_id
 		};
@@ -132,6 +124,14 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		this.type = data.type;
 		this.webhook = data.webhook_id === undefined ? undefined : { id: data.webhook_id };
 		this.update(data);
+		if (data.author.discriminator !== "0000") this.author = this._client.users.update(data.author);
+		else this.author = new User(data.author, this._client);
+		if (data.application !== undefined) this.application = new PartialApplication(data.application, this._client);
+		else if (data.application_id !== undefined) this.application = { id: data.application_id };
+		if (data.attachments) {
+			for (const attachment of data.attachments) this.attachments.update(attachment);
+		}
+		if (data.member) this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, id: data.member.user!.id }, this.channel.guild.id) : undefined;
 	}
 
 	protected update(data: Partial<RawMessage>) {

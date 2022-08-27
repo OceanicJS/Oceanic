@@ -21,8 +21,8 @@ export default class AutoModerationRule extends Base {
 	exemptChannels: Array<string>;
 	/** The roles that are exempt from this rule. */
 	exemptRoles: Array<string>;
-	/** The guild this rule is in. This can be a partial object with just an `id` property. */
-	guild: Guild | Uncached;
+	/** The guild this rule is in. */
+	guild: Guild;
 	/** The name of this rule */
 	name: string;
 	/** The metadata of this rule's trigger.  */
@@ -32,7 +32,7 @@ export default class AutoModerationRule extends Base {
 	constructor(data: RawAutoModerationRule, client: Client) {
 		super(data.id, client);
 		if (data.creator_id !== undefined) this.creator = this._client.users.get(data.creator_id) || { id: data.creator_id };
-		if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id)!;
 		this.update(data);
 	}
 

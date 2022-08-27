@@ -6,12 +6,11 @@ import type Client from "../Client";
 import type { ImageFormat, ScheduledEventEntityTypes, ScheduledEventPrivacyLevels, ScheduledEventStatuses } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
-import type { Uncached } from "../types/shared";
 import type { JSONScheduledEvent } from "../types/json";
 
 export default class ScheduledEvent extends Base {
 	/** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
-	channel: StageChannel | Uncached | null;
+	channel: StageChannel | null;
 	/** The creator of the event. Not present on events created before October 25th, 2021. */
 	creator?: User;
 	/** The description of the event. */
@@ -23,7 +22,7 @@ export default class ScheduledEvent extends Base {
 	/** The [entity type](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types) of the event */
 	entityType: ScheduledEventEntityTypes;
 	/** The guild this scheduled event belongs to. */
-	guild: Guild | Uncached;
+	guild: Guild;
 	/** The cover */
 	image?: string | null;
 	/** The name of the event. */
@@ -46,12 +45,12 @@ export default class ScheduledEvent extends Base {
 	}
 
 	protected update(data: Partial<RawScheduledEvent>) {
-		if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this._client.getChannel<StageChannel>(data.channel_id) || { id: data.channel_id };
+		if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this._client.getChannel<StageChannel>(data.channel_id)!;
 		if (data.description !== undefined) this.description = data.description;
 		if (data.entity_id !== undefined) this.entityID = data.entity_id;
 		if (data.entity_metadata !== undefined) this.entityMetadata = data.entity_metadata;
 		if (data.entity_type !== undefined) this.entityType = data.entity_type;
-		if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id)!;
 		if (data.image !== undefined) this.image = data.image;
 		if (data.name !== undefined) this.name = data.name;
 		if (data.privacy_level !== undefined) this.privacyLevel = data.privacy_level;
