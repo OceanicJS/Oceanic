@@ -7,6 +7,7 @@ import type { ImageFormat, ScheduledEventEntityTypes, ScheduledEventPrivacyLevel
 import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
 import type { Uncached } from "../types/shared";
+import type { JSONScheduledEvent } from "../types/json";
 
 export default class ScheduledEvent extends Base {
 	/** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
@@ -36,10 +37,11 @@ export default class ScheduledEvent extends Base {
 	/** The [status](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status) of the event. */
 	status: ScheduledEventStatuses;
 	/** The number of users subscribed to the event. */
-	userCount?: number;
+	userCount: number;
 	constructor(data: RawScheduledEvent, client: Client) {
 		super(data.id, client);
 		if (data.creator) this.creator = this._client.users.update(data.creator);
+		this.userCount = 0;
 		this.update(data);
 	}
 
@@ -80,23 +82,23 @@ export default class ScheduledEvent extends Base {
 		return !this.image ? null : this._client._formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"channel",
-			"creator",
-			"description",
-			"entityID",
-			"entityMetadata",
-			"entityType",
-			"guild",
-			"image",
-			"name",
-			"privacyLevel",
-			"scheduledEndTime",
-			"scheduledStartTime",
-			"status",
-			"userCount",
-			...props
-		]);
+	override toJSON(): JSONScheduledEvent {
+		return {
+			...super.toJSON(),
+			channel:            this.channel?.id || null,
+			creator:            this.creator?.toJSON(),
+			description:        this.description,
+			entityID:           this.entityID,
+			entityMetadata:     this.entityMetadata,
+			entityType:         this.entityType,
+			guild:              this.guild.id,
+			image:              this.image,
+			name:               this.name,
+			privacyLevel:       this.privacyLevel,
+			scheduledEndTime:   this.scheduledEndTime?.getTime() || null,
+			scheduledStartTime: this.scheduledStartTime.getTime(),
+			status:             this.status,
+			userCount:          this.userCount
+		};
 	}
 }

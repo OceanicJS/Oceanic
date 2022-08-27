@@ -1,10 +1,10 @@
 import GuildChannel from "./GuildChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
-import type PermissionOverwrite from "./PermissionOverwrite";
+import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
 import ThreadChannel from "./ThreadChannel";
-import Invite from "./Invite";
+import type Invite from "./Invite";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
@@ -12,6 +12,7 @@ import User from "./User";
 import type {
 	InviteTargetTypes,
 	OverwriteTypes,
+	PrivateChannelTypes,
 	TextChannelTypes,
 	ThreadAutoArchiveDuration,
 	ThreadChannelTypes
@@ -40,6 +41,7 @@ import type {
 } from "../types/channels";
 import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
+import type { JSONTextableChannel } from "../types/json";
 
 /** Represents a guild text channel. */
 export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {
@@ -61,11 +63,12 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
 	/** The topic of the channel. */
 	topic: string | null;
-	declare type: TextChannelTypes;
+	declare type: Exclude<TextChannelTypes, PrivateChannelTypes>;
 	constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
 		super(data, client);
 		this.messages = new Collection(Message, client);
 		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
+		this.permissionOverwrites = new Collection(PermissionOverwrite, client);
 		this.update(data);
 	}
 
@@ -105,7 +108,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 * @param {Boolean} [options.unique] - If the invite should be unique.
 	 * @returns {Promise<Invite>}
 	 */
-	async createInvite(options: CreateInviteOptions) {
+	async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", T>> {
 		return this._client.rest.channels.createInvite<"withMetadata", T>(this.id, options);
 	}
 
@@ -133,7 +136,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 * @param {Boolean} [options.tts] - If the message should be spoken aloud.
 	 * @returns {Promise<Message>}
 	 */
-	async createMessage(options: CreateMessageOptions) {
+	async createMessage(options: CreateMessageOptions): Promise<Message<T>> {
 		return this._client.rest.channels.createMessage<T>(this.id, options);
 	}
 
@@ -254,7 +257,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 *
 	 * @returns {Promise<Invite[]>} - An array of invites with metadata.
 	 */
-	async getInvites() {
+	async getInvites(): Promise<Array<Invite<"withMetadata", T>>> {
 		return this._client.rest.channels.getInvites<T>(this.id);
 	}
 
@@ -276,7 +279,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 * @param {String} messageID - The id of the message to get.
 	 * @returns {Promise<Message>}
 	 */
-	async getMessage(messageID: string) {
+	async getMessage(messageID: string): Promise<Message<T>> {
 		return this._client.rest.channels.getMessage<T>(this.id, messageID);
 	}
 
@@ -290,7 +293,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 * @param {Number} [options.limit] - The maximum amount of messages to get.
 	 * @returns {Promise<Message[]>}
 	 */
-	async getMessages(options?: GetChannelMessagesOptions) {
+	async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
 		return this._client.rest.channels.getMessages<T>(this.id, options);
 	}
 
@@ -299,7 +302,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 	 *
 	 * @returns {Promise<Message[]>}
 	 */
-	async getPinnedMessages() {
+	async getPinnedMessages(): Promise<Array<Message<T>>> {
 		return this._client.rest.channels.getPinnedMessages<T>(this.id);
 	}
 
@@ -394,19 +397,20 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 		return this._client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"defaultAutoArchiveDuration",
-			"lastMessage",
-			"messages",
-			"msfw",
-			"permissionOverwrites",
-			"position",
-			"rateLimitPerUser",
-			"threads",
-			"topic",
-			...props
-		]);
+	override toJSON(): JSONTextableChannel {
+		return {
+			...super.toJSON(),
+			defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
+			lastMessage:                this.lastMessage?.id || null,
+			messages:                   this.messages.map(message => message.id),
+			nsfw:                       this.nsfw,
+			permissionOverwrites:       this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
+			position:                   this.position,
+			rateLimitPerUser:           this.rateLimitPerUser,
+			threads:                    this.threads.map(thread => thread.id),
+			topic:                      this.topic,
+			type: 					                 this.type
+		};
 	}
 
 	/**

@@ -150,7 +150,7 @@ export interface RawApplicationCommandInteractionResolvedData {
 export interface ApplicationCommandInteractionResolvedData {
 	attachments: Collection<string, RawAttachment, Attachment>;
 	channels: Collection<string, RawChannel, AnyChannel>;
-	members: Collection<string, RawMember & { id: string; }, Member, [guildID: string]>;
+	members: Collection<string, RawMember, Member, [guildID: string]>;
 	messages: Collection<string, RawMessage, Message>;
 	roles: Collection<string, RawRole, Role, [guildID: string]>;
 	users: Collection<string, RawUser, User>;

@@ -8,17 +8,17 @@ import { InteractionResponseTypes } from "../Constants";
 import type { AutocompleteChoice, AutocompleteInteractionData, RawAutocompleteInteraction } from "../types/interactions";
 import type Client from "../Client";
 import type { AnyTextChannel } from "../types/channels";
-import type { Uncached } from "../types/shared";
+import type { JSONAutocompleteInteraction } from "../types/json";
 
 export default class AutocompleteInteraction extends Interaction {
 	/** The permissions the bot has in the channel this interaction was sent from. */
 	appPermissions?: Permission;
-	/** The channel this interaction was sent from. This can be a partial object with only an `id`. */
-	channel: AnyTextChannel | Uncached;
+	/** The channel this interaction was sent from. */
+	channel: AnyTextChannel ;
 	/** The data associated with the interaction. */
 	data: AutocompleteInteractionData;
-	/** The guild this interaction was sent from, if applicable. This can be a partial object with only an `id`. */
-	guild?: Guild | Uncached;
+	/** The guild this interaction was sent from, if applicable. */
+	guild?: Guild;
 	/** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
 	guildLocale?: string;
 	/** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
@@ -31,7 +31,7 @@ export default class AutocompleteInteraction extends Interaction {
 	constructor(data: RawAutocompleteInteraction, client: Client) {
 		super(data, client);
 		this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-		this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!) || { id: data.channel_id! };
+		this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!)!;
 		this.data = {
 			guildID: data.data.guild_id,
 			id:      data.data.id,
@@ -39,7 +39,7 @@ export default class AutocompleteInteraction extends Interaction {
 			options: data.data.options || [],
 			type:    data.data.type
 		};
-		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
 		this.guildLocale = data.guild_locale;
 		this.locale = data.locale!;
 		this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guild.id) : new Member(data.member, this._client, this.guild!.id) : undefined;
@@ -61,17 +61,18 @@ export default class AutocompleteInteraction extends Interaction {
 		return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: choices });
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"appPermissions",
-			"channel",
-			"data",
-			"guild",
-			"guildLocale",
-			"locale",
-			"member",
-			"user",
-			...props
-		]);
+	override toJSON(): JSONAutocompleteInteraction {
+		return {
+			...super.toJSON(),
+			appPermissions: this.appPermissions?.toJSON(),
+			channel:        this.channel.id,
+			data:           this.data,
+			guild:          this.guild?.id,
+			guildLocale:    this.guildLocale,
+			locale:         this.locale,
+			member:         this.member?.toJSON(),
+			type:           this.type,
+			user:           this.user.toJSON()
+		};
 	}
 }

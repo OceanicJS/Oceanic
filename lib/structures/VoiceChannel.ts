@@ -1,8 +1,9 @@
 import GuildChannel from "./GuildChannel";
-import type PermissionOverwrite from "./PermissionOverwrite";
+import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
 import Invite from "./Invite";
 import User from "./User";
+import Member from "./Member";
 import type { ChannelTypes, InviteTargetTypes, OverwriteTypes, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -19,11 +20,17 @@ import type {
 	RawVoiceChannel
 } from "../types/channels";
 import { File } from "../types/request-handler";
+import type { RawMember } from "../types/guilds";
+import type { JSONVoiceChannel } from "../types/json";
+import type { UpdateVoiceStateOptions } from "../types/gateway";
+import type { Uncached } from "../types/shared";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends GuildChannel {
 	/** The bitrate of the voice channel. */
 	bitrate: number;
+	/** The last message sent in this channel. This can be a partial object with only an `id` property. This will only be present if a message has been sent within the current session. */
+	lastMessage: Message | Uncached | null;
 	/** The cached messages in this channel. */
 	messages: Collection<string, RawMessage, Message>;
 	/** If this channel is age gated. */
@@ -39,9 +46,13 @@ export default class VoiceChannel extends GuildChannel {
 	declare type: ChannelTypes.GUILD_VOICE;
 	/** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
 	videoQualityMode: VideoQualityModes;
+	voiceMembers: Collection<string, RawMember, Member, [guildID: string]>;
 	constructor(data: RawVoiceChannel, client: Client) {
 		super(data, client);
+		this.lastMessage = null;
 		this.messages = new Collection(Message, client);
+		this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+		this.voiceMembers = new Collection(Member, client);
 		this.update(data);
 	}
 
@@ -281,6 +292,18 @@ export default class VoiceChannel extends GuildChannel {
 	}
 
 	/**
+	 * Join this voice channel.
+	 *
+	 * @param {Object} [options]
+	 * @param {Boolean} [options.selfDeaf] - If the client should join deafened.
+	 * @param {Boolean} [options.selfMute] - If the client should join muted.
+	 * @returns {Promise<void>}
+	 */
+	async join(options?: UpdateVoiceStateOptions) {
+		return this._client.joinVoiceChannel(this.id, options);
+	}
+
+	/**
 	 * Pin a message in this channel.
 	 *
 	 * @param {String} messageID - The id of the message to pin.
@@ -300,18 +323,20 @@ export default class VoiceChannel extends GuildChannel {
 		return this._client.rest.channels.sendTyping(this.id);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"bitrate",
-			"messages",
-			"nsfw",
-			"permissionOverwrites",
-			"position",
-			"rtcRegion",
-			"topic",
-			"videoQualityMode",
-			...props
-		]);
+	override toJSON(): JSONVoiceChannel {
+		return {
+			...super.toJSON(),
+			bitrate:              this.bitrate,
+			messages:             this.messages.map(message => message.id),
+			nsfw:                 this.nsfw,
+			permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
+			position:             this.position,
+			rtcRegion:            this.rtcRegion,
+			topic:                this.topic,
+			type:                 this.type,
+			videoQualityMode:     this.videoQualityMode,
+			voiceMembers:         this.voiceMembers.map(member => member.id)
+		};
 	}
 
 	/**

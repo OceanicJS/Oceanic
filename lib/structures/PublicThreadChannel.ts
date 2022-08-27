@@ -3,6 +3,7 @@ import ThreadChannel from "./ThreadChannel";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
 import type { EditPublicThreadChannelOptions, RawPublicThreadChannel } from "../types/channels";
+import type { JSONPublicThreadChannel } from "../types/json";
 
 /** Represents a guild thread channel. */
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {
@@ -28,5 +29,13 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
 	 */
 	override async edit(options: EditPublicThreadChannelOptions) {
 		return this._client.rest.channels.edit<this>(this.id, options);
+	}
+
+	toJSON(): JSONPublicThreadChannel {
+		return {
+			...super.toJSON(),
+			threadMetadata: this.threadMetadata,
+			type:           this.type
+		};
 	}
 }

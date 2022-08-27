@@ -13,10 +13,13 @@ import type CategoryChannel from "./CategoryChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type StageChannel from "./StageChannel";
 import Integration from "./Integration";
-import Invite from "./Invite";
+import type Invite from "./Invite";
 import GuildPreview from "./GuildPreview";
 import AutoModerationRule from "./AutoModerationRule";
 import Permission from "./Permission";
+import VoiceState from "./VoiceState";
+import Channel from "./Channel";
+import StageInstance from "./StageInstance";
 import type {
 	AuditLogActionTypes,
 	AutoModerationActionTypes,
@@ -88,7 +91,8 @@ import type {
 	WelcomeScreen,
 	Widget,
 	WidgetImageStyle,
-	WidgetSettings
+	WidgetSettings,
+	RawIntegration
 } from "../types/guilds";
 import type {
 	CreateScheduledEventOptions,
@@ -102,7 +106,11 @@ import type { GetAuditLogOptions } from "../types/audit-log";
 import { AuditLog } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
 import type { Uncached } from "../types/shared";
+import type { RawVoiceState } from "../types/voice";
 import { VoiceRegion } from "../types/voice";
+import type { RawStageInstance } from "../types/stage-instances";
+import type { JSONGuild } from "../types/json";
+import type { PresenceUpdate } from "../types/gateway";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
@@ -121,7 +129,7 @@ export default class Guild extends Base {
 	/** The hash of this guild's banner. */
 	banner: string | null;
 	/** The channels in this guild. */
-	channels: Collection<string, RawGuildChannel, GuildChannel>;
+	channels: Collection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
 	/** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
 	defaultMessageNotifications: DefaultMessageNotificationLevels;
 	/** The description of this guild. */
@@ -136,14 +144,22 @@ export default class Guild extends Base {
 	features: Array<GuildFeature>;
 	/** The icon hash of this guild. */
 	icon: string | null;
+	/** The integrations in this guild. */
+	integrations: Collection<string, RawIntegration, Integration>;
+	/** The date at which this guild was joined. */
+	joinedAt: Date;
+	/** If this guild is considered large. */
+	large: boolean;
 	/** The maximum amount of members this guild can have. */
 	maxMembers?: number;
 	/** The maximum amount of people that can be present at a time in this guild. Only present for very large guilds. */
 	maxPresences?: number;
 	/** The maximum amount of users that can be present in a video channel. */
 	maxVideoChannelUsers?: number;
+	/** The number of members in this guild. */
+	memberCount: number;
 	/** The cached members in this guild. */
-	members: Collection<string, RawMember & { id: string; }, Member, [guildID: string]>;
+	members: Collection<string, RawMember, Member, [guildID: string]>;
 	/** The required [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) for moderators of this guild. */
 	mfaLevel: MFALevels;
 	/** The name of this guild. */
@@ -176,18 +192,24 @@ export default class Guild extends Base {
 	scheduledEvents: Collection<string, RawScheduledEvent, ScheduledEvent>;
 	/** The invite splash hash of this guild. */
 	splash: string | null;
+	/** The stage instances in this guild. */
+	stageInstances: Collection<string, RawStageInstance, StageInstance>;
 	/** The custom stickers of this guild. */
-	stickers?: Array<Sticker>;
+	stickers: Array<Sticker>;
 	/** The id of the channel where welcome messages and boosts notices are posted. */
 	systemChannel: TextChannel | Uncached | null;
 	/** The [flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags) for the system channel. */
 	systemChannelFlags: number;
 	/** The threads in this guild. */
 	threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
+	/** If this guild is unavailable. */
+	unavailable: boolean;
 	/** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
 	vanityURLCode: string | null;
 	/** The [verfication level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
 	verificationLevel: VerificationLevels;
+	/** The voice states of members in voice channels. */
+	voiceStates: Collection<string, RawVoiceState, VoiceState>;
 	/** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
 	welcomeScreen?: WelcomeScreen;
 	/** The id of the channel the widget will generate an invite to, or `null` if set to no invite. */
@@ -197,12 +219,75 @@ export default class Guild extends Base {
 	constructor(data: RawGuild, client: Client) {
 		super(data.id, client);
 		this.autoModerationRules = new Collection(AutoModerationRule, client);
-		this.channels = new Collection(GuildChannel, client);
-		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
-		this.members = new Collection<string, RawMember & { id: string; }, Member, [guildID: string]>(Member, client);
+		this.emojis = [];
+		this.channels = new Collection(GuildChannel, client) as Collection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
+		this.features = [];
+		this.integrations = new Collection(Integration, client);
+		this.memberCount = data.member_count || data.approximate_member_count || 0;
+		this.members = new Collection(Member, client);
 		this.roles = new Collection(Role, client);
+		this.stageInstances = new Collection(StageInstance, client);
+		this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
+		this.stickers = [];
+		this.voiceStates = new Collection(VoiceState, client);
 		data.roles.forEach(role => this.roles.update(role, data.id));
 		this.update(data);
+
+		if (data.channels) {
+			for (const channelData of data.channels) {
+				channelData.guild_id = this.id;
+				client.channelGuildMap[channelData.id] = this.id;
+				this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+			}
+		}
+
+		if (data.threads) {
+			for (const threadData of data.threads) {
+				threadData.guild_id = this.id;
+				this.threads.add(Channel.from<AnyThreadChannel>(threadData, client));
+				client.threadGuildMap[threadData.id] = this.id;
+			}
+		}
+
+		if (data.members) {
+			for (const member of data.members) {
+				this.members.update({ ...member, id: member.user!.id }, this.id);
+			}
+		}
+
+		if (data.stage_instances) {
+			for (const stageInstance of data.stage_instances) {
+				stageInstance.guild_id = this.id;
+				this.stageInstances.update(stageInstance);
+			}
+		}
+
+		if (data.presences) {
+			for (const presence of data.presences) {
+				const member = this.members.get(presence.user.id);
+				if (member) {
+					delete (presence as { user?: PresenceUpdate["user"]; }).user;
+					member.presence = presence;
+				} else {
+					client.emit("debug", `Rogue presence (user: ${presence.user.id}, guild: ${this.id})`);
+				}
+			}
+		}
+
+		if (data.voice_states) {
+			for (const voiceState of data.voice_states) {
+				if (!this.members.has(voiceState.user_id) || !voiceState.channel_id) continue;
+				voiceState.guild_id = this.id;
+				this.voiceStates.update({ ...voiceState, id: voiceState.user_id });
+				const channel = this.channels.get(voiceState.channel_id);
+				const member = this.members.update({ id: voiceState.user_id, deaf: voiceState.deaf, mute: voiceState.mute }, this.id);
+				if (channel && "voiceMembers" in channel) channel.voiceMembers.add(member);
+				// @TODO voice
+				/* if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user!.id && !client.voiceConnections.has(this.id)) {
+					process.nextTick(() => client.joinVoiceChannel(voiceState.channel_id!));
+				} */
+			}
+		}
 	}
 
 	protected update(data: Partial<RawGuild>) {
@@ -225,6 +310,7 @@ export default class Guild extends Base {
 		if (data.max_members !== undefined) this.maxMembers = data.max_members;
 		if (data.max_presences !== undefined) this.maxPresences = data.max_presences;
 		if (data.max_video_channel_users !== undefined) this.maxVideoChannelUsers = data.max_video_channel_users;
+		if (data.member_count !== undefined) this.memberCount = data.member_count;
 		if (data.mfa_level !== undefined) this.mfaLevel = data.mfa_level;
 		if (data.name !== undefined) this.name = data.name;
 		if (data.nsfw_level !== undefined) this.nsfwLevel = data.nsfw_level;
@@ -256,6 +342,9 @@ export default class Guild extends Base {
 		if (data.widget_channel_id !== undefined) this.widgetChannel = data.widget_channel_id === null ? null : this._client.getChannel(data.widget_channel_id) || { id: data.widget_channel_id };
 		if (data.widget_enabled !== undefined) this.widgetEnabled = data.widget_enabled;
 	}
+
+	/** The shard this guild is on. Gateway only. */
+	get shard() { return this._client.shards.get(this._client.guildShardMap[this.id])!; }
 
 	/**
 	 * Add a member to this guild. Requires an access token with the `guilds.join` scope.
@@ -1102,39 +1191,58 @@ export default class Guild extends Base {
 		return this._client.rest.guilds.syncTemplate(this.id, code);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"afkChannel",
-			"afkTimeout",
-			"application",
-			"approximateMemberCount",
-			"approximatePresenceCount",
-			"autoModerationRules",
-			"banner",
-			"channels",
-			"defaultMessageNotifications",
-			"description",
-			"discoverySplash",
-			"emojis",
-			"explicitContentFilter",
-			"features",
-			"icon",
-			"maxMembers",
-			"maxPresences",
-			"maxVideoChannelUsers",
-			"members",
-			"mfaLevel",
-			"name",
-			"nsfwLevel",
-			"oauthOwner",
-			"owner",
-			"permissions",
-			"preferredLocale",
-			"premiumProgressBarEnabled",
-			"premiumSubscriptionCount",
-			"premiumTier",
-			"publicUpdatesChannel",
-			...props
-		]);
+	override toJSON(): JSONGuild {
+		return {
+			...super.toJSON(),
+			afkChannel:                  this.afkChannel?.id || null,
+			afkTimeout:                  this.afkTimeout,
+			application:                 this.application?.id,
+			approximateMemberCount:      this.approximateMemberCount,
+			approximatePresenceCount:    this.approximatePresenceCount,
+			autoModerationRules:         this.autoModerationRules.map(rule => rule.toJSON()),
+			banner:                      this.banner,
+			channels:                    this.channels.map(channel => channel.id),
+			defaultMessageNotifications: this.defaultMessageNotifications,
+			description:                 this.description,
+			discoverySplash:             this.discoverySplash,
+			emojis:                      this.emojis,
+			explicitContentFilter:       this.explicitContentFilter,
+			features:                    this.features,
+			icon:                        this.icon,
+			joinedAt:                    this.joinedAt.getTime(),
+			large:                       this.large,
+			maxMembers:                  this.maxMembers,
+			maxPresences:                this.maxPresences,
+			maxVideoChannelUsers:        this.maxVideoChannelUsers,
+			memberCount:                 this.memberCount,
+			members:                     this.members.map(member => member.id),
+			mfaLevel:                    this.mfaLevel,
+			name:                        this.name,
+			nsfwLevel:                   this.nsfwLevel,
+			owner:                       this.owner?.id,
+			permissions:                 this.permissions?.toJSON(),
+			preferredLocale:             this.preferredLocale,
+			premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
+			premiumSubscriptionCount:    this.premiumSubscriptionCount,
+			premiumTier:                 this.premiumTier,
+			publicUpdatesChannel:        this.publicUpdatesChannel?.id || null,
+			region:                      this.region,
+			roles:                       this.roles.map(role => role.toJSON()),
+			rulesChannel:                this.rulesChannel?.id || null,
+			scheduledEvents:             this.scheduledEvents.map(event => event.toJSON()),
+			splash:                      this.splash,
+			stageInstances:              this.stageInstances.map(instance => instance.toJSON()),
+			stickers:                    this.stickers,
+			systemChannel:               this.systemChannel?.id || null,
+			systemChannelFlags:          this.systemChannelFlags,
+			threads:                     this.threads.map(thread => thread.id),
+			unavailable:                 this.unavailable,
+			vanityURLCode:               this.vanityURLCode,
+			verificationLevel:           this.verificationLevel,
+			voiceStates:                 this.voiceStates.map(state => state.toJSON()),
+			welcomeScreen:               this.welcomeScreen,
+			widgetChannel:               this.widgetChannel === null ? null : this.widgetChannel?.id,
+			widgetEnabled:               this.widgetEnabled
+		};
 	}
 }

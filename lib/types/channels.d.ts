@@ -42,10 +42,11 @@ export interface RawChannel {
 	id: string;
 	last_message_id?: string | null;
 	last_pin_timestamp?: string | null;
-	member?: RawRESTThreadMember;
+	member?: RawChannelThreadMember;
 	member_count?: number;
 	message_count?: number;
 	name?: string | null;
+	newly_created?: boolean;
 	nsfw?: boolean;
 	owner_id?: string;
 	parent_id?: string | null;
@@ -65,16 +66,16 @@ export interface RawChannel {
 export type RawGuildChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> & { name: string; type: GuildChannelTypes; };
 export type RawPrivateChannel = Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> & { type: ChannelTypes.DM; };
 // managed and nicks are undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export type RawGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw">> & { managed: boolean; name: string; nicks?: Record<"id" | "nick", string>; type: ChannelTypes.GROUP_DM; };
+export type RawGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> & { managed: boolean; name: string; nicks?: Record<"id" | "nick", string>; type: ChannelTypes.GROUP_DM; };
 export type RawTextChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_TEXT; };
 export type RawCategoryChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel,  "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_CATEGORY; };
 export type RawAnnouncementChannel = Omit<RawTextChannel, "type"> & { type: ChannelTypes.GUILD_ANNOUNCEMENT; };
 export type RawVoiceChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_VOICE; };
 export type RawStageChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "rtc_region" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_STAGE_VOICE; };
 export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
-export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent">> & { member?: RawChannel["member"]; name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
+export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> & { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
 export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; };
-export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PRIVATE_THREAD; };
+export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; };
 
 export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
 
@@ -110,13 +111,13 @@ export interface RawThreadMetadata {
 
 export interface RawThreadMember {
 	flags: number;
-	id?: string;
+	id: string;
 	join_timestamp: string;
-	user_id?: string;
+	user_id: string;
 }
-export type RawRESTThreadMember = Required<RawThreadMember>;
+export type RawChannelThreadMember = Pick<RawThreadMember, "flags" | "join_timestamp">;
 
-export interface RESTThreadMember {
+export interface ThreadMember {
 	flags: number;
 	id: string;
 	joinTimestamp: Date;
@@ -379,6 +380,7 @@ export interface RawMessage {
 	flags?: number;
 	id: string;
 	interaction?: RawMessageInteraction;
+	member?: RawMember;
 	mention_channels?: Array<ChannelMention>;
 	mention_everyone: boolean;
 	mention_roles: Array<string>;
@@ -387,7 +389,7 @@ export interface RawMessage {
 	nonce?: number | string;
 	pinned: boolean;
 	position?: number;
-	reactions?: Array<MessageReaction>;
+	reactions?: Array<RawMessageReaction>;
 	referenced_message?: RawMessage | null;
 	// stickers exists, but is deprecated
 	sticker_items?: Array<StickerItem>;
@@ -405,9 +407,14 @@ export interface ChannelMention {
 	type: ChannelTypes;
 }
 
-export interface MessageReaction {
+export interface RawMessageReaction {
 	count: number;
 	emoji: PartialEmoji;
+	me: boolean;
+}
+
+export interface MessageReaction {
+	count: number;
 	me: boolean;
 }
 
@@ -453,6 +460,7 @@ export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChan
 export type AnyPrivateChannel = PrivateChannel | GroupChannel;
 export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
 export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
+export type AnyTextChannelWithoutThreads = Exclude<AnyTextChannel, AnyThreadChannel>;
 export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
 export type AnyThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
@@ -577,13 +585,13 @@ export interface GetArchivedThreadsOptions {
 
 export interface RawArchivedThreads<T extends RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel> {
 	has_more: boolean;
-	members: Array<RawRESTThreadMember>;
+	members: Array<RawThreadMember>;
 	threads: Array<T>;
 }
 
 export interface ArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel> {
 	hasMore: boolean;
-	members: Array<RESTThreadMember>;
+	members: Array<ThreadMember>;
 	threads: Array<T>;
 }
 

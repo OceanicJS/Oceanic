@@ -1,5 +1,7 @@
+import type { Uncached } from "./shared";
 import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, GuildChannelTypes } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
+import type ClientApplication from "../structures/ClientApplication";
 
 // @TODO `name_localized` and `description_localized`
 
@@ -168,9 +170,14 @@ export interface RawGuildApplicationCommandPermissions {
 	permissions: Array<ApplicationCommandPermission>;
 }
 
-export interface GuildApplicationCommandPermissions {
+export interface RESTGuildApplicationCommandPermissions {
 	applicationID: string;
 	guildID: string;
+	id: string;
+	permissions: Array<ApplicationCommandPermission>;
+}
+export interface GuildApplicationCommandPermissions {
+	application: ClientApplication | Uncached;
 	id: string;
 	permissions: Array<ApplicationCommandPermission>;
 }

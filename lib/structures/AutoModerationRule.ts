@@ -1,10 +1,11 @@
 import Base from "./Base";
-import type User from "./User";
+import User from "./User";
 import type Guild from "./Guild";
 import type Client from "../Client";
 import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
 import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
+import type { JSONAutoModerationRule } from "../types/json";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
@@ -16,7 +17,7 @@ export default class AutoModerationRule extends Base {
 	enabled: boolean;
 	/** The [event type](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types) of this rule. */
 	eventType: AutoModerationEventTypes;
-	/** The channels that are exempt from this rile. */
+	/** The channels that are exempt from this rule. */
 	exemptChannels: Array<string>;
 	/** The roles that are exempt from this rule. */
 	exemptRoles: Array<string>;
@@ -91,19 +92,19 @@ export default class AutoModerationRule extends Base {
 		return this._client.rest.guilds.editAutoModerationRule(this.guild.id, this.id, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"actions",
-			"creator",
-			"enabled",
-			"eventType",
-			"exemptChannels",
-			"exemptRoles",
-			"guild",
-			"name",
-			"triggerMetadata",
-			"triggerType",
-			...props
-		]);
+	override toJSON(): JSONAutoModerationRule {
+		return {
+			...super.toJSON(),
+			actions:         this.actions,
+			creator:         this.creator instanceof User ? this.creator.toJSON() : this.creator.id,
+			enabled:         this.enabled,
+			eventType:       this.eventType,
+			exemptChannels:  this.exemptChannels,
+			exemptRoles:     this.exemptRoles,
+			guild:           this.guild.id,
+			name:            this.name,
+			triggerMetadata: this.triggerMetadata,
+			triggerType:     this.triggerType
+		};
 	}
 }

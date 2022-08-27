@@ -12,7 +12,7 @@ import { FormData, fetch, File as UFile } from "undici";
 
 /**
  * Latency & ratelimit related things lovingly borrowed from eris
- * https://github.com/abalabahaha/eris/blob/dev/lib/rest/RequestHandler.js
+ * https://github.com/abalabahaha/eris/blob/dev/lib/rest/RequestHandler.js (eb403730855714eafa36c541dbe2cb84c9979158)
  */
 
 /** The primary means of communicating with Discord via rest. */

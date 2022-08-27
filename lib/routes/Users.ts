@@ -1,6 +1,6 @@
 import BaseRoute from "./BaseRoute";
 import type { RawGroupChannel, RawPrivateChannel } from "../types/channels";
-import type { CreateGroupChannelOptions, EditSelfUserOptions, RawExtendedUser, RawUser } from "../types/users";
+import type { CreateGroupChannelOptions, EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
 import * as Routes from "../util/Routes";
 import PrivateChannel from "../structures/PrivateChannel";
 import GroupChannel from "../structures/GroupChannel";
@@ -61,7 +61,7 @@ export default class Users extends BaseRoute {
 	 * @returns {Promise<ExtendedUser>}
 	 */
 	async getCurrentUser() {
-		return this._manager.authRequest<RawExtendedUser>({
+		return this._manager.authRequest<RawOAuthUser>({
 			method: "GET",
 			path:   Routes.OAUTH_CURRENT_USER
 		}).then(data => new ExtendedUser(data, this._client));
@@ -90,7 +90,7 @@ export default class Users extends BaseRoute {
 	 */
 	async modifySelf(options: EditSelfUserOptions) {
 		if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
-		return this._manager.authRequest<RawExtendedUser>({
+		return this._manager.authRequest<RawOAuthUser>({
 			method: "PATCH",
 			path:   Routes.USER("@me"),
 			json:   options

@@ -15,18 +15,18 @@ import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
 import type { AnyChannel, AnyGuildTextChannel, AnyTextChannel, RawChannel } from "../types/channels";
 import type { RawUser } from "../types/users";
-import type { Uncached } from "../types/shared";
 import { File } from "../types/request-handler";
+import type { JSONCommandInteraction } from "../types/json";
 
 export default class CommandInteraction extends Interaction {
 	/** The permissions the bot has in the channel this interaction was sent from. */
 	appPermissions?: Permission;
-	/** The channel this interaction was sent from. This can be a partial object with only an `id`. */
-	channel: AnyTextChannel | Uncached;
+	/** The channel this interaction was sent from. */
+	channel: AnyTextChannel;
 	/** The data associated with the interaction. */
 	data: ApplicationCommandInteractionData;
-	/** The guild this interaction was sent from, if applicable. This can be a partial object with only an `id`. */
-	guild?: Guild | Uncached;
+	/** The guild this interaction was sent from, if applicable. */
+	guild?: Guild;
 	/** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
 	guildLocale?: string;
 	/** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
@@ -39,7 +39,7 @@ export default class CommandInteraction extends Interaction {
 	constructor(data: RawApplicationCommandInteraction, client: Client) {
 		super(data, client);
 		this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-		this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!) || { id: data.channel_id! };
+		this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!)!;
 		this.data = {
 			guildID:  data.data.guild_id,
 			id:       data.data.id,
@@ -48,7 +48,7 @@ export default class CommandInteraction extends Interaction {
 			resolved: {
 				attachments: new Collection(Attachment, this._client),
 				channels:	   new Collection(Channel, this._client) as Collection<string, RawChannel, AnyChannel>,
-				members:	    new Collection<string, RawMember & { id: string; }, Member, [guildID: string]>(Member, this._client),
+				members:	    new Collection(Member, this._client),
 				messages:	   new Collection(Message, this._client),
 				roles: 	     new Collection(Role, this._client),
 				users:		     new Collection(User, this._client)
@@ -56,7 +56,7 @@ export default class CommandInteraction extends Interaction {
 			targetID: data.data.target_id,
 			type:     data.data.type
 		};
-		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
 		this.guildLocale = data.guild_locale;
 		this.locale = data.locale!;
 		this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guild.id) : new Member(data.member, this._client, this.guild!.id) : undefined;
@@ -247,17 +247,18 @@ export default class CommandInteraction extends Interaction {
 		return this._client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"appPermissions",
-			"channel",
-			"data",
-			"guild",
-			"guildLocale",
-			"locale",
-			"member",
-			"user",
-			...props
-		]);
+	override toJSON(): JSONCommandInteraction {
+		return {
+			...super.toJSON(),
+			appPermissions: this.appPermissions?.toJSON(),
+			channel:        this.channel.id,
+			data:           this.data,
+			guild:          this.guild?.id,
+			guildLocale:    this.guildLocale,
+			locale:         this.locale,
+			member:         this.member?.toJSON(),
+			type:           this.type,
+			user:           this.user.toJSON()
+		};
 	}
 }

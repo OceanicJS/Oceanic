@@ -90,9 +90,9 @@ import type {
 	AnyThreadChannel,
 	RawGuildChannel,
 	RawInvite,
-	RawRESTThreadMember,
 	RawThreadChannel,
-	RESTThreadMember
+	RawThreadMember,
+	ThreadMember
 } from "../types/channels";
 import type StageChannel from "../structures/StageChannel";
 import type TextChannel from "../structures/TextChannel";
@@ -1107,7 +1107,7 @@ export default class Guilds extends BaseRoute {
 	 * @returns {Promise<GetActiveThreadsResponse>}
 	 */
 	async getActiveThreads(id: string) {
-		return this._manager.authRequest<{ members: Array<RawRESTThreadMember>; threads: Array<RawThreadChannel>; }>({
+		return this._manager.authRequest<{ members: Array<RawThreadMember>; threads: Array<RawThreadChannel>; }>({
 			method: "GET",
 			path:   Routes.GUILD_ACTIVE_THREADS(id)
 		}).then(data => ({
@@ -1116,7 +1116,7 @@ export default class Guilds extends BaseRoute {
 				id:	           member.id,
 				joinTimestamp: new Date(member.join_timestamp),
 				userID:        member.user_id
-			}) as RESTThreadMember),
+			}) as ThreadMember),
 			threads: data.threads.map(thread => Channel.from<AnyThreadChannel>(thread, this._client))
 		}) as GetActiveThreadsResponse);
 	}

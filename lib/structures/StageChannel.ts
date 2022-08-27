@@ -1,6 +1,7 @@
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Invite from "./Invite";
+import Member from "./Member";
 import type { ChannelTypes, InviteTargetTypes, OverwriteTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -11,6 +12,9 @@ import type {
 	RawOverwrite,
 	RawStageChannel
 } from "../types/channels";
+import type { JSONStageChannel } from "../types/json";
+import type { RawMember } from "../types/guilds";
+import type { UpdateVoiceStateOptions } from "../types/gateway";
 
 /** Represents a guild stage channel. */
 export default class StageChannel extends GuildChannel {
@@ -25,9 +29,11 @@ export default class StageChannel extends GuildChannel {
 	/** The topic of the channel. */
 	topic: string | null;
 	declare type: ChannelTypes.GUILD_STAGE_VOICE;
+	voiceMembers: Collection<string, RawMember, Member, [guildID: string]>;
 	constructor(data: RawStageChannel, client: Client) {
 		super(data, client);
 		this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+		this.voiceMembers = new Collection(Member, client);
 		this.update(data);
 	}
 
@@ -99,14 +105,27 @@ export default class StageChannel extends GuildChannel {
 		return this._client.rest.channels.editPermission(this.id, overwriteID, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"bitrate",
-			"permissionOverwrites",
-			"position",
-			"rtcRegion",
-			"topic",
-			...props
-		]);
+	/**
+	 * Join this stage channel.
+	 *
+	 * @param {Object} [options]
+	 * @param {Boolean} [options.selfDeaf] - If the client should join deafened.
+	 * @param {Boolean} [options.selfMute] - If the client should join muted.
+	 * @returns {Promise<void>}
+	 */
+	async join(options?: UpdateVoiceStateOptions) {
+		return this._client.joinVoiceChannel(this.id, options);
+	}
+
+	override toJSON(): JSONStageChannel {
+		return {
+			...super.toJSON(),
+			bitrate:              this.bitrate,
+			permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
+			position:             this.position,
+			rtcRegion:            this.rtcRegion,
+			topic:                this.topic,
+			type:                 this.type
+		};
 	}
 }

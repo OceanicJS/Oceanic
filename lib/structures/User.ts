@@ -3,6 +3,7 @@ import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type { RawUser } from "../types/users";
+import type { JSONUser } from "../types/json";
 
 /** Represents a user. */
 export default class User extends Base {
@@ -73,17 +74,17 @@ export default class User extends Base {
 		return this._client._formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"accentColor",
-			"avatar",
-			"banner",
-			"bot",
-			"discriminator",
-			"publicFlags",
-			"system",
-			"username",
-			...props
-		]);
+	override toJSON(): JSONUser {
+		return {
+			...super.toJSON(),
+			accentColor:   this.accentColor,
+			avatar:        this.avatar,
+			banner:        this.banner,
+			bot:           this.bot,
+			discriminator: this.discriminator,
+			publicFlags:   this.publicFlags,
+			system:        this.system,
+			username:      this.username
+		};
 	}
 }

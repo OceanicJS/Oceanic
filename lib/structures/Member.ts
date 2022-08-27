@@ -1,10 +1,12 @@
 import Base from "./Base";
 import type User from "./User";
-import type Guild from "./Guild";
+import Guild from "./Guild";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
 import type { CreateBanOptions, EditMemberOptions, EditUserVoiceStateOptions, RawMember } from "../types/guilds";
 import type { Uncached } from "../types/shared";
+import type { JSONMember } from "../types/json";
+import type { Presence } from "../types/gateway";
 import { assert } from "tsafe";
 
 /** Represents a member of a guild. */
@@ -22,7 +24,7 @@ export default class Member extends Base {
 	/** Undocumented. */
 	isPending?: boolean;
 	/** The date at which this member joined the guild. */
-	joinedAt: Date;
+	joinedAt: Date | null;
 	/** If this member is server muted. */
 	mute: boolean;
 	/** This member's nickname, if any. */
@@ -31,6 +33,8 @@ export default class Member extends Base {
 	pending: boolean;
 	/** The date at which this member started boosting the guild, if applicable. */
 	premiumSince: Date | null;
+	/** The presence of this member. */
+	presence?: Presence;
 	/** The roles this member has. */
 	roles: Array<string>;
 	/** The user associated with this member. */
@@ -53,11 +57,11 @@ export default class Member extends Base {
 		if (data.deaf !== undefined) this.deaf = data.deaf;
 		if (data.flags !== undefined) this.flags = data.flags;
 		if (data.is_pending !== undefined) this.isPending = data.is_pending;
-		if (data.joined_at !== undefined) this.joinedAt = new Date(data.joined_at);
+		if (data.joined_at !== undefined) this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
 		if (data.mute !== undefined) this.mute = data.mute;
 		if (data.nick !== undefined) this.nick = data.nick;
 		if (data.pending !== undefined) this.pending = data.pending;
-		if (data.premium_since !== undefined) this.premiumSince = new Date(data.premium_since);
+		if (data.premium_since !== undefined) this.premiumSince = data.premium_since === null ? null : new Date(data.premium_since);
 		if (data.roles !== undefined) this.roles = data.roles;
 		if (data.user !== undefined) this.user = this._client.users.update(data.user);
 	}
@@ -76,6 +80,8 @@ export default class Member extends Base {
 	get tag() { return this.user.tag; }
 	/** The user associated ith this member's username. */
 	get username() { return this.user.username; }
+	/** The voice state of this member. */
+	get voiceState() { return this.guild instanceof Guild ? this.guild.voiceStates.get(this.id) || null : null; }
 
 	/**
 	 * Add a role to this member.
@@ -162,23 +168,24 @@ export default class Member extends Base {
 		await this._client.rest.guilds.removeMemberRole(this.guild.id, this.id, roleID, reason);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"avatar",
-			"communicationDisabledUntil",
-			"deaf",
-			"flags",
-			"guild",
-			"isPending",
-			"joinedAt",
-			"mute",
-			"nick",
-			"pending",
-			"premiumSince",
-			"roles",
-			"user",
-			...props
-		]);
+	override toJSON(): JSONMember {
+		return {
+			...super.toJSON(),
+			avatar:                     this.avatar,
+			communicationDisabledUntil: this.communicationDisabledUntil?.getTime() || null,
+			deaf:                       this.deaf,
+			flags:                      this.flags,
+			guild:                      this.guild.id,
+			isPending:                  this.isPending,
+			joinedAt:                   this.joinedAt?.getTime() || null,
+			mute:                       this.mute,
+			nick:                       this.nick,
+			pending:                    this.pending,
+			premiumSince:               this.premiumSince?.getTime() || null,
+			presence:                   this.presence,
+			roles:                      this.roles,
+			user:                       this.user.toJSON()
+		};
 	}
 
 	/**

@@ -16,6 +16,7 @@ import type {
 	RawTextChannel,
 	RawVoiceChannel
 } from "../types/channels";
+import type { JSONChannel } from "../types/json";
 
 /** Represents a channel. */
 export default class Channel extends Base {
@@ -42,9 +43,6 @@ export default class Channel extends Base {
 		}
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-	protected update(data: Partial<RawChannel>) {}
-
 	/** A string that will mention this channel. */
 	get mention() {
 		return `<#${this.id}>`;
@@ -59,24 +57,24 @@ export default class Channel extends Base {
 		await this._client.rest.channels.delete(this.id);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"type",
-			...props
-		]);
+	override toJSON(): JSONChannel {
+		return {
+			...super.toJSON(),
+			type: this.type
+		};
 	}
 }
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
 /* eslint-disable */
-const TextChannel = require("./TextChannel") as typeof import("./TextChannel").default;
-const PrivateChannel = require("./PrivateChannel") as typeof import("./PrivateChannel").default;
-const VoiceChannel = require("./VoiceChannel") as typeof import("./VoiceChannel").default;
-const CategoryChannel = require("./CategoryChannel") as typeof import("./CategoryChannel").default;
-const GroupChannel = require("./GroupChannel") as typeof import("./GroupChannel").default;
-const AnnouncementChannel = require("./AnnouncementChannel") as typeof import("./AnnouncementChannel").default;
-const PublicThreadChannel = require("./PublicThreadChannel") as typeof import("./PublicThreadChannel").default;
-const PrivateThreadChannel = require("./PrivateThreadChannel") as typeof import("./PrivateThreadChannel").default;
-const AnnouncementThreadChannel = require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel").default;
-const StageChannel = require("./StageChannel") as typeof import("./StageChannel").default;
+const TextChannel = (require("./TextChannel") as typeof import("./TextChannel")).default;
+const PrivateChannel = (require("./PrivateChannel") as typeof import("./PrivateChannel")).default;
+const VoiceChannel = (require("./VoiceChannel") as typeof import("./VoiceChannel")).default;
+const CategoryChannel = (require("./CategoryChannel") as typeof import("./CategoryChannel")).default;
+const GroupChannel = (require("./GroupChannel") as typeof import("./GroupChannel")).default;
+const AnnouncementChannel = (require("./AnnouncementChannel") as typeof import("./AnnouncementChannel")).default;
+const PublicThreadChannel = (require("./PublicThreadChannel") as typeof import("./PublicThreadChannel")).default;
+const PrivateThreadChannel = (require("./PrivateThreadChannel") as typeof import("./PrivateThreadChannel")).default;
+const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel")).default;
+const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
 /* eslint-enable */

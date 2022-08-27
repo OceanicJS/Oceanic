@@ -14,11 +14,13 @@ import type {
 	EditMessageOptions,
 	GetChannelMessagesOptions,
 	GetReactionsOptions,
-	RawGroupChannel
+	RawGroupChannel,
+	RawMessage
 } from "../types/channels";
 import type { RawUser } from "../types/users";
 import Collection from "../util/Collection";
 import type { Uncached } from "../types/shared";
+import type { JSONGroupChannel } from "../types/json";
 import { File } from "undici";
 
 /** Represents a group direct message. */
@@ -27,8 +29,12 @@ export default class GroupChannel extends Channel {
 	application: ClientApplication | Uncached;
 	/** The icon hash of this group, if any. */
 	icon: string | null;
+	/** The last message sent in this channel. This can be a partial object with only an `id` property. */
+	lastMessage: Message | Uncached | null;
 	/** If this group channel is managed by an application. */
 	managed: boolean;
+	/** The cached messages in this channel. */
+	messages: Collection<string, RawMessage, Message>;
 	/** The name of this group channel. */
 	name: string | null;
 	/** The nicknames used when creating this group channel. */
@@ -40,6 +46,8 @@ export default class GroupChannel extends Channel {
 	declare type: ChannelTypes.GROUP_DM;
 	constructor(data: RawGroupChannel, client: Client) {
 		super(data, client);
+		this.lastMessage = null;
+		this.messages = new Collection(Message, client);
 		this.recipients = new Collection(User, client);
 		data.recipients.forEach(r => this.recipients.add(this._client.users.update(r)));
 		this.update(data);
@@ -49,6 +57,7 @@ export default class GroupChannel extends Channel {
 		super.update(data);
 		if (data.application_id !== undefined) this.application = this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id } ;
 		if (data.icon !== undefined) this.icon = data.icon;
+		if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
 		if (data.managed !== undefined) this.managed = data.managed;
 		if (data.name !== undefined) this.name = data.name;
 		if (data.nicks !== undefined) this.nicks = data.nicks;
@@ -270,17 +279,18 @@ export default class GroupChannel extends Channel {
 		return this._client.rest.channels.sendTyping(this.id);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"application",
-			"icon",
-			"managed",
-			"name",
-			"nicks",
-			"owner",
-			"recipients",
-			...props
-		]);
+	override toJSON(): JSONGroupChannel {
+		return {
+			...super.toJSON(),
+			application: this.application.id,
+			icon:        this.icon,
+			managed:     this.managed,
+			name:        this.name,
+			nicks:       this.nicks,
+			owner:       this.owner instanceof User ? this.owner.toJSON() : this.owner.id,
+			recipients:  this.recipients.map(user => user.toJSON()),
+			type:        this.type
+		};
 	}
 
 	/**

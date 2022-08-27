@@ -1,5 +1,4 @@
 import PermissionOverwrite from "./PermissionOverwrite";
-import Channel from "./Channel";
 import GuildChannel from "./GuildChannel";
 import type Client from "../Client";
 import type { ChannelTypes, OverwriteTypes } from "../Constants";
@@ -11,9 +10,10 @@ import type {
 	RawGuildChannel,
 	RawOverwrite
 } from "../types/channels";
+import type { JSONCategoryChannel } from "../types/json";
 
 /** Represents a guild category channel. */
-export default class CategoryChannel extends Channel {
+export default class CategoryChannel extends GuildChannel {
 	/** The channels in this category. */
 	channels: Collection<string, RawGuildChannel, GuildChannel>;
 	/** The permission overwrites of this channel. */
@@ -74,12 +74,13 @@ export default class CategoryChannel extends Channel {
 		return this._client.rest.channels.editPermission(this.id, overwriteID, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"channels",
-			"permissionOverwrites",
-			"position",
-			...props
-		]);
+	override toJSON(): JSONCategoryChannel {
+		return {
+			...super.toJSON(),
+			channels:             this.channels.map(channel => channel.id),
+			permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
+			position:             this.position,
+			type:                 this.type
+		};
 	}
 }

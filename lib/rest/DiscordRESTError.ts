@@ -1,11 +1,11 @@
 import type { RESTMethod } from "../Constants";
-import Base from "../structures/Base";
+import type { JSONDiscordRESTError } from "../types/json";
 import type { Response } from "undici";
 
 export default class DiscordRESTError extends Error {
 	method: RESTMethod;
 	name = "DiscordRESTError";
-	resBody: Record<string, unknown>;
+	resBody: Record<string, unknown> | null;
 	response: Response;
 	constructor(res: Response, resBody: Record<string, unknown>, method: string, stack?: string) {
 		super();
@@ -47,14 +47,13 @@ export default class DiscordRESTError extends Error {
 	get status() { return this.response.status; }
 	get statusText() { return this.response.statusText; }
 
-	toJSON(props: Array<string> = []) {
-		return Base.prototype.toJSON.call(this, [
-			"message",
-			"method",
-			"name",
-			"stack",
-			"resBody",
-			...props
-		]);
+	toJSON(): JSONDiscordRESTError {
+		return {
+			message: this.message,
+			method:  this.method,
+			name:    this.name,
+			resBody: this.resBody,
+			stack:   this.stack || ""
+		};
 	}
 }

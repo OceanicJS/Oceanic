@@ -137,7 +137,7 @@ export default class Webhooks extends BaseRoute {
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
 	 * @returns {Promise<Message<T>>}
 	 */
-	async editMessage<T extends AnyGuildTextChannel>(id: string, token: string,messageID: string, options: EditWebhookMessageOptions) {
+	async editMessage<T extends AnyGuildTextChannel>(id: string, token: string,messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
 		const files = options.files;
 		if (options.files) delete options.files;
 		const query = new URLSearchParams();

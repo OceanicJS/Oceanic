@@ -4,6 +4,7 @@ import type { OverwriteTypes, Permission as PermissionNames } from "../Constants
 import type Client from "../Client";
 import Properties from "../util/Properties";
 import type { RawOverwrite } from "../types/channels";
+import type { JSONPermissionOverwrite } from "../types/json";
 
 export default class PermissionOverwrite extends Base {
 	/** The permissions of this overwrite. */
@@ -30,11 +31,11 @@ export default class PermissionOverwrite extends Base {
 		return this.permission.has(...permissions);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"permission",
-			"type",
-			...props
-		]);
+	override toJSON(): JSONPermissionOverwrite {
+		return {
+			...super.toJSON(),
+			permission: this.permission.toJSON(),
+			type:       this.type
+		};
 	}
 }

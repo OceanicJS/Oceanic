@@ -1,10 +1,12 @@
 import Channel from "./Channel";
 import type Guild from "./Guild";
 import type CategoryChannel from "./CategoryChannel";
+import type { GuildChannelTypes } from "../Constants";
 import { ChannelTypes, ThreadAutoArchiveDuration, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel, RawOverwrite } from "../types/channels";
 import type { Uncached } from "../types/shared";
+import type { JSONGuildChannel } from "../types/json";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
@@ -14,10 +16,10 @@ export default class GuildChannel extends Channel {
 	name: string;
 	/** The parent category of this channel. This can be a partial object with only an `id` property. */
 	parent: CategoryChannel | Uncached | null;
+	declare type: GuildChannelTypes;
 	constructor(data: RawGuildChannel, client: Client) {
 		super(data, client);
 		this.parent = null;
-		this.update(data);
 	}
 
 	protected update(data: Partial<RawGuildChannel>) {
@@ -56,12 +58,13 @@ export default class GuildChannel extends Channel {
 		return this._client.rest.channels.edit<AnyGuildChannel>(this.id, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"guild",
-			"name",
-			"parent",
-			...props
-		]);
+	override toJSON(): JSONGuildChannel {
+		return {
+			...super.toJSON(),
+			guild:  this.guild.id,
+			name:   this.name,
+			parent: this.parent ? this.parent.id : null,
+			type:   this.type
+		};
 	}
 }

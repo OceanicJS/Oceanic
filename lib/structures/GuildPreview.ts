@@ -2,6 +2,7 @@ import Base from "./Base";
 import type Client from "../Client";
 import type { GuildFeature } from "../Constants";
 import type { GuildEmoji, RawGuildPreview, Sticker } from "../types/guilds";
+import type { JSONGuildPreview } from "../types/json";
 
 /** A preview of a guild. */
 export default class GuildPreview extends Base {
@@ -46,19 +47,19 @@ export default class GuildPreview extends Base {
 		if (data.stickers !== undefined) this.stickers = data.stickers;
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"approximateMemberCount",
-			"approximatePresenceCount",
-			"description",
-			"discoverySplash",
-			"emojis",
-			"features",
-			"icon",
-			"name",
-			"splash",
-			"stickers",
-			...props
-		]);
+	override toJSON(): JSONGuildPreview {
+		return {
+			...super.toJSON(),
+			approximateMemberCount:   this.approximateMemberCount,
+			approximatePresenceCount: this.approximatePresenceCount,
+			description:              this.description,
+			discoverySplash:          this.discoverySplash,
+			emojis:                   this.emojis,
+			features:                 this.features,
+			icon:                     this.icon,
+			name:                     this.name,
+			splash:                   this.splash,
+			stickers:                 this.stickers
+		};
 	}
 }

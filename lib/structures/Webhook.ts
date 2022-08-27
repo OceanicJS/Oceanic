@@ -19,6 +19,7 @@ import type {
 } from "../types/webhooks";
 import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
+import type { JSONWebhook } from "../types/json";
 
 export default class Webhook extends Base {
 	/** The application associatd with this webhook. This can be a partial object with only an `id` property. */
@@ -144,7 +145,7 @@ export default class Webhook extends Base {
 	 * @param {String} [options.threadID] - The id of the thread to send the message to.
 	 * @returns {Promise<Message<T>>}
 	 */
-	async editMessage<T extends AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string) {
+	async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
 		const t = this.token || token;
 		if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
 		return this._client.rest.webhooks.editMessage<T>(this.id, t, messageID, options);
@@ -258,19 +259,19 @@ export default class Webhook extends Base {
 		return !this.sourceGuild?.icon ? null : this._client._formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"application",
-			"avatar",
-			"channel",
-			"guild",
-			"name",
-			"sourceChannel",
-			"sourceGuild",
-			"token",
-			"type",
-			"user",
-			...props
-		]);
+	override toJSON(): JSONWebhook {
+		return {
+			...super.toJSON(),
+			application:   this.application?.id || null,
+			avatar:        this.avatar,
+			channel:       this.channel?.id || null,
+			guild:         this.guild?.id || null,
+			name:          this.name,
+			sourceChannel: this.sourceChannel,
+			sourceGuild:   this.sourceGuild,
+			token:         this.token,
+			type:          this.type,
+			user:          this.user?.toJSON()
+		};
 	}
 }

@@ -3,6 +3,7 @@ import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { RawPartialApplication } from "../types/oauth";
+import type { JSONPartialApplication } from "../types/json";
 
 export class PartialApplication extends Base {
 	/** When false, only the application's owners can invite the bot to guilds. */
@@ -42,15 +43,15 @@ export class PartialApplication extends Base {
 		return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"botPublic",
-			"botRequireCodeGrant",
-			"description",
-			"icon",
-			"name",
-			"verifyKey",
-			...props
-		]);
+	override toJSON(): JSONPartialApplication {
+		return {
+			...super.toJSON(),
+			botPublic:           this.botPublic,
+			botRequireCodeGrant: this.botRequireCodeGrant,
+			description:         this.description,
+			icon:                this.icon,
+			name:                this.name,
+			verifyKey:           this.verifyKey
+		};
 	}
 }

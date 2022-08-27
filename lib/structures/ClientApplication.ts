@@ -4,7 +4,8 @@ import type Client from "../Client";
 import type { RawClientApplication } from "../types/oauth";
 import { ApplicationCommandTypes } from "../Constants";
 import type { AnyApplicationCommand, CreateApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions } from "../types/application-commands";
-import { ApplicationCommandPermission, GuildApplicationCommandPermissions } from "../types/application-commands";
+import { ApplicationCommandPermission, RESTGuildApplicationCommandPermissions } from "../types/application-commands";
+import type { JSONClientApplication } from "../types/json";
 
 /** A representation of the authorized client's application (typically recieved via gateway). */
 export default class ClientApplication extends Base {
@@ -160,7 +161,7 @@ export default class ClientApplication extends Base {
 	 * @param {Object} options
 	 * @param {String} [options.accessToken] - If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option.
 	 * @param {ApplicationCommandPermission[]} options.permissions - The permissions to set for the command.
-	 * @returns {Promise<GuildApplicationCommandPermissions>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions>}
 	 */
 	async editGuildCommandPermissions(guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions) {
 		return this._client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
@@ -215,7 +216,7 @@ export default class ClientApplication extends Base {
 	 *
 	 * @param {String} guildID - The id of the guild.
 	 * @param {String} commandID - The id of the command.
-	 * @returns {Promise<GuildApplicationCommandPermissions>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions>}
 	 */
 	async getGuildPermission(guildID: string, commandID: string) {
 		return this._client.rest.applicationCommands.getGuildPermission(this.id, guildID, commandID);
@@ -225,16 +226,16 @@ export default class ClientApplication extends Base {
 	 * Get the permissions for all commands in a guild.
 	 *
 	 * @param {String} guildID - The id of the guild.
-	 * @returns {Promise<GuildApplicationCommandPermissions[]>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions[]>}
 	 */
 	async getGuildPermissions(guildID: string) {
 		return this._client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"flags",
-			...props
-		]);
+	override toJSON(): JSONClientApplication {
+		return {
+			...super.toJSON(),
+			flags: this.flags
+		};
 	}
 }

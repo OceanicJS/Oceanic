@@ -1,10 +1,10 @@
 import type Guild from "./Guild";
 import type User from "./User";
-import Base from "./Base";
 import type Client from "../Client";
 import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
 import type { Uncached } from "../types/shared";
+import type { JSONGuildTemplate } from "../types/json";
 
 export default class GuildTemplate {
 	protected _client: Client;
@@ -88,19 +88,18 @@ export default class GuildTemplate {
 		return this._client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);
 	}
 
-	toJSON(props: Array<string> = []) {
-		return Base.prototype.toJSON.call(this, [
-			"code",
-			"createdAt",
-			"creator",
-			"description",
-			"isDirty",
-			"name",
-			"serializedSourceGuild",
-			"sourceGuild",
-			"updatedAt",
-			"usageCount",
-			...props
-		]);
+	toJSON(): JSONGuildTemplate {
+		return {
+			code:                  this.code,
+			createdAt:             this.createdAt.getTime(),
+			creator:               this.creator.toJSON(),
+			description:           this.description,
+			isDirty:               this.isDirty,
+			name:                  this.name,
+			serializedSourceGuild: this.serializedSourceGuild,
+			sourceGuild:           this.sourceGuild.id,
+			updatedAt:             this.updatedAt.getTime(),
+			usageCount:            this.usageCount
+		};
 	}
 }

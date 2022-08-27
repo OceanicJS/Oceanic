@@ -1,6 +1,7 @@
 import Base from "./Base";
 import type Client from "../Client";
 import type { RawAttachment } from "../types/channels";
+import type { JSONAttachment } from "../types/json";
 
 /** Represents a file attachment. */
 export default class Attachment extends Base {
@@ -35,18 +36,18 @@ export default class Attachment extends Base {
 		this.width = data.width;
 	}
 
-	toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"contentType",
-			"description",
-			"ephemeral",
-			"filename",
-			"height",
-			"proxyURL",
-			"size",
-			"url",
-			"width",
-			...props
-		]);
+	toJSON(): JSONAttachment {
+		return {
+			...super.toJSON(),
+			contentType: this.contentType,
+			description: this.description,
+			ephemeral:   this.ephemeral,
+			filename:    this.filename,
+			height:      this.height,
+			proxyURL:    this.proxyURL,
+			size:        this.size,
+			url:         this.url,
+			width:       this.width
+		};
 	}
 }

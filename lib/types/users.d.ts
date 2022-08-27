@@ -22,7 +22,8 @@ export interface RESTUser {
 }
 export type RawUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system" | "banner" | "accent_color"> & Required<Pick<RESTUser, "public_flags">>;
 export type RawUserWithMember = RawUser & Pick<RESTUser, "member">;
-export type RawExtendedUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
+export type RawOAuthUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "bot" | "system"> & Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
+export type RawExtendedUser = Pick<RawOAuthUser, "avatar" | "bot" | "discriminator" | "email" | "flags" | "id" | "mfa_enabled" | "username" | "verified">;
 
 export interface EditSelfUserOptions {
 	avatar?: Buffer | string | null;

@@ -9,7 +9,7 @@ import type {
 	EditApplicationCommandOptions,
 	EditApplicationCommandPermissionsOptions,
 	EditChatInputApplicationCommandOptions,
-	GuildApplicationCommandPermissions,
+	RESTGuildApplicationCommandPermissions,
 	RawApplicationCommand,
 	RawGuildApplicationCommandPermissions
 } from "../types/application-commands";
@@ -255,7 +255,7 @@ export default class ApplicationCommands extends BaseRoute {
 	 * @param {Object} options
 	 * @param {String} [options.accessToken] - If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option.
 	 * @param {ApplicationCommandPermission[]} options.permissions - The permissions to set for the command.
-	 * @returns {Promise<GuildApplicationCommandPermissions>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions>}
 	 */
 	async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions) {
 		return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
@@ -272,7 +272,7 @@ export default class ApplicationCommands extends BaseRoute {
 				guildID:       d.guild_id,
 				id:            d.id,
 				permissions:   d.permissions
-			} as GuildApplicationCommandPermissions;
+			} as RESTGuildApplicationCommandPermissions;
 		});
 	}
 
@@ -308,7 +308,7 @@ export default class ApplicationCommands extends BaseRoute {
 			method: "GET",
 			path:   Routes.APPLICATION_COMMANDS(applicationID),
 			query
-		}).then(data => data.map(d => new ApplicationCommand(d, this._client) as AnyApplicationCommand<W>));
+		}).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
 	}
 
 	/**
@@ -345,7 +345,7 @@ export default class ApplicationCommands extends BaseRoute {
 			method: "GET",
 			path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
 			query
-		}).then(data => data.map(d => new ApplicationCommand(d, this._client) as AnyApplicationCommand<W>));
+		}).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
 	}
 
 	/**
@@ -354,7 +354,7 @@ export default class ApplicationCommands extends BaseRoute {
 	 * @param {String} applicationID - The id of the application.
 	 * @param {String} guildID - The id of the guild.
 	 * @param {String} commandID - The id of the command.
-	 * @returns {Promise<GuildApplicationCommandPermissions>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions>}
 	 */
 	async getGuildPermission(applicationID: string, guildID: string, commandID: string) {
 		return this._manager.authRequest<RawGuildApplicationCommandPermissions>({
@@ -365,7 +365,7 @@ export default class ApplicationCommands extends BaseRoute {
 			guildID:       data.guild_id,
 			id:            data.id,
 			permissions:   data.permissions
-		}) as GuildApplicationCommandPermissions);
+		}) as RESTGuildApplicationCommandPermissions);
 	}
 
 	/**
@@ -373,7 +373,7 @@ export default class ApplicationCommands extends BaseRoute {
 	 *
 	 * @param {String} applicationID - The id of the application.
 	 * @param {String} guildID - The id of the guild.
-	 * @returns {Promise<GuildApplicationCommandPermissions[]>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions[]>}
 	 */
 	async getGuildPermissions(applicationID: string, guildID: string) {
 		return this._manager.authRequest<Array<RawGuildApplicationCommandPermissions>>({
@@ -384,6 +384,6 @@ export default class ApplicationCommands extends BaseRoute {
 			guildID:       d.guild_id,
 			id:            d.id,
 			permissions:   d.permissions
-		}) as GuildApplicationCommandPermissions));
+		}) as RESTGuildApplicationCommandPermissions));
 	}
 }

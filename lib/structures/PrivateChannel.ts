@@ -15,6 +15,7 @@ import type {
 import type { Uncached } from "../types/shared";
 import Collection from "../util/Collection";
 import { File } from "../types/request-handler";
+import type { JSONPrivateChannel } from "../types/json";
 
 /** Represents a direct message with a user. */
 export default class PrivateChannel extends Channel {
@@ -185,13 +186,14 @@ export default class PrivateChannel extends Channel {
 		return this._client.rest.channels.sendTyping(this.id);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"lastMessage",
-			"messages",
-			"recipient",
-			...props
-		]);
+	override toJSON(): JSONPrivateChannel {
+		return {
+			...super.toJSON(),
+			lastMessage: this.lastMessage?.id,
+			messages:    this.messages.map(message => message.id),
+			recipient:   this.recipient?.toJSON(),
+			type:        this.type
+		};
 	}
 
 	/**

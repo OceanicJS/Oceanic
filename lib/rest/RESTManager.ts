@@ -11,7 +11,7 @@ import type { RequestOptions } from "../types/request-handler";
 import ApplicationCommands from "../routes/ApplicationCommands";
 import Interactions from "../routes/Interactions";
 import * as Routes from "../util/Routes";
-import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/misc";
+import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
 
 export default class RESTManager {
 	private _client: Client;
@@ -37,6 +37,7 @@ export default class RESTManager {
 	}
 
 	get client() { return this._client; }
+	get options() { return this._handler.options; }
 
 	/** @hidden intentionally not documented - this is an internal function */
 	_convertImage(image: Buffer | string, name: string) {
@@ -58,11 +59,12 @@ export default class RESTManager {
 	 * @returns {Promise<GetBotGatewayResponse>}
 	 */
 	async getBotGateway() {
-		return this.request<RawGetBotGatewayResponse>({
+		return this.authRequest<RawGetBotGatewayResponse>({
 			method: "GET",
-			path:   Routes.GATEWAY
+			path:   Routes.GATEWAY_BOT
 		}).then(data => ({
 			url:               data.url,
+			maxConcurrency:    data.max_concurrency,
 			shards:            data.shards,
 			sessionStartLimit: {
 				total:          data.session_start_limit.total,

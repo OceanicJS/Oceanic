@@ -116,5 +116,5 @@ export const INTERACTION_CALLBACK = (interactionID: string, interactionToken: st
 
 // Misc
 export const GATEWAY = "/gateway" as const;
-export const GATEWAY_BOYCAR = "/gateway/bot" as const;
+export const GATEWAY_BOT = "/gateway/bot" as const;
 export const USER = (userID: string) => `/users/${userID}` as const;

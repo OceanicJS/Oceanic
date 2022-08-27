@@ -1,5 +1,6 @@
 import type Client from "../Client";
 import Properties from "../util/Properties";
+import type { JSONBase } from "../types/json";
 import { inspect } from "util";
 
 /** A base class which most other classes extend. */
@@ -37,24 +38,11 @@ export default abstract class Base {
 		return copy;
 	}
 
-	toJSON(props: Array<string> = []) {
-		const json: Record<string, unknown> = {};
-		if (this.id) {
-			json.id = this.id;
-			json.createdAt = this.createdAt;
-		}
-		for (const prop of props) {
-			const value = this[prop as never];
-			const type = typeof value;
-			if (value === undefined) continue;
-			else if (type !== "object" && type !== "function" && type !== "bigint" || value === null) json[prop] = value;
-			else if ((value as { toJSON(): unknown; }).toJSON !== undefined) json[prop] = (value as { toJSON(): unknown; }).toJSON();
-			else if ((value as Array<unknown>).values !== undefined) json[prop] = [...(value as Array<unknown>).values()];
-			else if (type === "bigint") json[prop] = (value as bigint).toString();
-			else if (type === "object") json[prop] = value;
-
-		}
-		return json;
+	toJSON(): JSONBase{
+		return {
+			createdAt: this.createdAt.getTime(),
+			id:        this.id
+		};
 	}
 
 	toString() {

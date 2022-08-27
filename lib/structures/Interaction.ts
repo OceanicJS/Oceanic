@@ -13,6 +13,7 @@ import type {
 import { InteractionTypes } from "../Constants";
 import Properties from "../util/Properties";
 import type { Uncached } from "../types/shared";
+import type { JSONInteraction } from "../types/json";
 
 export default class Interaction extends Base {
 	protected acknowledged: boolean;
@@ -44,14 +45,14 @@ export default class Interaction extends Base {
 		}
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"application",
-			"token",
-			"type",
-			"version",
-			...props
-		]);
+	override toJSON(): JSONInteraction {
+		return {
+			...super.toJSON(),
+			application: this.application.id,
+			token:       this.token,
+			type:        this.type,
+			version:     this.version
+		};
 	}
 }
 

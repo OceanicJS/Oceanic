@@ -1,11 +1,12 @@
 import Base from "./Base";
 import type StageChannel from "./StageChannel";
 import Guild from "./Guild";
-import type ScheduledEvent from "./ScheduledEvent";
+import ScheduledEvent from "./ScheduledEvent";
 import type { RawStageInstance } from "../types/stage-instances";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
 import type { Uncached } from "../types/shared";
+import type { JSONStageInstance } from "../types/json";
 
 export default class StageInstance extends Base {
 	/** The associated stage channel. This can be a partial with just an `id` property. */
@@ -34,15 +35,14 @@ export default class StageInstance extends Base {
 		if (data.topic !== undefined) this.topic = data.topic;
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"channel",
-			"discoverableDisabled",
-			"guild",
-			"privacyLevel",
-			"scheduledEvent",
-			"topic",
-			...props
-		]);
+	override toJSON(): JSONStageInstance {
+		return {
+			...super.toJSON(),
+			channel:              this.channel.id,
+			discoverableDisabled: this.discoverableDisabled,
+			guild:                this.guild.id,
+			scheduledEvent:       this.scheduledEvent instanceof ScheduledEvent ? this.scheduledEvent.toJSON() : this.scheduledEvent?.id,
+			topic:                this.topic
+		};
 	}
 }

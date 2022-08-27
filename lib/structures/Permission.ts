@@ -1,7 +1,7 @@
-import Base from "./Base";
 import type { Permission as PermissionNames } from "../Constants";
 import { Permissions } from "../Constants";
 import Properties from "../util/Properties";
+import type { JSONPermission } from "../types/json";
 
 export default class Permission {
 	private _json: Record<keyof typeof Permissions, boolean> | undefined;
@@ -40,12 +40,11 @@ export default class Permission {
 		return true;
 	}
 
-	toJSON(props: Array<string> = []) {
-		return Base.prototype.toJSON.call(this, [
-			"allow",
-			"deny",
-			...props
-		]);
+	toJSON(): JSONPermission {
+		return {
+			allow: this.allow.toString(),
+			deny:  this.deny.toString()
+		};
 	}
 
 	toString() {

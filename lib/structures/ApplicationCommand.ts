@@ -9,12 +9,13 @@ import type {
 	ApplicationCommandPermission,
 	CombinedApplicationCommandOption,
 	EditApplicationCommandPermissionsOptions,
-	GuildApplicationCommandPermissions,
+	RESTGuildApplicationCommandPermissions,
 	RawApplicationCommand,
 	RawApplicationCommandOption,
 	TypeToEdit
 } from "../types/application-commands";
 import type { Uncached } from "../types/shared";
+import type { JSONApplicationCommand } from "../types/json";
 
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
 	/** The the application this command is for. This can be a partial object with only an `id` property. */
@@ -27,8 +28,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	descriptionLocalizations?: Record<string, string> | null;
 	/** If this command can be used in direct messages (global commands only). */
 	dmPermission?: boolean;
-	/** The guild this command is in (guild commands only). This can be a partial object with only an `id` property. */
-	guild?: Guild | Uncached;
+	/** The guild this command is in (guild commands only). */
+	guild?: Guild;
 	/** The name of this command. */
 	name: string;
 	/** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
@@ -36,7 +37,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	/** The options on this command. Only valid for `CHAT_INPUT`. */
 	options?: Array<ApplicationCommandOptions>;
 	/** The [type](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types) of this command. */
-	type?: T;
+	type: T;
 	/** Autoincrementing version identifier updated during substantial record changes. */
 	version: string;
 	constructor(data: RawApplicationCommand, client: Client) {
@@ -46,7 +47,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 		this.description = data.description as never;
 		this.descriptionLocalizations = data.description_localizations;
 		this.dmPermission = data.dm_permission;
-		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+		this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
 		this.name = data.name;
 		this.nameLocalizations = data.name_localizations;
 		this.options = data.options?.map(o => ApplicationCommand._convertOption(o, "parsed"));
@@ -128,7 +129,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	 * @param {Object} options
 	 * @param {String} [options.accessToken] - If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option.
 	 * @param {ApplicationCommandPermission[]} options.permissions - The permissions to set for the command.
-	 * @returns {Promise<GuildApplicationCommandPermissions>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions>}
 	 */
 	async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions) {
 		if (!this.guild) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
@@ -138,27 +139,39 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 	/**
 	 * Get this command's permissions (guild commands only).
 	 *
-	 * @returns {Promise<GuildApplicationCommandPermissions>}
+	 * @returns {Promise<RESTGuildApplicationCommandPermissions>}
 	 */
 	async getGuildPermission() {
 		if (!this.guild) throw new Error("getGuildPermission cannot be used on global commands.");
 		return this._client.rest.applicationCommands.getGuildPermission(this.application.id, this.guild.id, this.id);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"application",
-			"defaultMemberPermissions",
-			"description",
-			"descriptionLocalizations",
-			"dmPermission",
-			"guild",
-			"name",
-			"nameLocalizations",
-			"options",
-			"type",
-			"version",
-			...props
-		]);
+	/**
+	 * Get a mention for this command.
+	 *
+	 * @param {String[]} sub - The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
+	 * @returns {String}
+	 */
+	mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]) {
+		let text = `${this.name}`;
+		if (sub?.length) text += ` ${sub.slice(0, 2).join(" ")}`;
+		return `<${text}:${this.id}>`;
+	}
+
+	override toJSON(): JSONApplicationCommand {
+		return {
+			...super.toJSON(),
+			application:              this.application.id,
+			defaultMemberPermissions: this.defaultMemberPermissions?.toJSON(),
+			description:              this.description,
+			descriptionLocalizations: this.descriptionLocalizations,
+			dmPermission:             this.dmPermission,
+			guild:                    this.guild?.id,
+			name:                     this.name,
+			nameLocalizations:        this.nameLocalizations,
+			options:                  this.options,
+			type:                     this.type,
+			version:                  this.version
+		};
 	}
 }

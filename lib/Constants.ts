@@ -59,6 +59,22 @@ export enum UserFlags {
 	BOT_HTTP_INTERACTIONS = 1 << 19
 }
 
+export enum ApplicationFlags {
+	EMBEDDED_RELEASED                = 2,
+	MANAGED_EMOJI                    = 4,
+	GROUP_DM_CREATE                  = 16,
+	GATEWAY_PRESENCE                 = 4096,
+	GATEWAY_PRESENCE_LIMITED         = 8192,
+	GATEWAY_GUILD_MEMBERS            = 16384,
+	GATEWAY_GUILD_MEMBERS_LIMITED    = 32768,
+	VERIFICATION_PENDING_GUILD_LIMIT = 65536,
+	EMBEDDED                         = 131072,
+	GATEWAY_MESSAGE_CONTENT          = 262144,
+	GATEWAY_MESSAGE_CONTENT_LIMITED  = 524288,
+	EMBEDDED_FIRST_PARTY             = 1048576,
+	APPLICATION_COMMAND_BADGE        = 2097152,
+}
+
 export const GuildFeatures = [
 	"ANIMATED_BANNER",
 	"ANIMATED_ICON",
@@ -239,49 +255,50 @@ export enum IntegrationExpireBehaviors {
 	KICK        = 1
 }
 
-// values won't be statically typed if we use bit shifting
+// values won't be statically typed if we use bit shifting, and enums can't use bigints
 export const Permissions = {
-	CREATE_INSTANT_INVITE:      1n,
-	KICK_MEMBERS:               2n,
-	BAN_MEMBERS:                4n,
-	ADMINISTRATOR:              8n,
-	MANAGE_CHANNELS:            16n,
-	MANAGE_GUILD:               32n,
-	ADD_REACTIONS:              64n,
-	VIEW_AUDIT_LOG:             128n,
-	PRIORITY_SPEAKER:           256n,
-	STREAM:                     512n,
-	VIEW_CHANNEL:               1024n,
-	SEND_MESSAGES:              2048n,
-	SEND_TTS_MESSAGES:          4096n,
-	MANAGE_MESSAGES:            8192n,
-	EMBED_LINKS:                16384n,
-	ATTACH_FILES:               32768n,
-	READ_MESSAGE_HISTORY:       65536n,
-	MENTION_EVERYONE:           131072n,
-	USE_EXTERNAL_EMOJIS:        262144n,
-	VIEW_GUILD_INSIGHTS:        524288n,
-	CONNECT:                    1048576n,
-	SPEAK:                      2097152n,
-	MUTE_MEMBERS:               4194304n,
-	DEAFEN_MEMBERS:             8388608n,
-	MOVE_MEMBERS:               16777216n,
-	USE_VAD:                    33554432n,
-	CHANGE_NICKNAME:            67108864n,
-	MANAGE_NICKNAMES:           134217728n,
-	MANAGE_ROLES:               268435456n,
-	MANAGE_WEBHOOKS:            536870912n,
-	MANAGE_EMOJIS_AND_STICKERS: 1073741824n,
-	USE_APPLICATION_COMMANDS:   2147483648n,
-	REQUEST_TO_SPEAK:           4294967296n,
-	MANAGE_EVENTS:              8589934592n,
-	MANAGE_THREADS:             17179869184n,
-	CREATE_PUBLIC_THREADS:      34359738368n,
-	CREATE_PRIVATE_THREADS:     68719476736n,
-	USE_EXTERNAL_STICKERS:      137438953472n,
-	SEND_MESSAGES_IN_THREADS:   274877906944n,
-	USE_EMBEDDED_ACTIVITIES:    549755813888n,
-	MODERATE_MEMBERS:           1099511627776n
+	CREATE_INSTANT_INVITE:               1n,
+	KICK_MEMBERS:                        2n,
+	BAN_MEMBERS:                         4n,
+	ADMINISTRATOR:                       8n,
+	MANAGE_CHANNELS:                     16n,
+	MANAGE_GUILD:                        32n,
+	ADD_REACTIONS:                       64n,
+	VIEW_AUDIT_LOG:                      128n,
+	PRIORITY_SPEAKER:                    256n,
+	STREAM:                              512n,
+	VIEW_CHANNEL:                        1024n,
+	SEND_MESSAGES:                       2048n,
+	SEND_TTS_MESSAGES:                   4096n,
+	MANAGE_MESSAGES:                     8192n,
+	EMBED_LINKS:                         16384n,
+	ATTACH_FILES:                        32768n,
+	READ_MESSAGE_HISTORY:                65536n,
+	MENTION_EVERYONE:                    131072n,
+	USE_EXTERNAL_EMOJIS:                 262144n,
+	VIEW_GUILD_INSIGHTS:                 524288n,
+	CONNECT:                             1048576n,
+	SPEAK:                               2097152n,
+	MUTE_MEMBERS:                        4194304n,
+	DEAFEN_MEMBERS:                      8388608n,
+	MOVE_MEMBERS:                        16777216n,
+	USE_VAD:                             33554432n,
+	CHANGE_NICKNAME:                     67108864n,
+	MANAGE_NICKNAMES:                    134217728n,
+	MANAGE_ROLES:                        268435456n,
+	MANAGE_WEBHOOKS:                     536870912n,
+	MANAGE_EMOJIS_AND_STICKERS:          1073741824n,
+	USE_APPLICATION_COMMANDS:            2147483648n,
+	REQUEST_TO_SPEAK:                    4294967296n,
+	MANAGE_EVENTS:                       8589934592n,
+	MANAGE_THREADS:                      17179869184n,
+	CREATE_PUBLIC_THREADS:               34359738368n,
+	CREATE_PRIVATE_THREADS:              68719476736n,
+	USE_EXTERNAL_STICKERS:               137438953472n,
+	SEND_MESSAGES_IN_THREADS:            274877906944n,
+	USE_EMBEDDED_ACTIVITIES:             549755813888n,
+	MODERATE_MEMBERS:                    1099511627776n,
+	VIEW_CREATOR_MONETIZATION_ANALYTICS: 2199023255552n
 } as const;
 export type Permission = keyof typeof Permissions;
 export const AllGuildPermissions = Permissions.KICK_MEMBERS |
@@ -297,7 +314,8 @@ export const AllGuildPermissions = Permissions.KICK_MEMBERS |
 	Permissions.MANAGE_WEBHOOKS |
 	Permissions.MANAGE_EMOJIS_AND_STICKERS |
 	Permissions.MANAGE_EVENTS |
-	Permissions.MODERATE_MEMBERS;
+	Permissions.MODERATE_MEMBERS |
+	Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS;
 export const AllTextPermissions = Permissions.CREATE_INSTANT_INVITE |
 	Permissions.MANAGE_CHANNELS |
 	Permissions.ADD_REACTIONS |
@@ -460,7 +478,8 @@ export enum MessageTypes {
 	THREAD_STARTER_MESSAGE                       = 21,
 	GUILD_INVITE_REMINDER                        = 22,
 	CONTEXT_MENU_COMMAND                         = 23,
-	AUTO_MODERATION_ACTION                       = 24
+	AUTO_MODERATION_ACTION                       = 24,
+	ROLE_SUBSCRIPTION_PURCHASE   			     = 25,
 }
 
 export enum MessageActivityTypes {
@@ -632,4 +651,132 @@ export enum InteractionResponseTypes {
 	UPDATE_MESSAGE                          = 7,
 	APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
 	MODAL                                   = 9
+}
+
+export enum Intents {
+	GUILDS                        = 1,
+	GUILD_MEMBERS                 = 2,
+	GUILD_BANS                    = 4,
+	GUILD_EMOJIS_AND_STICKERS     = 8,
+	GUILD_INTEGRATIONS            = 16,
+	GUILD_WEBHOOKS                = 32,
+	GUILD_INVITES                 = 64,
+	GUILD_VOICE_STATES            = 128,
+	GUILD_PRESENCES               = 256,
+	GUILD_MESSAGES                = 512,
+	GUILD_MESSAGE_REACTIONS       = 1024,
+	GUILD_MESSAGE_TYPING          = 2048,
+	DIRECT_MESSAGES               = 4096,
+	DIRECT_MESSAGE_REACTIONS      = 8192,
+	DIRECT_MESSAGE_TYPING         = 16384,
+	MESSAGE_CONTENT               = 32768,
+	GUILD_SCHEDULED_EVENTS        = 65536,
+	AUTO_MODERATION_CONFIGURATION = 1048576,
+	AUTO_MODERATION_EXECUTION     = 2097152
+}
+
+export type IntentNames = keyof typeof Intents;
+
+export const AllNonPrivilegedIntents =
+	Intents.GUILDS |
+	Intents.GUILD_BANS |
+	Intents.GUILD_EMOJIS_AND_STICKERS |
+	Intents.GUILD_INTEGRATIONS |
+	Intents.GUILD_WEBHOOKS |
+	Intents.GUILD_INVITES |
+	Intents.GUILD_VOICE_STATES |
+	Intents.GUILD_MESSAGES |
+	Intents.GUILD_MESSAGE_REACTIONS |
+	Intents.GUILD_MESSAGE_TYPING |
+	Intents.DIRECT_MESSAGES |
+	Intents.DIRECT_MESSAGE_REACTIONS |
+	Intents.DIRECT_MESSAGE_TYPING |
+	Intents.GUILD_SCHEDULED_EVENTS |
+	Intents.AUTO_MODERATION_CONFIGURATION |
+	Intents.AUTO_MODERATION_EXECUTION;
+export const AllPrivilegedIntents =
+	Intents.GUILD_MEMBERS |
+	Intents.GUILD_PRESENCES |
+	Intents.MESSAGE_CONTENT;
+export const AllIntents = AllNonPrivilegedIntents | AllPrivilegedIntents;
+
+export enum GatewayOPCodes {
+	DISPATCH              = 0,
+	HEARTBEAT             = 1,
+	IDENTIFY              = 2,
+	PRESENCE_UPDATE       = 3,
+	VOICE_STATE_UPDATE    = 4,
+	RESUME                = 6,
+	RECONNECT             = 7,
+	REQUEST_GUILD_MEMBERS = 8,
+	INVALID_SESSION       = 9,
+	HELLO                 = 10,
+	HEARTBEAT_ACK         = 11,
+}
+
+export enum GatewayCloseCodes {
+	UNKNOWN_ERROR         = 4000,
+	UNKNOWN_OPCODE        = 4001,
+	DECODE_ERROR          = 4002,
+	NOT_AUTHENTICATED     = 4003,
+	AUTHENTICATION_FAILED = 4004,
+	ALREADY_AUTHENTICATED = 4005,
+	INVALID_SEQUENCE      = 4007,
+	RATE_LIMITED          = 4008,
+	SESSION_TIMEOUT       = 4009,
+	INVALID_SHARD         = 4010,
+	SHARDING_REQUIRED     = 4011,
+	INVALID_API_VERSION   = 4012,
+	INVALID_INTENTS       = 4013,
+	DISALLOWED_INTENTS    = 4014,
+}
+
+export enum VoiceOPCodes {
+	IDENTIFY            = 0,
+	SELECT_PROTOCOL     = 1,
+	READY               = 2,
+	HEARTBEAT           = 3,
+	SESSION_DESCRIPTION = 4,
+	SPEAKING            = 5,
+	HEARTBEAT_ACK       = 6,
+	RESUME              = 7,
+	HELLO               = 8,
+	RESUMED             = 9,
+	CLIENT_DISCONNECT   = 13
+}
+
+export enum VoiceCloseCodes {
+	UNKNOWN_OPCODE          = 4001,
+	DECODE_ERROR            = 4002,
+	NOT_AUTHENTICATED       = 4003,
+	AUTHENTICATION_FAILED   = 4004,
+	ALREADY_AUTHENTICATED   = 4005,
+	INVALID_SESSION         = 4006,
+	SESSION_TIMEOUT         = 4009,
+	SERVER_NOT_FOUND        = 4011,
+	UNKNOWN_PROTOCOL        = 4012,
+	DISCONNECTED            = 4013,
+	VOICE_SERVER_CRASHED    = 4014,
+	UNKNOWN_ENCRYPTION_MODE = 4015,
+}
+
+export enum ActivityTypes {
+	GAME      = 0,
+	STREAMING = 1,
+	LISTENING = 2,
+	WATCHING  = 3,
+	CUSTOM    = 4,
+	COMPETING = 5
+}
+
+export enum ActivityFlags {
+	INSTANCE                    = 1,
+	JOIn                        = 2,
+	SPECTATE                    = 4,
+	JOIN_REQUEST                = 8,
+	SYNC                        = 16,
+	PLAY                        = 32,
+	PARTY_PRIVACY_FRIENDS_ONLY  = 64,
+	PARTY_PRIVACY_VOICE_CHANNEL = 128,
+	EMBEDDED                    = 256
 }

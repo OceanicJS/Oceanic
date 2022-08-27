@@ -1,6 +1,6 @@
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
-import type User from "./User";
+import User from "./User";
 import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -14,10 +14,11 @@ import type {
 	GetReactionsOptions,
 	RawMessage,
 	RawThreadChannel,
-	RESTThreadMember
+	ThreadMember
 } from "../types/channels";
 import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
+import type { JSONThreadChannel } from "../types/json";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel> extends GuildChannel {
@@ -27,6 +28,8 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	lastMessage: Message | Uncached | null;
 	/** The approximate number of members in this thread. Stops counting after 50. */
 	memberCount: number;
+	/** The members of this thread. */
+	members: Array<ThreadMember>;
 	/** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
 	messageCount: number;
 	/** The cached messages in this channel. */
@@ -42,6 +45,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	declare type: ThreadChannelTypes;
 	constructor(data: RawThreadChannel, client: Client) {
 		super(data, client);
+		this.members = [];
 		this.messages = new Collection(Message, client);
 		this.update(data);
 	}
@@ -49,6 +53,17 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	protected update(data: Partial<RawThreadChannel>) {
 		if (data.flags !== undefined) this.flags = data.flags;
 		if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+		if (data.member) {
+			const index = this.members.findIndex(m => m.userID === this._client.user!.id);
+			if (index === -1) this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this._client.user!.id });
+			else {
+				this.members[index] = {
+					...this.members[index],
+					flags:         data.member.flags,
+					joinTimestamp: new Date(data.member.join_timestamp)
+				};
+			}
+		}
 		if (data.member_count !== undefined) this.memberCount = data.member_count;
 		if (data.message_count !== undefined) this.messageCount = data.message_count;
 		if (data.owner_id !== undefined) this.owner = this._client.users.get(data.owner_id) || { id: data.owner_id };
@@ -101,7 +116,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	 * @param {Boolean} [options.tts] - If the message should be spoken aloud.
 	 * @returns {Promise<Message>}
 	 */
-	async createMessage(options: CreateMessageOptions) {
+	async createMessage(options: CreateMessageOptions): Promise<Message<T>> {
 		return this._client.rest.channels.createMessage<T>(this.id, options);
 	}
 
@@ -205,7 +220,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	 * Get a thread member in this thread.
 	 *
 	 * @param {String} userID - The id of the user to get the thread member of.
-	 * @returns {Promise<RESTThreadMember>}
+	 * @returns {Promise<ThreadMember>}
 	 */
 	async getMember(userID: string) {
 		return this._client.rest.channels.getThreadMember(this.id, userID);
@@ -214,7 +229,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	/**
 	 * Get the members of this thread.
 	 *
-	 * @returns {Promise<RESTThreadMember[]>}
+	 * @returns {Promise<ThreadMember[]>}
 	 */
 	async getMembers() {
 		return this._client.rest.channels.getThreadMembers(this.id);
@@ -226,7 +241,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	 * @param {String} messageID - The id of the message to get.
 	 * @returns {Promise<Message>}
 	 */
-	async getMessage(messageID: string) {
+	async getMessage(messageID: string): Promise<Message<T>> {
 		return this._client.rest.channels.getMessage<T>(this.id, messageID);
 	}
 
@@ -240,7 +255,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	 * @param {Number} [options.limit] - The maximum amount of messages to get.
 	 * @returns {Promise<Message[]>}
 	 */
-	async getMessages(options?: GetChannelMessagesOptions) {
+	async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
 		return this._client.rest.channels.getMessages<T>(this.id, options);
 	}
 
@@ -249,7 +264,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 	 *
 	 * @returns {Promise<Message[]>}
 	 */
-	async getPinnedMessages() {
+	async getPinnedMessages(): Promise<Array<Message<T>>> {
 		return this._client.rest.channels.getPinnedMessages<T>(this.id);
 	}
 
@@ -315,19 +330,20 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
 		return this._client.rest.channels.sendTyping(this.id);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"flags",
-			"lastMessage",
-			"memberCount",
-			"messageCount",
-			"messages",
-			"owner",
-			"rateLimitPerUser",
-			"threadMetadata",
-			"totalMessageSent",
-			...props
-		]);
+	override toJSON(): JSONThreadChannel {
+		return {
+			...super.toJSON(),
+			flags:            this.flags,
+			lastMessage:      this.lastMessage?.id || null,
+			memberCount:      this.memberCount,
+			messageCount:     this.messageCount,
+			messages:         this.messages.map(m => m.id),
+			owner:            this.owner instanceof User ? this.owner.toJSON() : this.owner?.id,
+			rateLimitPerUser: this.rateLimitPerUser,
+			threadMetadata:   this.threadMetadata,
+			totalMessageSent: this.totalMessageSent,
+			type:		           this.type
+		};
 	}
 
 	/**

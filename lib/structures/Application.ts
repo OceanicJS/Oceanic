@@ -7,6 +7,7 @@ import type { InstallParams, RESTApplication } from "../types/oauth";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { Uncached } from "../types/shared";
+import type { JSONApplication } from "../types/json";
 
 /** Represents an oauth application. */
 export default class Application extends ClientApplication {
@@ -84,27 +85,27 @@ export default class Application extends ClientApplication {
 		return this.coverImage === null ? null : this._client._formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"botPublic",
-			"botRequireCodeGrant",
-			"coverImage",
-			"customInstallURL",
-			"description",
-			"guild",
-			"icon",
-			"installParams",
-			"name",
-			"owner",
-			"primarySKUID",
-			"privacyPolicyURL",
-			"rpcOrigins",
-			"slug",
-			"tags",
-			"team",
-			"termsOfServiceURL",
-			"verifyKey",
-			...props
-		]);
+	override toJSON(): JSONApplication {
+		return {
+			...super.toJSON(),
+			botPublic:           this.botPublic,
+			botRequireCodeGrant: this.botRequireCodeGrant,
+			coverImage:          this.coverImage,
+			customInstallURL:    this.customInstallURL,
+			description:         this.description,
+			guild:               this.guild?.id,
+			icon:                this.icon,
+			installParams:       this.installParams,
+			name:                this.name,
+			owner:               this.owner.id,
+			primarySKUID:        this.primarySKUID,
+			privacyPolicyURL:    this.privacyPolicyURL,
+			rpcOrigins:          this.rpcOrigins,
+			slug:                this.slug,
+			tags:                this.tags,
+			team:                this.team?.toJSON() || null,
+			termsOfServiceURL:   this.termsOfServiceURL,
+			verifyKey:           this.verifyKey
+		};
 	}
 }

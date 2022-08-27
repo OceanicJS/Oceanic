@@ -1,7 +1,6 @@
 import Base from "./Base";
 import Attachment from "./Attachment";
 import User from "./User";
-import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import GuildChannel from "./GuildChannel";
 import Guild from "./Guild";
@@ -19,7 +18,6 @@ import type { Uncached } from "../types/shared";
 import type {
 	AnyGuildTextChannel,
 	AnyTextChannel,
-	AnyThreadChannel,
 	ChannelMention,
 	EditMessageOptions,
 	Embed,
@@ -27,16 +25,17 @@ import type {
 	MessageActionRow,
 	MessageActivity,
 	MessageInteraction,
-	MessageReaction,
 	MessageReference,
 	RawAttachment,
 	RawMessage,
 	StartThreadFromMessageOptions,
-	StickerItem
+	StickerItem,
+	MessageReaction
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import { File } from "../types/request-handler";
+import type { JSONMessage } from "../types/json";
 
 export default class Message<T extends AnyTextChannel = AnyTextChannel> extends Base {
 	/** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
@@ -65,6 +64,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	flags?: number;
 	/** The interaction info, if this message was the result of an interaction. */
 	interaction?: MessageInteraction;
+	member?: Member;
 	/** Channels mentioned in a `CROSSPOSTED` channel follower message. See [Discord's docs](https://discord.com/developers/docs/resources/channel#channel-mention-object) for more information. */
 	mentionChannels?: Array<ChannelMention>;
 	/** The mentions in this message. */
@@ -89,14 +89,14 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 	/** This message's relative position, if in a thread. */
 	position?: number;
 	/** The reactions on this message. */
-	reactions?: Array<MessageReaction>;
+	reactions: Record<string, MessageReaction>;
 	/** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, */
 	referencedMessage?: Message | null;
 	// stickers exists, but is deprecated
 	/** The sticker items on this message. */
 	stickerItems?: Array<StickerItem>;
 	/** The thread associated with this message, if any. */
-	thread?: ThreadChannel;
+	thread?: AnnouncementThreadChannel | PublicThreadChannel;
 	/** The timestamp at which this message was sent. */
 	timestamp: Date;
 	/** If this message was read aloud. */
@@ -115,6 +115,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		if (data.attachments) {
 			for (const attachment of data.attachments) this.attachments.update(attachment);
 		}
+		if (data.member) this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, id: data.member.user!.id }, this.channel.guild.id) : undefined;
 		this.channel = this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
 			id: data.channel_id
 		};
@@ -125,6 +126,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 			roles:    [],
 			users:    []
 		};
+		this.reactions = {};
 		this.timestamp = new Date(data.timestamp);
 		this.tts = data.tts;
 		this.type = data.type;
@@ -183,6 +185,15 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		if (data.nonce !== undefined) this.nonce = data.nonce;
 		if (data.pinned !== undefined) this.pinned = data.pinned;
 		if (data.position !== undefined) this.position = data.position;
+		if (data.reactions) {
+			data.reactions.forEach(reaction => {
+				const name = reaction.emoji.id ? `${reaction.emoji.name}:${reaction.emoji.id}` : reaction.emoji.name;
+				this.reactions[name] = {
+					count: reaction.count,
+					me:    reaction.me
+				};
+			});
+		}
 		if (data.referenced_message !== undefined) {
 			if (data.referenced_message === null) this.referencedMessage = null;
 			else {
@@ -192,8 +203,8 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		}
 		if (data.sticker_items !== undefined) this.stickerItems = data.sticker_items;
 		if (data.thread !== undefined) {
-			if ("threads" in this.channel) this.thread = this.channel.threads.add(Channel.from<AnyThreadChannel>(data.thread, this._client));
-			else this.thread = Channel.from<AnyThreadChannel>(data.thread, this._client);
+			if ("threads" in this.channel) this.thread = this.channel.threads.add(Channel.from<AnnouncementThreadChannel | PublicThreadChannel>(data.thread, this._client));
+			else this.thread = Channel.from<AnnouncementThreadChannel | PublicThreadChannel>(data.thread, this._client);
 		}
 	}
 
@@ -342,35 +353,47 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
 		return this._client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"activity",
-			"application",
-			"attachments",
-			"author",
-			"channel",
-			"components",
-			"content",
-			"editedTimestamp",
-			"embeds",
-			"flags",
-			"interaction",
-			"mentionChannels",
-			"mentions",
-			"messageReference",
-			"nonce",
-			"pinned",
-			"position",
-			"reactions",
-			"referencedMessage",
-			"stickerItems",
-			"thread",
-			"timestamp",
-			"tts",
-			"type",
-			"webhook",
-			...props
-		]);
+	override toJSON(): JSONMessage {
+		return {
+			...super.toJSON(),
+			activity:        this.activity,
+			application:     this.application instanceof PartialApplication ? this.application.toJSON() : this.application?.id,
+			attachments:     this.attachments.map(attachment => attachment.toJSON()),
+			author:          this.author.toJSON(),
+			channel:         this.channel.id,
+			components:      this.components,
+			content:         this.content,
+			editedTimestamp: this.editedTimestamp?.getTime() || null,
+			embeds:          this.embeds,
+			flags:           this.flags,
+			interaction:     !this.interaction ? undefined : {
+				id:     this.interaction.id,
+				member: this.interaction.member?.toJSON(),
+				name:   this.interaction.name,
+				type:   this.interaction.type,
+				user:   this.interaction.user.toJSON()
+			},
+			mentionChannels: this.mentionChannels,
+			mentions:        {
+				channels: this.mentions.channels,
+				everyone: this.mentions.everyone,
+				members:  this.mentions.members.map(member => member.toJSON()),
+				roles:    this.mentions.roles,
+				users:    this.mentions.users.map(user => user.toJSON())
+			},
+			messageReference:  this.messageReference,
+			nonce:             this.nonce,
+			pinned:            this.pinned,
+			position:          this.position,
+			reactions:         this.reactions,
+			referencedMessage: this.referencedMessage?.toJSON(),
+			stickerItems:      this.stickerItems,
+			thread:		          this.thread?.toJSON(),
+			timestamp:         this.timestamp.getTime(),
+			tts:               this.tts,
+			type:              this.type,
+			webhook:           this.webhook?.id
+		};
 	}
 
 	/**

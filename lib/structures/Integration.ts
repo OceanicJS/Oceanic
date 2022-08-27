@@ -4,6 +4,7 @@ import User from "./User";
 import type { IntegrationAccount, RawIntegration } from "../types/guilds";
 import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
 import type Client from "../Client";
+import type { JSONIntegration } from "../types/json";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {
@@ -56,23 +57,23 @@ export default class Integration extends Base {
 		if (data.user !== undefined) this.user = new User(data.user, this._client);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"account",
-			"application",
-			"enableEmoticons",
-			"enabled",
-			"expireBehavior",
-			"expireGracePeriod",
-			"name",
-			"revoked",
-			"roleID",
-			"subscriberCount",
-			"syncedAt",
-			"syncing",
-			"type",
-			"user",
-			...props
-		]);
+	override toJSON(): JSONIntegration {
+		return {
+			...super.toJSON(),
+			account:           this.account,
+			application:       this.application?.toJSON(),
+			enableEmoticons:   this.enableEmoticons,
+			enabled:           this.enabled,
+			expireBehavior:    this.expireBehavior,
+			expireGracePeriod: this.expireGracePeriod,
+			name:              this.name,
+			revoked:           this.revoked,
+			roleID:            this.roleID,
+			subscriberCount:   this.subscriberCount,
+			syncedAt:          this.syncedAt?.getTime(),
+			syncing:           this.syncing,
+			type:              this.type,
+			user:              this.user?.toJSON()
+		};
 	}
 }

@@ -4,6 +4,7 @@ import type Guild from "./Guild";
 import type Client from "../Client";
 import type { RawRole, RoleTags } from "../types/guilds";
 import type { Uncached } from "../types/shared";
+import type { JSONRole } from "../types/json";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
@@ -63,19 +64,20 @@ export default class Role extends Base {
 		return this._client.rest.guilds.deleteRole(this.guild.id, this.id, reason);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"color",
-			"hoist",
-			"icon",
-			"managed",
-			"mentionable",
-			"name",
-			"permissions",
-			"position",
-			"tags",
-			"unicodeEmoji",
-			...props
-		]);
+	override toJSON(): JSONRole {
+		return {
+			...super.toJSON(),
+			color:        this.color,
+			guild:        this.guild.id,
+			hoist:        this.hoist,
+			icon:         this.icon,
+			managed:      this.managed,
+			mentionable:  this.mentionable,
+			name:         this.name,
+			permissions:  this.permissions.toJSON(),
+			position:     this.position,
+			tags:         this.tags,
+			unicodeEmoji: this.unicodeEmoji
+		};
 	}
 }

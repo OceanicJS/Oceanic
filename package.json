@@ -23,22 +23,28 @@
   },
   "homepage": "https://github.com/DonovanDMC/Oceanic#readme",
   "devDependencies": {
-    "@types/node": "^18.6.4",
+    "@types/node": "^16.11.56",
+    "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.3",
     "@uwu-codes/eslint-config": "^1.0.55",
     "@uwu-codes/tsconfig": "^1.0.1",
-    "eslint": "^8.21.0",
+    "eslint": "^8.22.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.10",
     "typedoc-plugin-rename-defaults": "^0.6.4"
   },
   "dependencies": {
     "@augu/collections": "^1.1.0",
-    "tsafe": "^0.10.1",
-    "undici": "^5.8.1",
+    "tsafe": "^1.0.0",
+    "undici": "^5.10.0",
     "ws": "^8.8.1"
   },
   "engines": {
     "node": ">=16.16.0"
+  },
+  "optionalDependencies": {
+    "erlpack": "^0.1.4",
+    "pako": "^2.0.4",
+    "zlib-sync": "^0.1.7"
   }
 }

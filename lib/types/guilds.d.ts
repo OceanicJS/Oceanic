@@ -1,5 +1,16 @@
 import type { RawUser } from "./users";
-import type { AnyThreadChannel, OverwriteOptions, RawChannel, RESTThreadMember } from "./channels";
+import type {
+	AnyThreadChannel,
+	OverwriteOptions,
+	RawChannel,
+	RawGuildChannel,
+	RawThreadChannel,
+	ThreadMember
+} from "./channels";
+import type { RawScheduledEvent } from "./scheduled-events";
+import type { PresenceUpdate } from "./gateway";
+import type { RawStageInstance } from "./stage-instances";
+import type { RawVoiceState } from "./voice";
 import type {
 	ChannelTypes,
 	DefaultMessageNotificationLevels,
@@ -19,6 +30,8 @@ import type {
 } from "../Constants";
 import type User from "../structures/User";
 
+// @TODO channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
+// stage_instances, threads, unavailable, voice_states - all gateway only
 export interface RawGuild {
 	afk_channel_id: string | null;
 	afk_timeout: number;
@@ -26,18 +39,24 @@ export interface RawGuild {
 	approximate_member_count?: number;
 	approximate_presence_count?: number;
 	banner: string | null;
+	channels: Array<RawGuildChannel>;
 	default_message_notifications: DefaultMessageNotificationLevels;
 	description: string | null;
 	discovery_splash: string | null;
 	emojis: Array<RawGuildEmoji>;
 	explicit_content_filter: ExplicitContentFilterLevels;
 	features: Array<GuildFeature>;
+	guild_scheduled_events: Array<RawScheduledEvent>;
 	icon: string | null;
 	icon_hash?: string | null;
 	id: string;
+	joined_at: string;
+	large: boolean;
 	max_members?: number;
 	max_presences?: number;
 	max_video_channel_users?: number;
+	member_count: number;
+	members: Array<RawMember>;
 	mfa_level: MFALevels;
 	name: string;
 	nsfw_level: GuildNSFWLevels;
@@ -48,17 +67,21 @@ export interface RawGuild {
 	premium_progress_bar_enabled: boolean;
 	premium_subscription_count?: number;
 	premium_tier: PremiumTiers;
+	presences: Array<PresenceUpdate>;
 	public_updates_channel_id: string | null;
-	/** @deprecated */
 	region?: string | null;
 	roles: Array<RawRole>;
 	rules_channel_id: string | null;
 	splash: string | null;
+	stage_instances: Array<RawStageInstance>;
 	stickers?: Array<Sticker>;
 	system_channel_flags: number;
 	system_channel_id: string | null;
+	threads: Array<RawThreadChannel>;
+	unavailable: false;
 	vanity_url_code: string | null;
 	verification_level: VerificationLevels;
+	voice_states: Array<RawVoiceState>;
 	welcome_screen?: RawWelcomeScreen;
 	widget_channel_id?: string | null;
 	widget_enabled?: boolean;
@@ -88,12 +111,12 @@ export interface Emoji {
 	available?: boolean;
 	id: string;
 	managed?: boolean;
-	name: string | null; // null in reaction emoji objects?
+	name: string;
 	require_colons?: boolean;
 	roles?: Array<string>;
 	user?: RawUser;
 }
-export type RawGuildEmoji = Required<Omit<Emoji, "name" | "user">> & { name: string; user?: RawUser; };
+export type RawGuildEmoji = Required<Omit<Emoji, "user">> & { user?: RawUser; };
 export type GuildEmoji = Omit<RawGuildEmoji, "user"> & { user?: User; };
 export interface RawWelcomeScreen {
 	description: string | null;
@@ -139,12 +162,12 @@ export interface RawMember {
 	flags?: number;
 	/** undocumented */
 	is_pending?: boolean;
-	joined_at: string;
+	joined_at: string | null;
 	mute: boolean;
 	nick?: string | null;
 	pending?: boolean;
 	permissions?: string;
-	premium_since?: string;
+	premium_since?: string | null;
 	roles: Array<string>;
 	user?: RawUser;
 }
@@ -293,7 +316,7 @@ export interface ModifyChannelPositionsEntry {
 }
 
 export interface GetActiveThreadsResponse {
-	members: Array<RESTThreadMember>;
+	members: Array<ThreadMember>;
 	threads: Array<AnyThreadChannel>;
 }
 
@@ -438,4 +461,15 @@ export interface EditUserVoiceStateOptions {
 
 export interface EditCurrentUserVoiceStateOptions extends EditUserVoiceStateOptions {
 	requestToSpeakTimestamp?: string | null;
+}
+
+export interface RawUnavailableGuild {
+	id: string;
+	unavailable: true;
+}
+
+export interface RawGuild {
+	afkChannelID: string | null;
+	afkTimeout: number;
+	applicationID: string | null;
 }

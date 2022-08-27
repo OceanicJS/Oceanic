@@ -24,8 +24,7 @@ import type {
 	RawOverwrite,
 	RawPrivateThreadChannel,
 	RawPublicThreadChannel,
-	RawRESTThreadMember,
-	RESTThreadMember,
+	ThreadMember,
 	StartThreadFromMessageOptions,
 	StartThreadInForumOptions,
 	StartThreadWithoutMessageOptions,
@@ -33,7 +32,8 @@ import type {
 	GetInviteWithCountsAndExpirationOptions,
 	GetInviteWithCountsOptions,
 	GetInviteWithExpirationOptions,
-	GetInviteWithNoneOptions
+	GetInviteWithNoneOptions,
+	RawThreadMember
 } from "../types/channels";
 import type {
 	ChannelTypes,
@@ -548,7 +548,7 @@ export default class Channels extends BaseRoute {
 				id:            m.id,
 				joinTimestamp: new Date(m.join_timestamp),
 				userID:        m.user_id
-			}) as RESTThreadMember),
+			}) as ThreadMember),
 			threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this._client))
 		}) as ArchivedThreads<PrivateThreadChannel>);
 	}
@@ -631,7 +631,7 @@ export default class Channels extends BaseRoute {
 				id:            m.id,
 				joinTimestamp: new Date(m.join_timestamp),
 				userID:        m.user_id
-			}) as RESTThreadMember),
+			}) as ThreadMember),
 			threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this._client))
 		}) as ArchivedThreads<PrivateThreadChannel>);
 	}
@@ -661,7 +661,7 @@ export default class Channels extends BaseRoute {
 				id:            m.id,
 				joinTimestamp: new Date(m.join_timestamp),
 				userID:        m.user_id
-			}) as RESTThreadMember),
+			}) as ThreadMember),
 			threads: data.threads.map(d => Channel.from<T>(d, this._client))
 		}) as ArchivedThreads<T>);
 	}
@@ -694,10 +694,10 @@ export default class Channels extends BaseRoute {
 	 *
 	 * @param {String} id - The id of the thread.
 	 * @param {String} userID - The id of the user to get the thread member of.
-	 * @returns {Promise<RESTThreadMember>}
+	 * @returns {Promise<ThreadMember>}
 	 */
 	async getThreadMember(id: string, userID: string) {
-		return this._manager.authRequest<RawRESTThreadMember>({
+		return this._manager.authRequest<RawThreadMember>({
 			method: "GET",
 			path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
 		}).then(data => ({
@@ -705,17 +705,17 @@ export default class Channels extends BaseRoute {
 			id:            data.id,
 			joinTimestamp: new Date(data.join_timestamp),
 			userID:        data.user_id
-		}) as RESTThreadMember);
+		}) as ThreadMember);
 	}
 
 	/**
 	 * Get the members of a thread.
 	 *
 	 * @param {String} id - The id of the thread.
-	 * @returns {Promise<RESTThreadMember[]>}
+	 * @returns {Promise<ThreadMember[]>}
 	 */
 	async getThreadMembers(id: string) {
-		return this._manager.authRequest<Array<RawRESTThreadMember>>({
+		return this._manager.authRequest<Array<RawThreadMember>>({
 			method: "GET",
 			path:   Routes.CHANNEL_THREAD_MEMBERS(id)
 		}).then(data => data.map(d => ({
@@ -723,7 +723,7 @@ export default class Channels extends BaseRoute {
 			id:            d.id,
 			joinTimestamp: new Date(d.join_timestamp),
 			userID:        d.user_id
-		}) as RESTThreadMember));
+		}) as ThreadMember));
 	}
 
 	/**

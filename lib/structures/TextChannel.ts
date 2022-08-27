@@ -5,6 +5,7 @@ import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditTextChannelOptions, FollowedChannel, FollowAnnouncementChannelOptions, RawTextChannel } from "../types/channels";
 import { RawOverwrite } from "../types/channels";
+import type { JSONTextChannel } from "../types/json";
 
 /** Represents a guild text channel. */
 export default class TextChannel extends TextableChannel<TextChannel> {
@@ -51,5 +52,12 @@ export default class TextChannel extends TextableChannel<TextChannel> {
 	 */
 	async followAnnouncement(options?: FollowAnnouncementChannelOptions) {
 		return this._client.rest.channels.followAnnouncement(this.id, options);
+	}
+
+	toJSON(): JSONTextChannel {
+		return {
+			...super.toJSON(),
+			type: this.type
+		};
 	}
 }

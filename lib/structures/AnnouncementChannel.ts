@@ -4,9 +4,10 @@ import Message from "./Message";
 import type { ThreadAutoArchiveDuration, ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditGuildChannelOptions, RawAnnouncementChannel, RawOverwrite } from "../types/channels";
+import type { JSONAnnouncementChannel } from "../types/json";
 
 /** Represents a guild news channel. */
-export default class NewsChannel extends TextableChannel<NewsChannel> {
+export default class AnnouncementChannel extends TextableChannel<AnnouncementChannel> {
 	/** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
 	declare rateLimitPerUser: 0;
 	declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
@@ -27,7 +28,7 @@ export default class NewsChannel extends TextableChannel<NewsChannel> {
 	 * Crosspost a message in this channel.
 	 *
 	 * @param {String} messageID - The id of the message to crosspost.
-	 * @returns {Promise<Message<NewsChannel>>}
+	 * @returns {Promise<Message<AnnouncementChannel>>}
 	 */
 	async crosspostMessage(messageID: string) {
 		return this._client.rest.channels.crosspostMessage(this.id, messageID);
@@ -46,16 +47,17 @@ export default class NewsChannel extends TextableChannel<NewsChannel> {
 	 * @param {String} [options.reason] - The reason to be displayed in the audit log.
 	 * @param {?String} [options.topic] - The topic of the channel.
 	 * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
-	 * @returns {Promise<NewsChannel>}
+	 * @returns {Promise<AnnouncementChannel>}
 	 */
 	override async edit(options: EditGuildChannelOptions) {
 		return this._client.rest.channels.edit<this>(this.id, options);
 	}
 
-	override toJSON(props: Array<string> = []) {
-		return super.toJSON([
-			"rateLimitPerUser",
-			...props
-		]);
+	override toJSON(): JSONAnnouncementChannel {
+		return {
+			...super.toJSON(),
+			rateLimitPerUser: 0,
+			type:             this.type
+		};
 	}
 }
