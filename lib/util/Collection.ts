@@ -7,36 +7,36 @@ export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Clie
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class Collection<K extends string | number, M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends PolarCollection<K, C> {
-	protected _baseObject: AnyClass<M, C, E>;
-	protected _client: Client;
-	constructor(baseObject: AnyClass<M, C, E>, client: Client) {
-		super();
-		if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");
-		Properties.new(this)
-			.looseDefine("_baseObject", baseObject)
-			.looseDefine("_client", client);
-	}
+    protected _baseObject: AnyClass<M, C, E>;
+    protected _client: Client;
+    constructor(baseObject: AnyClass<M, C, E>, client: Client) {
+        super();
+        if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");
+        Properties.new(this)
+            .looseDefine("_baseObject", baseObject)
+            .looseDefine("_client", client);
+    }
 
-	add<T extends C>(value: T) {
-		if ("id" in value) {
-			this.set(value.id as K, value);
-			return value;
-		} else {
-			const err = new Error("Collection.add: value must have an id property");
-			Object.defineProperty(err, "_object", { value });
-			throw err;
-		}
-	}
+    add<T extends C>(value: T) {
+        if ("id" in value) {
+            this.set(value.id as K, value);
+            return value;
+        } else {
+            const err = new Error("Collection.add: value must have an id property");
+            Object.defineProperty(err, "_object", { value });
+            throw err;
+        }
+    }
 
-	update(value: C | Partial<M> & { id?: K; }, ...extra: E) {
-		if (value instanceof this._baseObject) {
-			if ("update" in value) value["update"].call(value, value);
-			return value;
-		}
-		// if the object does not have a direct id, we're forced to construct a whole new object
-		let item = "id" in value && value.id ? this.get(value.id as K) : undefined;
-		if (!item) item = this.add(new this._baseObject(value as M, this._client, ...extra));
-		else if ("update" in item) item["update"].call(item, value);
-		return item;
-	}
+    update(value: C | Partial<M> & { id?: K; }, ...extra: E) {
+        if (value instanceof this._baseObject) {
+            if ("update" in value) value["update"].call(value, value);
+            return value;
+        }
+        // if the object does not have a direct id, we're forced to construct a whole new object
+        let item = "id" in value && value.id ? this.get(value.id as K) : undefined;
+        if (!item) item = this.add(new this._baseObject(value as M, this._client, ...extra));
+        else if ("update" in item) item["update"].call(item, value);
+        return item;
+    }
 }

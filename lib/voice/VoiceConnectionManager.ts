@@ -4,9 +4,9 @@ import Properties from "../util/Properties";
 import { Collection } from "@augu/collections";
 
 export default class VoiceConnectionManager extends Collection<string, VoiceConnection> {
-	private _client: Client;
-	constructor(client: Client) {
-		super();
-		Properties.looseDefine(this, "_client", client);
-	}
+    private _client: Client;
+    constructor(client: Client) {
+        super();
+        Properties.looseDefine(this, "_client", client);
+    }
 }

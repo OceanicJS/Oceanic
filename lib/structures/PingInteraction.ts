@@ -7,24 +7,24 @@ import type { JSONPingInteraction } from "../types/json";
 
 /** Represents a PING interaction. This will not be recieved over a gateway connection. */
 export default class PingInteraction extends Interaction {
-	declare type: InteractionTypes.PING;
-	constructor(data: RawPingInteraction, client: Client) {
-		super(data, client);
-	}
+    declare type: InteractionTypes.PING;
+    constructor(data: RawPingInteraction, client: Client) {
+        super(data, client);
+    }
 
-	/**
-	 * Responds to the interaction with a `PONG`.
-	 *
-	 * @returns {Promise<void>}
-	 */
-	async pong() {
-		return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PONG });
-	}
+    /**
+     * Responds to the interaction with a `PONG`.
+     *
+     * @returns {Promise<void>}
+     */
+    async pong() {
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PONG });
+    }
 
-	toJSON(): JSONPingInteraction {
-		return {
-			...super.toJSON(),
-			type: this.type
-		};
-	}
+    toJSON(): JSONPingInteraction {
+        return {
+            ...super.toJSON(),
+            type: this.type
+        };
+    }
 }

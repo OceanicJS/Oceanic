@@ -1,20 +1,20 @@
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
-	AnyChannel,
-	ModalActionRow,
-	RawAttachment,
-	RawChannel,
-	RawMessage
+    AnyChannel,
+    ModalActionRow,
+    RawAttachment,
+    RawChannel,
+    RawMessage
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
 import type {
-	ApplicationCommandOptionTypes,
-	ApplicationCommandTypes,
-	ComponentTypes,
-	InteractionResponseTypes,
-	InteractionTypes,
-	MessageComponentTypes
+    ApplicationCommandOptionTypes,
+    ApplicationCommandTypes,
+    ComponentTypes,
+    InteractionResponseTypes,
+    InteractionTypes,
+    MessageComponentTypes
 } from "../Constants";
 import type Collection from "../util/Collection";
 import type Attachment from "../structures/Attachment";
@@ -32,51 +32,51 @@ export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" |
 
 export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalInteractionResponse;
 export interface PingInteractionResponse {
-	type: InteractionResponseTypes.PONG;
+    type: InteractionResponseTypes.PONG;
 }
 
 export interface MessageInteractionResponse {
-	data: InteractionContent;
-	type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.UPDATE_MESSAGE;
+    data: InteractionContent;
+    type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.UPDATE_MESSAGE;
 }
 
 export interface DeferredInteractionResponse {
-	data?: number;
-	type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESAGE;
+    data?: number;
+    type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESAGE;
 }
 
 export interface AutocompleteInteractionResponse {
-	data: Array<AutocompleteChoice>;
-	type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT;
+    data: Array<AutocompleteChoice>;
+    type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT;
 }
 
 export interface ModalInteractionResponse {
-	data: ModalData;
-	type: InteractionResponseTypes.MODAL;
+    data: ModalData;
+    type: InteractionResponseTypes.MODAL;
 }
 
 
 export interface ModalData {
-	components: Array<ModalActionRow>;
-	customID: string;
-	title: string;
+    components: Array<ModalActionRow>;
+    customID: string;
+    title: string;
 }
 
 export interface RawInteraction {
-	app_permissions?: string;
-	application_id: string;
-	channel_id?: string;
-	data?: RawInteractionData;
-	guild_id?: string;
-	guild_locale?: string;
-	id: string;
-	locale?: string;
-	member?: InteractionMember;
-	message?: RawMessage;
-	token: string;
-	type: InteractionTypes;
-	user?: RawUser;
-	version: 1;
+    app_permissions?: string;
+    application_id: string;
+    channel_id?: string;
+    data?: RawInteractionData;
+    guild_id?: string;
+    guild_locale?: string;
+    id: string;
+    locale?: string;
+    member?: InteractionMember;
+    message?: RawMessage;
+    token: string;
+    type: InteractionTypes;
+    user?: RawUser;
+    version: 1;
 }
 
 export type AnyRawInteraction = RawPingInteraction | AnyRawGatewayInteraction;
@@ -90,104 +90,104 @@ export type RawModalSubmitInteraction = Omit<RawInteraction, "data" | "message">
 export type RawInteractionData = RawApplicationCommandInteractionData | RawMessageComponentInteractionData | RawAutocompleteInteractionData | RawModalSubmitInteractionData;
 export type InteractionData = ApplicationCommandInteractionData | MessageComponentInteractionData | AutocompleteInteractionData | ModalSubmitInteractionData;
 export interface RawApplicationCommandInteractionData {
-	guild_id?: string;
-	id: string;
-	name: string;
-	options?: Array<InteractionOptions>;
-	resolved?: RawApplicationCommandInteractionResolvedData;
-	target_id?: string;
-	type: ApplicationCommandTypes;
+    guild_id?: string;
+    id: string;
+    name: string;
+    options?: Array<InteractionOptions>;
+    resolved?: RawApplicationCommandInteractionResolvedData;
+    target_id?: string;
+    type: ApplicationCommandTypes;
 }
 export interface ApplicationCommandInteractionData {
-	guildID?: string;
-	id: string;
-	name: string;
-	options: Array<InteractionOptions>;
-	resolved: ApplicationCommandInteractionResolvedData;
-	targetID?: string;
-	type: ApplicationCommandTypes;
+    guildID?: string;
+    id: string;
+    name: string;
+    options: Array<InteractionOptions>;
+    resolved: ApplicationCommandInteractionResolvedData;
+    targetID?: string;
+    type: ApplicationCommandTypes;
 }
 export type RawAutocompleteInteractionData = Omit<RawApplicationCommandInteractionData, "resolved" | "target_id">;
 export type AutocompleteInteractionData = Omit<ApplicationCommandInteractionData, "resolved" | "targetID">;
 
 export interface RawMessageComponentInteractionData {
-	component_type: MessageComponentTypes;
-	custom_id: string;
-	values?: Array<string>;
+    component_type: MessageComponentTypes;
+    custom_id: string;
+    values?: Array<string>;
 }
 
 export type MessageComponentInteractionData = MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
 export interface MessageComponentButtonInteractionData {
-	componentType: ComponentTypes.BUTTON;
-	customID: string;
+    componentType: ComponentTypes.BUTTON;
+    customID: string;
 }
 
 export interface MessageComponentSelectMenuInteractionData {
-	componentType: ComponentTypes.SELECT_MENU;
-	customID: string;
-	values: Array<string>;
+    componentType: ComponentTypes.SELECT_MENU;
+    customID: string;
+    values: Array<string>;
 }
 
 export interface RawModalSubmitInteractionData {
-	components: Array<ModalActionRow>;
-	custom_id: string;
+    components: Array<ModalActionRow>;
+    custom_id: string;
 }
 
 export interface ModalSubmitInteractionData {
-	components: Array<ModalActionRow>;
-	customID: string;
+    components: Array<ModalActionRow>;
+    customID: string;
 }
 
 export interface RawApplicationCommandInteractionResolvedData {
-	attachments?: Record<string, RawAttachment>;
-	channels?: Record<string, Pick<RawChannel, "id" | "name" | "type" | "permissions" | "thread_metadata" | "parent_id">>;
-	members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
-	messages?: Record<string, RawMessage>;
-	roles?: Record<string, RawRole>;
-	users?: Record<string, RawUser>;
+    attachments?: Record<string, RawAttachment>;
+    channels?: Record<string, Pick<RawChannel, "id" | "name" | "type" | "permissions" | "thread_metadata" | "parent_id">>;
+    members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
+    messages?: Record<string, RawMessage>;
+    roles?: Record<string, RawRole>;
+    users?: Record<string, RawUser>;
 }
 
 export interface ApplicationCommandInteractionResolvedData {
-	attachments: Collection<string, RawAttachment, Attachment>;
-	channels: Collection<string, RawChannel, AnyChannel>;
-	members: Collection<string, RawMember, Member, [guildID: string]>;
-	messages: Collection<string, RawMessage, Message>;
-	roles: Collection<string, RawRole, Role, [guildID: string]>;
-	users: Collection<string, RawUser, User>;
+    attachments: Collection<string, RawAttachment, Attachment>;
+    channels: Collection<string, RawChannel, AnyChannel>;
+    members: Collection<string, RawMember, Member, [guildID: string]>;
+    messages: Collection<string, RawMessage, Message>;
+    roles: Collection<string, RawRole, Role, [guildID: string]>;
+    users: Collection<string, RawUser, User>;
 }
 
 export type InteractionOptions = InteractionOptionsWithOptions | InteractionOptionsWithValue;
 export type InteractionOptionsWithOptions = InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
 export type InteractionOptionsWithValue = InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsBoolean | InteractionOptionsUser | InteractionOptionsChannel | InteractionOptionsRole | InteractionOptionsMentionable | InteractionOptionsNumber | InteractionOptionsAttachment;
 export interface InteractionOptionsBase {
-	focused?: boolean;
-	name: string;
-	type: ApplicationCommandOptionTypes;
+    focused?: boolean;
+    name: string;
+    type: ApplicationCommandOptionTypes;
 }
 
 export interface InteractionOptionsSubCommand extends InteractionOptionsBase {
-	options?: Array<InteractionOptionsSubCommandGroup | InteractionOptionsWithValue>;
-	type: ApplicationCommandOptionTypes.SUB_COMMAND;
+    options?: Array<InteractionOptionsSubCommandGroup | InteractionOptionsWithValue>;
+    type: ApplicationCommandOptionTypes.SUB_COMMAND;
 }
 
 export interface InteractionOptionsSubCommandGroup extends InteractionOptionsBase {
-	options?: Array<InteractionOptionsWithValue>;
-	type: ApplicationCommandOptionTypes.SUB_COMMAND_GROUP;
+    options?: Array<InteractionOptionsWithValue>;
+    type: ApplicationCommandOptionTypes.SUB_COMMAND_GROUP;
 }
 
 export interface InteractionOptionsStringValue<T extends InteractionOptionsStringTypes = InteractionOptionsStringTypes> extends InteractionOptionsBase {
-	type: T;
-	value: string;
+    type: T;
+    value: string;
 }
 
 export interface InteractionOptionsNumberValue<T extends InteractionOptionsNumberTypes = InteractionOptionsNumberTypes> extends InteractionOptionsBase {
-	type: T;
-	value: string;
+    type: T;
+    value: string;
 }
 
 export interface InteractionOptionsBooleanValue<T extends InteractionOptionsBooleanTypes = InteractionOptionsBooleanTypes> extends InteractionOptionsBase {
-	type: T;
-	value: string;
+    type: T;
+    value: string;
 }
 
 type InteractionOptionsStringTypes = ApplicationCommandOptionTypes.STRING | ApplicationCommandOptionTypes.USER | ApplicationCommandOptionTypes.CHANNEL | ApplicationCommandOptionTypes.ROLE | ApplicationCommandOptionTypes.MENTIONABLE | ApplicationCommandOptionTypes.ATTACHMENT;
@@ -209,7 +209,7 @@ export type AnyGatewayInteraction = CommandInteraction | ComponentInteraction | 
 
 
 export interface AutocompleteChoice {
-	name: string;
-	nameLocalizations?: Record<string, string>;
-	value: string;
+    name: string;
+    nameLocalizations?: Record<string, string>;
+    value: string;
 }

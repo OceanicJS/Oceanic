@@ -1,3 +1,4 @@
+export * from "./types/index";
 export { default as AnnouncementChannel } from "./structures/AnnouncementChannel";
 export { default as AnnouncementThreadChannel } from "./structures/AnnouncementThreadChannel";
 export { default as Application } from "./structures/Application";

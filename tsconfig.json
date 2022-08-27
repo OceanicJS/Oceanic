@@ -5,7 +5,8 @@
 		"baseUrl": "lib",
 		"strictPropertyInitialization": false,
 		"skipLibCheck": false,
-		"inlineSourceMap": true
+		"inlineSourceMap": true,
+		"target": "ES2022"
 	},
 	"include": ["lib/**/*.ts"],
 	"exclude": ["node_modules", "build", "test"]

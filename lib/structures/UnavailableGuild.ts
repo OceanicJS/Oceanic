@@ -5,16 +5,16 @@ import type { JSONUnavailableGuild } from "../types/json";
 
 /** Represents a guild that is unavailable. */
 export default class UnavailableGuild extends Base {
-	unavailable: true;
-	constructor(data: RawUnavailableGuild, client: Client) {
-		super(data.id, client);
-		this.unavailable = data.unavailable;
-	}
+    unavailable: true;
+    constructor(data: RawUnavailableGuild, client: Client) {
+        super(data.id, client);
+        this.unavailable = data.unavailable;
+    }
 
-	toJSON(): JSONUnavailableGuild {
-		return {
-			...super.toJSON(),
-			unavailable: this.unavailable
-		};
-	}
+    toJSON(): JSONUnavailableGuild {
+        return {
+            ...super.toJSON(),
+            unavailable: this.unavailable
+        };
+    }
 }

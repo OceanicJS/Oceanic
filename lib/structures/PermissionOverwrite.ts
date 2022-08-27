@@ -7,35 +7,35 @@ import type { RawOverwrite } from "../types/channels";
 import type { JSONPermissionOverwrite } from "../types/json";
 
 export default class PermissionOverwrite extends Base {
-	/** The permissions of this overwrite. */
-	permission: Permission;
-	/** The type of this overwrite. `0` for role, `1` for user. */
-	type: OverwriteTypes;
-	constructor(data: RawOverwrite, client: Client) {
-		super(data.id, client);
-		Properties.looseDefine(this, "_client", client);
-		this.permission = new Permission(data.allow, data.deny);
-		this.type = data.type;
-	}
+    /** The permissions of this overwrite. */
+    permission: Permission;
+    /** The type of this overwrite. `0` for role, `1` for user. */
+    type: OverwriteTypes;
+    constructor(data: RawOverwrite, client: Client) {
+        super(data.id, client);
+        Properties.looseDefine(this, "_client", client);
+        this.permission = new Permission(data.allow, data.deny);
+        this.type = data.type;
+    }
 
-	/** A key-value map of permission to if it's been allowed or denied (not present if neither) */
-	get json() { return this.permission.json; }
+    /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
+    get json() { return this.permission.json; }
 
-	/**
-	 *Check if this permissions instance has the given permissions allowed
-	 *
-	 * @param {...PermissionNames} permissions - The permissions to check for.
-	 * @returns {Boolean}
-	 */
-	has(...permissions: Array<PermissionNames>) {
-		return this.permission.has(...permissions);
-	}
+    /**
+     *Check if this permissions instance has the given permissions allowed
+     *
+     * @param {...PermissionNames} permissions - The permissions to check for.
+     * @returns {Boolean}
+     */
+    has(...permissions: Array<PermissionNames>) {
+        return this.permission.has(...permissions);
+    }
 
-	override toJSON(): JSONPermissionOverwrite {
-		return {
-			...super.toJSON(),
-			permission: this.permission.toJSON(),
-			type:       this.type
-		};
-	}
+    override toJSON(): JSONPermissionOverwrite {
+        return {
+            ...super.toJSON(),
+            permission: this.permission.toJSON(),
+            type:       this.type
+        };
+    }
 }

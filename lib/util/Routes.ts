@@ -106,15 +106,15 @@ export const TEAM_ICON                   = (teamID: string, hash: string) => `/t
 export const USER_AVATAR                 = (userID: string, hash: string) => `/avatars/${userID}/${hash}` as const;
 
 // Application Commands
-export const APPLICATION_COMMAND  = (applicationID: string, commandID: string) => `/applications/${applicationID}/commands/${commandID}` as const;
-export const APPLICATION_COMMANDS = (applicationID: string) => `/applications/${applicationID}/commands` as const;
-export const GUILD_APPLICATION_COMMAND  = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}commands/${commandID}` as const;
-export const GUILD_APPLICATION_COMMANDS = (applicationID: string, guildID: string) => `/applications/${applicationID}/guilds/${guildID}commands` as const;
-export const GUILD_APPLICATION_COMMAND_PERMISSION = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions` as const;
-export const GUILD_APPLICATION_COMMAND_PERMISSIONS  = (applicationID: string, guildID: string) => `/applications/${applicationID}/guilds/${guildID}commands/permissions` as const;
-export const INTERACTION_CALLBACK = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
+export const APPLICATION_COMMAND                   = (applicationID: string, commandID: string) => `/applications/${applicationID}/commands/${commandID}` as const;
+export const APPLICATION_COMMANDS                  = (applicationID: string) => `/applications/${applicationID}/commands` as const;
+export const GUILD_APPLICATION_COMMAND             = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}commands/${commandID}` as const;
+export const GUILD_APPLICATION_COMMANDS            = (applicationID: string, guildID: string) => `/applications/${applicationID}/guilds/${guildID}commands` as const;
+export const GUILD_APPLICATION_COMMAND_PERMISSION  = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions` as const;
+export const GUILD_APPLICATION_COMMAND_PERMISSIONS = (applicationID: string, guildID: string) => `/applications/${applicationID}/guilds/${guildID}commands/permissions` as const;
+export const INTERACTION_CALLBACK                  = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
 
 // Misc
-export const GATEWAY = "/gateway" as const;
+export const GATEWAY     = "/gateway" as const;
 export const GATEWAY_BOT = "/gateway/bot" as const;
-export const USER = (userID: string) => `/users/${userID}` as const;
+export const USER        = (userID: string) => `/users/${userID}` as const;
