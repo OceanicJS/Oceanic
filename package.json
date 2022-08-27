@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/DonovanDMC/Oceanic#readme",
   "devDependencies": {
+    "@types/debug": "^4.1.7",
     "@types/node": "^16.11.56",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.3",
@@ -35,6 +36,7 @@
   },
   "dependencies": {
     "@augu/collections": "^1.1.0",
+    "debug": "^4.3.4",
     "tsafe": "^1.0.0",
     "undici": "^5.10.0",
     "ws": "^8.8.1"

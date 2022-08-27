@@ -47,6 +47,7 @@ import type { Uncached } from "../types/shared";
 import Interaction from "../structures/Interaction";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
+import Debug from "../util/Debug";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
@@ -856,6 +857,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 	}
 
 	private onPacket(packet: AnyReceivePacket) {
+		Debug("ws:recieve", packet);
 		if ("s" in packet && packet.s) {
 			if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming") {
 				this._client.emit("warn", `Non-consecutive sequence (${this.sequence} -> ${packet.s})`, this.id);
@@ -1278,6 +1280,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 					this.ws.send(d);
 					if (typeof data === "object" && data && "token" in data) (data as { token: string; }).token = "[REMOVED]";
 					this._client.emit("debug", JSON.stringify({ op, d: data }), this.id);
+					Debug("ws:send", { op, d: data });
 				}
 			};
 			if (op === GatewayOPCodes.PRESENCE_UPDATE) {

@@ -48,6 +48,10 @@ export default class ShardManager extends Collection<number, Shard> {
 			ws:                   options.ws ?? {}
 		};
 
+		if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {
+			this.options.lastShardID = this.options.maxShards - 1;
+		}
+
 		if (Object.hasOwn(options, "intents")) {
 			if (Array.isArray(options.intents)) {
 				let bitmask = 0;
