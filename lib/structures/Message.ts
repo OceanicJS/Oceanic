@@ -5,7 +5,7 @@ import Channel from "./Channel";
 import GuildChannel from "./GuildChannel";
 import Guild from "./Guild";
 import type Member from "./Member";
-import { PartialApplication } from "./PartialApplication";
+import PartialApplication from "./PartialApplication";
 import type ClientApplication from "./ClientApplication";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";

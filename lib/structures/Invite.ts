@@ -2,7 +2,7 @@ import Channel from "./Channel";
 import Guild from "./Guild";
 import type ScheduledEvent from "./ScheduledEvent";
 import type User from "./User";
-import { PartialApplication } from "./PartialApplication";
+import PartialApplication from "./PartialApplication";
 import type CategoryChannel from "./CategoryChannel";
 import type {
 	AnyGuildChannel,

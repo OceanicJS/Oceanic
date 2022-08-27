@@ -1,5 +1,5 @@
 import Base from "./Base";
-import { PartialApplication } from "./PartialApplication";
+import PartialApplication from "./PartialApplication";
 import User from "./User";
 import type { IntegrationAccount, RawIntegration } from "../types/guilds";
 import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";

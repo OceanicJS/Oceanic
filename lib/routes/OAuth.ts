@@ -19,7 +19,7 @@ import type { RawGuild, RawMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import { BASE_URL } from "../Constants";
 import Application from "../structures/Application";
-import { PartialApplication } from "../structures/PartialApplication";
+import PartialApplication from "../structures/PartialApplication";
 import Member from "../structures/Member";
 import Guild from "../structures/Guild";
 import Webhook from "../structures/Webhook";

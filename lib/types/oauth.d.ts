@@ -2,7 +2,7 @@ import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
 import type { RawIntegration } from "./guilds";
 import type { ConnectionService, Permission, TeamMembershipState, VisibilityTypes } from "../Constants";
-import type { PartialApplication } from "../structures/PartialApplication";
+import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
 import type Integration from "../structures/Integration";

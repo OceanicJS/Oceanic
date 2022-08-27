@@ -5,7 +5,7 @@ import * as Routes from "../util/Routes";
 import type { RawPartialApplication } from "../types/oauth";
 import type { JSONPartialApplication } from "../types/json";
 
-export class PartialApplication extends Base {
+export default class PartialApplication extends Base {
 	/** When false, only the application's owners can invite the bot to guilds. */
 	botPublic?: boolean;
 	/** When true, the applications bot will only join upon the completion of the full oauth2 code grant flow. */
