@@ -1,6 +1,6 @@
 {
-	"extends": "@uwu-codes/eslint-config/ts.json",
-	"rules": {
-		"@typescript-eslint/no-unnecessary-type-assertion": "off"
-	}
+    "extends": "@uwu-codes/eslint-config/ts.json",
+    "rules": {
+        "@typescript-eslint/no-unnecessary-type-assertion": "off"
+    }
 }
