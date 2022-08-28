@@ -15,7 +15,7 @@ import type { Uncached } from "../types/shared";
 import type { AnyGuildTextChannel, AnyTextChannel, ChannelMention, EditMessageOptions, Embed, GetReactionsOptions, MessageActionRow, MessageActivity, MessageInteraction, MessageReference, RawAttachment, RawMessage, StartThreadFromMessageOptions, StickerItem, MessageReaction } from "../types/channels";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import type { JSONMessage } from "../types/json";
-export default class Message<T extends AnyTextChannel = AnyTextChannel> extends Base {
+export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**
@@ -29,7 +29,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
     /** The author of this message. */
     author: User;
     /** The channel this message was created in. This can be a partial object with only an `id` property. */
-    channel: T | Uncached;
+    channel: T;
     /** The components on this message. */
     components?: Array<MessageActionRow>;
     /** The content of this message. */

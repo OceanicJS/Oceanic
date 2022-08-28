@@ -37,7 +37,7 @@ import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../
 import { File } from "../types/request-handler";
 import type { JSONMessage } from "../types/json";
 
-export default class Message<T extends AnyTextChannel = AnyTextChannel> extends Base {
+export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**
@@ -51,7 +51,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
     /** The author of this message. */
     author: User;
     /** The channel this message was created in. This can be a partial object with only an `id` property. */
-    channel: T | Uncached;
+    channel: T;
     /** The components on this message. */
     components?: Array<MessageActionRow>;
     /** The content of this message. */
@@ -110,9 +110,9 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
     constructor(data: RawMessage, client: Client) {
         super(data.id, client);
         this.attachments = new Collection(Attachment, client);
-        this.channel = this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
+        this.channel = (this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
             id: data.channel_id
-        };
+        }) as T;
         this.guildID = data.guild_id;
         this.mentions = {
             channels: [],
@@ -291,8 +291,8 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
      * @param {File[]} [options.files] - The files to send.
      * @returns {Promise<Message<T>>}
      */
-    async edit(options: EditMessageOptions) {
-        return this._client.rest.channels.editMessage<T>(this.channel.id, this.id, options);
+    async edit(options: EditMessageOptions):  Promise<Message<T>> {
+        return this._client.rest.channels.editMessage(this.channel.id, this.id, options) as Promise<Message<T>>;
     }
 
     /**
