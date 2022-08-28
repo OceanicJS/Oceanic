@@ -93,7 +93,7 @@ export default class Member extends Base {
      * @returns {Promise<void>}
      */
     async addRole(roleID: string, reason?: string) {
-        await this._client.rest.guilds.addMemberRole(this.guild.id, this.id, roleID, reason);
+        await this._client.rest.guilds.addMemberRole(this.guildID, this.id, roleID, reason);
     }
 
     /**
@@ -117,7 +117,7 @@ export default class Member extends Base {
      * @returns {Promise<void>}
      */
     async ban(options?: CreateBanOptions) {
-        await this._client.rest.guilds.createBan(this.guild.id, this.id, options);
+        await this._client.rest.guilds.createBan(this.guildID, this.id, options);
     }
 
     /**
@@ -134,7 +134,7 @@ export default class Member extends Base {
      * @returns {Promise<Member>}
      */
     async edit(options: EditMemberOptions) {
-        return this._client.rest.guilds.editMember(this.guild.id, this.id, options);
+        return this._client.rest.guilds.editMember(this.guildID, this.id, options);
     }
 
     /**
@@ -146,7 +146,7 @@ export default class Member extends Base {
      * @returns {Promise<void>}
      */
     async editVoiceState(options: EditUserVoiceStateOptions) {
-        return this._client.rest.guilds.editUserVoiceState(this.guild.id, this.id, options);
+        return this._client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
     }
 
     /**
@@ -156,7 +156,7 @@ export default class Member extends Base {
      * @returns {Promise<void>}
      */
     async kick(reason?: string) {
-        await this._client.rest.guilds.removeMember(this.guild.id, this.id, reason);
+        await this._client.rest.guilds.removeMember(this.guildID, this.id, reason);
     }
 
     /**
@@ -167,7 +167,7 @@ export default class Member extends Base {
      * @returns {Promise<void>}
      */
     async removeRole(roleID: string, reason?: string) {
-        await this._client.rest.guilds.removeMemberRole(this.guild.id, this.id, roleID, reason);
+        await this._client.rest.guilds.removeMemberRole(this.guildID, this.id, roleID, reason);
     }
 
     override toJSON(): JSONMember {
@@ -196,6 +196,6 @@ export default class Member extends Base {
      * @param {String} [reason] - The reason for removing the ban.
      */
     async unban(reason?: string) {
-        await this._client.rest.guilds.removeBan(this.guild.id, this.id, reason);
+        await this._client.rest.guilds.removeBan(this.guildID, this.id, reason);
     }
 }

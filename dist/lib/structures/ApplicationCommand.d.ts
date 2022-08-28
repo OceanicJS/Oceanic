@@ -4,7 +4,7 @@ import type Guild from "./Guild";
 import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import { ApplicationCommandTypes } from "../Constants";
-import type { ApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RESTGuildApplicationCommandPermissions, RawApplicationCommand, RawApplicationCommandOption, TypeToEdit } from "../types/application-commands";
+import type { ApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RESTGuildApplicationCommandPermissions, RawApplicationCommand, TypeToEdit } from "../types/application-commands";
 import type { Uncached } from "../types/shared";
 import type { JSONApplicationCommand } from "../types/json";
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
@@ -33,8 +33,6 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** Autoincrementing version identifier updated during substantial record changes. */
     version: string;
     constructor(data: RawApplicationCommand, client: Client);
-    protected static _convertOption(option: RawApplicationCommandOption, to: "parsed"): ApplicationCommandOptions;
-    protected static _convertOption(option: ApplicationCommandOptions, to: "raw"): RawApplicationCommandOption;
     /**
      * Delete this command.
      *

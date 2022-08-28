@@ -22,6 +22,8 @@ export default class AutoModerationRule extends Base {
     exemptRoles: Array<string>;
     /** The guild this rule is in. */
     guild: Guild;
+    /** The id of the guild this rule is in. */
+    guildID: string;
     /** The name of this rule */
     name: string;
     /** The metadata of this rule's trigger.  */

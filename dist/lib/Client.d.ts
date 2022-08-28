@@ -1,12 +1,10 @@
-/// <reference types="node" />
-import type { ImageFormat } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import Collection from "./util/Collection";
 import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import User from "./structures/User";
 import Guild from "./structures/Guild";
-import type { AllowedMentions, AnyChannel, RawAllowedMentions, RawGroupChannel, RawPrivateChannel } from "./types/channels";
+import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
 import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
 import type { ClientEvents, ClientInstanceOptions, ClientOptions } from "./types/client";
@@ -17,6 +15,7 @@ import type { BotActivity, SendStatuses, UpdateVoiceStateOptions } from "./types
 import UnavailableGuild from "./structures/UnavailableGuild";
 import VoiceConnectionManager from "./voice/VoiceConnectionManager";
 import type ExtendedUser from "./structures/ExtendedUser";
+import Util from "./util/Util";
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
@@ -37,6 +36,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
     user: ExtendedUser;
     users: Collection<string, RawUser, User>;
+    util: Util;
     voiceConnections: VoiceConnectionManager;
     /**
      * @constructor
@@ -89,12 +89,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param {String} [options.rest.userAgent="Oceanic/\{VERSION\} (https://github.com/DonovanDMC/Oceanic)"] - The `User-Agent` header to use for requests.
      */
     constructor(options?: ClientOptions);
-    /** @hidden intentionally not documented - this is an internal function */
-    _convertImage(img: Buffer | string): string;
-    /** @hidden intentionally not documented - this is an internal function */
-    _formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions;
-    /** @hidden intentionally not documented - this is an internal function */
-    _formatImage(url: string, format?: ImageFormat, size?: number): string;
     connect(): Promise<void>;
     /**
      * Edit the client's status across all shards.

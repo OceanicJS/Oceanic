@@ -70,7 +70,7 @@ export default class ScheduledEvent extends Base {
      * @returns {Promise<void>}
      */
     async deleteScheduledEvent(reason?: string) {
-        return this._client.rest.guilds.deleteScheduledEvent(this.guild.id, this.id, reason);
+        return this._client.rest.guilds.deleteScheduledEvent(this.guildID, this.id, reason);
     }
 
     /**

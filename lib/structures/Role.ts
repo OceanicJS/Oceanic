@@ -63,7 +63,7 @@ export default class Role extends Base {
      * @returns {Promise<void>}
      */
     async deleteRole(reason?: string) {
-        return this._client.rest.guilds.deleteRole(this.guild.id, this.id, reason);
+        return this._client.rest.guilds.deleteRole(this.guildID, this.id, reason);
     }
 
     override toJSON(): JSONRole {

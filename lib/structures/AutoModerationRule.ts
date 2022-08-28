@@ -23,6 +23,8 @@ export default class AutoModerationRule extends Base {
     exemptRoles: Array<string>;
     /** The guild this rule is in. */
     guild: Guild;
+    /** The id of the guild this rule is in. */
+    guildID: string;
     /** The name of this rule */
     name: string;
     /** The metadata of this rule's trigger.  */
@@ -32,7 +34,10 @@ export default class AutoModerationRule extends Base {
     constructor(data: RawAutoModerationRule, client: Client) {
         super(data.id, client);
         if (data.creator_id !== undefined) this.creator = this._client.users.get(data.creator_id) || { id: data.creator_id };
-        if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id)!;
+        if (data.guild_id !== undefined) {
+            this.guild = this._client.guilds.get(data.guild_id)!;
+            this.guildID = data.guild_id;
+        }
         this.update(data);
     }
 
@@ -65,7 +70,7 @@ export default class AutoModerationRule extends Base {
      * @returns {Promise<void>}
      */
     async deleteAutoModerationRule(reason?: string) {
-        return this._client.rest.guilds.deleteAutoModerationRule(this.guild.id, this.id, reason);
+        return this._client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
     }
 
     /**
@@ -89,7 +94,7 @@ export default class AutoModerationRule extends Base {
      * @returns {Promise<AutoModerationRule>}
      */
     async edit(options: EditAutoModerationRuleOptions) {
-        return this._client.rest.guilds.editAutoModerationRule(this.guild.id, this.id, options);
+        return this._client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);
     }
 
     override toJSON(): JSONAutoModerationRule {
@@ -101,7 +106,7 @@ export default class AutoModerationRule extends Base {
             eventType:       this.eventType,
             exemptChannels:  this.exemptChannels,
             exemptRoles:     this.exemptRoles,
-            guild:           this.guild.id,
+            guild:           this.guildID,
             name:            this.name,
             triggerMetadata: this.triggerMetadata,
             triggerType:     this.triggerType

@@ -48,7 +48,7 @@ export default class ComponentInteraction extends Interaction {
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
-        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guild.id) : new Member(data.member, this._client, this.guild!.id) : undefined;
+        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, this._client, this.guild!.id) : undefined;
         this.message = "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, this._client);
         this.user = this._client.users.update((data.user || data.member!.user)!);
 

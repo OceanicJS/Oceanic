@@ -257,7 +257,7 @@ export default class Guild extends Base {
      * @returns {Promise<GuildEmoji>}
      */
     createEmoji(options: CreateEmojiOptions): Promise<{
-        user: User | undefined;
+        user: User | undefined; /** The shard this guild is on. Gateway only. */
         name: string;
         id: string;
         roles: string[];
@@ -603,7 +603,7 @@ export default class Guild extends Base {
      * @param {String} ruleID - The ID of the rule to get.
      * @returns {Promise<AutoModerationRule>}
      */
-    getAutoModerationRule(ruleID: string): Promise<AutoModerationRule | undefined>;
+    getAutoModerationRule(ruleID: string): Promise<AutoModerationRule>;
     /**
      * Get the auto moderation rules for this guild.
      *

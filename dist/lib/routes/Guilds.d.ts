@@ -23,7 +23,6 @@ import Invite from "../structures/Invite";
 import Integration from "../structures/Integration";
 import AutoModerationRule from "../structures/AutoModerationRule";
 export default class Guilds extends BaseRoute {
-    private _updateMember;
     /**
      * Add a member to a guild. Requires an access token with the `guilds.join` scope.
      *
@@ -536,7 +535,7 @@ export default class Guilds extends BaseRoute {
      * @param {String} ruleID - The ID of the rule to get.
      * @returns {Promise<AutoModerationRule>}
      */
-    getAutoModerationRule(id: string, ruleID: string): Promise<AutoModerationRule | undefined>;
+    getAutoModerationRule(id: string, ruleID: string): Promise<AutoModerationRule>;
     /**
      * Get the auto moderation rules for a guild.
      *

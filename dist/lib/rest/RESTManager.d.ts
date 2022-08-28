@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import type Client from "../Client";
 import Channels from "../routes/Channels";
 import Guilds from "../routes/Guilds";
@@ -23,8 +22,6 @@ export default class RESTManager {
     constructor(client: Client, options?: RESTOptions);
     get client(): Client;
     get options(): import("../types/request-handler").RequestHandlerInstanceOptions;
-    /** @hidden intentionally not documented - this is an internal function */
-    _convertImage(image: Buffer | string, name: string): string;
     /** Alias for {@link RequestHandler#authRequest} */
     authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T>;
     /**

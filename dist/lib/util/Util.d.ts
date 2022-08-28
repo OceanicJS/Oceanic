@@ -1,53 +1,21 @@
-import { ButtonStyles, ComponentTypes } from "../Constants";
-import type { MessageActionRow, ModalActionRow } from "../types";
+/// <reference types="node" />
+import type Client from "../Client";
+import type { ImageFormat } from "../Constants";
+import type { AllowedMentions, ApplicationCommandOptions, MessageActionRow, ModalActionRow, RawAllowedMentions, RawApplicationCommandOption, RawMember, RawMessageActionRow, RawModalActionRow } from "../types";
+import Member from "../structures/Member";
+/** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
-    static formatComponents(components: Array<ModalActionRow> | Array<MessageActionRow>): {
-        type: ComponentTypes.ACTION_ROW;
-        components: (import("../types").URLButton | {
-            custom_id: string;
-            disabled: boolean | undefined;
-            emoji: import("../types").PartialEmoji | undefined;
-            label: string | undefined;
-            style: ButtonStyles.PRIMARY | ButtonStyles.SECONDARY | ButtonStyles.SUCCESS | ButtonStyles.DANGER;
-            type: ComponentTypes.BUTTON;
-            max_values?: undefined;
-            min_values?: undefined;
-            options?: undefined;
-            placeholder?: undefined;
-            max_length?: undefined;
-            min_length?: undefined;
-            required?: undefined;
-            value?: undefined;
-        } | {
-            custom_id: string;
-            disabled: boolean | undefined;
-            max_values: number | undefined;
-            min_values: number | undefined;
-            options: import("../types").SelectOption[];
-            placeholder: string | undefined;
-            type: ComponentTypes.SELECT_MENU;
-            emoji?: undefined;
-            label?: undefined;
-            style?: undefined;
-            max_length?: undefined;
-            min_length?: undefined;
-            required?: undefined;
-            value?: undefined;
-        } | {
-            custom_id: string;
-            label: string;
-            max_length: boolean | undefined;
-            min_length: number | undefined;
-            placeholder: string | undefined;
-            required: boolean | undefined;
-            style: import("../Constants").TextInputStyles;
-            type: ComponentTypes.TEXT_INPUT;
-            value: string | undefined;
-            disabled?: undefined;
-            emoji?: undefined;
-            max_values?: undefined;
-            min_values?: undefined;
-            options?: undefined;
-        } | undefined)[];
-    }[];
+    static BASE64URL_REGEX: RegExp;
+    private _client;
+    constructor(client: Client);
+    /** @hidden intentionally not documented - this is an internal function */
+    _convertImage(image: Buffer | string, name: string): string;
+    componentsToParsed<T extends RawModalActionRow | RawMessageActionRow>(components: Array<T>): T extends RawModalActionRow ? Array<ModalActionRow> : T extends RawMessageActionRow ? Array<MessageActionRow> : never;
+    componentsToRaw<T extends ModalActionRow | MessageActionRow>(components: Array<T>): T extends ModalActionRow ? Array<RawModalActionRow> : T extends MessageActionRow ? Array<RawMessageActionRow> : never;
+    convertImage(img: Buffer | string): string;
+    formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions;
+    formatImage(url: string, format?: ImageFormat, size?: number): string;
+    optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions;
+    optionToRaw(option: ApplicationCommandOptions): RawApplicationCommandOption;
+    updateMember(guildID: string, memberID: string, member: RawMember): Member;
 }
