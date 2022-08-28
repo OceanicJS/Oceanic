@@ -6,7 +6,6 @@ import type Client from "../Client";
 import type { InstallParams, RESTApplication } from "../types/oauth";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { Uncached } from "../types/shared";
 import type { JSONApplication } from "../types/json";
 
 /** Represents an oauth application. */
@@ -21,8 +20,10 @@ export default class Application extends ClientApplication {
     customInstallURL?: string;
     /** The description of the application. */
     description: string;
-    /** If this application is a game sold on Discord, the guild to which it has been linked. This can be a partial object with only an `id` property. */
-    guild?: Guild | Uncached;
+    /** If this application is a game sold on Discord, the guild to which it has been linked.*/
+    guild?: Guild;
+    /** The ID of the guild associated with this application, if any. */
+    guildID?: string;
     /** The icon hash of the application. */
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */
@@ -59,7 +60,10 @@ export default class Application extends ClientApplication {
         if (data.cover_image !== undefined) this.coverImage = data.cover_image;
         if (data.custom_install_url !== undefined) this.customInstallURL = data.custom_install_url;
         if (data.description !== undefined) this.description = data.description;
-        if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id) || { id: data.guild_id };
+        if (data.guild_id !== undefined) {
+            this.guild = this._client.guilds.get(data.guild_id);
+            this.guildID = data.guild_id;
+        }
         if (data.icon !== undefined) this.icon = data.icon;
         if (data.install_params !== undefined) this.installParams = data.install_params;
         if (data.name !== undefined) this.name = data.name;

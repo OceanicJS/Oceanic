@@ -15,8 +15,10 @@ export default class GuildChannel extends Channel {
     guildID: string;
     /** The name of this channel. */
     name: string;
-    /** The parent category of this channel. */
+    /** The parent category of this channel, if applicable. */
     parent: CategoryChannel | null;
+    /** The ID of the parent category of this channel, if applicable. */
+    parentID: string | null;
     declare type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client) {
         super(data, client);
@@ -30,7 +32,10 @@ export default class GuildChannel extends Channel {
             this.guildID = data.guild_id;
         }
         if (data.name !== undefined) this.name = data.name;
-        if (data.parent_id !== undefined) this.parent = data.parent_id === null ? null : this._client.getChannel<CategoryChannel>(data.parent_id)!;
+        if (data.parent_id !== undefined) {
+            this.parent = data.parent_id === null ? null : this._client.getChannel<CategoryChannel>(data.parent_id)!;
+            this.parentID = data.parent_id;
+        }
     }
 
     /**

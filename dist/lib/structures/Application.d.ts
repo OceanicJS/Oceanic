@@ -5,7 +5,6 @@ import type Guild from "./Guild";
 import type Client from "../Client";
 import type { InstallParams, RESTApplication } from "../types/oauth";
 import type { ImageFormat } from "../Constants";
-import type { Uncached } from "../types/shared";
 import type { JSONApplication } from "../types/json";
 /** Represents an oauth application. */
 export default class Application extends ClientApplication {
@@ -19,8 +18,10 @@ export default class Application extends ClientApplication {
     customInstallURL?: string;
     /** The description of the application. */
     description: string;
-    /** If this application is a game sold on Discord, the guild to which it has been linked. This can be a partial object with only an `id` property. */
-    guild?: Guild | Uncached;
+    /** If this application is a game sold on Discord, the guild to which it has been linked.*/
+    guild?: Guild;
+    /** The ID of the guild associated with this application, if any. */
+    guildID?: string;
     /** The icon hash of the application. */
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */

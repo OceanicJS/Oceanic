@@ -13,8 +13,10 @@ export default class GuildChannel extends Channel {
     guildID: string;
     /** The name of this channel. */
     name: string;
-    /** The parent category of this channel. */
+    /** The parent category of this channel, if applicable. */
     parent: CategoryChannel | null;
+    /** The ID of the parent category of this channel, if applicable. */
+    parentID: string | null;
     type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client);
     protected update(data: Partial<RawGuildChannel>): void;
