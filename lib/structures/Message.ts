@@ -13,7 +13,8 @@ import type TextChannel from "./TextChannel";
 import Channel from "./Channel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { MessageTypes, ThreadAutoArchiveDuration } from "../Constants";
+import type { MessageTypes } from "../Constants";
+import { ButtonStyles, ComponentTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
     AnyGuildTextChannel,
@@ -22,7 +23,6 @@ import type {
     EditMessageOptions,
     Embed,
     GetReactionsOptions,
-    MessageActionRow,
     MessageActivity,
     MessageInteraction,
     MessageReference,
@@ -30,7 +30,8 @@ import type {
     RawMessage,
     StartThreadFromMessageOptions,
     StickerItem,
-    MessageReaction
+    MessageReaction,
+    MessageActionRow
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -155,7 +156,30 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             }
             for (const attachment of data.attachments) this.attachments.update(attachment);
         }
-        if (data.components !== undefined) this.components = data.components;
+        if (data.components !== undefined) this.components = data.components.map(row => ({
+            type:       row.type,
+            components: row.components.map(component => {
+                if (component.type === ComponentTypes.BUTTON) {
+                    if (component.style === ButtonStyles.LINK) return component;
+                    else return {
+                        customID: component.custom_id,
+                        disabled: component.disabled,
+                        emoji:    component.emoji,
+                        label:    component.label,
+                        style:    component.style,
+                        type:     component.type
+                    };
+                } else return {
+                    customID:    component.custom_id,
+                    disabled:    component.disabled,
+                    maxValues:   component.max_values,
+                    minValues:   component.min_values,
+                    options:     component.options,
+                    placeholder: component.placeholder,
+                    type:        component.type
+                };
+            })
+        }));
         if (data.content !== undefined) {
             this.content = data.content;
             this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1));
@@ -285,7 +309,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
+     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
      * @param {String} [options.content] - The content of the message.
      * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
      * @param {File[]} [options.files] - The files to send.
@@ -306,7 +330,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
+     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
      * @param {String} [options.content] - The content of the message.
      * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
      * @param {File[]} [options.files] - The files to send.

@@ -1,10 +1,11 @@
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
     AnyChannel,
-    ModalActionRow,
+    RawModalActionRow,
     RawAttachment,
     RawChannel,
-    RawMessage
+    RawMessage,
+    ModalActionRow
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -129,7 +130,7 @@ export interface MessageComponentSelectMenuInteractionData {
 }
 
 export interface RawModalSubmitInteractionData {
-    components: Array<ModalActionRow>;
+    components: Array<RawModalActionRow>;
     custom_id: string;
 }
 

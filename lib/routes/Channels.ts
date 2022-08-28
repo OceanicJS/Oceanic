@@ -36,8 +36,10 @@ import type {
     RawThreadMember,
     InviteInfoTypes
 } from "../types/channels";
-import type {
+import {
+    ButtonStyles,
     ChannelTypes,
+    ComponentTypes,
     InviteTargetTypes,
     OverwriteTypes,
     ThreadAutoArchiveDuration,
@@ -160,9 +162,32 @@ export default class Channels extends BaseRoute {
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(id),
             json:   {
-                allowed_mentions:  this._client._formatAllowedMentions(options.allowedMentions),
-                attachments:       options.attachments,
-                components:        options.components,
+                allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
+                attachments:      options.attachments,
+                components:       options.components?.map(row => ({
+                    type:       row.type,
+                    components: row.components.map(component => {
+                        if (component.type === ComponentTypes.BUTTON) {
+                            if (component.style === ButtonStyles.LINK) return component;
+                            else return {
+                                custom_id: component.customID,
+                                disabled:  component.disabled,
+                                emoji:     component.emoji,
+                                label:     component.label,
+                                style:     component.style,
+                                type:      component.type
+                            };
+                        } else return {
+                            custom_id:   component.customID,
+                            disabled:    component.disabled,
+                            max_values:  component.maxValues,
+                            min_values:  component.minValues,
+                            options:     component.options,
+                            placeholder: component.placeholder,
+                            type:        component.type
+                        };
+                    })
+                })),
                 content:           options.content,
                 embeds:            options.embeds,
                 flags:             options.flags,

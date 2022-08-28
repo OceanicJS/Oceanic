@@ -20,14 +20,14 @@ import type {
 import type {
     ChannelMention,
     Embed,
-    MessageActionRow,
     MessageActivity,
     MessageReference,
     RawChannel,
     StickerItem,
     MessageReaction,
     ThreadMetadata,
-    PrivateThreadmetadata
+    PrivateThreadmetadata,
+    MessageActionRow
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Presence } from "./gateway";

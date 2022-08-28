@@ -70,7 +70,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     /**
      * Request the members of a guild.
      *
-     * @param {string} guildID - The ID of the guild to request the members of.
+     * @param {string} guild - The ID of the guild to request the members of.
      * @param {Object} options
      * @param {Number} [options.limit] - The maximum number of members to request.
      * @param {Boolean} [options.presences=false] - If presences should be requested. Requires the `GUILD_PRESENCES` intent.

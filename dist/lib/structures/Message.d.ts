@@ -12,7 +12,7 @@ import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { MessageTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
-import type { AnyGuildTextChannel, AnyTextChannel, ChannelMention, EditMessageOptions, Embed, GetReactionsOptions, MessageActionRow, MessageActivity, MessageInteraction, MessageReference, RawAttachment, RawMessage, StartThreadFromMessageOptions, StickerItem, MessageReaction } from "../types/channels";
+import type { AnyGuildTextChannel, AnyTextChannel, ChannelMention, EditMessageOptions, Embed, GetReactionsOptions, MessageActivity, MessageInteraction, MessageReference, RawAttachment, RawMessage, StartThreadFromMessageOptions, StickerItem, MessageReaction, MessageActionRow } from "../types/channels";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import type { JSONMessage } from "../types/json";
 export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
@@ -141,7 +141,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
+     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
      * @param {String} [options.content] - The content of the message.
      * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
      * @param {File[]} [options.files] - The files to send.
@@ -159,7 +159,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
      * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
+     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
      * @param {String} [options.content] - The content of the message.
      * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
      * @param {File[]} [options.files] - The files to send.

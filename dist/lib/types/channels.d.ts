@@ -279,6 +279,23 @@ export interface MessageReference {
     messageID?: string;
 }
 
+export type RawComponent = RawMessageComponent | RawModalComponent;
+export type RawMessageComponent = RawButtonComponent | RawSelectMenu;
+export type RawModalComponent = RawTextInput;
+export type RawButtonComponent = RawTextButton | URLButton;
+export interface RawActionRowBase {
+    components: Array<RawComponent>;
+    type: ComponentTypes.ACTION_ROW;
+}
+
+export interface RawMessageActionRow extends RawActionRowBase {
+    components: Array<RawMessageComponent>;
+}
+
+export interface RawModalActionRow extends RawActionRowBase {
+    components: Array<RawModalComponent>;
+}
+
 export type Component = MessageComponent | ModalComponent;
 export type MessageComponent = ButtonComponent | SelectMenu;
 export type ModalComponent = TextInput;
@@ -304,8 +321,13 @@ export interface ButtonBase {
     type: ComponentTypes.BUTTON;
 }
 
-export interface TextButton extends ButtonBase {
+export interface RawTextButton extends ButtonBase {
     custom_id: string;
+    style: ButtonStyles.PRIMARY | ButtonStyles.SECONDARY | ButtonStyles.SUCCESS | ButtonStyles.DANGER;
+}
+
+export interface TextButton extends ButtonBase {
+    customID: string;
     style: ButtonStyles.PRIMARY | ButtonStyles.SECONDARY | ButtonStyles.SUCCESS | ButtonStyles.DANGER;
 }
 
@@ -314,11 +336,21 @@ export interface URLButton extends ButtonBase {
     url: string;
 }
 
-export interface SelectMenu {
+export interface RawSelectMenu {
     custom_id: string;
     disabled?: boolean;
     max_values?: number;
     min_values?: number;
+    options: Array<SelectOption>;
+    placeholder?: string;
+    type: ComponentTypes.SELECT_MENU;
+}
+
+export interface SelectMenu {
+    customID: string;
+    disabled?: boolean;
+    maxValues?: number;
+    minValues?: number;
     options: Array<SelectOption>;
     placeholder?: string;
     type: ComponentTypes.SELECT_MENU;
@@ -332,11 +364,23 @@ export interface SelectOption {
     value: string;
 }
 
-export interface TextInput {
+export interface RawTextInput {
     custom_id: string;
     label: string;
     max_length?: boolean;
     min_length?: number;
+    placeholder?: string;
+    required?: boolean;
+    style: TextInputStyles;
+    type: ComponentTypes.TEXT_INPUT;
+    value?: string;
+}
+
+export interface TextInput {
+    customID: string;
+    label: string;
+    maxLength?: boolean;
+    minLength?: number;
     placeholder?: string;
     required?: boolean;
     style: TextInputStyles;
@@ -373,7 +417,7 @@ export interface RawMessage {
     attachments: Array<RawAttachment>;
     author: RawUser; // this can be an invalid user if `webhook_id` is set
     channel_id: string;
-    components?: Array<MessageActionRow>;
+    components?: Array<RawMessageActionRow>;
     content: string;
     edited_timestamp: string | null;
     embeds: Array<Embed>;
