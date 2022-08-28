@@ -3,6 +3,7 @@ import type { JSONDiscordRESTError } from "../types/json";
 import type { Response } from "undici";
 
 export default class DiscordRESTError extends Error {
+    code: number;
     method: RESTMethod;
     name = "DiscordRESTError";
     resBody: Record<string, unknown> | null;
