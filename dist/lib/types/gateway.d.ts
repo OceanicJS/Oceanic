@@ -174,3 +174,5 @@ export interface AutoModerationActionExecution {
     ruleTriggerType: AutoModerationTriggerTypes;
     user: User | Uncached;
 }
+
+export type ShardStatus = "connecting" | "disconnected" | "handshaking" | "identifying" | "ready" | "resuming";

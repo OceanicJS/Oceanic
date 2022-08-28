@@ -57,7 +57,7 @@ export default class GroupChannel extends Channel {
      * @param {Boolean} [options.unique] - If the invite should be unique.
      * @returns {Promise<Invite>}
      */
-    createInvite(options: CreateInviteOptions): Promise<Invite<import("./Invite").InviteInfoTypes, import("../types/channels").InviteChannel>>;
+    createInvite(options: CreateInviteOptions): Promise<Invite<import("../types/channels").InviteInfoTypes, import("../types/channels").InviteChannel>>;
     /**
      * Create a message in this channel.
      *

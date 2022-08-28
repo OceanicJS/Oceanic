@@ -1,10 +1,10 @@
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
 import User from "./User";
-import type { ThreadAutoArchiveDuration, ThreadChannelTypes } from "../Constants";
+import type { ThreadChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { AnyThreadChannel, CreateMessageOptions, EditMessageOptions, EditThreadChannelOptions, GetChannelMessagesOptions, GetReactionsOptions, RawMessage, RawThreadChannel, ThreadMember } from "../types/channels";
+import type { AnyThreadChannel, CreateMessageOptions, EditMessageOptions, EditThreadChannelOptions, GetChannelMessagesOptions, GetReactionsOptions, PrivateThreadmetadata, RawMessage, RawThreadChannel, ThreadMember, ThreadMetadata } from "../types/channels";
 import type { Uncached } from "../types/shared";
 import type { JSONThreadChannel } from "../types/json";
 /** Represents a guild thread channel. */
@@ -229,14 +229,4 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @returns {Promise<void>}
      */
     unpinMessage(messageID: string, reason?: string): Promise<void>;
-}
-export interface ThreadMetadata {
-    archiveTimestamp: Date;
-    archived: boolean;
-    autoArchiveDuration: ThreadAutoArchiveDuration;
-    createTimestamp: Date | null;
-    locked: boolean;
-}
-export interface PrivateThreadmetadata extends ThreadMetadata {
-    invitable: boolean;
 }

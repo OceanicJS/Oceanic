@@ -19,7 +19,8 @@ import type {
     Presence,
     SendStatuses,
     BotActivity,
-    BotActivityTypes
+    BotActivityTypes,
+    ShardStatus
 } from "../types/gateway";
 import type Member from "../structures/Member";
 import Base from "../structures/Base";
@@ -78,7 +79,6 @@ try {
 
 
 /* eslint-disable @typescript-eslint/unbound-method */
-export type ShardStatus = "connecting" | "disconnected" | "handshaking" | "identifying" | "ready" | "resuming";
 export default class Shard extends TypedEmitter<ShardEvents> {
     private _client: Client;
     private _connectTimeout: NodeJS.Timeout | null;

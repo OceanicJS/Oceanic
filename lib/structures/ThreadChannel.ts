@@ -12,9 +12,11 @@ import type {
     EditThreadChannelOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
+    PrivateThreadmetadata,
     RawMessage,
     RawThreadChannel,
-    ThreadMember
+    ThreadMember,
+    ThreadMetadata
 } from "../types/channels";
 import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
@@ -356,16 +358,4 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     async unpinMessage(messageID: string, reason?: string) {
         return this._client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
-}
-
-export interface ThreadMetadata {
-    archiveTimestamp: Date;
-    archived: boolean;
-    autoArchiveDuration: ThreadAutoArchiveDuration;
-    createTimestamp: Date | null;
-    locked: boolean;
-}
-
-export interface PrivateThreadmetadata extends ThreadMetadata {
-    invitable: boolean;
 }

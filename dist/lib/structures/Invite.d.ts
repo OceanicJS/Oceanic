@@ -2,11 +2,10 @@ import Guild from "./Guild";
 import type ScheduledEvent from "./ScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
-import type { InviteChannel, InviteStageInstance, PartialInviteChannel, RawInvite, RawInviteWithMetadata } from "../types/channels";
+import type { InviteChannel, InviteInfoTypes, InviteStageInstance, PartialInviteChannel, RawInvite, RawInviteWithMetadata } from "../types/channels";
 import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
 import type { JSONInvite } from "../types/json";
-export declare type InviteInfoTypes = "withMetadata" | "withCounts" | "withoutCounts" | "withExpiration" | "withoutExpiration";
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> {
     protected _client: Client;

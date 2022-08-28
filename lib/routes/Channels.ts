@@ -33,7 +33,8 @@ import type {
     GetInviteWithCountsOptions,
     GetInviteWithExpirationOptions,
     GetInviteWithNoneOptions,
-    RawThreadMember
+    RawThreadMember,
+    InviteInfoTypes
 } from "../types/channels";
 import type {
     ChannelTypes,
@@ -48,7 +49,6 @@ import Message from "../structures/Message";
 import { File } from "../types/request-handler";
 import type { RawUser } from "../types/users";
 import User from "../structures/User";
-import type { InviteInfoTypes } from "../structures/Invite";
 import Invite from "../structures/Invite";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";

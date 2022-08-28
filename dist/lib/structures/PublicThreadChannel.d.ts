@@ -1,8 +1,7 @@
-import type { ThreadMetadata } from "./ThreadChannel";
 import ThreadChannel from "./ThreadChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditPublicThreadChannelOptions, RawPublicThreadChannel } from "../types/channels";
+import type { EditPublicThreadChannelOptions, RawPublicThreadChannel, ThreadMetadata } from "../types/channels";
 import type { JSONPublicThreadChannel } from "../types/json";
 /** Represents a guild thread channel. */
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {

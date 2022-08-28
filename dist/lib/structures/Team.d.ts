@@ -1,8 +1,7 @@
 import Base from "./Base";
 import User from "./User";
 import type Client from "../Client";
-import type { TeamMembershipState } from "../Constants";
-import type { RawTeam } from "../types/oauth";
+import type { RawTeam, TeamMember } from "../types/oauth";
 import type { Uncached } from "../types/shared";
 import type { JSONTeam } from "../types/json";
 export default class Team extends Base {
@@ -17,14 +16,4 @@ export default class Team extends Base {
     constructor(data: RawTeam, client: Client);
     protected update(data: Partial<RawTeam>): void;
     toJSON(): JSONTeam;
-}
-export interface TeamMember {
-    /** This member's [membership state](https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum) on this team. */
-    membershipState: TeamMembershipState;
-    /** An array of permissions this member has for this team. Currently always only has one entry: `*`.  */
-    permissions: ["*"];
-    /** The id of the team this member is associated with. */
-    teamID: string;
-    /** The user associated with this team member. */
-    user: User;
 }

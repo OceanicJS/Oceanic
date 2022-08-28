@@ -8,6 +8,7 @@ import type {
     AnyGuildChannel,
     AnyThreadChannel,
     InviteChannel,
+    InviteInfoTypes,
     InviteStageInstance,
     PartialInviteChannel,
     RawInvite,
@@ -20,8 +21,6 @@ import type { RawGuild } from "../types/guilds";
 import Properties from "../util/Properties";
 import type { JSONInvite } from "../types/json";
 
-// for the love of god find a way to make this not so shit
-export type InviteInfoTypes = "withMetadata" | "withCounts" | "withoutCounts" | "withExpiration" | "withoutExpiration";
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> {
     protected _client: Client;

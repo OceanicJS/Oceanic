@@ -39,7 +39,7 @@ export default class StageChannel extends GuildChannel {
      * @param {Boolean} [options.unique] - If the invite should be unique.
      * @returns {Promise<Invite<StageChannel>>}
      */
-    createInvite(options: CreateInviteOptions): Promise<Invite<import("./Invite").InviteInfoTypes, import("../types/channels").InviteChannel>>;
+    createInvite(options: CreateInviteOptions): Promise<Invite<import("../types/channels").InviteInfoTypes, import("../types/channels").InviteChannel>>;
     /**
      * Delete a permission overwrite on this channel.
      *

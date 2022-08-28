@@ -4,12 +4,11 @@ import TypedEmitter from "../util/TypedEmitter";
 import type { ShardEvents } from "../types/client";
 import Bucket from "../rest/Bucket";
 import { GatewayOPCodes } from "../Constants";
-import type { UpdatePreseneOptions, RequestGuildMembersOptions, UpdateVoiceStateOptions, SendStatuses, BotActivity } from "../types/gateway";
+import type { UpdatePreseneOptions, RequestGuildMembersOptions, UpdateVoiceStateOptions, SendStatuses, BotActivity, ShardStatus } from "../types/gateway";
 import type Member from "../structures/Member";
 import Base from "../structures/Base";
 import { WebSocket } from "ws";
 import { inspect } from "util";
-export declare type ShardStatus = "connecting" | "disconnected" | "handshaking" | "identifying" | "ready" | "resuming";
 export default class Shard extends TypedEmitter<ShardEvents> {
     private _client;
     private _connectTimeout;

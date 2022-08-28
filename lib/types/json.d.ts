@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import type { InstallParams } from "./oauth";
+import type { InstallParams, TeamMember } from "./oauth";
 import type { ApplicationCommandOptions } from "./application-commands";
 import type {
     ApplicationCommandInteractionData,
@@ -25,7 +25,9 @@ import type {
     MessageReference,
     RawChannel,
     StickerItem,
-    MessageReaction
+    MessageReaction,
+    ThreadMetadata,
+    PrivateThreadmetadata
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Presence } from "./gateway";
@@ -59,8 +61,6 @@ import type {
     VideoQualityModes,
     WebhookTypes
 } from "../Constants";
-import type { PrivateThreadmetadata, ThreadMetadata } from "../structures/ThreadChannel";
-import type { TeamMember } from "../structures/Team";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
     rateLimitPerUser: 0;

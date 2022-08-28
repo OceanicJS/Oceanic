@@ -621,3 +621,19 @@ export interface GetInviteWithNoneOptions extends Omit<GetInviteOptions, "withCo
     withCounts?: false;
     withExpiration?: false;
 }
+
+// for the love of god find a way to make this not so shit
+export type InviteInfoTypes = "withMetadata" | "withCounts" | "withoutCounts" | "withExpiration" | "withoutExpiration";
+
+
+export interface ThreadMetadata {
+    archiveTimestamp: Date;
+    archived: boolean;
+    autoArchiveDuration: ThreadAutoArchiveDuration;
+    createTimestamp: Date | null;
+    locked: boolean;
+}
+
+export interface PrivateThreadmetadata extends ThreadMetadata {
+    invitable: boolean;
+}
