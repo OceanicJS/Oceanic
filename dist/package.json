@@ -1,6 +1,6 @@
 {
     "name": "oceanic.js",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "A nodejs library for interfacing with Discord.",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
@@ -15,7 +15,8 @@
         "lint": "eslint lib --ext .ts --fix",
         "build:js": "rm -rf dist && tsc && sed -i '/__exportStar(require(\".\\/types\\/index\"), exports);/d' dist/lib/index.js && cp -r lib/types dist/lib",
         "build:docs": "npx typedoc && echo oceanic.owo-whats-this.dev > docs/CNAME",
-        "build": "npm run build:js && npm run build:docs"
+        "build": "npm run build:js && npm run build:docs",
+        "prepublishOnly": "npm run build"
     },
     "repository": {
         "type": "git",
