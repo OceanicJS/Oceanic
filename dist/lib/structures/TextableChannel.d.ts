@@ -102,7 +102,15 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param {String} [reason] - The reason for deleting the message.
      * @returns {Promise<void>}
      */
-    deleteMessage(idmessageID: string, reason?: string): Promise<void>;
+    deleteMessage(messageID: string, reason?: string): Promise<void>;
+    /**
+     * Bulk delete messages in this channel.
+     *
+     * @param {String[]} messageIDs - The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param {String} [reason] - The reason for deleting the messages.
+     * @returns {Promise<void>}
+     */
+    deleteMessages(messageIDs: Array<string>, reason?: string): Promise<void>;
     /**
      * Delete a permission overwrite on this channel.
      *
