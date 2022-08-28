@@ -142,7 +142,7 @@ export default class ComponentInteraction extends Interaction {
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: flags });
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: !flags ? undefined : { flags } });
     }
 
     /**
@@ -154,7 +154,7 @@ export default class ComponentInteraction extends Interaction {
     async deferUpdate(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: flags });
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: !flags ? undefined : { flags } });
     }
 
     /**

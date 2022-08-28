@@ -76,12 +76,12 @@ export const INVITE 								 = (code: string) => `/invites/${code}` as const;
 export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;
 export const OAUTH_AUTHORIZE    = "/oauth2/authorize" as const;
 export const OAUTH_INFO         = "/oauth2/@me" as const;
-export const OAUTH_CURRENT_USER = "/user/@me" as const;
-export const OAUTH_CHANNELS     = `${OAUTH_CURRENT_USER}/channels` as const;
-export const OAUTH_CONNECTIONS  = `${OAUTH_CURRENT_USER}/connections` as const;
-export const OAUTH_GUILD        = (guildID: string) => `${OAUTH_CURRENT_USER}/guilds/${guildID}` as const;
+export const OAUTH_CURRENT_USER = "/users/@me" as const;
+export const OAUTH_CHANNELS     = "/users/@me/channels" as const;
+export const OAUTH_CONNECTIONS  = "/users/@me/connections" as const;
+export const OAUTH_GUILD        = (guildID: string) => `/users/@me/guilds/${guildID}` as const;
 export const OAUTH_GUILD_MEMBER = (guildID: string) => `${OAUTH_GUILD(guildID)}/member` as const;
-export const OAUTH_GUILDS       = `${OAUTH_CURRENT_USER}/guilds` as const;
+export const OAUTH_GUILDS       = "/users/@me/guilds" as const;
 export const OAUTH_TOKEN        = "/oauth2/token" as const;
 export const OAUTH_TOKEN_REVOKE = "/oauth2/token/revoke" as const;
 

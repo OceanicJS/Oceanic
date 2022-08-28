@@ -42,7 +42,7 @@ export interface MessageInteractionResponse {
 }
 
 export interface DeferredInteractionResponse {
-    data?: number;
+    data?: { flags: number; };
     type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESAGE;
 }
 
