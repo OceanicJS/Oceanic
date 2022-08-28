@@ -5,11 +5,11 @@ import type { RawUser } from "../types/users";
 import type { JSONUser } from "../types/json";
 /** Represents a user. */
 export default class User extends Base {
-    /** The user's banner color. If this member was recived via the gateway, this will never be present. */
+    /** The user's banner color. If this member was received via the gateway, this will never be present. */
     accentColor?: number | null;
     /** The user's avatar hash. */
     avatar: string | null;
-    /** The user's banner hash. If this member was recived via the gateway, this will never be present. */
+    /** The user's banner hash. If this member was received via the gateway, this will never be present. */
     banner?: string | null;
     /** If this user is a bot. */
     bot: boolean;
