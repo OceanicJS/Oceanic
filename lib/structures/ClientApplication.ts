@@ -174,8 +174,10 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    async getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(commandID: string, withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGlobalCommand<W, T>(this.id, commandID, withLocalizations);
+    async getGlobalCommand(commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
+    async getGlobalCommand(commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
+    async getGlobalCommand(commandID: string, withLocalizations?: boolean) {
+        return this._client.rest.applicationCommands.getGlobalCommand(this.id, commandID, withLocalizations as true);
     }
 
     /**
@@ -184,8 +186,10 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async getGlobalCommands<W extends boolean = false>(withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGlobalCommands<W>(this.id, withLocalizations);
+    async getGlobalCommands(withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
+    async getGlobalCommands(withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
+    async getGlobalCommands(withLocalizations?: boolean) {
+        return this._client.rest.applicationCommands.getGlobalCommands(this.id, withLocalizations as true);
     }
 
     /**
@@ -196,8 +200,10 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    async getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(guildID: string, commandID: string, withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGuildCommand<W, T>(this.id, guildID, commandID, withLocalizations);
+    async getGuildCommand(guildID: string, commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
+    async getGuildCommand(guildID: string, commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
+    async getGuildCommand(guildID: string, commandID: string, withLocalizations?: boolean) {
+        return this._client.rest.applicationCommands.getGuildCommand(this.id, guildID, commandID, withLocalizations as true);
     }
 
     /**
@@ -207,8 +213,10 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async getGuildCommands<W extends boolean = false>(guildID: string, withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGuildCommands<W>(this.id, guildID, withLocalizations);
+    async getGuildCommands(guildID: string, withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
+    async getGuildCommands(guildID: string, withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
+    async getGuildCommands(guildID: string, withLocalizations?: boolean) {
+        return this._client.rest.applicationCommands.getGuildCommands(this.id, guildID, withLocalizations as true);
     }
 
     /**

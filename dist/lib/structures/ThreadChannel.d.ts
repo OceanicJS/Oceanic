@@ -1,6 +1,8 @@
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
 import User from "./User";
+import type TextChannel from "./TextChannel";
+import type AnnouncementChannel from "./AnnouncementChannel";
 import type { ThreadChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -23,6 +25,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     messages: Collection<string, RawMessage, Message>;
     /** The creator of this thread. */
     owner: User | Uncached;
+    parent: TextChannel | AnnouncementChannel | null;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this thread. */

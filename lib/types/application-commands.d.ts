@@ -74,6 +74,7 @@ export type ApplicationCommandOptionConversion<T extends EditApplicationCommandO
             T extends EditMessageApplicationCommandOptions | CreateMessageApplicationCommandOptions ? MessageApplicationCommand :
                 never;
 
+export type LangNames = "descriptionLocalizations" | "nameLocalizations";
 type WithLang<T extends ApplicationCommand, W extends boolean> = Omit<T, "descriptionLocalizations" | "nameLocalizations"> & (W extends false ? never : {
     descriptionLocalizations: Record<string, string> |  null;
     nameLocalizations: Record<string, string> |  null;

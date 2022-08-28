@@ -8,6 +8,7 @@ import type PrivateThreadChannel from "./PrivateThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import User from "./User";
+import type CategoryChannel from "./CategoryChannel";
 import type { PrivateChannelTypes, TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -24,6 +25,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     messages: Collection<string, RawMessage, Message>;
     /** If this channel is age gated. */
     nsfw: boolean;
+    parent: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -44,7 +46,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      *
      * @returns {Promise<TextChannel | AnnouncementChannel>}
      */
-    convert(): Promise<AnnouncementChannel | TextChannel>;
+    convert(): Promise<TextChannel | AnnouncementChannel>;
     /**
      * Create an invite for this channel.
      *
@@ -142,7 +144,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
      * @returns {Promise<GuildChannel>}
      */
-    edit(options: EditGuildChannelOptions): Promise<AnnouncementChannel | TextChannel>;
+    edit(options: EditGuildChannelOptions): Promise<TextChannel | AnnouncementChannel>;
     /**
      * Edit a message in this channel.
      *

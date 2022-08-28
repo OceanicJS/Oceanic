@@ -284,14 +284,16 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    async getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, commandID: string, withLocalizations?: W) {
+    async getGlobalCommand(applicationID: string, commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
+    async getGlobalCommand(applicationID: string, commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
+    async getGlobalCommand(applicationID: string, commandID: string, withLocalizations?: boolean) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
             query
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as T);
+        }).then(data => new ApplicationCommand(data, this._client) as never);
     }
 
     /**
@@ -301,14 +303,16 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async getGlobalCommands<W extends boolean = false>(applicationID: string, withLocalizations?: W) {
+    async getGlobalCommands(applicationID: string, withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
+    async getGlobalCommands(applicationID: string, withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
+    async getGlobalCommands(applicationID: string, withLocalizations?: boolean) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             query
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
+        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand));
     }
 
     /**
@@ -320,14 +324,16 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    async getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, guildID: string, commandID: string, withLocalizations?: W) {
+    async getGuildCommand(applicationID: string, guildID: string, commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
+    async getGuildCommand(applicationID: string, guildID: string, commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
+    async getGuildCommand(applicationID: string, guildID: string, commandID: string, withLocalizations?: boolean) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
             query
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as T);
+        }).then(data => new ApplicationCommand(data, this._client) as never);
     }
 
     /**
@@ -338,14 +344,16 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async getGuildCommands<W extends boolean = false>(applicationID: string, guildID: string, withLocalizations?: W) {
+    async getGuildCommands(applicationID: string, guildID: string, withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
+    async getGuildCommands(applicationID: string, guildID: string, withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
+    async getGuildCommands(applicationID: string, guildID: string, withLocalizations?: boolean) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             query
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
+        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as never));
     }
 
     /**

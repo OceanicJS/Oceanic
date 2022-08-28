@@ -2,6 +2,7 @@ import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Invite from "./Invite";
 import Member from "./Member";
+import type CategoryChannel from "./CategoryChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -13,6 +14,7 @@ import type { UpdateVoiceStateOptions } from "../types/gateway";
 export default class StageChannel extends GuildChannel {
     /** The bitrate of the stage channel. */
     bitrate: number;
+    parent: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */

@@ -139,14 +139,16 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(commandID: string, withLocalizations?: W): Promise<T>;
+    getGlobalCommand(commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
+    getGlobalCommand(commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
     /**
      * Get this application's global commands.
      *
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    getGlobalCommands<W extends boolean = false>(withLocalizations?: W): Promise<AnyApplicationCommand<W>[]>;
+    getGlobalCommands(withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
+    getGlobalCommands(withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
     /**
      * Get a global application command.
      *
@@ -155,7 +157,8 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(guildID: string, commandID: string, withLocalizations?: W): Promise<T>;
+    getGuildCommand(guildID: string, commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
+    getGuildCommand(guildID: string, commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
     /**
      * Get this application's commands in a specific guild.
      *
@@ -163,7 +166,8 @@ export default class ClientApplication extends Base {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    getGuildCommands<W extends boolean = false>(guildID: string, withLocalizations?: W): Promise<AnyApplicationCommand<W>[]>;
+    getGuildCommands(guildID: string, withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
+    getGuildCommands(guildID: string, withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
     /**
      * Get a command's permissions in a guild.
      *
