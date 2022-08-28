@@ -1,4 +1,5 @@
 export * from "./types/index";
+// Channel and Interaction MUST be at the top due to circular imports
 export { default as Channel } from "./structures/Channel";
 export { default as Interaction } from "./structures/Interaction";
 export { default as AnnouncementChannel } from "./structures/AnnouncementChannel";
@@ -11,7 +12,10 @@ export { default as AutoModerationRule } from "./structures/AutoModerationRule";
 export { default as Base } from "./structures/Base";
 export { default as Bucket } from "./rest/Bucket";
 export { default as CategoryChannel } from "./structures/CategoryChannel";
+export { default as Client } from "./Client";
 export { default as ClientApplication } from "./structures/ClientApplication";
+export * from "./Constants";
+export * as Constants from "./Constants";
 export { default as CommandInteraction } from "./structures/CommandInteraction";
 export { default as TypedCollection } from "./util/Collection";
 export { Collection } from "@augu/collections";
@@ -50,6 +54,7 @@ export { default as Team } from "./structures/Team";
 export { default as TextableChannel } from "./structures/TextableChannel";
 export { default as TextChannel } from "./structures/TextChannel";
 export { default as ThreadChannel } from "./structures/ThreadChannel";
+export { default as TypedEmitter } from "./util/TypedEmitter";
 export { default as UnavailableGuild } from "./structures/UnavailableGuild";
 export { default as User } from "./structures/User";
 export { default as VoiceChannel } from "./structures/VoiceChannel";

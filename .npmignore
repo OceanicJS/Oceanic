@@ -1,1 +1,8 @@
 test/
+lib/
+docs-plugin/
+.eslintignore
+.eslintrc.json
+.ncurc.json
+.prettierrc.json
+tsconfig.json
