@@ -110,7 +110,7 @@ import type { RawVoiceState } from "../types/voice";
 import { VoiceRegion } from "../types/voice";
 import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
-import type { PresenceUpdate } from "../types/gateway";
+import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
@@ -849,6 +849,21 @@ export default class Guild extends Base {
      */
     async editWidget(options: WidgetSettings) {
         return this._client.rest.guilds.editWidget(this.id, options);
+    }
+
+    /**
+     * Request members from this guild.
+     *
+     * @param {Object} options
+     * @param {Number} [options.limit] - The maximum number of members to request.
+     * @param {Boolean} [options.presences=false] - If presences should be requested. Requires the `GUILD_PRESENCES` intent.
+     * @param {String} [options.query] - If provided, only members with a username that starts with this string will be returned. If empty or not provided, requires the `GUILD_MEMBERS` intent.
+     * @param {Number} [options.timeout=client.rest.options.requestTimeout] - The maximum amount of time in milliseconds to wait.
+     * @param {String[]} [options.userIDs] - The IDs of up to 100 users to specifically request.
+     * @returns {Promise<Member[]>}
+     */
+    async fetchMembers(options?: RequestGuildMembersOptions) {
+        return this.shard.requestGuildMembers(this.id, options);
     }
 
     /**
