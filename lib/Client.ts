@@ -52,7 +52,7 @@ try {
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    /** The client's partial application (only set when using a gateway connection). */
+    /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
     application: ClientApplication;
     channelGuildMap: Record<string, string>;
     gatewayURL: string;
@@ -67,7 +67,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     startTime = 0;
     threadGuildMap: Record<string, string>;
     unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
-    /** The client's user (only set when using a gateway connection). */
+    /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
     user: ExtendedUser;
     users: Collection<string, RawUser, User>;
     voiceConnections: VoiceConnectionManager;
