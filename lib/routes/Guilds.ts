@@ -209,7 +209,7 @@ export default class Guilds extends BaseRoute {
             json:   {
                 afk_channel_id:                options.afkChannelID,
                 afk_timeout:                   options.afkTimeout,
-                channels: 	                    options.channels,
+                channels:                      options.channels,
                 default_message_notifications: options.defaultMessageNotifications,
                 explicit_content_filter:       options.explicitContentFilter,
                 icon:                          options.icon,
@@ -1067,7 +1067,7 @@ export default class Guilds extends BaseRoute {
             path:   Routes.GUILD_WIDGET(id),
             json:   {
                 channel_id: options.channelID,
-                enabled:	   options.enabled
+                enabled:    options.enabled
             }
         }).then(data => ({
             channels:      data.channels,
@@ -1083,7 +1083,7 @@ export default class Guilds extends BaseRoute {
                 tag:           `${m.username}#${m.discriminator}`,
                 username:      m.username
             })),
-            name: 		       data.name,
+            name:          data.name,
             presenceCount: data.presence_count
         }) as Widget);
     }
@@ -1118,7 +1118,7 @@ export default class Guilds extends BaseRoute {
         }).then(data => ({
             members: data.members.map(member => ({
                 flags:         member.flags,
-                id:	           member.id,
+                id:            member.id,
                 joinTimestamp: new Date(member.join_timestamp),
                 userID:        member.user_id
             }) as ThreadMember),
@@ -1545,7 +1545,7 @@ export default class Guilds extends BaseRoute {
                 tag:           `${m.username}#${m.discriminator}`,
                 username:      m.username
             })),
-            name: 		       data.name,
+            name:          data.name,
             presenceCount: data.presence_count
         }) as Widget);
     }

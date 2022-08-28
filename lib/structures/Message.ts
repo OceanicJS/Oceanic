@@ -416,7 +416,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             reactions:         this.reactions,
             referencedMessage: this.referencedMessage?.toJSON(),
             stickerItems:      this.stickerItems,
-            thread:		          this.thread?.toJSON(),
+            thread:            this.thread?.toJSON(),
             timestamp:         this.timestamp.getTime(),
             tts:               this.tts,
             type:              this.type,

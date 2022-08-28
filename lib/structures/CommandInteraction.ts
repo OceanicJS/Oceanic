@@ -49,11 +49,11 @@ export default class CommandInteraction extends Interaction {
             options:  data.data.options || [],
             resolved: {
                 attachments: new Collection(Attachment, this._client),
-                channels:	   new Collection(Channel, this._client) as Collection<string, RawChannel, AnyChannel>,
-                members:	    new Collection(Member, this._client),
-                messages:	   new Collection(Message, this._client),
-                roles: 	     new Collection(Role, this._client),
-                users:		     new Collection(User, this._client)
+                channels:    new Collection(Channel, this._client) as Collection<string, RawChannel, AnyChannel>,
+                members:     new Collection(Member, this._client),
+                messages:    new Collection(Message, this._client),
+                roles:       new Collection(Role, this._client),
+                users:       new Collection(User, this._client)
             },
             targetID: data.data.target_id,
             type:     data.data.type

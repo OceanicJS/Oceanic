@@ -38,7 +38,7 @@ export default class ModalSubmitInteraction extends Interaction {
                 type:       row.type,
                 components: row.components.map(component => ({
                     customID:    component.custom_id,
-                    label:	      component.label,
+                    label:       component.label,
                     maxLength:   component.max_length,
                     minLength:   component.min_length,
                     placeholder: component.placeholder,

@@ -411,7 +411,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
             rateLimitPerUser:           this.rateLimitPerUser,
             threads:                    this.threads.map(thread => thread.id),
             topic:                      this.topic,
-            type: 					                 this.type
+            type:                       this.type
         };
     }
 

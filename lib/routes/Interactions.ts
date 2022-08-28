@@ -63,7 +63,7 @@ export default class Interactions extends BaseRoute {
                                     label:    component.label,
                                     style:    component.style,
                                     type:     component.type,
-                                    url:	     component.url
+                                    url:      component.url
                                 }; else return {
                                     custom_id: component.customID,
                                     disabled:  component.disabled,
@@ -105,7 +105,7 @@ export default class Interactions extends BaseRoute {
                         type:       row.type,
                         components: row.components.map(component => ({
                             custom_id:   component.customID,
-                            label:	      component.label,
+                            label:       component.label,
                             max_length:  component.maxLength,
                             min_length:  component.minLength,
                             placeholder: component.placeholder,

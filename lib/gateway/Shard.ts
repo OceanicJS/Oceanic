@@ -1208,8 +1208,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             compress:        this._client.shards.options.compress,
             large_threshold: this._client.shards.options.largeThreshold,
             shard:           [this.id, this._client.shards.options.maxShards],
-            presence:		      this.presence,
-            intents:		       this._client.shards.options.intents
+            presence:        this.presence,
+            intents:         this._client.shards.options.intents
         };
         this.send(GatewayOPCodes.IDENTIFY, data);
     }

@@ -75,7 +75,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
                 min_value:                 opt.minValue,
                 name:                      opt.name,
                 name_localizations:        opt.nameLocalizations,
-                options: 				              opt.options?.map(o => this._convertOption(o as ApplicationCommandOptions, "raw")),
+                options:                   opt.options?.map(o => this._convertOption(o as ApplicationCommandOptions, "raw")),
                 required:                  opt.required,
                 type:                      opt.type
             } as RawApplicationCommandOption;
@@ -93,7 +93,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
                 min_value:                opt.min_value,
                 name:                     opt.name,
                 nameLocalizations:        opt.name_localizations,
-                options: 				             opt.options?.map(o => this._convertOption(o, "parsed")),
+                options:                  opt.options?.map(o => this._convertOption(o, "parsed")),
                 required:                 opt.required,
                 type:                     opt.type
             } as ApplicationCommandOptions;

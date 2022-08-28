@@ -80,7 +80,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
                 archived:            !!data.thread_metadata.archived,
                 autoArchiveDuration: data.thread_metadata.auto_archive_duration,
                 createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
-                locked:		            !!data.thread_metadata.locked
+                locked:              !!data.thread_metadata.locked
             };
             if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
 
@@ -348,7 +348,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             rateLimitPerUser: this.rateLimitPerUser,
             threadMetadata:   this.threadMetadata,
             totalMessageSent: this.totalMessageSent,
-            type:		           this.type
+            type:             this.type
         };
     }
 

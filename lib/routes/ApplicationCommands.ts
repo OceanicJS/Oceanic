@@ -40,7 +40,7 @@ export default class ApplicationCommands extends BaseRoute {
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             json:   opts.map(opt => ({
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:				            opt.description,
+                description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
@@ -74,7 +74,7 @@ export default class ApplicationCommands extends BaseRoute {
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   opts.map(opt => ({
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:				            opt.description,
+                description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
@@ -107,7 +107,7 @@ export default class ApplicationCommands extends BaseRoute {
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             json:   {
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:				            opt.description,
+                description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
@@ -141,7 +141,7 @@ export default class ApplicationCommands extends BaseRoute {
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   {
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:				            opt.description,
+                description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
@@ -203,7 +203,7 @@ export default class ApplicationCommands extends BaseRoute {
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
             json:   {
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:				            opt.description,
+                description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
@@ -236,7 +236,7 @@ export default class ApplicationCommands extends BaseRoute {
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
             json:   {
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:				            opt.description,
+                description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,

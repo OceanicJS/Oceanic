@@ -228,7 +228,7 @@ export default class Channels extends BaseRoute {
                 content:           options.content,
                 embeds:            options.embeds,
                 flags:             options.flags,
-                sticker_ids: 	     options.stickerIDs,
+                sticker_ids:       options.stickerIDs,
                 message_reference: !options.messageReference ? undefined : {
                     channel_id:         options.messageReference.channelID,
                     fail_if_not_exists: options.messageReference.failIfNotExists,
@@ -952,7 +952,7 @@ export default class Channels extends BaseRoute {
                     content:          options.message.content,
                     embeds:           options.message.embeds,
                     flags:            options.message.flags,
-                    sticker_ids: 	    options.message.stickerIDs
+                    sticker_ids:      options.message.stickerIDs
                 },
                 name:                options.name,
                 rate_limit_per_user: options.rateLimitPerUser
