@@ -3,7 +3,7 @@ import ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
 import type { RawClientApplication } from "../types/oauth";
 import { ApplicationCommandTypes } from "../Constants";
-import type { AnyApplicationCommand, CreateApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions } from "../types/application-commands";
+import type { AnyApplicationCommand, CreateApplicationCommandOptions, CreateGuildApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions, EditGuildApplicationCommandOptions } from "../types/application-commands";
 import { RESTGuildApplicationCommandPermissions } from "../types/application-commands";
 import type { JSONClientApplication } from "../types/json";
 /** A representation of the authorized client's application (typically recieved via gateway). */
@@ -43,7 +43,7 @@ export default class ClientApplication extends Base {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    bulkEditGuildCommands(guildID: string, options: Array<Omit<CreateApplicationCommandOptions, "dmPermission">>): Promise<ApplicationCommand<ApplicationCommandTypes>[]>;
+    bulkEditGuildCommands(guildID: string, options: Array<CreateGuildApplicationCommandOptions>): Promise<ApplicationCommand<ApplicationCommandTypes>[]>;
     /**
      * Create a global application command.
      *
@@ -74,7 +74,7 @@ export default class ClientApplication extends Base {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand>}
      */
-    createGuildCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(guildID: string, options: T): Promise<import("../types/application-commands").ApplicationCommandOptionConversion<T>>;
+    createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(guildID: string, options: T): Promise<import("../types/application-commands").ApplicationCommandOptionConversion<T>>;
     /**
      * Delete a global application command.
      *
@@ -120,7 +120,7 @@ export default class ClientApplication extends Base {
      * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
      * @returns {Promise<ApplicationCommand>}
      */
-    editGuildCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(guildID: string, commandID: string, options: T): Promise<import("../types/application-commands").ApplicationCommandOptionConversion<T>>;
+    editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(guildID: string, commandID: string, options: T): Promise<import("../types/application-commands").ApplicationCommandOptionConversion<T>>;
     /**
      * Edit a guild application command's permissions. This requires a bearer token with the `applications.commands.permissions.update` scope.
      *

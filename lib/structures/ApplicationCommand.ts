@@ -72,7 +72,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
      * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
      * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
+     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM (globa commands only).
      * @param {String} [options.name] - The name of the command.
      * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
      * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.

@@ -1,5 +1,5 @@
 import BaseRoute from "./BaseRoute";
-import type { AnyApplicationCommand, ApplicationCommandOptionConversion, CreateApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RESTGuildApplicationCommandPermissions } from "../types/application-commands";
+import type { AnyApplicationCommand, ApplicationCommandOptionConversion, CreateApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RESTGuildApplicationCommandPermissions, CreateGuildApplicationCommandOptions, EditGuildApplicationCommandOptions } from "../types/application-commands";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import { ApplicationCommandTypes } from "../Constants";
 export default class ApplicationCommands extends BaseRoute {
@@ -35,7 +35,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<Omit<CreateApplicationCommandOptions, "dmPermission">>): Promise<ApplicationCommand<ApplicationCommandTypes>[]>;
+    bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>): Promise<ApplicationCommand<ApplicationCommandTypes>[]>;
     /**
      * Create a global application command.
      *
@@ -68,7 +68,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand>}
      */
-    createGuildCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>>;
+    createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>>;
     /**
      * Delete a global application command.
      *
@@ -118,7 +118,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
      * @returns {Promise<ApplicationCommand>}
      */
-    editGuildCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>>;
+    editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>>;
     /**
      * Edit a guild application command's permissions. This requires a bearer token with the `applications.commands.permissions.update` scope.
      *

@@ -3,7 +3,14 @@ import ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
 import type { RawClientApplication } from "../types/oauth";
 import { ApplicationCommandTypes } from "../Constants";
-import type { AnyApplicationCommand, CreateApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions } from "../types/application-commands";
+import type {
+    AnyApplicationCommand,
+    CreateApplicationCommandOptions,
+    CreateGuildApplicationCommandOptions,
+    EditApplicationCommandOptions,
+    EditApplicationCommandPermissionsOptions,
+    EditGuildApplicationCommandOptions
+} from "../types/application-commands";
 import { ApplicationCommandPermission, RESTGuildApplicationCommandPermissions } from "../types/application-commands";
 import type { JSONClientApplication } from "../types/json";
 
@@ -54,7 +61,7 @@ export default class ClientApplication extends Base {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async bulkEditGuildCommands(guildID: string, options: Array<Omit<CreateApplicationCommandOptions, "dmPermission">>) {
+    async bulkEditGuildCommands(guildID: string, options: Array<CreateGuildApplicationCommandOptions>) {
         return this._client.rest.applicationCommands.bulkEditGuildCommands(this.id, guildID, options);
     }
 
@@ -91,7 +98,7 @@ export default class ClientApplication extends Base {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand>}
      */
-    async createGuildCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(guildID: string, options: T) {
+    async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(guildID: string, options: T) {
         return this._client.rest.applicationCommands.createGuildCommand<T>(this.id, guildID, options);
     }
 
@@ -149,7 +156,7 @@ export default class ClientApplication extends Base {
      * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
      * @returns {Promise<ApplicationCommand>}
      */
-    async editGuildCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(guildID: string, commandID: string, options: T) {
+    async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(guildID: string, commandID: string, options: T) {
         return this._client.rest.applicationCommands.editGuildCommand<T>(this.id, guildID, commandID, options);
     }
 

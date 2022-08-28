@@ -11,7 +11,9 @@ import type {
     EditChatInputApplicationCommandOptions,
     RESTGuildApplicationCommandPermissions,
     RawApplicationCommand,
-    RawGuildApplicationCommandPermissions
+    RawGuildApplicationCommandPermissions,
+    CreateGuildApplicationCommandOptions,
+    EditGuildApplicationCommandOptions
 } from "../types/application-commands";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import { ApplicationCommandTypes } from "../Constants";
@@ -67,7 +69,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<Omit<CreateApplicationCommandOptions, "dmPermission">>) {
+    async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>) {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method: "PUT",
@@ -134,7 +136,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {ApplicationCommandTypes} options.type - The type of the command.
      * @returns {Promise<ApplicationCommand>}
      */
-    async createGuildCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, guildID: string, options: T) {
+    async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T) {
         const opt = options as CreateChatInputApplicationCommandOptions;
         return this._manager.authRequest<RawApplicationCommand>({
             method: "POST",
@@ -229,7 +231,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
      * @returns {Promise<ApplicationCommand>}
      */
-    async editGuildCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T) {
+    async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T) {
         const opt = options as EditChatInputApplicationCommandOptions;
         return this._manager.authRequest<RawApplicationCommand>({
             method: "PATCH",

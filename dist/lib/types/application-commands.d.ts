@@ -150,6 +150,7 @@ export interface CreateApplicationCommandOptionsBase<T extends ApplicationComman
 }
 
 export type CreateApplicationCommandOptions = CreateChatInputApplicationCommandOptions | CreateUserApplicationCommandOptions | CreateMessageApplicationCommandOptions;
+export type CreateGuildApplicationCommandOptions = Omit<CreateChatInputApplicationCommandOptions, "dmPermission"> | Omit<CreateUserApplicationCommandOptions, "dmPermission"> | Omit<CreateMessageApplicationCommandOptions, "dmPermission">;
 export interface CreateChatInputApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.CHAT_INPUT> {
     description: string;
     descriptionLocalizations?: Record<string, string> | null;
@@ -163,6 +164,11 @@ export type EditApplicationCommandOptions = EditChatInputApplicationCommandOptio
 export type EditChatInputApplicationCommandOptions = Partial<Omit<CreateChatInputApplicationCommandOptions, "type">>;
 export type EditUserApplicationCommandOptions = Partial<Omit<CreateUserApplicationCommandOptions, "type">>;
 export type EditMessageApplicationCommandOptions = Partial<Omit<CreateMessageApplicationCommandOptions, "type">>;
+
+export type EditGuildApplicationCommandOptions = EditGuildChatInputApplicationCommandOptions | EditGuildUserApplicationCommandOptions | EditGuildMessageApplicationCommandOptions;
+export type EditGuildChatInputApplicationCommandOptions = Partial<Omit<CreateChatInputApplicationCommandOptions, "type" | "dmPermission">>;
+export type EditGuildUserApplicationCommandOptions = Partial<Omit<CreateUserApplicationCommandOptions, "type" | "dmPermission">>;
+export type EditGuildMessageApplicationCommandOptions = Partial<Omit<CreateMessageApplicationCommandOptions, "type" | "dmPermission">>;
 
 export interface RawGuildApplicationCommandPermissions {
     application_id: string;
