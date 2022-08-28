@@ -302,7 +302,7 @@ export default class Channels extends BaseRoute {
      */
     async deleteMessages(id: string, messageIDs: Array<string>, reason?: string) {
         await this._manager.authRequest<null>({
-            method: "DELETE",
+            method: "POST",
             path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(id),
             json:   {
                 messages: messageIDs
