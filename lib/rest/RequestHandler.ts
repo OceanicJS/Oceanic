@@ -195,14 +195,14 @@ export default class RequestHandler {
                             `x-ratelimit-global = " + ${res.headers.get("x-ratelimit-global")!}`].join("\n"));
                     }
                     this.ratelimits[route].remaining = !res.headers.has("x-ratelimit-remaining") ? 1 : Number(res.headers.get("x-ratelimit-remaining")) || 0;
-                    const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") || res.headers.get("retry-after") || 0);
+                    const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") || res.headers.get("retry-after") || 0) * 1000;
                     if (retryAfter >= 0) {
                         if (res.headers.has("x-ratelimit-global")) {
                             this.globalBlock = true;
                             setTimeout(this.globalUnblock.bind(this), retryAfter || 1);
                         } else this.ratelimits[route].reset = (retryAfter || 1) + now;
                     } else if (res.headers.has("x-ratelimit-reset")) {
-                        let resetTime = Number(res.headers.get("x-ratelimit-reset")) * 100;
+                        let resetTime = Number(res.headers.get("x-ratelimit-reset")) * 1000;
                         if (route.endsWith("/reactions/:id") && (resetTime - headerNow) === 1000) resetTime = now + 250;
                         this.ratelimits[route].reset = Math.max(resetTime - this.latencyRef.latency, now);
                     } else this.ratelimits[route].reset = now;
@@ -212,7 +212,7 @@ export default class RequestHandler {
                             let delay = retryAfter;
                             if (res.headers.get("x-ratelimit-scope") === "shared") {
                                 try {
-                                    delay = (resBody as { retry_after: number; }).retry_after;
+                                    delay = (resBody as { retry_after: number; }).retry_after * 1000;
                                 } catch (err) {
                                     reject(err);
                                 }
@@ -224,9 +224,11 @@ export default class RequestHandler {
                                     // eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, prefer-spread
                                     this.request<T>(options).then(resolve).catch(reject);
                                 }, delay);
+                                return;
                             } else {
                                 cb();
                                 this.request<T>(options).then(resolve).catch(reject);
+                                return;
                             }
                         } else if (res.status === 502 && ++attempts < 4) {
                             this._manager.client.emit("debug", `Unexpected 502 on ${options.method} ${route}`);
