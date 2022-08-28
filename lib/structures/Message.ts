@@ -113,6 +113,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
         this.channel = this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
             id: data.channel_id
         };
+        this.guildID = data.guild_id;
         this.mentions = {
             channels: [],
             everyone: false,
@@ -162,7 +163,6 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
         if (data.edited_timestamp !== undefined) this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
         if (data.embeds !== undefined) this.embeds = data.embeds;
         if (data.flags !== undefined) this.flags = data.flags;
-        if (data.guild_id !== undefined) this.guildID = data.guild_id;
         if (data.interaction !== undefined) {
             let member: RawMember & { id: string; } | undefined;
             if (data.interaction.member) member = {
@@ -369,6 +369,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
             editedTimestamp: this.editedTimestamp?.getTime() || null,
             embeds:          this.embeds,
             flags:           this.flags,
+            guild:           this.guildID,
             interaction:     !this.interaction ? undefined : {
                 id:     this.interaction.id,
                 member: this.interaction.member?.toJSON(),

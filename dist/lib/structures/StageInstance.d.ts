@@ -14,6 +14,8 @@ export default class StageInstance extends Base {
     discoverableDisabled: boolean;
     /** The guild of the associated stage channel. */
     guild: Guild;
+    /** The id of the guild associated with this stage instance's stage channel. */
+    guildID: string;
     /** The [privacy level](https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level) of this stage instance. */
     privacyLevel: StageInstancePrivacyLevels;
     /** The scheduled event for this stage instance. */

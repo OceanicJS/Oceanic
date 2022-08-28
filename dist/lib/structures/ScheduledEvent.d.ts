@@ -21,6 +21,8 @@ export default class ScheduledEvent extends Base {
     entityType: ScheduledEventEntityTypes;
     /** The guild this scheduled event belongs to. */
     guild: Guild;
+    /** The id of the guild this scheduled event belongs to. */
+    guildID: string;
     /** The cover */
     image?: string | null;
     /** The name of the event. */

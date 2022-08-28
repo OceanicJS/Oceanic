@@ -9,11 +9,13 @@ import type { JSONGuildChannel } from "../types/json";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
-    /** The guild associated with this channel. This can be a partial object with only an `id` property. */
+    /** The guild associated with this channel. */
     guild: Guild;
+    /** The id of the guild this channel is in. */
+    guildID: string;
     /** The name of this channel. */
     name: string;
-    /** The parent category of this channel. This can be a partial object with only an `id` property. */
+    /** The parent category of this channel. */
     parent: CategoryChannel | null;
     declare type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client) {
@@ -23,7 +25,10 @@ export default class GuildChannel extends Channel {
 
     protected update(data: Partial<RawGuildChannel>) {
         super.update(data);
-        if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id)!;
+        if (data.guild_id !== undefined) {
+            this.guild = this._client.guilds.get(data.guild_id)!;
+            this.guildID = data.guild_id;
+        }
         if (data.name !== undefined) this.name = data.name;
         if (data.parent_id !== undefined) this.parent = data.parent_id === null ? null : this._client.getChannel<CategoryChannel>(data.parent_id)!;
     }
@@ -60,7 +65,7 @@ export default class GuildChannel extends Channel {
     override toJSON(): JSONGuildChannel {
         return {
             ...super.toJSON(),
-            guild:  this.guild.id,
+            guild:  this.guildID,
             name:   this.name,
             parent: this.parent ? this.parent.id : null,
             type:   this.type

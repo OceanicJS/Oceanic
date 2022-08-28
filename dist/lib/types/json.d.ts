@@ -367,6 +367,7 @@ export interface JSONMessage extends JSONBase {
     editedTimestamp: number | null;
     embeds: Array<Embed>;
     flags?: number;
+    guild?: string;
     interaction?: {
         id: string;
         member?: JSONMember;

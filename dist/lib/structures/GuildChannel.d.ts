@@ -7,11 +7,13 @@ import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel } from "
 import type { JSONGuildChannel } from "../types/json";
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
-    /** The guild associated with this channel. This can be a partial object with only an `id` property. */
+    /** The guild associated with this channel. */
     guild: Guild;
+    /** The id of the guild this channel is in. */
+    guildID: string;
     /** The name of this channel. */
     name: string;
-    /** The parent category of this channel. This can be a partial object with only an `id` property. */
+    /** The parent category of this channel. */
     parent: CategoryChannel | null;
     type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client);

@@ -23,6 +23,8 @@ export default class ScheduledEvent extends Base {
     entityType: ScheduledEventEntityTypes;
     /** The guild this scheduled event belongs to. */
     guild: Guild;
+    /** The id of the guild this scheduled event belongs to. */
+    guildID: string;
     /** The cover */
     image?: string | null;
     /** The name of the event. */
@@ -40,6 +42,8 @@ export default class ScheduledEvent extends Base {
     constructor(data: RawScheduledEvent, client: Client) {
         super(data.id, client);
         if (data.creator) this.creator = this._client.users.update(data.creator);
+        this.guild = this._client.guilds.get(data.guild_id)!;
+        this.guildID = data.guild_id;
         this.userCount = 0;
         this.update(data);
     }
@@ -50,7 +54,6 @@ export default class ScheduledEvent extends Base {
         if (data.entity_id !== undefined) this.entityID = data.entity_id;
         if (data.entity_metadata !== undefined) this.entityMetadata = data.entity_metadata;
         if (data.entity_type !== undefined) this.entityType = data.entity_type;
-        if (data.guild_id !== undefined) this.guild = this._client.guilds.get(data.guild_id)!;
         if (data.image !== undefined) this.image = data.image;
         if (data.name !== undefined) this.name = data.name;
         if (data.privacy_level !== undefined) this.privacyLevel = data.privacy_level;
@@ -90,7 +93,7 @@ export default class ScheduledEvent extends Base {
             entityID:           this.entityID,
             entityMetadata:     this.entityMetadata,
             entityType:         this.entityType,
-            guild:              this.guild.id,
+            guild:              this.guildID,
             image:              this.image,
             name:               this.name,
             privacyLevel:       this.privacyLevel,

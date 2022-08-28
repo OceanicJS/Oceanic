@@ -11,14 +11,16 @@ import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions, EditWebhoo
 import type { Uncached } from "../types/shared";
 import type { JSONWebhook } from "../types/json";
 export default class Webhook extends Base {
-    /** The application associatd with this webhook. This can be a partial object with only an `id` property. */
+    /** The application associatd with this webhook. */
     application: ClientApplication | Uncached | null;
     /** The hash of this webhook's avatar. */
     avatar: string | null;
-    /** The channel this webhook is for, if any. This can be a partial object with only an `id` property. */
+    /** The channel this webhook is for, if applicable. */
     channel: AnyGuildTextChannel | Uncached | null;
-    /** The guild this webhook is for, if any. This can be a partial object with only an `id` property. */
-    guild: Guild | Uncached | null;
+    /** The guild this webhook is for, if applicable. */
+    guild: Guild | null;
+    /** The id of the guild this webhook is in, if applicable. */
+    guildID: string | null;
     /** The username of this webhook, if any. */
     name: string | null;
     /** The source channel for this webhook (channel follower only). */
@@ -30,9 +32,8 @@ export default class Webhook extends Base {
     /** The [type](https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types) of this webhook. */
     type: WebhookTypes;
     /** The user that created this webhook. */
-    user?: User;
+    user: User | null;
     constructor(data: RawWebhook, client: Client);
-    protected update(data: Partial<RawWebhook>): void;
     get url(): string;
     /**
      * The url of this webhook's avatar.

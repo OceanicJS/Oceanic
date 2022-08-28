@@ -3,14 +3,15 @@ import Permission from "./Permission";
 import type Guild from "./Guild";
 import type Client from "../Client";
 import type { RawRole, RoleTags } from "../types/guilds";
-import type { Uncached } from "../types/shared";
 import type { JSONRole } from "../types/json";
 /** Represents a role in a guild. */
 export default class Role extends Base {
     /** The color of this role. */
     color: number;
-    /** The guild this role is in. This can be a partial object with just an `id` property. */
-    guild: Guild | Uncached;
+    /** The guild this role is in. */
+    guild: Guild;
+    /** The id of the guild this role is in. */
+    guildID: string;
     /** If this role is hoisted. */
     hoist: boolean;
     /** The icon has of this role. */

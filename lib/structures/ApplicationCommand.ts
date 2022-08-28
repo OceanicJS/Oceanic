@@ -30,6 +30,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     dmPermission?: boolean;
     /** The guild this command is in (guild commands only). */
     guild?: Guild;
+    /** The id of the guild this command is in (guild commands only). */
+    guildID?: string;
     /** The name of this command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
@@ -48,6 +50,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.descriptionLocalizations = data.description_localizations;
         this.dmPermission = data.dm_permission;
         this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.guildID = !data.guild_id ? undefined : data.guild_id;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
         this.options = data.options?.map(o => ApplicationCommand._convertOption(o, "parsed"));
@@ -166,7 +169,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
             description:              this.description,
             descriptionLocalizations: this.descriptionLocalizations,
             dmPermission:             this.dmPermission,
-            guild:                    this.guild?.id,
+            guild:                    this.guildID,
             name:                     this.name,
             nameLocalizations:        this.nameLocalizations,
             options:                  this.options,

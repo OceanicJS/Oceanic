@@ -12,12 +12,14 @@ import type { JSONModalSubmitInteraction } from "../types/json";
 export default class ModalSubmitInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
-    /** The channel this interaction was sent from. This can be a partial object with only an `id`. */
+    /** The channel this interaction was sent from. */
     channel: AnyTextChannel;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
-    /** The guild this interaction was sent from, if applicable. This can be a partial object with only an `id`. */
+    /** The guild this interaction was sent from, if applicable. */
     guild?: Guild;
+    /** The id of the guild this interaction was sent from, if applicable. */
+    guildID?: string;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale?: string;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
@@ -36,6 +38,7 @@ export default class ModalSubmitInteraction extends Interaction {
             customID:   data.data.custom_id
         };
         this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guild.id) : new Member(data.member, this._client, this.guild!.id) : undefined;
@@ -48,7 +51,7 @@ export default class ModalSubmitInteraction extends Interaction {
             appPermissions: this.appPermissions?.toJSON(),
             channel:        this.channel.id,
             data:           this.data,
-            guild:          this.guild?.id,
+            guild:          this.guildID,
             guildLocale:    this.guildLocale,
             locale:         this.locale,
             member:         this.member?.toJSON(),

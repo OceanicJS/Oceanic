@@ -17,6 +17,8 @@ export default class AutocompleteInteraction extends Interaction {
     data: AutocompleteInteractionData;
     /** The guild this interaction was sent from, if applicable. */
     guild?: Guild;
+    /** The id of the guild this interaction was sent from, if applicable. */
+    guildID?: string;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale?: string;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */

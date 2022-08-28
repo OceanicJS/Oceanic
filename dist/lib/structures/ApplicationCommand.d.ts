@@ -20,6 +20,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     dmPermission?: boolean;
     /** The guild this command is in (guild commands only). */
     guild?: Guild;
+    /** The id of the guild this command is in (guild commands only). */
+    guildID?: string;
     /** The name of this command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */

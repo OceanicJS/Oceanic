@@ -19,6 +19,8 @@ export default class AutocompleteInteraction extends Interaction {
     data: AutocompleteInteractionData;
     /** The guild this interaction was sent from, if applicable. */
     guild?: Guild;
+    /** The id of the guild this interaction was sent from, if applicable. */
+    guildID?: string;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale?: string;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
@@ -40,6 +42,7 @@ export default class AutocompleteInteraction extends Interaction {
             type:    data.data.type
         };
         this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guild.id) : new Member(data.member, this._client, this.guild!.id) : undefined;
@@ -67,7 +70,7 @@ export default class AutocompleteInteraction extends Interaction {
             appPermissions: this.appPermissions?.toJSON(),
             channel:        this.channel.id,
             data:           this.data,
-            guild:          this.guild?.id,
+            guild:          this.guildID,
             guildLocale:    this.guildLocale,
             locale:         this.locale,
             member:         this.member?.toJSON(),

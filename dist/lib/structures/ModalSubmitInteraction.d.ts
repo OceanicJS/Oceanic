@@ -11,12 +11,14 @@ import type { JSONModalSubmitInteraction } from "../types/json";
 export default class ModalSubmitInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
-    /** The channel this interaction was sent from. This can be a partial object with only an `id`. */
+    /** The channel this interaction was sent from. */
     channel: AnyTextChannel;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
-    /** The guild this interaction was sent from, if applicable. This can be a partial object with only an `id`. */
+    /** The guild this interaction was sent from, if applicable. */
     guild?: Guild;
+    /** The id of the guild this interaction was sent from, if applicable. */
+    guildID?: string;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale?: string;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */

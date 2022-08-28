@@ -20,6 +20,8 @@ export default class Member extends Base {
     flags?: number;
     /** The guild this member is for. */
     guild: Guild;
+    /** The id of the guild this member is for. */
+    guildID: string;
     /** Undocumented. */
     isPending?: boolean;
     /** The date at which this member joined the guild. */
@@ -47,6 +49,7 @@ export default class Member extends Base {
         this.pending = false;
         this.premiumSince = null;
         this.guild = this._client.guilds.get(guildID)!;
+        this.guildID = guildID;
         this.update(data);
     }
 
@@ -174,7 +177,7 @@ export default class Member extends Base {
             communicationDisabledUntil: this.communicationDisabledUntil?.getTime() || null,
             deaf:                       this.deaf,
             flags:                      this.flags,
-            guild:                      this.guild.id,
+            guild:                      this.guildID,
             isPending:                  this.isPending,
             joinedAt:                   this.joinedAt?.getTime() || null,
             mute:                       this.mute,
