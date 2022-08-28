@@ -853,8 +853,12 @@ export default class Guilds extends BaseRoute {
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(id, memberID),
             json:   {
-                nick:  options.nick,
-                roles: options.roles
+                channel_id:                   options.channelID,
+                communication_disabled_until: options.communicationDisabledUntil,
+                deaf:                         options.deaf,
+                mute:                         options.mute,
+                nick:                         options.nick,
+                roles:                        options.roles
             },
             reason
         }).then(data => this._updateMember(id, memberID, data));

@@ -97,3 +97,11 @@ client.on("ready", async() => {
 		}
 	});
 });
+
+// an error handler
+client.on("error", (error) => {
+	console.error("Something Went Wrong", error);
+});
+
+// connect to Discord
+client.connect();
