@@ -160,8 +160,19 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param {String} [reason] - The reason for deleting the message.
      * @returns {Promise<void>}
      */
-    async deleteMessage(idmessageID: string, reason?: string) {
-        return this._client.rest.channels.deleteMessage(this.id, idmessageID, reason);
+    async deleteMessage(messageID: string, reason?: string) {
+        return this._client.rest.channels.deleteMessage(this.id, messageID, reason);
+    }
+
+    /**
+     * Bulk delete messages in this channel.
+     *
+     * @param {String[]} messageIDs - The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param {String} [reason] - The reason for deleting the messages.
+     * @returns {Promise<void>}
+     */
+    async deleteMessages(messageIDs: Array<string>, reason?: string) {
+        return this._client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
 
     /**
