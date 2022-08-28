@@ -16,12 +16,12 @@ client.on("ready", async() => {
 	// https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#createGlobalCommand
 	// Create a single command
 	await client.application.createGlobalCommand({
-		type: ApplicationCommandTypes.CHAT_INPUT, // CHAT_INPUT = slash commands
+		type: ApplicationCommandTypes.CHAT_INPUT, // CHAT_INPUT = slash commands - full list: https://oceanic.owo-whats-this.dev/enums/Constants.ApplicationCommandTypes.html
 		name: "global-command",
 		description: "A global command.",
 		options: [
 			{
-				type: ApplicationCommandOptionTypes.STRING,
+				type: ApplicationCommandOptionTypes.STRING, // A string input - full list: https://oceanic.owo-whats-this.dev/enums/Constants.ApplicationCommandOptionTypes.html
 				name: "suspicious",
 				nameLocalizations: { // (optional) a dictionary of locales to localized names (see: https://discord.com/developers/docs/reference#locales)
 					"es-ES": "sospechoso"
