@@ -161,7 +161,7 @@ export default class OAuth extends BaseRoute {
             type:         connection.type,
             verified:     connection.verified,
             visibility:   connection.visibility
-        })));
+        }) as Connection));
     }
 
     /**
