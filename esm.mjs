@@ -60,6 +60,7 @@ const VoiceChannel = (await import("./dist/lib/structures/VoiceChannel.js")).def
 const VoiceState = (await import("./dist/lib/structures/VoiceState.js")).default.default;
 const Webhook = (await import("./dist/lib/structures/Webhook.js")).default.default;
 
+export * from "./dist/lib/Constants.js";
 export { Collection } from "@augu/collections";
 
 export {
