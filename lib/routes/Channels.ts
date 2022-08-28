@@ -34,7 +34,9 @@ import type {
     GetInviteWithExpirationOptions,
     GetInviteWithNoneOptions,
     RawThreadMember,
-    InviteInfoTypes
+    InviteInfoTypes,
+    RawPrivateChannel,
+    RawGroupChannel
 } from "../types/channels";
 import {
     ButtonStyles,
@@ -49,7 +51,7 @@ import {
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
 import { File } from "../types/request-handler";
-import type { RawUser } from "../types/users";
+import type { CreateGroupChannelOptions, RawUser } from "../types/users";
 import User from "../structures/User";
 import Invite from "../structures/Invite";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
@@ -58,6 +60,8 @@ import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
+import PrivateChannel from "../structures/PrivateChannel";
+import GroupChannel from "../structures/GroupChannel";
 
 export default class Channels extends BaseRoute {
     /**
@@ -93,6 +97,39 @@ export default class Channels extends BaseRoute {
             method: "PUT",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
         });
+    }
+    /**
+     * Create a direct message.
+     *
+     * @param {String} recipient - The id of the recipient of the direct message.
+     * @returns {Promise<PrivateChannel>}
+     */
+    async createDM(recipient: string) {
+        return this._manager.authRequest<RawPrivateChannel>({
+            method: "POST",
+            path:   Routes.OAUTH_CHANNELS,
+            json:   {
+                recipient_id: recipient
+            } }
+        ).then(data => this._client.privateChannels.update(data));
+    }
+
+    /**
+     * Create a group dm.
+     *
+     * @param {Object} options
+     * @param {String[]} options.accessTokens - An array of access tokens with the `gdm.join` scope.
+     * @param {Object} [options.nicks] - A dictionary of ids to nicknames, looks unused.
+     * @returns {Promise<GroupChannel>}
+     */
+    async createGroupDM(options: CreateGroupChannelOptions) {
+        return this._manager.authRequest<RawGroupChannel>({
+            method: "POST",
+            path:   Routes.OAUTH_CHANNELS,
+            json:   {
+                access_tokens: options.accessTokens,
+                nicks:         options.nicks
+            } }).then(data => this._client.groupChannels.update(data));
     }
 
     /**
