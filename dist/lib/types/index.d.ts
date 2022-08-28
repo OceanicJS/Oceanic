@@ -10,6 +10,7 @@ export * from "./json";
 export * from "./oauth";
 export * from "./request-handler";
 export * from "./scheduled-events";
+export * from "./shared";
 export * from "./users";
 export * from "./voice";
 export * from "./webhooks";
