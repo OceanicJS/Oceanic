@@ -1,27 +1,13 @@
 import Properties from "./util/Properties";
 import type { ImageFormat } from "./Constants";
-import {
-    ChannelTypes,
-    GATEWAY_VERSION,
-    IntentNames,
-    MAX_IMAGE_SIZE,
-    MIN_IMAGE_SIZE,
-    ImageFormats
-} from "./Constants";
-import { CDN_URL } from "./util/Routes";
+import { ChannelTypes, GATEWAY_VERSION, IntentNames } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import Collection from "./util/Collection";
 import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import User from "./structures/User";
 import Guild from "./structures/Guild";
-import type {
-    AllowedMentions,
-    AnyChannel,
-    RawAllowedMentions,
-    RawGroupChannel,
-    RawPrivateChannel
-} from "./types/channels";
+import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
 import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
 import type { ClientEvents, ClientInstanceOptions, ClientOptions } from "./types/client";
@@ -40,6 +26,7 @@ import VoiceConnectionManager from "./voice/VoiceConnectionManager";
 import type ExtendedUser from "./structures/ExtendedUser";
 import type VoiceChannel from "./structures/VoiceChannel";
 import type StageChannel from "./structures/StageChannel";
+import Util from "./util/Util";
 import { Agent } from "undici";
 
 /* eslint-disable */
@@ -49,7 +36,6 @@ try {
 } catch {}
 /* eslint-enable */
 
-const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
@@ -70,6 +56,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
     user: ExtendedUser;
     users: Collection<string, RawUser, User>;
+    util: Util;
     voiceConnections: VoiceConnectionManager;
     /**
      * @constructor
@@ -145,53 +132,8 @@ export default class Client extends TypedEmitter<ClientEvents> {
             .define("threadGuildMap", {})
             .define("unavailableGuilds", new Collection(UnavailableGuild, this))
             .define("users", new Collection(User, this))
+            .define("util", new Util(this))
             .define("voiceConnections", new VoiceConnectionManager(this));
-    }
-
-    /** @hidden intentionally not documented - this is an internal function */
-    _convertImage(img: Buffer | string) {
-        if (Buffer.isBuffer(img)) {
-            const b64 = img.toString("base64");
-            let mime: string | undefined;
-            const magic = [...new Uint8Array(img.subarray(0, 4))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
-            switch (magic) {
-                case "47494638": mime = "image/gif"; break;
-                case "89504E47": mime = "image/png"; break;
-                case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": mime = "image/jpeg"; break;
-            }
-            if (!mime) throw new Error(`Failed to determine image format. (magic: ${magic})`);
-            img = `data:${mime};base64,${b64}`;
-        }
-        if (!BASE64URL_REGEX.test(img)) throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
-        return img;
-    }
-
-    /** @hidden intentionally not documented - this is an internal function */
-    _formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {
-        const result: RawAllowedMentions = {
-            parse: []
-        };
-
-        if (!allowed) return this._formatAllowedMentions(this.options.allowedMentions);
-
-        if (allowed.everyone === true) result.parse.push("everyone");
-
-        if (allowed.roles === true) result.parse.push("roles");
-        else if (Array.isArray(allowed.roles)) result.roles = allowed.roles;
-
-        if (allowed.users === true) result.parse.push("users");
-        else if (Array.isArray(allowed.users)) result.users = allowed.users;
-
-        if (allowed.repliedUser === true) result.replied_user = true;
-
-        return result;
-    }
-
-    /** @hidden intentionally not documented - this is an internal function */
-    _formatImage(url: string, format?: ImageFormat, size?: number) {
-        if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) format = url.includes("/a_") ? "gif" : this.options.defaultImageFormat;
-        if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.options.defaultImageSize;
-        return `${CDN_URL}${url}.${format}?size=${size}`;
     }
 
     async connect() {

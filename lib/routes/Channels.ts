@@ -60,7 +60,6 @@ import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
 import PrivateChannel from "../structures/PrivateChannel";
 import GroupChannel from "../structures/GroupChannel";
-import Util from "../util/Util";
 
 export default class Channels extends BaseRoute {
     /**
@@ -198,9 +197,9 @@ export default class Channels extends BaseRoute {
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(id),
             json:   {
-                allowed_mentions:  this._client._formatAllowedMentions(options.allowedMentions),
+                allowed_mentions:  this._client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:       options.attachments,
-                components:        options.components ? Util.formatComponents(options.components) : [],
+                components:        options.components ? this._client.util.componentsToRaw(options.components) : [],
                 content:           options.content,
                 embeds:            options.embeds,
                 flags:             options.flags,
@@ -393,7 +392,7 @@ export default class Channels extends BaseRoute {
         if (options.reason) delete options.reason;
         if (options.icon) {
             try {
-                options.icon = this._client._convertImage(options.icon);
+                options.icon = this._client.util.convertImage(options.icon);
             } catch (err) {
                 throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
             }
@@ -453,9 +452,9 @@ export default class Channels extends BaseRoute {
             method: "PATCH",
             path:   Routes.CHANNEL_MESSAGE(id, messageID),
             json:   {
-                allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
+                allowed_mentions: this._client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components ? Util.formatComponents(options.components) : [],
+                components:       options.components ? this._client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds,
                 flags:            options.flags
@@ -922,9 +921,9 @@ export default class Channels extends BaseRoute {
             json:   {
                 auto_archive_duration: options.autoArchiveDuration,
                 message:               {
-                    allowed_mentions: this._client._formatAllowedMentions(options.message.allowedMentions),
+                    allowed_mentions: this._client.util.formatAllowedMentions(options.message.allowedMentions),
                     attachments:      options.message.attachments,
-                    components:       options.message.components ? Util.formatComponents(options.message.components) : [],
+                    components:       options.message.components ? this._client.util.componentsToRaw(options.message.components) : [],
                     content:          options.message.content,
                     embeds:           options.message.embeds,
                     flags:            options.message.flags,

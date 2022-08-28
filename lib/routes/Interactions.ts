@@ -6,7 +6,6 @@ import { InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel } from "../types/channels";
 import Message from "../structures/Message";
 import { File } from "../types/request-handler";
-import Util from "../util/Util";
 
 export default class Interactions extends BaseRoute {
     /**
@@ -51,10 +50,10 @@ export default class Interactions extends BaseRoute {
             case InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE:
             case InteractionResponseTypes.UPDATE_MESSAGE: {
                 data = {
-                    allowed_mentions: this._client._formatAllowedMentions(options.data.allowedMentions),
+                    allowed_mentions: this._client.util.formatAllowedMentions(options.data.allowedMentions),
                     attachments:      options.data.attachments,
                     content:          options.data.content,
-                    components:       options.data.components ? Util.formatComponents(options.data.components) : [],
+                    components:       options.data.components ? this._client.util.componentsToRaw(options.data.components) : [],
                     embeds:           options.data.embeds,
                     flags:            options.data.flags
                 };
@@ -73,7 +72,7 @@ export default class Interactions extends BaseRoute {
             case InteractionResponseTypes.MODAL: {
                 data = {
                     custom_id:  options.data.customID,
-                    components: Util.formatComponents(options.data.components),
+                    components: this._client.util.componentsToRaw(options.data.components),
                     title:      options.data.title
                 };
                 break;

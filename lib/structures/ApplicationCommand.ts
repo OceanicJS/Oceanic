@@ -7,11 +7,9 @@ import { ApplicationCommandTypes } from "../Constants";
 import type {
     ApplicationCommandOptions,
     ApplicationCommandPermission,
-    CombinedApplicationCommandOption,
     EditApplicationCommandPermissionsOptions,
     RESTGuildApplicationCommandPermissions,
     RawApplicationCommand,
-    RawApplicationCommandOption,
     TypeToEdit
 } from "../types/application-commands";
 import type { Uncached } from "../types/shared";
@@ -53,51 +51,9 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.guildID = !data.guild_id ? undefined : data.guild_id;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
-        this.options = data.options?.map(o => ApplicationCommand._convertOption(o, "parsed"));
+        this.options = data.options?.map(o => this._client.util.optionToParsed(o));
         this.type = (data.type || ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;
-    }
-
-    protected static _convertOption(option: RawApplicationCommandOption, to: "parsed"): ApplicationCommandOptions;
-    protected static _convertOption(option: ApplicationCommandOptions, to: "raw"): RawApplicationCommandOption;
-    protected static _convertOption(option: RawApplicationCommandOption | ApplicationCommandOptions, to: "raw" | "parsed") {
-        if (to === "raw") {
-            const opt = option as unknown as CombinedApplicationCommandOption;
-            return {
-                autocomplete:              opt.autocomplete,
-                channel_types:             opt.channelTypes,
-                choices:                   opt.choices,
-                description:               opt.description,
-                description_localizations: opt.descriptionLocalizations,
-                max_length:                opt.maxLength,
-                max_value:                 opt.maxValue,
-                min_length:                opt.minLength,
-                min_value:                 opt.minValue,
-                name:                      opt.name,
-                name_localizations:        opt.nameLocalizations,
-                options:                   opt.options?.map(o => this._convertOption(o as ApplicationCommandOptions, "raw")),
-                required:                  opt.required,
-                type:                      opt.type
-            } as RawApplicationCommandOption;
-        } else if (to === "parsed") {
-            const opt = option as RawApplicationCommandOption;
-            return {
-                autocomplete:             opt.autocomplete,
-                channelTypes:             opt.channel_types,
-                choices:                  opt.choices,
-                description:              opt.description,
-                descriptionLocalizations: opt.description_localizations,
-                max_length:               opt.max_length,
-                max_value:                opt.max_value,
-                min_length:               opt.min_length,
-                min_value:                opt.min_value,
-                name:                     opt.name,
-                nameLocalizations:        opt.name_localizations,
-                options:                  opt.options?.map(o => this._convertOption(o, "parsed")),
-                required:                 opt.required,
-                type:                     opt.type
-            } as ApplicationCommandOptions;
-        }
     }
 
     /**

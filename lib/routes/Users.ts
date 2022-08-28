@@ -52,7 +52,7 @@ export default class Users extends BaseRoute {
      * @returns {Promise<ExtendedUser>}
      */
     async modifySelf(options: EditSelfUserOptions) {
-        if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
+        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
         return this._manager.authRequest<RawOAuthUser>({
             method: "PATCH",
             path:   Routes.USER("@me"),

@@ -14,7 +14,7 @@ import Channel from "./Channel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { MessageTypes } from "../Constants";
-import { ButtonStyles, ComponentTypes, ThreadAutoArchiveDuration } from "../Constants";
+import { ThreadAutoArchiveDuration } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
     AnyGuildTextChannel,
@@ -156,30 +156,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             }
             for (const attachment of data.attachments) this.attachments.update(attachment);
         }
-        if (data.components !== undefined) this.components = data.components.map(row => ({
-            type:       row.type,
-            components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON) {
-                    if (component.style === ButtonStyles.LINK) return component;
-                    else return {
-                        customID: component.custom_id,
-                        disabled: component.disabled,
-                        emoji:    component.emoji,
-                        label:    component.label,
-                        style:    component.style,
-                        type:     component.type
-                    };
-                } else return {
-                    customID:    component.custom_id,
-                    disabled:    component.disabled,
-                    maxValues:   component.max_values,
-                    minValues:   component.min_values,
-                    options:     component.options,
-                    placeholder: component.placeholder,
-                    type:        component.type
-                };
-            })
-        }));
+        if (data.components !== undefined) this.components = this._client.util.componentsToParsed(data.components);
         if (data.content !== undefined) {
             this.content = data.content;
             this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1));

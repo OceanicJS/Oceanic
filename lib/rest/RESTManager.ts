@@ -39,15 +39,6 @@ export default class RESTManager {
     get client() { return this._client; }
     get options() { return this._handler.options; }
 
-    /** @hidden intentionally not documented - this is an internal function */
-    _convertImage(image: Buffer | string, name: string) {
-        try {
-            return this._client._convertImage(image);
-        } catch (err) {
-            throw new Error(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
-        }
-    }
-
     /** Alias for {@link RequestHandler#authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
         return this._handler.authRequest<T>(options);

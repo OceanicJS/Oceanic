@@ -107,11 +107,6 @@ import Channel from "../structures/Channel";
 import AuditLogEntry from "../structures/AuditLogEntry";
 
 export default class Guilds extends BaseRoute {
-
-    private _updateMember(guildID: string, memberID: string, member: RawMember) {
-        return this._client.guilds.has(guildID) ? this._client.guilds.get(guildID)!.members.update({ ...member, id: memberID }, guildID) : new Member(member, this._client, guildID);
-    }
-
     /**
      * Add a member to a guild. Requires an access token with the `guilds.join` scope.
      *
@@ -138,7 +133,7 @@ export default class Guilds extends BaseRoute {
                 nick:         options.nick,
                 roles:        options.roles
             }
-        }).then(data => data === null ? undefined as void : this._updateMember(id, userID, data));
+        }).then(data => data === null ? undefined as void : this._client.util.updateMember(id, userID, data));
     }
 
     /**
@@ -202,7 +197,7 @@ export default class Guilds extends BaseRoute {
      * @returns {Promise<Guild>}
      */
     async create(options: CreateGuildOptions) {
-        if (options.icon) options.icon = this._manager._convertImage(options.icon, "icon");
+        if (options.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
         return this._manager.authRequest<RawGuild>({
             method: "POST",
             path:   Routes.GUILDS,
@@ -367,7 +362,7 @@ export default class Guilds extends BaseRoute {
     async createEmoji(id: string, options: CreateEmojiOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.image) options.image = this._manager._convertImage(options.image, "image");
+        if (options.image) options.image = this._client.util._convertImage(options.image, "image");
         return this._manager.authRequest<RawGuildEmoji>({
             method: "POST",
             path:   Routes.GUILD_EMOJIS(id),
@@ -393,7 +388,7 @@ export default class Guilds extends BaseRoute {
      * @returns {Promise<Guild>}
      */
     async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions) {
-        if (options.icon) options.icon = this._manager._convertImage(options.icon, "icon");
+        if (options.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
         return this._manager.authRequest<RawGuild>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATE_CODE(code),
@@ -422,7 +417,7 @@ export default class Guilds extends BaseRoute {
     async createRole(id: string, options?: CreateRoleOptions) {
         const reason = options?.reason;
         if (options?.reason) delete options.reason;
-        if (options?.icon) options.icon = this._manager._convertImage(options.icon, "icon");
+        if (options?.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
         return this._manager.authRequest<RawRole>({
             method: "POST",
             path:   Routes.GUILD_ROLES(id),
@@ -460,7 +455,7 @@ export default class Guilds extends BaseRoute {
     async createScheduledEvent(id: string, options: CreateScheduledEventOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.image) options.image = this._manager._convertImage(options.image, "image");
+        if (options.image) options.image = this._client.util._convertImage(options.image, "image");
         return this._manager.authRequest<RawScheduledEvent>({
             method: "POST",
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
@@ -637,10 +632,10 @@ export default class Guilds extends BaseRoute {
     async edit(id: string, options: EditGuildOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.banner) options.banner = this._manager._convertImage(options.banner, "banner");
-        if (options.discoverySplash) options.discoverySplash = this._manager._convertImage(options.discoverySplash, "discovery splash");
-        if (options.icon) options.icon = this._manager._convertImage(options.icon, "icon");
-        if (options.splash) options.splash = this._manager._convertImage(options.splash, "splash");
+        if (options.banner) options.banner = this._client.util._convertImage(options.banner, "banner");
+        if (options.discoverySplash) options.discoverySplash = this._client.util._convertImage(options.discoverySplash, "discovery splash");
+        if (options.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
+        if (options.splash) options.splash = this._client.util._convertImage(options.splash, "splash");
         return this._manager.authRequest<RawGuild>({
             method: "PATCH",
             path:   Routes.GUILD(id),
@@ -763,7 +758,7 @@ export default class Guilds extends BaseRoute {
                 nick: options.nick
             },
             reason
-        }).then(data => this._updateMember(id, data.user!.id, data));
+        }).then(data => this._client.util.updateMember(id, data.user!.id, data));
     }
 
     /**
@@ -862,7 +857,7 @@ export default class Guilds extends BaseRoute {
                 roles:                        options.roles
             },
             reason
-        }).then(data => this._updateMember(id, memberID, data));
+        }).then(data => this._client.util.updateMember(id, memberID, data));
     }
 
     /**
@@ -883,7 +878,7 @@ export default class Guilds extends BaseRoute {
     async editRole(id: string, roleID: string, options: EditRoleOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.icon) options.icon = this._manager._convertImage(options.icon, "icon");
+        if (options.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
         return this._manager.authRequest<RawRole>({
             method: "PATCH",
             path:   Routes.GUILD_ROLE(id, roleID),
@@ -945,7 +940,7 @@ export default class Guilds extends BaseRoute {
     async editScheduledEvent(id: string, options: EditScheduledEventOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.image) options.image = this._manager._convertImage(options.image, "image");
+        if (options.image) options.image = this._client.util._convertImage(options.image, "image");
         return this._manager.authRequest<RawScheduledEvent>({
             method: "POST",
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
@@ -1172,7 +1167,7 @@ export default class Guilds extends BaseRoute {
         return this._manager.authRequest<RawAutoModerationRule>({
             method: "GET",
             path:   Routes.GUILD_AUTOMOD_RULE(id, ruleID)
-        }).then(data => this._client.guilds.has(id) ? this._client.guilds.get(id)?.autoModerationRules.update(data) : new AutoModerationRule(data, this._client));
+        }).then(data => this._client.guilds.has(id) ? this._client.guilds.get(id)!.autoModerationRules.update(data) : new AutoModerationRule(data, this._client));
     }
 
     /**
@@ -1314,7 +1309,7 @@ export default class Guilds extends BaseRoute {
         return this._manager.authRequest<RawMember>({
             method: "GET",
             path:   Routes.GUILD_MEMBER(id, memberID)
-        }).then(data => this._updateMember(id, memberID, data));
+        }).then(data => this._client.util.updateMember(id, memberID, data));
     }
 
     /**
@@ -1334,7 +1329,7 @@ export default class Guilds extends BaseRoute {
             method: "GET",
             path:   Routes.GUILD_MEMBERS(id),
             query
-        }).then(data => data.map(d => this._updateMember(id, d.user!.id, d)));
+        }).then(data => data.map(d => this._client.util.updateMember(id, d.user!.id, d)));
     }
 
     /**
@@ -1427,7 +1422,7 @@ export default class Guilds extends BaseRoute {
         }).then(data => data.map(d => ({
             guildScheduledEvent: guild?.scheduledEvents.get(d.guild_scheduled_event_id) || { id: d.guild_scheduled_event_id },
             user:                this._client.users.update(d.user),
-            member:              d.member ? this._updateMember(id, d.member.user!.id, d.member) : undefined
+            member:              d.member ? this._client.util.updateMember(id, d.member.user!.id, d.member) : undefined
         } as ScheduledEventUser)));
     }
 
@@ -1661,7 +1656,7 @@ export default class Guilds extends BaseRoute {
             method: "GET",
             path:   Routes.GUILD_SEARCH_MEMBERS(id),
             query
-        }).then(data => data.map(d => this._updateMember(id, d.user!.id, d)));
+        }).then(data => data.map(d => this._client.util.updateMember(id, d.user!.id, d)));
     }
 
     /**

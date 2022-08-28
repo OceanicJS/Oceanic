@@ -86,7 +86,7 @@ export default class Application extends ClientApplication {
      * @returns {?String}
      */
     coverImageURL(format?: ImageFormat, size?: number) {
-        return this.coverImage === null ? null : this._client._formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
+        return this.coverImage === null ? null : this._client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
     }
 
     override toJSON(): JSONApplication {

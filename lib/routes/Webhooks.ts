@@ -14,7 +14,6 @@ import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
 import { File } from "../types/request-handler";
-import Util from "../util/Util";
 
 export default class Webhooks extends BaseRoute {
     /**
@@ -30,7 +29,7 @@ export default class Webhooks extends BaseRoute {
     async create(channelID: string, options: CreateWebhookOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
+        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
         return this._manager.authRequest<RawWebhook>({
             method: "POST",
             path:   Routes.CHANNEL_WEBHOOKS(channelID),
@@ -104,7 +103,7 @@ export default class Webhooks extends BaseRoute {
     async edit(id: string, options: EditWebhookOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
+        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
         return this._manager.authRequest<RawWebhook>({
             method: "PATCH",
             path:   Routes.WEBHOOK(id),
@@ -147,9 +146,9 @@ export default class Webhooks extends BaseRoute {
             method: "PATCH",
             path:   Routes.WEBHOOK_MESSAGE(id, token, messageID),
             json:   {
-                allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
+                allowed_mentions: this._client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components ? Util.formatComponents(options.components) : [],
+                components:       options.components ? this._client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds
             },
@@ -168,7 +167,7 @@ export default class Webhooks extends BaseRoute {
      * @returns {Promise<Webhook>}
      */
     async editToken(id: string, token: string, options: EditWebhookTokenOptions) {
-        if (options.avatar) options.avatar = this._manager._convertImage(options.avatar, "avatar");
+        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
         return this._manager.authRequest<RawWebhook>({
             method: "PATCH",
             path:   Routes.WEBHOOK(id, token),
@@ -218,10 +217,10 @@ export default class Webhooks extends BaseRoute {
             path:   Routes.WEBHOOK(id, token),
             query,
             json:   {
-                allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
+                allowed_mentions: this._client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
                 avatar_url:       options.avatarURL,
-                components:       options.components ? Util.formatComponents(options.components) : [],
+                components:       options.components ? this._client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds,
                 flags:            options.flags,

@@ -246,7 +246,7 @@ export default class GroupChannel extends Channel {
     }
 
     iconURL(format?: ImageFormat, size?: number) {
-        return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_ICON(this.application.id, this.icon), format, size);
+        return this.icon === null ? null : this._client.util.formatImage(Routes.APPLICATION_ICON(this.application.id, this.icon), format, size);
     }
 
     /**

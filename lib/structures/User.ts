@@ -63,7 +63,7 @@ export default class User extends Base {
      * @returns {String}
      */
     avatarURL(format?: ImageFormat, size?: number) {
-        return this.avatar === null ? this.defaultAvatarURL() : this._client._formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
+        return this.avatar === null ? this.defaultAvatarURL() : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
     /**
      * Create a direct message with this user.
@@ -80,7 +80,7 @@ export default class User extends Base {
      * @returns {String}
      */
     defaultAvatarURL() {
-        return this._client._formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
+        return this._client.util.formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
     }
 
     override toJSON(): JSONUser {

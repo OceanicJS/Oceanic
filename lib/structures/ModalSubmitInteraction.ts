@@ -34,21 +34,8 @@ export default class ModalSubmitInteraction extends Interaction {
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
         this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!)!;
         this.data = {
-            components: data.data.components.map(row => ({
-                type:       row.type,
-                components: row.components.map(component => ({
-                    customID:    component.custom_id,
-                    label:       component.label,
-                    maxLength:   component.max_length,
-                    minLength:   component.min_length,
-                    placeholder: component.placeholder,
-                    required:    component.required,
-                    style:       component.style,
-                    type:        component.type,
-                    value:       component.value
-                }))
-            })),
-            customID: data.data.custom_id
+            components: this._client.util.componentsToParsed(data.data.components),
+            customID:   data.data.custom_id
         };
         this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;

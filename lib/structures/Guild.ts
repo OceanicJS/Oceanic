@@ -384,7 +384,7 @@ export default class Guild extends Base {
      * @returns {(String | null)}
      */
     bannerURL(format?: ImageFormat, size?: number) {
-        return this.banner === null ? null : this._client._formatImage(Routes.BANNER(this.id, this.banner), format, size);
+        return this.banner === null ? null : this._client.util.formatImage(Routes.BANNER(this.id, this.banner), format, size);
     }
 
     /**
@@ -1148,7 +1148,7 @@ export default class Guild extends Base {
      * @returns {(String | null)}
      */
     iconURL(format?: ImageFormat, size?: number) {
-        return this.icon === null ? null : this._client._formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
+        return this.icon === null ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
     }
 
     /**

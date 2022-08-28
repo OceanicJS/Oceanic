@@ -69,7 +69,7 @@ export default class Webhook extends Base {
      * @returns {(String | null)}
      */
     avatarURL(format?: ImageFormat, size?: number) {
-        return this.avatar === null ? null : this._client._formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
+        return this.avatar === null ? null : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
 
     /**
@@ -255,7 +255,7 @@ export default class Webhook extends Base {
      * @returns {(String | null)}
      */
     sourceGuildIconURL(format?: ImageFormat, size?: number) {
-        return !this.sourceGuild?.icon ? null : this._client._formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
+        return !this.sourceGuild?.icon ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
     }
 
     override toJSON(): JSONWebhook {

@@ -45,7 +45,7 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw")),
+                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
                 type:                       opt.type
             }))
         }).then(data => data.map(d => new ApplicationCommand(d, this._client)));
@@ -79,7 +79,7 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw")),
+                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
                 type:                       opt.type
             }))
         }).then(data => data.map(d => new ApplicationCommand(d, this._client)));
@@ -112,7 +112,7 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw")),
+                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
                 type:                       opt.type
             }
         }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
@@ -146,7 +146,7 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw")),
+                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
                 type:                       opt.type
             }
         }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
@@ -208,7 +208,7 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw"))
+                options:                    opt.options?.map(o => this._client.util.optionToRaw(o))
             }
         }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
     }
@@ -241,7 +241,7 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw"))
+                options:                    opt.options?.map(o => this._client.util.optionToRaw(o))
             }
         }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
     }

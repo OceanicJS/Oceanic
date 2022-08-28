@@ -40,7 +40,7 @@ export default class PartialApplication extends Base {
      * @returns {?String}
      */
     iconURL(format?: ImageFormat, size?: number) {
-        return this.icon === null ? null : this._client._formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);
+        return this.icon === null ? null : this._client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);
     }
 
     override toJSON(): JSONPartialApplication {

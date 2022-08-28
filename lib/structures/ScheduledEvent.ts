@@ -81,7 +81,7 @@ export default class ScheduledEvent extends Base {
      * @returns {string}
      */
     imageURL(format?: ImageFormat, size?: number) {
-        return !this.image ? null : this._client._formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
+        return !this.image ? null : this._client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
     }
 
     override toJSON(): JSONScheduledEvent {

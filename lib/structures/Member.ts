@@ -104,7 +104,7 @@ export default class Member extends Base {
      * @returns {String}
      */
     avatarURL(format?: ImageFormat, size?: number) {
-        return this.avatar === null ? this.user.avatarURL(format, size) : this._client._formatImage(this.avatar, format, size);
+        return this.avatar === null ? this.user.avatarURL(format, size) : this._client.util.formatImage(this.avatar, format, size);
     }
 
     /**
