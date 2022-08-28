@@ -2,6 +2,7 @@ import type { RESTMethod } from "../Constants";
 import type { JSONDiscordRESTError } from "../types/json";
 import type { Response } from "undici";
 export default class DiscordRESTError extends Error {
+    code: number;
     method: RESTMethod;
     name: string;
     resBody: Record<string, unknown> | null;
