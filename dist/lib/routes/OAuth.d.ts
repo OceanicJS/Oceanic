@@ -1,9 +1,8 @@
 import BaseRoute from "./BaseRoute";
-import type { AuthorizationInformation, ClientCredentialsTokenOptions, ClientCredentialsTokenResponse, ExchangeCodeOptions, ExchangeCodeResponse, OAuthURLOption, RefreshTokenOptions, RevokeTokenOptions } from "../types/oauth";
+import type { AuthorizationInformation, ClientCredentialsTokenOptions, ClientCredentialsTokenResponse, Connection, ExchangeCodeOptions, ExchangeCodeResponse, OAuthURLOption, RefreshTokenOptions, RevokeTokenOptions } from "../types/oauth";
 import Application from "../structures/Application";
 import Member from "../structures/Member";
 import Guild from "../structures/Guild";
-import Integration from "../structures/Integration";
 export default class OAuth extends BaseRoute {
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
@@ -59,17 +58,7 @@ export default class OAuth extends BaseRoute {
      *
      * @returns {Promise<Connection[]>}
      */
-    getCurrentConnections(): Promise<{
-        friendSync: boolean;
-        id: string;
-        integrations: Integration[] | undefined;
-        name: string;
-        revoked: boolean | undefined;
-        showActivity: boolean;
-        type: "battlenet" | "epicgames" | "facebook" | "github" | "leagueoflegends" | "playstation" | "reddit" | "samsunggalaxy" | "spotify" | "skype" | "steam" | "twitch" | "twitter" | "xbox" | "youtube";
-        verified: boolean;
-        visibility: import("../Constants").VisibilityTypes;
-    }[]>;
+    getCurrentConnections(): Promise<Connection[]>;
     /**
      * Get the guild member information about the currently authenticated user.
      *
