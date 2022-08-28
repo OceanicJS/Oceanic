@@ -133,7 +133,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
         if (data.attachments) {
             for (const attachment of data.attachments) this.attachments.update(attachment);
         }
-        if (data.member) this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, id: data.member.user!.id }, this.channel.guild.id) : undefined;
+        if (data.member) this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, id: data.author.id }, this.channel.guild.id) : undefined;
     }
 
     protected update(data: Partial<RawMessage>) {
