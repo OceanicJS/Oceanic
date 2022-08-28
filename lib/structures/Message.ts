@@ -1,7 +1,6 @@
 import Base from "./Base";
 import Attachment from "./Attachment";
 import User from "./User";
-import Channel from "./Channel";
 import GuildChannel from "./GuildChannel";
 import Guild from "./Guild";
 import type Member from "./Member";
@@ -11,6 +10,7 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
+import Channel from "./Channel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { MessageTypes, ThreadAutoArchiveDuration } from "../Constants";

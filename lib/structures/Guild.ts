@@ -18,8 +18,8 @@ import GuildPreview from "./GuildPreview";
 import AutoModerationRule from "./AutoModerationRule";
 import Permission from "./Permission";
 import VoiceState from "./VoiceState";
-import Channel from "./Channel";
 import StageInstance from "./StageInstance";
+import Channel from "./Channel";
 import type {
     AuditLogActionTypes,
     AutoModerationActionTypes,

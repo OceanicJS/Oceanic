@@ -2,13 +2,13 @@ import Base from "./Base";
 import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import type {
+    AnyInteraction,
     AnyRawInteraction,
     RawApplicationCommandInteraction,
     RawAutocompleteInteraction,
     RawInteraction,
     RawMessageComponentInteraction,
-    RawModalSubmitInteraction,
-    AnyInteraction
+    RawModalSubmitInteraction
 } from "../types/interactions";
 import { InteractionTypes } from "../Constants";
 import Properties from "../util/Properties";
@@ -33,6 +33,7 @@ export default class Interaction extends Base {
         this.type = data.type;
         this.version = data.version;
     }
+
 
     static from<T extends AnyInteraction = AnyInteraction>(data: RawInteraction, client: Client): T {
         switch (data.type) {

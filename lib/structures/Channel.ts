@@ -4,11 +4,11 @@ import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type {
     AnyChannel,
+    RawAnnouncementChannel,
+    RawAnnouncementThreadChannel,
     RawCategoryChannel,
     RawChannel,
     RawGroupChannel,
-    RawAnnouncementChannel,
-    RawAnnouncementThreadChannel,
     RawPrivateChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,

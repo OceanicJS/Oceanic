@@ -70,7 +70,6 @@ import {
 } from "../Constants";
 import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
 import ScheduledEvent from "../structures/ScheduledEvent";
-import Channel from "../structures/Channel";
 import Webhook from "../structures/Webhook";
 import type {
     CreateScheduledEventOptions,
@@ -104,6 +103,7 @@ import type { VoiceRegion } from "../types/voice";
 import Invite from "../structures/Invite";
 import Integration from "../structures/Integration";
 import AutoModerationRule from "../structures/AutoModerationRule";
+import Channel from "../structures/Channel";
 
 export default class Guilds extends BaseRoute {
 

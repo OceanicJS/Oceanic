@@ -44,7 +44,6 @@ import type {
     VideoQualityModes
 } from "../Constants";
 import * as Routes from "../util/Routes";
-import Channel from "../structures/Channel";
 import Message from "../structures/Message";
 import { File } from "../types/request-handler";
 import type { RawUser } from "../types/users";
@@ -56,6 +55,7 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
+import Channel from "../structures/Channel";
 
 export default class Channels extends BaseRoute {
     /**
