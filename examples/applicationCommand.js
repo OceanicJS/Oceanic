@@ -31,13 +31,15 @@ client.on("ready", async() => {
 						name: "Yes",
 						nameLocalizations: {
 							"es-ES": "Sí"
-						}
+						},
+						value: "yes"
 					},
 					{
 						name: "No",
 						nameLocalizations: {
 							"es-ES": "No"
-						}
+						},
+						value: "no"
 					}
 				]
 			}
