@@ -310,7 +310,7 @@ export default class Guild extends Base {
     /**
      * Delete this guild.
      *
-     * @returns {Promise<void>}}
+     * @returns {Promise<void>}
      */
     delete(): Promise<void>;
     /**

@@ -461,7 +461,7 @@ class Guild extends Base_1.default {
     /**
      * Delete this guild.
      *
-     * @returns {Promise<void>}}
+     * @returns {Promise<void>}
      */
     async delete() {
         return this._client.rest.guilds.delete(this.id);

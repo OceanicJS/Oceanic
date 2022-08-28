@@ -224,7 +224,7 @@ export default class Guilds extends BaseRoute {
      * Delete a guild.
      *
      * @param {String} id - The ID of the guild.
-     * @returns {Promise<void>}}
+     * @returns {Promise<void>}
      */
     delete(id: string): Promise<void>;
     /**

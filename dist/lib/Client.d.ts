@@ -80,13 +80,13 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param {Object} [options.gateway.ws] - The options to pass to constructed websockets.
      * @param {Object} [options.rest] - The options for the request handler.
      * @param {Agent?} [options.rest.agent=null] - The agent to use for requests.
-     * @param {String} [options.rest.baseURL="https://discordapp.com/api/v{REST_VERSION}"] - The base URL to use for requests - must be a fully qualified url.
+     * @param {String} [options.rest.baseURL="https://discordapp.com/api/v\{REST_VERSION\}"] - The base URL to use for requests - must be a fully qualified url.
      * @param {Boolean} [options.rest.disableLatencyCompensation] - If the built in latency compensator should be disabled
      * @param {String} [options.rest.host="discord.com"] - The `Host` header to use for requests. By default, this is parsed from `baseURL`.
      * @param {Number} [options.rest.latencyThreshold=30000] - In milliseconds, the average request latency at which to start emitting latency errors.
      * @param {Number} [options.rest.ratelimiterOffset=0] - In milliseconds, the time to offset ratelimit calculations by.
      * @param {Number} [options.rest.requestTimeout=15000] - In milliseconds, how long to wait until a request is timed out.
-     * @param {String} [options.rest.userAgent="Oceanic/{VERSION} (https://github.com/DonovanDMC/Oceanic)"] - The `User-Agent` header to use for requests.
+     * @param {String} [options.rest.userAgent="Oceanic/\{VERSION\} (https://github.com/DonovanDMC/Oceanic)"] - The `User-Agent` header to use for requests.
      */
     constructor(options?: ClientOptions);
     /** @hidden intentionally not documented - this is an internal function */

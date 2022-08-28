@@ -407,7 +407,7 @@ class Guilds extends BaseRoute_1.default {
      * Delete a guild.
      *
      * @param {String} id - The ID of the guild.
-     * @returns {Promise<void>}}
+     * @returns {Promise<void>}
      */
     async delete(id) {
         await this._manager.authRequest({

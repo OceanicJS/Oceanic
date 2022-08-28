@@ -230,9 +230,9 @@ export declare enum OAuthScopes {
     GDM_JOIN = "gdm.join",
     /**	allows [/users/@me/guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds) to return basic information about all of a user's guilds */
     GUILDS = "guilds",
-    /** allows [/guilds/{guild.id}/members/{user.id}](https://discord.com/developers/docs/resources/guild#add-guild-member) to be used for joining users to a guild */
+    /** allows [/guilds/\{guild.id\}/members/\{user.id\}](https://discord.com/developers/docs/resources/guild#add-guild-member) to be used for joining users to a guild */
     GUILDS_JOIN = "guilds.join",
-    /** allows [/users/@me/guilds/{guild.id}/member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member) to return a user's member information in a guild */
+    /** allows [/users/@me/guilds/\{guild.id\}/member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member) to return a user's member information in a guild */
     GUILDS_MEMBERS_READ = "guilds.members.read",
     /** allows [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user) without `email` */
     IDENTIFY = "identify",
