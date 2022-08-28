@@ -19,8 +19,8 @@ import VoiceConnectionManager from "./voice/VoiceConnectionManager";
 import type ExtendedUser from "./structures/ExtendedUser";
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    /** The client's partial application (only set when using a gateway connection). */
-    application?: ClientApplication;
+    /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
+    application: ClientApplication;
     channelGuildMap: Record<string, string>;
     gatewayURL: string;
     groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
@@ -34,8 +34,8 @@ export default class Client extends TypedEmitter<ClientEvents> {
     startTime: number;
     threadGuildMap: Record<string, string>;
     unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
-    /** The client's user (only set when using a gateway connection). */
-    user?: ExtendedUser;
+    /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
+    user: ExtendedUser;
     users: Collection<string, RawUser, User>;
     voiceConnections: VoiceConnectionManager;
     /**
