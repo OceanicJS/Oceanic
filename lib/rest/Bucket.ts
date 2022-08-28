@@ -65,7 +65,7 @@ export default class Bucket {
      * @param {Boolean} [priority=false] - if true, the item will be added to the front of the queue
      * @returns {void}
      */
-    queue(func: () => void, priority = false): void {
+    queue(func: () => void, priority = false) {
         if (priority) this._queue.unshift({ func, priority });
         else this._queue.push({ func, priority });
         this.check();

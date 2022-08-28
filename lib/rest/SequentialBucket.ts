@@ -45,7 +45,7 @@ export default class SequentialBucket {
         --this.remaining;
         this.processing = true;
         this._queue.shift()!(() => {
-            if (this._queue.length === 0) this.check(true);
+            if (this._queue.length > 0) this.check(true);
             else this.processing = false;
         });
     }
@@ -57,7 +57,7 @@ export default class SequentialBucket {
      * @param {Boolean} [priority=false] - if true, the item will be added to the front of the queue
      * @returns {void}
      */
-    queue(func: (cb: () => void) => void, priority = false): void {
+    queue(func: (cb: () => void) => void, priority = false) {
         if (priority) this._queue.unshift(func);
         else this._queue.push(func);
         this.check();
