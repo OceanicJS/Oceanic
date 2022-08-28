@@ -115,7 +115,7 @@ export default class ApplicationCommands extends BaseRoute {
                 options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw")),
                 type:                       opt.type
             }
-        }).then(data => new ApplicationCommand(data, this._client) as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -149,7 +149,7 @@ export default class ApplicationCommands extends BaseRoute {
                 options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw")),
                 type:                       opt.type
             }
-        }).then(data => new ApplicationCommand(data, this._client) as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -210,7 +210,7 @@ export default class ApplicationCommands extends BaseRoute {
                 name_localizations:         opt.nameLocalizations,
                 options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw"))
             }
-        }).then(data => new ApplicationCommand(data, this._client) as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -243,7 +243,7 @@ export default class ApplicationCommands extends BaseRoute {
                 name_localizations:         opt.nameLocalizations,
                 options:                    opt.options?.map(o => ApplicationCommand["_convertOption"](o, "raw"))
             }
-        }).then(data => new ApplicationCommand(data, this._client) as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -284,16 +284,14 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    async getGlobalCommand(applicationID: string, commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
-    async getGlobalCommand(applicationID: string, commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
-    async getGlobalCommand(applicationID: string, commandID: string, withLocalizations?: boolean) {
+    async getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, commandID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
             query
-        }).then(data => new ApplicationCommand(data, this._client) as never);
+        }).then(data => new ApplicationCommand(data, this._client) as unknown as T);
     }
 
     /**
@@ -303,16 +301,14 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async getGlobalCommands(applicationID: string, withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
-    async getGlobalCommands(applicationID: string, withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
-    async getGlobalCommands(applicationID: string, withLocalizations?: boolean) {
+    async getGlobalCommands<W extends boolean = false>(applicationID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             query
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand));
+        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
     }
 
     /**
@@ -324,16 +320,14 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand>}
      */
-    async getGuildCommand(applicationID: string, guildID: string, commandID: string, withLocalizations: true): Promise<AnyApplicationCommand<true>>;
-    async getGuildCommand(applicationID: string, guildID: string, commandID: string, withLocalizations?: false): Promise<AnyApplicationCommand<false>>;
-    async getGuildCommand(applicationID: string, guildID: string, commandID: string, withLocalizations?: boolean) {
+    async getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, guildID: string, commandID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
             query
-        }).then(data => new ApplicationCommand(data, this._client) as never);
+        }).then(data => new ApplicationCommand(data, this._client) as unknown as T);
     }
 
     /**
@@ -344,16 +338,14 @@ export default class ApplicationCommands extends BaseRoute {
      * @param {Boolean} [withLocalizations=false] - If localizations should be included.
      * @returns {Promise<ApplicationCommand[]>}
      */
-    async getGuildCommands(applicationID: string, guildID: string, withLocalizations: true): Promise<Array<AnyApplicationCommand<true>>>;
-    async getGuildCommands(applicationID: string, guildID: string, withLocalizations?: false): Promise<Array<AnyApplicationCommand<false>>>;
-    async getGuildCommands(applicationID: string, guildID: string, withLocalizations?: boolean) {
+    async getGuildCommands<W extends boolean = false>(applicationID: string, guildID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             query
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as never));
+        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
     }
 
     /**
