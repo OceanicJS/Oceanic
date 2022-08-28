@@ -8,7 +8,7 @@ A NodeJS Library for Discord.
 NodeJS **16.16.0** or higher is required.
 
 ```sh
-npm i OceanicJS/Oceanic
+npm i oceanic.js
 ```
 
 This module is in its early alpha stages. See the `examples` folder on github for some examples, and visit [this site](https://oceanic.owo-whats-this.dev) for documentation.

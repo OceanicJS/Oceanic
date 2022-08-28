@@ -1,5 +1,6 @@
 test/
 lib/
+docs/
 docs-plugin/
 .eslintignore
 .eslintrc.json
