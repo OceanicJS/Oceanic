@@ -1,4 +1,4 @@
-const { ButtonStyles, Client, ComponentTypes } = require("oceanic.js");
+const { Client } = require("oceanic.js");
 const fs = require("fs");
 
 const client = new Client({
