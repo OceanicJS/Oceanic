@@ -6,6 +6,7 @@
 	],
 	"plugin": [
 		"typedoc-plugin-rename-defaults",
+		"typedoc-plugin-extras",
 		"./docs-plugin/dark.js"
 	],
 	"tsconfig": "tsconfig.json",
@@ -18,8 +19,8 @@
 	"readme": "README.md",
 	"out": "docs",
 	"exclude": [
-		"node_modules",
-		"lib/util/Properties.ts"
+		"lib/util/Properties.ts",
 	],
-	"gitRevision": "dev"
+	"gitRevision": "dev",
+	"favicon": "favicon.ico"
 }
