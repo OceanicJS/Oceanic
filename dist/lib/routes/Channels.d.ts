@@ -1,6 +1,7 @@
 import BaseRoute from "./BaseRoute";
 import type { AddGroupRecipientOptions, AnyChannel, AnyTextChannel, ArchivedThreads, CreateInviteOptions, CreateMessageOptions, EditChannelOptions, EditMessageOptions, EditPermissionOptions, FollowedChannel, FollowAnnouncementChannelOptions, GetChannelMessagesOptions, GetArchivedThreadsOptions, GetReactionsOptions, InviteChannel, ThreadMember, StartThreadFromMessageOptions, StartThreadInForumOptions, StartThreadWithoutMessageOptions, GetInviteWithCountsAndExpirationOptions, GetInviteWithCountsOptions, GetInviteWithExpirationOptions, GetInviteWithNoneOptions, InviteInfoTypes } from "../types/channels";
 import Message from "../structures/Message";
+import type { CreateGroupChannelOptions } from "../types/users";
 import User from "../structures/User";
 import Invite from "../structures/Invite";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
@@ -8,6 +9,8 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
+import PrivateChannel from "../structures/PrivateChannel";
+import GroupChannel from "../structures/GroupChannel";
 export default class Channels extends BaseRoute {
     /**
      * Add a user to a group channel.
@@ -28,6 +31,22 @@ export default class Channels extends BaseRoute {
      * @returns {Promise<void>}
      */
     addThreadMember(id: string, userID: string): Promise<void>;
+    /**
+     * Create a direct message.
+     *
+     * @param {String} recipient - The id of the recipient of the direct message.
+     * @returns {Promise<PrivateChannel>}
+     */
+    createDM(recipient: string): Promise<PrivateChannel>;
+    /**
+     * Create a group dm.
+     *
+     * @param {Object} options
+     * @param {String[]} options.accessTokens - An array of access tokens with the `gdm.join` scope.
+     * @param {Object} [options.nicks] - A dictionary of ids to nicknames, looks unused.
+     * @returns {Promise<GroupChannel>}
+     */
+    createGroupDM(options: CreateGroupChannelOptions): Promise<GroupChannel>;
     /**
      * Create an invite for a channel.
      *

@@ -1,26 +1,8 @@
 import BaseRoute from "./BaseRoute";
-import type { CreateGroupChannelOptions, EditSelfUserOptions } from "../types/users";
-import PrivateChannel from "../structures/PrivateChannel";
-import GroupChannel from "../structures/GroupChannel";
+import type { EditSelfUserOptions } from "../types/users";
 import User from "../structures/User";
 import ExtendedUser from "../structures/ExtendedUser";
 export default class Users extends BaseRoute {
-    /**
-     * Create a direct message.
-     *
-     * @param {String} recipient - The id of the recipient of the direct message.
-     * @returns {Promise<PrivateChannel>}
-     */
-    createDM(recipient: string): Promise<PrivateChannel>;
-    /**
-     * Create a group dm.
-     *
-     * @param {Object} options
-     * @param {String[]} options.accessTokens - An array of access tokens with the `gdm.join` scope.
-     * @param {Object} [options.nicks] - A dictionary of ids to nicknames, looks unused.
-     * @returns {Promise<GroupChannel>}
-     */
-    createGroupDM(options: CreateGroupChannelOptions): Promise<GroupChannel>;
     /**
      * Get a user by their id
      *

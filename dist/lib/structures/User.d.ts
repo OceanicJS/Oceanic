@@ -1,4 +1,5 @@
 import Base from "./Base";
+import PrivateChannel from "./PrivateChannel";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
 import type { RawUser } from "../types/users";
@@ -37,6 +38,12 @@ export default class User extends Base {
      * @returns {String}
      */
     avatarURL(format?: ImageFormat, size?: number): string;
+    /**
+     * Create a direct message with this user.
+     *
+     * @returns {Promise<PrivateChannel>}
+     */
+    createDM(): Promise<PrivateChannel>;
     /**
      * The url of this user's default avatar.
      *

@@ -85,7 +85,7 @@ export interface ApplicationCommandOptionBase<T extends ApplicationCommandOption
     descriptionLocalizations?: Record<string, string>;
     name: string;
     nameLocalizations?: Record<string, string>;
-    required?: T extends ApplicationCommandOptionTypes.SUB_COMMAND | ApplicationCommandOptionTypes.SUB_COMMAND_GROUP ? boolean : never;
+    required?: T extends ApplicationCommandOptionTypes.SUB_COMMAND | ApplicationCommandOptionTypes.SUB_COMMAND_GROUP ? never : boolean;
     type: T;
 }
 
