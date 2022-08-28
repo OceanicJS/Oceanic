@@ -130,6 +130,7 @@
 <a href="structures_Guild.Guild.html#editUserVoiceState" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>edit<wbr/>User<wbr/>Voice<wbr/>State</span></a>
 <a href="structures_Guild.Guild.html#editWelcomeScreen" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>edit<wbr/>Welcome<wbr/>Screen</span></a>
 <a href="structures_Guild.Guild.html#editWidget" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>edit<wbr/>Widget</span></a>
+<a href="structures_Guild.Guild.html#fetchMembers" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>fetch<wbr/>Members</span></a>
 <a href="structures_Guild.Guild.html#getActiveThreads" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Active<wbr/>Threads</span></a>
 <a href="structures_Guild.Guild.html#getAuditLog" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Audit<wbr/>Log</span></a>
 <a href="structures_Guild.Guild.html#getAutoModerationRule" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Auto<wbr/>Moderation<wbr/>Rule</span></a>
@@ -1230,6 +1231,22 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.Widget.html" class="tsd-signature-type" data-tsd-kind="Interface">Widget</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L850">lib/structures/Guild.ts:850</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="fetchMembers" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>fetch<wbr/>Members</span><a href="#fetchMembers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="fetchMembers.fetchMembers-1">fetch<wbr/>Members<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_gateway.RequestGuildMembersOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RequestGuildMembersOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#fetchMembers.fetchMembers-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Request members from this guild.</p>
+
+<h3>Returns</h3></div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_gateway.RequestGuildMembersOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RequestGuildMembersOptions</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L865">lib/structures/Guild.ts:865</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getActiveThreads" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Active<wbr/>Threads</span><a href="#getActiveThreads" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1240,7 +1257,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.GetActiveThreadsResponse.html" class="tsd-signature-type" data-tsd-kind="Interface">GetActiveThreadsResponse</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L859">lib/structures/Guild.ts:859</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L874">lib/structures/Guild.ts:874</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getAuditLog" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Audit<wbr/>Log</span><a href="#getAuditLog" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1257,7 +1274,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_audit_log.GetAuditLogOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetAuditLogOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_audit_log.AuditLog.html" class="tsd-signature-type" data-tsd-kind="Interface">AuditLog</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L875">lib/structures/Guild.ts:875</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L890">lib/structures/Guild.ts:890</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getAutoModerationRule" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Auto<wbr/>Moderation<wbr/>Rule</span><a href="#getAutoModerationRule" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1275,7 +1292,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_AutoModerationRule.AutoModerationRule.html" class="tsd-signature-type" data-tsd-kind="Class">AutoModerationRule</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L885">lib/structures/Guild.ts:885</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L900">lib/structures/Guild.ts:900</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getAutoModerationRules" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Auto<wbr/>Moderation<wbr/>Rules</span><a href="#getAutoModerationRules" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1286,7 +1303,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_AutoModerationRule.AutoModerationRule.html" class="tsd-signature-type" data-tsd-kind="Class">AutoModerationRule</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L894">lib/structures/Guild.ts:894</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L909">lib/structures/Guild.ts:909</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getBan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Ban</span><a href="#getBan" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1304,7 +1321,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.Ban.html" class="tsd-signature-type" data-tsd-kind="Interface">Ban</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L904">lib/structures/Guild.ts:904</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L919">lib/structures/Guild.ts:919</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getBans" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Bans</span><a href="#getBans" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1320,7 +1337,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_guilds.GetBansOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetBansOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.Ban.html" class="tsd-signature-type" data-tsd-kind="Interface">Ban</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L917">lib/structures/Guild.ts:917</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L932">lib/structures/Guild.ts:932</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getChannels" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Channels</span><a href="#getChannels" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1331,7 +1348,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_channels.AnyGuildChannelWithoutThreads.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyGuildChannelWithoutThreads</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L926">lib/structures/Guild.ts:926</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L941">lib/structures/Guild.ts:941</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getEmoji" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Emoji</span><a href="#getEmoji" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1349,7 +1366,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_guilds.GuildEmoji.html" class="tsd-signature-type" data-tsd-kind="Type alias">GuildEmoji</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L936">lib/structures/Guild.ts:936</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L951">lib/structures/Guild.ts:951</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getEmojis" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Emojis</span><a href="#getEmojis" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1360,7 +1377,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_guilds.GuildEmoji.html" class="tsd-signature-type" data-tsd-kind="Type alias">GuildEmoji</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L945">lib/structures/Guild.ts:945</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L960">lib/structures/Guild.ts:960</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getIntegrations" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Integrations</span><a href="#getIntegrations" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1371,7 +1388,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Integration.Integration.html" class="tsd-signature-type" data-tsd-kind="Class">Integration</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L954">lib/structures/Guild.ts:954</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L969">lib/structures/Guild.ts:969</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getInvites" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Invites</span><a href="#getInvites" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1385,7 +1402,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><a href="../types/types_channels.InviteChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">InviteChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L963">lib/structures/Guild.ts:963</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L978">lib/structures/Guild.ts:978</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Member</span><a href="#getMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1403,7 +1420,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L973">lib/structures/Guild.ts:973</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L988">lib/structures/Guild.ts:988</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMembers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Members</span><a href="#getMembers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1419,7 +1436,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_guilds.GetMembersOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetMembersOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L985">lib/structures/Guild.ts:985</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1000">lib/structures/Guild.ts:1000</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getPreview" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Preview</span><a href="#getPreview" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1430,7 +1447,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_GuildPreview.GuildPreview.html" class="tsd-signature-type" data-tsd-kind="Class">GuildPreview</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L994">lib/structures/Guild.ts:994</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1009">lib/structures/Guild.ts:1009</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getPruneCount" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Prune<wbr/>Count</span><a href="#getPruneCount" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1446,7 +1463,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_guilds.GetPruneCountOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetPruneCountOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1006">lib/structures/Guild.ts:1006</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1021">lib/structures/Guild.ts:1021</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getRoles" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Roles</span><a href="#getRoles" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1457,7 +1474,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Role.Role.html" class="tsd-signature-type" data-tsd-kind="Class">Role</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1015">lib/structures/Guild.ts:1015</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1030">lib/structures/Guild.ts:1030</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getScheduledEvent" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Scheduled<wbr/>Event</span><a href="#getScheduledEvent" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1479,7 +1496,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_ScheduledEvent.ScheduledEvent.html" class="tsd-signature-type" data-tsd-kind="Class">ScheduledEvent</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1026">lib/structures/Guild.ts:1026</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1041">lib/structures/Guild.ts:1041</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getScheduledEventUsers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Scheduled<wbr/>Event<wbr/>Users</span><a href="#getScheduledEventUsers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1497,7 +1514,7 @@
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_scheduled_events.GetScheduledEventUsersOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetScheduledEventUsersOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_scheduled_events.ScheduledEventUser.html" class="tsd-signature-type" data-tsd-kind="Interface">ScheduledEventUser</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1041">lib/structures/Guild.ts:1041</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1056">lib/structures/Guild.ts:1056</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getScheduledEvents" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Scheduled<wbr/>Events</span><a href="#getScheduledEvents" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1515,7 +1532,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_ScheduledEvent.ScheduledEvent.html" class="tsd-signature-type" data-tsd-kind="Class">ScheduledEvent</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1051">lib/structures/Guild.ts:1051</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1066">lib/structures/Guild.ts:1066</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getTemplates" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Templates</span><a href="#getTemplates" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1526,7 +1543,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_GuildTemplate.GuildTemplate.html" class="tsd-signature-type" data-tsd-kind="Class">GuildTemplate</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1060">lib/structures/Guild.ts:1060</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1075">lib/structures/Guild.ts:1075</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getVanityURL" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>VanityURL</span><a href="#getVanityURL" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1537,7 +1554,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.GetVanityURLResponse.html" class="tsd-signature-type" data-tsd-kind="Interface">GetVanityURLResponse</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1069">lib/structures/Guild.ts:1069</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1084">lib/structures/Guild.ts:1084</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getVoiceRegions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Voice<wbr/>Regions</span><a href="#getVoiceRegions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1548,7 +1565,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_voice.VoiceRegion.html" class="tsd-signature-type" data-tsd-kind="Interface">VoiceRegion</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1078">lib/structures/Guild.ts:1078</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1093">lib/structures/Guild.ts:1093</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getWelcomeScreen" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Welcome<wbr/>Screen</span><a href="#getWelcomeScreen" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1559,7 +1576,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.WelcomeScreen.html" class="tsd-signature-type" data-tsd-kind="Interface">WelcomeScreen</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1087">lib/structures/Guild.ts:1087</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1102">lib/structures/Guild.ts:1102</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getWidget" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Widget</span><a href="#getWidget" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1570,7 +1587,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.Widget.html" class="tsd-signature-type" data-tsd-kind="Interface">Widget</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1096">lib/structures/Guild.ts:1096</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1111">lib/structures/Guild.ts:1111</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getWidgetImage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Widget<wbr/>Image</span><a href="#getWidgetImage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1588,7 +1605,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1106">lib/structures/Guild.ts:1106</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1121">lib/structures/Guild.ts:1121</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getWidgetJSON" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>WidgetJSON</span><a href="#getWidgetJSON" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1599,7 +1616,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.RawWidget.html" class="tsd-signature-type" data-tsd-kind="Interface">RawWidget</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1115">lib/structures/Guild.ts:1115</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1130">lib/structures/Guild.ts:1130</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getWidgetSettings" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Widget<wbr/>Settings</span><a href="#getWidgetSettings" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1610,7 +1627,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_guilds.WidgetSettings.html" class="tsd-signature-type" data-tsd-kind="Interface">WidgetSettings</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1124">lib/structures/Guild.ts:1124</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1139">lib/structures/Guild.ts:1139</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="iconURL" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>iconURL</span><a href="#iconURL" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1632,7 +1649,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1135">lib/structures/Guild.ts:1135</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1150">lib/structures/Guild.ts:1150</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeBan" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Ban</span><a href="#removeBan" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1653,7 +1670,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1145">lib/structures/Guild.ts:1145</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1160">lib/structures/Guild.ts:1160</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Member</span><a href="#removeMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1675,7 +1692,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1156">lib/structures/Guild.ts:1156</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1171">lib/structures/Guild.ts:1171</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeMemberRole" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Member<wbr/>Role</span><a href="#removeMemberRole" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1701,7 +1718,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1168">lib/structures/Guild.ts:1168</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1183">lib/structures/Guild.ts:1183</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="searchMembers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>search<wbr/>Members</span><a href="#searchMembers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1717,7 +1734,7 @@
 <h5>options: <a href="../interfaces/types_guilds.SearchMembersOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SearchMembersOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1180">lib/structures/Guild.ts:1180</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1195">lib/structures/Guild.ts:1195</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="syncTemplate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>sync<wbr/>Template</span><a href="#syncTemplate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1735,7 +1752,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_GuildTemplate.GuildTemplate.html" class="tsd-signature-type" data-tsd-kind="Class">GuildTemplate</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1190">lib/structures/Guild.ts:1190</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1205">lib/structures/Guild.ts:1205</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="toJSON" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>toJSON</span><a href="#toJSON" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -1744,7 +1761,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/types_json.JSONGuild.html" class="tsd-signature-type" data-tsd-kind="Interface">JSONGuild</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="structures_Base.Base.html">Base</a>.<a href="structures_Base.Base.html#toJSON">toJSON</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1194">lib/structures/Guild.ts:1194</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Guild.ts#L1209">lib/structures/Guild.ts:1209</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -1825,6 +1842,7 @@
 <li class="tsd-kind-module"><a href="../modules/structures_Application.html">structures/<wbr/>Application</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_ApplicationCommand.html">structures/<wbr/>Application<wbr/>Command</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Attachment.html">structures/<wbr/>Attachment</a></li>
+<li class="tsd-kind-module"><a href="../modules/structures_AuditLogEntry.html">structures/<wbr/>Audit<wbr/>Log<wbr/>Entry</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_AutoModerationRule.html">structures/<wbr/>Auto<wbr/>Moderation<wbr/>Rule</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_AutocompleteInteraction.html">structures/<wbr/>Autocomplete<wbr/>Interaction</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Base.html">structures/<wbr/>Base</a></li>
@@ -1984,6 +2002,7 @@
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#editUserVoiceState" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>edit<wbr/>User<wbr/>Voice<wbr/>State</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#editWelcomeScreen" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>edit<wbr/>Welcome<wbr/>Screen</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#editWidget" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>edit<wbr/>Widget</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#fetchMembers" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>fetch<wbr/>Members</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#getActiveThreads" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Active<wbr/>Threads</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#getAuditLog" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Audit<wbr/>Log</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="structures_Guild.Guild.html#getAutoModerationRule" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Auto<wbr/>Moderation<wbr/>Rule</a></li>

@@ -104,6 +104,7 @@ import Invite from "../structures/Invite";
 import Integration from "../structures/Integration";
 import AutoModerationRule from "../structures/AutoModerationRule";
 import Channel from "../structures/Channel";
+import AuditLogEntry from "../structures/AuditLogEntry";
 
 export default class Guilds extends BaseRoute {
 
@@ -1151,7 +1152,7 @@ export default class Guilds extends BaseRoute {
             query
         }).then(data => ({
             autoModerationRules:  data.auto_moderation_rules.map(rule => guild ? guild.autoModerationRules.update(rule) : new AutoModerationRule(rule, this._client)),
-            entries:              data.audit_log_entries,
+            entries:              data.audit_log_entries.map(entry => new AuditLogEntry(entry, this._client)),
             guildScheduledEvents: data.guild_scheduled_events.map(event => guild ? guild.scheduledEvents.update(event) : new ScheduledEvent(event, this._client)),
             integrations:         data.integrations.map(integration => new Integration(integration, this._client)),
             threads:              data.threads.map(thread => guild ? guild.threads.update(thread) : Channel.from(thread, this._client)),

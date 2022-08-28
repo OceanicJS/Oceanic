@@ -33,6 +33,7 @@ import type { RawVoiceState } from "../types/voice";
 import { VoiceRegion } from "../types/voice";
 import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
+import type { RequestGuildMembersOptions } from "../types/gateway";
 /** Represents a Discord server. */
 export default class Guild extends Base {
     /** This guild's afk voice channel. This can be a partial object with just an `id` property. */
@@ -565,6 +566,18 @@ export default class Guild extends Base {
      * @returns {Promise<Widget>}
      */
     editWidget(options: WidgetSettings): Promise<Widget>;
+    /**
+     * Request members from this guild.
+     *
+     * @param {Object} options
+     * @param {Number} [options.limit] - The maximum number of members to request.
+     * @param {Boolean} [options.presences=false] - If presences should be requested. Requires the `GUILD_PRESENCES` intent.
+     * @param {String} [options.query] - If provided, only members with a username that starts with this string will be returned. If empty or not provided, requires the `GUILD_MEMBERS` intent.
+     * @param {Number} [options.timeout=client.rest.options.requestTimeout] - The maximum amount of time in milliseconds to wait.
+     * @param {String[]} [options.userIDs] - The IDs of up to 100 users to specifically request.
+     * @returns {Promise<Member[]>}
+     */
+    fetchMembers(options?: RequestGuildMembersOptions): Promise<Member[]>;
     /**
      * Get the active threads in this guild.
      *
