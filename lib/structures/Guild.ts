@@ -237,28 +237,28 @@ export default class Guild extends Base {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client)).guild = this;
             }
         }
 
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
-                this.threads.add(Channel.from<AnyThreadChannel>(threadData, client));
+                this.threads.add(Channel.from<AnyThreadChannel>(threadData, client)).guild = this;
                 client.threadGuildMap[threadData.id] = this.id;
             }
         }
 
         if (data.members) {
             for (const member of data.members) {
-                this.members.update({ ...member, id: member.user!.id }, this.id);
+                this.members.update({ ...member, id: member.user!.id }, this.id).guild = this;
             }
         }
 
         if (data.stage_instances) {
             for (const stageInstance of data.stage_instances) {
                 stageInstance.guild_id = this.id;
-                this.stageInstances.update(stageInstance);
+                this.stageInstances.update(stageInstance).guild = this;
             }
         }
 

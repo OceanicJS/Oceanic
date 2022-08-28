@@ -1,0 +1,25 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "name": "Oceanic",
+    "entryPoints": [
+        "lib/"
+    ],
+    "plugin": [
+        "typedoc-plugin-rename-defaults",
+        "./docs-plugin/dark.js"
+    ],
+    "tsconfig": "tsconfig.json",
+    "entryPointStrategy": "expand",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "githubPages": false,
+    "hideGenerator": true,
+    "gitRemote": "origin",
+    "readme": "README.md",
+    "out": "docs",
+    "exclude": [
+        "node_modules",
+        "lib/util/Properties.ts"
+    ],
+    "excludeExternals": true
+}

@@ -28,7 +28,13 @@ import type { ClientEvents, ClientInstanceOptions, ClientOptions } from "./types
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
-import type { BotActivityTypes, GetBotGatewayResponse, SendStatuses, UpdateVoiceStateOptions } from "./types/gateway";
+import type {
+    BotActivity,
+    BotActivityTypes,
+    GetBotGatewayResponse,
+    SendStatuses,
+    UpdateVoiceStateOptions
+} from "./types/gateway";
 import UnavailableGuild from "./structures/UnavailableGuild";
 import VoiceConnectionManager from "./voice/VoiceConnectionManager";
 import type ExtendedUser from "./structures/ExtendedUser";
@@ -46,7 +52,7 @@ try {
 const BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    /** The client's partial application (only set when using a gateay connection). */
+    /** The client's partial application (only set when using a gateway connection). */
     application?: ClientApplication;
     channelGuildMap: Record<string, string>;
     gatewayURL: string;
@@ -61,7 +67,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     startTime = 0;
     threadGuildMap: Record<string, string>;
     unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
-    /** The client's user (only set when using a gateay connection). */
+    /** The client's user (only set when using a gateway connection). */
     user?: ExtendedUser;
     users: Collection<string, RawUser, User>;
     voiceConnections: VoiceConnectionManager;
@@ -226,6 +232,20 @@ export default class Client extends TypedEmitter<ClientEvents> {
             }
         }
         for (const id of this.shards.options.shardIDs) this.shards.spawn(id);
+    }
+
+    /**
+     * Edit the client's status across all shards.
+     *
+     * @param {SendStatuses} status - The status.
+     * @param {BotActivity[]} [activities] - An array of activities.
+     * @param {BotActivityTypes} [activities[].type] - The activity type.
+     * @param {String} [activities[].name] - The activity name.
+     * @param {String} [activities[].url] - The activity url.
+     * @returns
+     */
+    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []) {
+        return this.shards.forEach(shard => shard.editStatus(status, activities));
     }
 
     getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined {

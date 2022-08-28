@@ -62,6 +62,8 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
     embeds: Array<Embed>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
     flags?: number;
+    /** The ID of the guild this message is in. */
+    guildID?: string;
     /** The interaction info, if this message was the result of an interaction. */
     interaction?: MessageInteraction;
     member?: Member;
@@ -160,6 +162,7 @@ export default class Message<T extends AnyTextChannel = AnyTextChannel> extends 
         if (data.edited_timestamp !== undefined) this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
         if (data.embeds !== undefined) this.embeds = data.embeds;
         if (data.flags !== undefined) this.flags = data.flags;
+        if (data.guild_id !== undefined) this.guildID = data.guild_id;
         if (data.interaction !== undefined) {
             let member: RawMember & { id: string; } | undefined;
             if (data.interaction.member) member = {

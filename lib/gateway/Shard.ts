@@ -16,7 +16,10 @@ import type {
     RequestGuildMembersOptions,
     UpdateVoiceStateOptions,
     PresenceUpdate,
-    Presence
+    Presence,
+    SendStatuses,
+    BotActivity,
+    BotActivityTypes
 } from "../types/gateway";
 import type Member from "../structures/Member";
 import Base from "../structures/Base";
@@ -1145,6 +1148,22 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.reconnectInterval = Math.min(Math.round(this.reconnectInterval * (Math.random() * 2 + 1)), 30000);
             }
         } else this.hardReset();
+    }
+
+    /**
+     * Edit this shard's status.
+     *
+     * @param {SendStatuses} status - The status.
+     * @param {BotActivity[]} [activities] - An array of activities.
+     * @param {BotActivityTypes} [activities[].type] - The activity type.
+     * @param {String} [activities[].name] - The activity name.
+     * @param {String} [activities[].url] - The activity url.
+     * @returns
+     */
+    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []) {
+        this.presence.status = status;
+        this.presence.activities = activities;
+        return this.sendPresenceUpdate();
     }
 
     hardReset() {

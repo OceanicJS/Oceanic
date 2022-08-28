@@ -6,7 +6,9 @@
     "types": "dist/lib/index.d.ts",
     "scripts": {
         "lint": "eslint lib --ext .ts --fix",
-        "build": "rm -rf dist && tsc && sed -i '/__exportStar(require(\".\\/types\\/index\"), exports);/d' dist/lib/index.js && cp -r lib/types dist/lib"
+        "build:js": "rm -rf dist && tsc && sed -i '/__exportStar(require(\".\\/types\\/index\"), exports);/d' dist/lib/index.js && cp -r lib/types dist/lib",
+        "build:docs": "npx typedoc",
+        "build": "npm run build:js && npm run build:docs"
     },
     "repository": {
         "type": "git",

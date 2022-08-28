@@ -378,6 +378,7 @@ export interface RawMessage {
     edited_timestamp: string | null;
     embeds: Array<Embed>;
     flags?: number;
+    guild_id?: string;
     id: string;
     interaction?: RawMessageInteraction;
     member?: RawMember;
