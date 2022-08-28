@@ -7,6 +7,8 @@ const client = new Client({
     }
 });
 
+client.on("ready", () => console.log("Ready As", client.user.tag));
+
 client.on("messageCreate", async(msg) => {
     if(msg.content.includes("!component")) {
         await client.rest.channels.createMessage(msg.channel.id, {
