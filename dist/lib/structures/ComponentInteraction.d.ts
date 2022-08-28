@@ -82,12 +82,19 @@ export default class ComponentInteraction extends Interaction {
      */
     createModal(options: ModalData): Promise<void>;
     /**
-     * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
+     * Defer this interaction with a `DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE` response. This is an initial response, and more than one initial response cannot be used.
      *
      * @param {Number} flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      * @returns {Promise<void>}
      */
     defer(flags?: number): Promise<void>;
+    /**
+     * Defer this interaction with a `DEFERRED_UPDATE_MESAGE` response.. This is an initial response, and more than one initial response cannot be used.
+     *
+     * @param {Number} flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @returns {Promise<void>}
+     */
+    deferUpdate(flags?: number): Promise<void>;
     /**
      * Delete a follow up message.
      *

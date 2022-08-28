@@ -134,12 +134,24 @@ export default class ComponentInteraction extends Interaction {
     }
 
     /**
-     * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
+     * Defer this interaction with a `DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE` response. This is an initial response, and more than one initial response cannot be used.
      *
      * @param {Number} flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      * @returns {Promise<void>}
      */
     async defer(flags?: number) {
+        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        this.acknowledged = true;
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: flags });
+    }
+
+    /**
+     * Defer this interaction with a `DEFERRED_UPDATE_MESAGE` response.. This is an initial response, and more than one initial response cannot be used.
+     *
+     * @param {Number} flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @returns {Promise<void>}
+     */
+    async deferUpdate(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
         return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: flags });
