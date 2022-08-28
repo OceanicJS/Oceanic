@@ -14,7 +14,7 @@ import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
 import { File } from "../types/request-handler";
-import { ButtonStyles, ComponentTypes } from "../Constants";
+import Util from "../util/Util";
 
 export default class Webhooks extends BaseRoute {
     /**
@@ -149,7 +149,7 @@ export default class Webhooks extends BaseRoute {
             json:   {
                 allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components,
+                components:       options.components ? Util.formatComponents(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds
             },
@@ -221,36 +221,13 @@ export default class Webhooks extends BaseRoute {
                 allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
                 avatar_url:       options.avatarURL,
-                components:       options.components?.map(row => ({
-                    type:       row.type,
-                    components: row.components.map(component => {
-                        if (component.type === ComponentTypes.BUTTON) {
-                            if (component.style === ButtonStyles.LINK) return component;
-                            else return {
-                                custom_id: component.customID,
-                                disabled:  component.disabled,
-                                emoji:     component.emoji,
-                                label:     component.label,
-                                style:     component.style,
-                                type:      component.type
-                            };
-                        } else return {
-                            custom_id:   component.customID,
-                            disabled:    component.disabled,
-                            max_values:  component.maxValues,
-                            min_values:  component.minValues,
-                            options:     component.options,
-                            placeholder: component.placeholder,
-                            type:        component.type
-                        };
-                    })
-                })),
-                content:     options.content,
-                embeds:      options.embeds,
-                flags:       options.flags,
-                thread_name: options.threadName,
-                tts:         options.tts,
-                username:    options.username
+                components:       options.components ? Util.formatComponents(options.components) : [],
+                content:          options.content,
+                embeds:           options.embeds,
+                flags:            options.flags,
+                thread_name:      options.threadName,
+                tts:              options.tts,
+                username:         options.username
             },
             files
         }).then(res => {

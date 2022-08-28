@@ -57,6 +57,7 @@ export { default as ThreadChannel } from "./structures/ThreadChannel";
 export { default as TypedEmitter } from "./util/TypedEmitter";
 export { default as UnavailableGuild } from "./structures/UnavailableGuild";
 export { default as User } from "./structures/User";
+export { default as Util } from "./util/Util";
 export { default as VoiceChannel } from "./structures/VoiceChannel";
 export { default as VoiceState } from "./structures/VoiceState";
 export { default as Webhook } from "./structures/Webhook";

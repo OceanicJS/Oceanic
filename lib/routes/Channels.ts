@@ -39,9 +39,7 @@ import type {
     RawGroupChannel
 } from "../types/channels";
 import {
-    ButtonStyles,
     ChannelTypes,
-    ComponentTypes,
     InviteTargetTypes,
     OverwriteTypes,
     ThreadAutoArchiveDuration,
@@ -62,6 +60,7 @@ import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
 import PrivateChannel from "../structures/PrivateChannel";
 import GroupChannel from "../structures/GroupChannel";
+import Util from "../util/Util";
 
 export default class Channels extends BaseRoute {
     /**
@@ -199,32 +198,9 @@ export default class Channels extends BaseRoute {
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(id),
             json:   {
-                allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
-                attachments:      options.attachments,
-                components:       options.components?.map(row => ({
-                    type:       row.type,
-                    components: row.components.map(component => {
-                        if (component.type === ComponentTypes.BUTTON) {
-                            if (component.style === ButtonStyles.LINK) return component;
-                            else return {
-                                custom_id: component.customID,
-                                disabled:  component.disabled,
-                                emoji:     component.emoji,
-                                label:     component.label,
-                                style:     component.style,
-                                type:      component.type
-                            };
-                        } else return {
-                            custom_id:   component.customID,
-                            disabled:    component.disabled,
-                            max_values:  component.maxValues,
-                            min_values:  component.minValues,
-                            options:     component.options,
-                            placeholder: component.placeholder,
-                            type:        component.type
-                        };
-                    })
-                })),
+                allowed_mentions:  this._client._formatAllowedMentions(options.allowedMentions),
+                attachments:       options.attachments,
+                components:        options.components ? Util.formatComponents(options.components) : [],
                 content:           options.content,
                 embeds:            options.embeds,
                 flags:             options.flags,
@@ -479,7 +455,7 @@ export default class Channels extends BaseRoute {
             json:   {
                 allowed_mentions: this._client._formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components,
+                components:       options.components ? Util.formatComponents(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds,
                 flags:            options.flags
@@ -948,7 +924,7 @@ export default class Channels extends BaseRoute {
                 message:               {
                     allowed_mentions: this._client._formatAllowedMentions(options.message.allowedMentions),
                     attachments:      options.message.attachments,
-                    components:       options.message.components,
+                    components:       options.message.components ? Util.formatComponents(options.message.components) : [],
                     content:          options.message.content,
                     embeds:           options.message.embeds,
                     flags:            options.message.flags,

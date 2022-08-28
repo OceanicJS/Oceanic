@@ -2,10 +2,11 @@ import BaseRoute from "./BaseRoute";
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
 import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
-import { ButtonStyles, ComponentTypes, InteractionResponseTypes } from "../Constants";
+import { InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel } from "../types/channels";
 import Message from "../structures/Message";
 import { File } from "../types/request-handler";
+import Util from "../util/Util";
 
 export default class Interactions extends BaseRoute {
     /**
@@ -53,38 +54,9 @@ export default class Interactions extends BaseRoute {
                     allowed_mentions: this._client._formatAllowedMentions(options.data.allowedMentions),
                     attachments:      options.data.attachments,
                     content:          options.data.content,
-                    components:       options.data.components?.map(row => ({
-                        type:       row.type,
-                        components: row.components.map(component => {
-                            if (component.type === ComponentTypes.BUTTON) {
-                                if (component.style === ButtonStyles.LINK) return {
-                                    disabled: component.disabled,
-                                    emoji:    component.emoji,
-                                    label:    component.label,
-                                    style:    component.style,
-                                    type:     component.type,
-                                    url:      component.url
-                                }; else return {
-                                    custom_id: component.customID,
-                                    disabled:  component.disabled,
-                                    emoji:     component.emoji,
-                                    label:     component.label,
-                                    style:     component.style,
-                                    type:      component.type
-                                };
-                            } else return {
-                                custom_id:   component.customID,
-                                disabled:    component.disabled,
-                                max_values:  component.maxValues,
-                                min_values:  component.minValues,
-                                options:     component.options,
-                                placeholder: component.placeholder,
-                                type:        component.type
-                            };
-                        })
-                    })),
-                    embeds: options.data.embeds,
-                    flags:  options.data.flags
+                    components:       options.data.components ? Util.formatComponents(options.data.components) : [],
+                    embeds:           options.data.embeds,
+                    flags:            options.data.flags
                 };
                 break;
             }
@@ -101,21 +73,8 @@ export default class Interactions extends BaseRoute {
             case InteractionResponseTypes.MODAL: {
                 data = {
                     custom_id:  options.data.customID,
-                    components: options.data.components.map(row => ({
-                        type:       row.type,
-                        components: row.components.map(component => ({
-                            custom_id:   component.customID,
-                            label:       component.label,
-                            max_length:  component.maxLength,
-                            min_length:  component.minLength,
-                            placeholder: component.placeholder,
-                            required:    component.required,
-                            style:       component.style,
-                            type:        component.type,
-                            value:       component.value
-                        }))
-                    })),
-                    title: options.data.title
+                    components: Util.formatComponents(options.data.components),
+                    title:      options.data.title
                 };
                 break;
             }
