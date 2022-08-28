@@ -142,7 +142,7 @@
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/Base.ts#L9">lib/structures/Base.ts:9</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="lastMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>last<wbr/>Message</span><a href="#lastMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">last<wbr/>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_channels.AnyTextChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyTextChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/types_shared.Uncached.html" class="tsd-signature-type" data-tsd-kind="Interface">Uncached</a></div>
+<div class="tsd-signature">last<wbr/>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/types_shared.Uncached.html" class="tsd-signature-type" data-tsd-kind="Interface">Uncached</a><span class="tsd-signature-symbol"> | </span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_channels.AnyTextChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyTextChannel</a><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>The last message sent in this channel. This can be a partial object with only an <code>id</code> property.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#lastMessage">lastMessage</a></p>
@@ -198,7 +198,7 @@
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L42">lib/structures/ThreadChannel.ts:42</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="parent" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>parent</span><a href="#parent" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">parent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="structures_TextChannel.TextChannel.html" class="tsd-signature-type" data-tsd-kind="Class">TextChannel</a><span class="tsd-signature-symbol"> | </span><a href="structures_AnnouncementChannel.AnnouncementChannel.html" class="tsd-signature-type" data-tsd-kind="Class">AnnouncementChannel</a></div>
+<div class="tsd-signature">parent<span class="tsd-signature-symbol">:</span> <a href="structures_TextChannel.TextChannel.html" class="tsd-signature-type" data-tsd-kind="Class">TextChannel</a><span class="tsd-signature-symbol"> | </span><a href="structures_AnnouncementChannel.AnnouncementChannel.html" class="tsd-signature-type" data-tsd-kind="Class">AnnouncementChannel</a></div>
 <div class="tsd-comment tsd-typography"><p>The parent of this channel, if applicable. This will be a text/announcement channel if we&#39;re in a thread, category otherwise.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#parent">parent</a></p>
@@ -206,12 +206,12 @@
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L43">lib/structures/ThreadChannel.ts:43</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="parentID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>parentID</span><a href="#parentID" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">parentID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+<div class="tsd-signature">parentID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>The ID of the parent of this channel, if applicable.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#parentID">parentID</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/GuildChannel.ts#L23">lib/structures/GuildChannel.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L44">lib/structures/ThreadChannel.ts:44</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="rateLimitPerUser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>rate<wbr/>Limit<wbr/>Per<wbr/>User</span><a href="#rateLimitPerUser" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">rate<wbr/>Limit<wbr/>Per<wbr/>User<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
@@ -219,7 +219,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#rateLimitPerUser">rateLimitPerUser</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L45">lib/structures/ThreadChannel.ts:45</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L46">lib/structures/ThreadChannel.ts:46</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="threadMetadata" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>thread<wbr/>Metadata</span><a href="#threadMetadata" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">thread<wbr/>Metadata<span class="tsd-signature-symbol">:</span> <a href="../interfaces/types_channels.PrivateThreadmetadata.html" class="tsd-signature-type" data-tsd-kind="Interface">PrivateThreadmetadata</a></div>
@@ -235,7 +235,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#totalMessageSent">totalMessageSent</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L49">lib/structures/ThreadChannel.ts:49</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L50">lib/structures/ThreadChannel.ts:50</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="type" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>type</span><a href="#type" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">type<span class="tsd-signature-symbol">:</span> <a href="../enums/Constants.ChannelTypes.html#PRIVATE_THREAD" class="tsd-signature-type" data-tsd-kind="Enumeration Member">PRIVATE_THREAD</a></div>
@@ -295,7 +295,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#addMember">addMember</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L96">lib/structures/ThreadChannel.ts:96</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L97">lib/structures/ThreadChannel.ts:97</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="createMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Message</span><a href="#createMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -312,7 +312,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#createMessage">createMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L124">lib/structures/ThreadChannel.ts:124</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L125">lib/structures/ThreadChannel.ts:125</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="createReaction" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Reaction</span><a href="#createReaction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -335,7 +335,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#createReaction">createReaction</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L135">lib/structures/ThreadChannel.ts:135</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L136">lib/structures/ThreadChannel.ts:136</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="delete" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete</span><a href="#delete" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -370,7 +370,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#deleteMessage">deleteMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L146">lib/structures/ThreadChannel.ts:146</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L147">lib/structures/ThreadChannel.ts:147</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="deleteMessages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Messages</span><a href="#deleteMessages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -393,7 +393,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#deleteMessages">deleteMessages</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L157">lib/structures/ThreadChannel.ts:157</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L158">lib/structures/ThreadChannel.ts:158</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="deleteReaction" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Reaction</span><a href="#deleteReaction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -420,7 +420,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#deleteReaction">deleteReaction</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L169">lib/structures/ThreadChannel.ts:169</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L170">lib/structures/ThreadChannel.ts:170</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="deleteReactions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Reactions</span><a href="#deleteReactions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -443,7 +443,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#deleteReactions">deleteReactions</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L180">lib/structures/ThreadChannel.ts:180</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L181">lib/structures/ThreadChannel.ts:181</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="edit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>edit</span><a href="#edit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -481,7 +481,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_channels.AnyTextChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyTextChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#editMessage">editMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L220">lib/structures/ThreadChannel.ts:220</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L221">lib/structures/ThreadChannel.ts:221</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Member</span><a href="#getMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -500,7 +500,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ThreadMember.html" class="tsd-signature-type" data-tsd-kind="Interface">ThreadMember</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#getMember">getMember</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L230">lib/structures/ThreadChannel.ts:230</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L231">lib/structures/ThreadChannel.ts:231</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getMembers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Members</span><a href="#getMembers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -512,7 +512,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ThreadMember.html" class="tsd-signature-type" data-tsd-kind="Interface">ThreadMember</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#getMembers">getMembers</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L239">lib/structures/ThreadChannel.ts:239</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L240">lib/structures/ThreadChannel.ts:240</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Message</span><a href="#getMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -531,7 +531,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#getMessage">getMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L249">lib/structures/ThreadChannel.ts:249</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L250">lib/structures/ThreadChannel.ts:250</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getMessages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Messages</span><a href="#getMessages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -550,7 +550,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#getMessages">getMessages</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L263">lib/structures/ThreadChannel.ts:263</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L264">lib/structures/ThreadChannel.ts:264</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getPinnedMessages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Pinned<wbr/>Messages</span><a href="#getPinnedMessages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -562,7 +562,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#getPinnedMessages">getPinnedMessages</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L272">lib/structures/ThreadChannel.ts:272</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L273">lib/structures/ThreadChannel.ts:273</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getReactions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Reactions</span><a href="#getReactions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -589,7 +589,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#getReactions">getReactions</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L286">lib/structures/ThreadChannel.ts:286</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L287">lib/structures/ThreadChannel.ts:287</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="join" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>join</span><a href="#join" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -601,7 +601,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#join">join</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L295">lib/structures/ThreadChannel.ts:295</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L296">lib/structures/ThreadChannel.ts:296</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="leave" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>leave</span><a href="#leave" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -613,7 +613,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#leave">leave</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L304">lib/structures/ThreadChannel.ts:304</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L305">lib/structures/ThreadChannel.ts:305</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="pinMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pin<wbr/>Message</span><a href="#pinMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -636,7 +636,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#pinMessage">pinMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L315">lib/structures/ThreadChannel.ts:315</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L316">lib/structures/ThreadChannel.ts:316</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="removeMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Member</span><a href="#removeMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -655,7 +655,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#removeMember">removeMember</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L325">lib/structures/ThreadChannel.ts:325</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L326">lib/structures/ThreadChannel.ts:326</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="sendTyping" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>send<wbr/>Typing</span><a href="#sendTyping" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -667,7 +667,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#sendTyping">sendTyping</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L334">lib/structures/ThreadChannel.ts:334</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L335">lib/structures/ThreadChannel.ts:335</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="toJSON" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>toJSON</span><a href="#toJSON" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -708,7 +708,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="structures_ThreadChannel.ThreadChannel.html">ThreadChannel</a>.<a href="structures_ThreadChannel.ThreadChannel.html#unpinMessage">unpinMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L361">lib/structures/ThreadChannel.ts:361</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ThreadChannel.ts#L362">lib/structures/ThreadChannel.ts:362</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="from" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>from</span><a href="#from" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">

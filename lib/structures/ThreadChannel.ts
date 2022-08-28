@@ -40,7 +40,8 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     messages: Collection<string, RawMessage, Message>;
     /** The creator of this thread. */
     owner: User | Uncached;
-    declare parent: TextChannel | AnnouncementChannel | null;
+    declare parent: TextChannel | AnnouncementChannel;
+    declare parentID: string;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this thread. */
