@@ -9,6 +9,7 @@ import type PrivateThreadChannel from "./PrivateThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import User from "./User";
+import type CategoryChannel from "./CategoryChannel";
 import type {
     InviteTargetTypes,
     OverwriteTypes,
@@ -53,6 +54,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     messages: Collection<string, RawMessage, Message>;
     /** If this channel is age gated. */
     nsfw: boolean;
+    declare parent: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */

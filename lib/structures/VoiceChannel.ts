@@ -4,6 +4,7 @@ import Message from "./Message";
 import Invite from "./Invite";
 import User from "./User";
 import Member from "./Member";
+import type CategoryChannel from "./CategoryChannel";
 import type { ChannelTypes, InviteTargetTypes, OverwriteTypes, VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -35,6 +36,7 @@ export default class VoiceChannel extends GuildChannel {
     messages: Collection<string, RawMessage, Message>;
     /** If this channel is age gated. */
     nsfw: boolean;
+    declare parent: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
