@@ -5,7 +5,7 @@ import type { ShardEvents } from "../types/client";
 import Bucket from "../rest/Bucket";
 import { GatewayOPCodes } from "../Constants";
 import type { UpdatePreseneOptions, RequestGuildMembersOptions, UpdateVoiceStateOptions, SendStatuses, BotActivity, ShardStatus } from "../types/gateway";
-import type Member from "../structures/Member";
+import Member from "../structures/Member";
 import Base from "../structures/Base";
 import { WebSocket } from "ws";
 import { inspect } from "util";

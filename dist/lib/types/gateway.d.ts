@@ -1,10 +1,8 @@
 import type { RawUser } from "./users";
 import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
-import type { AnyGuildTextChannel } from "./channels";
 import type { Uncached } from "./shared";
 import type { ActivityTypes, AutoModerationTriggerTypes, IntentNames } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
-import type User from "../structures/User";
 import type { ClientOptions as WSClientOptions } from "ws";
 
 export type ReconnectDelayFunction = (lastDelay: number, attempts: number) => number;
@@ -165,14 +163,12 @@ export interface RawAutoModerationActionExecution {
 export interface AutoModerationActionExecution {
     action: AutoModerationAction;
     alertSystemMessageID?: string;
-    channelID?: AnyGuildTextChannel | Uncached;
     content: string;
     matchedContent: string;
     matchedKeyword: string | null;
     messageID?: string;
     rule: AutoModerationRule | Uncached;
     ruleTriggerType: AutoModerationTriggerTypes;
-    user: User | Uncached;
 }
 
 export type ShardStatus = "connecting" | "disconnected" | "handshaking" | "identifying" | "ready" | "resuming";

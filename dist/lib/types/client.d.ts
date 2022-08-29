@@ -83,7 +83,7 @@ export interface ClientEvents {
     /** @event Emitted when an application command's permissions are updated. */
     applicationCommandPermissionsUpdate: [guild: Guild, permissions: GuildApplicationCommandPermissions];
     /** @event Emitted when an auto moderation action is executed. Requires the `AUTO_MODERATION_EXECUTION` intent. */
-    autoModerationActionExecution: [guild: Guild, execution: AutoModerationActionExecution];
+    autoModerationActionExecution: [guild: Guild, channel: AnyGuildTextChannel | Uncached | null, user: User | Uncached, executionOptions: AutoModerationActionExecution];
     /** @event Emitted when an auto moderation rule is created. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleCreate: [rule: AutoModerationRule];
     /** @event Emitted when an auto moderation rule is deleted. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
@@ -121,13 +121,13 @@ export interface ClientEvents {
     /** @event Emitted when a guild's integrations are updated. Requires the `GUILD_INTEGRATOPMS` intent. */
     guildIntegrationsUpdate: [guild: Guild];
     /** @event Emitted when a member joins a guild. Requires the `GUILD_MEMBERS` intent. */
-    guildMemberAdd: [guild: Guild, member: Member];
+    guildMemberAdd: [member: Member];
     /** @event Emitted when a chunk of guild members is received from Discord. */
     guildMemberChunk: [guild: Guild, members: Array<Member>];
     /** @event Emitted when a member leaves a guild. Requires the `GUILD_MEMBERS` intent.*/
-    guildMemberRemove: [guild: Guild, member: Member | User];
+    guildMemberRemove: [member: Member | User];
     /** @event Emitted when a guild member is updates. Requires the `GUILD_MEMBERS` intent.*/
-    guildMemberUpdate: [guild: Guild, member: Member, oldMember: JSONMember | null];
+    guildMemberUpdate: [member: Member, oldMember: JSONMember | null];
     /** @event Emitted when a role is created. Requires the `GUILDS` intent. */
     guildRoleCreate: [role: Role];
     /** @event Emitted when a role is deleted. Requires the `GUILDS` intent. */
@@ -149,7 +149,7 @@ export interface ClientEvents {
     /** @event Emitted when a guild becomes unavailable. Requires the `GUILDS` intent. */
     guildUnavailable: [guild: UnavailableGuild];
     /** @event Emitted when a guild is updated. Requires the `GUILDS` intent. */
-    guildUpdate: [guild: Guild, oldGuild: JSONGuild];
+    guildUpdate: [guild: Guild, oldGuild: JSONGuild | null];
     /** @event Emitted when a shard receives the HELLO packet. */
     hello: [interval: number, shard: number];
     /** @event Emitted when an integration is created. Requires the `GUILD_INTEGRATIONS` intent. */
@@ -231,7 +231,7 @@ export interface ClientEvents {
     /** @event Emitted with various warning information. */
     warn: [info: string, shard?: number];
     /** @event Emitted when a guild's webhooks are updated. Requires the `GUILD_WEBHOOKS` intent. */
-    webhooksUpdate: [channel: AnyGuildChannelWithoutThreads | Uncached];
+    webhooksUpdate: [guild: Guild, channel: AnyGuildChannelWithoutThreads | Uncached];
 }
 
 export interface ShardEvents {

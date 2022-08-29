@@ -22,12 +22,12 @@ import type {
     BotActivityTypes,
     ShardStatus
 } from "../types/gateway";
-import type Member from "../structures/Member";
+import Member from "../structures/Member";
 import Base from "../structures/Base";
 import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
 import ClientApplication from "../structures/ClientApplication";
 import type { RawOAuthUser, RawUser } from "../types/users";
-import type { RawGuild } from "../types/guilds";
+import type { RawGuild, RawMember } from "../types/guilds";
 import ExtendedUser from "../structures/ExtendedUser";
 import AutoModerationRule from "../structures/AutoModerationRule";
 import Channel from "../structures/Channel";
@@ -185,7 +185,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this._client.emit("packet", packet, this.id);
         switch (packet.t) {
             case "APPLICATION_COMMAND_PERMISSIONS_UPDATE": {
-                this._client.emit("applicationCommandPermissionsUpdate", this._client.guilds.get(packet.d.guild_id)!, {
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in APPLICATION_COMMAND_PERMISSIONS_UPDATE: ${packet.d.guild_id}`);
+                    break;
+                }
+                this._client.emit("applicationCommandPermissionsUpdate", guild, {
                     application: packet.d.application_id === this._client.application!.id ? this._client.application! : { id: packet.d.application_id },
                     id:          packet.d.id,
                     permissions: packet.d.permissions
@@ -194,26 +199,61 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "AUTO_MODERATION_ACTION_EXECUTION": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
-                this._client.emit("autoModerationRuleCreate", guild.autoModerationRules.update(packet.d));
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in AUTO_MODERATION_ACTION_EXECUTION: ${packet.d.guild_id}`);
+                    break;
+                }
+                const channel = !packet.d.channel_id ? null : this._client.getChannel(packet.d.channel_id) || { id: packet.d.channel_id };
+                this._client.emit("autoModerationActionExecution", guild, channel, this._client.users.get(packet.d.user_id) || { id: packet.d.user_id },{
+                    action: {
+                        metadata: {
+                            channelID:       packet.d.action.metadata.channel_id,
+                            durationSeconds: packet.d.action.metadata.duration_seconds
+                        },
+                        type: packet.d.action.type
+                    },
+                    alertSystemMessageID: packet.d.alert_system_message_id,
+                    content:              packet.d.content,
+                    matchedContent:       packet.d.matched_content,
+                    matchedKeyword:       packet.d.matched_keyword,
+                    messageID:            packet.d.message_id,
+                    rule:                 guild && guild.autoModerationRules.get(packet.d.rule_id) || { id: packet.d.rule_id },
+                    ruleTriggerType:      packet.d.rule_trigger_type
+                });
                 break;
             }
 
             case "AUTO_MODERATION_RULE_CREATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in AUTO_MODERATION_RULE_CREATE: ${packet.d.guild_id}`);
+                    this._client.emit("autoModerationRuleCreate", new AutoModerationRule(packet.d, this._client));
+                    break;
+                }
                 this._client.emit("autoModerationRuleCreate", guild.autoModerationRules.update(packet.d));
                 break;
             }
 
             case "AUTO_MODERATION_RULE_DELETE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in AUTO_MODERATION_RULE_DELETE: ${packet.d.guild_id}`);
+                    this._client.emit("autoModerationRuleDelete", new AutoModerationRule(packet.d, this._client));
+                    break;
+                }
                 guild.autoModerationRules.delete(packet.d.id);
                 this._client.emit("autoModerationRuleDelete", new AutoModerationRule(packet.d, this._client));
                 break;
             }
 
             case "AUTO_MODERATION_RULE_UPDATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in AUTO_MODERATION_RULE_UPDATE: ${packet.d.guild_id}`);
+                    this._client.emit("autoModerationRuleUpdate", new AutoModerationRule(packet.d, this._client), null);
+                    break;
+                }
                 const oldRule = guild.autoModerationRules.get(packet.d.id)?.toJSON() || null;
                 this._client.emit("autoModerationRuleUpdate", guild.autoModerationRules.update(packet.d), oldRule);
                 break;
@@ -273,13 +313,21 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_BAN_ADD": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_BAN_ADD: ${packet.d.guild_id}`);
+                    break;
+                }
                 this._client.emit("guildBanAdd", guild, this._client.users.update(packet.d.user));
                 break;
             }
 
             case "GUILD_BAN_REMOVE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_BAN_REMOVE: ${packet.d.guild_id}`);
+                    break;
+                }
                 this._client.emit("guildBanRemove", guild, this._client.users.update(packet.d.user));
                 break;
             }
@@ -315,7 +363,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_EMOJIS_UPDATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_EMOJIS_UPDATE: ${packet.d.guild_id}`);
+                    break;
+                }
                 const oldEmojis = [...guild.emojis];
                 guild["update"]({ emojis: packet.d.emojis });
                 this._client.emit("guildEmojisUpdate", guild, guild.emojis, oldEmojis);
@@ -323,13 +375,23 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_INTEGRATIONS_UPDATE": {
-                this._client.emit("guildIntegrationsUpdate", this._client.guilds.get(packet.d.guild_id)!);
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_INTEGRATIONS_UPDATE: ${packet.d.guild_id}`);
+                    break;
+                }
+                this._client.emit("guildIntegrationsUpdate", guild);
                 break;
             }
 
             case "GUILD_MEMBER_ADD": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
-                this._client.emit("guildMemberAdd", guild, guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id));
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_MEMBER_ADD: ${packet.d.guild_id}`);
+                    this._client.emit("guildMemberAdd", new Member(packet.d as RawMember, this._client, packet.d.guild_id));
+                    break;
+                }
+                this._client.emit("guildMemberAdd", guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id));
                 break;
             }
 
@@ -365,20 +427,30 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_MEMBER_REMOVE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_MEMBER_REMOVE: ${packet.d.guild_id}`);
+                    this._client.emit("guildMemberRemove", this._client.users.update(packet.d.user));
+                    break;
+                }
                 let member: Member | User;
-                if (guild.members.has(packet.d.user!.id)) {
-                    member = guild.members.get(packet.d.user!.id)!;
+                if (guild.members.has(packet.d.user.id)) {
+                    member = guild.members.get(packet.d.user.id)!;
                     member["update"]({ user: packet.d.user });
-                } else member = this._client.users.update(packet.d.user!);
-                this._client.emit("guildMemberRemove", guild, member);
+                } else member = this._client.users.update(packet.d.user);
+                this._client.emit("guildMemberRemove", member);
                 break;
             }
 
             case "GUILD_MEMBER_UPDATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_MEMBER_UPDATE: ${packet.d.guild_id}`);
+                    this._client.emit("guildMemberUpdate", new Member(packet.d as RawMember, this._client, packet.d.guild_id), null);
+                    break;
+                }
                 const oldMember = guild.members.get(packet.d.user!.id)?.toJSON() || null;
-                this._client.emit("guildMemberUpdate", guild, guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id), oldMember);
+                this._client.emit("guildMemberUpdate", guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id), oldMember);
                 break;
             }
 
@@ -402,13 +474,23 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_SCHEDULED_EVENT_CREATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_CREATE: ${packet.d.guild_id}`);
+                    this._client.emit("guildScheduledEventCreate", new ScheduledEvent(packet.d, this._client));
+                    break;
+                }
                 this._client.emit("guildScheduledEventCreate", guild.scheduledEvents.update(packet.d));
                 break;
             }
 
             case "GUILD_SCHEDULED_EVENT_DELETE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_DELETE: ${packet.d.guild_id}`);
+                    this._client.emit("guildScheduledEventDelete", new ScheduledEvent(packet.d, this._client));
+                    break;
+                }
                 let event: ScheduledEvent;
                 if (guild.scheduledEvents.has(packet.d.id)) event = guild.scheduledEvents.get(packet.d.id)!;
                 else event = new ScheduledEvent(packet.d, this._client);
@@ -418,14 +500,20 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_SCHEDULED_EVENT_UPDATE": {
                 const guild = this._client.guilds.get(packet.d.guild_id)!;
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_UPDATE: ${packet.d.guild_id}`);
+                    this._client.emit("guildScheduledEventUpdate", new ScheduledEvent(packet.d, this._client), null);
+                    break;
+                }
                 const oldEvent = guild.scheduledEvents.get(packet.d.id)?.toJSON() || null;
                 this._client.emit("guildScheduledEventUpdate", guild.scheduledEvents.update(packet.d), oldEvent);
                 break;
             }
 
             case "GUILD_SCHEDULED_EVENT_USER_ADD": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
-                const event = guild.scheduledEvents.get(packet.d.guild_scheduled_event_id) || { id: packet.d.guild_scheduled_event_id };
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_USER_ADD: ${packet.d.guild_id}`);
+                const event = guild && guild.scheduledEvents.get(packet.d.guild_scheduled_event_id) || { id: packet.d.guild_scheduled_event_id };
                 if ("userCount" in event) event.userCount++;
                 const user = this._client.users.get(packet.d.user_id) || { id: packet.d.user_id };
                 this._client.emit("guildScheduledEventUserAdd", event, user);
@@ -433,8 +521,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_SCHEDULED_EVENT_USER_REMOVE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
-                const event = guild.scheduledEvents.get(packet.d.guild_scheduled_event_id) || { id: packet.d.guild_scheduled_event_id };
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_USER_REMOVE: ${packet.d.guild_id}`);
+                const event = guild && guild.scheduledEvents.get(packet.d.guild_scheduled_event_id) || { id: packet.d.guild_scheduled_event_id };
                 if ("userCount" in event) event.userCount--;
                 const user = this._client.users.get(packet.d.user_id) || { id: packet.d.user_id };
                 this._client.emit("guildScheduledEventUserRemove", event, user);
@@ -442,7 +531,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_STICKERS_UPDATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in GUILD_STICKERS_UPDATE: ${packet.d.guild_id}`);
+                    break;
+                }
                 const oldStickers = [...guild.stickers];
                 guild["update"]({ stickers: packet.d.stickers });
                 this._client.emit("guildStickersUpdate", guild, guild.stickers, oldStickers);
@@ -450,26 +543,38 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_UPDATE": {
-                const guild = this._client.guilds.get(packet.d.id)!;
-                const oldGuild = guild.toJSON();
+                const guild = this._client.guilds.get(packet.d.id);
+                const oldGuild = guild?.toJSON() || null;
                 this._client.emit("guildUpdate", this._client.guilds.update(packet.d), oldGuild);
                 break;
             }
 
             case "INTEGRATION_CREATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in INTEGRATION_CREATE: ${packet.d.guild_id}`);
+                    break;
+                }
                 this._client.emit("integrationCreate", guild, guild.integrations.update(packet.d));
                 break;
             }
 
             case "INTEGRATION_DELETE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in INTEGRATION_DELETE: ${packet.d.guild_id}`);
+                    break;
+                }
                 this._client.emit("integrationDelete", guild, guild.integrations.get(packet.d.id) || { applicationID: packet.d.application_id, id: packet.d.id });
                 break;
             }
 
             case "INTEGRATION_UPDATE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in INTEGRATION_UPDATE: ${packet.d.guild_id}`);
+                    break;
+                }
                 const oldIntegration = guild.integrations.get(packet.d.id)?.toJSON() || null;
                 this._client.emit("integrationUpdate", guild, guild.integrations.update(packet.d), oldIntegration);
                 break;
@@ -607,7 +712,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                 const guild = this._client.guilds.get(packet.d.guild_id);
                 if (!guild) {
-                    this._client.emit("debug", `Got PRESENCE_UPDATE for ${packet.d.user.id} without guild ${packet.d.guild_id}`);
+                    this._client.emit("debug", `Missing guild in PRESENCE_UPDATE: ${packet.d.guild_id}`);
                     break;
                 }
                 const member = guild.members.get(packet.d.user.id);
@@ -852,8 +957,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "WEBHOOKS_UPDATE": {
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                if (!guild) {
+                    this._client.emit("debug", `Missing guild in WEBHOOKS_UPDATE: ${packet.d.guild_id}`);
+                    break;
+                }
                 const channel = this._client.getChannel<AnyGuildChannelWithoutThreads>(packet.d.channel_id) || { id: packet.d.channel_id };
-                this._client.emit("webhooksUpdate", channel);
+                this._client.emit("webhooksUpdate", guild, channel);
                 break;
             }
         }

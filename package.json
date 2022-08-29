@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DonovanDMC/Oceanic.git"
+    "url": "git+https://github.com/OceanicJS/Oceanic.git"
   },
   "keywords": [
     "discord",
@@ -31,9 +31,9 @@
   "author": "Donovan Daniels <hewwo@yiff.rocks>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DonovanDMC/Oceanic/issues"
+    "url": "https://github.com/OceanicJS/Oceanic/issues"
   },
-  "homepage": "https://github.com/DonovanDMC/Oceanic#readme",
+  "homepage": "https://github.com/OceanicJS/Oceanic#readme",
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/node": "^16.11.56",
