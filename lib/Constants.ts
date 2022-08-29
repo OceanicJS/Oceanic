@@ -51,6 +51,8 @@ export enum UserFlags {
     EARLY_SUPPORTER      = 1 << 9,
     PSUEDO_TEAM_USER     = 1 << 10,
 
+    SYSTEM = 1 << 12,
+
     BUG_HUNTER_LEVEL_2 = 1 << 14,
 
     VERIFIED_BOT          = 1 << 16,
