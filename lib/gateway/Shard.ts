@@ -428,6 +428,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_MEMBER_REMOVE": {
+                if (packet.d.user.id === this._client.user.id) break;
                 const guild = this._client.guilds.get(packet.d.guild_id);
                 if (!guild) {
                     this._client.emit("debug", `Missing guild in GUILD_MEMBER_REMOVE: ${packet.d.guild_id}`);
