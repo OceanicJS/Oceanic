@@ -391,6 +391,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this._client.emit("guildMemberAdd", new Member(packet.d as RawMember, this._client, packet.d.guild_id));
                     break;
                 }
+                guild.memberCount++;
                 this._client.emit("guildMemberAdd", guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id));
                 break;
             }
@@ -430,15 +431,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this._client.guilds.get(packet.d.guild_id);
                 if (!guild) {
                     this._client.emit("debug", `Missing guild in GUILD_MEMBER_REMOVE: ${packet.d.guild_id}`);
-                    this._client.emit("guildMemberRemove", this._client.users.update(packet.d.user));
+                    this._client.emit("guildMemberRemove", this._client.users.update(packet.d.user), { id: packet.d.guild_id });
                     break;
                 }
+                guild.memberCount--;
                 let member: Member | User;
                 if (guild.members.has(packet.d.user.id)) {
                     member = guild.members.get(packet.d.user.id)!;
                     member["update"]({ user: packet.d.user });
                 } else member = this._client.users.update(packet.d.user);
-                this._client.emit("guildMemberRemove", member);
+                this._client.emit("guildMemberRemove", member, guild);
                 break;
             }
 
