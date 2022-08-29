@@ -124,7 +124,7 @@ export interface ClientEvents {
     guildMemberAdd: [member: Member];
     /** @event Emitted when a chunk of guild members is received from Discord. */
     guildMemberChunk: [guild: Guild, members: Array<Member>];
-    /** @event Emitted when a member leaves a guild. Requires the `GUILD_MEMBERS` intent.*/
+    /** @event Emitted when a member leaves a guild. Requires the `GUILD_MEMBERS` intent. If the member is uncached, the first parameter will be a user. If the guild is uncached, the first parameter will be a user, and the second will be an object with only an `id`. */
     guildMemberRemove: [member: Member | User, guild: Guild | Uncached];
     /** @event Emitted when a guild member is updates. Requires the `GUILD_MEMBERS` intent.*/
     guildMemberUpdate: [member: Member, oldMember: JSONMember | null];
