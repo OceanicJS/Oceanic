@@ -29,8 +29,10 @@ export { default as GroupChannel } from "./structures/GroupChannel";
 export { default as Guild } from "./structures/Guild";
 export { default as GuildChannel } from "./structures/GuildChannel";
 export { default as GuildPreview } from "./structures/GuildPreview";
+export { default as GuildScheduledEvent } from "./structures/GuildScheduledEvent";
 export { default as GuildTemplate } from "./structures/GuildTemplate";
 export { default as Integration } from "./structures/Integration";
+export { default as InteractionOptionsWrapper } from "./util/InteractionOptionsWrapper";
 export { default as Invite } from "./structures/Invite";
 export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";
@@ -45,7 +47,6 @@ export { default as PublicThreadChannel } from "./structures/PublicThreadChannel
 export { default as RESTManager } from "./rest/RESTManager";
 export { default as Role } from "./structures/Role";
 export * as Routes from "./util/Routes";
-export { default as ScheduledEvent } from "./structures/ScheduledEvent";
 export { default as SequentialBucket } from "./rest/SequentialBucket";
 export { default as Shard } from "./gateway/Shard";
 export { default as ShardManager } from "./gateway/ShardManager";

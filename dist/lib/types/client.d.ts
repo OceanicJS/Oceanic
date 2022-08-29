@@ -49,7 +49,7 @@ import type StageChannel from "../structures/StageChannel";
 import type User from "../structures/User";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
-import type ScheduledEvent from "../structures/ScheduledEvent";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type Integration from "../structures/Integration";
 import type Invite from "../structures/Invite";
 import type Message from "../structures/Message";
@@ -135,15 +135,15 @@ export interface ClientEvents {
     /** @event Emitted when a role is updated. Requires the `GUILDS` intent. */
     guildRoleUpdate: [role: Role, oldRole: JSONRole | null];
     /** @event Emitted when a scheduled event is created. Requires the `GUILD_SCHEDULED_EVENTS` intent. */
-    guildScheduledEventCreate: [event: ScheduledEvent];
+    guildScheduledEventCreate: [event: GuildScheduledEvent];
     /** @event Emitted when a scheduled event is deleted. Requires the `GUILD_SCHEDULED_EVENTS` intent. */
-    guildScheduledEventDelete: [event: ScheduledEvent];
+    guildScheduledEventDelete: [event: GuildScheduledEvent];
     /** @event Emitted when a scheduled event is updated. Requires the `GUILD_SCHEDULED_EVENTS` intent. */
-    guildScheduledEventUpdate: [event: ScheduledEvent, oldEvent: JSONScheduledEvent | null];
+    guildScheduledEventUpdate: [event: GuildScheduledEvent, oldEvent: JSONScheduledEvent | null];
     /** @event Emitted when a user subscribes to a scheduled event. Requires the `GUILD_SCHEDULED_EVENTS` intent. */
-    guildScheduledEventUserAdd: [event: ScheduledEvent | Uncached, user: User | Uncached];
+    guildScheduledEventUserAdd: [event: GuildScheduledEvent | Uncached, user: User | Uncached];
     /** @event Emitted when a user unsubscribes from a scheduled event. Requires the `GUILD_SCHEDULED_EVENTS` intent. */
-    guildScheduledEventUserRemove: [event: ScheduledEvent | Uncached, user: User | Uncached];
+    guildScheduledEventUserRemove: [event: GuildScheduledEvent | Uncached, user: User | Uncached];
     /** @event Emitted when a guild's stickers are updated. Requires the `GUILD_EMOJIS_AND_STICKERS` intent. */
     guildStickersUpdate: [guild: Guild, stickers: Array<Sticker>, oldStickers: Array<Sticker>];
     /** @event Emitted when a guild becomes unavailable. Requires the `GUILDS` intent. */

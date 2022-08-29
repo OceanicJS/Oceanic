@@ -17,7 +17,7 @@
 <h1>Variable AllGuildPermissions<code class="tsd-tag ts-flagConst">Const</code> </h1></div>
 <div class="tsd-signature">All<wbr/>Guild<wbr/>Permissions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">bigint</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/Constants.ts#L306">lib/Constants.ts:306</a></li></ul></aside></div>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/Constants.ts#L308">lib/Constants.ts:308</a></li></ul></aside></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -76,6 +76,7 @@
 <li class="tsd-kind-module"><a href="../modules/structures_Guild.html">structures/<wbr/>Guild</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_GuildChannel.html">structures/<wbr/>Guild<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_GuildPreview.html">structures/<wbr/>Guild<wbr/>Preview</a></li>
+<li class="tsd-kind-module"><a href="../modules/structures_GuildScheduledEvent.html">structures/<wbr/>Guild<wbr/>Scheduled<wbr/>Event</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_GuildTemplate.html">structures/<wbr/>Guild<wbr/>Template</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Integration.html">structures/<wbr/>Integration</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Interaction.html">structures/<wbr/>Interaction</a></li>
@@ -91,7 +92,6 @@
 <li class="tsd-kind-module"><a href="../modules/structures_PrivateThreadChannel.html">structures/<wbr/>Private<wbr/>Thread<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_PublicThreadChannel.html">structures/<wbr/>Public<wbr/>Thread<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Role.html">structures/<wbr/>Role</a></li>
-<li class="tsd-kind-module"><a href="../modules/structures_ScheduledEvent.html">structures/<wbr/>Scheduled<wbr/>Event</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_StageChannel.html">structures/<wbr/>Stage<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_StageInstance.html">structures/<wbr/>Stage<wbr/>Instance</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Team.html">structures/<wbr/>Team</a></li>
@@ -125,6 +125,7 @@
 <li class="tsd-kind-module"><a href="../modules/types_webhooks.html">types/webhooks</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Collection.html">util/<wbr/>Collection</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Debug.html">util/<wbr/>Debug</a></li>
+<li class="tsd-kind-module"><a href="../modules/util_InteractionOptionsWrapper.html">util/<wbr/>Interaction<wbr/>Options<wbr/>Wrapper</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Routes.html">util/<wbr/>Routes</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_TypedEmitter.html">util/<wbr/>Typed<wbr/>Emitter</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Util.html">util/<wbr/>Util</a></li>
@@ -152,6 +153,9 @@
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.GatewayCloseCodes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Gateway<wbr/>Close<wbr/>Codes</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.GatewayOPCodes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>GatewayOPCodes</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.GuildNSFWLevels.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>GuildNSFWLevels</a></li>
+<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.GuildScheduledEventEntityTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Guild<wbr/>Scheduled<wbr/>Event<wbr/>Entity<wbr/>Types</a></li>
+<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.GuildScheduledEventPrivacyLevels.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Guild<wbr/>Scheduled<wbr/>Event<wbr/>Privacy<wbr/>Levels</a></li>
+<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.GuildScheduledEventStatuses.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Guild<wbr/>Scheduled<wbr/>Event<wbr/>Statuses</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.IntegrationExpireBehaviors.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Integration<wbr/>Expire<wbr/>Behaviors</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.Intents.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Intents</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.InteractionResponseTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Interaction<wbr/>Response<wbr/>Types</a></li>
@@ -165,15 +169,13 @@
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.OverwriteTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Overwrite<wbr/>Types</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.PremiumTiers.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Premium<wbr/>Tiers</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.PremiumTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Premium<wbr/>Types</a></li>
-<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.ScheduledEventEntityTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Scheduled<wbr/>Event<wbr/>Entity<wbr/>Types</a></li>
-<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.ScheduledEventPrivacyLevels.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Scheduled<wbr/>Event<wbr/>Privacy<wbr/>Levels</a></li>
-<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.ScheduledEventStatuses.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Scheduled<wbr/>Event<wbr/>Statuses</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.StageInstancePrivacyLevels.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Stage<wbr/>Instance<wbr/>Privacy<wbr/>Levels</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.StickerFormatTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Sticker<wbr/>Format<wbr/>Types</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.StickerTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Sticker<wbr/>Types</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.SystemChannelFlags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>System<wbr/>Channel<wbr/>Flags</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.TeamMembershipState.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Team<wbr/>Membership<wbr/>State</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.TextInputStyles.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Text<wbr/>Input<wbr/>Styles</a></li>
+<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.ThreadMemberFlags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Thread<wbr/>Member<wbr/>Flags</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.UserFlags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>User<wbr/>Flags</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.VerificationLevels.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Verification<wbr/>Levels</a></li>
 <li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/Constants.VideoQualityModes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Video<wbr/>Quality<wbr/>Modes</a></li>

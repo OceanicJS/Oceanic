@@ -51,9 +51,9 @@ import type {
     PremiumTiers,
     PrivateChannelTypes,
     RESTMethod,
-    ScheduledEventEntityTypes,
-    ScheduledEventPrivacyLevels,
-    ScheduledEventStatuses,
+    GuildScheduledEventEntityTypes,
+    GuildScheduledEventPrivacyLevels,
+    GuildScheduledEventStatuses,
     TextChannelTypes,
     ThreadAutoArchiveDuration,
     ThreadChannelTypes,
@@ -459,14 +459,14 @@ export interface JSONScheduledEvent extends JSONBase {
     description?: string | null;
     entityID: string | null;
     entityMetadata: ScheduledEventEntityMetadata | null;
-    entityType: ScheduledEventEntityTypes;
+    entityType: GuildScheduledEventEntityTypes;
     guild: string;
     image?: string | null;
     name: string;
-    privacyLevel: ScheduledEventPrivacyLevels;
+    privacyLevel: GuildScheduledEventPrivacyLevels;
     scheduledEndTime: number | null;
     scheduledStartTime: number;
-    status: ScheduledEventStatuses;
+    status: GuildScheduledEventStatuses;
     userCount?: number;
 }
 export interface JSONStageChannel extends JSONGuildChannel {

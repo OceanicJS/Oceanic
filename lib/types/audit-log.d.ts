@@ -5,7 +5,7 @@ import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawUser } from "./users";
 import type { RawWebhook } from "./webhooks";
 import type { AuditLogActionTypes } from "../Constants";
-import type ScheduledEvent from "../structures/ScheduledEvent";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
@@ -28,7 +28,7 @@ export interface RawAuditLog {
 export interface AuditLog {
     autoModerationRules: Array<AutoModerationRule>;
     entries: Array<AuditLogEntry>;
-    guildScheduledEvents: Array<ScheduledEvent>;
+    guildScheduledEvents: Array<GuildScheduledEvent>;
     integrations: Array<Integration>;
     threads: Array<AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>;
     users: Array<User>;

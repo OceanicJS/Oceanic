@@ -28,6 +28,7 @@ import type CommandInteraction from "../structures/CommandInteraction";
 import type ComponentInteraction from "../structures/ComponentInteraction";
 import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
 import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
+import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
 
@@ -103,8 +104,9 @@ export interface ApplicationCommandInteractionData {
     guildID?: string;
     id: string;
     name: string;
-    options: Array<InteractionOptions>;
+    options: InteractionOptionsWrapper;
     resolved: ApplicationCommandInteractionResolvedData;
+    target?: User | Message;
     targetID?: string;
     type: ApplicationCommandTypes;
 }
@@ -183,12 +185,12 @@ export interface InteractionOptionsStringValue<T extends InteractionOptionsStrin
 
 export interface InteractionOptionsNumberValue<T extends InteractionOptionsNumberTypes = InteractionOptionsNumberTypes> extends InteractionOptionsBase {
     type: T;
-    value: string;
+    value: number;
 }
 
 export interface InteractionOptionsBooleanValue<T extends InteractionOptionsBooleanTypes = InteractionOptionsBooleanTypes> extends InteractionOptionsBase {
     type: T;
-    value: string;
+    value: boolean;
 }
 
 type InteractionOptionsStringTypes = ApplicationCommandOptionTypes.STRING | ApplicationCommandOptionTypes.USER | ApplicationCommandOptionTypes.CHANNEL | ApplicationCommandOptionTypes.ROLE | ApplicationCommandOptionTypes.MENTIONABLE | ApplicationCommandOptionTypes.ATTACHMENT;

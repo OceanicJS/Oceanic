@@ -1,7 +1,7 @@
 import Base from "./Base";
 import type StageChannel from "./StageChannel";
 import Guild from "./Guild";
-import ScheduledEvent from "./ScheduledEvent";
+import GuildScheduledEvent from "./GuildScheduledEvent";
 import type { RawStageInstance } from "../types/stage-instances";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
@@ -19,7 +19,7 @@ export default class StageInstance extends Base {
     /** The [privacy level](https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level) of this stage instance. */
     privacyLevel: StageInstancePrivacyLevels;
     /** The scheduled event for this stage instance. */
-    scheduledEvent?: ScheduledEvent | Uncached;
+    scheduledEvent?: GuildScheduledEvent | Uncached;
     /** The topic of this stage instance. */
     topic: string;
     constructor(data: RawStageInstance, client: Client);

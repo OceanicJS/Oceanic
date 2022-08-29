@@ -3,12 +3,12 @@ import type User from "./User";
 import type Guild from "./Guild";
 import type StageChannel from "./StageChannel";
 import type Client from "../Client";
-import type { ImageFormat, ScheduledEventEntityTypes, ScheduledEventPrivacyLevels, ScheduledEventStatuses } from "../Constants";
+import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
 import type { JSONScheduledEvent } from "../types/json";
 
-export default class ScheduledEvent extends Base {
+export default class GuildScheduledEvent extends Base {
     /** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     channel: StageChannel | null;
     /** The creator of the event. Not present on events created before October 25th, 2021. */
@@ -20,7 +20,7 @@ export default class ScheduledEvent extends Base {
     /** The [metadata](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-field-requirements-by-entity-type) associated with the event. */
     entityMetadata: ScheduledEventEntityMetadata | null;
     /** The [entity type](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types) of the event */
-    entityType: ScheduledEventEntityTypes;
+    entityType: GuildScheduledEventEntityTypes;
     /** The guild this scheduled event belongs to. */
     guild: Guild;
     /** The id of the guild this scheduled event belongs to. */
@@ -30,13 +30,13 @@ export default class ScheduledEvent extends Base {
     /** The name of the event. */
     name: string;
     /** The [privacy level](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level) of the event. */
-    privacyLevel: ScheduledEventPrivacyLevels;
+    privacyLevel: GuildScheduledEventPrivacyLevels;
     /** The time at which the event will end. Required if entityType is `EXTERNAL`. */
     scheduledEndTime: Date | null;
     /** The time at which the event will start. */
     scheduledStartTime: Date;
     /** The [status](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-status) of the event. */
-    status: ScheduledEventStatuses;
+    status: GuildScheduledEventStatuses;
     /** The number of users subscribed to the event. */
     userCount: number;
     constructor(data: RawScheduledEvent, client: Client) {

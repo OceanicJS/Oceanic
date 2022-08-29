@@ -109,15 +109,15 @@ export interface RoleTags {
 export interface Emoji {
     animated?: boolean;
     available?: boolean;
-    id: string;
+    id: string | null;
     managed?: boolean;
     name: string;
     require_colons?: boolean;
     roles?: Array<string>;
     user?: RawUser;
 }
-export type RawGuildEmoji = Required<Omit<Emoji, "user">> & { user?: RawUser; };
-export type GuildEmoji = Omit<RawGuildEmoji, "user"> & { user?: User; };
+export type RawGuildEmoji = Required<Omit<Emoji, "user" | "id">> & { id: string; user?: RawUser; };
+export type GuildEmoji = Omit<RawGuildEmoji, "user" | "id"> & { id: string; user?: User; };
 export interface RawWelcomeScreen {
     description: string | null;
     welcome_channels: Array<RawWelcomeScreenChannel>;

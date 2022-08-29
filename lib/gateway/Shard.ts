@@ -44,7 +44,7 @@ import type { JSONAnnouncementThreadChannel, JSONTextChannel } from "../types/js
 import type User from "../structures/User";
 import VoiceChannel from "../structures/VoiceChannel";
 import StageChannel from "../structures/StageChannel";
-import ScheduledEvent from "../structures/ScheduledEvent";
+import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Invite from "../structures/Invite";
 import Message from "../structures/Message";
 import type { Uncached } from "../types/shared";
@@ -480,7 +480,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this._client.guilds.get(packet.d.guild_id);
                 if (!guild) {
                     this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_CREATE: ${packet.d.guild_id}`);
-                    this._client.emit("guildScheduledEventCreate", new ScheduledEvent(packet.d, this._client));
+                    this._client.emit("guildScheduledEventCreate", new GuildScheduledEvent(packet.d, this._client));
                     break;
                 }
                 this._client.emit("guildScheduledEventCreate", guild.scheduledEvents.update(packet.d));
@@ -491,12 +491,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this._client.guilds.get(packet.d.guild_id);
                 if (!guild) {
                     this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_DELETE: ${packet.d.guild_id}`);
-                    this._client.emit("guildScheduledEventDelete", new ScheduledEvent(packet.d, this._client));
+                    this._client.emit("guildScheduledEventDelete", new GuildScheduledEvent(packet.d, this._client));
                     break;
                 }
-                let event: ScheduledEvent;
+                let event: GuildScheduledEvent;
                 if (guild.scheduledEvents.has(packet.d.id)) event = guild.scheduledEvents.get(packet.d.id)!;
-                else event = new ScheduledEvent(packet.d, this._client);
+                else event = new GuildScheduledEvent(packet.d, this._client);
                 this._client.emit("guildScheduledEventDelete", event);
                 break;
             }
@@ -505,7 +505,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this._client.guilds.get(packet.d.guild_id)!;
                 if (!guild) {
                     this._client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_UPDATE: ${packet.d.guild_id}`);
-                    this._client.emit("guildScheduledEventUpdate", new ScheduledEvent(packet.d, this._client), null);
+                    this._client.emit("guildScheduledEventUpdate", new GuildScheduledEvent(packet.d, this._client), null);
                     break;
                 }
                 const oldEvent = guild.scheduledEvents.get(packet.d.id)?.toJSON() || null;

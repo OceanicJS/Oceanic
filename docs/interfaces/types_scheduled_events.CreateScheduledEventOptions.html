@@ -63,7 +63,7 @@
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/types/scheduled-events.d.ts#L35">lib/types/scheduled-events.d.ts:35</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="entityType" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>entity<wbr/>Type</span><a href="#entityType" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">entity<wbr/>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/Constants.ScheduledEventEntityTypes.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ScheduledEventEntityTypes</a></div><aside class="tsd-sources">
+<div class="tsd-signature">entity<wbr/>Type<span class="tsd-signature-symbol">:</span> <a href="../enums/Constants.GuildScheduledEventEntityTypes.html" class="tsd-signature-type" data-tsd-kind="Enumeration">GuildScheduledEventEntityTypes</a></div><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/types/scheduled-events.d.ts#L38">lib/types/scheduled-events.d.ts:38</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="image" class="tsd-anchor"></a>
@@ -78,7 +78,7 @@
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/types/scheduled-events.d.ts#L40">lib/types/scheduled-events.d.ts:40</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="privacyLevel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>privacy<wbr/>Level</span><a href="#privacyLevel" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">privacy<wbr/>Level<span class="tsd-signature-symbol">:</span> <a href="../enums/Constants.ScheduledEventPrivacyLevels.html#GUILD_ONLY" class="tsd-signature-type" data-tsd-kind="Enumeration Member">GUILD_ONLY</a></div><aside class="tsd-sources">
+<div class="tsd-signature">privacy<wbr/>Level<span class="tsd-signature-symbol">:</span> <a href="../enums/Constants.GuildScheduledEventPrivacyLevels.html" class="tsd-signature-type" data-tsd-kind="Enumeration">GuildScheduledEventPrivacyLevels</a></div><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/types/scheduled-events.d.ts#L41">lib/types/scheduled-events.d.ts:41</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="reason" class="tsd-anchor"></a>
@@ -154,6 +154,7 @@
 <li class="tsd-kind-module"><a href="../modules/structures_Guild.html">structures/<wbr/>Guild</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_GuildChannel.html">structures/<wbr/>Guild<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_GuildPreview.html">structures/<wbr/>Guild<wbr/>Preview</a></li>
+<li class="tsd-kind-module"><a href="../modules/structures_GuildScheduledEvent.html">structures/<wbr/>Guild<wbr/>Scheduled<wbr/>Event</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_GuildTemplate.html">structures/<wbr/>Guild<wbr/>Template</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Integration.html">structures/<wbr/>Integration</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Interaction.html">structures/<wbr/>Interaction</a></li>
@@ -169,7 +170,6 @@
 <li class="tsd-kind-module"><a href="../modules/structures_PrivateThreadChannel.html">structures/<wbr/>Private<wbr/>Thread<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_PublicThreadChannel.html">structures/<wbr/>Public<wbr/>Thread<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Role.html">structures/<wbr/>Role</a></li>
-<li class="tsd-kind-module"><a href="../modules/structures_ScheduledEvent.html">structures/<wbr/>Scheduled<wbr/>Event</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_StageChannel.html">structures/<wbr/>Stage<wbr/>Channel</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_StageInstance.html">structures/<wbr/>Stage<wbr/>Instance</a></li>
 <li class="tsd-kind-module"><a href="../modules/structures_Team.html">structures/<wbr/>Team</a></li>
@@ -203,6 +203,7 @@
 <li class="tsd-kind-module"><a href="../modules/types_webhooks.html">types/webhooks</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Collection.html">util/<wbr/>Collection</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Debug.html">util/<wbr/>Debug</a></li>
+<li class="tsd-kind-module"><a href="../modules/util_InteractionOptionsWrapper.html">util/<wbr/>Interaction<wbr/>Options<wbr/>Wrapper</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Routes.html">util/<wbr/>Routes</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_TypedEmitter.html">util/<wbr/>Typed<wbr/>Emitter</a></li>
 <li class="tsd-kind-module"><a href="../modules/util_Util.html">util/<wbr/>Util</a></li>

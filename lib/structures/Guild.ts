@@ -2,7 +2,7 @@ import Role from "./Role";
 import Base from "./Base";
 import GuildChannel from "./GuildChannel";
 import Member from "./Member";
-import type ScheduledEvent from "./ScheduledEvent";
+import type GuildScheduledEvent from "./GuildScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
 import GuildTemplate from "./GuildTemplate";
 import type User from "./User";
@@ -35,9 +35,9 @@ import type {
     MFALevels,
     OverwriteTypes,
     PremiumTiers,
-    ScheduledEventEntityTypes,
-    ScheduledEventPrivacyLevels,
-    ScheduledEventStatuses,
+    GuildScheduledEventEntityTypes,
+    GuildScheduledEventPrivacyLevels,
+    GuildScheduledEventStatuses,
     ThreadAutoArchiveDuration,
     VerificationLevels,
     VideoQualityModes
@@ -189,7 +189,7 @@ export default class Guild extends Base {
     /** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
     rulesChannel: TextChannel | Uncached | null;
     /** The scheduled events in this guild. */
-    scheduledEvents: Collection<string, RawScheduledEvent, ScheduledEvent>;
+    scheduledEvents: Collection<string, RawScheduledEvent, GuildScheduledEvent>;
     /** The invite splash hash of this guild. */
     splash: string | null;
     /** The stage instances in this guild. */
@@ -512,14 +512,14 @@ export default class Guild extends Base {
      * @param {String} [options.description] - The description of the event.
      * @param {Object} [options.entityMetadata]
      * @param {String} [options.entityMetadata.location] - The location of the event. Required if `entityType` is `EXTERNAL`.
-     * @param {ScheduledEventEntityTypes} options.entityType - The type of the event.
+     * @param {GuildScheduledEventEntityTypes} options.entityType - The type of the event.
      * @param {(Buffer | String)} [options.image] - The cover image of the event.
      * @param {String} options.name - The name of the scheduled event.
-     * @param {ScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
+     * @param {GuildScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
      * @param {String} [options.reason] - The reason for creating the scheduled event.
      * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if `entityType` is `EXTERNAL`.
      * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
-     * @returns {Promise<ScheduledEvent>}
+     * @returns {Promise<GuildScheduledEvent>}
      */
     async createScheduledEvent(options: CreateScheduledEventOptions) {
         return this._client.rest.guilds.createScheduledEvent(this.id, options);
@@ -782,15 +782,15 @@ export default class Guild extends Base {
      * @param {String} [options.description] - The description of the event.
      * @param {Object} [options.entityMetadata]
      * @param {String} [options.entityMetadata.location] - The location of the event. Required if changing `entityType` to `EXTERNAL`.
-     * @param {ScheduledEventEntityTypes} options.entityType - The type of the event.
+     * @param {GuildScheduledEventEntityTypes} options.entityType - The type of the event.
      * @param {(Buffer | String)} [options.image] - The cover image of the event.
      * @param {String} options.name - The name of the scheduled event.
-     * @param {ScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
+     * @param {GuildScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
      * @param {String} [options.reason] - The reason for creating the scheduled event.
      * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if changing `entityType` to `EXTERNAL`.
      * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
-     * @param {ScheduledEventStatuses} [options.status] - The status of the event.
-     * @returns {Promise<ScheduledEvent>}
+     * @param {GuildScheduledEventStatuses} [options.status] - The status of the event.
+     * @returns {Promise<GuildScheduledEvent>}
      */
     async editScheduledEvent(options: EditScheduledEventOptions) {
         return this._client.rest.guilds.editScheduledEvent(this.id, options);
@@ -1036,7 +1036,7 @@ export default class Guild extends Base {
      *
      * @param {String} eventID - The ID of the scheduled event to get.
      * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
-     * @returns {Promise<ScheduledEvent>}
+     * @returns {Promise<GuildScheduledEvent>}
      */
     async getScheduledEvent(eventID: string, withUserCount?: number) {
         return this._client.rest.guilds.getScheduledEvent(this.id, eventID, withUserCount);
@@ -1061,7 +1061,7 @@ export default class Guild extends Base {
      * Get this guild's scheduled events
      *
      * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
-     * @returns {Promise<ScheduledEvent[]>}
+     * @returns {Promise<GuildScheduledEvent[]>}
      */
     async getScheduledEvents(withUserCount?: number) {
         return this._client.rest.guilds.getScheduledEvents(this.id, withUserCount);

@@ -9,7 +9,7 @@ import Guild from "./Guild";
 import Permission from "./Permission";
 import Collection from "../util/Collection";
 import type { InteractionTypes } from "../Constants";
-import { InteractionResponseTypes } from "../Constants";
+import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
 import type { ApplicationCommandInteractionData, InteractionContent, ModalData, RawApplicationCommandInteraction } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
@@ -17,6 +17,7 @@ import type { AnyChannel, AnyGuildTextChannel, AnyTextChannel, RawChannel } from
 import type { RawUser } from "../types/users";
 import { File } from "../types/request-handler";
 import type { JSONCommandInteraction } from "../types/json";
+import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 
 export default class CommandInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
@@ -46,7 +47,7 @@ export default class CommandInteraction extends Interaction {
             guildID:  data.data.guild_id,
             id:       data.data.id,
             name:     data.data.name,
-            options:  data.data.options || [],
+            options:  new InteractionOptionsWrapper([], null),
             resolved: {
                 attachments: new Collection(Attachment, this._client),
                 channels:    new Collection(Channel, this._client) as Collection<string, RawChannel, AnyChannel>,
@@ -55,6 +56,7 @@ export default class CommandInteraction extends Interaction {
                 roles:       new Collection(Role, this._client),
                 users:       new Collection(User, this._client)
             },
+            target:   undefined,
             targetID: data.data.target_id,
             type:     data.data.type
         };
@@ -87,6 +89,13 @@ export default class CommandInteraction extends Interaction {
 
             if (data.data.resolved.users) Object.values(data.data.resolved.users).forEach(user => this.data.resolved.users.update(user));
         }
+
+        if (this.data.targetID) {
+            if (this.data.type === ApplicationCommandTypes.USER) this.data.target = this.data.resolved.users.get(this.data.targetID);
+            else if (this.data.type === ApplicationCommandTypes.MESSAGE) this.data.target = this.data.resolved.messages.get(this.data.targetID);
+        }
+
+        if (data.data.options) this.data.options = new InteractionOptionsWrapper(data.data.options, this.data.resolved);
     }
 
     /**

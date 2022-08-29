@@ -26,8 +26,10 @@ const GroupChannel = (await import("./dist/lib/structures/GroupChannel.js")).def
 const Guild = (await import("./dist/lib/structures/Guild.js")).default.default;
 const GuildChannel = (await import("./dist/lib/structures/GuildChannel.js")).default.default;
 const GuildPreview = (await import("./dist/lib/structures/GuildPreview.js")).default.default;
+const GuildScheduledEvent = (await import("./dist/lib/structures/GuildScheduledEvent.js")).default.default;
 const GuildTemplate = (await import("./dist/lib/structures/GuildTemplate.js")).default.default;
 const Integration = (await import("./dist/lib/structures/Integration.js")).default.default;
+const InteractionOptionsWrapper = (await import("./dist/lib/structures/InteractionOptionsWrapper.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
@@ -42,7 +44,6 @@ const PublicThreadChannel = (await import("./dist/lib/structures/PublicThreadCha
 const RESTManager = (await import("./dist/lib/rest/RESTManager.js")).default.default;
 const Role = (await import("./dist/lib/structures/Role.js")).default.default;
 const Routes = (await import("./dist/lib/util/Routes.js")).default.default;
-const ScheduledEvent = (await import("./dist/lib/structures/ScheduledEvent.js")).default.default;
 const SequentialBucket = (await import("./dist/lib/rest/SequentialBucket.js")).default.default;
 const Shard = (await import("./dist/lib/gateway/Shard.js")).default.default;
 const ShardManager = (await import("./dist/lib/gateway/ShardManager.js")).default.default;
@@ -91,8 +92,10 @@ export {
     Guild,
     GuildChannel,
     GuildPreview,
+    GuildScheduledEvent,
     GuildTemplate,
     Integration,
+    InteractionOptionsWrapper,
     Invite,
     Member,
     Message,
@@ -107,7 +110,6 @@ export {
     RESTManager,
     Role,
     Routes,
-    ScheduledEvent,
     SequentialBucket,
     Shard,
     ShardManager,

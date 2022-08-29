@@ -1,10 +1,10 @@
 import type { RawUser } from "./users";
 import type { RawMember } from "./guilds";
 import type { Uncached } from "./shared";
-import type { ScheduledEventEntityTypes, ScheduledEventPrivacyLevels, ScheduledEventStatuses } from "../Constants";
+import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
 import type Member from "../structures/Member";
 import type User from "../structures/User";
-import type ScheduledEvent from "../structures/ScheduledEvent";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 
 export interface RawScheduledEvent {
     channel_id: string | null;
@@ -13,15 +13,15 @@ export interface RawScheduledEvent {
     description?: string | null;
     entity_id: string | null;
     entity_metadata: ScheduledEventEntityMetadata | null;
-    entity_type: ScheduledEventEntityTypes;
+    entity_type: GuildScheduledEventEntityTypes;
     guild_id: string;
     id: string;
     image?: string | null;
     name: string;
-    privacy_level: ScheduledEventPrivacyLevels;
+    privacy_level: GuildScheduledEventPrivacyLevels;
     scheduled_end_time: string | null;
     scheduled_start_time: string;
-    status: ScheduledEventStatuses;
+    status: GuildScheduledEventStatuses;
     user_count?: number;
 }
 
@@ -35,10 +35,10 @@ export interface CreateScheduledEventOptions {
     entityMetadata?: {
         location?: string;
     };
-    entityType: ScheduledEventEntityTypes;
+    entityType: GuildScheduledEventEntityTypes;
     image?: Buffer | string;
     name: string;
-    privacyLevel: ScheduledEventPrivacyLevels;
+    privacyLevel: GuildScheduledEventPrivacyLevels;
     reason?: string;
     scheduledEndTime?: string;
     scheduledStartTime: string;
@@ -47,7 +47,7 @@ export interface CreateScheduledEventOptions {
 
 export interface EditScheduledEventOptions extends Omit<Partial<CreateScheduledEventOptions>, "channelID"> {
     channelID?: string | null;
-    status?: ScheduledEventStatuses;
+    status?: GuildScheduledEventStatuses;
 }
 
 export interface GetScheduledEventUsersOptions {
@@ -64,7 +64,7 @@ export interface RawScheduledEventUser {
 }
 
 export interface ScheduledEventUser {
-    guildScheduledEvent: ScheduledEvent | Uncached;
+    guildScheduledEvent: GuildScheduledEvent | Uncached;
     member?: Member;
     user: User;
 }

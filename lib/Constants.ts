@@ -58,7 +58,8 @@ export enum UserFlags {
     VERIFIED_BOT          = 1 << 16,
     VERIFIED_DEVELOPER    = 1 << 17,
     CERTIFIED_MODERATOR   = 1 << 18,
-    BOT_HTTP_INTERACTIONS = 1 << 19
+    BOT_HTTP_INTERACTIONS = 1 << 19,
+    SPAMMER               = 1 << 20
 }
 
 export enum ApplicationFlags {
@@ -78,6 +79,7 @@ export enum ApplicationFlags {
 }
 
 export const GuildFeatures = [
+    "AUTO_MODERATION",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
     "BANNER",
@@ -456,22 +458,22 @@ export enum MessageFlags {
 }
 
 export enum MessageTypes {
-    DEFAULT                                      = 0,
-    RECIPIENT_ADD                                = 1,
-    RECIPIENT_REMOVE                             = 2,
-    CALL                                         = 3,
-    CHANNEL_NAME_CHANGE                          = 4,
-    CHANNEL_ICON_CHANGE                          = 5,
-    CHANNEL_PINNED_MESSAGE                       = 6,
-    USER_JOIN                                    = 7,
-    GUILD_BOOST                                  = 8,
-    GUILD_BOOST_TIER_1                             = 9,
-    GUILD_BOOST_TIER_2                             = 10,
-    GUILD_BOOST_TIER_3                             = 11,
-    CHANNEL_FOLLOW_ADD                             = 12,
+    DEFAULT                = 0,
+    RECIPIENT_ADD          = 1,
+    RECIPIENT_REMOVE       = 2,
+    CALL                   = 3,
+    CHANNEL_NAME_CHANGE    = 4,
+    CHANNEL_ICON_CHANGE    = 5,
+    CHANNEL_PINNED_MESSAGE = 6,
+    USER_JOIN              = 7,
+    GUILD_BOOST            = 8,
+    GUILD_BOOST_TIER_1     = 9,
+    GUILD_BOOST_TIER_2     = 10,
+    GUILD_BOOST_TIER_3     = 11,
+    CHANNEL_FOLLOW_ADD     = 12,
 
     GUILD_DISCOVERY_DISQUALIFIED                 = 14,
-    GUILD_DISCOVERY_REQUALIFIED                     = 15,
+    GUILD_DISCOVERY_REQUALIFIED                  = 15,
     GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING = 16,
     GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING   = 17,
     THREAD_CREATED                               = 18,
@@ -481,7 +483,7 @@ export enum MessageTypes {
     GUILD_INVITE_REMINDER                        = 22,
     CONTEXT_MENU_COMMAND                         = 23,
     AUTO_MODERATION_ACTION                       = 24,
-    ROLE_SUBSCRIPTION_PURCHASE                    = 25,
+    ROLE_SUBSCRIPTION_PURCHASE                   = 25,
 }
 
 export enum MessageActivityTypes {
@@ -504,18 +506,20 @@ export enum InviteTargetTypes {
     EMBEDDED_APPLICATION = 2,
 }
 
-export enum ScheduledEventPrivacyLevels {
+export enum GuildScheduledEventPrivacyLevels {
+    /** @deprecated */
+    PUBLIC     = 1,
     GUILD_ONLY = 2
 }
 
-export enum ScheduledEventStatuses {
+export enum GuildScheduledEventStatuses {
     SCHEDULED = 1,
     ACTIVE    = 2,
     COMPLETED = 3,
-    CANCELLED = 4
+    CANCELED = 4
 }
 
-export enum ScheduledEventEntityTypes {
+export enum GuildScheduledEventEntityTypes {
     STAGE_INSTANCE = 1,
     VOICE          = 2,
     EXTERNAL       = 3
@@ -781,4 +785,11 @@ export enum ActivityFlags {
     PARTY_PRIVACY_FRIENDS_ONLY  = 64,
     PARTY_PRIVACY_VOICE_CHANNEL = 128,
     EMBEDDED                    = 256
+}
+
+export enum ThreadMemberFlags {
+    HAS_INTERACTED = 1,
+    ALL_MESSAGES   = 2,
+    ONLY_MENTIONS  = 4,
+    NO_MESSAGES   = 8
 }

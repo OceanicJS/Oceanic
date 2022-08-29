@@ -1,5 +1,5 @@
 import Guild from "./Guild";
-import type ScheduledEvent from "./ScheduledEvent";
+import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
 import type { InviteChannel, InviteInfoTypes, InviteStageInstance, PartialInviteChannel, RawInvite, RawInviteWithMetadata } from "../types/channels";
@@ -24,7 +24,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The guild this invite leads to. */
     guild?: Guild;
     /** The scheduled event associated with this invite. */
-    guildScheduledEvent?: ScheduledEvent;
+    guildScheduledEvent?: GuildScheduledEvent;
     /** The user that created this invite. */
     inviter?: User;
     /** The time after which this invite expires. */

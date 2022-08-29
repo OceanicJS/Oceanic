@@ -9,6 +9,7 @@ import type { AutocompleteChoice, AutocompleteInteractionData, RawAutocompleteIn
 import type Client from "../Client";
 import type { AnyTextChannel } from "../types/channels";
 import type { JSONAutocompleteInteraction } from "../types/json";
+import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 
 export default class AutocompleteInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
@@ -38,7 +39,7 @@ export default class AutocompleteInteraction extends Interaction {
             guildID: data.data.guild_id,
             id:      data.data.id,
             name:    data.data.name,
-            options: data.data.options || [],
+            options: new InteractionOptionsWrapper(data.data.options || [], null),
             type:    data.data.type
         };
         this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
