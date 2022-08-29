@@ -154,16 +154,7 @@ export default class Guilds extends BaseRoute {
      * @param {String[]} [options.roles] - The roles to restrict the emoji to.
      * @returns {Promise<GuildEmoji>}
      */
-    createEmoji(id: string, options: CreateEmojiOptions): Promise<{
-        user: import("..").User | undefined;
-        name: string;
-        roles: string[];
-        managed: boolean;
-        animated: boolean;
-        available: boolean;
-        require_colons: boolean;
-        id: string;
-    }>;
+    createEmoji(id: string, options: CreateEmojiOptions): Promise<GuildEmoji>;
     /**
      * Create a guild from a template. This can only be used by bots in less than 10 guilds.
      *

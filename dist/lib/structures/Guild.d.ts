@@ -256,16 +256,7 @@ export default class Guild extends Base {
      * @param {String[]} [options.roles] - The roles to restrict the emoji to.
      * @returns {Promise<GuildEmoji>}
      */
-    createEmoji(options: CreateEmojiOptions): Promise<{
-        user: User | undefined;
-        name: string;
-        roles: string[];
-        managed: boolean;
-        animated: boolean;
-        available: boolean;
-        require_colons: boolean;
-        id: string;
-    }>;
+    createEmoji(options: CreateEmojiOptions): Promise<GuildEmoji>;
     /**
      * Create a role.
      *

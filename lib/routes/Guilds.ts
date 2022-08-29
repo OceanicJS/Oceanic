@@ -375,7 +375,7 @@ export default class Guilds extends BaseRoute {
         }).then(data => ({
             ...data,
             user: !data.user ? undefined : this._client.users.update(data.user)
-        }));
+        }) as GuildEmoji);
     }
 
     /**
