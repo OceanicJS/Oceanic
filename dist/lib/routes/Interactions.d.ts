@@ -1,12 +1,7 @@
 import BaseRoute from "./BaseRoute";
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
-import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
-import * as Routes from "../util/Routes";
-import { InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel } from "../types/channels";
 import Message from "../structures/Message";
-import { File } from "../types/request-handler";
-
 export default class Interactions extends BaseRoute {
     /**
      * Create a followup message.
@@ -29,10 +24,7 @@ export default class Interactions extends BaseRoute {
      * @param {Boolean} [options.tts] - If the message should be spoken aloud.
      * @returns {Promise<Message<T>>}
      */
-    async createFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
-        return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
-    }
-
+    createFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>>;
     /**
      * Create an initial interaction response.
      *
@@ -43,58 +35,7 @@ export default class Interactions extends BaseRoute {
      * @param {InteractionResponseTypes} options.type - The [type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type) of response.
      * @return {Promise<void>}
      */
-    async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse) {
-        let data: unknown | undefined;
-        switch (options.type) {
-            case InteractionResponseTypes.PONG: break;
-            case InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE:
-            case InteractionResponseTypes.UPDATE_MESSAGE: {
-                data = {
-                    allowed_mentions: this._client.util.formatAllowedMentions(options.data.allowedMentions),
-                    attachments:      options.data.attachments,
-                    content:          options.data.content,
-                    components:       options.data.components ? this._client.util.componentsToRaw(options.data.components) : [],
-                    embeds:           options.data.embeds,
-                    flags:            options.data.flags
-                };
-                break;
-            }
-
-            case InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT: {
-                data = {
-                    choices: options.data.choices.map(d => ({
-                        name:               d.name,
-                        name_localizations: d.nameLocalizations,
-                        value:              d.value
-                    }))
-                };
-                break;
-            }
-
-            case InteractionResponseTypes.MODAL: {
-                data = {
-                    custom_id:  options.data.customID,
-                    components: this._client.util.componentsToRaw(options.data.components),
-                    title:      options.data.title
-                };
-                break;
-            }
-
-            default: {
-                data = options.data;
-                break;
-            }
-        }
-        await this._manager.authRequest<null>({
-            method: "POST",
-            path:   Routes.INTERACTION_CALLBACK(interactionID, interactionToken),
-            json:   {
-                data,
-                type: options.type
-            }
-        });
-    }
-
+    createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse): Promise<void>;
     /**
      * Delete a follow up message.
      *
@@ -103,10 +44,7 @@ export default class Interactions extends BaseRoute {
      * @param {String} messageID - The ID of the message.
      * @returns {Promise<void>}
      */
-    async deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string) {
-        await this._manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
-    }
-
+    deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string): Promise<void>;
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
      *
@@ -114,10 +52,7 @@ export default class Interactions extends BaseRoute {
      * @param {String} interactionToken - The token of the interaction.
      * @returns {Promise<void>}
      */
-    async deleteOriginalMessage(applicationID: string, interactionToken: string) {
-        await this._manager.webhooks.deleteMessage(applicationID, interactionToken, "@original");
-    }
-
+    deleteOriginalMessage(applicationID: string, interactionToken: string): Promise<void>;
     /**
      * Edit a followup message.
      *
@@ -140,10 +75,7 @@ export default class Interactions extends BaseRoute {
      * @param {Boolean} [options.tts] - If the message should be spoken aloud.
      * @returns {Promise<Message<T>>}
      */
-    async editFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent) {
-        return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
-    }
-
+    editFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent): Promise<Message<T>>;
     /**
      * Edit an original interaction response.
      *
@@ -165,10 +97,7 @@ export default class Interactions extends BaseRoute {
      * @param {Boolean} [options.tts] - If the message should be spoken aloud.
      * @returns {Promise<Message<T>>}
      */
-    async editOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
-        return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, "@original", options);
-    }
-
+    editOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>>;
     /**
      * Get a followup message.
      *
@@ -178,10 +107,7 @@ export default class Interactions extends BaseRoute {
      * @param {String} messageID - The ID of the message.
      * @returns {Promise<Message<T>>}
      */
-    async getFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string) {
-        return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
-    }
-
+    getFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>>;
     /**
      * Get an original interaction response.
      *
@@ -190,7 +116,5 @@ export default class Interactions extends BaseRoute {
      * @param {String} interactionToken - The token of the interaction.
      * @returns {Promise<Message<T>>}
      */
-    async getOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string) {
-        return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, "@original");
-    }
+    getOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string): Promise<Message<T>>;
 }
