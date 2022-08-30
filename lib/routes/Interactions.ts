@@ -4,30 +4,13 @@ import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel } from "../types/channels";
-import Message from "../structures/Message";
-import { File } from "../types/request-handler";
 
 export default class Interactions extends BaseRoute {
     /**
      * Create a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
+     * @param options - The options for creating the followup message.
      */
     async createFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
         return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
@@ -35,13 +18,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Create an initial interaction response.
-     *
-     * @param {String} interactionID - The ID of the interaction.
-     * @param {String} interactionToken - The token of the interaction.
-     * @param {Object} options
-     * @param {unknown} [options.data] - The [response data](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-data-structure). Convert any `snake_case` keys to `camelCase`.
-     * @param {InteractionResponseTypes} options.type - The [type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-type) of response.
-     * @return {Promise<void>}
+     * @param interactionID - The ID of the interaction.
+     * @param interactionToken - The token of the interaction.
+     * @param options - The options for creating the interaction response.
      */
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse) {
         let data: unknown | undefined;
@@ -97,11 +76,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Delete a follow up message.
-     *
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @param {String} messageID - The ID of the message.
-     * @returns {Promise<void>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
+     * @param messageID - The ID of the message.
      */
     async deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string) {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
@@ -109,10 +86,8 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
-     *
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @returns {Promise<void>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
      */
     async deleteOriginalMessage(applicationID: string, interactionToken: string) {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, "@original");
@@ -120,25 +95,10 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Edit a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @param {String} messageID - The ID of the message.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
+     * @param messageID - The ID of the message.
+     * @param options - The options for editing the followup message.
      */
     async editFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent) {
         return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
@@ -146,24 +106,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Edit an original interaction response.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
+     * @param options - The options for editing the original message.
      */
     async editOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
         return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, "@original", options);
@@ -171,12 +116,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Get a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @param {String} messageID - The ID of the message.
-     * @returns {Promise<Message<T>>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
+     * @param messageID - The ID of the message.
      */
     async getFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string) {
         return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
@@ -184,11 +126,8 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Get an original interaction response.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} applicationID - The ID of the application.
-     * @param {String} interactionToken - The token of the interaction.
-     * @returns {Promise<Message<T>>}
+     * @param applicationID - The ID of the application.
+     * @param interactionToken - The token of the interaction.
      */
     async getOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string) {
         return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, "@original");

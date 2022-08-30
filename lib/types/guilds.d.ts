@@ -134,13 +134,19 @@ export interface RawWelcomeScreenChannel {
     emoji_name: string | null;
 }
 export interface WelcomeScreen {
+    /** The description of the welcome screen. */
     description: string | null;
+    /** If the welcome screen is enabled. */
     welcomeChannels: Array<WelcomeScreenChannel>;
 }
 export interface WelcomeScreenChannel {
+    /** The ID of the welcome channel. */
     channelID: string;
+    /** The description of the welcome channel. */
     description: string;
+    /** The ID of the emoji to use on the welcome channel. */
     emojiID: string | null;
+    /** The name (or unicode characters) of the emoji to use on the welcome channel. */
     emojiName: string | null;
 }
 export interface Sticker {
@@ -213,15 +219,22 @@ export interface RawIntegrationApplication {
 export type PartialEmoji = Pick<Emoji, "id" | "name" | "animated">;
 
 export interface CreateEmojiOptions {
+    /** The image (buffer, or full data url). */
     image: Buffer | string;
+    /** The name of the emoji. */
     name: string;
+    /** The reason for creating the emoji. */
     reason?: string;
+    /** The roles to restrict the emoji to. */
     roles?: Array<string>;
 }
 
 export interface EditEmojiOptions {
+    /** The name of the emoji. */
     name?: string;
+    /** The reason for creating the emoji. */
     reason?: string;
+    /** The roles to restrict the emoji to. */
     roles?: Array<string> | null;
 }
 
@@ -240,59 +253,103 @@ export interface RawGuildPreview {
 }
 
 export interface CreateGuildOptions {
+    /** The ID of the AFK voice channel. */
     afkChannelID?: string;
+    /** The AFK timeout in seconds. */
     afkTimeout?: number;
+    /** The initial channels of the guild. */
     channels?: Array<CreateChannelOptions>;
+    /** The default message notification level. */
     defaultMessageNotifications?: DefaultMessageNotificationLevels;
+    /** The explicit content filter level. */
     explicitContentFilter?: ExplicitContentFilterLevels;
+    /** The icon of the guild. */
     icon?: Buffer | string;
+    /** The name of the guild. */
     name: string;
-    /** @deprecated */
+    /** @deprecated The region of the guild. */
     region?: string | null;
+    /** The initial roles of the guild. */
     roles?: Array<Omit<CreateRoleOptions, "reason">>;
+    /** The system channel flags. */
     systemChannelFlags?: number;
+    /** The ID of the system channel. */
     systemChannelID?: string;
+    /** The verification level of the guild. */
     verificationLevel?: VerificationLevels;
 }
 
 export interface EditGuildOptions {
+    /** The ID of the AFK voice channel. `null` to reset. */
     afkChannelID?: string | null;
+    /** The AFK timeout in seconds. */
     afkTimeout?: number;
+    /** The banner of the guild (buffer, or full data url). `null` to reset. */
     banner?: Buffer | string | null;
+    /** The default message notification level. */
     defaultMessageNotifications?: DefaultMessageNotificationLevels;
+    /** The description of the guild. `null` to reset. */
     description?: string | null;
+    /** The discovery splash of the guild (buffer, or full data url). `null` to reset. */
     discoverySplash?: Buffer | string | null;
+    /** The explicit content filter level. */
     explicitContentFilter?: ExplicitContentFilterLevels;
+    /** The features of the guild. Only some can be added or removed. */
     features?: Array<GuildFeature>;
+    /** The icon of the guild (buffer or full data url). `null` to reset. */
     icon?: Buffer | string | null;
+    /** The name of the guild. */
     name?: string;
+    /** The ID of the member to transfer guild ownership to. */
     ownerID?: string;
+    /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild. `null` to reset. */
     preferredLocale?: string | null;
+    /** If the premium progress bar is enabled. */
     premiumProgressBarEnabled?: boolean;
+    /** The ID of the public updates channel. `null` to reset. */
     publicUpdatesChannelID?: string | null;
+    /** The reason for editing the guild. */
     reason?: string;
-    /** @deprecated */
+    /** @deprecated The region of the guild. */
     region?: string | null;
+    /** The ID of the rules channel. `null` to reset. */
     rulesChannelID?: string | null;
+    /** The splash of the guild (buffer, or full data url). `null` to reset. */
     splash?: Buffer | string | null;
+    /** The system channel flags. */
     systemChannelFlags?: number;
+    /** The ID of the system channel. `null` to reset. */
     systemChannelID?: string | null;
+    /** The verification level of the guild. */
     verificationLevel?: VerificationLevels;
 }
 
 export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
+    /** [Text, Announcement] The default auto archive duration for the channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
+    /** The name of the channel. */
     name: string;
+    /** [Text, Voice, Announcement] If the channel is age restricted. */
     nsfw?: boolean;
+    /** The ID of the category to put this channel in. */
     parentID?: string;
+    /** The permission overwrites to apply to the channel. */
     permissionOverwrites?: Array<OverwriteOptions>;
+    /** The position of the channel. */
     position?: number;
+    /** [Text] The seconds between sending messages for users. Between 0 and 21600. */
     rateLimitPerUser?: number;
+    /** The reason for creating the channel. */
     reason?: string;
+    /** [Voice] The voice region for the channel. */
     rtcRegion?: string;
+    /** [Text, Voice, Announcement] The topic of the channel. */
     topic?: string;
+    /** The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of channel to create. */
     type: T;
+    /** [Voice] The maximum number of users that can be in the channel. Between 0 and 99. */
     userLimit?: number;
+    /** [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) for the channel. */
     videoQualityMode?: VideoQualityModes;
 }
 
@@ -311,20 +368,32 @@ export type CreateChannelReturn<T extends GuildChannelTypesWithoutThreads> =
                         never;
 
 export interface CreateRoleOptions {
+    /** The color of the role. */
     color?: number;
+    /** If the role should be hoisted. */
     hoist?: boolean;
+    /** The icon for the role (buffer, or full data url). Requires the `ROLE_ICONS` feature. */
     icon?: Buffer | string | null;
+    /** If the role should be mentionable. */
     mentionable?: boolean;
+    /** The name of the role. */
     name?: string;
+    /** The permissions of the role. */
     permissions?: string;
+    /** The reason for creating the role. */
     reason?: string;
+    /** The unicode emoji for the role. Requires the `ROLE_ICONS` feature. */
     unicodeEmoji?: string | null;
 }
 
 export interface ModifyChannelPositionsEntry {
+    /** The ID of the channel to move. */
     id: string;
+    /** If the permissions should be synced (if moving to a new category). */
     lockPermissions?: boolean;
+    /** The ID of the new parent category. */
     parentID?: string;
+    /** The position to move the channel to. */
     position?: number;
 }
 
@@ -334,38 +403,57 @@ export interface GetActiveThreadsResponse {
 }
 
 export interface GetMembersOptions {
+    /** The last id on the previous page, for pagination. */
     after?: string;
+    /** The maximum number of members to get. */
     limit?: number;
 }
 
 export interface SearchMembersOptions {
+    /** The maximum number of entries to get. */
     limit?: number;
+    /** The query to search for. */
     query: string;
 }
 
 export interface AddMemberOptions {
+    /** The access token of the user to add. */
     accessToken: string;
+    /** If the user should be deafened or not. */
     deaf?: boolean;
+    /** If the user should be muted or not. */
     mute?: boolean;
+    /** The nickname of the user to add. */
     nick?: string;
+    /** The IDs of the roles to add to the user. This bypasses membership screening and verification levels. */
     roles?: Array<string>;
 }
 
 export interface EditMemberOptions {
+    /** The ID of the channel to move the member to. `null` to disconnect. */
     channelID?: string | null;
+    /** An ISO8601 timestamp to time out until. `null` to reset. */
     communicationDisabledUntil?: string | null;
+    /** If the member should be deafened. */
     deaf?: boolean;
+    /** If the member should be muted. */
     mute?: boolean;
+    /** The new nickname of the member. `null` to reset. */
     nick?: string | null;
+    /** The reason for editing the member. */
     reason?: string;
+    /** The new roles of the member. */
     roles?: string;
 }
 
 export type EditCurrentMemberOptions = Pick<EditMemberOptions, "nick" | "reason">;
 
 export interface GetBansOptions {
+    /** The ID of the ban to get bans after. */
     after?: string;
+    /** The ID of the ban to get bans before. */
     before?: string;
+    /** The maximum number of bans to get. */
     limit?: number;
 }
 
@@ -380,25 +468,34 @@ export interface Ban {
 }
 
 export interface CreateBanOptions {
+    /** The number of days to delete messages from. Technically DEPRECTED. This is internally converted in to `deleteMessageSeconds`. */
     deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+    /** The number of seconds to delete messages from. Takes precedence over `deleteMessageDays`. */
     deleteMessageSeconds?: number;
+    /** The reason for creating the bon. */
     reason?: string;
 }
 
 export interface EditRolePositionsEntry {
+    /** The ID of the role to move. */
     id: string;
+    /** The position to move the role to. */
     position?: number | null;
 }
 
 export type EditRoleOptions = CreateRoleOptions;
 
 export interface GetPruneCountOptions {
+    /** The number of days to prune. */
     days?: number;
+    /** The roles to include. */
     includeRoles?: Array<string>;
 }
 
 export interface BeginPruneOptions extends GetPruneCountOptions {
+    /** If the number of members to prune should be computed. If false, the return will be `null`. */
     computePruneCount?: boolean;
+    /** The reason for the prune. */
     reason?: string;
 }
 
@@ -408,7 +505,9 @@ export interface RawWidgetSettings {
 }
 
 export interface WidgetSettings {
+    /** The ID of the channel the widget should lead to. */
     channelID: string;
+    /** If the widget is enabled. */
     enabled: boolean;
 }
 
@@ -463,16 +562,21 @@ export interface WidgetUser {
 export type WidgetImageStyle = "shield" | "banner1" | "banner2" | "banner3" | "banner4";
 
 export interface EditWelcomeScreenOptions extends WelcomeScreen {
+    /** Whether the welcome screen is enabled. */
     enabled?: boolean;
+    /** The reason for editing the welcome screen. */
     reason?: string;
 }
 
 export interface EditUserVoiceStateOptions {
+    /** The ID of the stage channel the member is in. */
     channelID: string;
+    /** If the user should be suppressed. */
     suppress?: boolean;
 }
 
 export interface EditCurrentUserVoiceStateOptions extends EditUserVoiceStateOptions {
+    /** The timestamp of when the member should be able to speak. */
     requestToSpeakTimestamp?: string | null;
 }
 

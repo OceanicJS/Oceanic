@@ -42,28 +42,8 @@ import type {
     CreateChannelOptions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
-import Guild from "../structures/Guild";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type {
-    GuildChannelTypesWithoutThreads,
-    MFALevels,
-    OverwriteTypes,
-    ThreadAutoArchiveDuration,
-    VideoQualityModes
-} from "../Constants";
-import {
-    AuditLogActionTypes,
-    AutoModerationActionTypes,
-    AutoModerationEventTypes,
-    AutoModerationKeywordPresetTypes,
-    AutoModerationTriggerTypes,
-    DefaultMessageNotificationLevels,
-    ExplicitContentFilterLevels,
-    GuildScheduledEventEntityTypes,
-    GuildScheduledEventPrivacyLevels,
-    GuildScheduledEventStatuses,
-    VerificationLevels
-} from "../Constants";
+import type { GuildChannelTypesWithoutThreads, MFALevels } from "../Constants";
 import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Webhook from "../structures/Webhook";
@@ -75,12 +55,10 @@ import type {
     RawScheduledEventUser,
     ScheduledEventUser
 } from "../types/scheduled-events";
-import Member from "../structures/Member";
 import GuildTemplate from "../structures/GuildTemplate";
 import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import GuildPreview from "../structures/GuildPreview";
 import type {
-    AnyGuildChannel,
     AnyGuildChannelWithoutThreads,
     AnyThreadChannel,
     RawGuildChannel,
@@ -102,16 +80,9 @@ export default class Guilds extends BaseRoute {
      * Add a member to a guild. Requires an access token with the `guilds.join` scope.
      *
      * Returns the newly added member upon success, or void if the member is already in the guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} userID - The ID of the user to add.
-     * @param {Object} options
-     * @param {String} options.accessToken - The access token of the user to add.
-     * @param {Boolean} [options.deaf] - If the user should be deafened or not.
-     * @param {Boolean} [options.mute] - If the user should be muted or not.
-     * @param {String} [options.nick] - The nickname of the user to add.
-     * @param {String} [options.roles] - The IDs of the roles to add to the user. This bypasses membership screening and verification levels.
-     * @returns {Promise<void | Member>}
+     * @param id - The ID of the guild.
+     * @param userID - The ID of the user to add.
+     * @param options - The options for adding the member.
      */
     async addMember(id: string, userID: string, options: AddMemberOptions) {
         return this._manager.authRequest<RawMember | null>({
@@ -129,12 +100,10 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Add a role to a member.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} memberID - The ID of the member.
-     * @param {String} roleID - The ID of the role to add.
-     * @param {String} [reason] - The reason for adding the role.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param memberID - The ID of the member.
+     * @param roleID - The ID of the role to add.
+     * @param reason - The reason for adding the role.
      */
     async addMemberRole(id: string, memberID: string, roleID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -146,14 +115,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Begine a prune.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} [options]
-     * @param {Number} [options.days] - The number of days to prune.
-     * @param {Boolean} [options.computePruneCount] - If the number of members to prune should be computed. If false, the return will be `null`.
-     * @param {String[]} [options.includeRoles] - The roles to include.
-     * @param {String} [options.reason] - The reason for the prune.
-     * @returns {Promise<Number?>}
+     * @param id - The ID of the guild.
+     * @param options - The options for the prune.
      */
     async beginPrune(id: string, options?: BeginPruneOptions) {
         const reason = options?.reason;
@@ -172,20 +135,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a guild. This can only be used by bots in under 10 guilds.
-     *
-     * @param {Object} options
-     * @param {String?} [options.afkChannelID] - The ID of the AFK voice channel.
-     * @param {Number} [options.afkTimeout] - The AFK timeout in seconds.
-     * @param {(Buffer | String)?} [options.banner] - The banner of the guild.
-     * @param {DefaultMessageNotificationLevels} [options.defaultMessageNotifications] - The default message notification level.
-     * @param {ExplicitContentFilterLevels} [options.explicitContentFilter] - The explicit content filter level.
-     * @param {String?} [options.icon] - The icon of the guild.
-     * @param {String} [options.name] - The name of the guild.
-     * @param {String?} [options.region] - The region of the guild.
-     * @param {Number} [options.systemChannelFlags] - The system channel flags.
-     * @param {String?} [options.systemChannelID] - The ID of the system channel.
-     * @param {VerificationLevels} [options.verificationLevel] - The verification level of the guild.
-     * @returns {Promise<Guild>}
+     * @param options - The options for creating the guild.
      */
     async create(options: CreateGuildOptions) {
         if (options.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
@@ -211,25 +161,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create an auto moderation rule for a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {Object[]} options.actions - The actions to take.
-     * @param {Object} options.actions[].metadata - The metadata for the action.
-     * @param {String} [options.actions[].metadata.channelID] - The ID of the channel to send the message to. (`SEND_ALERT_MESSAGE`)
-     * @param {Number} [options.actions[].metadata.durationSeconds] - The duration of the timeout in seconds. (`TIMEOUT`)
-     * @param {AutoModerationActionTypes} options.actions[].type - The type of action to take.
-     * @param {AutoModerationEventTypes} options.eventType - The event type to trigger on.
-     * @param {String[]} options.exemptChannels - The channels to exempt from the rule.
-     * @param {String[]} options.exemptRoles - The roles to exempt from the rule.
-     * @param {String} [options.reason] - The reason for creating the rule.
-     * @param {Object} [options.triggerMetadata] - The metadata to use for the trigger.
-     * @param {String} [options.triggerMetadata.allowList] - The keywords to allow. (`KEYWORD_PRESET`)
-     * @param {String[]} [options.triggerMetadata.keywordFilter] - The keywords to filter. (`KEYWORD`)
-     * @param {Number} [options.triggerMetadata.mentionTotalLimit] - The maximum number of mentions to allow. (`MENTION_SPAM`)
-     * @param {AutoModerationKeywordPresetTypes[]} [options.triggerMetadata.presets] - The presets to use. (`KEYWORD_PRESET`)
-     * @param {AutoModerationTriggerTypes} options.triggerType - The type of trigger to use.
-     * @returns {Promise<AutoModerationRule>}
+     * @param id - The ID of the guild.
+     * @param options - The options for creating the rule.
      */
     async createAutoModerationRule(id: string, options: CreateAutoModerationRuleOptions) {
         const reason = options.reason;
@@ -263,14 +196,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a bon for a user.
-     *
-     * @param {String} guildID - The ID of the guild.
-     * @param {String} userID - The ID of the user.
-     * @param {Object} [options]
-     * @param {Number} [options.deleteMessageDays] - The number of days to delete messages from. Technically DEPRECTED. This is internally converted in to `deleteMessageSeconds`.
-     * @param {Number} [options.deleteMessageSeconds] - The number of seconds to delete messages from. Takes precedence over `deleteMessageDays`.
-     * @param {String} [options.reason] - The reason for creating the bon.
-     * @returns {Promise<void>}
+     * @param guildID - The ID of the guild.
+     * @param userID - The ID of the user to ban.
+     * @param options - The options for creating the bon.
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions) {
         const reason = options?.reason;
@@ -288,27 +216,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a channel in a guild.
-     *
-     * @template {AnyGuildChannel} T
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, Announcement] The default auto archive duration for the channel.
-     * @param {String} options.name - The name of the channel.
-     * @param {Boolean} [options.nsfw] - [Text, Voice, Announcement] If the channel is age restricted.
-     * @param {String} [options.parentID] - The ID of the category to put this channel in.
-     * @param {Object[]} [options.permissionOverwrites] - The permission overwrites to apply to the channel.
-     * @param {(BigInt | String)} [options.permissionOverwrites[].allow] - The permissions to allow.
-     * @param {(BigInt | String)} [options.permissionOverwrites[].deny] - The permissions to deny.
-     * @param {String} options.permissionOverwrites[].id - The ID of the user or role to apply the permissions to.
-     * @param {OverwriteTypes} options.permissionOverwrites[].type - `0` for role, `1` for user.
-     * @param {Number} [options.position] - The position of the channel.
-     * @param {Number} [options.rateLimitPerUser] - [Text] The seconds between sending messages for users. Between 0 and 21600.
-     * @param {String} [options.reason] - The reason for creating the channel.
-     * @param {String} [options.rtcRegion] - [Voice] The voice region for the channel.
-     * @param {GuildChannelTypesWithoutThreads} options.type - The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of channel to create.
-     * @param {Number} [options.userLimit] - [Voice] The maximum number of users that can be in the channel. Between 0 and 99.
-     * @param {VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) for the channel.
-     * @param {Promise<T>}
+     * @param id - The ID of the guild.
+     * @param options - The options for creating the channel.
      */
     async createChannel<T extends GuildChannelTypesWithoutThreads>(id: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
         const reason = options.reason;
@@ -336,14 +245,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create an emoji in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {String} options.name - The name of the emoji.
-     * @param {(Buffer | String)} options.image - The image (buffer, or full data url).
-     * @param {String} [options.reason] - The reason for creating the emoji.
-     * @param {String[]} [options.roles] - The roles to restrict the emoji to.
-     * @returns {Promise<GuildEmoji>}
+     * @param id - The ID of the guild.
+     * @param options - The options for creating the emoji.
      */
     async createEmoji(id: string, options: CreateEmojiOptions) {
         const reason = options.reason;
@@ -366,12 +269,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a guild from a template. This can only be used by bots in less than 10 guilds.
-     *
-     * @param {String} code - The code of the template to use.
-     * @param {Object} options
-     * @param {(Buffer | String)} [options.icon] - The icon for the created guild (buffer, or full data url).
-     * @param {String} options.name - The name of the guild.
-     * @returns {Promise<Guild>}
+     * @param code - The code of the template to use.
+     * @param options - The options for creating the guild.
      */
     async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions) {
         if (options.icon) options.icon = this._client.util._convertImage(options.icon, "icon");
@@ -387,18 +286,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a role.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {Number} [options.color] - The color of the role.
-     * @param {Boolean} [options.hoist] - If the role should be hoisted.
-     * @param {(Buffer | String)?} [options.icon] - The icon for the role (buffer, or full data url) (requires the `ROLE_ICONS` feature).
-     * @param {Boolean} [options.mentionable] - If the role should be mentionable.
-     * @param {String} [options.name] - The name of the role.
-     * @param {String} [options.permissions] - The permissions of the role.
-     * @param {String} [options.reason] - The reason for creating the role.
-     * @param {String} [options.unicodeEmoji] - The unicode emoji for the role (requires the `ROLE_ICONS` feature).
-     * @returns
+     * @param id - The ID of the guild.
+     * @param options - The options for creating the role.
      */
     async createRole(id: string, options?: CreateRoleOptions) {
         const reason = options?.reason;
@@ -422,21 +311,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a scheduled event in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {String} [options.channelID] - The ID of the stage channel the event is taking place in. Optional if `entityType` is `EXTERNAL`.
-     * @param {String} [options.description] - The description of the event.
-     * @param {Object} [options.entityMetadata]
-     * @param {String} [options.entityMetadata.location] - The location of the event. Required if `entityType` is `EXTERNAL`.
-     * @param {GuildScheduledEventEntityTypes} options.entityType - The type of the event.
-     * @param {(Buffer | String)} [options.image] - The cover image of the event.
-     * @param {String} options.name - The name of the scheduled event.
-     * @param {GuildScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
-     * @param {String} [options.reason] - The reason for creating the scheduled event.
-     * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if `entityType` is `EXTERNAL`.
-     * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
-     * @returns {Promise<GuildScheduledEvent>}
+     * @param id - The ID of the guild.
+     * @param options - The options for creating the scheduled event.
      */
     async createScheduledEvent(id: string, options: CreateScheduledEventOptions) {
         const reason = options.reason;
@@ -464,12 +340,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Create a guild template.
-     *
-     * @param {String} id - The ID of the guild to create a template from.
-     * @param {Object} options
-     * @param {String} [options.description] - The description of the template.
-     * @param {String} options.name - The name of the template.
-     * @returns {Promise<GuildTemplate>}
+     * @param id - The ID of the guild to create a template from.
+     * @param options - The options for creating the template.
      */
     async createTemplate(id: string, options: CreateTemplateOptions) {
         return this._manager.authRequest<RawGuildTemplate>({
@@ -484,9 +356,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
      */
     async delete(id: string) {
         await this._manager.authRequest<null>({
@@ -497,11 +367,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete an auto moderation rule.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} ruleID - The ID of the rule to delete.
-     * @param {String} [reason] - The reason for deleting the rule.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param ruleID - The ID of the rule to delete.
+     * @param reason - The reason for deleting the rule.
      */
     async deleteAutoModerationRule(id: string, ruleID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -513,11 +381,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete an emoji.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} emojiID - The ID of the emoji.
-     * @param {String} [reason] - The reason for deleting the emoji.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param emojiID - The ID of the emoji.
+     * @param reason - The reason for deleting the emoji.
      */
     async deleteEmoji(id: string, emojiID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -529,11 +395,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete an integration.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} integrationID - The ID of the integration.
-     * @param {String} [reason] - The reason for deleting the integration.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param integrationID - The ID of the integration.
+     * @param reason - The reason for deleting the integration.
      */
     async deleteIntegration(id: string, integrationID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -545,11 +409,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete a role.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} roleID - The ID of the role to delete.
-     * @param {String} [reason] - The reason for deleting the role.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param roleID - The ID of the role to delete.
+     * @param reason - The reason for deleting the role.
      */
     async deleteRole(id: string, roleID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -561,11 +423,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete a scheduled event.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} eventID - The ID of the scheduled event.
-     * @param {String} reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param eventID - The ID of the scheduled event.
+     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     async deleteScheduledEvent(id: string, eventID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -577,10 +437,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Delete a template.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} code - The code of the template.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param code - The code of the template.
      */
     async deleteTemplate(id: string, code: string) {
         await this._manager.authRequest<null>({
@@ -591,29 +449,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {String?} [options.afkChannelID] - The ID of the AFK voice channel.
-     * @param {Number} [options.afkTimeout] - The AFK timeout in seconds.
-     * @param {(Buffer | String)?} [options.banner] - The banner of the guild.
-     * @param {DefaultMessageNotificationLevels} [options.defaultMessageNotifications] - The default message notification level.
-     * @param {String?} [options.description] - The description of the guild.
-     * @param {ExplicitContentFilterLevels} [options.explicitContentFilter] - The explicit content filter level.
-     * @param {String?} [options.icon] - The icon of the guild.
-     * @param {String} [options.name] - The name of the guild.
-     * @param {String} [options.ownerID] - The ID of the member to transfer guild ownership to.
-     * @param {String?} [options.preferredLocale] - The preferred locale of the guild.
-     * @param {Boolean} [options.premiumProgressBarEnabled] - Whether the premium progress bar is enabled.
-     * @param {String?} [options.publicUpdatesChannelID] - The ID of the public updates channel.
-     * @param {String} [options.reason] - The reason for editing the guild.
-     * @param {String?} [options.region] - The region of the guild.
-     * @param {String?} [options.rulesChannelID] - The ID of the rules channel.
-     * @param {(Buffer | String)?} [options.splash] - The splash of the guild.
-     * @param {Number} [options.systemChannelFlags] - The system channel flags.
-     * @param {String?} [options.systemChannelID] - The ID of the system channel.
-     * @param {VerificationLevels} [options.verificationLevel] - The verification level of the guild.
-     * @returns {Promise<Guild>}
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the guild.
      */
     async edit(id: string, options: EditGuildOptions) {
         const reason = options.reason;
@@ -653,25 +490,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit an existing auto moderation rule.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} ruleID - The ID of the rule to edit.
-     * @param {Object} options
-     * @param {Object[]} [options.actions] - The actions to take.
-     * @param {Object} options.actions[].metadata - The metadata for the action.
-     * @param {String} [options.actions[].metadata.channelID] - The ID of the channel to send the message to. (`SEND_ALERT_MESSAGE`)
-     * @param {Number} [options.actions[].metadata.durationSeconds] - The duration of the timeout in seconds. (`TIMEOUT`)
-     * @param {AutoModerationActionTypes} options.actions[].type - The type of action to take.
-     * @param {AutoModerationEventTypes} options.eventType - The event type to trigger on.
-     * @param {String[]} [options.exemptChannels] - The channels to exempt from the rule.
-     * @param {String[]} [options.exemptRoles] - The roles to exempt from the rule.
-     * @param {String} [options.reason] - The reason for editing the rule.
-     * @param {Object} [options.triggerMetadata] - The metadata to use for the trigger.
-     * @param {String} [options.triggerMetadata.allowList] - The keywords to allow. (`KEYWORD_PRESET`)
-     * @param {String[]} [options.triggerMetadata.keywordFilter] - The keywords to filter. (`KEYWORD`)
-     * @param {Number} [options.triggerMetadata.mentionTotalLimit] - The maximum number of mentions to allow. (`MENTION_SPAM`)
-     * @param {AutoModerationKeywordPresetTypes[]} [options.triggerMetadata.presets] - The presets to use. (`KEYWORD_PRESET`)
-     * @returns {Promise<AutoModerationRule>}
+     * @param id - The ID of the guild.
+     * @param ruleID - The ID of the rule to edit.
+     * @param options - The options for editing the rule.
      */
     async editAutoModerationRule(id: string, ruleID: string, options: EditAutoModerationRuleOptions) {
         const reason = options.reason;
@@ -704,13 +525,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit the positions of channels in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object[]} options - The channels to move. Unedited channels do not need to be specifed.
-     * @param {String} options[].id - The ID of the channel to move.
-     * @param {Boolean} [options[].lockPermissions] - If the permissions should be synced (if moving to a new category).
-     * @param {String} [options[].parentID] - The ID of the new parent category.
-     * @param {Number} [options[].position] - The position to move the channel to.
+     * @param id - The ID of the guild.
+     * @param options - The channels to move. Unedited channels do not need to be specifed.
      */
     async editChannelPositions(id: string, options: Array<ModifyChannelPositionsEntry>) {
         await this._manager.authRequest<null>({
@@ -727,12 +543,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Modify the current member in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {String?} [options.nick] - The new nickname for the member.
-     * @param {String} [options.reason] - The reason updating the member.
-     * @returns {Promise<Member>}
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the member.
      */
     async editCurrentMember(id: string, options: EditCurrentMemberOptions) {
         const reason = options.reason;
@@ -749,13 +561,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit the current member's voice state in a guild. `channelID` is required, and the current member must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats) for more information.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {String} options.channelID - The ID of the stage channel the member is in.
-     * @param {String} [options.requestToSpeakTimestamp] - The timestamp of when the member should be able to speak.
-     * @param {Boolean} [options.suppress] - If the user should be suppressed.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the voice state.
      */
     async editCurrentUserVoiceState(id: string, options: EditCurrentUserVoiceStateOptions) {
         await this._manager.authRequest<null>({
@@ -771,13 +578,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit an existing emoji.
-     *
-     * @param {String} id - The ID of the guild the emoji is in.
-     * @param {Object} options
-     * @param {String} [options.name] - The name of the emoji.
-     * @param {String} [options.reason] - The reason for creating the emoji.
-     * @param {String[]} [options.roles] - The roles to restrict the emoji to.
-     * @returns {Promise<GuildEmoji>}
+     * @param id - The ID of the guild the emoji is in.
+     * @param options - The options for editing the emoji.
      */
     async editEmoji(id: string, emojiID: string, options: EditEmojiOptions) {
         const reason = options.reason;
@@ -798,10 +600,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of a guild. This can only be used by the guild owner.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {MFALevels} level - The new MFA level.
-     * @returns {Promise<MFALevels>}
+     * @param id - The ID of the guild.
+     * @param level - The new MFA level.
      */
     async editMFALevel(id: string, level: MFALevels) {
         return this._manager.authRequest<MFALevels>({
@@ -815,18 +615,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit a guild member.
-     *
-     * @param {string} id - The ID of the guild.
-     * @param {String} memberID - The ID of the member.
-     * @param {Object} options
-     * @param {String?} [options.channelID] - The ID of the channel to move the member to. `null` to disconnect.
-     * @param {String?} [options.communicationDisabledUntil] - An ISO8601 timestamp to disable communication until. `null` to reset.
-     * @param {Boolean} [options.deaf] - If the member should be deafened.
-     * @param {Boolean} [options.mute] - If the member should be muted.
-     * @param {String} [options.nick] - The new nickname of the member. `null` to reset.
-     * @param {String} [options.reason] - The reason for editing the member.
-     * @param {String[]} [options.roles] - The new roles of the member.
-     * @returns {Promise<Member>}
+     * @param id - The ID of the guild.
+     * @param memberID - The ID of the member.
+     * @param options - The options for editing the member.
      */
     async editMember(id: string, memberID: string, options: EditMemberOptions) {
         const reason = options.reason;
@@ -848,18 +639,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit an existing role.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {Number} [options.color] - The color of the role.
-     * @param {Boolean} [options.hoist] - If the role should be hoisted.
-     * @param {(Buffer | String)?} [options.icon] - The icon for the role (buffer, or full data url) (requires the `ROLE_ICONS` feature).
-     * @param {Boolean} [options.mentionable] - If the role should be mentionable.
-     * @param {String} [options.name] - The name of the role.
-     * @param {String} [options.permissions] - The permissions of the role.
-     * @param {String} [options.reason] - The reason for creating the role.
-     * @param {String} [options.unicodeEmoji] - The unicode emoji for the role (requires the `ROLE_ICONS` feature).
-     * @returns
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the role.
      */
     async editRole(id: string, roleID: string, options: EditRoleOptions) {
         const reason = options.reason;
@@ -883,13 +664,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit the position of roles in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object[]} options
-     * @param {String} options[].id - The ID of the role to move.
-     * @param {Number?} [options[].position] - The position to move the role to.
-     * @param {String} [reason] - The reason for moving the roles.
-     * @returns {Promise<Role[]>}
+     * @param id - The ID of the guild.
+     * @param options - The roles to move.
      */
     async editRolePositions(id: string, options: Array<EditRolePositionsEntry>, reason?: string) {
         const guild = this._client.guilds.get(id);
@@ -906,22 +682,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit an existing scheduled event in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {?String} [options.channelID] - The ID of the stage channel the event is taking place in. Required to be `null` if changing `entityType` to `EXTERNAL`.
-     * @param {String} [options.description] - The description of the event.
-     * @param {Object} [options.entityMetadata]
-     * @param {String} [options.entityMetadata.location] - The location of the event. Required if changing `entityType` to `EXTERNAL`.
-     * @param {GuildScheduledEventEntityTypes} options.entityType - The type of the event.
-     * @param {(Buffer | String)} [options.image] - The cover image of the event.
-     * @param {String} options.name - The name of the scheduled event.
-     * @param {GuildScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
-     * @param {String} [options.reason] - The reason for creating the scheduled event.
-     * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if changing `entityType` to `EXTERNAL`.
-     * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
-     * @param {GuildScheduledEventStatuses} [options.status] - The status of the event.
-     * @returns {Promise<GuildScheduledEvent>}
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the scheduled event.
      */
     async editScheduledEvent(id: string, options: EditScheduledEventOptions) {
         const reason = options.reason;
@@ -950,13 +712,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit a guild template.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} code - The code of the template.
-     * @param {Object} options
-     * @param {String} [options.description] - The description of the template.
-     * @param {String} [options.name] - The name of the template.
-     * @returns {Promise<GuildTemplate>}
+     * @param id - The ID of the guild.
+     * @param code - The code of the template.
+     * @param options - The options for editing the template.
      */
     async editTemplate(id: string, code: string, options: EditGuildTemplateOptions) {
         return this._manager.authRequest<RawGuildTemplate>({
@@ -972,13 +730,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit a guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} memberID - The ID of the member.
-     * @param {Object} options
-     * @param {String} options.channelID - The ID of the stage channel the member is in.
-     * @param {Boolean} [options.suppress] - If the user should be suppressed.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param memberID - The ID of the member.
+     * @param options - The options for editing the voice state.
      */
     async editUserVoiceState(id: string, memberID: string, options: EditUserVoiceStateOptions) {
         await this._manager.authRequest<null>({
@@ -993,17 +747,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit the welcome screen in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} options
-     * @param {String} [options.description] - The description of the welcome screen.
-     * @param {Boolean} [options.enabled] - Whether the welcome screen is enabled.
-     * @param {Object[]} [options.welcomeChannels] - The welcome channels of the guild.
-     * @param {String} options.welcomeChannels[].channelID - The ID of the welcome channel.
-     * @param {String} options.welcomeChannels[].description - The description of the welcome channel.
-     * @param {String} options.welcomeChannels[].emojiID - The ID of the emoji to use on the welcome channel.
-     * @param {String} options.welcomeChannels[].emojiName - The name (or unicode characters) of the emoji to use on the welcome channel.
-     * @returns {Promise<WelcomeScreen>}
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the welcome screen.
      */
     async editWelcomeScreen(id: string, options: EditWelcomeScreenOptions) {
         const reason = options.reason;
@@ -1035,12 +780,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Edit the widget of a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {String} [options.channelID] - The ID of the channel the widget should lead to.
-     * @param {Boolean} [options.enabled] - If the widget is enabled.
-     * @returns {Promise<Widget>}
+     * @param id - The ID of the guild.
+     * @param options - The options for editing the widget.
      */
     async editWidget(id: string, options: WidgetSettings) {
         return this._manager.authRequest<RawWidget>({
@@ -1071,10 +812,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Number} [withCounts=false] - If the approximate number of members and online members should be included.
-     * @returns {Promise<Guild>}
+     * @param id - The ID of the guild.
+     * @param withCounts - If the approximate number of members and online members should be included.
      */
     async get(id: string, withCounts?: number) {
         const query = new URLSearchParams();
@@ -1088,9 +827,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the active threads in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<GetActiveThreadsResponse>}
+     * @param id - The ID of the guild.
      */
     async getActiveThreads(id: string) {
         return this._manager.authRequest<{ members: Array<RawThreadMember>; threads: Array<RawThreadChannel>; }>({
@@ -1109,16 +846,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild's audit log.
-     *
-     * Note: everything under the `entries` key is raw from Discord. See [their documentation](https://discord.com/developers/docs/resources/audit-log#audit-logs) for structure and other information. (`audit_log_entries`)
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} [options]
-     * @param {AuditLogActionTypes} [options.actionType] - The action type to filter by.
-     * @param {Number} [options.before] - The ID of the entry to get entries before.
-     * @param {Number} [options.limit] - The maximum number of entries to get.
-     * @param {String} [options.userID] - The ID of the user to filter by.
-     * @returns {Promise<AuditLog>}
+     * @param id - The ID of the guild.
+     * @param options - The options for getting the audit logs.
      */
     async getAuditLog(id: string, options?: GetAuditLogOptions) {
         const guild = this._client.guilds.get(id);
@@ -1144,10 +873,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get an auto moderation rule for a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} ruleID - The ID of the rule to get.
-     * @returns {Promise<AutoModerationRule>}
+     * @param id - The ID of the guild.
+     * @param ruleID - The ID of the rule to get.
      */
     async getAutoModerationRule(id: string, ruleID: string) {
         return this._manager.authRequest<RawAutoModerationRule>({
@@ -1158,9 +885,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the auto moderation rules for a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<AutoModerationRule[]>}
+     * @param id - The ID of the guild.
      */
     async getAutoModerationRules(id: string) {
         const guild = this._client.guilds.get(id);
@@ -1172,10 +897,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a ban.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} userID - The ID of the user to get the ban of.
-     * @returns {Promise<Ban>}
+     * @param id - The ID of the guild.
+     * @param userID - The ID of the user to get the ban of.
      */
     async getBan(id: string, userID: string) {
         return this._manager.authRequest<RawBan>({
@@ -1189,13 +912,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the bans in a guild.
-     *
-     * @param {String} id
-     * @param {Object} options
-     * @param {String} [options.after] - The ID of the ban to get bans after.
-     * @param {String} [options.before] - The ID of the ban to get bans before.
-     * @param {Number} [options.limit] - The maximum number of bans to get.
-     * @returns {Promise<Ban[]>}
+     * @param id - The ID of the guild.
+     * @param options - The options for getting the bans.
      */
     async getBans(id: string, options?: GetBansOptions) {
         const query = new URLSearchParams();
@@ -1214,9 +932,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the channels in a guild. Does not include threads.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<AnyGuildChannelWithoutThreads[]>}
+     * @param id - The ID of the guild.
      */
     async getChannels(id: string) {
         return this._manager.authRequest<Array<RawGuildChannel>>({
@@ -1227,10 +943,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get an emoji in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} emojiID - The ID of the emoji to get.
-     * @returns {Promise<GuildEmoji>}
+     * @param id - The ID of the guild.
+     * @param emojiID - The ID of the emoji to get.
      */
     async getEmoji(id: string, emojiID: string) {
         return this._manager.authRequest<RawGuildEmoji>({
@@ -1244,9 +958,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the emojis in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<GuildEmoji[]>}
+     * @param id - The ID of the guild.
      */
     async getEmojis(id: string) {
         return this._manager.authRequest<Array<RawGuildEmoji>>({
@@ -1260,9 +972,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the integrations in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<Integration[]>}
+     * @param id - The ID of the guild.
      */
     async getIntegrations(id: string) {
         return this._manager.authRequest<Array<RawIntegration>>({
@@ -1273,9 +983,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the invites of a guild.
-     *
-     * @param {String} id - The id of the guild to get the invites of.
-     * @returns {Promise<Invite[]>} - An array of invites with metadata.
+     * @param id - The ID of the guild to get the invites of.
      */
     async getInvites(id: string) {
         return this._manager.authRequest<Array<RawInvite>>({
@@ -1286,10 +994,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild member.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} memberID - The ID of the member.
-     * @returns {Promise<Member>}
+     * @param id - The ID of the guild.
+     * @param memberID - The ID of the member.
      */
     async getMember(id: string, memberID: string) {
         return this._manager.authRequest<RawMember>({
@@ -1300,12 +1006,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild's members. This requires the `GUILD_MEMBERS` intent.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} [options]
-     * @param {String} [options.after] - The last id on the previous page, for pagination.
-     * @param {Number} [options.limit] - The maximum number of members to get.
-     * @returns {Promise<Member[]>}
+     * @param id - The ID of the guild.
+     * @param options - The options for getting the members.
      */
     async getMembers(id: string, options?: GetMembersOptions) {
         const query = new URLSearchParams();
@@ -1320,9 +1022,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a preview of a guild. If the client is not already in this guild, the guild must be lurkable.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<GuildPreview>}
+     * @param id - The ID of the guild.
      */
     async getPreview(id: string) {
         return this._manager.authRequest<RawGuildPreview>({
@@ -1333,12 +1033,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the prune count of a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} [options]
-     * @param {Number} [options.days] - The number of days to consider inactivity for.
-     * @param {String[]} [options.includeRoles] - The roles to include.
-     * @returns {Promise<Number>}
+     * @param id - The ID of the guild.
+     * @param options - The options for getting the prune count.
      */
     async getPruneCount(id: string, options?: GetPruneCountOptions) {
         const query = new URLSearchParams();
@@ -1353,9 +1049,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the roles in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<Role[]>}
+     * @param id - The ID of the guild.
      */
     async getRoles(id: string) {
         const guild = this._client.guilds.get(id);
@@ -1367,11 +1061,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a scheduled event.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} eventID - The ID of the scheduled event to get.
-     * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
-     * @returns {Promise<GuildScheduledEvent>}
+     * @param id - The ID of the guild.
+     * @param eventID - The ID of the scheduled event to get.
+     * @param withUserCount - If the number of users subscribed to the event should be included.
      */
     async getScheduledEvent(id: string, eventID: string, withUserCount?: number) {
         const query = new URLSearchParams();
@@ -1385,15 +1077,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the users subscribed to a scheduled event.
-     *
-     * @param {String} id
-     * @param {String} eventID
-     * @param {Object} options
-     * @param {String} [options.after] - The ID of the entry to get entries after.
-     * @param {String} [options.before] - The ID of the entry to get entries before.
-     * @param {Number} [options.limit] - The maximum number of entries to get.
-     * @param {Boolean} [options.withMember] - If the member object should be included.
-     * @returns {Promise<ScheduledEventUser[]>}
+     * @param id - The ID of the guild.
+     * @param eventID - The ID of the scheduled event.
+     * @param options - The options for getting the users.
      */
     async getScheduledEventUsers(id: string, eventID: string, options?: GetScheduledEventUsersOptions) {
         const guild = this._client.guilds.get(id);
@@ -1414,10 +1100,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild's scheduled events
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
-     * @returns {Promise<GuildScheduledEvent[]>}
+     * @param id - The ID of the guild.
+     * @param withUserCount - If the number of users subscribed to the event should be included.
      */
     async getScheduledEvents(id: string, withUserCount?: number) {
         const query = new URLSearchParams();
@@ -1431,9 +1115,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild template.
-     *
-     * @param {String} code - The code of the template to get.
-     * @returns {Promise<GuildTemplate>}
+     * @param code - The code of the template to get.
      */
     async getTemplate(code: string) {
         return this._manager.authRequest<RawGuildTemplate>({
@@ -1444,9 +1126,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild's templates.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<GuildTemplate[]>}
+     * @param id - The ID of the guild.
      */
     async getTemplates(id: string) {
         return this._manager.authRequest<Array<RawGuildTemplate>>({
@@ -1457,9 +1137,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the vanity url of a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<GetVanityURLResponse>}
+     * @param id - The ID of the guild.
      */
     async getVanityURL(id: string) {
         return this._manager.authRequest<GetVanityURLResponse>({
@@ -1470,9 +1148,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the list of usable voice regions for a guild. This will return VIP servers when the guild is VIP-enabled.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<VoiceRegion[]>}
+     * @param id - The ID of the guild.
      */
     async getVoiceRegions(id: string) {
         return this._manager.authRequest<Array<VoiceRegion>>({
@@ -1483,9 +1159,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the welcome screen for a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<WelcomeScreen>}
+     * @param id - The ID of the guild.
      */
     async getWelcomeScreen(id: string) {
         return this._manager.authRequest<RawWelcomeScreen>({
@@ -1504,9 +1178,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the widget of a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<Widget>}
+     * @param id - The ID of the guild.
      */
     async getWidget(id: string) {
         return this._manager.authRequest<RawWidget>({
@@ -1533,10 +1205,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the widget image of a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {WidgetImageStyle} [style=shield] - The style of the image.
-     * @returns {Promise<Buffer>}
+     * @param id - The ID of the guild.
+     * @param style - The style of the image.
      */
     async getWidgetImage(id: string, style?: WidgetImageStyle) {
         const query = new URLSearchParams();
@@ -1550,9 +1220,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get the raw JSON widget of a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<RawWidget>}
+     * @param id - The ID of the guild.
      */
     async getWidgetJSON(id: string) {
         return this._manager.request<RawWidget>({
@@ -1563,9 +1231,7 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Get a guild's widget settings.
-     *
-     * @param {String} id - The ID of the guild.
-     * @returns {Promise<WidgetSettings>}
+     * @param id - The ID of the guild.
      */
     async getWidgetSettings(id: string) {
         return this._manager.authRequest<RawWidgetSettings>({
@@ -1579,10 +1245,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Remove a ban.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {string} userID - The ID of the user to remove the ban from.
-     * @param {String} [reason] - The reason for removing the ban.
+     * @param id - The ID of the guild.
+     * @param userID - The ID of the user to remove the ban from.
+     * @param reason - The reason for removing the ban.
      */
     async removeBan(id: string, userID: string, reason?: string) {
         await this._manager.authRequest<void>({
@@ -1594,11 +1259,9 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Remove a member from a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} memberID - The ID of the user to remove.
-     * @param {String} reason - The reason for the removal.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param memberID - The ID of the user to remove.
+     * @param reason - The reason for the removal.
      */
     async removeMember(id: string, memberID: string, reason?: string) {
         await this._manager.authRequest<void>({
@@ -1610,12 +1273,10 @@ export default class Guilds extends BaseRoute {
 
     /**
      * remove a role from a member.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} memberID - The ID of the member.
-     * @param {String} roleID - The ID of the role to remove.
-     * @param {String} [reason] - The reason for removing the role.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild.
+     * @param memberID - The ID of the member.
+     * @param roleID - The ID of the role to remove.
+     * @param reason - The reason for removing the role.
      */
     async removeMemberRole(id: string, memberID: string, roleID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -1627,12 +1288,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Search the username & nicknames of members in a guild.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {Object} options
-     * @param {Number} [options.limit] - The maximum number of entries to get.
-     * @param {String} options.query - The query to search for.
-     * @returns {Promise<Member[]>}
+     * @param id - The ID of the guild.
+     * @param options - The options to search with.
      */
     async searchMembers(id: string, options: SearchMembersOptions) {
         const query = new URLSearchParams();
@@ -1647,10 +1304,8 @@ export default class Guilds extends BaseRoute {
 
     /**
      * Sync a guild template.
-     *
-     * @param {String} id - The ID of the guild.
-     * @param {String} code - The code of the template to sync.
-     * @returns {Promise<GuildTemplate>}
+     * @param id - The ID of the guild.
+     * @param code - The code of the template to sync.
      */
     async syncTemplate(id: string, code: string) {
         return this._manager.authRequest<RawGuildTemplate>({

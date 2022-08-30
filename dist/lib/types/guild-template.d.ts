@@ -16,12 +16,16 @@ export interface RawGuildTemplate {
 }
 
 export interface CreateGuildFromTemplateOptions {
+    /** The icon for the created guild (buffer, or full data url). */
     icon?: Buffer | string;
+    /** The name of the guild. */
     name: string;
 }
 
 export interface CreateTemplateOptions {
+    /** The description of the template. */
     description?: string | null;
+    /** The name of the template. */
     name: string;
 }
 

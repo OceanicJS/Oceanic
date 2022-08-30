@@ -6,7 +6,7 @@ import type { RESTMethod } from "../Constants";
 import { API_URL, RESTMethods, USER_AGENT } from "../Constants";
 import Base from "../structures/Base";
 import Properties from "../util/Properties";
-import type { File, LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
+import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
 import type { RESTOptions } from "../types/client";
 import { FormData, fetch, File as UFile } from "undici";
 
@@ -81,20 +81,8 @@ export default class RequestHandler {
     }
 
     /**
-     * Make a request
-     *
-     * @template T
-     * @param {Object} options
-     * @param {(Boolean | String)} [options.auth=false] - True to use global auth if specified, false for no auth, and a string value for specific authorization (must be prefixed).
-     * @param {File[]} [options.files] - The files to send with this request.
-     * @param {FormData} [options.form] - The form body to send with the request. Mutually exclusive with `json`.
-     * @param {Object} [options.json] - The json body to send with the request. Mutually exclusive with `form`.
-     * @param {RESTMethod} options.method - The method of this request.
-     * @param {String} options.path - The path of this request - will be combined with baseURL.
-     * @param {Boolean} [options.priority=false] - If this request should be considered a priority.
-     * @param {String} [options.reason] - The value to pass in `X-Audit-Log-Reason`, if applicable.
-     * @param {String} [options.route] - The route path (with placeholders).
-     * @returns {Promise<T>} - The result body, null if no content
+     * Make a request. `null` will be returned if the request results in a `204 NO CONTENT`.
+     * @param options - The options for the request.
      */
     async request<T = unknown>(options: RequestOptions) {
         options.method = options.method.toUpperCase() as RESTMethod;

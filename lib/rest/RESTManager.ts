@@ -39,15 +39,13 @@ export default class RESTManager {
     get client() { return this._client; }
     get options() { return this._handler.options; }
 
-    /** Alias for {@link RequestHandler#authRequest} */
+    /** Alias for {@link RequestHandler.authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
         return this._handler.authRequest<T>(options);
     }
 
     /**
      * Get the gateway information related to your bot client.
-     *
-     * @returns {Promise<GetBotGatewayResponse>}
      */
     async getBotGateway() {
         return this.authRequest<RawGetBotGatewayResponse>({
@@ -68,8 +66,6 @@ export default class RESTManager {
 
     /**
      * Get the gateway information.
-     *
-     * @returns {Promise<GetGatewayResponse>}
      */
     async getGateway() {
         return this.request<GetGatewayResponse>({
@@ -78,7 +74,7 @@ export default class RESTManager {
         });
     }
 
-    /** Alias for {@link RequestHandler#request} */
+    /** Alias for {@link RequestHandler.request} */
     async request<T = unknown>(options: RequestOptions) {
         return this._handler.request<T>(options);
     }

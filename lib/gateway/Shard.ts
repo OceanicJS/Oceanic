@@ -12,14 +12,13 @@ import {
     Intents
 } from "../Constants";
 import type {
-    UpdatePreseneOptions,
+    UpdatePresenceOptions,
     RequestGuildMembersOptions,
     UpdateVoiceStateOptions,
     PresenceUpdate,
     Presence,
     SendStatuses,
     BotActivity,
-    BotActivityTypes,
     ShardStatus
 } from "../types/gateway";
 import Member from "../structures/Member";
@@ -98,7 +97,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     lastHeartbeatSent: number;
     latency: number;
     preReady: boolean;
-    presence: Required<UpdatePreseneOptions>;
+    presence: Required<UpdatePresenceOptions>;
     presenceUpdateBucket: Bucket;
     ready: boolean;
     reconnectInterval: number;
@@ -1265,13 +1264,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Edit this shard's status.
-     *
-     * @param {SendStatuses} status - The status.
-     * @param {BotActivity[]} [activities] - An array of activities.
-     * @param {BotActivityTypes} [activities[].type] - The activity type.
-     * @param {String} [activities[].name] - The activity name.
-     * @param {String} [activities[].url] - The activity url.
-     * @returns
+     * @param status - The status.
+     * @param activities - An array of activities.
      */
     async editStatus(status: SendStatuses, activities: Array<BotActivity> = []) {
         this.presence.status = status;
@@ -1333,15 +1327,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Request the members of a guild.
-     *
-     * @param {string} guild - The ID of the guild to request the members of.
-     * @param {Object} options
-     * @param {Number} [options.limit] - The maximum number of members to request.
-     * @param {Boolean} [options.presences=false] - If presences should be requested. Requires the `GUILD_PRESENCES` intent.
-     * @param {String} [options.query] - If provided, only members with a username that starts with this string will be returned. If empty or not provided, requires the `GUILD_MEMBERS` intent.
-     * @param {Number} [options.timeout=client.rest.options.requestTimeout] - The maximum amount of time in milliseconds to wait.
-     * @param {String[]} [options.userIDs] - The IDs of up to 100 users to specifically request.
-     * @returns {Promise<Member[]>}
+     * @param guild - The ID of the guild to request the members of.
+     * @param options - The options for requesting the members.
      */
     async requestGuildMembers(guild: string, options?: RequestGuildMembersOptions) {
         const opts = {
@@ -1429,13 +1416,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Update the voice state of this shard.
-     *
-     * @param {String} guildID - The ID of the guild to update the voice state of.
-     * @param {String?} channelID - The ID of the voice channel to join. Null to disconnect.
-     * @param {Object} [options]
-     * @param {Boolean} [options.selfDeaf] - If the client should join deafened.
-     * @param {Boolean} [options.selfMute] - If the client should join muted.
-     * @returns {void}
+     * @param guildID - The ID of the guild to update the voice state of.
+     * @param channelID - The ID of the voice channel to join. Null to disconnect.
+     * @param options - The options for updating the voice state.
      */
     updateVoiceState(guildID: string, channelID: string | null, options?: UpdateVoiceStateOptions) {
         this.send(GatewayOPCodes.VOICE_STATE_UPDATE, {

@@ -3,15 +3,12 @@ import Role from "./Role";
 import Base from "./Base";
 import Member from "./Member";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
-import GuildTemplate from "./GuildTemplate";
 import type User from "./User";
 import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
 import Integration from "./Integration";
-import type Invite from "./Invite";
-import GuildPreview from "./GuildPreview";
 import AutoModerationRule from "./AutoModerationRule";
 import Permission from "./Permission";
 import VoiceState from "./VoiceState";
@@ -20,15 +17,13 @@ import type { DefaultMessageNotificationLevels, ExplicitContentFilterLevels, Gui
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type { AnyGuildChannel, AnyGuildChannelWithoutThreads, AnyGuildTextChannel, AnyThreadChannel, RawGuildChannel, RawThreadChannel } from "../types/channels";
-import type { AddMemberOptions, Ban, BeginPruneOptions, CreateBanOptions, CreateChannelOptions, CreateEmojiOptions, CreateRoleOptions, EditCurrentMemberOptions, EditCurrentUserVoiceStateOptions, EditEmojiOptions, EditGuildOptions, EditMemberOptions, EditRoleOptions, EditRolePositionsEntry, EditUserVoiceStateOptions, EditWelcomeScreenOptions, GetActiveThreadsResponse, GetBansOptions, GetMembersOptions, GetPruneCountOptions, GetVanityURLResponse, GuildEmoji, ModifyChannelPositionsEntry, RawGuild, RawMember, RawRole, RawWidget, SearchMembersOptions, Sticker, WelcomeScreen, Widget, WidgetImageStyle, WidgetSettings, RawIntegration } from "../types/guilds";
-import type { CreateScheduledEventOptions, EditScheduledEventOptions, GetScheduledEventUsersOptions, RawScheduledEvent, ScheduledEventUser } from "../types/scheduled-events";
+import type { AddMemberOptions, BeginPruneOptions, CreateBanOptions, CreateChannelOptions, CreateEmojiOptions, CreateRoleOptions, EditCurrentMemberOptions, EditCurrentUserVoiceStateOptions, EditEmojiOptions, EditGuildOptions, EditMemberOptions, EditRoleOptions, EditRolePositionsEntry, EditUserVoiceStateOptions, EditWelcomeScreenOptions, GetBansOptions, GetMembersOptions, GetPruneCountOptions, GuildEmoji, ModifyChannelPositionsEntry, RawGuild, RawMember, RawRole, SearchMembersOptions, Sticker, WelcomeScreen, WidgetImageStyle, WidgetSettings, RawIntegration } from "../types/guilds";
+import type { CreateScheduledEventOptions, EditScheduledEventOptions, GetScheduledEventUsersOptions, RawScheduledEvent } from "../types/scheduled-events";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
 import type { GetAuditLogOptions } from "../types/audit-log";
-import { AuditLog } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
 import type { Uncached } from "../types/shared";
 import type { RawVoiceState } from "../types/voice";
-import { VoiceRegion } from "../types/voice";
 import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
 import type { RequestGuildMembersOptions } from "../types/gateway";
@@ -144,293 +139,132 @@ export default class Guild extends Base {
      * Add a member to this guild. Requires an access token with the `guilds.join` scope.
      *
      * Returns the newly added member upon success, or void if the member is already in the guild.
-     *
-     * @param {String} userID - The ID of the user to add.
-     * @param {Object} options
-     * @param {String} options.accessToken - The access token of the user to add.
-     * @param {Boolean} [options.deaf] - If the user should be deafened or not.
-     * @param {Boolean} [options.mute] - If the user should be muted or not.
-     * @param {String} [options.nick] - The nickname of the user to add.
-     * @param {String} [options.roles] - The IDs of the roles to add to the user. This bypasses membership screening and verification levels.
-     * @returns {Promise<void | Member>}
+     * @param userID - The ID of the user to add.
+     * @param options - The options for adding the member.
      */
     addMember(userID: string, options: AddMemberOptions): Promise<void | Member>;
     /**
      * Add a role to a member.
-     *
-     * @param {String} memberID - The ID of the member.
-     * @param {String} roleID - The ID of the role to add.
-     * @param {String} [reason] - The reason for adding the role.
-     * @returns {Promise<void>}
+     * @param memberID - The ID of the member.
+     * @param roleID - The ID of the role to add.
+     * @param reason - The reason for adding the role.
      */
     addMemberRole(memberID: string, roleID: string, reason?: string): Promise<void>;
     /**
      * The url of this guild's banner.
-     *
-     * @param {ImageFormat} format - The format the url should be.
-     * @param {Number} size - The dimensions of the image.
-     * @returns {(String | null)}
+     * @param format - The format the url should be.
+     * @param size - The dimensions of the image.
      */
     bannerURL(format?: ImageFormat, size?: number): string | null;
     /**
      * Begine a prune.
-     *
-     * @param {Object} [options]
-     * @param {Number} [options.days] - The number of days to prune.
-     * @param {Boolean} [options.computePruneCount] - If the number of members to prune should be computed. If false, the return will be `null`.
-     * @param {String[]} [options.includeRoles] - The roles to include.
-     * @param {String} [options.reason] - The reason for the prune.
-     * @returns {Promise<Number?>}
+     * @param options - The options for the prune.
      */
     beginPrune(options?: BeginPruneOptions): Promise<number | null>;
     /**
      * Create an auto moderation rule for this guild.
-     *
-     * @param {Object} options
-     * @param {Object[]} options.actions - The actions to take.
-     * @param {Object} options.actions[].metadata - The metadata for the action.
-     * @param {String} [options.actions[].metadata.channelID] - The ID of the channel to send the message to. (`SEND_ALERT_MESSAGE`)
-     * @param {Number} [options.actions[].metadata.durationSeconds] - The duration of the timeout in seconds. (`TIMEOUT`)
-     * @param {AutoModerationActionTypes} options.actions[].type - The type of action to take.
-     * @param {AutoModerationEventTypes} options.eventType - The event type to trigger on.
-     * @param {String[]} options.exemptChannels - The channels to exempt from the rule.
-     * @param {String[]} options.exemptRoles - The roles to exempt from the rule.
-     * @param {String} [options.reason] - The reason for creating the rule.
-     * @param {Object} [options.triggerMetadata] - The metadata to use for the trigger.
-     * @param {String} [options.triggerMetadata.allowList] - The keywords to allow. (`KEYWORD_PRESET`)
-     * @param {String[]} [options.triggerMetadata.keywordFilter] - The keywords to filter. (`KEYWORD`)
-     * @param {Number} [options.triggerMetadata.mentionTotalLimit] - The maximum number of mentions to allow. (`MENTION_SPAM`)
-     * @param {AutoModerationKeywordPresetTypes[]} [options.triggerMetadata.presets] - The presets to use. (`KEYWORD_PRESET`)
-     * @param {AutoModerationTriggerTypes} options.triggerType - The type of trigger to use.
-     * @returns {Promise<AutoModerationRule>}
+     * @param options - The options for the rule.
      */
     createAutoModerationRule(options: CreateAutoModerationRuleOptions): Promise<AutoModerationRule | undefined>;
     /**
      * Create a bon for a user.
-     *
-     * @param {String} userID - The ID of the user.
-     * @param {Object} options
-     * @param {Number} [options.deleteMessageDays] - The number of days to delete messages from. Technically DEPRECTED. This is internally converted in to `deleteMessageSeconds`.
-     * @param {Number} [options.deleteMessageSeconds] - The number of seconds to delete messages from. Takes precedence over `deleteMessageDays`.
-     * @param {String} [options.reason] - The reason for creating the bon.
-     * @returns {Promise<void>}
+     * @param userID - The ID of the user.
+     * @param options - The options for creating the bon.
      */
     createBan(userID: string, options?: CreateBanOptions): Promise<void>;
     /**
      * Create a channel in this guild.
-     *
-     * @template {AnyGuildChannel} T
-     * @param {Object} options
-     * @param {ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - [Text, Announcement] The default auto archive duration for the channel.
-     * @param {String} options.name - The name of the channel.
-     * @param {Boolean} [options.nsfw] - [Text, Voice, Announcement] If the channel is age restricted.
-     * @param {String} [options.parentID] - The ID of the category to put this channel in.
-     * @param {Object[]} [options.permissionOverwrites] - The permission overwrites to apply to the channel.
-     * @param {(BigInt | String)} [options.permissionOverwrites[].allow] - The permissions to allow.
-     * @param {(BigInt | String)} [options.permissionOverwrites[].deny] - The permissions to deny.
-     * @param {String} options.permissionOverwrites[].id - The ID of the user or role to apply the permissions to.
-     * @param {OverwriteTypes} options.permissionOverwrites[].type - `0` for role, `1` for user.
-     * @param {Number} [options.position] - The position of the channel.
-     * @param {Number} [options.rateLimitPerUser] - [Text] The seconds between sending messages for users. Between 0 and 21600.
-     * @param {String} [options.reason] - The reason for creating the channel.
-     * @param {String} [options.rtcRegion] - [Voice] The voice region for the channel.
-     * @param {GuildChannelTypesWithoutThreads} options.type - The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of channel to create.
-     * @param {Number} [options.userLimit] - [Voice] The maximum number of users that can be in the channel. Between 0 and 99.
-     * @param {VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) for the channel.
-     * @param {Promise<T>}
+     * @param options - The options for creating the channel.
      */
     createChannel<T extends GuildChannelTypesWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<import("../types/guilds").CreateChannelReturn<T>>;
     /**
      * Create an emoji in this guild.
-     *
-     * @param {Object} options
-     * @param {String} options.name - The name of the emoji.
-     * @param {(Buffer | String)} options.image - The image (buffer, or full data url).
-     * @param {String} [options.reason] - The reason for creating the emoji.
-     * @param {String[]} [options.roles] - The roles to restrict the emoji to.
-     * @returns {Promise<GuildEmoji>}
+     * @param options - The options for creating the emoji.
      */
     createEmoji(options: CreateEmojiOptions): Promise<GuildEmoji>;
     /**
      * Create a role.
-     *
-     * @param {Object} options
-     * @param {Number} [options.color] - The color of the role.
-     * @param {Boolean} [options.hoist] - If the role should be hoisted.
-     * @param {(Buffer | String)?} [options.icon] - The icon for the role (buffer, or full data url) (requires the `ROLE_ICONS` feature).
-     * @param {Boolean} [options.mentionable] - If the role should be mentionable.
-     * @param {String} [options.name] - The name of the role.
-     * @param {String} [options.permissions] - The permissions of the role.
-     * @param {String} [options.reason] - The reason for creating the role.
-     * @param {String} [options.unicodeEmoji] - The unicode emoji for the role (requires the `ROLE_ICONS` feature).
-     * @returns
+     * @param options - The options for creating the role.
      */
     createRole(options?: CreateRoleOptions): Promise<Role>;
     /**
      * Create a scheduled event in this guild.
-     *
-     * @param {Object} options
-     * @param {String} [options.channelID] - The ID of the stage channel the event is taking place in. Optional if `entityType` is `EXTERNAL`.
-     * @param {String} [options.description] - The description of the event.
-     * @param {Object} [options.entityMetadata]
-     * @param {String} [options.entityMetadata.location] - The location of the event. Required if `entityType` is `EXTERNAL`.
-     * @param {GuildScheduledEventEntityTypes} options.entityType - The type of the event.
-     * @param {(Buffer | String)} [options.image] - The cover image of the event.
-     * @param {String} options.name - The name of the scheduled event.
-     * @param {GuildScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
-     * @param {String} [options.reason] - The reason for creating the scheduled event.
-     * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if `entityType` is `EXTERNAL`.
-     * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
-     * @returns {Promise<GuildScheduledEvent>}
+     * @param options - The options for creating the scheduled event.
      */
     createScheduledEvent(options: CreateScheduledEventOptions): Promise<GuildScheduledEvent>;
     /**
      * Create a guild template.
-     *
-     * @param {Object} options
-     * @param {String} [options.description] - The description of the template.
-     * @param {String} options.name - The name of the template.
-     * @returns {Promise<GuildTemplate>}
+     * @param options - The options for creating the template.
      */
-    createTemplate(options: CreateTemplateOptions): Promise<GuildTemplate>;
+    createTemplate(options: CreateTemplateOptions): Promise<import("./GuildTemplate").default>;
     /**
      * Delete this guild.
-     *
-     * @returns {Promise<void>}
      */
     delete(): Promise<void>;
     /**
      * Delete an auto moderation rule in this guild.
-     *
-     * @param {String} ruleID - The ID of the rule to delete.
-     * @param {String} [reason] - The reason for deleting the rule.
-     * @returns {Promise<void>}
+     * @param ruleID - The ID of the rule to delete.
+     * @param reason - The reason for deleting the rule.
      */
     deleteAutoModerationRule(ruleID: string, reason?: string): Promise<void>;
     /**
      * Delete an emoji in this guild.
-     *
-     * @param {String} emojiID - The ID of the emoji.
-     * @param {String} [reason] - The reason for deleting the emoji.
-     * @returns {Promise<void>}
+     * @param emojiID - The ID of the emoji.
+     * @param reason - The reason for deleting the emoji.
      */
     deleteEmoji(emojiID: string, reason?: string): Promise<void>;
     /**
      * Delete an integration.
-     *
-     * @param {String} integrationID - The ID of the integration.
-     * @param {String} [reason] - The reason for deleting the integration.
-     * @returns {Promise<void>}
+     * @param integrationID - The ID of the integration.
+     * @param reason - The reason for deleting the integration.
      */
     deleteIntegration(integrationID: string, reason?: string): Promise<void>;
     /**
      * Delete a role.
-     *
-     * @param {String} roleID - The ID of the role to delete.
-     * @param {String} [reason] - The reason for deleting the role.
-     * @returns {Promise<void>}
+     * @param roleID - The ID of the role to delete.
+     * @param reason - The reason for deleting the role.
      */
     deleteRole(roleID: string, reason?: string): Promise<void>;
     /**
      * Delete a scheduled event.
-     *
-     * @param {String} eventID - The ID of the scheduled event.
-     * @param {String} reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
-     * @returns {Promise<void>}
+     * @param eventID - The ID of the scheduled event.
+     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     deleteScheduledEvent(eventID: string, reason?: string): Promise<void>;
     /**
      * Delete a template.
-     *
-     * @param {String} code - The code of the template.
-     * @returns {Promise<void>}
+     * @param code - The code of the template.
      */
     deleteTemplate(code: string): Promise<void>;
     /**
      * Edit this guild.
-     *
-     * @param {Object} options
-     * @param {String?} [options.afkChannelID] - The ID of the AFK voice channel.
-     * @param {Number} [options.afkTimeout] - The AFK timeout in seconds.
-     * @param {(Buffer | String)?} [options.banner] - The banner of the guild.
-     * @param {DefaultMessageNotificationLevels} [options.defaultMessageNotifications] - The default message notification level.
-     * @param {String?} [options.description] - The description of the guild.
-     * @param {ExplicitContentFilterLevels} [options.explicitContentFilter] - The explicit content filter level.
-     * @param {String?} [options.icon] - The icon of the guild.
-     * @param {String} [options.name] - The name of the guild.
-     * @param {String} [options.ownerID] - The ID of the member to transfer guild ownership to.
-     * @param {String?} [options.preferredLocale] - The preferred locale of the guild.
-     * @param {Boolean} [options.premiumProgressBarEnabled] - Whether the premium progress bar is enabled.
-     * @param {String?} [options.publicUpdatesChannelID] - The ID of the public updates channel.
-     * @param {String} [options.reason] - The reason for editing the guild.
-     * @param {String?} [options.region] - The region of the guild.
-     * @param {String?} [options.rulesChannelID] - The ID of the rules channel.
-     * @param {(Buffer | String)?} [options.splash] - The splash of the guild.
-     * @param {Number} [options.systemChannelFlags] - The system channel flags.
-     * @param {String?} [options.systemChannelID] - The ID of the system channel.
-     * @param {VerificationLevels} [options.verificationLevel] - The verification level of the guild.
-     * @returns {Promise<Guild>}
+     * @param options - The options for editing the guild.
      */
     edit(options: EditGuildOptions): Promise<Guild>;
     /**
      * Edit an existing auto moderation rule in this guild.
-     *
-     * @param {String} ruleID - The ID of the rule to edit.
-     * @param {Object} options
-     * @param {Object[]} [options.actions] - The actions to take.
-     * @param {Object} options.actions[].metadata - The metadata for the action.
-     * @param {String} [options.actions[].metadata.channelID] - The ID of the channel to send the message to. (`SEND_ALERT_MESSAGE`)
-     * @param {Number} [options.actions[].metadata.durationSeconds] - The duration of the timeout in seconds. (`TIMEOUT`)
-     * @param {AutoModerationActionTypes} options.actions[].type - The type of action to take.
-     * @param {AutoModerationEventTypes} options.eventType - The event type to trigger on.
-     * @param {String[]} [options.exemptChannels] - The channels to exempt from the rule.
-     * @param {String[]} [options.exemptRoles] - The roles to exempt from the rule.
-     * @param {String} [options.reason] - The reason for editing the rule.
-     * @param {Object} [options.triggerMetadata] - The metadata to use for the trigger.
-     * @param {String} [options.triggerMetadata.allowList] - The keywords to allow. (`KEYWORD_PRESET`)
-     * @param {String[]} [options.triggerMetadata.keywordFilter] - The keywords to filter. (`KEYWORD`)
-     * @param {Number} [options.triggerMetadata.mentionTotalLimit] - The maximum number of mentions to allow. (`MENTION_SPAM`)
-     * @param {AutoModerationKeywordPresetTypes[]} [options.triggerMetadata.presets] - The presets to use. (`KEYWORD_PRESET`)
-     * @returns {Promise<AutoModerationRule>}
+     * @param ruleID - The ID of the rule to edit.
+     * @param options - The options for editing the rule.
      */
     editAutoModerationRule(ruleID: string, options: EditAutoModerationRuleOptions): Promise<AutoModerationRule | undefined>;
     /**
      * Edit the positions of channels in this guild.
-     *
-     * @param {Object[]} options - The channels to move. Unedited channels do not need to be specifed.
-     * @param {String} options[].id - The ID of the channel to move.
-     * @param {Boolean} [options[].lockPermissions] - If the permissions should be synced (if moving to a new category).
-     * @param {String} [options[].parentID] - The ID of the new parent category.
-     * @param {Number} [options[].position] - The position to move the channel to.
+     * @param options - The channels to move. Unedited channels do not need to be specifed.
      */
     editChannelPositions(options: Array<ModifyChannelPositionsEntry>): Promise<void>;
     /**
      * Modify the current member in this guild.
-     *
-     * @param {Object} options
-     * @param {String?} [options.nick] - The new nickname for the member.
-     * @param {String} [options.reason] - The reason updating the member.
-     * @returns {Promise<Member>}
+     * @param options - The options for editing the member.
      */
     editCurrentMember(options: EditCurrentMemberOptions): Promise<Member>;
     /**
      * Edit the current member's voice state in this guild. `channelID` is required, and the current member must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats) for more information.
-     *
-     * @param {Object} options
-     * @param {String} options.channelID - The ID of the stage channel the member is in.
-     * @param {String} [options.requestToSpeakTimestamp] - The timestamp of when the member should be able to speak.
-     * @param {Boolean} [options.suppress] - If the user should be suppressed.
-     * @returns {Promise<void>}
+     * @param options - The options for editing the voice state.
      */
     editCurrentUserVoiceState(options: EditCurrentUserVoiceStateOptions): Promise<void>;
     /**
      * Edit an existing emoji in this guild.
-     *
-     * @param {Object} options
-     * @param {String} [options.name] - The name of the emoji.
-     * @param {String} [options.reason] - The reason for creating the emoji.
-     * @param {String[]} [options.roles] - The roles to restrict the emoji to.
-     * @returns {Promise<GuildEmoji>}
+     * @param options - The options for editing the emoji.
      */
     editEmoji(emojiID: string, options: EditEmojiOptions): Promise<{
         user: User | undefined;
@@ -444,378 +278,222 @@ export default class Guild extends Base {
     }>;
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of this guild. This can only be used by the guild owner.
-     *
-     * @param {MFALevels} level - The new MFA level.
-     * @returns {Promise<MFALevels>}
+     * @param level - The new MFA level.
      */
     editMFALevel(level: MFALevels): Promise<MFALevels>;
     /**
      * Edit a member of this guild.
-     *
-     * @param {String} memberID - The ID of the member.
-     * @param {Object} options
-     * @param {String?} [options.channelID] - The ID of the channel to move the member to. `null` to disconnect.
-     * @param {String?} [options.communicationDisabledUntil] - An ISO8601 timestamp to disable communication until. `null` to reset.
-     * @param {Boolean} [options.deaf] - If the member should be deafened.
-     * @param {Boolean} [options.mute] - If the member should be muted.
-     * @param {String} [options.nick] - The new nickname of the member. `null` to reset.
-     * @param {String} [options.reason] - The reason for editing the member.
-     * @param {String[]} [options.roles] - The new roles of the member.
-     * @returns {Promise<Member>}
+     * @param memberID - The ID of the member.
+     * @param options - The options for editing the member.
      */
     editMember(memberID: string, options: EditMemberOptions): Promise<Member>;
     /**
      * Edit an existing role.
-     *
-     * @param {Object} options
-     * @param {Number} [options.color] - The color of the role.
-     * @param {Boolean} [options.hoist] - If the role should be hoisted.
-     * @param {(Buffer | String)?} [options.icon] - The icon for the role (buffer, or full data url) (requires the `ROLE_ICONS` feature).
-     * @param {Boolean} [options.mentionable] - If the role should be mentionable.
-     * @param {String} [options.name] - The name of the role.
-     * @param {String} [options.permissions] - The permissions of the role.
-     * @param {String} [options.reason] - The reason for creating the role.
-     * @param {String} [options.unicodeEmoji] - The unicode emoji for the role (requires the `ROLE_ICONS` feature).
-     * @returns
+     * @param options - The options for editing the role.
      */
     editRole(roleID: string, options: EditRoleOptions): Promise<Role>;
     /**
      * Edit the position of roles in this guild.
-     *
-     * @param {Object[]} options
-     * @param {String} options[].id - The ID of the role to move.
-     * @param {Number?} [options[].position] - The position to move the role to.
-     * @param {String} [reason] - The reason for moving the roles.
-     * @returns {Promise<Role[]>}
+     * @param options - The roles to move.
      */
     editRolePositions(options: Array<EditRolePositionsEntry>, reason?: string): Promise<Role[]>;
     /**
      * Edit an existing scheduled event in this guild.
-     *
-     * @param {Object} options
-     * @param {?String} [options.channelID] - The ID of the stage channel the event is taking place in. Required to be `null` if changing `entityType` to `EXTERNAL`.
-     * @param {String} [options.description] - The description of the event.
-     * @param {Object} [options.entityMetadata]
-     * @param {String} [options.entityMetadata.location] - The location of the event. Required if changing `entityType` to `EXTERNAL`.
-     * @param {GuildScheduledEventEntityTypes} options.entityType - The type of the event.
-     * @param {(Buffer | String)} [options.image] - The cover image of the event.
-     * @param {String} options.name - The name of the scheduled event.
-     * @param {GuildScheduledEventPrivacyLevels} options.privacyLevel - The privacy level of the event.
-     * @param {String} [options.reason] - The reason for creating the scheduled event.
-     * @param {String} [options.scheduledEndTime] - The time the event ends. ISO8601 Timestamp. Required if changing `entityType` to `EXTERNAL`.
-     * @param {String} options.scheduledStartTime - The time the event starts. ISO8601 Timestamp.
-     * @param {GuildScheduledEventStatuses} [options.status] - The status of the event.
-     * @returns {Promise<GuildScheduledEvent>}
+     * @param options - The options for editing the scheduled event.
      */
     editScheduledEvent(options: EditScheduledEventOptions): Promise<GuildScheduledEvent>;
     /**
      * Edit a template.
-     *
-     * @param {String} code - The code of the template.
-     * @param {Object} options
-     * @param {String} [options.description] - The description of the template.
-     * @param {String} [options.name] - The name of the template.
-     * @returns {Promise<GuildTemplate>}
+     * @param code - The code of the template.
+     * @param options - The options for editing the template.
      */
-    editTemplate(code: string, options: EditGuildTemplateOptions): Promise<GuildTemplate>;
+    editTemplate(code: string, options: EditGuildTemplateOptions): Promise<import("./GuildTemplate").default>;
     /**
      * Edit a guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     *
-     * @param {String} memberID - The ID of the member.
-     * @param {Object} options
-     * @param {String} options.channelID - The ID of the stage channel the member is in.
-     * @param {Boolean} [options.suppress] - If the user should be suppressed.
-     * @returns {Promise<void>}
+     * @param memberID - The ID of the member.
+     * @param options - The options for editing the voice state.
      */
     editUserVoiceState(memberID: string, options: EditUserVoiceStateOptions): Promise<void>;
     /**
      * Edit the welcome screen in this guild.
-     *
-     * @param {String} options
-     * @param {String} [options.description] - The description of the welcome screen.
-     * @param {Boolean} [options.enabled] - Whether the welcome screen is enabled.
-     * @param {Object[]} [options.welcomeChannels] - The welcome channels of the guild.
-     * @param {String} options.welcomeChannels[].channelID - The ID of the welcome channel.
-     * @param {String} options.welcomeChannels[].description - The description of the welcome channel.
-     * @param {String} options.welcomeChannels[].emojiID - The ID of the emoji to use on the welcome channel.
-     * @param {String} options.welcomeChannels[].emojiName - The name (or unicode characters) of the emoji to use on the welcome channel.
-     * @returns {Promise<WelcomeScreen>}
+     * @param options - The options for editing the welcome screen.
      */
     editWelcomeScreen(options: EditWelcomeScreenOptions): Promise<WelcomeScreen>;
     /**
      * Edit the widget of this guild.
-     *
-     * @param {Object} options
-     * @param {String} [options.channelID] - The ID of the channel the widget should lead to.
-     * @param {Boolean} [options.enabled] - If the widget is enabled.
-     * @returns {Promise<Widget>}
+     * @param options - The options for editing the widget.
      */
-    editWidget(options: WidgetSettings): Promise<Widget>;
+    editWidget(options: WidgetSettings): Promise<import("../types/guilds").Widget>;
     /**
      * Request members from this guild.
-     *
-     * @param {Object} options
-     * @param {Number} [options.limit] - The maximum number of members to request.
-     * @param {Boolean} [options.presences=false] - If presences should be requested. Requires the `GUILD_PRESENCES` intent.
-     * @param {String} [options.query] - If provided, only members with a username that starts with this string will be returned. If empty or not provided, requires the `GUILD_MEMBERS` intent.
-     * @param {Number} [options.timeout=client.rest.options.requestTimeout] - The maximum amount of time in milliseconds to wait.
-     * @param {String[]} [options.userIDs] - The IDs of up to 100 users to specifically request.
-     * @returns {Promise<Member[]>}
+     * @param options - The options for fetching the members.
      */
     fetchMembers(options?: RequestGuildMembersOptions): Promise<Member[]>;
     /**
      * Get the active threads in this guild.
-     *
-     * @returns {Promise<GetActiveThreadsResponse>}
      */
-    getActiveThreads(): Promise<GetActiveThreadsResponse>;
+    getActiveThreads(): Promise<import("../types/guilds").GetActiveThreadsResponse>;
     /**
      * Get this guild's audit log.
-     *
-     * Note: everything under the `entries` key is raw from Discord. See [their documentation](https://discord.com/developers/docs/resources/audit-log#audit-logs) for structure and other information. (`audit_log_entries`)
-     *
-     * @param {Object} [options]
-     * @param {AuditLogActionTypes} [options.actionType] - The action type to filter by.
-     * @param {Number} [options.before] - The ID of the entry to get entries before.
-     * @param {Number} [options.limit] - The maximum number of entries to get.
-     * @param {String} [options.userID] - The ID of the user to filter by.
-     * @returns {Promise<AuditLog>}
+     * @param options - The options for the audit log.
      */
-    getAuditLog(options?: GetAuditLogOptions): Promise<AuditLog>;
+    getAuditLog(options?: GetAuditLogOptions): Promise<import("../types/audit-log").AuditLog>;
     /**
      * Get an auto moderation rule for this guild.
-     *
-     * @param {String} ruleID - The ID of the rule to get.
-     * @returns {Promise<AutoModerationRule>}
+     * @param ruleID - The ID of the rule to get.
      */
     getAutoModerationRule(ruleID: string): Promise<AutoModerationRule>;
     /**
      * Get the auto moderation rules for this guild.
-     *
-     * @returns {Promise<AutoModerationRule[]>}
      */
     getAutoModerationRules(): Promise<AutoModerationRule[]>;
     /**
      * Get a ban in this guild.
-     *
-     * @param {String} userID - The ID of the user to get the ban of.
-     * @returns {Promise<Ban>}
+     * @param userID - The ID of the user to get the ban of.
      */
-    getBan(userID: string): Promise<Ban>;
+    getBan(userID: string): Promise<import("../types/guilds").Ban>;
     /**
      * Get the bans in this guild.
-     *
-     * @param {Object} options
-     * @param {String} [options.after] - The ID of the ban to get bans after.
-     * @param {String} [options.before] - The ID of the ban to get bans before.
-     * @param {Number} [options.limit] - The maximum number of bans to get.
-     * @returns {Promise<Ban[]>}
+     * @param options - The options for getting the bans.
      */
-    getBans(options?: GetBansOptions): Promise<Ban[]>;
+    getBans(options?: GetBansOptions): Promise<import("../types/guilds").Ban[]>;
     /**
      * Get the channels in a guild. Does not include threads. Only use this if you need to. See the `channels` collection.
-     *
-     * @returns {Promise<AnyGuildChannelWithoutThreads[]>}
      */
     getChannels(): Promise<AnyGuildChannelWithoutThreads[]>;
     /**
      * Get an emoji in this guild.
-     *
-     * @param {String} emojiID - The ID of the emoji to get.
-     * @returns {Promise<GuildEmoji>}
+     * @param emojiID - The ID of the emoji to get.
      */
     getEmoji(emojiID: string): Promise<GuildEmoji>;
     /**
      * Get the emojis in this guild.
-     *
-     * @returns {Promise<GuildEmoji[]>}
      */
     getEmojis(): Promise<GuildEmoji[]>;
     /**
      * Get the integrations in this guild.
-     *
-     * @returns {Promise<Integration[]>}
      */
     getIntegrations(): Promise<Integration[]>;
     /**
      * Get the invites of this guild.
-     *
-     * @returns {Promise<Invite[]>} - An array of invites with metadata.
      */
-    getInvites(): Promise<Invite<"withMetadata", import("../types/channels").InviteChannel>[]>;
+    getInvites(): Promise<import("./Invite").default<"withMetadata", import("../types/channels").InviteChannel>[]>;
     /**
      * Get a member of this guild.
-     *
-     * @param {String} memberID - The ID of the member.
-     * @returns {Promise<Member>}
+     * @param memberID - The ID of the member.
      */
     getMember(memberID: string): Promise<Member>;
     /**
      * Get this guild's members. This requires the `GUILD_MEMBERS` intent.
-     *
-     * @param {Object} [options]
-     * @param {String} [options.after] - The last id on the previous page, for pagination.
-     * @param {Number} [options.limit] - The maximum number of members to get.
-     * @returns {Promise<Member[]>}
+     * @param options - The options for getting the members.
      */
     getMembers(options?: GetMembersOptions): Promise<Member[]>;
     /**
      * Get a preview of this guild.
-     *
-     * @returns {Promise<GuildPreview>}
      */
-    getPreview(): Promise<GuildPreview>;
+    getPreview(): Promise<import("./GuildPreview").default>;
     /**
      * Get the prune count of this guild.
-     *
-     * @param {Object} [options]
-     * @param {Number} [options.days] - The number of days to consider inactivity for.
-     * @param {String[]} [options.includeRoles] - The roles to include.
-     * @returns {Promise<Number>}
+     * @param options - The options for getting the prune count.
      */
     getPruneCount(options?: GetPruneCountOptions): Promise<number>;
     /**
      * Get the roles in this guild. Only use this if you need to. See the `roles` collection.
-     *
-     * @returns {Promise<Role[]>}
      */
     getRoles(): Promise<Role[]>;
     /**
      * Get a scheduled event.
-     *
-     * @param {String} eventID - The ID of the scheduled event to get.
-     * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
-     * @returns {Promise<GuildScheduledEvent>}
+     * @param eventID - The ID of the scheduled event to get.
+     * @param withUserCount - If the number of users subscribed to the event should be included.
      */
     getScheduledEvent(eventID: string, withUserCount?: number): Promise<GuildScheduledEvent>;
     /**
      * Get the users subscribed to a scheduled event.
-     *
-     * @param {String} eventID
-     * @param {Object} options
-     * @param {String} [options.after] - The ID of the entry to get entries after.
-     * @param {String} [options.before] - The ID of the entry to get entries before.
-     * @param {Number} [options.limit] - The maximum number of entries to get.
-     * @param {Boolean} [options.withMember] - If the member object should be included.
-     * @returns {Promise<ScheduledEventUser[]>}
+     * @param eventID - The ID of the scheduled event to get the users of.
+     * @param options - The options for getting the users.
      */
-    getScheduledEventUsers(eventID: string, options?: GetScheduledEventUsersOptions): Promise<ScheduledEventUser[]>;
+    getScheduledEventUsers(eventID: string, options?: GetScheduledEventUsersOptions): Promise<import("../types/scheduled-events").ScheduledEventUser[]>;
     /**
      * Get this guild's scheduled events
-     *
-     * @param {Number} [withUserCount] - If the number of users subscribed to the event should be included.
-     * @returns {Promise<GuildScheduledEvent[]>}
+     * @param withUserCount - If the number of users subscribed to the event should be included.
      */
     getScheduledEvents(withUserCount?: number): Promise<GuildScheduledEvent[]>;
     /**
      * Get this guild's templates.
-     *
-     * @returns {Promise<GuildTemplate[]>}
      */
-    getTemplates(): Promise<GuildTemplate[]>;
+    getTemplates(): Promise<import("./GuildTemplate").default[]>;
     /**
      * Get the vanity url of this guild.
-     *
-     * @returns {Promise<GetVanityURLResponse>}
      */
-    getVanityURL(): Promise<GetVanityURLResponse>;
+    getVanityURL(): Promise<import("../types/guilds").GetVanityURLResponse>;
     /**
      * Get the list of usable voice regions for this guild. This will return VIP servers when the guild is VIP-enabled.
-     *
-     * @returns {Promise<VoiceRegion[]>}
      */
-    getVoiceRegions(): Promise<VoiceRegion[]>;
+    getVoiceRegions(): Promise<import("../types/voice").VoiceRegion[]>;
     /**
      * Get the welcome screen for this guild.
-     *
-     * @returns {Promise<WelcomeScreen>}
      */
     getWelcomeScreen(): Promise<WelcomeScreen>;
     /**
      * Get the widget of this guild.
-     *
-     * @returns {Promise<Widget>}
      */
-    getWidget(): Promise<Widget>;
+    getWidget(): Promise<import("../types/guilds").Widget>;
     /**
      * Get the widget image of this guild.
-     *
-     * @param {WidgetImageStyle} [style=shield] - The style of the image.
-     * @returns {Promise<Buffer>}
+     * @param style - The style of the image.
      */
     getWidgetImage(style?: WidgetImageStyle): Promise<Buffer>;
     /**
      * Get the raw JSON widget of this guild.
-     *
-     * @returns {Promise<RawWidget>}
      */
-    getWidgetJSON(): Promise<RawWidget>;
+    getWidgetJSON(): Promise<import("../types/guilds").RawWidget>;
     /**
      * Get this guild's widget settings.
-     *
-     * @returns {Promise<WidgetSettings>}
      */
     getWidgetSettings(): Promise<WidgetSettings>;
     /**
      * The url of this guild's icon.
-     *
-     * @param {ImageFormat} format - The format the url should be.
-     * @param {Number} size - The dimensions of the image.
-     * @returns {(String | null)}
+     * @param format - The format the url should be.
+     * @param size - The dimensions of the image.
      */
     iconURL(format?: ImageFormat, size?: number): string | null;
     /**
      * Leave this guild.
-     *
-     * @returns {Promise<void>}
      */
     leave(): Promise<void>;
     /**
      * Get the permissions of a member. If providing an id, the member must be cached.
-     *
-     * @param {(String | Member)} member - The member to get the permissions of.
-     * @returns {Permission}
+     * @param member - The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission;
     /**
      * Remove a ban.
-     *
-     * @param {string} userID - The ID of the user to remove the ban from.
-     * @param {String} [reason] - The reason for removing the ban.
+     * @param userID - The ID of the user to remove the ban from.
+     * @param reason - The reason for removing the ban.
      */
     removeBan(userID: string, reason?: string): Promise<void>;
     /**
      * Remove a member from this guild.
-     *
-     * @param {String} memberID - The ID of the user to remove.
-     * @param {String} reason - The reason for the removal.
-     * @returns {Promise<void>}
+     * @param memberID - The ID of the user to remove.
+     * @param reason - The reason for the removal.
      */
     removeMember(memberID: string, reason?: string): Promise<void>;
     /**
      * remove a role from a member.
-     *
-     * @param {String} memberID - The ID of the member.
-     * @param {String} roleID - The ID of the role to remove.
-     * @param {String} [reason] - The reason for removing the role.
-     * @returns {Promise<void>}
+     * @param memberID - The ID of the member.
+     * @param roleID - The ID of the role to remove.
+     * @param reason - The reason for removing the role.
      */
     removeMemberRole(memberID: string, roleID: string, reason?: string): Promise<void>;
     /**
      * Search the username & nicknames of members in this guild.
-     *
-     * @param {Object} options
-     * @param {Number} [options.limit] - The maximum number of entries to get.
-     * @param {String} options.query - The query to search for.
-     * @returns {Promise<Member[]>}
+     * @param options - The options for the search.
      */
     searchMembers(options: SearchMembersOptions): Promise<Member[]>;
     /**
      * Sync a guild template.
-     *
-     * @param {String} code - The code of the template to sync.
-     * @returns {Promise<GuildTemplate>}
+     * @param code - The code of the template to sync.
      */
-    syncTemplate(code: string): Promise<GuildTemplate>;
+    syncTemplate(code: string): Promise<import("./GuildTemplate").default>;
     toJSON(): JSONGuild;
 }

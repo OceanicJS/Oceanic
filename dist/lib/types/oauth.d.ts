@@ -92,22 +92,35 @@ export interface Connection {
     visibility: VisibilityTypes;
 }
 
-export interface OAuthURLOption {
+export interface OAuthURLOptions {
+    /** The client id of the application. */
     clientID: string;
+    /** If the guild dropdown should be disabled. */
     disableGuildSelect?: boolean;
+    /** The id of the guild to preselect. */
     guildID?: string;
+    /** The permissions to request. */
     permissions?: string;
+    /** `consent` to show the prompt, `none` to not show the prompt if the user has already authorized previously. */
     prompt?: "consent" | "none";
+    /** The redirect uri of the application. */
     redirectURI?: string;
+    /** The response type when authorized. `code` will result in query parameters that need to be exchanged with Discord for a token. `token` will result in fragment parameters that are not accessible server side, but this will be an immediate token. */
     responseType?: "code" | "token";
+    /** The [scopes](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes) to request. */
     scopes: Array<string>;
+    /** The state to send. */
     state?: string;
 }
 
 export interface ExchangeCodeOptions {
+    /** The id of the client the authorization was performed with. */
     clientID: string;
+    /** The secret of the client the authorization was performed with. */
     clientSecret: string;
+    /** The code from the authorization. */
     code: string;
+    /** The redirect uri used in the authorization. */
     redirectURI: string;
 }
 
@@ -130,12 +143,20 @@ export interface ExchangeCodeResponse {
 }
 
 export interface RefreshTokenOptions {
+    /** The id of the client the authorization was performed with. */
     clientID: string;
+    /** The secret of the client the authorization was performed with. */
     clientSecret: string;
+    /** The refresh token from when the code was exchanged. */
     refreshToken: string;
 }
 
 export interface ClientCredentialsTokenOptions {
+    /** The id of the client to perform the authorization with. This can be omitted if the global authorization is the proper (Basic base64(clientID:clientSecret)) already, or if connected to the gateway and ready. */
+    clientID?: string;
+    /** The secret of the client to perform the authorization with. This can be omitted if the global authorization is the proper (Basic base64(clientID:clientSecret)) already. */
+    clientSecret?: string;
+    /** The [scopes](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes) to request. */
     scopes: Array<string>;
 }
 
@@ -143,8 +164,11 @@ export type RawClientCredentialsTokenResponse = Omit<RawExchangeCodeResponse, "r
 export type ClientCredentialsTokenResponse = Omit<ExchangeCodeResponse, "refreshToken">;
 
 export interface RevokeTokenOptions {
+    /** The id of the client the authorization was performed with. */
     clientID: string;
+    /** The secret of the client the authorization was performed with. */
     clientSecret: string;
+    /** The access token to revoke. */
     token: string;
 }
 

@@ -22,7 +22,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">Channels</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L64">lib/routes/Channels.ts:64</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L50">lib/routes/Channels.ts:50</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -101,84 +101,83 @@
 <li class="tsd-signature tsd-anchor-link" id="addGroupRecipient.addGroupRecipient-1">add<wbr/>Group<wbr/>Recipient<span class="tsd-signature-symbol">(</span>groupID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.AddGroupRecipientOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">AddGroupRecipientOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#addGroupRecipient.addGroupRecipient-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Add a user to a group channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>groupID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the group to add the user to.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the group to add the user to.</p>
 </div></li>
 <li>
-<h5>options: <a href="../interfaces/types_channels.AddGroupRecipientOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">AddGroupRecipientOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.AddGroupRecipientOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">AddGroupRecipientOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for adding the recipient.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L75">lib/routes/Channels.ts:75</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L56">lib/routes/Channels.ts:56</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="addThreadMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add<wbr/>Thread<wbr/>Member</span><a href="#addThreadMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="addThreadMember.addThreadMember-1">add<wbr/>Thread<wbr/>Member<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#addThreadMember.addThreadMember-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Add a member to a thread.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the thread to add them to.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the thread to add them to.</p>
 </div></li>
 <li>
 <h5>userID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the user to add to the thread.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the user to add to the thread.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L93">lib/routes/Channels.ts:93</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L72">lib/routes/Channels.ts:72</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createDM" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>createDM</span><a href="#createDM" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="createDM.createDM-1">createDM<span class="tsd-signature-symbol">(</span>recipient<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateChannel.PrivateChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateChannel</a><span class="tsd-signature-symbol">&gt;</span><a href="#createDM.createDM-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a direct message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>recipient: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the recipient of the direct message.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the recipient of the direct message.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateChannel.PrivateChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateChannel</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L105">lib/routes/Channels.ts:105</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L82">lib/routes/Channels.ts:82</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createGroupDM" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>GroupDM</span><a href="#createGroupDM" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="createGroupDM.createGroupDM-1">create<wbr/>GroupDM<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_users.CreateGroupChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateGroupChannelOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_GroupChannel.GroupChannel.html" class="tsd-signature-type" data-tsd-kind="Class">GroupChannel</a><span class="tsd-signature-symbol">&gt;</span><a href="#createGroupDM.createGroupDM-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a group dm.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>options: <a href="../interfaces/types_users.CreateGroupChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateGroupChannelOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_users.CreateGroupChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateGroupChannelOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for creating the group dm.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_GroupChannel.GroupChannel.html" class="tsd-signature-type" data-tsd-kind="Class">GroupChannel</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L123">lib/routes/Channels.ts:123</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L96">lib/routes/Channels.ts:96</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createInvite" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Invite</span><a href="#createInvite" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="createInvite.createInvite-1">create<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">CH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.CreateInviteOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateInviteOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">CH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#createInvite.createInvite-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create an invite for a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -191,21 +190,22 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to create an invite for.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to create an invite for.</p>
 </div></li>
 <li>
-<h5>options: <a href="../interfaces/types_channels.CreateInviteOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateInviteOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.CreateInviteOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateInviteOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for creating the invite.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">CH</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L148">lib/routes/Channels.ts:148</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L111">lib/routes/Channels.ts:111</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Message</span><a href="#createMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="createMessage.createMessage-1">create<wbr/>Message<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.CreateMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateMessageOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#createMessage.createMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a message in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -216,31 +216,32 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to create the message in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to create the message in.</p>
 </div></li>
 <li>
-<h5>options: <a href="../interfaces/types_channels.CreateMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateMessageOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.CreateMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateMessageOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for creating the message.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L193">lib/routes/Channels.ts:193</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L135">lib/routes/Channels.ts:135</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createReaction" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Reaction</span><a href="#createReaction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="createReaction.createReaction-1">create<wbr/>Reaction<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, emoji<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#createReaction.createReaction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Add a reaction to a message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel the message is in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel the message is in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to add a reaction to.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to add a reaction to.</p>
 </div></li>
 <li>
 <h5>emoji: <span class="tsd-signature-type">string</span></h5>
@@ -248,37 +249,35 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L227">lib/routes/Channels.ts:227</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L167">lib/routes/Channels.ts:167</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="crosspostMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>crosspost<wbr/>Message</span><a href="#crosspostMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="crosspostMessage.crosspostMessage-1">crosspost<wbr/>Message<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_AnnouncementChannel.AnnouncementChannel.html" class="tsd-signature-type" data-tsd-kind="Class">AnnouncementChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#crosspostMessage.crosspostMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Crosspost a message in an announcement channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to crosspost the message in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to crosspost the message in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to crosspost.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to crosspost.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_AnnouncementChannel.AnnouncementChannel.html" class="tsd-signature-type" data-tsd-kind="Class">AnnouncementChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L242">lib/routes/Channels.ts:242</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L180">lib/routes/Channels.ts:180</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="delete" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete</span><a href="#delete" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="delete.delete-1">delete<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#delete.delete-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Delete or close a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
@@ -292,15 +291,14 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L256">lib/routes/Channels.ts:256</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L192">lib/routes/Channels.ts:192</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteInvite" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Invite</span><a href="#deleteInvite" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="deleteInvite.deleteInvite-1">delete<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteInvite.deleteInvite-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Delete an invite.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -319,25 +317,24 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L271">lib/routes/Channels.ts:271</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L205">lib/routes/Channels.ts:205</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Message</span><a href="#deleteMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="deleteMessage.deleteMessage-1">delete<wbr/>Message<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteMessage.deleteMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Delete a message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to delete the message in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to delete the message in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to delete.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to delete.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> reason: <span class="tsd-signature-type">string</span></h5>
@@ -345,25 +342,24 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L287">lib/routes/Channels.ts:287</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L219">lib/routes/Channels.ts:219</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteMessages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Messages</span><a href="#deleteMessages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="deleteMessages.deleteMessages-1">delete<wbr/>Messages<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageIDs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteMessages.deleteMessages-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Bulk delete messages.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to delete the messages in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to delete the messages in.</p>
 </div></li>
 <li>
 <h5>messageIDs: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
-<div class="tsd-comment tsd-typography"><p>The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.</p>
+<div class="tsd-comment tsd-typography"><p>The IDs of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> reason: <span class="tsd-signature-type">string</span></h5>
@@ -371,25 +367,24 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L303">lib/routes/Channels.ts:303</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L233">lib/routes/Channels.ts:233</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deletePermission" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Permission</span><a href="#deletePermission" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="deletePermission.deletePermission-1">delete<wbr/>Permission<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, overwriteID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deletePermission.deletePermission-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Delete a permission overwrite.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to delete the permission overwrite in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to delete the permission overwrite in.</p>
 </div></li>
 <li>
 <h5>overwriteID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the permission overwrite to delete.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the permission overwrite to delete.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> reason: <span class="tsd-signature-type">string</span></h5>
@@ -397,55 +392,53 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L322">lib/routes/Channels.ts:322</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L250">lib/routes/Channels.ts:250</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteReaction" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Reaction</span><a href="#deleteReaction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="deleteReaction.deleteReaction-1">delete<wbr/>Reaction<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, emoji<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, user<span class="tsd-signature-symbol">??: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteReaction.deleteReaction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="deleteReaction.deleteReaction-1">delete<wbr/>Reaction<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, emoji<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, user<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteReaction.deleteReaction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Remove a reaction from a message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel the message is in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel the message is in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to remove a reaction from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to remove a reaction from.</p>
 </div></li>
 <li>
 <h5>emoji: <span class="tsd-signature-type">string</span></h5>
 <div class="tsd-comment tsd-typography"><p>The reaction to remove from the message. <code>name:id</code> for custom emojis, and the unicode codepoint for default emojis.</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> user: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;@me&quot;</span></h5>
+<h5>user: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;@me&quot;</span></h5>
 <div class="tsd-comment tsd-typography"><p>The user to remove the reaction from, <code>@me</code> for the current user (default).</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L339">lib/routes/Channels.ts:339</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L265">lib/routes/Channels.ts:265</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteReactions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Reactions</span><a href="#deleteReactions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="deleteReactions.deleteReactions-1">delete<wbr/>Reactions<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, emoji<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#deleteReactions.deleteReactions-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Remove all, or a specific emoji&#39;s reactions from a message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel the message is in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel the message is in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to remove reactions from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to remove reactions from.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> emoji: <span class="tsd-signature-type">string</span></h5>
@@ -453,15 +446,14 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L355">lib/routes/Channels.ts:355</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L279">lib/routes/Channels.ts:279</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="edit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>edit</span><a href="#edit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="edit.edit-1">edit<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../types/types_channels.EditChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">EditChannelOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#edit.edit-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Edit a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -472,21 +464,22 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to edit.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to edit.</p>
 </div></li>
 <li>
-<h5>options: <a href="../types/types_channels.EditChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">EditChannelOptions</a></h5></li></ul></div>
+<h5>options: <a href="../types/types_channels.EditChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">EditChannelOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for editing the channel.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L390">lib/routes/Channels.ts:390</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L292">lib/routes/Channels.ts:292</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="editMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>edit<wbr/>Message</span><a href="#editMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="editMessage.editMessage-1">edit<wbr/>Message<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../types/types_channels.EditMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">EditMessageOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#editMessage.editMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Edit a message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -497,69 +490,72 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel the message is in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel the message is in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to edit.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to edit.</p>
 </div></li>
 <li>
-<h5>options: <a href="../types/types_channels.EditMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">EditMessageOptions</a></h5></li></ul></div>
+<h5>options: <a href="../types/types_channels.EditMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">EditMessageOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for editing the message.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L448">lib/routes/Channels.ts:448</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L337">lib/routes/Channels.ts:337</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="editPermission" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>edit<wbr/>Permission</span><a href="#editPermission" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="editPermission.editPermission-1">edit<wbr/>Permission<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, overwriteID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.EditPermissionOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EditPermissionOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#editPermission.editPermission-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Edit a permission overwrite.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to edit the permission overwrite for.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to edit the permission overwrite for.</p>
 </div></li>
 <li>
 <h5>overwriteID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the permission overwrite to edit.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the permission overwrite to edit.</p>
 </div></li>
 <li>
-<h5>options: <a href="../interfaces/types_channels.EditPermissionOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EditPermissionOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.EditPermissionOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EditPermissionOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for editing the permission overwrite.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L478">lib/routes/Channels.ts:478</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L361">lib/routes/Channels.ts:361</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="followAnnouncement" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>follow<wbr/>Announcement</span><a href="#followAnnouncement" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="followAnnouncement.followAnnouncement-1">follow<wbr/>Announcement<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.FollowAnnouncementChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">FollowAnnouncementChannelOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.FollowedChannel.html" class="tsd-signature-type" data-tsd-kind="Interface">FollowedChannel</a><span class="tsd-signature-symbol">&gt;</span><a href="#followAnnouncement.followAnnouncement-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="followAnnouncement.followAnnouncement-1">follow<wbr/>Announcement<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, webhookChannelID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.FollowedChannel.html" class="tsd-signature-type" data-tsd-kind="Interface">FollowedChannel</a><span class="tsd-signature-symbol">&gt;</span><a href="#followAnnouncement.followAnnouncement-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Follow an announcement channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to follow the announcement channel to.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to follow the announcement channel to.</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.FollowAnnouncementChannelOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">FollowAnnouncementChannelOptions</a></h5></li></ul></div>
+<h5>webhookChannelID: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to follow the announcement channel to.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.FollowedChannel.html" class="tsd-signature-type" data-tsd-kind="Interface">FollowedChannel</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L501">lib/routes/Channels.ts:501</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L381">lib/routes/Channels.ts:381</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="get" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get</span><a href="#get" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="get.get-1">get<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#get.get-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -570,19 +566,18 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L518">lib/routes/Channels.ts:518</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L398">lib/routes/Channels.ts:398</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getInvite" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Invite</span><a href="#getInvite" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="getInvite.getInvite-1">get<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.GetInviteWithNoneOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithNoneOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getInvite.getInvite-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getInvite.getInvite-1">get<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.GetInviteWithNoneOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithNoneOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getInvite.getInvite-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get an invite.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -596,10 +591,12 @@
 <div class="tsd-comment tsd-typography"><p>The code of the invite to get.</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetInviteWithNoneOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithNoneOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.GetInviteWithNoneOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithNoneOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for getting the invite.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L535">lib/routes/Channels.ts:535</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L410">lib/routes/Channels.ts:410</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getInvite.getInvite-2">get<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.GetInviteWithCountsAndExpirationOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithCountsAndExpirationOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withCounts&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withExpiration&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getInvite.getInvite-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-type-parameters">
@@ -616,7 +613,7 @@
 <h5>options: <a href="../interfaces/types_channels.GetInviteWithCountsAndExpirationOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithCountsAndExpirationOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withCounts&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withExpiration&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L536">lib/routes/Channels.ts:536</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L411">lib/routes/Channels.ts:411</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getInvite.getInvite-3">get<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.GetInviteWithCountsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithCountsOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withCounts&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getInvite.getInvite-3" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-type-parameters">
@@ -633,7 +630,7 @@
 <h5>options: <a href="../interfaces/types_channels.GetInviteWithCountsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithCountsOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withCounts&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L537">lib/routes/Channels.ts:537</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L412">lib/routes/Channels.ts:412</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getInvite.getInvite-4">get<wbr/>Invite<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>code<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.GetInviteWithExpirationOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithExpirationOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withExpiration&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getInvite.getInvite-4" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-type-parameters">
@@ -650,17 +647,13 @@
 <h5>options: <a href="../interfaces/types_channels.GetInviteWithExpirationOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetInviteWithExpirationOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;withExpiration&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L538">lib/routes/Channels.ts:538</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L413">lib/routes/Channels.ts:413</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getInvites" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Invites</span><a href="#getInvites" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getInvites.getInvites-1">get<wbr/>Invites<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getInvites.getInvites-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the invites of a channel.</p>
-
-<h3>Returns</h3><ul>
-<li>An array of invites with metadata.</li>
-</ul>
 </div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
@@ -672,39 +665,39 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get the invites of.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get the invites of.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Invite.Invite.html" class="tsd-signature-type" data-tsd-kind="Class">Invite</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;withMetadata&quot;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L557">lib/routes/Channels.ts:557</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L430">lib/routes/Channels.ts:430</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getJoinedPrivateArchivedThreads" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Joined<wbr/>Private<wbr/>Archived<wbr/>Threads</span><a href="#getJoinedPrivateArchivedThreads" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getJoinedPrivateArchivedThreads.getJoinedPrivateArchivedThreads-1">get<wbr/>Joined<wbr/>Private<wbr/>Archived<wbr/>Threads<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ArchivedThreads.html" class="tsd-signature-type" data-tsd-kind="Interface">ArchivedThreads</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getJoinedPrivateArchivedThreads.getJoinedPrivateArchivedThreads-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the private archived threads the current user has joined in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get the archived threads from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get the archived threads from.</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for getting the archived threads.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ArchivedThreads.html" class="tsd-signature-type" data-tsd-kind="Interface">ArchivedThreads</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L573">lib/routes/Channels.ts:573</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L442">lib/routes/Channels.ts:442</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Message</span><a href="#getMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getMessage.getMessage-1">get<wbr/>Message<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getMessage.getMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get a message in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -715,23 +708,22 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel the message is in</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel the message is in</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to get.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to get.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L601">lib/routes/Channels.ts:601</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L467">lib/routes/Channels.ts:467</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMessages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Messages</span><a href="#getMessages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getMessages.getMessages-1">get<wbr/>Messages<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.GetChannelMessagesOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetChannelMessagesOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getMessages.getMessages-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get messages in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -742,23 +734,22 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get messages from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get messages from.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetChannelMessagesOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetChannelMessagesOptions</a></h5>
-<div class="tsd-comment tsd-typography"><p>All options are mutually exclusive.</p>
+<div class="tsd-comment tsd-typography"><p>The options for getting messages. All are mutually exclusive.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L620">lib/routes/Channels.ts:620</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L479">lib/routes/Channels.ts:479</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getPinnedMessages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Pinned<wbr/>Messages</span><a href="#getPinnedMessages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getPinnedMessages.getPinnedMessages-1">get<wbr/>Pinned<wbr/>Messages<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getPinnedMessages.getPinnedMessages-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the pinned messages in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -769,39 +760,39 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get the pinned messages from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get the pinned messages from.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L640">lib/routes/Channels.ts:640</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L496">lib/routes/Channels.ts:496</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getPrivateArchivedThreads" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Private<wbr/>Archived<wbr/>Threads</span><a href="#getPrivateArchivedThreads" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getPrivateArchivedThreads.getPrivateArchivedThreads-1">get<wbr/>Private<wbr/>Archived<wbr/>Threads<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ArchivedThreads.html" class="tsd-signature-type" data-tsd-kind="Interface">ArchivedThreads</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getPrivateArchivedThreads.getPrivateArchivedThreads-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the private archived threads in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get the archived threads from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get the archived threads from.</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for getting the archived threads.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ArchivedThreads.html" class="tsd-signature-type" data-tsd-kind="Interface">ArchivedThreads</a><span class="tsd-signature-symbol">&lt;</span><a href="structures_PrivateThreadChannel.PrivateThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PrivateThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L656">lib/routes/Channels.ts:656</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L508">lib/routes/Channels.ts:508</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getPublicArchivedThreads" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Public<wbr/>Archived<wbr/>Threads</span><a href="#getPublicArchivedThreads" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getPublicArchivedThreads.getPublicArchivedThreads-1">get<wbr/>Public<wbr/>Archived<wbr/>Threads<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ArchivedThreads.html" class="tsd-signature-type" data-tsd-kind="Interface">ArchivedThreads</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#getPublicArchivedThreads.getPublicArchivedThreads-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the public archived threads in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -812,31 +803,32 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to get the archived threads from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to get the archived threads from.</p>
 </div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetArchivedThreadsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetArchivedThreadsOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for getting the archived threads.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ArchivedThreads.html" class="tsd-signature-type" data-tsd-kind="Interface">ArchivedThreads</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L686">lib/routes/Channels.ts:686</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L533">lib/routes/Channels.ts:533</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getReactions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Reactions</span><a href="#getReactions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getReactions.getReactions-1">get<wbr/>Reactions<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, emoji<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/types_channels.GetReactionsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetReactionsOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getReactions.getReactions-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the users who reacted with a specific emoji on a message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel the message is in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel the message is in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to get reactions from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to get reactions from.</p>
 </div></li>
 <li>
 <h5>emoji: <span class="tsd-signature-type">string</span></h5>
@@ -844,116 +836,110 @@
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/types_channels.GetReactionsOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GetReactionsOptions</a></h5>
-<div class="tsd-comment tsd-typography"><p>Options for the request.</p>
+<div class="tsd-comment tsd-typography"><p>The options for getting the reactions.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L717">lib/routes/Channels.ts:717</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L560">lib/routes/Channels.ts:560</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getThreadMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Thread<wbr/>Member</span><a href="#getThreadMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getThreadMember.getThreadMember-1">get<wbr/>Thread<wbr/>Member<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ThreadMember.html" class="tsd-signature-type" data-tsd-kind="Interface">ThreadMember</a><span class="tsd-signature-symbol">&gt;</span><a href="#getThreadMember.getThreadMember-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get a thread member.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the thread.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the thread.</p>
 </div></li>
 <li>
 <h5>userID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the user to get the thread member of.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the user to get the thread member of.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ThreadMember.html" class="tsd-signature-type" data-tsd-kind="Interface">ThreadMember</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L736">lib/routes/Channels.ts:736</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L577">lib/routes/Channels.ts:577</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getThreadMembers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Thread<wbr/>Members</span><a href="#getThreadMembers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getThreadMembers.getThreadMembers-1">get<wbr/>Thread<wbr/>Members<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ThreadMember.html" class="tsd-signature-type" data-tsd-kind="Interface">ThreadMember</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getThreadMembers.getThreadMembers-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the members of a thread.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the thread.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the thread.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_channels.ThreadMember.html" class="tsd-signature-type" data-tsd-kind="Interface">ThreadMember</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L754">lib/routes/Channels.ts:754</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L593">lib/routes/Channels.ts:593</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getVoiceRegions" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Voice<wbr/>Regions</span><a href="#getVoiceRegions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getVoiceRegions.getVoiceRegions-1">get<wbr/>Voice<wbr/>Regions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_voice.VoiceRegion.html" class="tsd-signature-type" data-tsd-kind="Interface">VoiceRegion</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getVoiceRegions.getVoiceRegions-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the list of usable voice regions.</p>
-
-<h3>Returns</h3></div>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_voice.VoiceRegion.html" class="tsd-signature-type" data-tsd-kind="Interface">VoiceRegion</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L771">lib/routes/Channels.ts:771</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L608">lib/routes/Channels.ts:608</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="joinThread" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>join<wbr/>Thread</span><a href="#joinThread" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="joinThread.joinThread-1">join<wbr/>Thread<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#joinThread.joinThread-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Join a thread.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the thread to join.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the thread to join.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L784">lib/routes/Channels.ts:784</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L619">lib/routes/Channels.ts:619</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="leaveThread" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>leave<wbr/>Thread</span><a href="#leaveThread" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="leaveThread.leaveThread-1">leave<wbr/>Thread<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#leaveThread.leaveThread-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Leave a thread.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the thread to leave.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the thread to leave.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L797">lib/routes/Channels.ts:797</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L630">lib/routes/Channels.ts:630</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="pinMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>pin<wbr/>Message</span><a href="#pinMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="pinMessage.pinMessage-1">pin<wbr/>Message<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#pinMessage.pinMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Pin a message in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to pin the message in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to pin the message in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to pin.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to pin.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> reason: <span class="tsd-signature-type">string</span></h5>
@@ -961,77 +947,73 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L812">lib/routes/Channels.ts:812</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L643">lib/routes/Channels.ts:643</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeGroupRecipient" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Group<wbr/>Recipient</span><a href="#removeGroupRecipient" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="removeGroupRecipient.removeGroupRecipient-1">remove<wbr/>Group<wbr/>Recipient<span class="tsd-signature-symbol">(</span>groupID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#removeGroupRecipient.removeGroupRecipient-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Remove a user from the group channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>groupID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the group to remove the user from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the group to remove the user from.</p>
 </div></li>
 <li>
 <h5>userID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the user to remove.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the user to remove.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L827">lib/routes/Channels.ts:827</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L656">lib/routes/Channels.ts:656</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeThreadMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>Thread<wbr/>Member</span><a href="#removeThreadMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="removeThreadMember.removeThreadMember-1">remove<wbr/>Thread<wbr/>Member<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, userID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#removeThreadMember.removeThreadMember-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Remove a member from a thread.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the thread to remove them from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the thread to remove them from.</p>
 </div></li>
 <li>
 <h5>userID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the user to remove from the thread.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the user to remove from the thread.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L841">lib/routes/Channels.ts:841</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L668">lib/routes/Channels.ts:668</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="sendTyping" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>send<wbr/>Typing</span><a href="#sendTyping" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="sendTyping.sendTyping-1">send<wbr/>Typing<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#sendTyping.sendTyping-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Show a typing indicator in a channel. How long users see this varies from client to client.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to show the typing indicator in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to show the typing indicator in.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L854">lib/routes/Channels.ts:854</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L679">lib/routes/Channels.ts:679</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="startThreadFromMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>start<wbr/>Thread<wbr/>From<wbr/>Message</span><a href="#startThreadFromMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="startThreadFromMessage.startThreadFromMessage-1">start<wbr/>Thread<wbr/>From<wbr/>Message<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.StartThreadFromMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadFromMessageOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#startThreadFromMessage.startThreadFromMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a thread from an existing message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -1042,43 +1024,45 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to create the thread in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to create the thread in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to create the thread from.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to create the thread from.</p>
 </div></li>
 <li>
 <h5>options: <a href="../interfaces/types_channels.StartThreadFromMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadFromMessageOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L874">lib/routes/Channels.ts:874</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L692">lib/routes/Channels.ts:692</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="startThreadInForum" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>start<wbr/>Thread<wbr/>In<wbr/>Forum</span><a href="#startThreadInForum" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="startThreadInForum.startThreadInForum-1">start<wbr/>Thread<wbr/>In<wbr/>Forum<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.StartThreadInForumOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadInForumOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_PublicThreadChannel.PublicThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PublicThreadChannel</a><span class="tsd-signature-symbol">&gt;</span><a href="#startThreadInForum.startThreadInForum-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a thread in a forum channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>id: <span class="tsd-signature-type">string</span></h5></li>
+<h5>id: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to start the thread in.</p>
+</div></li>
 <li>
-<h5>options: <a href="../interfaces/types_channels.StartThreadInForumOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadInForumOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.StartThreadInForumOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadInForumOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for starting the thread</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_PublicThreadChannel.PublicThreadChannel.html" class="tsd-signature-type" data-tsd-kind="Class">PublicThreadChannel</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L913">lib/routes/Channels.ts:913</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L712">lib/routes/Channels.ts:712</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="startThreadWithoutMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>start<wbr/>Thread<wbr/>Without<wbr/>Message</span><a href="#startThreadWithoutMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="startThreadWithoutMessage.startThreadWithoutMessage-1">start<wbr/>Thread<wbr/>Without<wbr/>Message<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_channels.StartThreadWithoutMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadWithoutMessageOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><a href="#startThreadWithoutMessage.startThreadWithoutMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Create a thread without an existing message.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -1088,30 +1072,33 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>id: <span class="tsd-signature-type">string</span></h5></li>
+<h5>id: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to start the thread in.</p>
+</div></li>
 <li>
-<h5>options: <a href="../interfaces/types_channels.StartThreadWithoutMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadWithoutMessageOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_channels.StartThreadWithoutMessageOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">StartThreadWithoutMessageOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for starting the thread.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L954">lib/routes/Channels.ts:954</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L744">lib/routes/Channels.ts:744</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="unpinMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>unpin<wbr/>Message</span><a href="#unpinMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="unpinMessage.unpinMessage-1">unpin<wbr/>Message<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, messageID<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, reason<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#unpinMessage.unpinMessage-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Unpin a message in a channel.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>id: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the channel to unpin the message in.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the channel to unpin the message in.</p>
 </div></li>
 <li>
 <h5>messageID: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>The id of the message to unpin.</p>
+<div class="tsd-comment tsd-typography"><p>The ID of the message to unpin.</p>
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> reason: <span class="tsd-signature-type">string</span></h5>
@@ -1119,7 +1106,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L979">lib/routes/Channels.ts:979</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/Channels.ts#L767">lib/routes/Channels.ts:767</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">

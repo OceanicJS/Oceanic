@@ -18,197 +18,118 @@ class ClientApplication extends Base_1.default {
     }
     /**
      * Overwrite all existing global application commands.
-     *
-     * @param {Object[]} options
-     * @param {String?} [options[].defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options[].description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options[].dmPermission] - If the command can be used in a DM.
-     * @param {String} options[].name - The name of the command.
-     * @param {Object?} [options[].nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param options - The commands.
      */
     async bulkEditGlobalCommands(options) {
         return this._client.rest.applicationCommands.bulkEditGlobalCommands(this.id, options);
     }
     /**
      * Overwrite all existing application commands in a guild.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {Object[]} options
-     * @param {String?} [options[].defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options[].description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options[].dmPermission] - If the command can be used in a DM.
-     * @param {String} options[].name - The name of the command.
-     * @param {Object?} [options[].nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param guildID - The ID of the guild.
+     * @param options - The commands.
      */
     async bulkEditGuildCommands(guildID, options) {
         return this._client.rest.applicationCommands.bulkEditGuildCommands(this.id, guildID, options);
     }
     /**
      * Create a global application command.
-     *
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} options.name - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand>}
+     * @param options - The options for creating the command.
      */
     async createGlobalCommand(options) {
         return this._client.rest.applicationCommands.createGlobalCommand(this.id, options);
     }
     /**
      * Create a guild application command.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} options.name - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand>}
+     * @param guildID - The ID of the guild.
+     * @param options - The options for creating the command.
      */
     async createGuildCommand(guildID, options) {
         return this._client.rest.applicationCommands.createGuildCommand(this.id, guildID, options);
     }
     /**
      * Delete a global application command.
-     *
-     * @param {String} commandID - The id of the command.
-     * @returns {Promise<void>}
+     * @param commandID - The ID of the command.
      */
     async deleteGlobalCommand(commandID) {
         return this._client.rest.applicationCommands.deleteGlobalCommand(this.id, commandID);
     }
     /**
      * Delete a guild application command.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @returns {Promise<void>}
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
      */
     async deleteGuildCommand(guildID, commandID) {
         return this._client.rest.applicationCommands.deleteGuildCommand(this.id, guildID, commandID);
     }
     /**
      * Edit a global application command.
-     *
-     * @param {String} commandID - The id of the command.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} [options.name] - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @returns {Promise<ApplicationCommand>}
+     * @param commandID - The ID of the command.
+     * @param options - The options for editing the command.
      */
     async editGlobalCommand(commandID, options) {
         return this._client.rest.applicationCommands.editGlobalCommand(this.id, commandID, options);
     }
     /**
      * Edit a guild application command.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} [options.name] - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @returns {Promise<ApplicationCommand>}
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
+     * @param options - The options for editing the command.
      */
     async editGuildCommand(guildID, commandID, options) {
         return this._client.rest.applicationCommands.editGuildCommand(this.id, guildID, commandID, options);
     }
     /**
      * Edit a guild application command's permissions. This requires a bearer token with the `applications.commands.permissions.update` scope.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @param {Object} options
-     * @param {String} [options.accessToken] - If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option.
-     * @param {ApplicationCommandPermission[]} options.permissions - The permissions to set for the command.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions>}
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
+     * @param options - The options for editing the permissions.
      */
     async editGuildCommandPermissions(guildID, commandID, options) {
         return this._client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
     }
     /**
      * Get a global application command.
-     *
-     * @param {String} commandID - The id of the command.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand>}
+     * @param commandID - The ID of the command.
+     * @param withLocalizations - If localizations should be included.
      */
     async getGlobalCommand(commandID, withLocalizations) {
         return this._client.rest.applicationCommands.getGlobalCommand(this.id, commandID, withLocalizations);
     }
     /**
      * Get this application's global commands.
-     *
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param withLocalizations - If localizations should be included.
      */
     async getGlobalCommands(withLocalizations) {
         return this._client.rest.applicationCommands.getGlobalCommands(this.id, withLocalizations);
     }
     /**
      * Get a global application command.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand>}
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
+     * @param withLocalizations - If localizations should be included.
      */
     async getGuildCommand(guildID, commandID, withLocalizations) {
         return this._client.rest.applicationCommands.getGuildCommand(this.id, guildID, commandID, withLocalizations);
     }
     /**
      * Get this application's commands in a specific guild.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param guildID - The ID of the guild.
+     * @param withLocalization - If localizations should be included.
      */
     async getGuildCommands(guildID, withLocalizations) {
         return this._client.rest.applicationCommands.getGuildCommands(this.id, guildID, withLocalizations);
     }
     /**
      * Get a command's permissions in a guild.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions>}
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
      */
     async getGuildPermission(guildID, commandID) {
         return this._client.rest.applicationCommands.getGuildPermission(this.id, guildID, commandID);
     }
     /**
      * Get the permissions for all commands in a guild.
-     *
-     * @param {String} guildID - The id of the guild.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions[]>}
+     * @param guildID - The ID of the guild.
      */
     async getGuildPermissions(guildID) {
         return this._client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
@@ -221,4 +142,4 @@ class ClientApplication extends Base_1.default {
     }
 }
 exports.default = ClientApplication;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ2xpZW50QXBwbGljYXRpb24uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9saWIvc3RydWN0dXJlcy9DbGllbnRBcHBsaWNhdGlvbi50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFBLGtEQUEwQjtBQWdCMUIsZ0dBQWdHO0FBQ2hHLE1BQXFCLGlCQUFrQixTQUFRLGNBQUk7SUFDL0MseUlBQXlJO0lBQ3pJLEtBQUssQ0FBUztJQUNkLFlBQVksSUFBMEIsRUFBRSxNQUFjO1FBQ2xELEtBQUssQ0FBQyxJQUFJLENBQUMsRUFBRSxFQUFFLE1BQU0sQ0FBQyxDQUFDO1FBQ3ZCLElBQUksQ0FBQyxNQUFNLENBQUMsSUFBSSxDQUFDLENBQUM7SUFDdEIsQ0FBQztJQUVTLE1BQU0sQ0FBQyxJQUFtQztRQUNoRCxJQUFJLE9BQU8sSUFBSSxDQUFDLEtBQUssS0FBSyxXQUFXO1lBQUUsSUFBSSxDQUFDLEtBQUssR0FBRyxJQUFJLENBQUMsS0FBSyxDQUFDO0lBQ25FLENBQUM7SUFFRDs7Ozs7Ozs7Ozs7OztPQWFHO0lBQ0gsS0FBSyxDQUFDLHNCQUFzQixDQUFDLE9BQStDO1FBQ3hFLE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMsc0JBQXNCLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLENBQUMsQ0FBQztJQUMxRixDQUFDO0lBRUQ7Ozs7Ozs7Ozs7Ozs7OztPQWVHO0lBQ0gsS0FBSyxDQUFDLHFCQUFxQixDQUFDLE9BQWUsRUFBRSxPQUFvRDtRQUM3RixPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLG1CQUFtQixDQUFDLHFCQUFxQixDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxFQUFFLE9BQU8sQ0FBQyxDQUFDO0lBQ2xHLENBQUM7SUFFRDs7Ozs7Ozs7Ozs7OztPQWFHO0lBQ0gsS0FBSyxDQUFDLG1CQUFtQixDQUE4RSxPQUFVO1FBQzdHLE9BQU8sSUFB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
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiQ2xpZW50QXBwbGljYXRpb24uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9saWIvc3RydWN0dXJlcy9DbGllbnRBcHBsaWNhdGlvbi50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFBLGtEQUEwQjtBQWExQixnR0FBZ0c7QUFDaEcsTUFBcUIsaUJBQWtCLFNBQVEsY0FBSTtJQUMvQyx5SUFBeUk7SUFDekksS0FBSyxDQUFTO0lBQ2QsWUFBWSxJQUEwQixFQUFFLE1BQWM7UUFDbEQsS0FBSyxDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUUsTUFBTSxDQUFDLENBQUM7UUFDdkIsSUFBSSxDQUFDLE1BQU0sQ0FBQyxJQUFJLENBQUMsQ0FBQztJQUN0QixDQUFDO0lBRVMsTUFBTSxDQUFDLElBQW1DO1FBQ2hELElBQUksT0FBTyxJQUFJLENBQUMsS0FBSyxLQUFLLFdBQVc7WUFBRSxJQUFJLENBQUMsS0FBSyxHQUFHLElBQUksQ0FBQyxLQUFLLENBQUM7SUFDbkUsQ0FBQztJQUVEOzs7T0FHRztJQUNILEtBQUssQ0FBQyxzQkFBc0IsQ0FBQyxPQUErQztRQUN4RSxPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLG1CQUFtQixDQUFDLHNCQUFzQixDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDMUYsQ0FBQztJQUVEOzs7O09BSUc7SUFDSCxLQUFLLENBQUMscUJBQXFCLENBQUMsT0FBZSxFQUFFLE9BQW9EO1FBQzdGLE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMscUJBQXFCLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDbEcsQ0FBQztJQUVEOzs7T0FHRztJQUNILEtBQUssQ0FBQyxtQkFBbUIsQ0FBOEUsT0FBVTtRQUM3RyxPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLG1CQUFtQixDQUFDLG1CQUFtQixDQUFJLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDMUYsQ0FBQztJQUVEOzs7O09BSUc7SUFDSCxLQUFLLENBQUMsa0JBQWtCLENBQXdGLE9BQWUsRUFBRSxPQUFVO1FBQ3ZJLE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMsa0JBQWtCLENBQUksSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDbEcsQ0FBQztJQUVEOzs7T0FHRztJQUNILEtBQUssQ0FBQyxtQkFBbUIsQ0FBQyxTQUFpQjtRQUN2QyxPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLG1CQUFtQixDQUFDLG1CQUFtQixDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUUsU0FBUyxDQUFDLENBQUM7SUFDekYsQ0FBQztJQUVEOzs7O09BSUc7SUFDSCxLQUFLLENBQUMsa0JBQWtCLENBQUMsT0FBZSxFQUFFLFNBQWlCO1FBQ3ZELE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMsa0JBQWtCLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLEVBQUUsU0FBUyxDQUFDLENBQUM7SUFDakcsQ0FBQztJQUVEOzs7O09BSUc7SUFDSCxLQUFLLENBQUMsaUJBQWlCLENBQTBFLFNBQWlCLEVBQUUsT0FBVTtRQUMxSCxPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLG1CQUFtQixDQUFDLGlCQUFpQixDQUFJLElBQUksQ0FBQyxFQUFFLEVBQUUsU0FBUyxFQUFFLE9BQU8sQ0FBQyxDQUFDO0lBQ25HLENBQUM7SUFFRDs7Ozs7T0FLRztJQUNILEtBQUssQ0FBQyxnQkFBZ0IsQ0FBb0YsT0FBZSxFQUFFLFNBQWlCLEVBQUUsT0FBVTtRQUNwSixPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLG1CQUFtQixDQUFDLGdCQUFnQixDQUFJLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxFQUFFLFNBQVMsRUFBRSxPQUFPLENBQUMsQ0FBQztJQUMzRyxDQUFDO0lBRUQ7Ozs7O09BS0c7SUFDSCxLQUFLLENBQUMsMkJBQTJCLENBQUMsT0FBZSxFQUFFLFNBQWlCLEVBQUUsT0FBaUQ7UUFDbkgsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxtQkFBbUIsQ0FBQywyQkFBMkIsQ0FBQyxJQUFJLENBQUMsRUFBRSxFQUFFLE9BQU8sRUFBRSxTQUFTLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDbkgsQ0FBQztJQUVEOzs7O09BSUc7SUFDSCxLQUFLLENBQUMsZ0JBQWdCLENBQTJGLFNBQWlCLEVBQUUsaUJBQXFCO1FBQ3JKLE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMsZ0JBQWdCLENBQU8sSUFBSSxDQUFDLEVBQUUsRUFBRSxTQUFTLEVBQUUsaUJBQWlCLENBQUMsQ0FBQztJQUMvRyxDQUFDO0lBRUQ7OztPQUdHO0lBQ0gsS0FBSyxDQUFDLGlCQUFpQixDQUE0QixpQkFBcUI7UUFDcEUsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxtQkFBbUIsQ0FBQyxpQkFBaUIsQ0FBSSxJQUFJLENBQUMsRUFBRSxFQUFFLGlCQUFpQixDQUFDLENBQUM7SUFDbEcsQ0FBQztJQUVEOzs7OztPQUtHO0lBQ0gsS0FBSyxDQUFDLGVBQWUsQ0FBMkYsT0FBZSxFQUFFLFNBQWlCLEVBQUUsaUJBQXFCO1FBQ3JLLE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMsZUFBZSxDQUFPLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxFQUFFLFNBQVMsRUFBRSxpQkFBaUIsQ0FBQyxDQUFDO0lBQ3ZILENBQUM7SUFFRDs7OztPQUlHO0lBQ0gsS0FBSyxDQUFDLGdCQUFnQixDQUE0QixPQUFlLEVBQUUsaUJBQXFCO1FBQ3BGLE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsbUJBQW1CLENBQUMsZ0JBQWdCLENBQUksSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLEVBQUUsaUJBQWlCLENBQUMsQ0FBQztJQUMxRyxDQUFDO0lBRUQ7Ozs7T0FJRztJQUNILEtBQUssQ0FBQyxrQkFBa0IsQ0FBQyxPQUFlLEVBQUUsU0FBaUI7UUFDdkQsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxtQkFBbUIsQ0FBQyxrQkFBa0IsQ0FBQyxJQUFJLENBQUMsRUFBRSxFQUFFLE9BQU8sRUFBRSxTQUFTLENBQUMsQ0FBQztJQUNqRyxDQUFDO0lBRUQ7OztPQUdHO0lBQ0gsS0FBSyxDQUFDLG1CQUFtQixDQUFDLE9BQWU7UUFDckMsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxtQkFBbUIsQ0FBQyxtQkFBbUIsQ0FBQyxJQUFJLENBQUMsRUFBRSxFQUFFLE9BQU8sQ0FBQyxDQUFDO0lBQ3ZGLENBQUM7SUFFUSxNQUFNO1FBQ1gsT0FBTztZQUNILEdBQUcsS0FBSyxDQUFDLE1BQU0sRUFBRTtZQUNqQixLQUFLLEVBQUUsSUFBSSxDQUFDLEtBQUs7U0FDcEIsQ0FBQztJQUNOLENBQUM7Q0FDSjtBQXZKRCxvQ0F1SkMifQ==

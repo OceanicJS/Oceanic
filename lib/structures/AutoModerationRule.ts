@@ -3,7 +3,7 @@ import User from "./User";
 import type Guild from "./Guild";
 import type Client from "../Client";
 import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
-import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
+import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type { JSONAutoModerationRule } from "../types/json";
 
@@ -65,9 +65,7 @@ export default class AutoModerationRule extends Base {
 
     /**
      * Delete this auto moderation rule.
-     *
-     * @param {String} [reason] - The reason for deleting the rule.
-     * @returns {Promise<void>}
+     * @param reason - The reason for deleting this rule.
      */
     async deleteAutoModerationRule(reason?: string) {
         return this._client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
@@ -75,23 +73,7 @@ export default class AutoModerationRule extends Base {
 
     /**
      * Edit this auto moderation rule.
-     *
-     * @param {Object} options
-     * @param {Object[]} [options.actions] - The actions to take.
-     * @param {Object} options.actions[].metadata - The metadata for the action.
-     * @param {String} [options.actions[].metadata.channelID] - The ID of the channel to send the message to. (`SEND_ALERT_MESSAGE`)
-     * @param {Number} [options.actions[].metadata.durationSeconds] - The duration of the timeout in seconds. (`TIMEOUT`)
-     * @param {AutoModerationActionTypes} options.actions[].type - The type of action to take.
-     * @param {AutoModerationEventTypes} options.eventType - The event type to trigger on.
-     * @param {String[]} [options.exemptChannels] - The channels to exempt from the rule.
-     * @param {String[]} [options.exemptRoles] - The roles to exempt from the rule.
-     * @param {String} [options.reason] - The reason for editing the rule.
-     * @param {Object} [options.triggerMetadata] - The metadata to use for the trigger.
-     * @param {String} [options.triggerMetadata.allowList] - The keywords to allow. (`KEYWORD_PRESET`)
-     * @param {String[]} [options.triggerMetadata.keywordFilter] - The keywords to filter. (`KEYWORD`)
-     * @param {Number} [options.triggerMetadata.mentionTotalLimit] - The maximum number of mentions to allow. (`MENTION_SPAM`)
-     * @param {AutoModerationKeywordPresetTypes[]} [options.triggerMetadata.presets] - The presets to use. (`KEYWORD_PRESET`)
-     * @returns {Promise<AutoModerationRule>}
+     * @param options - The options for editing the rule.
      */
     async edit(options: EditAutoModerationRuleOptions) {
         return this._client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);

@@ -69,59 +69,61 @@
 <li class="tsd-signature tsd-anchor-link" id="clientCredentialsGrant.clientCredentialsGrant-1">client<wbr/>Credentials<wbr/>Grant<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_oauth.ClientCredentialsTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientCredentialsTokenOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_oauth.ClientCredentialsTokenResponse.html" class="tsd-signature-type" data-tsd-kind="Type alias">ClientCredentialsTokenResponse</a><span class="tsd-signature-symbol">&gt;</span><a href="#clientCredentialsGrant.clientCredentialsGrant-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get an access token for the application owner. If the application is owned by a team, this is restricted to <code>identify</code> &amp; <code>applications.commands.update</code>.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>options: <a href="../interfaces/types_oauth.ClientCredentialsTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientCredentialsTokenOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_oauth.ClientCredentialsTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientCredentialsTokenOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options to for the client credentials grant.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../types/types_oauth.ClientCredentialsTokenResponse.html" class="tsd-signature-type" data-tsd-kind="Type alias">ClientCredentialsTokenResponse</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L37">lib/routes/OAuth.ts:37</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L34">lib/routes/OAuth.ts:34</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="constructURL" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructURL</span><a href="#constructURL" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructURL.constructURL-1">constructURL<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_oauth.OAuthURLOption.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthURLOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#constructURL.constructURL-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructURL.constructURL-1">constructURL<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_oauth.OAuthURLOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthURLOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#constructURL.constructURL-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Construct an oauth authorization url.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>options: <a href="../interfaces/types_oauth.OAuthURLOption.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthURLOption</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_oauth.OAuthURLOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuthURLOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options to construct the url with.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L67">lib/routes/OAuth.ts:67</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L55">lib/routes/OAuth.ts:55</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="exchangeCode" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>exchange<wbr/>Code</span><a href="#exchangeCode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="exchangeCode.exchangeCode-1">exchange<wbr/>Code<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_oauth.ExchangeCodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_oauth.ExchangeCodeResponse.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeResponse</a><span class="tsd-signature-symbol">&gt;</span><a href="#exchangeCode.exchangeCode-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Exchange a code for an access token.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>options: <a href="../interfaces/types_oauth.ExchangeCodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_oauth.ExchangeCodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for exchanging the code.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_oauth.ExchangeCodeResponse.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeResponse</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L91">lib/routes/OAuth.ts:91</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L74">lib/routes/OAuth.ts:74</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getApplication" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Application</span><a href="#getApplication" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getApplication.getApplication-1">get<wbr/>Application<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Application.Application.html" class="tsd-signature-type" data-tsd-kind="Class">Application</a><span class="tsd-signature-symbol">&gt;</span><a href="#getApplication.getApplication-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the OAuth application information.</p>
-
-<h3>Returns</h3></div>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Application.Application.html" class="tsd-signature-type" data-tsd-kind="Class">Application</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L117">lib/routes/OAuth.ts:117</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L98">lib/routes/OAuth.ts:98</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getCurrentAuthorizationInformation" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Current<wbr/>Authorization<wbr/>Information</span><a href="#getCurrentAuthorizationInformation" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -129,11 +131,10 @@
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get information about the current authorization.</p>
 <p>Note: OAuth only. Bots cannot use this.</p>
-
-<h3>Returns</h3></div>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_oauth.AuthorizationInformation.html" class="tsd-signature-type" data-tsd-kind="Interface">AuthorizationInformation</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L131">lib/routes/OAuth.ts:131</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L110">lib/routes/OAuth.ts:110</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getCurrentConnections" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Current<wbr/>Connections</span><a href="#getCurrentConnections" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -141,11 +142,10 @@
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the connections of the currently authenticated user.</p>
 <p>Note: Requires the <code>connections</code> scope when using oauth.</p>
-
-<h3>Returns</h3></div>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_oauth.Connection.html" class="tsd-signature-type" data-tsd-kind="Interface">Connection</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L150">lib/routes/OAuth.ts:150</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L127">lib/routes/OAuth.ts:127</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getCurrentGuildMember" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Current<wbr/>Guild<wbr/>Member</span><a href="#getCurrentGuildMember" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -153,37 +153,36 @@
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the guild member information about the currently authenticated user.</p>
 <p>Note: OAuth only. Requires the <code>guilds.members.read</code> scope. Bots cannot use this.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
 <h5>guild: <span class="tsd-signature-type">string</span></h5>
-<div class="tsd-comment tsd-typography"><p>the id of the guild</p>
+<div class="tsd-comment tsd-typography"><p>the ID of the guild</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L175">lib/routes/OAuth.ts:175</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L150">lib/routes/OAuth.ts:150</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getCurrentGuilds" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Current<wbr/>Guilds</span><a href="#getCurrentGuilds" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getCurrentGuilds.getCurrentGuilds-1">get<wbr/>Current<wbr/>Guilds<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Guild.Guild.html" class="tsd-signature-type" data-tsd-kind="Class">Guild</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><a href="#getCurrentGuilds.getCurrentGuilds-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Get the currently authenticated user&#39;s guilds.</p>
-
-<h3>Returns</h3></div>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Guild.Guild.html" class="tsd-signature-type" data-tsd-kind="Class">Guild</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L187">lib/routes/OAuth.ts:187</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L160">lib/routes/OAuth.ts:160</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="refreshToken" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>refresh<wbr/>Token</span><a href="#refreshToken" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="refreshToken.refreshToken-1">refresh<wbr/>Token<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_oauth.RefreshTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RefreshTokenOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_oauth.ExchangeCodeResponse.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeResponse</a><span class="tsd-signature-symbol">&gt;</span><a href="#refreshToken.refreshToken-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Exchange a code for an access token.</p>
+<div class="tsd-comment tsd-typography"><p>Refresh an existing access token.</p>
 
-<h3>Returns</h3></div>
+<h3>Aram</h3><p>options - The options for refreshing the token.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
@@ -191,23 +190,24 @@
 <h5>options: <a href="../interfaces/types_oauth.RefreshTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RefreshTokenOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/types_oauth.ExchangeCodeResponse.html" class="tsd-signature-type" data-tsd-kind="Interface">ExchangeCodeResponse</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L203">lib/routes/OAuth.ts:203</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L172">lib/routes/OAuth.ts:172</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="revokeToken" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>revoke<wbr/>Token</span><a href="#revokeToken" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="revokeToken.revokeToken-1">revoke<wbr/>Token<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/types_oauth.RevokeTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RevokeTokenOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span><a href="#revokeToken.revokeToken-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Revoke an access token.</p>
-
-<h3>Returns</h3></div>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>options: <a href="../interfaces/types_oauth.RevokeTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RevokeTokenOptions</a></h5></li></ul></div>
+<h5>options: <a href="../interfaces/types_oauth.RevokeTokenOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">RevokeTokenOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>The options for revoking the token.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L232">lib/routes/OAuth.ts:232</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/routes/OAuth.ts#L197">lib/routes/OAuth.ts:197</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">

@@ -24,11 +24,9 @@ export default class Bucket {
     });
     private check;
     /**
-     * add an item to the queue
-     *
-     * @param {Function} func - the function to queue
-     * @param {Boolean} [priority=false] - if true, the item will be added to the front of the queue
-     * @returns {void}
+     * Add an item to the queue.
+     * @param func - The function to queue.
+     * @param priority - If true, the item will be added to the front of the queue.
      */
     queue(func: () => void, priority?: boolean): void;
 }

@@ -18,33 +18,19 @@ export default class CategoryChannel extends GuildChannel {
     protected update(data: Partial<RawCategoryChannel>): void;
     /**
      * Delete a permission overwrite on this channel.
-     *
-     * @param {String} overwriteID - The id of the permission overwrite to delete.
-     * @param {String} reason - The reason for deleting the permission overwrite.
-     * @returns {Promise<void>}
+     * @param overwriteID - The ID of the permission overwrite to delete.
+     * @param reason - The reason for deleting the permission overwrite.
      */
     deletePermission(overwriteID: string, reason?: string): Promise<void>;
     /**
      * Edit this channel.
-     *
-     * @param {Object} options
-     * @param {String} [options.name] - [All] The name of the channel.
-     * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
-     * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
-     * @param {String} [roptions.eason] - The reason to be displayed in the audit log.
-     * @returns {Promise<CategoryChannel>}
+     * @param options - The options for editing the channel.
      */
     edit(options: EditAnyGuildChannelOptions): Promise<this>;
     /**
      * Edit a permission overwrite on this channel.
-     *
-     * @param {String} overwriteID - The id of the permission overwrite to edit.
-     * @param {Object} options
-     * @param {(BigInt | String)} [options.allow] - The permissions to allow.
-     * @param {(BigInt | String)} [options.deny] - The permissions to deny.
-     * @param {String} [options.reason] - The reason for editing the permission.
-     * @param {OverwriteTypes} [options.type] - The type of the permission overwrite.
-     * @returns {Promise<void>}
+     * @param overwriteID - The ID of the permission overwrite to edit.
+     * @param options - The options for editing the permission overwrite.
      */
     editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void>;
     toJSON(): JSONCategoryChannel;

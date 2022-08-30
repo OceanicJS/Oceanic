@@ -13,8 +13,6 @@ export default class Channel extends Base {
     get mention(): string;
     /**
      * Close a direct message, leave a group channel, or delete a guild channel.
-     *
-     * @returns {Promise<void>}
      */
     delete(): Promise<void>;
     toJSON(): JSONChannel;

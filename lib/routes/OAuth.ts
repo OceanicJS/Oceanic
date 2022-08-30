@@ -6,7 +6,7 @@ import type {
     Connection,
     ExchangeCodeOptions,
     ExchangeCodeResponse,
-    OAuthURLOption,
+    OAuthURLOptions,
     RawAuthorizationInformation,
     RawClientCredentialsTokenResponse,
     RawConnection,
@@ -29,19 +29,17 @@ import { FormData } from "undici";
 export default class OAuth extends BaseRoute {
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
-     *
-     * @param {Object} options
-     * @param {string[]} options.scopes - The [scopes](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes) to request.
-     * @returns {Promise<ClientCredentialsTokenResponse>}
+     * @param options - The options to for the client credentials grant.
      */
     async clientCredentialsGrant(options: ClientCredentialsTokenOptions) {
         const form = new FormData();
         form.append("grant_type", "client_credentials");
         form.append("scope", options.scopes.join(" "));
-        return this._manager.authRequest<RawClientCredentialsTokenResponse>({
+        return this._manager.request<RawClientCredentialsTokenResponse>({
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
-            form
+            form,
+            auth:   (options.clientID || this._client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID || this._client.application?.id}:${options.clientSecret}`).toString("base64")}` : true
         }).then(data => ({
             accessToken: data.access_token,
             expiresIn:   data.expires_in,
@@ -52,19 +50,9 @@ export default class OAuth extends BaseRoute {
 
     /**
      * Construct an oauth authorization url.
-     *
-     * @param {Object} options
-     * @param {String} options.clientID - The client id of the application.
-     * @param {Boolean} [options.disableGuildSelect] - If the guild dropdown should be disabled.
-     * @param {String} [options.guildID] - The id of the guild to preselect.
-     * @param {String} [options.permissions] - The permissions to request.
-     * @param {("consent" | "none")} [options.prompt] - `consent` to show the prompt, `none` to not show the prompt if the user has already authorized previously.
-     * @param {String} [options.redirectURI] - The redirect uri of the application.
-     * @param {string[]} options.scopes - The [scopes](https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes) to request.
-     * @param {String} [options.state] - The state to send.
-     * @returns {String}
+     * @param options - The options to construct the url with.
      */
-    constructURL(options: OAuthURLOption) {
+    constructURL(options: OAuthURLOptions) {
         const params: Array<string> = [
             `client_id=${options.clientID}`,
             `response_type=${options.responseType || "code"}`,
@@ -81,12 +69,7 @@ export default class OAuth extends BaseRoute {
 
     /**
      * Exchange a code for an access token.
-     *
-     * @param {Object} options.clientID - The id of the client the authorization was performed with.
-     * @param {Object} options.clientSecret - The secret of the client the authorization was performed with.
-     * @param {Object} options.code - The code from the authorization.
-     * @param {Object} options.redirectURI - The redirect uri used in the authorization.
-     * @returns {Promise<ExchangeCodeResponse>}
+     * @param options - The options for exchanging the code.
      */
     async exchangeCode(options: ExchangeCodeOptions) {
         const form = new FormData();
@@ -111,8 +94,6 @@ export default class OAuth extends BaseRoute {
 
     /**
      * Get the OAuth application information.
-     *
-     * @returns {Promise<Application>}
      */
     async getApplication() {
         return this._manager.authRequest<RESTApplication>({
@@ -125,8 +106,6 @@ export default class OAuth extends BaseRoute {
      * Get information about the current authorization.
      *
      * Note: OAuth only. Bots cannot use this.
-     *
-     * @returns {Promise<AuthorizationInformation>}
      */
     async getCurrentAuthorizationInformation() {
         return this._manager.authRequest<RawAuthorizationInformation>({
@@ -144,8 +123,6 @@ export default class OAuth extends BaseRoute {
      * Get the connections of the currently authenticated user.
      *
      * Note: Requires the `connections` scope when using oauth.
-     *
-     * @returns {Promise<Connection[]>}
      */
     async getCurrentConnections() {
         return this._manager.authRequest<Array<RawConnection>>({
@@ -168,9 +145,7 @@ export default class OAuth extends BaseRoute {
      * Get the guild member information about the currently authenticated user.
      *
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
-     *
-     * @param {String} guild - the id of the guild
-     * @returns {Promise<Member>}
+     * @param guild - the ID of the guild
      */
     async getCurrentGuildMember(guild: string) {
         return this._manager.authRequest<RawMember>({
@@ -181,8 +156,6 @@ export default class OAuth extends BaseRoute {
 
     /**
      * Get the currently authenticated user's guilds.
-     *
-     * @returns {Promise<Guild[]>}
      */
     async getCurrentGuilds() {
         return this._manager.authRequest<Array<RawGuild>>({
@@ -193,12 +166,8 @@ export default class OAuth extends BaseRoute {
 
 
     /**
-     * Exchange a code for an access token.
-     *
-     * @param {Object} options.clientID - The id of the client the authorization was performed with.
-     * @param {Object} options.clientSecret - The secret of the client the authorization was performed with.
-     * @param {Object} options.refreshToken - The refresh token from when the code was exchanged.
-     * @returns {Promise<ExchangeCodeResponse>}
+     * Refresh an existing access token.
+     * @aram options - The options for refreshing the token.
      */
     async refreshToken(options: RefreshTokenOptions) {
         const form = new FormData();
@@ -223,11 +192,7 @@ export default class OAuth extends BaseRoute {
 
     /**
      * Revoke an access token.
-     *
-     * @param {Object} options.clientID - The id of the client the authorization was performed with.
-     * @param {Object} options.clientSecret - The secret of the client the authorization was performed with.
-     * @param {Object} options.token - The access token to revoke.
-     * @returns {Promise<void>}
+     * @param options - The options for revoking the token.
      */
     async revokeToken(options: RevokeTokenOptions) {
         const form = new FormData();

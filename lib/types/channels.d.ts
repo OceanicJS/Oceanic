@@ -94,9 +94,13 @@ export interface Overwrite {
 }
 
 export interface OverwriteOptions {
+    /** The permissions to allow. */
     allow?: string | bigint;
+    /** The permissions to deny. */
     deny?: string | bigint;
+    /** The ID of the user or role to apply the permissions to. */
     id: string;
+    /** `0` for role, `1` for user. */
     type: OverwriteTypes;
 }
 
@@ -128,29 +132,50 @@ export interface GatewayThreadMember {
     joinTimestamp: Date;
 }
 export interface EditGroupDMOptions {
+    /** [Group DM] The icon of the channel. */
     icon?: string | Buffer;
+    /** The name of the channel. */
     name?: string;
 }
 
 export interface EditGuildChannelOptions {
+    /** [Thread] If the thread is archived. */
     archived?: boolean;
+    /** [Thread] The duration after which the thread will be archived. */
     autoArchiveDuration?: ThreadAutoArchiveDuration;
+    /** [Voice, Stage] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;
+    /** [Text, Announcement] The default auto archive duration for threads made in this channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
+    /** [Thread] The [channel flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) to set on the channel. */
     flags?: number;
+    /** [Private Thread] If non-moderators can add other non-moderators to the thread. */
     invitable?: boolean;
+    /** [Thread] If the thread should be locked. */
     locked?: boolean;
+    /** The name of the channel. */
     name?: string;
+    /** [Text, Voice, Announcement] - If the channel is age gated. */
     nsfw?: string | null;
+    /** [Text, Voice, Announcement] The id of the parent category channel. */
     parentID?: string | null;
+    /** Channel or category specific permissions. */
     permissionOverwrites?: Array<RawOverwrite> | null;
+    /** The position of the channel in the channel list. */
     position?: number | null;
+    /** [Thread, Text] The seconds between sending messages for users. Between 0 and 21600. */
     rateLimitPerUser?: number | null;
+    /** The reason to be displayed in the audit log. */
     reason?: string;
+    /** [Voice, Stage] The voice region id of the channel, null for automatic. */
     rtcRegion?: string | null;
+    /** [Text, Announcement] The topic of the channel. */
     topic?: string | null;
+    /** [Text, Announcement] Provide the opposite type to convert the channel. */
     type?: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
+    /** [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99. */
     userLimit?: number | null;
+    /** [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of the channel. */
     videoQualityMode?: VideoQualityModes | null;
 }
 
@@ -165,21 +190,34 @@ export type EditPublicThreadChannelOptions = Pick<EditGuildChannelOptions, "name
 export type EditPrivateThreadChannelOptions = EditPublicThreadChannelOptions & Pick<EditGuildChannelOptions, "invitable">;
 
 export interface AddGroupRecipientOptions {
+    /** The access token of the user to add. */
     accessToken: string;
+    /** The nickname of the user to add. */
     nick?: string;
+    /** The id of the user to add. */
     userID: string;
 }
 
 export interface CreateMessageOptions {
+    /** An object that specifies the allowed mentions in this message. */
     allowedMentions?: AllowedMentions;
+    /** An array of [partial attachments](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files. */
     attachments?: Array<MessageAttachment>;
+    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`. */
     components?: Array<MessageActionRow>;
+    /** The content of the message. */
     content?: string;
+    /** An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send. */
     embeds?: Array<EmbedOptions>;
+    /** The files to send. */
     files?: Array<File>;
+    /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message. */
     flags?: number;
+    /** Reply to a message. */
     messageReference?: MessageReference;
+    /** The IDs of up to 3 stickers from the current guild to send. */
     stickerIDs?: Array<string>;
+    /** If the message should be spoken aloud. */
     tts?: boolean;
 }
 
@@ -266,16 +304,24 @@ export interface EmbedAuthor extends EmbedAuthorOptions {
 }
 
 export interface AllowedMentions {
+    /** If `@everyone`/`@here` mentions should be allowed. */
     everyone?: boolean;
+    /** If the replied user (`messageReference`) should be mentioned. */
     repliedUser?: boolean;
+    /** An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none. */
     roles?: boolean | Array<string>;
+    /** An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none. */
     users?: boolean | Array<string>;
 }
 
 export interface MessageReference {
+    /** The ID of the channel the replied message is in. */
     channelID?: string;
+    /** If creating the message should fail if the message to reply to does not exist. */
     failIfNotExists?: boolean;
+    /** The ID of the guild the replied message is in. */
     guildID?: string;
+    /** The ID of the message to reply to. */
     messageID?: string;
 }
 
@@ -520,9 +566,13 @@ export interface PartialInviteChannel {
 }
 
 export interface GetChannelMessagesOptions {
+    /** Get messages after this message id. */
     after?: string;
+    /** Get messages around this message id. */
     around?: string;
+    /** Get messages before this message id. */
     before?: string;
+    /** The maximum amount of messages to get. */
     limit?: number;
 }
 
@@ -534,9 +584,13 @@ export interface GetReactionsOptions {
 export type EditMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags">;
 
 export interface EditPermissionOptions {
+    /** The permissions to allow. */
     allow?: bigint | string;
+    /** The permissions to deny. */
     deny?: bigint | string;
+    /** The reason for editing the permission. */
     reason?: string;
+    /** The type of the permission overwrite. */
     type: OverwriteTypes;
 }
 
@@ -581,18 +635,22 @@ export interface InviteStageInstance {
 }
 
 export interface CreateInviteOptions {
+    /** How long the invite should last. */
     maxAge?: number;
+    /** How many times the invite can be used. */
     maxUses?: number;
+    /** The reason for creating the invite. */
     reason?: string;
+    /** The id of the embedded application to open for this invite. */
     targetApplicationID?: string;
+    /** The [type of target](https://discord.com/developers/docs/resources/channel#invite-target-types) for the invite. */
     targetType?: InviteTargetTypes;
+    /** The ID of the user whose stream to display for this invite. */
     targetUserID?: string;
+    /** If the invite should be temporary. */
     temporary?: boolean;
+    /** If the invite should be unique. */
     unique?: boolean;
-}
-
-export interface FollowAnnouncementChannelOptions {
-    webhookChannelID: string;
 }
 
 export interface RawFollowedChannel {
@@ -606,25 +664,34 @@ export interface FollowedChannel {
 }
 
 export interface StartThreadFromMessageOptions {
+    /** The duration of no activity after which this thread will be automatically archived. */
     autoArchiveDuration?: ThreadAutoArchiveDuration;
+    /** The name of the thread. */
     name: string;
+    /** The amount of seconds a user has to wait before sending another message. */
     rateLimitPerUser?: number | null;
+    /** The reason for creating the thread. */
     reason?: string;
 }
 
 export interface StartThreadWithoutMessageOptions extends StartThreadFromMessageOptions {
+    /** [Private Thread Only] If non-moderators can add other non-moderators to the thread. */
     invitable?: boolean;
+    /** The type of thread to create. */
     type: ThreadChannelTypes;
 }
 
 export interface StartThreadInForumOptions extends StartThreadFromMessageOptions {
+    /** The message to start the thread with. */
     message: ForumThreadStarterMessageOptions;
 }
 
 export type ForumThreadStarterMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "stickerIDs" | "attachments" | "flags" | "files">;
 
 export interface GetArchivedThreadsOptions {
+    /** A **timestamp** to get threads before. */
     before?: string;
+    /** The maximum amount of threads to get. */
     limit?: number;
 }
 
@@ -641,28 +708,37 @@ export interface ArchivedThreads<T extends AnnouncementThreadChannel | PublicThr
 }
 
 export interface GetInviteOptions {
+    /** The id of the guild scheduled event to include with the invite. */
     guildScheduledEventID?: string;
+    /** If the invite should contain approximate member counts. */
     withCounts?: boolean;
+    /** If the invite should contain expiration data.  */
     withExpiration?: boolean;
 }
 
 export interface GetInviteWithCountsOptions extends Omit<GetInviteOptions, "withCounts"> {
+    /** If the invite should contain approximate member counts. */
     withCounts: true;
 }
 
 export interface GetInviteWithExpirationOptions extends Omit<GetInviteOptions, "withExpiration"> {
+    /** If the invite should contain expiration data.  */
     withExpiration: true;
 }
 
 
 export interface GetInviteWithCountsAndExpirationOptions extends Omit<GetInviteOptions, "withCounts" | "withExpiration"> {
+    /** If the invite should contain approximate member counts. */
     withCounts: true;
+    /** If the invite should contain expiration data.  */
     withExpiration: true;
 }
 
 
 export interface GetInviteWithNoneOptions extends Omit<GetInviteOptions, "withCounts" | "withExpiration"> {
+    /** If the invite should contain approximate member counts. */
     withCounts?: false;
+    /** If the invite should contain expiration data.  */
     withExpiration?: false;
 }
 

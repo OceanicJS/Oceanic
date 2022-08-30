@@ -17,7 +17,6 @@ import type {
     ExecuteWebhookWaitOptions,
     RawWebhook
 } from "../types/webhooks";
-import { File } from "../types/request-handler";
 import type { Uncached } from "../types/shared";
 import type { JSONWebhook } from "../types/json";
 
@@ -63,10 +62,8 @@ export default class Webhook extends Base {
 
     /**
      * The url of this webhook's avatar.
-     *
-     * @param {ImageFormat} format - The format the url should be.
-     * @param {Number} size - The dimensions of the image.
-     * @returns {(String | null)}
+     * @param format - The format the url should be.
+     * @param size - The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
         return this.avatar === null ? null : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
@@ -74,9 +71,7 @@ export default class Webhook extends Base {
 
     /**
      * Delete this webhook (requires a bot user, see `deleteToken`).
-     *
-     * @param {String} [reason] - The reason for deleting this webhook.
-     * @returns {Promise<void>}
+     * @param reason - The reason for deleting this webhook.
      */
     async delete(reason?: string) {
         return this._client.rest.webhooks.delete(this.id, reason);
@@ -84,12 +79,9 @@ export default class Webhook extends Base {
 
     /**
      * Delete a message from this webhook.
-     *
-     * @param {String} messageID - The id of the message.
-     * @param {Object} [options]
-     * @param {String} [options.threadID] - The id of the thread the message is in.
-     * @param {String} [token] - The token for the webhook, if not already present.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message.
+     * @param options - The options for deleting the message.
+     * @param token - The token for the webhook, if not already present.
      */
     async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string) {
         const t = this.token || token;
@@ -99,9 +91,7 @@ export default class Webhook extends Base {
 
     /**
      * Delete this webhook via its token.
-     *
-     * @param {String} [token] - The token for the webhook, if not already present.
-     * @returns {Promise<void>}
+     * @param token - The token for the webhook, if not already present.
      */
     async deleteToken(token?: string) {
         const t = this.token || token;
@@ -111,13 +101,7 @@ export default class Webhook extends Base {
 
     /**
      * Edit this webhook (requires a bot user, see `editToken`).
-     *
-     * @param {Object} options
-     * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
-     * @param {String} [options.channelID] - The id of the channel to move this webhook to.
-     * @param {String} [options.name] - The name of the webhook.
-     * @param {String} [options.reason] - The reason for editing this webhook.
-     * @returns {Promise<Webhook>}
+     * @param options - The options for editing the webhook.
      */
     async edit(options: EditWebhookOptions) {
         return this._client.rest.webhooks.edit(this.id, options);
@@ -125,24 +109,10 @@ export default class Webhook extends Base {
 
     /**
      * Edit a webhook message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} id - The id of the webhook.
-     * @param {String} token - The token of the webhook.
-     * @param {String} messageID - The id of the message to edit.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {String} [options.threadID] - The id of the thread to send the message to.
-     * @returns {Promise<Message<T>>}
+     * @param id - The ID of the webhook.
+     * @param token - The token of the webhook.
+     * @param messageID - The ID of the message to edit.
+     * @param options - The options for editing the message.
      */
     async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
         const t = this.token || token;
@@ -152,12 +122,8 @@ export default class Webhook extends Base {
 
     /**
      * Edit a webhook via its token.
-     *
-     * @param {Object} options
-     * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
-     * @param {String} [options.name] - The name of the webhook.
-     * @param {String} [token] - The token for the webhook, if not already present.
-     * @returns {Promise<Webhook>}
+     * @param options - The options for editing the webhook.
+     * @param token - The token for the webhook, if not already present.
      */
     async editToken(options: EditWebhookOptions, token?: string) {
         const t = this.token || token;
@@ -167,28 +133,8 @@ export default class Webhook extends Base {
 
     /**
      * Execute the webhook.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {String} [options.avatarURL] - The avatar of the webhook.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {String} [options.threadID] - The id of the thread to send the message to.
-     * @param {String} [options.threadName] - The name of the thread to create (forum channels).
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @param {String} [options.username] - The username of the webhook.
-     * @param {Boolean} [options.wait] - If the created message should be returned.
-     * @param {String} [token] - The token for the webhook, if not already present.
-     * @returns {Promise<Message<T> | void>}
+     * @param options - The options for executing the webhook.
+     * @param token - The token for the webhook, if not already present.
      */
     async execute<T extends AnyGuildTextChannel>(options: ExecuteWebhookWaitOptions, token?: string): Promise<Message<T>>;
     async execute(options: ExecuteWebhookOptions, token?: string): Promise<void>;
@@ -200,12 +146,8 @@ export default class Webhook extends Base {
 
     /**
      * Execute this webhook as github compatible.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options - The options to send. See Github's documentation for more information.
-     * @param {Boolean} [options.wait] - If the created message should be returned.
-     * @param {String} [token] - The token for the webhook, if not already present.
-     * @return {Promise<Message<T> | void>}
+     * @param options - The options to send. See Github's documentation for more information.
+     * @param token - The token for the webhook, if not already present.
      */
     async executeGithub(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
     async executeGithub<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
@@ -217,12 +159,8 @@ export default class Webhook extends Base {
 
     /**
      * Execute this webhook as slack compatible.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options - The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
-     * @param {Boolean} [options.wait] - If the created message should be returned.
-     * @param {String} options.token - The token for the webhook, if not already present.
-     * @return {Promise<Message<T> | void>}
+     * @param options - The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
+     * @param token - The token for the webhook, if not already present.
      */
     async executeSlack(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
     async executeSlack<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
@@ -234,12 +172,9 @@ export default class Webhook extends Base {
 
     /**
      * Get a webhook message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} messageID - The id of the message.
-     * @param {String} [threadID] - The id of the thread the message is in.
-     * @param {String} [token] - The token for the webhook, if not already present.
-     * @returns {Promise<Message<T>>}
+     * @param messageID - The ID of the message.
+     * @param threadID - The ID of the thread the message is in.
+     * @param token - The token for the webhook, if not already present.
      */
     async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string) {
         const t = this.token || token;
@@ -249,10 +184,8 @@ export default class Webhook extends Base {
 
     /**
      * The url of this webhook's `sourceGuild` icon (only present on channel follower webhooks).
-     *
-     * @param {ImageFormat} format - The format the url should be.
-     * @param {Number} size - The dimensions of the image.
-     * @returns {(String | null)}
+     * @param format - The format the url should be.
+     * @param size - The dimensions of the image.
      */
     sourceGuildIconURL(format?: ImageFormat, size?: number) {
         return !this.sourceGuild?.icon ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);

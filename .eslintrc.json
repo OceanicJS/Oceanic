@@ -8,6 +8,7 @@
 			{
 				"SwitchCase": 1
 			}
-		]
+		],
+		"jsdoc/newline-after-description": ["error", "never"]
 	}
 }

@@ -10,19 +10,8 @@ class PrivateThreadChannel extends ThreadChannel_1.default {
         super(data, client);
     }
     /**
-     * Edit a channel.
-     *
-     * @param {String} id - The id of the channel to edit.
-     * @param {Object} options
-     * @param {Boolean} [options.archived] - If the thread is archived.
-     * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration after which the thread will be archived.
-     * @param {Number} [options.flags] - The [channel flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) to set on the channel.
-     * @param {Boolean} [options.invitable] - If non-moderators can add other non-moderators to the thread.
-     * @param {Boolean} [options.locked] - If the thread should be locked.
-     * @param {String} [options.name] - The name of the channel.
-     * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
-     * @param {String} [options.reason] - The reason to be displayed in the audit log.
-     * @returns {Promise<PrivateThreadChannel>}
+     * Edit this channel.
+     * @param options - The options to edit the channel with.
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);
@@ -36,4 +25,4 @@ class PrivateThreadChannel extends ThreadChannel_1.default {
     }
 }
 exports.default = PrivateThreadChannel;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiUHJpdmF0ZVRocmVhZENoYW5uZWwuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9saWIvc3RydWN0dXJlcy9Qcml2YXRlVGhyZWFkQ2hhbm5lbC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFBLG9FQUE0QztBQU01Qyx5Q0FBeUM7QUFDekMsTUFBcUIsb0JBQXFCLFNBQVEsdUJBQW1DO0lBR2pGLFlBQVksSUFBNkIsRUFBRSxNQUFjO1FBQ3JELEtBQUssQ0FBQyxJQUFJLEVBQUUsTUFBTSxDQUFDLENBQUM7SUFDeEIsQ0FBQztJQUVEOzs7Ozs7Ozs7Ozs7OztPQWNHO0lBQ00sS0FBSyxDQUFDLElBQUksQ0FBQyxPQUF3QztRQUN4RCxPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLFFBQVEsQ0FBQyxJQUFJLENBQU8sSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLENBQUMsQ0FBQztJQUNuRSxDQUFDO0lBRUQsTUFBTTtRQUNGLE9BQU87WUFDSCxHQUFHLEtBQUssQ0FBQyxNQUFNLEVBQUU7WUFDakIsY0FBYyxFQUFFLElBQUksQ0FBQyxjQUFjO1lBQ25DLElBQUksRUFBWSxJQUFJLENBQUMsSUFBSTtTQUM1QixDQUFDO0lBQ04sQ0FBQztDQUNKO0FBakNELHVDQWlDQyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiUHJpdmF0ZVRocmVhZENoYW5uZWwuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9saWIvc3RydWN0dXJlcy9Qcml2YXRlVGhyZWFkQ2hhbm5lbC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFBLG9FQUE0QztBQU01Qyx5Q0FBeUM7QUFDekMsTUFBcUIsb0JBQXFCLFNBQVEsdUJBQW1DO0lBR2pGLFlBQVksSUFBNkIsRUFBRSxNQUFjO1FBQ3JELEtBQUssQ0FBQyxJQUFJLEVBQUUsTUFBTSxDQUFDLENBQUM7SUFDeEIsQ0FBQztJQUVEOzs7T0FHRztJQUNNLEtBQUssQ0FBQyxJQUFJLENBQUMsT0FBd0M7UUFDeEQsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFPLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDbkUsQ0FBQztJQUVELE1BQU07UUFDRixPQUFPO1lBQ0gsR0FBRyxLQUFLLENBQUMsTUFBTSxFQUFFO1lBQ2pCLGNBQWMsRUFBRSxJQUFJLENBQUMsY0FBYztZQUNuQyxJQUFJLEVBQVksSUFBSSxDQUFDLElBQUk7U0FDNUIsQ0FBQztJQUNOLENBQUM7Q0FDSjtBQXRCRCx1Q0FzQkMifQ==

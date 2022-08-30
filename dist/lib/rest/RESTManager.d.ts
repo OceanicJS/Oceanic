@@ -22,20 +22,16 @@ export default class RESTManager {
     constructor(client: Client, options?: RESTOptions);
     get client(): Client;
     get options(): import("../types/request-handler").RequestHandlerInstanceOptions;
-    /** Alias for {@link RequestHandler#authRequest} */
+    /** Alias for {@link RequestHandler.authRequest} */
     authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T>;
     /**
      * Get the gateway information related to your bot client.
-     *
-     * @returns {Promise<GetBotGatewayResponse>}
      */
     getBotGateway(): Promise<GetBotGatewayResponse>;
     /**
      * Get the gateway information.
-     *
-     * @returns {Promise<GetGatewayResponse>}
      */
     getGateway(): Promise<GetGatewayResponse>;
-    /** Alias for {@link RequestHandler#request} */
+    /** Alias for {@link RequestHandler.request} */
     request<T = unknown>(options: RequestOptions): Promise<T>;
 }

@@ -91,8 +91,12 @@ export interface RoleAuditLogChange {
 }
 
 export interface GetAuditLogOptions {
+    /** The action type to filter by. */
     actionType?: AuditLogActionTypes;
+    /** The ID of the entry to get entries before. */
     before?: string;
+    /** The maximum number of entries to get. */
     limit?: number;
+    /** The ID of the user to filter by. */
     userID?: string;
 }

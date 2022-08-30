@@ -1,5 +1,4 @@
 import Base from "./Base";
-import PrivateChannel from "./PrivateChannel";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -57,18 +56,15 @@ export default class User extends Base {
 
     /**
      * The url of this user's avatar (or default avatar, if they have not set an avatar).
-     *
-     * @param {ImageFormat} format - The format the url should be.
-     * @param {Number} size - The dimensions of the image.
-     * @returns {String}
+     * @param format - The format the url should be.
+     * @param size - The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
         return this.avatar === null ? this.defaultAvatarURL() : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
+
     /**
      * Create a direct message with this user.
-     *
-     * @returns {Promise<PrivateChannel>}
      */
     async createDM() {
         return this._client.rest.channels.createDM(this.id);
@@ -76,8 +72,6 @@ export default class User extends Base {
 
     /**
      * The url of this user's default avatar.
-     *
-     * @returns {String}
      */
     defaultAvatarURL() {
         return this._client.util.formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");

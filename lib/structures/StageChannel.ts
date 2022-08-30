@@ -1,11 +1,10 @@
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
-import Invite from "./Invite";
 import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
 import type { ChannelTypes } from "../Constants";
-import { AllPermissions, InviteTargetTypes, OverwriteTypes, Permissions } from "../Constants";
+import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type {
@@ -52,17 +51,7 @@ export default class StageChannel extends GuildChannel {
 
     /**
      * Create an invite for this channel.
-     *
-     * @param {Object} options
-     * @param {Number} [options.maxAge] - How long the invite should last.
-     * @param {Number} [options.maxUses] - How many times the invite can be used.
-     * @param {String} [options.reason] - The reason for creating the invite.
-     * @param {String} [options.targetApplicationID] - The id of the embedded application to open for this invite.
-     * @param {InviteTargetTypes} [options.targetType] - The [type of target](https://discord.com/developers/docs/resources/channel#invite-target-types) for the invite.
-     * @param {String} [options.targetUserID] - The id of the user whose stream to display for this invite.
-     * @param {Boolean} [options.temporary] - If the invite should be temporary.
-     * @param {Boolean} [options.unique] - If the invite should be unique.
-     * @returns {Promise<Invite<StageChannel>>}
+     * @param options - The options to create an invite with.
      */
     async createInvite(options: CreateInviteOptions) {
         return this._client.rest.channels.createInvite(this.id, options);
@@ -70,10 +59,8 @@ export default class StageChannel extends GuildChannel {
 
     /**
      * Delete a permission overwrite on this channel.
-     *
-     * @param {String} overwriteID - The id of the permission overwrite to delete.
-     * @param {String} reason - The reason for deleting the permission overwrite.
-     * @returns {Promise<void>}
+     * @param overwriteID - The ID of the permission overwrite to delete.
+     * @param reason - The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string) {
         return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
@@ -81,14 +68,7 @@ export default class StageChannel extends GuildChannel {
 
     /**
      * Edit this channel.
-     *
-     * @param {Object} options
-     * @param {String} [options.name] - [All] The name of the channel.
-     * @param {?RawOverwrite[]} [options.permissionOverwrites] - [All Guild] Channel or category specific permissions
-     * @param {?Number} [options.position] - [All Guild] The position of the channel in the channel list.
-     * @param {String} [options.reason] - The reason to be displayed in the audit log.
-     * @param {?String} [options.rtcRegion] - [Voice, Stage] The voice region id of the channel, null for automatic.
-     * @returns {Promise<StageChannel>}
+     * @param options - The options for editing the channel.
      */
     async edit(options: EditStageChannelOptions) {
         return this._client.rest.channels.edit<this>(this.id, options);
@@ -96,14 +76,8 @@ export default class StageChannel extends GuildChannel {
 
     /**
      * Edit a permission overwrite on this channel.
-     *
-     * @param {String} overwriteID - The id of the permission overwrite to edit.
-     * @param {Object} options
-     * @param {(BigInt | String)} [options.allow] - The permissions to allow.
-     * @param {(BigInt | String)} [options.deny] - The permissions to deny.
-     * @param {String} [options.reason] - The reason for editing the permission.
-     * @param {OverwriteTypes} [options.type] - The type of the permission overwrite.
-     * @returns {Promise<void>}
+     * @param overwriteID - The ID of the permission overwrite to edit.
+     * @param options - The options for editing the permission overwrite.
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions) {
         return this._client.rest.channels.editPermission(this.id, overwriteID, options);
@@ -111,11 +85,7 @@ export default class StageChannel extends GuildChannel {
 
     /**
      * Join this stage channel.
-     *
-     * @param {Object} [options]
-     * @param {Boolean} [options.selfDeaf] - If the client should join deafened.
-     * @param {Boolean} [options.selfMute] - If the client should join muted.
-     * @returns {Promise<void>}
+     * @param options - The options to join the channel with.
      */
     async join(options?: UpdateVoiceStateOptions) {
         return this._client.joinVoiceChannel(this.id, options);
@@ -123,9 +93,7 @@ export default class StageChannel extends GuildChannel {
 
     /**
      * Get the permissions of a member.  If providing an id, the member must be cached.
-     *
-     * @param {(String | Member)} member - The member to get the permissions of.
-     * @returns {Permission}
+     * @param member - The member to get the permissions of.
      */
     permissionsOf(member: string | Member) {
         if (typeof member === "string") member = this.guild.members.get(member)!;

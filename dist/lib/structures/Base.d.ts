@@ -11,6 +11,7 @@ export default abstract class Base {
     static getDiscordEpoch(id: string): number;
     protected update(data: unknown): void;
     get createdAt(): Date;
+    /** @hidden */
     [inspect.custom](): this;
     toJSON(): JSONBase;
     toString(): string;

@@ -4,14 +4,7 @@ import type Guild from "./Guild";
 import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import { ApplicationCommandTypes } from "../Constants";
-import type {
-    ApplicationCommandOptions,
-    ApplicationCommandPermission,
-    EditApplicationCommandPermissionsOptions,
-    RESTGuildApplicationCommandPermissions,
-    RawApplicationCommand,
-    TypeToEdit
-} from "../types/application-commands";
+import type { ApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RawApplicationCommand, TypeToEdit } from "../types/application-commands";
 import type { Uncached } from "../types/shared";
 import type { JSONApplicationCommand } from "../types/json";
 
@@ -58,8 +51,6 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Delete this command.
-     *
-     * @returns {Promise<void>}
      */
     async delete() {
         return this.guildID ? this._client.rest.applicationCommands.deleteGuildCommand(this.application.id, this.guildID, this.id) : this._client.rest.applicationCommands.deleteGlobalCommand(this.application.id, this.id);
@@ -67,16 +58,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Edit this command.
-     *
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM (globa commands only).
-     * @param {String} [options.name] - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @returns {Promise<ApplicationCommand>}
+     * @param options - The options for editing the command.
      */
     async edit(options: TypeToEdit<T>) {
         return this.guildID ? this._client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this._client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
@@ -84,11 +66,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Edit this command's permissions (guild commands only). This requires a bearer token with the `applications.commands.permissions.update` scope.
-     *
-     * @param {Object} options
-     * @param {String} [options.accessToken] - If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option.
-     * @param {ApplicationCommandPermission[]} options.permissions - The permissions to set for the command.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions>}
+     * @param options - The options for editing the permissions.
      */
     async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions) {
         if (!this.guildID) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
@@ -97,8 +75,6 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Get this command's permissions (guild commands only).
-     *
-     * @returns {Promise<RESTGuildApplicationCommandPermissions>}
      */
     async getGuildPermission() {
         if (!this.guildID) throw new Error("getGuildPermission cannot be used on global commands.");
@@ -107,9 +83,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Get a mention for this command.
-     *
-     * @param {String[]} sub - The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
-     * @returns {String}
+     * @param sub - The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
      */
     mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]) {
         let text = `${this.name}`;

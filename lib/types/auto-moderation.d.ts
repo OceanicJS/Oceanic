@@ -1,5 +1,4 @@
 import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
-import type AutoModerationRule from "../structures/AutoModerationRule";
 
 export interface RawAutoModerationRule {
     actions: Array<RawAutoModerationAction>;
@@ -39,28 +38,49 @@ export interface RawActionMetadata {
 }
 
 export interface TriggerMetadata {
-    /** KEYWORD_PRESET */
+    /** The keywords to allow. Valid for `KEYWORD_PRESET`. */
     allowList?: Array<string>;
-    /** KEYWORD */
+    /** The keywords to filter. Valid for `KEYWORD`. */
     keywordFilter?: Array<string>;
-    /** MENTION_SPAM */
+    /** The maximum number of mentions to allow. Valid for `MENTION_SPAM`. */
     mentionTotalLimit?: number;
-    /** KEYWORD_PRESET */
+    /** The presets to use. Valid for `KEYWORD_PRESET`. */
     presets?: Array<AutoModerationKeywordPresetTypes>;
 }
 
 export interface AutoModerationAction {
+    /** The metadata for the action. */
     metadata: ActionMetadata;
+    /** The type of the action. */
     type: AutoModerationActionTypes;
 }
 
 export interface ActionMetadata {
-    /** SEND_ALERT_MESSAGE */
+    /** The ID of the channel to send the message to. Valid for `SEND_ALERT_MESSAGE`. */
     channelID: string;
-    /** TIMEOUT */
+    /** The duration of the timeout in seconds. Valid for `TIMEOUT`. */
     durationSeconds: number;
 }
 
-export type CreateAutoModerationRuleOptions = Pick<AutoModerationRule, "name" | "eventType" | "triggerType" | "actions"> & Partial<Pick<AutoModerationRule, "triggerMetadata" | "enabled" | "exemptRoles" | "exemptChannels">> & { reason?: string; };
+export interface CreateAutoModerationRuleOptions {
+    /** The actions for the rule. */
+    actions: Array<AutoModerationAction>;
+    /** If the rule is enabled. */
+    enabled?: boolean;
+    /** The event type to trigger on. */
+    eventType: AutoModerationEventTypes;
+    /** The channels to exempt from the rule. */
+    exemptChannels?: Array<string>;
+    /** The roles to exempt from the rule. */
+    exemptRoles?: Array<string>;
+    /** The name of the rule. */
+    name: string;
+    /** The reason for creating the rule. */
+    reason?: string;
+    /** The metadata to use for the trigger. */
+    triggerMetadata?: TriggerMetadata;
+    /** The type of trigger to use. */
+    triggerType: AutoModerationTriggerTypes;
+}
 
 export type EditAutoModerationRuleOptions = Partial<Pick<CreateAutoModerationRuleOptions, "name" | "eventType" | "triggerMetadata" | "actions" | "enabled" | "exemptRoles" | "exemptChannels" | "reason">>;

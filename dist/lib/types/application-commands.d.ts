@@ -142,18 +142,26 @@ type ApplicationCommandOptionsUser        = ApplicationCommandOptionBase<Applica
 
 // desc, options
 export interface CreateApplicationCommandOptionsBase<T extends ApplicationCommandTypes = ApplicationCommandTypes> {
+    /** The default member permissions for the command. */
     defaultMemberPermissions?: string | null;
+    /** If the command can be used in a DM. */
     dmPermission?: boolean | null;
+    /** The name of the command. */
     name: string;
+    /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
     nameLocalizations?: Record<string, string> | null;
+    /** The type of the command. */
     type: T;
 }
 
 export type CreateApplicationCommandOptions = CreateChatInputApplicationCommandOptions | CreateUserApplicationCommandOptions | CreateMessageApplicationCommandOptions;
 export type CreateGuildApplicationCommandOptions = Omit<CreateChatInputApplicationCommandOptions, "dmPermission"> | Omit<CreateUserApplicationCommandOptions, "dmPermission"> | Omit<CreateMessageApplicationCommandOptions, "dmPermission">;
 export interface CreateChatInputApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.CHAT_INPUT> {
+    /** The description of the command. */
     description: string;
+    /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
     descriptionLocalizations?: Record<string, string> | null;
+    /** See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. */
     options?: Array<ApplicationCommandOptions>;
 }
 
@@ -190,13 +198,18 @@ export interface GuildApplicationCommandPermissions {
 }
 
 export interface ApplicationCommandPermission {
+    /** The id of the role, user, channel, or a [permission constant](https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permissions-constants). */
     id: string;
+    /** If the permission is allowed. */
     permission: boolean;
+    /** The [type](https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permission-type) of permission */
     type: ApplicationCommandPermissionTypes;
 }
 
 export interface EditApplicationCommandPermissionsOptions {
+    /** If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option. */
     accessToken?: string;
+    /** The permissions to set for the command. */
     permissions: Array<ApplicationCommandPermission>;
 }
 

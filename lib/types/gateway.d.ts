@@ -7,28 +7,109 @@ import type { ClientOptions as WSClientOptions } from "ws";
 
 export type ReconnectDelayFunction = (lastDelay: number, attempts: number) => number;
 interface GatewayOptions {
+    /**
+     * If dropped connections should be automatically reconnected.
+     * @defaultValue true
+     */
     autoReconnect?: boolean;
+    /**
+     * If packets to and from Discord should be compressed.
+     * @defaultValue false
+     */
     compress?: boolean;
+    /**
+     * he concurrency for shard connections. If you don't know what this is, don't mess with it. Only bots in >150,000 servers can use any non-default value.
+     * @defaultValue 1
+     */
     concurrency?: number | "auto";
+    /**
+     * The `properties` used when identifying.
+     */
     connectionProperties?: {
+        /**
+         * The browser of the client.
+         * @defaultValue Oceanic
+         */
         browser?: string;
+        /**
+         * The device of the client.
+         * @defaultValue Oceanic
+         */
         device?: string;
+        /**
+         * The operating system of the client.
+         * @defaultValue `process.platform()`
+         */
         os?: string;
     };
+    /**
+     * The maximum amount of time in milliseconds to wait for a connection to be established.
+     * @defaultValue 30000
+     */
     connectionTimeout?: number;
+    /**
+     * The ID of the first shard to run for this client. Mutually exclusive with `shardIDs`.
+     * @defaultValue 0
+     */
     firstShardID?: number;
+    /**
+     * If the members of all guilds should be requested. Requires the `GUILD_MEMBERS` intent.
+     * @defaultValue false
+     */
     getAllUsers?: boolean;
+    /**
+     * The time in milliseconds after which the client will consider all guilds to have been received.
+     * @defaultValue 2000
+     */
     guildCreateTimeout?: number;
+    /**
+     * The [intents](https://discord.com/developers/docs/topics/gateway#list-of-intents) to use. Either a number, array of intent names, array of numbers, or "ALL". All non privileged intents are used by default.
+     * @defaultValue [[AllNonPrivilegedIntents]]
+     */
     intents?: number | Array<IntentNames | "ALL" | number>;
+    /**
+     * The threshold at which guilds are considered "large" (after which offline members will not be loaded).
+     * @defaultValue 250
+     */
     largeThreshold?: number;
+    /**
+     * The ID of the last shard to run for this client. Mutually exclusive with `shardIDs`.
+     * @defaultValue maxShards - 1
+     */
     lastShardID?: number;
+    /**
+     * The maximum number of attempts to reconnect.
+     * @defaultValue Infinity
+     */
     maxReconnectAttempts?: number;
+    /**
+     * The maximum number of attempts to resume a lost connection.
+     * @defaultValue 10
+     */
     maxResumeAttempts?: number;
+    /**
+     * The total number of shards across all running clients. Limit the number of shards per client via `firstShardID` & `lastShardID`.
+     * @defaultValue 1
+     */
     maxShards?: number | "auto";
-    presence?: UpdatePreseneOptions;
+    /** The intiial presence to use when connecting. */
+    presence?: UpdatePresenceOptions;
+    /**
+     * A function to calculate the delay between reconnect attempts.
+     * @defaultValue (lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000
+     */
     reconnectDelay?: ReconnectDelayFunction;
+    /**
+     * If exisitng voice connections should be populated. This will disconnect connections from other sessions.
+     * @defaultValue false
+     */
     seedVoiceConnections?: boolean;
+    /**
+     * An array of shard IDs to run for this client. Mutually exclusive with `firstShardID` & `lastShardID`.
+     * @defaultValue based on `firstShardID` & `lastShardID`
+     */
     shardIDs?: Array<number>;
+    /** The options to pass to constructed websockets. */
     ws?: WSClientOptions;
 }
 
@@ -37,7 +118,7 @@ export interface ShardManagerInstanceOptions extends Required<Pick<GatewayOption
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
     intents: number;
     maxShards: number;
-    presence: Required<UpdatePreseneOptions>;
+    presence: Required<UpdatePresenceOptions>;
 }
 
 export interface GetGatewayResponse {
@@ -72,10 +153,21 @@ export interface GetBotGatewayResponse extends GetGatewayResponse {
 }
 
 export interface RequestGuildMembersOptions {
+    /** The maximum number of members to request. */
     limit?: number;
+    /**
+     * If presences should be requested. Requires the `GUILD_PRESENCES` intent.
+     * @defaultValue false
+     */
     presences?: boolean;
+    /** If provided, only members with a username that starts with this string will be returned. If empty or not provided, requires the `GUILD_MEMBERS` intent. */
     query?: string;
+    /**
+     * The maximum amount of time in milliseconds to wait.
+     * @defaultValue `client.rest.options.requestTimeout`
+     */
     timeout?: number;
+    /** The IDs of up to 100 users to specifically request. */
     userIDs?: Array<string>;
 }
 
@@ -83,9 +175,12 @@ export type MutualStatuses = "online" | "dnd" | "idle";
 export type SendStatuses = MutualStatuses | "invisible";
 export type RecieveStatuses = MutualStatuses | "offline";
 
-export interface UpdatePreseneOptions {
+export interface UpdatePresenceOptions {
+    /** An array of activities. */
     activities?: Array<BotActivity>;
+    /** If the client is afk. */
     afk?: boolean;
+    /** The [status](https://discord.com/developers/docs/topics/gateway#update-presence-status-types). */
     status: SendStatuses;
 }
 
@@ -142,7 +237,9 @@ export interface ClientStatus {
 }
 
 export interface UpdateVoiceStateOptions {
+    /** If the client should be self deafened. */
     selfDeaf?: boolean;
+    /** If the client should be self muted. */
     selfMute?: boolean;
 }
 

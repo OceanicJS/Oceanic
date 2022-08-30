@@ -18,11 +18,7 @@ export default class ExtendedUser extends User {
     protected update(data: Partial<RawOAuthUser>): void;
     /**
      * Modify this user.
-     *
-     * @param {Object} options
-     * @param {String} [options.username] - The new username
-     * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
-     * @returns {Promise<ExtendedUser>}
+     * @param options - The options for editing the user.
      */
     edit(options: EditSelfUserOptions): Promise<ExtendedUser>;
     toJSON(): JSONExtendedUser;

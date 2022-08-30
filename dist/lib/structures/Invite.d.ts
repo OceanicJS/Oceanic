@@ -47,9 +47,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     protected update(data: Partial<RawInvite> | Partial<RawInviteWithMetadata>): void;
     /**
      * Delete this invite.
-     *
-     * @param {String} [reason] - The reason for deleting this invite.
-     * @returns {Promise<Invite>}
+     * @param reason - The reason for deleting this invite.
      */
     deleteInvite(reason?: string): Promise<Invite<"withMetadata", CH>>;
     toJSON(): JSONInvite;

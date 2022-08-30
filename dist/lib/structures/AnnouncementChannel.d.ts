@@ -1,6 +1,5 @@
 import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
-import Message from "./Message";
 import type CategoryChannel from "./CategoryChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -15,31 +14,16 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     constructor(data: RawAnnouncementChannel, client: Client);
     /**
      * Convert this news channel to a text channel.
-     *
-     * @returns {Promise<TextChannel>}
      */
     convert(): Promise<TextChannel>;
     /**
      * Crosspost a message in this channel.
-     *
-     * @param {String} messageID - The id of the message to crosspost.
-     * @returns {Promise<Message<AnnouncementChannel>>}
+     * @param messageID - The ID of the message to crosspost.
      */
-    crosspostMessage(messageID: string): Promise<Message<AnnouncementChannel>>;
+    crosspostMessage(messageID: string): Promise<import("./Message").default<AnnouncementChannel>>;
     /**
      * Edit this channel.
-     *
-     * @param {Object} options
-     * @param {?ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - The default auto archive duration for threads made in this channel.
-     * @param {String} [options.name] - The name of the channel.
-     * @param {?Boolean} [options.nsfw] - If the channel is age gated.
-     * @param {?String} [options.parentID] - The id of the parent category channel.
-     * @param {?RawOverwrite[]} [options.permissionOverwrites] - Channel or category specific permissions
-     * @param {?Number} [options.position] - The position of the channel in the channel list.
-     * @param {String} [options.reason] - The reason to be displayed in the audit log.
-     * @param {?String} [options.topic] - The topic of the channel.
-     * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
-     * @returns {Promise<AnnouncementChannel>}
+     * @param options - The options for editing the channel.
      */
     edit(options: EditGuildChannelOptions): Promise<this>;
     toJSON(): JSONAnnouncementChannel;

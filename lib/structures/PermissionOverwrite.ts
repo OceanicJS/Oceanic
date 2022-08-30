@@ -26,9 +26,7 @@ export default class PermissionOverwrite extends Base {
 
     /**
      *Check if this permissions instance has the given permissions allowed
-     *
-     * @param {...PermissionNames} permissions - The permissions to check for.
-     * @returns {Boolean}
+     * @param permissions - The permissions to check for.
      */
     has(...permissions: Array<PermissionNames>) {
         return this.permission.has(...permissions);

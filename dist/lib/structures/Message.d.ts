@@ -88,120 +88,66 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     protected update(data: Partial<RawMessage>): void;
     /**
      * Add a reaction to this message.
-     *
-     * @param {String} emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @returns {Promise<void>}
+     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     createReaction(emoji: string): Promise<void>;
     /**
      * Crosspost this message in a announcement channel.
-     *
-     * @returns {Promise<Message<AnnouncementChannel>>}
      */
     crosspost(): Promise<Message<AnnouncementChannel>>;
     /**
      * Delete this message.
-     *
-     * @param {String} [reason] - The reason for deleting the message.
-     * @returns {Promise<void>}
+     * @param reason - The reason for deleting the message.
      */
     deleteMessage(reason?: string): Promise<void>;
     /**
      * Remove a reaction from this message.
-     *
-     * @param {String} emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param {String} [user="@me"] - The user to remove the reaction from, `@me` for the current user (default).
-     * @returns {Promise<void>}
+     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user - The user to remove the reaction from, `@me` for the current user (default).
      */
     deleteReaction(emoji: string, user?: string): Promise<void>;
     /**
      * Remove all, or a specific emoji's reactions from this message.
-     *
-     * @param {String} [emoji] - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
-     * @returns {Promise<void>}
+     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     deleteReactions(emoji?: string): Promise<void>;
     /**
      * Delete this message as a webhook.
-     *
-     * @param {String} token - The token of the webhook.
-     * @param {Object} [options]
-     * @param {String} [options.threadID] - The id of the thread the message is in.
-     * @returns {Promise<void>}
+     * @param token - The token of the webhook.
+     * @param options - Options for deleting the message.
      */
     deleteWebhook(token: string, options: DeleteWebhookMessageOptions): Promise<void>;
     /**
      * Edit this message.
-     *
-     * @template {AnyTextChannel} T
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @returns {Promise<Message<T>>}
+     * @param options - The options for editing the message.
      */
     edit(options: EditMessageOptions): Promise<Message<T>>;
     /**
      * Edit this message as a webhook.
-     *
-     * @param {String} token - The token of the webhook.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {String} [options.threadID] - The id of the thread to send the message to.
-     * @returns {Promise<Message>}
+     * @param token - The token of the webhook.
+     * @param options - The options for editing the message.
      */
     editWebhook(token: string, options: EditWebhookMessageOptions): Promise<Message<AnyGuildTextChannel>>;
     /**
      * Get the users who reacted with a specific emoji on this message.
-     *
-     * @param {String} emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param {Object} [options] - Options for the request.
-     * @param {String} [options.after] - Get users after this user id.
-     * @param {Number} [options.limit] - The maximum amount of users to get.
-     * @returns {Promise<User[]>}
+     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options - The options for getting the reactions.
      */
     getReactions(emoji: string, options?: GetReactionsOptions): Promise<User[]>;
     /**
      * Pin this message.
-     *
-     * @param {String} [reason] - The reason for pinning the message.
-     * @returns {Promise<void>}
+     * @param reason - The reason for pinning the message.
      */
     pin(reason?: string): Promise<void>;
     /**
      * Create a thread from this message.
-     *
-     * @template {(AnnouncementThreadChannel | PublicThreadChannel)} T
-     * @param {Object} options
-     * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration of no activity after which this thread will be automatically archived.
-     * @param {String} options.name - The name of the thread.
-     * @param {Number?} [options.rateLimitPerUser] - The amount of seconds a user has to wait before sending another message.
-     * @param {String} [options.reason] - The reason for creating the thread.
-     * @returns {Promise<T>}
+     * @param options - The options for creating the thread.
      */
     startThread(options: StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>;
     toJSON(): JSONMessage;
     /**
      * Unpin this message.
-     *
-     * @param {String} [reason] - The reason for unpinning the message.
-     * @returns {Promise<void>}
+     * @param reason - The reason for unpinning the message.
      */
     unpin(reason?: string): Promise<void>;
 }

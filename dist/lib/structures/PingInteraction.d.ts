@@ -9,8 +9,6 @@ export default class PingInteraction extends Interaction {
     constructor(data: RawPingInteraction, client: Client);
     /**
      * Responds to the interaction with a `PONG`.
-     *
-     * @returns {Promise<void>}
      */
     pong(): Promise<void>;
     toJSON(): JSONPingInteraction;

@@ -26,11 +26,15 @@ export type RawOAuthUser = Pick<RESTUser, "id" | "username" | "discriminator" | 
 export type RawExtendedUser = Pick<RawOAuthUser, "avatar" | "bot" | "discriminator" | "email" | "flags" | "id" | "mfa_enabled" | "username" | "verified">;
 
 export interface EditSelfUserOptions {
+    /** The new avatar (buffer, or full data url). `null` to reset. */
     avatar?: Buffer | string | null;
+    /** The new username. */
     username?: string;
 }
 
 export interface CreateGroupChannelOptions {
+    /** An array of access tokens with the `gdm.join` scope. */
     accessTokens: Array<string>;
+    /** A dictionary of ids to nicknames, looks unused. */
     nicks?: Record<string, string>;
 }

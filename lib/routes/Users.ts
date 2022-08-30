@@ -1,15 +1,25 @@
 import BaseRoute from "./BaseRoute";
 import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
 import * as Routes from "../util/Routes";
-import User from "../structures/User";
 import ExtendedUser from "../structures/ExtendedUser";
 
 export default class Users extends BaseRoute {
     /**
-     * Get a user by their id
-     *
-     * @param {String} id - the id of the user
-     * @returns {Promise<User>}
+     * Edit the currently authenticated user.
+     * @param options - The options to edit with.
+     */
+    async editSelf(options: EditSelfUserOptions) {
+        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
+        return this._manager.authRequest<RawOAuthUser>({
+            method: "PATCH",
+            path:   Routes.USER("@me"),
+            json:   options
+        }).then(data => new ExtendedUser(data, this._client));
+    }
+
+    /**
+     * Get a user.
+     * @param id - the ID of the user
      */
     async get(id: string) {
         return this._manager.authRequest<RawUser>({
@@ -20,8 +30,6 @@ export default class Users extends BaseRoute {
 
     /**
      * Get the currently authenticated user's information.
-     *
-     * @returns {Promise<ExtendedUser>}
      */
     async getCurrentUser() {
         return this._manager.authRequest<RawOAuthUser>({
@@ -32,31 +40,12 @@ export default class Users extends BaseRoute {
 
     /**
      * Leave a guild.
-     *
-     * @param {String} id - The id of the guild to leave.
-     * @returns {Promise<void>}
+     * @param id - The ID of the guild to leave.
      */
     async leaveGuild(id: string) {
         await this._manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.OAUTH_GUILD(id)
         });
-    }
-
-    /**
-     * Modify the currently authenticated user.
-     *
-     * @param {Object} options
-     * @param {?(String | Buffer)} [options.avatar] - The new avatar (buffer, or full data url). `null` to remove the current avatar.
-     * @param {String} [options.username] - The new username
-     * @returns {Promise<ExtendedUser>}
-     */
-    async modifySelf(options: EditSelfUserOptions) {
-        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
-        return this._manager.authRequest<RawOAuthUser>({
-            method: "PATCH",
-            path:   Routes.USER("@me"),
-            json:   options
-        }).then(data => new ExtendedUser(data, this._client));
     }
 }

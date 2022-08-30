@@ -38,21 +38,25 @@ export interface PingInteractionResponse {
 }
 
 export interface MessageInteractionResponse {
+    /** The [response data](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-messages). Convert any `snake_case` keys to `camelCase`. */
     data: InteractionContent;
     type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.UPDATE_MESSAGE;
 }
 
 export interface DeferredInteractionResponse {
+    /** The response data. Only [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) can be sent. */
     data?: { flags?: number; };
     type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESAGE;
 }
 
 export interface AutocompleteInteractionResponse {
+    /** The [response data](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete). */
     data: { choices: Array<AutocompleteChoice>; };
     type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT;
 }
 
 export interface ModalInteractionResponse {
+    /** The [response data](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-modal). Convert any `snake_case` keys to `camelCase`. */
     data: ModalData;
     type: InteractionResponseTypes.MODAL;
 }
@@ -60,7 +64,9 @@ export interface ModalInteractionResponse {
 
 export interface ModalData {
     components: Array<ModalActionRow>;
+    /** The custom ID of the modal. */
     customID: string;
+    /** The title of the modal. */
     title: string;
 }
 
@@ -212,7 +218,10 @@ export type AnyGatewayInteraction = CommandInteraction | ComponentInteraction | 
 
 
 export interface AutocompleteChoice {
+    /** The name of the choice. */
     name: string;
+    /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
     nameLocalizations?: Record<string, string>;
+    /** The value of the choice. */
     value: string;
 }

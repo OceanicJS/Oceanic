@@ -38,199 +38,114 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     protected update(data: Partial<RawThreadChannel>): void;
     /**
      * Add a member to this thread.
-     *
-     * @param {String} userID - The id of the user to add to the thread.
-     * @returns {Promise<void>}
+     * @param userID - The ID of the user to add to the thread.
      */
     addMember(userID: string): Promise<void>;
     /**
      * Create a message in this thread.
-     *
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {String[]} [options.stickerIDs] - The IDs of up to 3 stickers from the current guild to send.
-     * @param {Object} [options.messageReference] - Reply to a message.
-     * @param {String} [options.messageReference.channelID] - The id of the channel the replied message is in.
-     * @param {Boolean} [options.messageReference.failIfNotExists] - If creating the message should fail if the message to reply to does not exist.
-     * @param {String} [options.messageReference.guildID] - The id of the guild the replied message is in.
-     * @param {String} [options.messageReference.messageID] - The id of the message to reply to.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message>}
+     * @param options - The options for creating the message.
      */
     createMessage(options: CreateMessageOptions): Promise<Message<T>>;
     /**
      * Add a reaction to a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to add a reaction to.
-     * @param {String} emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message to add a reaction to.
+     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     createReaction(messageID: string, emoji: string): Promise<void>;
     /**
      * Delete a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to delete.
-     * @param {String} [reason] - The reason for deleting the message.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message to delete.
+     * @param reason - The reason for deleting the message.
      */
     deleteMessage(messageID: string, reason?: string): Promise<void>;
     /**
      * Bulk delete messages in this thread.
-     *
-     * @param {String[]} messageIDs - The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
-     * @param {String} [reason] - The reason for deleting the messages.
-     * @returns {Promise<void>}
+     * @param messageIDs - The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param reason - The reason for deleting the messages.
      */
     deleteMessages(messageIDs: Array<string>, reason?: string): Promise<void>;
     /**
      * Remove a reaction from a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to remove a reaction from.
-     * @param {String} emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param {String} [user="@me"] - The user to remove the reaction from, `@me` for the current user (default).
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message to remove a reaction from.
+     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user - The user to remove the reaction from, `@me` for the current user (default).
      */
     deleteReaction(messageID: string, emoji: string, user?: string): Promise<void>;
     /**
      * Remove all, or a specific emoji's reactions from a message.
-     *
-     * @param {String} messageID - The id of the message to remove reactions from.
-     * @param {String} [emoji] - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message to remove reactions from.
+     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     deleteReactions(messageID: string, emoji?: string): Promise<void>;
     /**
      * Edit this thread.
-     *
-     * @param {String} id - The id of the channel to edit.
-     * @param {Object} options
-     * @param {Boolean} [options.archived] - If the thread is archived.
-     * @param {ThreadAutoArchiveDuration} [options.autoArchiveDuration] - The duration after which the thread will be archived.
-     * @param {Number} [options.flags] - The [channel flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) to set on the channel.
-     * @param {Boolean} [options.invitable] - [Private] If non-moderators can add other non-moderators to the thread.
-     * @param {Boolean} [options.locked] - If the thread should be locked.
-     * @param {String} [options.name] - The name of the channel.
-     * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
-     * @param {String} [options.reason] - The reason to be displayed in the audit log.
-     * @returns {Promise<AnyThreadChannel>}
+     * @param options - The options for editing the channel.
      */
     edit(options: EditThreadChannelOptions): Promise<AnyThreadChannel>;
     /**
      * Edit a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to edit.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @returns {Promise<Message>}
+     * @param messageID - The ID of the message to edit.
+     * @param options - The options for editing the message.
      */
     editMessage(messageID: string, options: EditMessageOptions): Promise<Message<import("../types/channels").AnyTextChannel>>;
     /**
      * Get a thread member in this thread.
-     *
-     * @param {String} userID - The id of the user to get the thread member of.
-     * @returns {Promise<ThreadMember>}
+     * @param userID - The ID of the user to get the thread member of.
      */
     getMember(userID: string): Promise<ThreadMember>;
     /**
      * Get the members of this thread.
-     *
-     * @returns {Promise<ThreadMember[]>}
      */
     getMembers(): Promise<ThreadMember[]>;
     /**
      * Get a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to get.
-     * @returns {Promise<Message>}
+     * @param messageID - The ID of the message to get.
      */
     getMessage(messageID: string): Promise<Message<T>>;
     /**
      * Get messages in this thread.
-     *
-     * @param {Object} options - All options are mutually exclusive.
-     * @param {String} [options.after] - Get messages after this message id.
-     * @param {String} [options.around] - Get messages around this message id.
-     * @param {String} [options.before] - Get messages before this message id.
-     * @param {Number} [options.limit] - The maximum amount of messages to get.
-     * @returns {Promise<Message[]>}
+     * @param options - The options for getting the messages. All options are mutually exclusive.
      */
     getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>>;
     /**
      * Get the pinned messages in this thread.
-     *
-     * @returns {Promise<Message[]>}
      */
     getPinnedMessages(): Promise<Array<Message<T>>>;
     /**
      * Get the users who reacted with a specific emoji on a message.
-     *
-     * @param {String} messageID - The id of the message to get reactions from.
-     * @param {String} emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param {Object} [options] - Options for the request.
-     * @param {String} [options.after] - Get users after this user id.
-     * @param {Number} [options.limit] - The maximum amount of users to get.
-     * @returns {Promise<User[]>}
+     * @param messageID - The ID of the message to get reactions from.
+     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options - The options for getting the reactions.
      */
     getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<User[]>;
     /**
      * Join this thread.
-     *
-     * @returns {Promise<void>}
      */
     join(): Promise<void>;
     /**
      * Leave this thread.
-     *
-     * @returns {Promise<void>}
      */
     leave(): Promise<void>;
     /**
      * Pin a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to pin.
-     * @param {String} [reason] - The reason for pinning the message.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message to pin.
+     * @param reason - The reason for pinning the message.
      */
     pinMessage(messageID: string, reason?: string): Promise<void>;
     /**
      * Remove a member from this thread.
-     *
-     * @param {String} userID - The id of the user to remove from the thread.
-     * @returns {Promise<void>}
+     * @param userID - The ID of the user to remove from the thread.
      */
     removeMember(userID: string): Promise<void>;
     /**
      * Show a typing indicator in this thread.
-     *
-     * @returns {Promise<void>}
      */
     sendTyping(): Promise<void>;
     toJSON(): JSONThreadChannel;
     /**
      * Unpin a message in this thread.
-     *
-     * @param {String} messageID - The id of the message to unpin.
-     * @param {String} [reason] - The reason for unpinning the message.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message to unpin.
+     * @param reason - The reason for unpinning the message.
      */
     unpinMessage(messageID: string, reason?: string): Promise<void>;
 }

@@ -12,40 +12,23 @@ class TextChannel extends TextableChannel_1.default {
     }
     /**
      * Convert this text channel to a announcement channel.
-     *
-     * @returns {Promise<AnnouncementChannel>}
      */
     async convert() {
         return this.edit({ type: Constants_1.ChannelTypes.GUILD_ANNOUNCEMENT });
     }
     /**
      * Edit this channel.
-     *
-     * @param {Object} options
-     * @param {?ThreadAutoArchiveDuration} [options.defaultAutoArchiveDuration] - The default auto archive duration for threads made in this channel.
-     * @param {String} [options.name] - The name of the channel.
-     * @param {?Boolean} [options.nsfw] - If the channel is age gated.
-     * @param {?String} [options.parentID] - The id of the parent category channel.
-     * @param {?RawOverwrite[]} [options.permissionOverwrites] - Channel or category specific permissions
-     * @param {?Number} [options.position] - The position of the channel in the channel list.
-     * @param {?Number} [options.rateLimitPerUser] - The seconds between sending messages for users. Between 0 and 21600.
-     * @param {String} [options.reason] - The reason to be displayed in the audit log.
-     * @param {?String} [options.topic] - The topic of the channel.
-     * @param {ChannelTypes.GUILD_ANNOUNCEMENT} [options.type] - Provide the opposite type to convert the channel.
-     * @returns {Promise<TextChannel>}
+     * @param options - The options for editing the channel
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);
     }
     /**
      * Follow an announcement channel to this channel.
-     *
-     * @param {Object} options
-     * @param {String} [options.webhookChannelID] - The id of the channel to follow.
-     * @returns {Promise<FollowedChannel>}
+     * @param webhookChannelID - The ID of the channel to follow the announcement channel to.
      */
-    async followAnnouncement(options) {
-        return this._client.rest.channels.followAnnouncement(this.id, options);
+    async followAnnouncement(webhookChannelID) {
+        return this._client.rest.channels.followAnnouncement(this.id, webhookChannelID);
     }
     toJSON() {
         return {
@@ -55,4 +38,4 @@ class TextChannel extends TextableChannel_1.default {
     }
 }
 exports.default = TextChannel;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVGV4dENoYW5uZWwuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9saWIvc3RydWN0dXJlcy9UZXh0Q2hhbm5lbC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFBLHdFQUFnRDtBQUdoRCw0Q0FBNEM7QUFNNUMsdUNBQXVDO0FBQ3ZDLE1BQXFCLFdBQVksU0FBUSx5QkFBNEI7SUFFakUsWUFBWSxJQUFvQixFQUFFLE1BQWM7UUFDNUMsS0FBSyxDQUFDLElBQUksRUFBRSxNQUFNLENBQUMsQ0FBQztJQUN4QixDQUFDO0lBRUQ7Ozs7T0FJRztJQUNILEtBQUssQ0FBQyxPQUFPO1FBQ1QsT0FBTyxJQUFJLENBQUMsSUFBSSxDQUFDLEVBQUUsSUFBSSxFQUFFLHdCQUFZLENBQUMsa0JBQWtCLEVBQUUsQ0FBb0MsQ0FBQztJQUNuRyxDQUFDO0lBRUQ7Ozs7Ozs7Ozs7Ozs7OztPQWVHO0lBQ00sS0FBSyxDQUFDLElBQUksQ0FBQyxPQUErQjtRQUMvQyxPQUFPLElBQUksQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLFFBQVEsQ0FBQyxJQUFJLENBQU8sSUFBSSxDQUFDLEVBQUUsRUFBRSxPQUFPLENBQUMsQ0FBQztJQUNuRSxDQUFDO0lBRUQ7Ozs7OztPQU1HO0lBQ0gsS0FBSyxDQUFDLGtCQUFrQixDQUFDLE9BQTBDO1FBQy9ELE9BQU8sSUFBSSxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsUUFBUSxDQUFDLGtCQUFrQixDQUFDLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDM0UsQ0FBQztJQUVELE1BQU07UUFDRixPQUFPO1lBQ0gsR0FBRyxLQUFLLENBQUMsTUFBTSxFQUFFO1lBQ2pCLElBQUksRUFBRSxJQUFJLENBQUMsSUFBSTtTQUNsQixDQUFDO0lBQ04sQ0FBQztDQUNKO0FBcERELDhCQW9EQyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiVGV4dENoYW5uZWwuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9saWIvc3RydWN0dXJlcy9UZXh0Q2hhbm5lbC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7OztBQUFBLHdFQUFnRDtBQUVoRCw0Q0FBNEM7QUFLNUMsdUNBQXVDO0FBQ3ZDLE1BQXFCLFdBQVksU0FBUSx5QkFBNEI7SUFFakUsWUFBWSxJQUFvQixFQUFFLE1BQWM7UUFDNUMsS0FBSyxDQUFDLElBQUksRUFBRSxNQUFNLENBQUMsQ0FBQztJQUN4QixDQUFDO0lBRUQ7O09BRUc7SUFDSCxLQUFLLENBQUMsT0FBTztRQUNULE9BQU8sSUFBSSxDQUFDLElBQUksQ0FBQyxFQUFFLElBQUksRUFBRSx3QkFBWSxDQUFDLGtCQUFrQixFQUFFLENBQW9DLENBQUM7SUFDbkcsQ0FBQztJQUVEOzs7T0FHRztJQUNNLEtBQUssQ0FBQyxJQUFJLENBQUMsT0FBK0I7UUFDL0MsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsSUFBSSxDQUFPLElBQUksQ0FBQyxFQUFFLEVBQUUsT0FBTyxDQUFDLENBQUM7SUFDbkUsQ0FBQztJQUVEOzs7T0FHRztJQUNILEtBQUssQ0FBQyxrQkFBa0IsQ0FBQyxnQkFBd0I7UUFDN0MsT0FBTyxJQUFJLENBQUMsT0FBTyxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsa0JBQWtCLENBQUMsSUFBSSxDQUFDLEVBQUUsRUFBRSxnQkFBZ0IsQ0FBQyxDQUFDO0lBQ3BGLENBQUM7SUFFRCxNQUFNO1FBQ0YsT0FBTztZQUNILEdBQUcsS0FBSyxDQUFDLE1BQU0sRUFBRTtZQUNqQixJQUFJLEVBQUUsSUFBSSxDQUFDLElBQUk7U0FDbEIsQ0FBQztJQUNOLENBQUM7Q0FDSjtBQW5DRCw4QkFtQ0MifQ==

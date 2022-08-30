@@ -3,14 +3,12 @@ import Member from "./Member";
 import type User from "./User";
 import Guild from "./Guild";
 import Permission from "./Permission";
-import Message from "./Message";
 import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes } from "../Constants";
 import type { InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
 import type Client from "../Client";
 import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
-import { File } from "undici";
 
 export default class ModalSubmitInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
@@ -53,22 +51,7 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Create a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param options - The options for creating the followup message.
      */
     async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent) {
         return this._client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
@@ -76,21 +59,7 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
-     *
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Promise<void>>}
+     * @param options - The options for the message.
      */
     async createMessage(options: InteractionContent) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
@@ -100,9 +69,7 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
-     *
-     * @param {Number} flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
-     * @returns {Promise<void>}
+     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
@@ -112,9 +79,7 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Delete a follow up message.
-     *
-     * @param {String} messageID - The ID of the message.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message.
      */
     async deleteFollowup(messageID: string) {
         return this._client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
@@ -122,8 +87,6 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
-     *
-     * @returns {Promise<void>}
      */
     async deleteOriginal() {
         return this._client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
@@ -131,23 +94,8 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Edit a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} messageID - The ID of the message.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param messageID - The ID of the message.
+     * @param options - The options for editing the followup message.
      */
     async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent) {
         return this._client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
@@ -155,22 +103,7 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Edit the original interaction response.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param options - The options for editing the original message.
      */
     async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent) {
         return this._client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
@@ -178,20 +111,14 @@ export default class ModalSubmitInteraction extends Interaction {
 
     /**
      * Get a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} messageID - The ID of the message.
-     * @returns {Promise<Message<T>>}
+     * @param messageID - The ID of the message.
      */
     async getFollowup<T extends AnyGuildTextChannel>(messageID: string) {
         return this._client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
     }
 
     /**
-     * Get an original interaction response.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @returns {Promise<Message<T>>}
+     * Get the original interaction response.
      */
     async getOriginal<T extends AnyGuildTextChannel>() {
         return this._client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);

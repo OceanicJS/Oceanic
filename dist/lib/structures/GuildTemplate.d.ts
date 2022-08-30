@@ -31,32 +31,20 @@ export default class GuildTemplate {
     protected update(data: Partial<RawGuildTemplate>): void;
     /**
      * Create a guild from this template. This can only be used by bots in less than 10 guilds.
-     *
-     * @param {Object} options
-     * @param {(Buffer | String)} [options.icon] - The icon for the created guild (buffer, or full data url).
-     * @param {String} options.name - The name of the guild.
-     * @returns {Promise<Guild>}
+     * @param options - The options for creating the guild.
      */
     createGuild(options: CreateGuildFromTemplateOptions): Promise<Guild>;
     /**
      * Delete this template.
-     *
-     * @returns {Promise<void>}
      */
     delete(): Promise<void>;
     /**
      * Edit this template.
-     *
-     * @param {Object} options
-     * @param {String} [options.description] - The description of the template.
-     * @param {String} [options.name] - The name of the template.
-     * @returns {Promise<GuildTemplate>}
+     * @param options - The options for editing the template.
      */
     editTemplate(options: EditGuildTemplateOptions): Promise<GuildTemplate>;
     /**
      * Sync this template.
-     *
-     * @returns {Promise<GuildTemplate>}
      */
     syncTemplate(): Promise<GuildTemplate>;
     toJSON(): JSONGuildTemplate;

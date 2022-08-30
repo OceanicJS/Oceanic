@@ -41,17 +41,13 @@ export default class GuildScheduledEvent extends Base {
     protected update(data: Partial<RawScheduledEvent>): void;
     /**
      * Delete this scheduled event.
-     *
-     * @param {String} reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
-     * @returns {Promise<void>}
+     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     deleteScheduledEvent(reason?: string): Promise<void>;
     /**
      * The url of this event's cover image.
-     *
-     * @param {ImageFormat} format The format of the image.
-     * @param {number} size The size of the image.
-     * @returns {string}
+     * @param format The format of the image.
+     * @param size The size of the image.
      */
     imageURL(format?: ImageFormat, size?: number): string | null;
     toJSON(): JSONScheduledEvent;

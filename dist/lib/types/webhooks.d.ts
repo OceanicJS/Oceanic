@@ -24,25 +24,37 @@ export type ApplicationWebhook = Pick<RawWebhook, "type" | "id" | "name" | "avat
 export type ChannelFollowerWebhook = BasicWebhook & Required<Pick<RawWebhook, "source_guild" | "source_channel">> & Pick<RawWebhook, "user">;
 
 export interface CreateWebhookOptions {
+    /** The avatar (buffer, or full data url). */
     avatar?: Buffer | string | null;
+    /** The name of the webhook. */
     name?: string;
+    /** The reason for creating this webhook. */
     reason?: string;
 }
 
 export interface EditWebhookTokenOptions  {
+    /** The new avatar (buffer, or full data url). `null` to reset. */
     avatar?: Buffer | string | null;
+    /** The name of the webhook. */
     name?: string;
 }
 export interface EditWebhookOptions extends EditWebhookTokenOptions {
+    /** The id of the channel to move this webhook to. */
     channelID?: string;
+    /** The reason for editing this webhook. */
     reason?: string;
 }
 
 export type ExecuteWebhookOptions = Pick<CreateMessageOptions, "content" | "tts" | "embeds" | "allowedMentions" | "components" | "attachments" | "flags" | "files"> & {
+    /** The url of an avatar to use. */
     avatarURL?: string;
+    /** The id of the thread to send the message to. */
     threadID?: string;
+    /** The name of the thread to create (forum channels). */
     threadName?: string;
+    /** The username to use. */
     username?: string;
+    /** If the created message should be returned. */
     wait?: boolean;
 };
 export type ExecuteWebhookWaitOptions = Omit<ExecuteWebhookOptions, "wait">  & { wait: true; };
@@ -55,5 +67,6 @@ export interface GetWebhookMessageOptions {
 export type EditWebhookMessageOptions = Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID" | "files">;
 
 export interface DeleteWebhookMessageOptions {
+    /** The id of the thread the message is in. */
     threadID?: string;
 }

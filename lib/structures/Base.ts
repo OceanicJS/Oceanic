@@ -27,8 +27,9 @@ export default abstract class Base {
         return Base.getCreatedAt(this.id);
     }
 
+    /** @hidden */
     [inspect.custom]() {
-        // http://stackoverflow.com/questions/5905492/dynamic-function-name-in-javascript
+        // https://stackoverflow.com/questions/5905492/dynamic-function-name-in-javascript
         const copy = new { [this.constructor.name]: class {} }[this.constructor.name]() as this;
         for (const key in this) {
             if (Object.hasOwn(this, key) && !key.startsWith("_") && this[key] !== undefined) {

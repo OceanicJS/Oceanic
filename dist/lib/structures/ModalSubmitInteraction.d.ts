@@ -3,7 +3,6 @@ import Member from "./Member";
 import type User from "./User";
 import Guild from "./Guild";
 import Permission from "./Permission";
-import Message from "./Message";
 import type { InteractionTypes } from "../Constants";
 import type { InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
 import type Client from "../Client";
@@ -34,118 +33,47 @@ export default class ModalSubmitInteraction extends Interaction {
     constructor(data: RawModalSubmitInteraction, client: Client);
     /**
      * Create a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param options - The options for creating the followup message.
      */
-    createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>>;
+    createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<import("./Message").default<T>>;
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
-     *
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Promise<void>>}
+     * @param options - The options for the message.
      */
     createMessage(options: InteractionContent): Promise<void>;
     /**
      * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
-     *
-     * @param {Number} flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
-     * @returns {Promise<void>}
+     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     defer(flags?: number): Promise<void>;
     /**
      * Delete a follow up message.
-     *
-     * @param {String} messageID - The ID of the message.
-     * @returns {Promise<void>}
+     * @param messageID - The ID of the message.
      */
     deleteFollowup(messageID: string): Promise<void>;
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
-     *
-     * @returns {Promise<void>}
      */
     deleteOriginal(): Promise<void>;
     /**
      * Edit a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} messageID - The ID of the message.
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param messageID - The ID of the message.
+     * @param options - The options for editing the followup message.
      */
-    editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent): Promise<Message<T>>;
+    editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent): Promise<import("./Message").default<T>>;
     /**
      * Edit the original interaction response.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {Object} options
-     * @param {Object} [options.allowedMentions] - An object that specifies the allowed mentions in this message.
-     * @param {Boolean} [options.allowedMentions.everyone] - If `@everyone`/`@here` mentions should be allowed.
-     * @param {Boolean} [options.allowedMentions.repliedUser] - If the replied user (`messageReference`) should be mentioned.
-     * @param {(Boolean | String[])} [options.allowedMentions.roles] - An array of role ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {(Boolean | String[])} [options.allowedMentions.users] - An array of user ids that are allowed to be mentioned, or a boolean value to allow all or none.
-     * @param {Object[]} [options.attachments] - An array of [attachment information](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files.
-     * @param {Object[]} [options.components] - An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`.
-     * @param {String} [options.content] - The content of the message.
-     * @param {Object[]} [options.embeds] - An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send.
-     * @param {File[]} [options.files] - The files to send.
-     * @param {Number} [options.flags] - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message.
-     * @param {Boolean} [options.tts] - If the message should be spoken aloud.
-     * @returns {Promise<Message<T>>}
+     * @param options - The options for editing the original message.
      */
-    editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>>;
+    editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<import("./Message").default<T>>;
     /**
      * Get a followup message.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @param {String} messageID - The ID of the message.
-     * @returns {Promise<Message<T>>}
+     * @param messageID - The ID of the message.
      */
-    getFollowup<T extends AnyGuildTextChannel>(messageID: string): Promise<Message<T>>;
+    getFollowup<T extends AnyGuildTextChannel>(messageID: string): Promise<import("./Message").default<T>>;
     /**
-     * Get an original interaction response.
-     *
-     * @template {AnyGuildTextChannel} T
-     * @returns {Promise<Message<T>>}
+     * Get the original interaction response.
      */
-    getOriginal<T extends AnyGuildTextChannel>(): Promise<Message<T>>;
+    getOriginal<T extends AnyGuildTextChannel>(): Promise<import("./Message").default<T>>;
     toJSON(): JSONModalSubmitInteraction;
 }

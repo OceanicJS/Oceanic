@@ -48,11 +48,7 @@ export default class GuildTemplate {
 
     /**
      * Create a guild from this template. This can only be used by bots in less than 10 guilds.
-     *
-     * @param {Object} options
-     * @param {(Buffer | String)} [options.icon] - The icon for the created guild (buffer, or full data url).
-     * @param {String} options.name - The name of the guild.
-     * @returns {Promise<Guild>}
+     * @param options - The options for creating the guild.
      */
     async createGuild(options: CreateGuildFromTemplateOptions) {
         return this._client.rest.guilds.createFromTemplate(this.code, options);
@@ -60,8 +56,6 @@ export default class GuildTemplate {
 
     /**
      * Delete this template.
-     *
-     * @returns {Promise<void>}
      */
     async delete() {
         return this._client.rest.guilds.deleteTemplate(this.sourceGuild.id, this.code);
@@ -69,11 +63,7 @@ export default class GuildTemplate {
 
     /**
      * Edit this template.
-     *
-     * @param {Object} options
-     * @param {String} [options.description] - The description of the template.
-     * @param {String} [options.name] - The name of the template.
-     * @returns {Promise<GuildTemplate>}
+     * @param options - The options for editing the template.
      */
     async editTemplate(options: EditGuildTemplateOptions) {
         return this._client.rest.guilds.editTemplate(this.sourceGuild.id, this.code, options);
@@ -81,8 +71,6 @@ export default class GuildTemplate {
 
     /**
      * Sync this template.
-     *
-     * @returns {Promise<GuildTemplate>}
      */
     async syncTemplate() {
         return this._client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);

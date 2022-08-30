@@ -3,7 +3,6 @@ import * as Routes from "../util/Routes";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
-    ApplicationCommandPermission,
     CreateApplicationCommandOptions,
     CreateChatInputApplicationCommandOptions,
     EditApplicationCommandOptions,
@@ -16,24 +15,13 @@ import type {
     EditGuildApplicationCommandOptions
 } from "../types/application-commands";
 import ApplicationCommand from "../structures/ApplicationCommand";
-import { ApplicationCommandTypes } from "../Constants";
 import type { RequestOptions } from "../types/request-handler";
 
 export default class ApplicationCommands extends BaseRoute {
     /**
      * Overwrite all existing global application commands.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {Object[]} options
-     * @param {String?} [options[].defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options[].description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options[].dmPermission] - If the command can be used in a DM.
-     * @param {String} options[].name - The name of the command.
-     * @param {Object?} [options[].nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param applicationID - The ID of the application.
+     * @param options - The commands.
      */
     async bulkEditGlobalCommands(applicationID: string, options: Array<CreateApplicationCommandOptions>) {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
@@ -55,19 +43,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Overwrite all existing application commands in a guild.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {Object[]} options
-     * @param {String?} [options[].defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options[].description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options[].descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options[].dmPermission] - If the command can be used in a DM.
-     * @param {String} options[].name - The name of the command.
-     * @param {Object?} [options[].nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options[].options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param options - The commands.
      */
     async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>) {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
@@ -89,18 +67,8 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Create a global application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} options.name - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand>}
+     * @param applicationID - The ID of the application.
+     * @param options - The options for the command.
      */
     async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, options: T) {
         const opt = options as CreateChatInputApplicationCommandOptions;
@@ -122,19 +90,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Create a guild application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} options.name - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @param {ApplicationCommandTypes} options.type - The type of the command.
-     * @returns {Promise<ApplicationCommand>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param options - The options for the command.
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T) {
         const opt = options as CreateChatInputApplicationCommandOptions;
@@ -156,10 +114,8 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Delete a global application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} commandID - The id of the command.
-     * @returns {Promise<void>}
+     * @param applicationID - The ID of the application.
+     * @param commandID - The ID ID the command to delete.
      */
     async deleteGlobalCommand(applicationID: string, commandID: string) {
         await this._manager.authRequest<RawApplicationCommand>({
@@ -170,11 +126,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Delete a guild application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @returns {Promise<void>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command to delete.
      */
     async deleteGuildCommand(applicationID: string, guildID: string, commandID: string) {
         await this._manager.authRequest<RawApplicationCommand>({
@@ -185,18 +139,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Edit a global application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} commandID - The id of the command.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} [options.name] - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @returns {Promise<ApplicationCommand>}
+     * @param applicationID - The ID of the application.
+     * @param commandID - The ID of the command to edit.
+     * @param options - The options for editing the command.
      */
     async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T) {
         const opt = options as EditChatInputApplicationCommandOptions;
@@ -217,19 +162,10 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Edit a guild application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @param {Object} options
-     * @param {String?} [options.defaultMemberPermissions] - The default member permissions for the command.
-     * @param {String} [options.description] - The description of the command. `CHAT_INPUT` only.
-     * @param {String?} [options.descriptionLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. `CHAT_INPUT` only.
-     * @param {Boolean?} [options.dmPermission] - If the command can be used in a DM.
-     * @param {String} [options.name] - The name of the command.
-     * @param {Object?} [options.nameLocalizations] - A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names.
-     * @param {Object[]} [options.options] - See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. `CHAT_INPUT` only.
-     * @returns {Promise<ApplicationCommand>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command to edit.
+     * @param options - The options for editing the command.
      */
     async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T) {
         const opt = options as EditChatInputApplicationCommandOptions;
@@ -250,19 +186,15 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Edit a guild application command's permissions. This requires a bearer token with the `applications.commands.permissions.update` scope.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @param {Object} options
-     * @param {String} [options.accessToken] - If the overall authorization of this rest instance is not a bearer token, a bearer token can be supplied via this option.
-     * @param {ApplicationCommandPermission[]} options.permissions - The permissions to set for the command.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
+     * @param options - The options for editing the permissions.
      */
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions) {
         return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
             method: "PATCH",
-            path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
+            path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
             json:   {
                 permissions: options.permissions
             },
@@ -280,11 +212,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Get a global application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} commandID - The id of the command.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand>}
+     * @param applicationID - The ID of the application.
+     * @param commandID - The ID of the command.
+     * @param withLocalizations - If localizations should be included.
      */
     async getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, commandID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
@@ -298,10 +228,8 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Get an application's global commands.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param applicationID - The ID of the application.
+     * @param withLocalizations - If localizations should be included.
      */
     async getGlobalCommands<W extends boolean = false>(applicationID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
@@ -315,12 +243,10 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Get a global application command.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
+     * @param withLocalizations - If localizations should be included.
      */
     async getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, guildID: string, commandID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
@@ -334,11 +260,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Get an application's application commands in a specific guild.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {Boolean} [withLocalizations=false] - If localizations should be included.
-     * @returns {Promise<ApplicationCommand[]>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param withLocalizations - If localizations should be included.
      */
     async getGuildCommands<W extends boolean = false>(applicationID: string, guildID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
@@ -352,11 +276,9 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Get an application command's permissions in a guild.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @param {String} commandID - The id of the command.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
+     * @param commandID - The ID of the command.
      */
     async getGuildPermission(applicationID: string, guildID: string, commandID: string) {
         return this._manager.authRequest<RawGuildApplicationCommandPermissions>({
@@ -372,10 +294,8 @@ export default class ApplicationCommands extends BaseRoute {
 
     /**
      * Get the permissions for all application commands in a guild.
-     *
-     * @param {String} applicationID - The id of the application.
-     * @param {String} guildID - The id of the guild.
-     * @returns {Promise<RESTGuildApplicationCommandPermissions[]>}
+     * @param applicationID - The ID of the application.
+     * @param guildID - The ID of the guild.
      */
     async getGuildPermissions(applicationID: string, guildID: string) {
         return this._manager.authRequest<Array<RawGuildApplicationCommandPermissions>>({
