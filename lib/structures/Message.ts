@@ -229,7 +229,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * Delete this message.
      * @param reason The reason for deleting the message.
      */
-    async deleteMessage(reason?: string) {
+    async delete(reason?: string) {
         return this._client.rest.channels.deleteMessage(this.channel.id, this.id, reason);
     }
 

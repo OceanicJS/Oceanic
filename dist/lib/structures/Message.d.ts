@@ -99,7 +99,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * Delete this message.
      * @param reason The reason for deleting the message.
      */
-    deleteMessage(reason?: string): Promise<void>;
+    delete(reason?: string): Promise<void>;
     /**
      * Remove a reaction from this message.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
