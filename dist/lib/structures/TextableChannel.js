@@ -307,7 +307,7 @@ class TextableChannel extends GuildChannel_1.default {
         return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
     /**
-     * Get the permissions of a member.
+     * Get the permissions of a member.  If providing an id, the member must be cached.
      *
      * @param {(String | Member)} member - The member to get the permissions of.
      * @returns {Permission}

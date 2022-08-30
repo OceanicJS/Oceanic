@@ -85,7 +85,7 @@ export default class StageChannel extends GuildChannel {
      */
     join(options?: UpdateVoiceStateOptions): Promise<void>;
     /**
-     * Get the permissions of a member.
+     * Get the permissions of a member.  If providing an id, the member must be cached.
      *
      * @param {(String | Member)} member - The member to get the permissions of.
      * @returns {Permission}

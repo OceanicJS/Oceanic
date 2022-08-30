@@ -227,7 +227,7 @@ export default class VoiceChannel extends GuildChannel {
     /**
      * Get the permissions of a member.
      *
-     * @param {(String | Member)} member - The member to get the permissions of.
+     * @param {(String | Member)} member - The member to get the permissions of.  If providing an id, the member must be cached.
      * @returns {Permission}
      */
     permissionsOf(member: string | Member): Permission;
