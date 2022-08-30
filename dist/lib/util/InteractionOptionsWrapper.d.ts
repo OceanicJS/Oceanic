@@ -9,6 +9,7 @@ export default class InteractionOptionsWrapper {
     /** The raw options from Discord.  */
     raw: Array<InteractionOptions>;
     constructor(data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null);
+    private _getOption;
     /**
      * Get an attachment option.
      *
@@ -175,8 +176,8 @@ export default class InteractionOptionsWrapper {
      * @param {String} name - The name of the option.
      * @param {Boolean} [required=false] - If true, an error will be thrown if the option is not present.
      */
-    getSubCommand(required?: false): InteractionOptionsWrapper | undefined;
-    getSubCommand(required: true): InteractionOptionsWrapper;
+    getSubCommand(required?: false): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined;
+    getSubCommand(required: true): [subcommand: string] | [subcommandGroup: string, subcommand: string];
     /**
      * Get a user option.
      *

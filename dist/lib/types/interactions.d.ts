@@ -169,12 +169,12 @@ export interface InteractionOptionsBase {
 }
 
 export interface InteractionOptionsSubCommand extends InteractionOptionsBase {
-    options?: Array<InteractionOptionsSubCommandGroup | InteractionOptionsWithValue>;
+    options?: Array<InteractionOptionsWithValue>;
     type: ApplicationCommandOptionTypes.SUB_COMMAND;
 }
 
 export interface InteractionOptionsSubCommandGroup extends InteractionOptionsBase {
-    options?: Array<InteractionOptionsWithValue>;
+    options?: Array<InteractionOptionsSubCommand | InteractionOptionsWithValue>;
     type: ApplicationCommandOptionTypes.SUB_COMMAND_GROUP;
 }
 

@@ -16,7 +16,8 @@ import type {
     InteractionOptionsString,
     InteractionOptionsSubCommand,
     InteractionOptionsSubCommandGroup,
-    InteractionOptionsUser
+    InteractionOptionsUser,
+    InteractionOptionsWithValue
 } from "../types";
 import type Attachment from "../structures/Attachment";
 import { assert } from "tsafe";
@@ -31,6 +32,16 @@ export default class InteractionOptionsWrapper {
         this.resolved = resolved;
     }
 
+    private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes) {
+        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
+        const sub = this.getSubCommand(false);
+        if (sub?.length === 1) baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        else if (sub?.length === 2) baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        const opt = (baseOptions || this.raw).find(o => o.name === name && o.type === type) as T | undefined;
+        if (!opt && required) throw new Error(`Missing required option: ${name}`);
+        else return opt;
+    }
+
     /**
      * Get an attachment option.
      *
@@ -40,9 +51,7 @@ export default class InteractionOptionsWrapper {
     getAttachment(name: string, required?: false): InteractionOptionsAttachment | undefined;
     getAttachment(name: string, required: true): InteractionOptionsAttachment;
     getAttachment(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.ATTACHMENT) as InteractionOptionsAttachment | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.ATTACHMENT);
     }
 
 
@@ -73,9 +82,7 @@ export default class InteractionOptionsWrapper {
     getBoolean(name: string, required?: false): InteractionOptionsBoolean | undefined;
     getBoolean(name: string, required: true): InteractionOptionsBoolean;
     getBoolean(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.BOOLEAN) as InteractionOptionsBoolean | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.BOOLEAN);
     }
 
     /**
@@ -99,9 +106,7 @@ export default class InteractionOptionsWrapper {
     getChannel(name: string, required?: false): InteractionOptionsChannel | undefined;
     getChannel(name: string, required: true): InteractionOptionsChannel;
     getChannel(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.CHANNEL) as InteractionOptionsChannel | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.CHANNEL);
     }
 
     /**
@@ -142,9 +147,7 @@ export default class InteractionOptionsWrapper {
     getInteger(name: string, required?: false): InteractionOptionsInteger | undefined;
     getInteger(name: string, required: true): InteractionOptionsInteger;
     getInteger(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.INTEGER) as InteractionOptionsInteger | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.INTEGER);
     }
 
     /**
@@ -185,9 +188,7 @@ export default class InteractionOptionsWrapper {
     getMentionable(name: string, required?: false): InteractionOptionsMentionable | undefined;
     getMentionable(name: string, required: true): InteractionOptionsMentionable;
     getMentionable(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.MENTIONABLE);
     }
 
     /**
@@ -228,9 +229,7 @@ export default class InteractionOptionsWrapper {
     getNumber(name: string, required?: false): InteractionOptionsNumber | undefined;
     getNumber(name: string, required: true): InteractionOptionsNumber;
     getNumber(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.NUMBER) as InteractionOptionsNumber | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
     }
 
     /**
@@ -254,9 +253,7 @@ export default class InteractionOptionsWrapper {
     getRole(name: string, required?: false): InteractionOptionsRole | undefined;
     getRole(name: string, required: true): InteractionOptionsRole;
     getRole(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.ROLE) as InteractionOptionsRole | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.ROLE);
     }
 
     /**
@@ -297,9 +294,7 @@ export default class InteractionOptionsWrapper {
     getString(name: string, required?: false): InteractionOptionsString | undefined;
     getString(name: string, required: true): InteractionOptionsString;
     getString(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.STRING) as InteractionOptionsString | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.STRING);
     }
 
     /**
@@ -320,14 +315,21 @@ export default class InteractionOptionsWrapper {
      * @param {String} name - The name of the option.
      * @param {Boolean} [required=false] - If true, an error will be thrown if the option is not present.
      */
-    getSubCommand(required?: false): InteractionOptionsWrapper | undefined;
-    getSubCommand(required: true): InteractionOptionsWrapper;
+    getSubCommand(required?: false): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined;
+    getSubCommand(required: true): [subcommand: string] | [subcommandGroup: string, subcommand: string];
     getSubCommand(required?: boolean) {
-        const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type as never === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
+        const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
         if (!opt?.options) {
             if (required) throw new Error("Missing required option: subcommand/subcommandgroup");
             else return undefined;
-        } else return new InteractionOptionsWrapper(opt.options, this.resolved);
+        } else {
+            // nested
+            if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
+                const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
+                if (!sub?.options) return [opt.name];
+                else return [opt.name, sub.name];
+            } else return [opt.name];
+        }
     }
 
     /**
@@ -339,9 +341,7 @@ export default class InteractionOptionsWrapper {
     getUser(name: string, required?: false): InteractionOptionsUser | undefined;
     getUser(name: string, required: true): InteractionOptionsUser;
     getUser(name: string, required?: boolean) {
-        const opt = this.raw.find(o => o.name === name && o.type === ApplicationCommandOptionTypes.USER) as InteractionOptionsUser | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        return this._getOption(name, required, ApplicationCommandOptionTypes.USER);
     }
 
     /**
