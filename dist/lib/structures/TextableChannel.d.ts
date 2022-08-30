@@ -47,66 +47,66 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     convert(): Promise<TextChannel | AnnouncementChannel>;
     /**
      * Create an invite for this channel.
-     * @param options - The options for the invite.
+     * @param options The options for the invite.
      */
     createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", T>>;
     /**
      * Create a message in this channel.
-     * @param options - The options for the message.
+     * @param options The options for the message.
      */
     createMessage(options: CreateMessageOptions): Promise<Message<T>>;
     /**
      * Add a reaction to a message in this channel.
-     * @param messageID - The ID of the message to add a reaction to.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param messageID The ID of the message to add a reaction to.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     createReaction(messageID: string, emoji: string): Promise<void>;
     /**
      * Delete a message in this channel.
-     * @param messageID - The ID of the message to delete.
-     * @param reason - The reason for deleting the message.
+     * @param messageID The ID of the message to delete.
+     * @param reason The reason for deleting the message.
      */
     deleteMessage(messageID: string, reason?: string): Promise<void>;
     /**
      * Bulk delete messages in this channel.
-     * @param messageIDs - The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
-     * @param reason - The reason for deleting the messages.
+     * @param messageIDs The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param reason The reason for deleting the messages.
      */
     deleteMessages(messageIDs: Array<string>, reason?: string): Promise<void>;
     /**
      * Delete a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to delete.
-     * @param reason - The reason for deleting the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to delete.
+     * @param reason The reason for deleting the permission overwrite.
      */
     deletePermission(overwriteID: string, reason?: string): Promise<void>;
     /**
      * Remove a reaction from a message in this channel.
-     * @param messageID - The ID of the message to remove a reaction from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param messageID The ID of the message to remove a reaction from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     deleteReaction(messageID: string, emoji: string, user?: string): Promise<void>;
     /**
      * Remove all, or a specific emoji's reactions from a message in this channel.
-     * @param messageID - The ID of the message to remove reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param messageID The ID of the message to remove reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     deleteReactions(messageID: string, emoji?: string): Promise<void>;
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     edit(options: EditGuildChannelOptions): Promise<TextChannel | AnnouncementChannel>;
     /**
      * Edit a message in this channel.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     editMessage(messageID: string, options: EditMessageOptions): Promise<Message<import("../types/channels").AnyTextChannel>>;
     /**
      * Edit a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to edit.
-     * @param options - The options for editing the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to edit.
+     * @param options The options for editing the permission overwrite.
      */
     editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void>;
     /**
@@ -115,17 +115,17 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     getInvites(): Promise<Array<Invite<"withMetadata", T>>>;
     /**
      * Get the private archived threads the current user has joined in this channel.
-     * @param options - The options for getting the joined private archived threads.
+     * @param options The options for getting the joined private archived threads.
      */
     getJoinedPrivateArchivedThreads(options?: GetArchivedThreadsOptions): Promise<import("../types/channels").ArchivedThreads<import("./PrivateThreadChannel").default>>;
     /**
      * Get a message in this channel.
-     * @param messageID - The ID of the message to get.
+     * @param messageID The ID of the message to get.
      */
     getMessage(messageID: string): Promise<Message<T>>;
     /**
      * Get messages in this channel.
-     * @param options - The options for getting the messages. All options are mutually exclusive.
+     * @param options The options for getting the messages. All options are mutually exclusive.
      */
     getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>>;
     /**
@@ -134,30 +134,30 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     getPinnedMessages(): Promise<Array<Message<T>>>;
     /**
      * Get the private archived threads in this channel.
-     * @param options - The options for getting the private archived threads.
+     * @param options The options for getting the private archived threads.
      */
     getPrivateArchivedThreads(options?: GetArchivedThreadsOptions): Promise<import("../types/channels").ArchivedThreads<import("./PrivateThreadChannel").default>>;
     /**
      * Get the public archived threads in this channel.
-     * @param options - The options for getting the public archived threads.
+     * @param options The options for getting the public archived threads.
      */
     getPublicArchivedThreads(options?: GetArchivedThreadsOptions): Promise<import("../types/channels").ArchivedThreads<T extends TextChannel ? PublicThreadChannel : AnnouncementThreadChannel>>;
     /**
      * Get the users who reacted with a specific emoji on a message in this channel.
-     * @param messageID - The ID of the message to get reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param messageID The ID of the message to get reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<import("./User").default[]>;
     /**
      * Get the permissions of a member.  If providing an id, the member must be cached.
-     * @param member - The member to get the permissions of.
+     * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission;
     /**
      * Pin a message in this channel.
-     * @param messageID - The ID of the message to pin.
-     * @param reason - The reason for pinning the message.
+     * @param messageID The ID of the message to pin.
+     * @param reason The reason for pinning the message.
      */
     pinMessage(messageID: string, reason?: string): Promise<void>;
     /**
@@ -166,20 +166,20 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     sendTyping(): Promise<void>;
     /**
      * Create a thread from an existing message in this channel.
-     * @param messageID - The ID of the message to create a thread from.
-     * @param options - The options for creating the thread.
+     * @param messageID The ID of the message to create a thread from.
+     * @param options The options for creating the thread.
      */
     startThreadFromMessage(messageID: string, options: StartThreadFromMessageOptions): Promise<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>;
     /**
      * Create a thread without an existing message in this channel.
-     * @param options - The options for creating the thread.
+     * @param options The options for creating the thread.
      */
     startThreadWithoutMessage(options: StartThreadWithoutMessageOptions): Promise<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>;
     toJSON(): JSONTextableChannel;
     /**
      * Unpin a message in this channel.
-     * @param messageID - The ID of the message to unpin.
-     * @param reason - The reason for unpinning the message.
+     * @param messageID The ID of the message to unpin.
+     * @param reason The reason for unpinning the message.
      */
     unpinMessage(messageID: string, reason?: string): Promise<void>;
 }

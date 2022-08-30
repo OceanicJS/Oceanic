@@ -58,7 +58,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Edit this command.
-     * @param options - The options for editing the command.
+     * @param options The options for editing the command.
      */
     async edit(options: TypeToEdit<T>) {
         return this.guildID ? this._client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this._client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
@@ -66,7 +66,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Edit this command's permissions (guild commands only). This requires a bearer token with the `applications.commands.permissions.update` scope.
-     * @param options - The options for editing the permissions.
+     * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions) {
         if (!this.guildID) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
@@ -83,7 +83,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
 
     /**
      * Get a mention for this command.
-     * @param sub - The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
+     * @param sub The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
      */
     mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]) {
         let text = `${this.name}`;

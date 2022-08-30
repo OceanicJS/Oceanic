@@ -58,86 +58,86 @@ class VoiceChannel extends GuildChannel_1.default {
     }
     /**
      * Create an invite for this channel.
-     * @param options - The options for creating the invite.
+     * @param options The options for creating the invite.
      */
     async createInvite(options) {
         return this._client.rest.channels.createInvite(this.id, options);
     }
     /**
      * Create a message in this channel.
-     * @param options - The options for creating the message.
+     * @param options The options for creating the message.
      */
     async createMessage(options) {
         return this._client.rest.channels.createMessage(this.id, options);
     }
     /**
      * Add a reaction to a message in this channel.
-     * @param messageID - The ID of the message to add a reaction to.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param messageID The ID of the message to add a reaction to.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(messageID, emoji) {
         return this._client.rest.channels.createReaction(this.id, messageID, emoji);
     }
     /**
      * Delete a message in this channel.
-     * @param messageID - The ID of the message to delete.
-     * @param reason - The reason for deleting the message.
+     * @param messageID The ID of the message to delete.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(messageID, reason) {
         return this._client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
     /**
      * Bulk delete messages in this channel.
-     * @param messageIDs - The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
-     * @param reason - The reason for deleting the messages.
+     * @param messageIDs The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param reason The reason for deleting the messages.
      */
     async deleteMessages(messageIDs, reason) {
         return this._client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
     /**
      * Delete a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to delete.
-     * @param reason - The reason for deleting the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to delete.
+     * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID, reason) {
         return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
     /**
      * Remove a reaction from a message in this channel.
-     * @param messageID - The ID of the message to remove a reaction from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param messageID The ID of the message to remove a reaction from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(messageID, emoji, user = "@me") {
         return this._client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
     }
     /**
      * Remove all, or a specific emoji's reactions from a message in this channel.
-     * @param messageID - The ID of the message to remove reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param messageID The ID of the message to remove reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(messageID, emoji) {
         return this._client.rest.channels.deleteReactions(this.id, messageID, emoji);
     }
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);
     }
     /**
      * Edit a message in this channel.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage(messageID, options) {
         return this._client.rest.channels.editMessage(this.id, messageID, options);
     }
     /**
      * Edit a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to edit.
-     * @param options - The options for editing the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to edit.
+     * @param options The options for editing the permission overwrite.
      */
     async editPermission(overwriteID, options) {
         return this._client.rest.channels.editPermission(this.id, overwriteID, options);
@@ -150,14 +150,14 @@ class VoiceChannel extends GuildChannel_1.default {
     }
     /**
      * Get a message in this channel.
-     * @param messageID - The ID of the message to get.
+     * @param messageID The ID of the message to get.
      */
     async getMessage(messageID) {
         return this._client.rest.channels.getMessage(this.id, messageID);
     }
     /**
      * Get messages in this channel.
-     * @param options - The options for getting the messages. All options are mutually exclusive.
+     * @param options The options for getting the messages. All options are mutually exclusive.
      */
     async getMessages(options) {
         return this._client.rest.channels.getMessages(this.id, options);
@@ -170,23 +170,23 @@ class VoiceChannel extends GuildChannel_1.default {
     }
     /**
      * Get the users who reacted with a specific emoji on a message in this channel.
-     * @param messageID - The ID of the message to get reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param messageID The ID of the message to get reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(messageID, emoji, options) {
         return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
     /**
      * Join this voice channel.
-     * @param options - The options for joining the voice channel.
+     * @param options The options for joining the voice channel.
      */
     async join(options) {
         return this._client.joinVoiceChannel(this.id, options);
     }
     /**
      * Get the permissions of a member.
-     * @param member - The member to get the permissions of.  If providing an ID, the member must be cached.
+     * @param member The member to get the permissions of.  If providing an ID, the member must be cached.
      */
     permissionsOf(member) {
         if (typeof member === "string")
@@ -215,8 +215,8 @@ class VoiceChannel extends GuildChannel_1.default {
     }
     /**
      * Pin a message in this channel.
-     * @param messageID - The ID of the message to pin.
-     * @param reason - The reason for pinning the message.
+     * @param messageID The ID of the message to pin.
+     * @param reason The reason for pinning the message.
      */
     async pinMessage(messageID, reason) {
         return this._client.rest.channels.pinMessage(this.id, messageID, reason);
@@ -244,8 +244,8 @@ class VoiceChannel extends GuildChannel_1.default {
     }
     /**
      * Unpin a message in this channel.
-     * @param messageID - The ID of the message to unpin.
-     * @param reason - The reason for unpinning the message.
+     * @param messageID The ID of the message to unpin.
+     * @param reason The reason for unpinning the message.
      */
     async unpinMessage(messageID, reason) {
         return this._client.rest.channels.unpinMessage(this.id, messageID, reason);

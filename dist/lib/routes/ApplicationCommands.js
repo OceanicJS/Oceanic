@@ -32,8 +32,8 @@ const ApplicationCommand_1 = __importDefault(require("../structures/ApplicationC
 class ApplicationCommands extends BaseRoute_1.default {
     /**
      * Overwrite all existing global application commands.
-     * @param applicationID - The ID of the application.
-     * @param options - The commands.
+     * @param applicationID The ID of the application.
+     * @param options The commands.
      */
     async bulkEditGlobalCommands(applicationID, options) {
         const opts = options;
@@ -54,9 +54,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Overwrite all existing application commands in a guild.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param options - The commands.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param options The commands.
      */
     async bulkEditGuildCommands(applicationID, guildID, options) {
         const opts = options;
@@ -77,8 +77,8 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Create a global application command.
-     * @param applicationID - The ID of the application.
-     * @param options - The options for the command.
+     * @param applicationID The ID of the application.
+     * @param options The options for the command.
      */
     async createGlobalCommand(applicationID, options) {
         const opt = options;
@@ -99,9 +99,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Create a guild application command.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param options - The options for the command.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param options The options for the command.
      */
     async createGuildCommand(applicationID, guildID, options) {
         const opt = options;
@@ -122,8 +122,8 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Delete a global application command.
-     * @param applicationID - The ID of the application.
-     * @param commandID - The ID ID the command to delete.
+     * @param applicationID The ID of the application.
+     * @param commandID The ID ID the command to delete.
      */
     async deleteGlobalCommand(applicationID, commandID) {
         await this._manager.authRequest({
@@ -133,9 +133,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Delete a guild application command.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command to delete.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command to delete.
      */
     async deleteGuildCommand(applicationID, guildID, commandID) {
         await this._manager.authRequest({
@@ -145,9 +145,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Edit a global application command.
-     * @param applicationID - The ID of the application.
-     * @param commandID - The ID of the command to edit.
-     * @param options - The options for editing the command.
+     * @param applicationID The ID of the application.
+     * @param commandID The ID of the command to edit.
+     * @param options The options for editing the command.
      */
     async editGlobalCommand(applicationID, commandID, options) {
         const opt = options;
@@ -167,10 +167,10 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Edit a guild application command.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command to edit.
-     * @param options - The options for editing the command.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command to edit.
+     * @param options The options for editing the command.
      */
     async editGuildCommand(applicationID, guildID, commandID, options) {
         const opt = options;
@@ -190,10 +190,10 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Edit a guild application command's permissions. This requires a bearer token with the `applications.commands.permissions.update` scope.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
-     * @param options - The options for editing the permissions.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
+     * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(applicationID, guildID, commandID, options) {
         return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
@@ -215,9 +215,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Get a global application command.
-     * @param applicationID - The ID of the application.
-     * @param commandID - The ID of the command.
-     * @param withLocalizations - If localizations should be included.
+     * @param applicationID The ID of the application.
+     * @param commandID The ID of the command.
+     * @param withLocalizations If localizations should be included.
      */
     async getGlobalCommand(applicationID, commandID, withLocalizations) {
         const query = new URLSearchParams();
@@ -231,8 +231,8 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Get an application's global commands.
-     * @param applicationID - The ID of the application.
-     * @param withLocalizations - If localizations should be included.
+     * @param applicationID The ID of the application.
+     * @param withLocalizations If localizations should be included.
      */
     async getGlobalCommands(applicationID, withLocalizations) {
         const query = new URLSearchParams();
@@ -246,10 +246,10 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Get a global application command.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
-     * @param withLocalizations - If localizations should be included.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
+     * @param withLocalizations If localizations should be included.
      */
     async getGuildCommand(applicationID, guildID, commandID, withLocalizations) {
         const query = new URLSearchParams();
@@ -263,9 +263,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Get an application's application commands in a specific guild.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param withLocalizations - If localizations should be included.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param withLocalizations If localizations should be included.
      */
     async getGuildCommands(applicationID, guildID, withLocalizations) {
         const query = new URLSearchParams();
@@ -279,9 +279,9 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Get an application command's permissions in a guild.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
      */
     async getGuildPermission(applicationID, guildID, commandID) {
         return this._manager.authRequest({
@@ -296,8 +296,8 @@ class ApplicationCommands extends BaseRoute_1.default {
     }
     /**
      * Get the permissions for all application commands in a guild.
-     * @param applicationID - The ID of the application.
-     * @param guildID - The ID of the guild.
+     * @param applicationID The ID of the application.
+     * @param guildID The ID of the guild.
      */
     async getGuildPermissions(applicationID, guildID) {
         return this._manager.authRequest({

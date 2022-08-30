@@ -1264,8 +1264,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Edit this shard's status.
-     * @param status - The status.
-     * @param activities - An array of activities.
+     * @param status The status.
+     * @param activities An array of activities.
      */
     async editStatus(status: SendStatuses, activities: Array<BotActivity> = []) {
         this.presence.status = status;
@@ -1327,8 +1327,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Request the members of a guild.
-     * @param guild - The ID of the guild to request the members of.
-     * @param options - The options for requesting the members.
+     * @param guild The ID of the guild to request the members of.
+     * @param options The options for requesting the members.
      */
     async requestGuildMembers(guild: string, options?: RequestGuildMembersOptions) {
         const opts = {
@@ -1416,9 +1416,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Update the voice state of this shard.
-     * @param guildID - The ID of the guild to update the voice state of.
-     * @param channelID - The ID of the voice channel to join. Null to disconnect.
-     * @param options - The options for updating the voice state.
+     * @param guildID The ID of the guild to update the voice state of.
+     * @param channelID The ID of the voice channel to join. Null to disconnect.
+     * @param options The options for updating the voice state.
      */
     updateVoiceState(guildID: string, channelID: string | null, options?: UpdateVoiceStateOptions) {
         this.send(GatewayOPCodes.VOICE_STATE_UPDATE, {

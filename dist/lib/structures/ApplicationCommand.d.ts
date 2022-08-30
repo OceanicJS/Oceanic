@@ -39,12 +39,12 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     delete(): Promise<void>;
     /**
      * Edit this command.
-     * @param options - The options for editing the command.
+     * @param options The options for editing the command.
      */
     edit(options: TypeToEdit<T>): Promise<import("../types/application-commands").ApplicationCommandOptionConversion<TypeToEdit<T>>>;
     /**
      * Edit this command's permissions (guild commands only). This requires a bearer token with the `applications.commands.permissions.update` scope.
-     * @param options - The options for editing the permissions.
+     * @param options The options for editing the permissions.
      */
     editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions): Promise<import("../types/application-commands").RESTGuildApplicationCommandPermissions>;
     /**
@@ -53,7 +53,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     getGuildPermission(): Promise<import("../types/application-commands").RESTGuildApplicationCommandPermissions>;
     /**
      * Get a mention for this command.
-     * @param sub - The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
+     * @param sub The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
      */
     mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]): string;
     toJSON(): JSONApplicationCommand;

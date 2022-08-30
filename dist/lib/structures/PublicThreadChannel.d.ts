@@ -10,7 +10,7 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
     constructor(data: RawPublicThreadChannel, client: Client);
     /**
      * Edit this channel.
-     * @param options - The options to edit the channel with.
+     * @param options The options to edit the channel with.
      */
     edit(options: EditPublicThreadChannelOptions): Promise<this>;
     toJSON(): JSONPublicThreadChannel;

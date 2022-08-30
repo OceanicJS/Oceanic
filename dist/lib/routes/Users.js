@@ -32,7 +32,7 @@ const ExtendedUser_1 = __importDefault(require("../structures/ExtendedUser"));
 class Users extends BaseRoute_1.default {
     /**
      * Edit the currently authenticated user.
-     * @param options - The options to edit with.
+     * @param options The options to edit with.
      */
     async editSelf(options) {
         if (options.avatar)
@@ -45,7 +45,7 @@ class Users extends BaseRoute_1.default {
     }
     /**
      * Get a user.
-     * @param id - the ID of the user
+     * @param id the ID of the user
      */
     async get(id) {
         return this._manager.authRequest({
@@ -64,7 +64,7 @@ class Users extends BaseRoute_1.default {
     }
     /**
      * Leave a guild.
-     * @param id - The ID of the guild to leave.
+     * @param id The ID of the guild to leave.
      */
     async leaveGuild(id) {
         await this._manager.authRequest({

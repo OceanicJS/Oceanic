@@ -23,7 +23,7 @@ class PermissionOverwrite extends Base_1.default {
     get json() { return this.permission.json; }
     /**
      *Check if this permissions instance has the given permissions allowed
-     * @param permissions - The permissions to check for.
+     * @param permissions The permissions to check for.
      */
     has(...permissions) {
         return this.permission.has(...permissions);

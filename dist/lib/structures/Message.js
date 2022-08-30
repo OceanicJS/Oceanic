@@ -200,7 +200,7 @@ class Message extends Base_1.default {
     }
     /**
      * Add a reaction to this message.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(emoji) {
         return this._client.rest.channels.createReaction(this.channel.id, this.id, emoji);
@@ -213,30 +213,30 @@ class Message extends Base_1.default {
     }
     /**
      * Delete this message.
-     * @param reason - The reason for deleting the message.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(reason) {
         return this._client.rest.channels.deleteMessage(this.channel.id, this.id, reason);
     }
     /**
      * Remove a reaction from this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(emoji, user = "@me") {
         return this._client.rest.channels.deleteReaction(this.channel.id, this.id, emoji, user);
     }
     /**
      * Remove all, or a specific emoji's reactions from this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(emoji) {
         return this._client.rest.channels.deleteReactions(this.channel.id, this.id, emoji);
     }
     /**
      * Delete this message as a webhook.
-     * @param token - The token of the webhook.
-     * @param options - Options for deleting the message.
+     * @param token The token of the webhook.
+     * @param options Options for deleting the message.
      */
     async deleteWebhook(token, options) {
         if (!this.webhook?.id)
@@ -245,15 +245,15 @@ class Message extends Base_1.default {
     }
     /**
      * Edit this message.
-     * @param options - The options for editing the message.
+     * @param options The options for editing the message.
      */
     async edit(options) {
         return this._client.rest.channels.editMessage(this.channel.id, this.id, options);
     }
     /**
      * Edit this message as a webhook.
-     * @param token - The token of the webhook.
-     * @param options - The options for editing the message.
+     * @param token The token of the webhook.
+     * @param options The options for editing the message.
      */
     async editWebhook(token, options) {
         if (!this.webhook?.id)
@@ -262,22 +262,22 @@ class Message extends Base_1.default {
     }
     /**
      * Get the users who reacted with a specific emoji on this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(emoji, options) {
         return this._client.rest.channels.getReactions(this.channel.id, this.id, emoji, options);
     }
     /**
      * Pin this message.
-     * @param reason - The reason for pinning the message.
+     * @param reason The reason for pinning the message.
      */
     async pin(reason) {
         return this._client.rest.channels.pinMessage(this.channel.id, this.id, reason);
     }
     /**
      * Create a thread from this message.
-     * @param options - The options for creating the thread.
+     * @param options The options for creating the thread.
      */
     async startThread(options) {
         return this._client.rest.channels.startThreadFromMessage(this.channel.id, this.id, options);
@@ -327,7 +327,7 @@ class Message extends Base_1.default {
     }
     /**
      * Unpin this message.
-     * @param reason - The reason for unpinning the message.
+     * @param reason The reason for unpinning the message.
      */
     async unpin(reason) {
         return this._client.rest.channels.unpinMessage(this.channel.id, this.id, reason);

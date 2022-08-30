@@ -38,7 +38,7 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Create a message in this channel.
-     * @param options - The options for creating the message.
+     * @param options The options for creating the message.
      */
     async createMessage(options: CreateMessageOptions) {
         return this._client.rest.channels.createMessage<this>(this.id, options);
@@ -46,8 +46,8 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Add a reaction to a message in this channel.
-     * @param messageID - The ID of the message to add a reaction to.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param messageID The ID of the message to add a reaction to.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(messageID: string, emoji: string) {
         return this._client.rest.channels.createReaction(this.id, messageID, emoji);
@@ -55,8 +55,8 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Delete a message in this channel.
-     * @param messageID - The ID of the message to delete.
-     * @param reason - The reason for deleting the message.
+     * @param messageID The ID of the message to delete.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(messageID: string, reason?: string) {
         return this._client.rest.channels.deleteMessage(this.id, messageID, reason);
@@ -64,8 +64,8 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Remove a reaction from a message in this channel.
-     * @param messageID - The ID of the message to remove a reaction from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param messageID The ID of the message to remove a reaction from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async deleteReaction(messageID: string, emoji: string) {
         return this._client.rest.channels.deleteReaction(this.id, messageID, emoji);
@@ -73,8 +73,8 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Edit a message in this channel.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage(messageID: string, options: EditMessageOptions) {
         return this._client.rest.channels.editMessage<this>(this.id, messageID, options);
@@ -82,7 +82,7 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Get a message in this channel.
-     * @param messageID - The ID of the message to get.
+     * @param messageID The ID of the message to get.
      */
     async getMessage(messageID: string) {
         return this._client.rest.channels.getMessage<this>(this.id, messageID);
@@ -90,7 +90,7 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Get messages in this channel.
-     * @param options - The options for getting the messages. All options are mutually exclusive.
+     * @param options The options for getting the messages. All options are mutually exclusive.
      */
     async getMessages(options?: GetChannelMessagesOptions) {
         return this._client.rest.channels.getMessages<this>(this.id, options);
@@ -105,9 +105,9 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Get the users who reacted with a specific emoji on a message.
-     * @param messageID - The iIDd of the message to get reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param messageID The iIDd of the message to get reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
         return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
@@ -115,8 +115,8 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Pin a message in this channel.
-     * @param messageID - The ID of the message to pin.
-     * @param reason - The reason for pinning the message.
+     * @param messageID The ID of the message to pin.
+     * @param reason The reason for pinning the message.
      */
     async pinMessage(messageID: string, reason?: string) {
         return this._client.rest.channels.pinMessage(this.id, messageID, reason);
@@ -141,8 +141,8 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Unpin a message in this channel.
-     * @param messageID - The ID of the message to unpin.
-     * @param reason - The ID for unpinning the message.
+     * @param messageID The ID of the message to unpin.
+     * @param reason The ID for unpinning the message.
      */
     async unpinMessage(messageID: string, reason?: string) {
         return this._client.rest.channels.unpinMessage(this.id, messageID, reason);

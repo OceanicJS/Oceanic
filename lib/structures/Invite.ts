@@ -106,7 +106,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
     /**
      * Delete this invite.
-     * @param reason - The reason for deleting this invite.
+     * @param reason The reason for deleting this invite.
      */
     async deleteInvite(reason?: string) {
         return this._client.rest.channels.deleteInvite<CH>(this.code, reason);

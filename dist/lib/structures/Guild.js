@@ -311,82 +311,82 @@ class Guild extends Base_1.default {
      * Add a member to this guild. Requires an access token with the `guilds.join` scope.
      *
      * Returns the newly added member upon success, or void if the member is already in the guild.
-     * @param userID - The ID of the user to add.
-     * @param options - The options for adding the member.
+     * @param userID The ID of the user to add.
+     * @param options The options for adding the member.
      */
     async addMember(userID, options) {
         return this._client.rest.guilds.addMember(this.id, userID, options);
     }
     /**
      * Add a role to a member.
-     * @param memberID - The ID of the member.
-     * @param roleID - The ID of the role to add.
-     * @param reason - The reason for adding the role.
+     * @param memberID The ID of the member.
+     * @param roleID The ID of the role to add.
+     * @param reason The reason for adding the role.
      */
     async addMemberRole(memberID, roleID, reason) {
         return this._client.rest.guilds.addMemberRole(this.id, memberID, roleID, reason);
     }
     /**
      * The url of this guild's banner.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     bannerURL(format, size) {
         return this.banner === null ? null : this._client.util.formatImage(Routes.BANNER(this.id, this.banner), format, size);
     }
     /**
      * Begine a prune.
-     * @param options - The options for the prune.
+     * @param options The options for the prune.
      */
     async beginPrune(options) {
         return this._client.rest.guilds.beginPrune(this.id, options);
     }
     /**
      * Create an auto moderation rule for this guild.
-     * @param options - The options for the rule.
+     * @param options The options for the rule.
      */
     async createAutoModerationRule(options) {
         return this._client.rest.guilds.createAutoModerationRule(this.id, options);
     }
     /**
      * Create a bon for a user.
-     * @param userID - The ID of the user.
-     * @param options - The options for creating the bon.
+     * @param userID The ID of the user.
+     * @param options The options for creating the bon.
      */
     async createBan(userID, options) {
         return this._client.rest.guilds.createBan(this.id, userID, options);
     }
     /**
      * Create a channel in this guild.
-     * @param options - The options for creating the channel.
+     * @param options The options for creating the channel.
      */
     async createChannel(type, options) {
         return this._client.rest.guilds.createChannel(this.id, type, options);
     }
     /**
      * Create an emoji in this guild.
-     * @param options - The options for creating the emoji.
+     * @param options The options for creating the emoji.
      */
     async createEmoji(options) {
         return this._client.rest.guilds.createEmoji(this.id, options);
     }
     /**
      * Create a role.
-     * @param options - The options for creating the role.
+     * @param options The options for creating the role.
      */
     async createRole(options) {
         return this._client.rest.guilds.createRole(this.id, options);
     }
     /**
      * Create a scheduled event in this guild.
-     * @param options - The options for creating the scheduled event.
+     * @param options The options for creating the scheduled event.
      */
     async createScheduledEvent(options) {
         return this._client.rest.guilds.createScheduledEvent(this.id, options);
     }
     /**
      * Create a guild template.
-     * @param options - The options for creating the template.
+     * @param options The options for creating the template.
      */
     async createTemplate(options) {
         return this._client.rest.guilds.createTemplate(this.id, options);
@@ -399,163 +399,163 @@ class Guild extends Base_1.default {
     }
     /**
      * Delete an auto moderation rule in this guild.
-     * @param ruleID - The ID of the rule to delete.
-     * @param reason - The reason for deleting the rule.
+     * @param ruleID The ID of the rule to delete.
+     * @param reason The reason for deleting the rule.
      */
     async deleteAutoModerationRule(ruleID, reason) {
         return this._client.rest.guilds.deleteAutoModerationRule(this.id, ruleID, reason);
     }
     /**
      * Delete an emoji in this guild.
-     * @param emojiID - The ID of the emoji.
-     * @param reason - The reason for deleting the emoji.
+     * @param emojiID The ID of the emoji.
+     * @param reason The reason for deleting the emoji.
      */
     async deleteEmoji(emojiID, reason) {
         return this._client.rest.guilds.deleteEmoji(this.id, emojiID, reason);
     }
     /**
      * Delete an integration.
-     * @param integrationID - The ID of the integration.
-     * @param reason - The reason for deleting the integration.
+     * @param integrationID The ID of the integration.
+     * @param reason The reason for deleting the integration.
      */
     async deleteIntegration(integrationID, reason) {
         return this._client.rest.guilds.deleteIntegration(this.id, integrationID, reason);
     }
     /**
      * Delete a role.
-     * @param roleID - The ID of the role to delete.
-     * @param reason - The reason for deleting the role.
+     * @param roleID The ID of the role to delete.
+     * @param reason The reason for deleting the role.
      */
     async deleteRole(roleID, reason) {
         return this._client.rest.guilds.deleteRole(this.id, roleID, reason);
     }
     /**
      * Delete a scheduled event.
-     * @param eventID - The ID of the scheduled event.
-     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
+     * @param eventID The ID of the scheduled event.
+     * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     async deleteScheduledEvent(eventID, reason) {
         return this._client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
     }
     /**
      * Delete a template.
-     * @param code - The code of the template.
+     * @param code The code of the template.
      */
     async deleteTemplate(code) {
         return this._client.rest.guilds.deleteTemplate(this.id, code);
     }
     /**
      * Edit this guild.
-     * @param options - The options for editing the guild.
+     * @param options The options for editing the guild.
      */
     async edit(options) {
         return this._client.rest.guilds.edit(this.id, options);
     }
     /**
      * Edit an existing auto moderation rule in this guild.
-     * @param ruleID - The ID of the rule to edit.
-     * @param options - The options for editing the rule.
+     * @param ruleID The ID of the rule to edit.
+     * @param options The options for editing the rule.
      */
     async editAutoModerationRule(ruleID, options) {
         return this._client.rest.guilds.editAutoModerationRule(this.id, ruleID, options);
     }
     /**
      * Edit the positions of channels in this guild.
-     * @param options - The channels to move. Unedited channels do not need to be specifed.
+     * @param options The channels to move. Unedited channels do not need to be specifed.
      */
     async editChannelPositions(options) {
         return this._client.rest.guilds.editChannelPositions(this.id, options);
     }
     /**
      * Modify the current member in this guild.
-     * @param options - The options for editing the member.
+     * @param options The options for editing the member.
      */
     async editCurrentMember(options) {
         return this._client.rest.guilds.editCurrentMember(this.id, options);
     }
     /**
      * Edit the current member's voice state in this guild. `channelID` is required, and the current member must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats) for more information.
-     * @param options - The options for editing the voice state.
+     * @param options The options for editing the voice state.
      */
     async editCurrentUserVoiceState(options) {
         return this._client.rest.guilds.editCurrentUserVoiceState(this.id, options);
     }
     /**
      * Edit an existing emoji in this guild.
-     * @param options - The options for editing the emoji.
+     * @param options The options for editing the emoji.
      */
     async editEmoji(emojiID, options) {
         return this._client.rest.guilds.editEmoji(this.id, emojiID, options);
     }
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of this guild. This can only be used by the guild owner.
-     * @param level - The new MFA level.
+     * @param level The new MFA level.
      */
     async editMFALevel(level) {
         return this._client.rest.guilds.editMFALevel(this.id, level);
     }
     /**
      * Edit a member of this guild.
-     * @param memberID - The ID of the member.
-     * @param options - The options for editing the member.
+     * @param memberID The ID of the member.
+     * @param options The options for editing the member.
      */
     async editMember(memberID, options) {
         return this._client.rest.guilds.editMember(this.id, memberID, options);
     }
     /**
      * Edit an existing role.
-     * @param options - The options for editing the role.
+     * @param options The options for editing the role.
      */
     async editRole(roleID, options) {
         return this._client.rest.guilds.editRole(this.id, roleID, options);
     }
     /**
      * Edit the position of roles in this guild.
-     * @param options - The roles to move.
+     * @param options The roles to move.
      */
     async editRolePositions(options, reason) {
         return this._client.rest.guilds.editRolePositions(this.id, options, reason);
     }
     /**
      * Edit an existing scheduled event in this guild.
-     * @param options - The options for editing the scheduled event.
+     * @param options The options for editing the scheduled event.
      */
     async editScheduledEvent(options) {
         return this._client.rest.guilds.editScheduledEvent(this.id, options);
     }
     /**
      * Edit a template.
-     * @param code - The code of the template.
-     * @param options - The options for editing the template.
+     * @param code The code of the template.
+     * @param options The options for editing the template.
      */
     async editTemplate(code, options) {
         return this._client.rest.guilds.editTemplate(this.id, code, options);
     }
     /**
      * Edit a guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     * @param memberID - The ID of the member.
-     * @param options - The options for editing the voice state.
+     * @param memberID The ID of the member.
+     * @param options The options for editing the voice state.
      */
     async editUserVoiceState(memberID, options) {
         return this._client.rest.guilds.editUserVoiceState(this.id, memberID, options);
     }
     /**
      * Edit the welcome screen in this guild.
-     * @param options - The options for editing the welcome screen.
+     * @param options The options for editing the welcome screen.
      */
     async editWelcomeScreen(options) {
         return this._client.rest.guilds.editWelcomeScreen(this.id, options);
     }
     /**
      * Edit the widget of this guild.
-     * @param options - The options for editing the widget.
+     * @param options The options for editing the widget.
      */
     async editWidget(options) {
         return this._client.rest.guilds.editWidget(this.id, options);
     }
     /**
      * Request members from this guild.
-     * @param options - The options for fetching the members.
+     * @param options The options for fetching the members.
      */
     async fetchMembers(options) {
         return this.shard.requestGuildMembers(this.id, options);
@@ -568,14 +568,14 @@ class Guild extends Base_1.default {
     }
     /**
      * Get this guild's audit log.
-     * @param options - The options for the audit log.
+     * @param options The options for the audit log.
      */
     async getAuditLog(options) {
         return this._client.rest.guilds.getAuditLog(this.id, options);
     }
     /**
      * Get an auto moderation rule for this guild.
-     * @param ruleID - The ID of the rule to get.
+     * @param ruleID The ID of the rule to get.
      */
     async getAutoModerationRule(ruleID) {
         return this._client.rest.guilds.getAutoModerationRule(this.id, ruleID);
@@ -588,14 +588,14 @@ class Guild extends Base_1.default {
     }
     /**
      * Get a ban in this guild.
-     * @param userID - The ID of the user to get the ban of.
+     * @param userID The ID of the user to get the ban of.
      */
     async getBan(userID) {
         return this._client.rest.guilds.getBan(this.id, userID);
     }
     /**
      * Get the bans in this guild.
-     * @param options - The options for getting the bans.
+     * @param options The options for getting the bans.
      */
     async getBans(options) {
         return this._client.rest.guilds.getBans(this.id, options);
@@ -608,7 +608,7 @@ class Guild extends Base_1.default {
     }
     /**
      * Get an emoji in this guild.
-     * @param emojiID - The ID of the emoji to get.
+     * @param emojiID The ID of the emoji to get.
      */
     async getEmoji(emojiID) {
         return this._client.rest.guilds.getEmoji(this.id, emojiID);
@@ -633,14 +633,14 @@ class Guild extends Base_1.default {
     }
     /**
      * Get a member of this guild.
-     * @param memberID - The ID of the member.
+     * @param memberID The ID of the member.
      */
     async getMember(memberID) {
         return this._client.rest.guilds.getMember(this.id, memberID);
     }
     /**
      * Get this guild's members. This requires the `GUILD_MEMBERS` intent.
-     * @param options - The options for getting the members.
+     * @param options The options for getting the members.
      */
     async getMembers(options) {
         return this._client.rest.guilds.getMembers(this.id, options);
@@ -653,7 +653,7 @@ class Guild extends Base_1.default {
     }
     /**
      * Get the prune count of this guild.
-     * @param options - The options for getting the prune count.
+     * @param options The options for getting the prune count.
      */
     async getPruneCount(options) {
         return this._client.rest.guilds.getPruneCount(this.id, options);
@@ -666,23 +666,23 @@ class Guild extends Base_1.default {
     }
     /**
      * Get a scheduled event.
-     * @param eventID - The ID of the scheduled event to get.
-     * @param withUserCount - If the number of users subscribed to the event should be included.
+     * @param eventID The ID of the scheduled event to get.
+     * @param withUserCount If the number of users subscribed to the event should be included.
      */
     async getScheduledEvent(eventID, withUserCount) {
         return this._client.rest.guilds.getScheduledEvent(this.id, eventID, withUserCount);
     }
     /**
      * Get the users subscribed to a scheduled event.
-     * @param eventID - The ID of the scheduled event to get the users of.
-     * @param options - The options for getting the users.
+     * @param eventID The ID of the scheduled event to get the users of.
+     * @param options The options for getting the users.
      */
     async getScheduledEventUsers(eventID, options) {
         return this._client.rest.guilds.getScheduledEventUsers(this.id, eventID, options);
     }
     /**
      * Get this guild's scheduled events
-     * @param withUserCount - If the number of users subscribed to the event should be included.
+     * @param withUserCount If the number of users subscribed to the event should be included.
      */
     async getScheduledEvents(withUserCount) {
         return this._client.rest.guilds.getScheduledEvents(this.id, withUserCount);
@@ -719,7 +719,7 @@ class Guild extends Base_1.default {
     }
     /**
      * Get the widget image of this guild.
-     * @param style - The style of the image.
+     * @param style The style of the image.
      */
     async getWidgetImage(style) {
         return this._client.rest.guilds.getWidgetImage(this.id, style);
@@ -738,8 +738,8 @@ class Guild extends Base_1.default {
     }
     /**
      * The url of this guild's icon.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     iconURL(format, size) {
         return this.icon === null ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
@@ -752,7 +752,7 @@ class Guild extends Base_1.default {
     }
     /**
      * Get the permissions of a member. If providing an id, the member must be cached.
-     * @param member - The member to get the permissions of.
+     * @param member The member to get the permissions of.
      */
     permissionsOf(member) {
         if (typeof member === "string")
@@ -781,39 +781,39 @@ class Guild extends Base_1.default {
     }
     /**
      * Remove a ban.
-     * @param userID - The ID of the user to remove the ban from.
-     * @param reason - The reason for removing the ban.
+     * @param userID The ID of the user to remove the ban from.
+     * @param reason The reason for removing the ban.
      */
     async removeBan(userID, reason) {
         return this._client.rest.guilds.removeBan(this.id, userID, reason);
     }
     /**
      * Remove a member from this guild.
-     * @param memberID - The ID of the user to remove.
-     * @param reason - The reason for the removal.
+     * @param memberID The ID of the user to remove.
+     * @param reason The reason for the removal.
      */
     async removeMember(memberID, reason) {
         return this._client.rest.guilds.removeMember(this.id, memberID, reason);
     }
     /**
      * remove a role from a member.
-     * @param memberID - The ID of the member.
-     * @param roleID - The ID of the role to remove.
-     * @param reason - The reason for removing the role.
+     * @param memberID The ID of the member.
+     * @param roleID The ID of the role to remove.
+     * @param reason The reason for removing the role.
      */
     async removeMemberRole(memberID, roleID, reason) {
         return this._client.rest.guilds.removeMemberRole(this.id, memberID, roleID, reason);
     }
     /**
      * Search the username & nicknames of members in this guild.
-     * @param options - The options for the search.
+     * @param options The options for the search.
      */
     async searchMembers(options) {
         return this._client.rest.guilds.searchMembers(this.id, options);
     }
     /**
      * Sync a guild template.
-     * @param code - The code of the template to sync.
+     * @param code The code of the template to sync.
      */
     async syncTemplate(code) {
         return this._client.rest.guilds.syncTemplate(this.id, code);

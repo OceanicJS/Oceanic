@@ -14,12 +14,12 @@ export default class TextChannel extends TextableChannel<TextChannel> {
     convert(): Promise<AnnouncementChannel>;
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel
+     * @param options The options for editing the channel
      */
     edit(options: EditTextChannelOptions): Promise<this>;
     /**
      * Follow an announcement channel to this channel.
-     * @param webhookChannelID - The ID of the channel to follow the announcement channel to.
+     * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
     followAnnouncement(webhookChannelID: string): Promise<import("../types/channels").FollowedChannel>;
     toJSON(): JSONTextChannel;

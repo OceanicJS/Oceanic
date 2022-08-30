@@ -70,24 +70,24 @@ class Webhook extends Base_1.default {
     get url() { return `${Constants_1.BASE_URL}${Routes.WEBHOOK(this.id, this.token)}`; }
     /**
      * The url of this webhook's avatar.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     avatarURL(format, size) {
         return this.avatar === null ? null : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
     /**
      * Delete this webhook (requires a bot user, see `deleteToken`).
-     * @param reason - The reason for deleting this webhook.
+     * @param reason The reason for deleting this webhook.
      */
     async delete(reason) {
         return this._client.rest.webhooks.delete(this.id, reason);
     }
     /**
      * Delete a message from this webhook.
-     * @param messageID - The ID of the message.
-     * @param options - The options for deleting the message.
-     * @param token - The token for the webhook, if not already present.
+     * @param messageID The ID of the message.
+     * @param options The options for deleting the message.
+     * @param token The token for the webhook, if not already present.
      */
     async deleteMessage(messageID, options, token) {
         const t = this.token || token;
@@ -97,7 +97,7 @@ class Webhook extends Base_1.default {
     }
     /**
      * Delete this webhook via its token.
-     * @param token - The token for the webhook, if not already present.
+     * @param token The token for the webhook, if not already present.
      */
     async deleteToken(token) {
         const t = this.token || token;
@@ -107,17 +107,17 @@ class Webhook extends Base_1.default {
     }
     /**
      * Edit this webhook (requires a bot user, see `editToken`).
-     * @param options - The options for editing the webhook.
+     * @param options The options for editing the webhook.
      */
     async edit(options) {
         return this._client.rest.webhooks.edit(this.id, options);
     }
     /**
      * Edit a webhook message.
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage(messageID, options, token) {
         const t = this.token || token;
@@ -127,8 +127,8 @@ class Webhook extends Base_1.default {
     }
     /**
      * Edit a webhook via its token.
-     * @param options - The options for editing the webhook.
-     * @param token - The token for the webhook, if not already present.
+     * @param options The options for editing the webhook.
+     * @param token The token for the webhook, if not already present.
      */
     async editToken(options, token) {
         const t = this.token || token;
@@ -156,9 +156,9 @@ class Webhook extends Base_1.default {
     }
     /**
      * Get a webhook message.
-     * @param messageID - The ID of the message.
-     * @param threadID - The ID of the thread the message is in.
-     * @param token - The token for the webhook, if not already present.
+     * @param messageID The ID of the message.
+     * @param threadID The ID of the thread the message is in.
+     * @param token The token for the webhook, if not already present.
      */
     async getMessage(messageID, threadID, token) {
         const t = this.token || token;
@@ -168,8 +168,8 @@ class Webhook extends Base_1.default {
     }
     /**
      * The url of this webhook's `sourceGuild` icon (only present on channel follower webhooks).
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     sourceGuildIconURL(format, size) {
         return !this.sourceGuild?.icon ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);

@@ -39,7 +39,7 @@ const undici_1 = require("undici");
 class OAuth extends BaseRoute_1.default {
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
-     * @param options - The options to for the client credentials grant.
+     * @param options The options to for the client credentials grant.
      */
     async clientCredentialsGrant(options) {
         const form = new undici_1.FormData();
@@ -59,7 +59,7 @@ class OAuth extends BaseRoute_1.default {
     }
     /**
      * Construct an oauth authorization url.
-     * @param options - The options to construct the url with.
+     * @param options The options to construct the url with.
      */
     constructURL(options) {
         const params = [
@@ -83,7 +83,7 @@ class OAuth extends BaseRoute_1.default {
     }
     /**
      * Exchange a code for an access token.
-     * @param options - The options for exchanging the code.
+     * @param options The options for exchanging the code.
      */
     async exchangeCode(options) {
         const form = new undici_1.FormData();
@@ -155,7 +155,7 @@ class OAuth extends BaseRoute_1.default {
      * Get the guild member information about the currently authenticated user.
      *
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
-     * @param guild - the ID of the guild
+     * @param guild the ID of the guild
      */
     async getCurrentGuildMember(guild) {
         return this._manager.authRequest({
@@ -197,7 +197,7 @@ class OAuth extends BaseRoute_1.default {
     }
     /**
      * Revoke an access token.
-     * @param options - The options for revoking the token.
+     * @param options The options for revoking the token.
      */
     async revokeToken(options) {
         const form = new undici_1.FormData();

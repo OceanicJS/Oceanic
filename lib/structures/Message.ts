@@ -212,7 +212,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Add a reaction to this message.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(emoji: string) {
         return this._client.rest.channels.createReaction(this.channel.id, this.id, emoji);
@@ -227,7 +227,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Delete this message.
-     * @param reason - The reason for deleting the message.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(reason?: string) {
         return this._client.rest.channels.deleteMessage(this.channel.id, this.id, reason);
@@ -235,8 +235,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Remove a reaction from this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(emoji: string, user = "@me") {
         return this._client.rest.channels.deleteReaction(this.channel.id, this.id, emoji, user);
@@ -244,7 +244,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Remove all, or a specific emoji's reactions from this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(emoji?: string) {
         return this._client.rest.channels.deleteReactions(this.channel.id, this.id, emoji);
@@ -252,8 +252,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Delete this message as a webhook.
-     * @param token - The token of the webhook.
-     * @param options - Options for deleting the message.
+     * @param token The token of the webhook.
+     * @param options Options for deleting the message.
      */
     async deleteWebhook(token: string, options: DeleteWebhookMessageOptions) {
         if (!this.webhook?.id) throw new Error("This message is not a webhook message.");
@@ -262,7 +262,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Edit this message.
-     * @param options - The options for editing the message.
+     * @param options The options for editing the message.
      */
     async edit(options: EditMessageOptions):  Promise<Message<T>> {
         return this._client.rest.channels.editMessage(this.channel.id, this.id, options) as Promise<Message<T>>;
@@ -270,8 +270,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Edit this message as a webhook.
-     * @param token - The token of the webhook.
-     * @param options - The options for editing the message.
+     * @param token The token of the webhook.
+     * @param options The options for editing the message.
      */
     async editWebhook(token: string, options: EditWebhookMessageOptions) {
         if (!this.webhook?.id) throw new Error("This message is not a webhook message.");
@@ -280,8 +280,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Get the users who reacted with a specific emoji on this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(emoji: string, options?: GetReactionsOptions) {
         return this._client.rest.channels.getReactions(this.channel.id, this.id, emoji, options);
@@ -289,7 +289,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Pin this message.
-     * @param reason - The reason for pinning the message.
+     * @param reason The reason for pinning the message.
      */
     async pin(reason?: string) {
         return this._client.rest.channels.pinMessage(this.channel.id, this.id, reason);
@@ -297,7 +297,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Create a thread from this message.
-     * @param options - The options for creating the thread.
+     * @param options The options for creating the thread.
      */
     async startThread(options: StartThreadFromMessageOptions) {
         return this._client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
@@ -349,7 +349,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /**
      * Unpin this message.
-     * @param reason - The reason for unpinning the message.
+     * @param reason The reason for unpinning the message.
      */
     async unpin(reason?: string) {
         return this._client.rest.channels.unpinMessage(this.channel.id, this.id, reason);

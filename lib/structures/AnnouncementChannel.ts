@@ -25,7 +25,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
 
     /**
      * Crosspost a message in this channel.
-     * @param messageID - The ID of the message to crosspost.
+     * @param messageID The ID of the message to crosspost.
      */
     async crosspostMessage(messageID: string) {
         return this._client.rest.channels.crosspostMessage(this.id, messageID);
@@ -33,7 +33,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
 
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     override async edit(options: EditGuildChannelOptions) {
         return this._client.rest.channels.edit<this>(this.id, options);

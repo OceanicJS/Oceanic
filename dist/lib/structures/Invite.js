@@ -106,7 +106,7 @@ class Invite {
     }
     /**
      * Delete this invite.
-     * @param reason - The reason for deleting this invite.
+     * @param reason The reason for deleting this invite.
      */
     async deleteInvite(reason) {
         return this._client.rest.channels.deleteInvite(this.code, reason);

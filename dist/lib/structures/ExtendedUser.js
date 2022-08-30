@@ -33,7 +33,7 @@ class ExtendedUser extends User_1.default {
     }
     /**
      * Modify this user.
-     * @param options - The options for editing the user.
+     * @param options The options for editing the user.
      */
     async edit(options) {
         return this._client.rest.users.editSelf(options);

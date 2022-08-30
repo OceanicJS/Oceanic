@@ -10,7 +10,7 @@ export default class AnnouncementThreadChannel extends ThreadChannel<Announcemen
     constructor(data: RawAnnouncementThreadChannel, client: Client);
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     edit(options: EditPublicThreadChannelOptions): Promise<this>;
     toJSON(): JSONAnnouncementThreadChannel;

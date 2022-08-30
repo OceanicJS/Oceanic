@@ -17,14 +17,14 @@ class AnnouncementChannel extends TextableChannel_1.default {
     }
     /**
      * Crosspost a message in this channel.
-     * @param messageID - The ID of the message to crosspost.
+     * @param messageID The ID of the message to crosspost.
      */
     async crosspostMessage(messageID) {
         return this._client.rest.channels.crosspostMessage(this.id, messageID);
     }
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);

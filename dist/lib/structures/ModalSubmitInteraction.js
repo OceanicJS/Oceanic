@@ -47,14 +47,14 @@ class ModalSubmitInteraction extends Interaction_1.default {
     }
     /**
      * Create a followup message.
-     * @param options - The options for creating the followup message.
+     * @param options The options for creating the followup message.
      */
     async createFollowup(options) {
         return this._client.rest.interactions.createFollowupMessage(this.application.id, this.token, options);
     }
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
-     * @param options - The options for the message.
+     * @param options The options for the message.
      */
     async createMessage(options) {
         if (this.acknowledged)
@@ -64,7 +64,7 @@ class ModalSubmitInteraction extends Interaction_1.default {
     }
     /**
      * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags) {
         if (this.acknowledged)
@@ -74,7 +74,7 @@ class ModalSubmitInteraction extends Interaction_1.default {
     }
     /**
      * Delete a follow up message.
-     * @param messageID - The ID of the message.
+     * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID) {
         return this._client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
@@ -87,22 +87,22 @@ class ModalSubmitInteraction extends Interaction_1.default {
     }
     /**
      * Edit a followup message.
-     * @param messageID - The ID of the message.
-     * @param options - The options for editing the followup message.
+     * @param messageID The ID of the message.
+     * @param options The options for editing the followup message.
      */
     async editFollowup(messageID, options) {
         return this._client.rest.interactions.editFollowupMessage(this.application.id, this.token, messageID, options);
     }
     /**
      * Edit the original interaction response.
-     * @param options - The options for editing the original message.
+     * @param options The options for editing the original message.
      */
     async editOriginal(options) {
         return this._client.rest.interactions.editOriginalMessage(this.application.id, this.token, options);
     }
     /**
      * Get a followup message.
-     * @param messageID - The ID of the message.
+     * @param messageID The ID of the message.
      */
     async getFollowup(messageID) {
         return this._client.rest.interactions.getFollowupMessage(this.application.id, this.token, messageID);

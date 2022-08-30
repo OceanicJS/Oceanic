@@ -24,7 +24,7 @@ export default class GuildChannel extends Channel {
     protected update(data: Partial<RawGuildChannel>): void;
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     edit(options: EditGuildChannelOptions): Promise<AnyGuildChannel>;
     toJSON(): JSONGuildChannel;

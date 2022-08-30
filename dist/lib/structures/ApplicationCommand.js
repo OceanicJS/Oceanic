@@ -54,14 +54,14 @@ class ApplicationCommand extends Base_1.default {
     }
     /**
      * Edit this command.
-     * @param options - The options for editing the command.
+     * @param options The options for editing the command.
      */
     async edit(options) {
         return this.guildID ? this._client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this._client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
     }
     /**
      * Edit this command's permissions (guild commands only). This requires a bearer token with the `applications.commands.permissions.update` scope.
-     * @param options - The options for editing the permissions.
+     * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(options) {
         if (!this.guildID)
@@ -78,7 +78,7 @@ class ApplicationCommand extends Base_1.default {
     }
     /**
      * Get a mention for this command.
-     * @param sub - The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
+     * @param sub The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
      */
     mention(sub) {
         let text = `${this.name}`;

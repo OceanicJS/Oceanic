@@ -34,8 +34,8 @@ const Channel_1 = __importDefault(require("../structures/Channel"));
 class Channels extends BaseRoute_1.default {
     /**
      * Add a user to a group channel.
-     * @param groupID - The ID of the group to add the user to.
-     * @param options - The options for adding the recipient.
+     * @param groupID The ID of the group to add the user to.
+     * @param options The options for adding the recipient.
      */
     async addGroupRecipient(groupID, options) {
         await this._manager.authRequest({
@@ -49,8 +49,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Add a member to a thread.
-     * @param id - The ID of the thread to add them to.
-     * @param userID - The ID of the user to add to the thread.
+     * @param id The ID of the thread to add them to.
+     * @param userID The ID of the user to add to the thread.
      */
     async addThreadMember(id, userID) {
         await this._manager.authRequest({
@@ -60,7 +60,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create a direct message.
-     * @param recipient - The ID of the recipient of the direct message.
+     * @param recipient The ID of the recipient of the direct message.
      */
     async createDM(recipient) {
         return this._manager.authRequest({
@@ -73,7 +73,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create a group dm.
-     * @param options - The options for creating the group dm.
+     * @param options The options for creating the group dm.
      */
     async createGroupDM(options) {
         return this._manager.authRequest({
@@ -87,8 +87,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create an invite for a channel.
-     * @param id - The ID of the channel to create an invite for.
-     * @param options - The options for creating the invite.
+     * @param id The ID of the channel to create an invite for.
+     * @param options The options for creating the invite.
      */
     async createInvite(id, options) {
         const reason = options.reason;
@@ -111,8 +111,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create a message in a channel.
-     * @param id - The ID of the channel to create the message in.
-     * @param options - The options for creating the message.
+     * @param id The ID of the channel to create the message in.
+     * @param options The options for creating the message.
      */
     async createMessage(id, options) {
         const files = options.files;
@@ -142,9 +142,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Add a reaction to a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to add a reaction to.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to add a reaction to.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(id, messageID, emoji) {
         if (emoji === decodeURIComponent(emoji))
@@ -156,8 +156,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Crosspost a message in an announcement channel.
-     * @param id - The ID of the channel to crosspost the message in.
-     * @param messageID - The ID of the message to crosspost.
+     * @param id The ID of the channel to crosspost the message in.
+     * @param messageID The ID of the message to crosspost.
      */
     async crosspostMessage(id, messageID) {
         return this._manager.authRequest({
@@ -167,8 +167,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Delete or close a channel.
-     * @param id - The ID of the channel to delete or close.
-     * @param reason - The reason to be displayed in the audit log.
+     * @param id The ID of the channel to delete or close.
+     * @param reason The reason to be displayed in the audit log.
      */
     async delete(id, reason) {
         await this._manager.authRequest({
@@ -179,8 +179,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Delete an invite.
-     * @param code - The code of the invite to delete.
-     * @param reason - The reason for deleting the invite.
+     * @param code The code of the invite to delete.
+     * @param reason The reason for deleting the invite.
      */
     async deleteInvite(code, reason) {
         return this._manager.authRequest({
@@ -191,9 +191,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Delete a message.
-     * @param id - The ID of the channel to delete the message in.
-     * @param messageID - The ID of the message to delete.
-     * @param reason - The reason for deleting the message.
+     * @param id The ID of the channel to delete the message in.
+     * @param messageID The ID of the message to delete.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(id, messageID, reason) {
         await this._manager.authRequest({
@@ -204,9 +204,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Bulk delete messages.
-     * @param id - The ID of the channel to delete the messages in.
-     * @param messageIDs - The IDs of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
-     * @param reason - The reason for deleting the messages.
+     * @param id The ID of the channel to delete the messages in.
+     * @param messageIDs The IDs of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param reason The reason for deleting the messages.
      */
     async deleteMessages(id, messageIDs, reason) {
         await this._manager.authRequest({
@@ -220,9 +220,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Delete a permission overwrite.
-     * @param id - The ID of the channel to delete the permission overwrite in.
-     * @param overwriteID - The ID of the permission overwrite to delete.
-     * @param reason - The reason for deleting the permission overwrite.
+     * @param id The ID of the channel to delete the permission overwrite in.
+     * @param overwriteID The ID of the permission overwrite to delete.
+     * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(id, overwriteID, reason) {
         await this._manager.authRequest({
@@ -233,10 +233,10 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Remove a reaction from a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to remove a reaction from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to remove a reaction from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(id, messageID, emoji, user = "@me") {
         if (emoji === decodeURIComponent(emoji))
@@ -248,9 +248,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Remove all, or a specific emoji's reactions from a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to remove reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to remove reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(id, messageID, emoji) {
         if (emoji && emoji === decodeURIComponent(emoji))
@@ -262,8 +262,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Edit a channel.
-     * @param id - The ID of the channel to edit.
-     * @param options - The options for editing the channel.
+     * @param id The ID of the channel to edit.
+     * @param options The options for editing the channel.
      */
     async edit(id, options) {
         const reason = options.reason;
@@ -306,9 +306,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Edit a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage(id, messageID, options) {
         const files = options.files;
@@ -330,9 +330,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Edit a permission overwrite.
-     * @param id - The ID of the channel to edit the permission overwrite for.
-     * @param overwriteID - The ID of the permission overwrite to edit.
-     * @param options - The options for editing the permission overwrite.
+     * @param id The ID of the channel to edit the permission overwrite for.
+     * @param overwriteID The ID of the permission overwrite to edit.
+     * @param options The options for editing the permission overwrite.
      */
     async editPermission(id, overwriteID, options) {
         const reason = options.reason;
@@ -351,8 +351,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Follow an announcement channel.
-     * @param id - The ID of the channel to follow the announcement channel to.
-     * @param webhookChannelID - The ID of the channel to follow the announcement channel to.
+     * @param id The ID of the channel to follow the announcement channel to.
+     * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
     async followAnnouncement(id, webhookChannelID) {
         return this._manager.authRequest({
@@ -368,7 +368,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get a channel.
-     * @param id - The ID of the channel to get.
+     * @param id The ID of the channel to get.
      */
     async get(id) {
         return this._manager.authRequest({
@@ -392,7 +392,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the invites of a channel.
-     * @param id - The ID of the channel to get the invites of.
+     * @param id The ID of the channel to get the invites of.
      */
     async getInvites(id) {
         return this._manager.authRequest({
@@ -402,8 +402,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the private archived threads the current user has joined in a channel.
-     * @param id - The ID of the channel to get the archived threads from.
-     * @param options - The options for getting the archived threads.
+     * @param id The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
      */
     async getJoinedPrivateArchivedThreads(id, options) {
         return this._manager.authRequest({
@@ -426,8 +426,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get a message in a channel.
-     * @param id - The ID of the channel the message is in
-     * @param messageID - The ID of the message to get.
+     * @param id The ID of the channel the message is in
+     * @param messageID The ID of the message to get.
      */
     async getMessage(id, messageID) {
         return this._manager.authRequest({
@@ -437,8 +437,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get messages in a channel.
-     * @param id - The ID of the channel to get messages from.
-     * @param options - The options for getting messages. All are mutually exclusive.
+     * @param id The ID of the channel to get messages from.
+     * @param options The options for getting messages. All are mutually exclusive.
      */
     async getMessages(id, options) {
         return this._manager.authRequest({
@@ -454,7 +454,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the pinned messages in a channel.
-     * @param id - The ID of the channel to get the pinned messages from.
+     * @param id The ID of the channel to get the pinned messages from.
      */
     async getPinnedMessages(id) {
         return this._manager.authRequest({
@@ -464,8 +464,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the private archived threads in a channel.
-     * @param id - The ID of the channel to get the archived threads from.
-     * @param options - The options for getting the archived threads.
+     * @param id The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
      */
     async getPrivateArchivedThreads(id, options) {
         return this._manager.authRequest({
@@ -488,8 +488,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the public archived threads in a channel.
-     * @param id - The ID of the channel to get the archived threads from.
-     * @param options - The options for getting the archived threads.
+     * @param id The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
      */
     async getPublicArchivedThreads(id, options) {
         return this._manager.authRequest({
@@ -512,10 +512,10 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the users who reacted with a specific emoji on a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to get reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to get reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(id, messageID, emoji, options) {
         if (emoji === decodeURIComponent(emoji))
@@ -531,8 +531,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get a thread member.
-     * @param id - The ID of the thread.
-     * @param userID - The ID of the user to get the thread member of.
+     * @param id The ID of the thread.
+     * @param userID The ID of the user to get the thread member of.
      */
     async getThreadMember(id, userID) {
         return this._manager.authRequest({
@@ -547,7 +547,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Get the members of a thread.
-     * @param id - The ID of the thread.
+     * @param id The ID of the thread.
      */
     async getThreadMembers(id) {
         return this._manager.authRequest({
@@ -571,7 +571,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Join a thread.
-     * @param id - The ID of the thread to join.
+     * @param id The ID of the thread to join.
      */
     async joinThread(id) {
         await this._manager.authRequest({
@@ -581,7 +581,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Leave a thread.
-     * @param id - The ID of the thread to leave.
+     * @param id The ID of the thread to leave.
      */
     async leaveThread(id) {
         await this._manager.authRequest({
@@ -591,9 +591,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Pin a message in a channel.
-     * @param id - The ID of the channel to pin the message in.
-     * @param messageID - The ID of the message to pin.
-     * @param reason - The reason for pinning the message.
+     * @param id The ID of the channel to pin the message in.
+     * @param messageID The ID of the message to pin.
+     * @param reason The reason for pinning the message.
      */
     async pinMessage(id, messageID, reason) {
         await this._manager.authRequest({
@@ -604,8 +604,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Remove a user from the group channel.
-     * @param groupID - The ID of the group to remove the user from.
-     * @param userID - The ID of the user to remove.
+     * @param groupID The ID of the group to remove the user from.
+     * @param userID The ID of the user to remove.
      */
     async removeGroupRecipient(groupID, userID) {
         await this._manager.authRequest({
@@ -615,8 +615,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Remove a member from a thread.
-     * @param id - The ID of the thread to remove them from.
-     * @param userID - The ID of the user to remove from the thread.
+     * @param id The ID of the thread to remove them from.
+     * @param userID The ID of the user to remove from the thread.
      */
     async removeThreadMember(id, userID) {
         await this._manager.authRequest({
@@ -626,7 +626,7 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Show a typing indicator in a channel. How long users see this varies from client to client.
-     * @param id - The ID of the channel to show the typing indicator in.
+     * @param id The ID of the channel to show the typing indicator in.
      */
     async sendTyping(id) {
         await this._manager.authRequest({
@@ -636,9 +636,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create a thread from an existing message.
-     * @param id - The ID of the channel to create the thread in.
-     * @param messageID - The ID of the message to create the thread from.
-     * @param {options - The options for starting the thread.
+     * @param id The ID of the channel to create the thread in.
+     * @param messageID The ID of the message to create the thread from.
+     * @param {options The options for starting the thread.
      */
     async startThreadFromMessage(id, messageID, options) {
         const reason = options.reason;
@@ -657,8 +657,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create a thread in a forum channel.
-     * @param id - The ID of the channel to start the thread in.
-     * @param options - The options for starting the thread
+     * @param id The ID of the channel to start the thread in.
+     * @param options The options for starting the thread
      */
     async startThreadInForum(id, options) {
         const reason = options.reason;
@@ -690,8 +690,8 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Create a thread without an existing message.
-     * @param id - The ID of the channel to start the thread in.
-     * @param options - The options for starting the thread.
+     * @param id The ID of the channel to start the thread in.
+     * @param options The options for starting the thread.
      */
     async startThreadWithoutMessage(id, options) {
         const reason = options.reason;
@@ -712,9 +712,9 @@ class Channels extends BaseRoute_1.default {
     }
     /**
      * Unpin a message in a channel.
-     * @param id - The ID of the channel to unpin the message in.
-     * @param messageID - The ID of the message to unpin.
-     * @param reason - The reason for unpinning the message.
+     * @param id The ID of the channel to unpin the message in.
+     * @param messageID The ID of the message to unpin.
+     * @param reason The reason for unpinning the message.
      */
     async unpinMessage(id, messageID, reason) {
         await this._manager.authRequest({

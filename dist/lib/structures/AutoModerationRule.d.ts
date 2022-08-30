@@ -34,12 +34,12 @@ export default class AutoModerationRule extends Base {
     protected update(data: Partial<RawAutoModerationRule>): void;
     /**
      * Delete this auto moderation rule.
-     * @param reason - The reason for deleting this rule.
+     * @param reason The reason for deleting this rule.
      */
     deleteAutoModerationRule(reason?: string): Promise<void>;
     /**
      * Edit this auto moderation rule.
-     * @param options - The options for editing the rule.
+     * @param options The options for editing the rule.
      */
     edit(options: EditAutoModerationRuleOptions): Promise<AutoModerationRule | undefined>;
     toJSON(): JSONAutoModerationRule;

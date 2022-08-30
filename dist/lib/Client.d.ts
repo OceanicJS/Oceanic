@@ -40,26 +40,26 @@ export default class Client extends TypedEmitter<ClientEvents> {
     voiceConnections: VoiceConnectionManager;
     /**
      * @constructor
-     * @param options - The options to create the client with.
+     * @param options The options to create the client with.
      */
     constructor(options?: ClientOptions);
     connect(): Promise<void>;
     /**
      * Edit the client's status across all shards.
-     * @param status - The status.
-     * @param activities - An array of activities.
+     * @param status The status.
+     * @param activities An array of activities.
      */
     editStatus(status: SendStatuses, activities?: Array<BotActivity>): Promise<void>;
     getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined;
     /**
      * Join a voice channel.
-     * @param channelID - The ID of the voice channel to join. Null to disconnect.
-     * @param options - The options for joining the voice channel.
+     * @param channelID The ID of the voice channel to join. Null to disconnect.
+     * @param options The options for joining the voice channel.
      */
     joinVoiceChannel(channelID: string, options?: UpdateVoiceStateOptions): Promise<void>;
     /**
      * Leave a voice channel.
-     * @param channelID - The ID of the voice channel to leave.
+     * @param channelID The ID of the voice channel to leave.
      */
     leaveVoiceChannel(channelID: string): Promise<void>;
 }

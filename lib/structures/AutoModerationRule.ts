@@ -65,7 +65,7 @@ export default class AutoModerationRule extends Base {
 
     /**
      * Delete this auto moderation rule.
-     * @param reason - The reason for deleting this rule.
+     * @param reason The reason for deleting this rule.
      */
     async deleteAutoModerationRule(reason?: string) {
         return this._client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
@@ -73,7 +73,7 @@ export default class AutoModerationRule extends Base {
 
     /**
      * Edit this auto moderation rule.
-     * @param options - The options for editing the rule.
+     * @param options The options for editing the rule.
      */
     async edit(options: EditAutoModerationRuleOptions) {
         return this._client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);

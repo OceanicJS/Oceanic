@@ -33,8 +33,8 @@ const Message_1 = __importDefault(require("../structures/Message"));
 class Webhooks extends BaseRoute_1.default {
     /**
      * Creat a channel webhook.
-     * @param channelID - The ID of the channel to create the webhook in.
-     * @param options - The options to create the webhook with.
+     * @param channelID The ID of the channel to create the webhook in.
+     * @param options The options to create the webhook with.
      */
     async create(channelID, options) {
         const reason = options.reason;
@@ -54,8 +54,8 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Delete a webhook.
-     * @param id - The ID of the webhook.
-     * @param reason - The reason for deleting the webhook.
+     * @param id The ID of the webhook.
+     * @param reason The reason for deleting the webhook.
      */
     async delete(id, reason) {
         await this._manager.authRequest({
@@ -66,10 +66,10 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Delete a webhook message.
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
-     * @param messageID - The ID of the message.
-     * @param options - The options for deleting the message.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
+     * @param messageID The ID of the message.
+     * @param options The options for deleting the message.
      */
     async deleteMessage(id, token, messageID, options) {
         const query = new URLSearchParams();
@@ -82,8 +82,8 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Delete a webhook via its token.
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
      */
     async deleteToken(id, token) {
         await this._manager.authRequest({
@@ -93,8 +93,8 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Edit a webhook.
-     * @param id - The ID of the webhook.
-     * @param options - The options tofor editing the webhook.
+     * @param id The ID of the webhook.
+     * @param options The options tofor editing the webhook.
      */
     async edit(id, options) {
         const reason = options.reason;
@@ -115,10 +115,10 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Edit a webhook message.
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage(id, token, messageID, options) {
         const files = options.files;
@@ -143,8 +143,8 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Edit a webhook via its token.
-     * @param id - The ID of the webhook.
-     * @param options - The options for editing the webhook.
+     * @param id The ID of the webhook.
+     * @param options The options for editing the webhook.
      */
     async editToken(id, token, options) {
         if (options.avatar)
@@ -219,8 +219,8 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Get a webhook by ID (and optionally token).
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
      */
     async get(id, token) {
         return this._manager.authRequest({
@@ -230,7 +230,7 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Get the webhooks in the specified channel.
-     * @param channelID - The ID of the channel to get the webhooks of.
+     * @param channelID The ID of the channel to get the webhooks of.
      */
     async getChannel(channelID) {
         return this._manager.authRequest({
@@ -240,7 +240,7 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Get the webhooks in the specified guild.
-     * @param guildID - The ID of the guild to get the webhooks of.
+     * @param guildID The ID of the guild to get the webhooks of.
      */
     async getGuild(guildID) {
         return this._manager.authRequest({
@@ -250,10 +250,10 @@ class Webhooks extends BaseRoute_1.default {
     }
     /**
      * Get a webhook message.
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
-     * @param messageID - The ID of the message.
-     * @param threadID - The ID of the thread the message is in.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
+     * @param messageID The ID of the message.
+     * @param threadID The ID of the thread the message is in.
      */
     async getMessage(id, token, messageID, threadID) {
         const query = new URLSearchParams();

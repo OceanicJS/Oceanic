@@ -8,9 +8,9 @@ import type { AnyGuildTextChannel } from "../types/channels";
 export default class Interactions extends BaseRoute {
     /**
      * Create a followup message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param options - The options for creating the followup message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param options The options for creating the followup message.
      */
     async createFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
         return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
@@ -18,9 +18,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Create an initial interaction response.
-     * @param interactionID - The ID of the interaction.
-     * @param interactionToken - The token of the interaction.
-     * @param options - The options for creating the interaction response.
+     * @param interactionID The ID of the interaction.
+     * @param interactionToken The token of the interaction.
+     * @param options The options for creating the interaction response.
      */
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse) {
         let data: unknown | undefined;
@@ -76,9 +76,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Delete a follow up message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param messageID - The ID of the message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param messageID The ID of the message.
      */
     async deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string) {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
@@ -86,8 +86,8 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
      */
     async deleteOriginalMessage(applicationID: string, interactionToken: string) {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, "@original");
@@ -95,10 +95,10 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Edit a followup message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param messageID - The ID of the message.
-     * @param options - The options for editing the followup message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param messageID The ID of the message.
+     * @param options The options for editing the followup message.
      */
     async editFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent) {
         return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
@@ -106,9 +106,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Edit an original interaction response.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param options - The options for editing the original message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param options The options for editing the original message.
      */
     async editOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
         return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, "@original", options);
@@ -116,9 +116,9 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Get a followup message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param messageID - The ID of the message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param messageID The ID of the message.
      */
     async getFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string) {
         return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
@@ -126,8 +126,8 @@ export default class Interactions extends BaseRoute {
 
     /**
      * Get an original interaction response.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
      */
     async getOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string) {
         return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, "@original");

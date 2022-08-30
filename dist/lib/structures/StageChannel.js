@@ -43,44 +43,44 @@ class StageChannel extends GuildChannel_1.default {
     }
     /**
      * Create an invite for this channel.
-     * @param options - The options to create an invite with.
+     * @param options The options to create an invite with.
      */
     async createInvite(options) {
         return this._client.rest.channels.createInvite(this.id, options);
     }
     /**
      * Delete a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to delete.
-     * @param reason - The reason for deleting the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to delete.
+     * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID, reason) {
         return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);
     }
     /**
      * Edit a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to edit.
-     * @param options - The options for editing the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to edit.
+     * @param options The options for editing the permission overwrite.
      */
     async editPermission(overwriteID, options) {
         return this._client.rest.channels.editPermission(this.id, overwriteID, options);
     }
     /**
      * Join this stage channel.
-     * @param options - The options to join the channel with.
+     * @param options The options to join the channel with.
      */
     async join(options) {
         return this._client.joinVoiceChannel(this.id, options);
     }
     /**
      * Get the permissions of a member.  If providing an id, the member must be cached.
-     * @param member - The member to get the permissions of.
+     * @param member The member to get the permissions of.
      */
     permissionsOf(member) {
         if (typeof member === "string")

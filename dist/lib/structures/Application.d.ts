@@ -50,8 +50,8 @@ export default class Application extends ClientApplication {
     protected update(data: Partial<RESTApplication>): void;
     /**
      * The url of this application's cover image.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     coverImageURL(format?: ImageFormat, size?: number): string | null;
     toJSON(): JSONApplication;

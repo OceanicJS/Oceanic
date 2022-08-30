@@ -55,7 +55,7 @@ export default class AutocompleteInteraction extends Interaction {
 
     /**
      * Defer this reaction. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
@@ -65,7 +65,7 @@ export default class AutocompleteInteraction extends Interaction {
 
     /**
      * Acknowledge this interaction with a set of choices. This is an initial response, and more than one initial response cannot be used.
-     * @param choices - The choices to send.
+     * @param choices The choices to send.
      */
     async result(choices: Array<AutocompleteChoice>) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");

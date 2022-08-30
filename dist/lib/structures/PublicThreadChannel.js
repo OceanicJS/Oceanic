@@ -11,7 +11,7 @@ class PublicThreadChannel extends ThreadChannel_1.default {
     }
     /**
      * Edit this channel.
-     * @param options - The options to edit the channel with.
+     * @param options The options to edit the channel with.
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);

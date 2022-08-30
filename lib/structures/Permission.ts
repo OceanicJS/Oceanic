@@ -29,7 +29,7 @@ export default class Permission {
 
     /**
      * Check if this permissions instance has the given permissions allowed
-     * @param permissions - The permissions to check for.
+     * @param permissions The permissions to check for.
      */
     has(...permissions: Array<PermissionNames>) {
         for (const perm of permissions) {

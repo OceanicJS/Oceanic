@@ -18,14 +18,14 @@ class TextChannel extends TextableChannel_1.default {
     }
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel
+     * @param options The options for editing the channel
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);
     }
     /**
      * Follow an announcement channel to this channel.
-     * @param webhookChannelID - The ID of the channel to follow the announcement channel to.
+     * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
     async followAnnouncement(webhookChannelID) {
         return this._client.rest.channels.followAnnouncement(this.id, webhookChannelID);

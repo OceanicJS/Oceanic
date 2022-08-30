@@ -88,7 +88,7 @@ export default class Member extends Base {
 
     /**
      * Add a role to this member.
-     * @param roleID - The ID of the role to add.
+     * @param roleID The ID of the role to add.
      */
     async addRole(roleID: string, reason?: string) {
         await this._client.rest.guilds.addMemberRole(this.guildID, this.id, roleID, reason);
@@ -96,8 +96,8 @@ export default class Member extends Base {
 
     /**
      * The url of this user's guild avatar (or their user avatar if no guild avatar is set, or their default avatar if none apply).
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
         return this.avatar === null ? this.user.avatarURL(format, size) : this._client.util.formatImage(this.avatar, format, size);
@@ -105,7 +105,7 @@ export default class Member extends Base {
 
     /**
      * Create a bon for this member.
-     * @param options - The options for the ban.
+     * @param options The options for the ban.
      */
     async ban(options?: CreateBanOptions) {
         await this._client.rest.guilds.createBan(this.guildID, this.id, options);
@@ -113,7 +113,7 @@ export default class Member extends Base {
 
     /**
      * Edit this member.
-     * @param options - The options for editing the member.
+     * @param options The options for editing the member.
      */
     async edit(options: EditMemberOptions) {
         return this._client.rest.guilds.editMember(this.guildID, this.id, options);
@@ -121,7 +121,7 @@ export default class Member extends Base {
 
     /**
      * Edit this guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     * @param options - The options for editing the voice state.
+     * @param options The options for editing the voice state.
      */
     async editVoiceState(options: EditUserVoiceStateOptions) {
         return this._client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
@@ -129,7 +129,7 @@ export default class Member extends Base {
 
     /**
      * Remove a member from the guild.
-     * @param reason - The reason for the kick.
+     * @param reason The reason for the kick.
      */
     async kick(reason?: string) {
         await this._client.rest.guilds.removeMember(this.guildID, this.id, reason);
@@ -137,8 +137,8 @@ export default class Member extends Base {
 
     /**
      * remove a role from this member.
-     * @param roleID - The ID of the role to remove.
-     * @param reason - The reason for removing the role.
+     * @param roleID The ID of the role to remove.
+     * @param reason The reason for removing the role.
      */
     async removeRole(roleID: string, reason?: string) {
         await this._client.rest.guilds.removeMemberRole(this.guildID, this.id, roleID, reason);
@@ -166,7 +166,7 @@ export default class Member extends Base {
 
     /**
      * Remove a ban for this member.
-     * @param reason - The reason for removing the ban.
+     * @param reason The reason for removing the ban.
      */
     async unban(reason?: string) {
         await this._client.rest.guilds.removeBan(this.guildID, this.id, reason);

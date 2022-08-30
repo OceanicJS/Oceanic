@@ -20,8 +20,8 @@ export default class PartialApplication extends Base {
     protected update(data: RawPartialApplication): void;
     /**
      * The url of this application's icon.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     iconURL(format?: ImageFormat, size?: number): string | null;
     toJSON(): JSONPartialApplication;

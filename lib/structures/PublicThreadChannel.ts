@@ -14,7 +14,7 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
 
     /**
      * Edit this channel.
-     * @param options - The options to edit the channel with.
+     * @param options The options to edit the channel with.
      */
     override async edit(options: EditPublicThreadChannelOptions) {
         return this._client.rest.channels.edit<this>(this.id, options);

@@ -59,45 +59,45 @@ export default class Member extends Base {
     get voiceState(): import("./VoiceState").default | null;
     /**
      * Add a role to this member.
-     * @param roleID - The ID of the role to add.
+     * @param roleID The ID of the role to add.
      */
     addRole(roleID: string, reason?: string): Promise<void>;
     /**
      * The url of this user's guild avatar (or their user avatar if no guild avatar is set, or their default avatar if none apply).
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number): string;
     /**
      * Create a bon for this member.
-     * @param options - The options for the ban.
+     * @param options The options for the ban.
      */
     ban(options?: CreateBanOptions): Promise<void>;
     /**
      * Edit this member.
-     * @param options - The options for editing the member.
+     * @param options The options for editing the member.
      */
     edit(options: EditMemberOptions): Promise<Member>;
     /**
      * Edit this guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     * @param options - The options for editing the voice state.
+     * @param options The options for editing the voice state.
      */
     editVoiceState(options: EditUserVoiceStateOptions): Promise<void>;
     /**
      * Remove a member from the guild.
-     * @param reason - The reason for the kick.
+     * @param reason The reason for the kick.
      */
     kick(reason?: string): Promise<void>;
     /**
      * remove a role from this member.
-     * @param roleID - The ID of the role to remove.
-     * @param reason - The reason for removing the role.
+     * @param roleID The ID of the role to remove.
+     * @param reason The reason for removing the role.
      */
     removeRole(roleID: string, reason?: string): Promise<void>;
     toJSON(): JSONMember;
     /**
      * Remove a ban for this member.
-     * @param reason - The reason for removing the ban.
+     * @param reason The reason for removing the ban.
      */
     unban(reason?: string): Promise<void>;
 }

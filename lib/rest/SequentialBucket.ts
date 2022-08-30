@@ -52,7 +52,7 @@ export default class SequentialBucket {
 
     /**
      * Add an item to the queue.
-     * @param func - The function to queue.
+     * @param func The function to queue.
      * @param priority- If true, the item will be added to the front of the queue/
      */
     queue(func: (cb: () => void) => void, priority = false) {

@@ -47,7 +47,7 @@ class GuildTemplate {
     }
     /**
      * Create a guild from this template. This can only be used by bots in less than 10 guilds.
-     * @param options - The options for creating the guild.
+     * @param options The options for creating the guild.
      */
     async createGuild(options) {
         return this._client.rest.guilds.createFromTemplate(this.code, options);
@@ -60,7 +60,7 @@ class GuildTemplate {
     }
     /**
      * Edit this template.
-     * @param options - The options for editing the template.
+     * @param options The options for editing the template.
      */
     async editTemplate(options) {
         return this._client.rest.guilds.editTemplate(this.sourceGuild.id, this.code, options);

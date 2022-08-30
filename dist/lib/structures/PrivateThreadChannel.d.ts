@@ -10,7 +10,7 @@ export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadCha
     constructor(data: RawPrivateThreadChannel, client: Client);
     /**
      * Edit this channel.
-     * @param options - The options to edit the channel with.
+     * @param options The options to edit the channel with.
      */
     edit(options: EditPrivateThreadChannelOptions): Promise<this>;
     toJSON(): JSONPrivateThreadChannel;

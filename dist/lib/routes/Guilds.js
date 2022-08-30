@@ -43,9 +43,9 @@ class Guilds extends BaseRoute_1.default {
      * Add a member to a guild. Requires an access token with the `guilds.join` scope.
      *
      * Returns the newly added member upon success, or void if the member is already in the guild.
-     * @param id - The ID of the guild.
-     * @param userID - The ID of the user to add.
-     * @param options - The options for adding the member.
+     * @param id The ID of the guild.
+     * @param userID The ID of the user to add.
+     * @param options The options for adding the member.
      */
     async addMember(id, userID, options) {
         return this._manager.authRequest({
@@ -62,10 +62,10 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Add a role to a member.
-     * @param id - The ID of the guild.
-     * @param memberID - The ID of the member.
-     * @param roleID - The ID of the role to add.
-     * @param reason - The reason for adding the role.
+     * @param id The ID of the guild.
+     * @param memberID The ID of the member.
+     * @param roleID The ID of the role to add.
+     * @param reason The reason for adding the role.
      */
     async addMemberRole(id, memberID, roleID, reason) {
         await this._manager.authRequest({
@@ -76,8 +76,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Begine a prune.
-     * @param id - The ID of the guild.
-     * @param options - The options for the prune.
+     * @param id The ID of the guild.
+     * @param options The options for the prune.
      */
     async beginPrune(id, options) {
         const reason = options?.reason;
@@ -96,7 +96,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a guild. This can only be used by bots in under 10 guilds.
-     * @param options - The options for creating the guild.
+     * @param options The options for creating the guild.
      */
     async create(options) {
         if (options.icon)
@@ -122,8 +122,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create an auto moderation rule for a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for creating the rule.
+     * @param id The ID of the guild.
+     * @param options The options for creating the rule.
      */
     async createAutoModerationRule(id, options) {
         const reason = options.reason;
@@ -157,9 +157,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a bon for a user.
-     * @param guildID - The ID of the guild.
-     * @param userID - The ID of the user to ban.
-     * @param options - The options for creating the bon.
+     * @param guildID The ID of the guild.
+     * @param userID The ID of the user to ban.
+     * @param options The options for creating the bon.
      */
     async createBan(guildID, userID, options) {
         const reason = options?.reason;
@@ -178,8 +178,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a channel in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for creating the channel.
+     * @param id The ID of the guild.
+     * @param options The options for creating the channel.
      */
     async createChannel(id, type, options) {
         const reason = options.reason;
@@ -207,8 +207,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create an emoji in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for creating the emoji.
+     * @param id The ID of the guild.
+     * @param options The options for creating the emoji.
      */
     async createEmoji(id, options) {
         const reason = options.reason;
@@ -232,8 +232,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a guild from a template. This can only be used by bots in less than 10 guilds.
-     * @param code - The code of the template to use.
-     * @param options - The options for creating the guild.
+     * @param code The code of the template to use.
+     * @param options The options for creating the guild.
      */
     async createFromTemplate(code, options) {
         if (options.icon)
@@ -249,8 +249,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a role.
-     * @param id - The ID of the guild.
-     * @param options - The options for creating the role.
+     * @param id The ID of the guild.
+     * @param options The options for creating the role.
      */
     async createRole(id, options) {
         const reason = options?.reason;
@@ -275,8 +275,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a scheduled event in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for creating the scheduled event.
+     * @param id The ID of the guild.
+     * @param options The options for creating the scheduled event.
      */
     async createScheduledEvent(id, options) {
         const reason = options.reason;
@@ -305,8 +305,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Create a guild template.
-     * @param id - The ID of the guild to create a template from.
-     * @param options - The options for creating the template.
+     * @param id The ID of the guild to create a template from.
+     * @param options The options for creating the template.
      */
     async createTemplate(id, options) {
         return this._manager.authRequest({
@@ -320,7 +320,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async delete(id) {
         await this._manager.authRequest({
@@ -330,9 +330,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete an auto moderation rule.
-     * @param id - The ID of the guild.
-     * @param ruleID - The ID of the rule to delete.
-     * @param reason - The reason for deleting the rule.
+     * @param id The ID of the guild.
+     * @param ruleID The ID of the rule to delete.
+     * @param reason The reason for deleting the rule.
      */
     async deleteAutoModerationRule(id, ruleID, reason) {
         await this._manager.authRequest({
@@ -343,9 +343,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete an emoji.
-     * @param id - The ID of the guild.
-     * @param emojiID - The ID of the emoji.
-     * @param reason - The reason for deleting the emoji.
+     * @param id The ID of the guild.
+     * @param emojiID The ID of the emoji.
+     * @param reason The reason for deleting the emoji.
      */
     async deleteEmoji(id, emojiID, reason) {
         await this._manager.authRequest({
@@ -356,9 +356,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete an integration.
-     * @param id - The ID of the guild.
-     * @param integrationID - The ID of the integration.
-     * @param reason - The reason for deleting the integration.
+     * @param id The ID of the guild.
+     * @param integrationID The ID of the integration.
+     * @param reason The reason for deleting the integration.
      */
     async deleteIntegration(id, integrationID, reason) {
         await this._manager.authRequest({
@@ -369,9 +369,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete a role.
-     * @param id - The ID of the guild.
-     * @param roleID - The ID of the role to delete.
-     * @param reason - The reason for deleting the role.
+     * @param id The ID of the guild.
+     * @param roleID The ID of the role to delete.
+     * @param reason The reason for deleting the role.
      */
     async deleteRole(id, roleID, reason) {
         await this._manager.authRequest({
@@ -382,9 +382,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete a scheduled event.
-     * @param id - The ID of the guild.
-     * @param eventID - The ID of the scheduled event.
-     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
+     * @param id The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     async deleteScheduledEvent(id, eventID, reason) {
         await this._manager.authRequest({
@@ -395,8 +395,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Delete a template.
-     * @param id - The ID of the guild.
-     * @param code - The code of the template.
+     * @param id The ID of the guild.
+     * @param code The code of the template.
      */
     async deleteTemplate(id, code) {
         await this._manager.authRequest({
@@ -406,8 +406,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the guild.
+     * @param id The ID of the guild.
+     * @param options The options for editing the guild.
      */
     async edit(id, options) {
         const reason = options.reason;
@@ -451,9 +451,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit an existing auto moderation rule.
-     * @param id - The ID of the guild.
-     * @param ruleID - The ID of the rule to edit.
-     * @param options - The options for editing the rule.
+     * @param id The ID of the guild.
+     * @param ruleID The ID of the rule to edit.
+     * @param options The options for editing the rule.
      */
     async editAutoModerationRule(id, ruleID, options) {
         const reason = options.reason;
@@ -486,8 +486,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit the positions of channels in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The channels to move. Unedited channels do not need to be specifed.
+     * @param id The ID of the guild.
+     * @param options The channels to move. Unedited channels do not need to be specifed.
      */
     async editChannelPositions(id, options) {
         await this._manager.authRequest({
@@ -503,8 +503,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Modify the current member in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the member.
+     * @param id The ID of the guild.
+     * @param options The options for editing the member.
      */
     async editCurrentMember(id, options) {
         const reason = options.reason;
@@ -521,8 +521,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit the current member's voice state in a guild. `channelID` is required, and the current member must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats) for more information.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the voice state.
+     * @param id The ID of the guild.
+     * @param options The options for editing the voice state.
      */
     async editCurrentUserVoiceState(id, options) {
         await this._manager.authRequest({
@@ -537,8 +537,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit an existing emoji.
-     * @param id - The ID of the guild the emoji is in.
-     * @param options - The options for editing the emoji.
+     * @param id The ID of the guild the emoji is in.
+     * @param options The options for editing the emoji.
      */
     async editEmoji(id, emojiID, options) {
         const reason = options.reason;
@@ -559,8 +559,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of a guild. This can only be used by the guild owner.
-     * @param id - The ID of the guild.
-     * @param level - The new MFA level.
+     * @param id The ID of the guild.
+     * @param level The new MFA level.
      */
     async editMFALevel(id, level) {
         return this._manager.authRequest({
@@ -573,9 +573,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit a guild member.
-     * @param id - The ID of the guild.
-     * @param memberID - The ID of the member.
-     * @param options - The options for editing the member.
+     * @param id The ID of the guild.
+     * @param memberID The ID of the member.
+     * @param options The options for editing the member.
      */
     async editMember(id, memberID, options) {
         const reason = options.reason;
@@ -597,8 +597,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit an existing role.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the role.
+     * @param id The ID of the guild.
+     * @param options The options for editing the role.
      */
     async editRole(id, roleID, options) {
         const reason = options.reason;
@@ -623,8 +623,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit the position of roles in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The roles to move.
+     * @param id The ID of the guild.
+     * @param options The roles to move.
      */
     async editRolePositions(id, options, reason) {
         const guild = this._client.guilds.get(id);
@@ -640,8 +640,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit an existing scheduled event in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the scheduled event.
+     * @param id The ID of the guild.
+     * @param options The options for editing the scheduled event.
      */
     async editScheduledEvent(id, options) {
         const reason = options.reason;
@@ -671,9 +671,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit a guild template.
-     * @param id - The ID of the guild.
-     * @param code - The code of the template.
-     * @param options - The options for editing the template.
+     * @param id The ID of the guild.
+     * @param code The code of the template.
+     * @param options The options for editing the template.
      */
     async editTemplate(id, code, options) {
         return this._manager.authRequest({
@@ -688,9 +688,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit a guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     * @param id - The ID of the guild.
-     * @param memberID - The ID of the member.
-     * @param options - The options for editing the voice state.
+     * @param id The ID of the guild.
+     * @param memberID The ID of the member.
+     * @param options The options for editing the voice state.
      */
     async editUserVoiceState(id, memberID, options) {
         await this._manager.authRequest({
@@ -704,8 +704,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit the welcome screen in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the welcome screen.
+     * @param id The ID of the guild.
+     * @param options The options for editing the welcome screen.
      */
     async editWelcomeScreen(id, options) {
         const reason = options.reason;
@@ -737,8 +737,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Edit the widget of a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for editing the widget.
+     * @param id The ID of the guild.
+     * @param options The options for editing the widget.
      */
     async editWidget(id, options) {
         return this._manager.authRequest({
@@ -768,8 +768,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild.
-     * @param id - The ID of the guild.
-     * @param withCounts - If the approximate number of members and online members should be included.
+     * @param id The ID of the guild.
+     * @param withCounts If the approximate number of members and online members should be included.
      */
     async get(id, withCounts) {
         const query = new URLSearchParams();
@@ -783,7 +783,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the active threads in a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getActiveThreads(id) {
         return this._manager.authRequest({
@@ -801,8 +801,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild's audit log.
-     * @param id - The ID of the guild.
-     * @param options - The options for getting the audit logs.
+     * @param id The ID of the guild.
+     * @param options The options for getting the audit logs.
      */
     async getAuditLog(id, options) {
         const guild = this._client.guilds.get(id);
@@ -831,8 +831,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get an auto moderation rule for a guild.
-     * @param id - The ID of the guild.
-     * @param ruleID - The ID of the rule to get.
+     * @param id The ID of the guild.
+     * @param ruleID The ID of the rule to get.
      */
     async getAutoModerationRule(id, ruleID) {
         return this._manager.authRequest({
@@ -842,7 +842,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the auto moderation rules for a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getAutoModerationRules(id) {
         const guild = this._client.guilds.get(id);
@@ -853,8 +853,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a ban.
-     * @param id - The ID of the guild.
-     * @param userID - The ID of the user to get the ban of.
+     * @param id The ID of the guild.
+     * @param userID The ID of the user to get the ban of.
      */
     async getBan(id, userID) {
         return this._manager.authRequest({
@@ -867,8 +867,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the bans in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for getting the bans.
+     * @param id The ID of the guild.
+     * @param options The options for getting the bans.
      */
     async getBans(id, options) {
         const query = new URLSearchParams();
@@ -889,7 +889,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the channels in a guild. Does not include threads.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getChannels(id) {
         return this._manager.authRequest({
@@ -899,8 +899,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get an emoji in a guild.
-     * @param id - The ID of the guild.
-     * @param emojiID - The ID of the emoji to get.
+     * @param id The ID of the guild.
+     * @param emojiID The ID of the emoji to get.
      */
     async getEmoji(id, emojiID) {
         return this._manager.authRequest({
@@ -913,7 +913,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the emojis in a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getEmojis(id) {
         return this._manager.authRequest({
@@ -926,7 +926,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the integrations in a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getIntegrations(id) {
         return this._manager.authRequest({
@@ -936,7 +936,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the invites of a guild.
-     * @param id - The ID of the guild to get the invites of.
+     * @param id The ID of the guild to get the invites of.
      */
     async getInvites(id) {
         return this._manager.authRequest({
@@ -946,8 +946,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild member.
-     * @param id - The ID of the guild.
-     * @param memberID - The ID of the member.
+     * @param id The ID of the guild.
+     * @param memberID The ID of the member.
      */
     async getMember(id, memberID) {
         return this._manager.authRequest({
@@ -957,8 +957,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild's members. This requires the `GUILD_MEMBERS` intent.
-     * @param id - The ID of the guild.
-     * @param options - The options for getting the members.
+     * @param id The ID of the guild.
+     * @param options The options for getting the members.
      */
     async getMembers(id, options) {
         const query = new URLSearchParams();
@@ -974,7 +974,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a preview of a guild. If the client is not already in this guild, the guild must be lurkable.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getPreview(id) {
         return this._manager.authRequest({
@@ -984,8 +984,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the prune count of a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options for getting the prune count.
+     * @param id The ID of the guild.
+     * @param options The options for getting the prune count.
      */
     async getPruneCount(id, options) {
         const query = new URLSearchParams();
@@ -1001,7 +1001,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the roles in a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getRoles(id) {
         const guild = this._client.guilds.get(id);
@@ -1012,9 +1012,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a scheduled event.
-     * @param id - The ID of the guild.
-     * @param eventID - The ID of the scheduled event to get.
-     * @param withUserCount - If the number of users subscribed to the event should be included.
+     * @param id The ID of the guild.
+     * @param eventID The ID of the scheduled event to get.
+     * @param withUserCount If the number of users subscribed to the event should be included.
      */
     async getScheduledEvent(id, eventID, withUserCount) {
         const query = new URLSearchParams();
@@ -1028,9 +1028,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the users subscribed to a scheduled event.
-     * @param id - The ID of the guild.
-     * @param eventID - The ID of the scheduled event.
-     * @param options - The options for getting the users.
+     * @param id The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for getting the users.
      */
     async getScheduledEventUsers(id, eventID, options) {
         const guild = this._client.guilds.get(id);
@@ -1054,8 +1054,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild's scheduled events
-     * @param id - The ID of the guild.
-     * @param withUserCount - If the number of users subscribed to the event should be included.
+     * @param id The ID of the guild.
+     * @param withUserCount If the number of users subscribed to the event should be included.
      */
     async getScheduledEvents(id, withUserCount) {
         const query = new URLSearchParams();
@@ -1069,7 +1069,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild template.
-     * @param code - The code of the template to get.
+     * @param code The code of the template to get.
      */
     async getTemplate(code) {
         return this._manager.authRequest({
@@ -1079,7 +1079,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild's templates.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getTemplates(id) {
         return this._manager.authRequest({
@@ -1089,7 +1089,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the vanity url of a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getVanityURL(id) {
         return this._manager.authRequest({
@@ -1099,7 +1099,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the list of usable voice regions for a guild. This will return VIP servers when the guild is VIP-enabled.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getVoiceRegions(id) {
         return this._manager.authRequest({
@@ -1109,7 +1109,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the welcome screen for a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getWelcomeScreen(id) {
         return this._manager.authRequest({
@@ -1127,7 +1127,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the widget of a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getWidget(id) {
         return this._manager.authRequest({
@@ -1153,8 +1153,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the widget image of a guild.
-     * @param id - The ID of the guild.
-     * @param style - The style of the image.
+     * @param id The ID of the guild.
+     * @param style The style of the image.
      */
     async getWidgetImage(id, style) {
         const query = new URLSearchParams();
@@ -1168,7 +1168,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get the raw JSON widget of a guild.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getWidgetJSON(id) {
         return this._manager.request({
@@ -1178,7 +1178,7 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Get a guild's widget settings.
-     * @param id - The ID of the guild.
+     * @param id The ID of the guild.
      */
     async getWidgetSettings(id) {
         return this._manager.authRequest({
@@ -1191,9 +1191,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Remove a ban.
-     * @param id - The ID of the guild.
-     * @param userID - The ID of the user to remove the ban from.
-     * @param reason - The reason for removing the ban.
+     * @param id The ID of the guild.
+     * @param userID The ID of the user to remove the ban from.
+     * @param reason The reason for removing the ban.
      */
     async removeBan(id, userID, reason) {
         await this._manager.authRequest({
@@ -1204,9 +1204,9 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Remove a member from a guild.
-     * @param id - The ID of the guild.
-     * @param memberID - The ID of the user to remove.
-     * @param reason - The reason for the removal.
+     * @param id The ID of the guild.
+     * @param memberID The ID of the user to remove.
+     * @param reason The reason for the removal.
      */
     async removeMember(id, memberID, reason) {
         await this._manager.authRequest({
@@ -1217,10 +1217,10 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * remove a role from a member.
-     * @param id - The ID of the guild.
-     * @param memberID - The ID of the member.
-     * @param roleID - The ID of the role to remove.
-     * @param reason - The reason for removing the role.
+     * @param id The ID of the guild.
+     * @param memberID The ID of the member.
+     * @param roleID The ID of the role to remove.
+     * @param reason The reason for removing the role.
      */
     async removeMemberRole(id, memberID, roleID, reason) {
         await this._manager.authRequest({
@@ -1231,8 +1231,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Search the username & nicknames of members in a guild.
-     * @param id - The ID of the guild.
-     * @param options - The options to search with.
+     * @param id The ID of the guild.
+     * @param options The options to search with.
      */
     async searchMembers(id, options) {
         const query = new URLSearchParams();
@@ -1247,8 +1247,8 @@ class Guilds extends BaseRoute_1.default {
     }
     /**
      * Sync a guild template.
-     * @param id - The ID of the guild.
-     * @param code - The code of the template to sync.
+     * @param id The ID of the guild.
+     * @param code The code of the template to sync.
      */
     async syncTemplate(id, code) {
         return this._manager.authRequest({

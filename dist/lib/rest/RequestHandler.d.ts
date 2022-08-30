@@ -21,7 +21,7 @@ export default class RequestHandler {
     authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T>;
     /**
      * Make a request. `null` will be returned if the request results in a `204 NO CONTENT`.
-     * @param options - The options for the request.
+     * @param options The options for the request.
      */
     request<T = unknown>(options: RequestOptions): Promise<T>;
 }

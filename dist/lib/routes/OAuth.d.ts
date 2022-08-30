@@ -6,17 +6,17 @@ import Guild from "../structures/Guild";
 export default class OAuth extends BaseRoute {
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
-     * @param options - The options to for the client credentials grant.
+     * @param options The options to for the client credentials grant.
      */
     clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse>;
     /**
      * Construct an oauth authorization url.
-     * @param options - The options to construct the url with.
+     * @param options The options to construct the url with.
      */
     constructURL(options: OAuthURLOptions): string;
     /**
      * Exchange a code for an access token.
-     * @param options - The options for exchanging the code.
+     * @param options The options for exchanging the code.
      */
     exchangeCode(options: ExchangeCodeOptions): Promise<ExchangeCodeResponse>;
     /**
@@ -39,7 +39,7 @@ export default class OAuth extends BaseRoute {
      * Get the guild member information about the currently authenticated user.
      *
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
-     * @param guild - the ID of the guild
+     * @param guild the ID of the guild
      */
     getCurrentGuildMember(guild: string): Promise<Member>;
     /**
@@ -53,7 +53,7 @@ export default class OAuth extends BaseRoute {
     refreshToken(options: RefreshTokenOptions): Promise<ExchangeCodeResponse>;
     /**
      * Revoke an access token.
-     * @param options - The options for revoking the token.
+     * @param options The options for revoking the token.
      */
     revokeToken(options: RevokeTokenOptions): Promise<void>;
 }

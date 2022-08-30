@@ -36,32 +36,32 @@ export default class ComponentInteraction extends Interaction {
     constructor(data: RawMessageComponentInteraction, client: Client);
     /**
      * Create a followup message.
-     * @param options - The options for creating the followup message.
+     * @param options The options for creating the followup message.
      */
     createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>>;
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
-     * @param options - The options for the message.
+     * @param options The options for the message.
      */
     createMessage(options: InteractionContent): Promise<void>;
     /**
      * Respond to this interaction with a modal. This is an initial response, and more than one initial response cannot be used.
-     * @param options - The options for the modal.
+     * @param options The options for the modal.
      */
     createModal(options: ModalData): Promise<void>;
     /**
      * Defer this interaction with a `DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE` response. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     defer(flags?: number): Promise<void>;
     /**
      * Defer this interaction with a `DEFERRED_UPDATE_MESAGE` response.. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     deferUpdate(flags?: number): Promise<void>;
     /**
      * Delete a follow up message.
-     * @param messageID - The ID of the message.
+     * @param messageID The ID of the message.
      */
     deleteFollowup(messageID: string): Promise<void>;
     /**
@@ -70,23 +70,23 @@ export default class ComponentInteraction extends Interaction {
     deleteOriginal(): Promise<void>;
     /**
      * Edit a followup message.
-     * @param messageID - The ID of the message.
-     * @param options - The options for editing the followup message.
+     * @param messageID The ID of the message.
+     * @param options The options for editing the followup message.
      */
     editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent): Promise<Message<T>>;
     /**
      * Edit the original interaction response.
-     * @param options - The options for editing the original message.
+     * @param options The options for editing the original message.
      */
     editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>>;
     /**
      * Edit the message this interaction is from. If this interaction has already been acknowledged, use `createFollowup`.
-     * @param options - The options for editing the message.
+     * @param options The options for editing the message.
      */
     editParent(options: InteractionContent): Promise<void>;
     /**
      * Get a followup message.
-     * @param messageID - The ID of the message.
+     * @param messageID The ID of the message.
      */
     getFollowup<T extends AnyGuildTextChannel>(messageID: string): Promise<Message<T>>;
     /**

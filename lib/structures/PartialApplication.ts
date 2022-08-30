@@ -34,8 +34,8 @@ export default class PartialApplication extends Base {
 
     /**
      * The url of this application's icon.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     iconURL(format?: ImageFormat, size?: number) {
         return this.icon === null ? null : this._client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);

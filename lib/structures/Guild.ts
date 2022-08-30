@@ -317,8 +317,8 @@ export default class Guild extends Base {
      * Add a member to this guild. Requires an access token with the `guilds.join` scope.
      *
      * Returns the newly added member upon success, or void if the member is already in the guild.
-     * @param userID - The ID of the user to add.
-     * @param options - The options for adding the member.
+     * @param userID The ID of the user to add.
+     * @param options The options for adding the member.
      */
     async addMember(userID: string, options: AddMemberOptions) {
         return this._client.rest.guilds.addMember(this.id, userID, options);
@@ -326,9 +326,9 @@ export default class Guild extends Base {
 
     /**
      * Add a role to a member.
-     * @param memberID - The ID of the member.
-     * @param roleID - The ID of the role to add.
-     * @param reason - The reason for adding the role.
+     * @param memberID The ID of the member.
+     * @param roleID The ID of the role to add.
+     * @param reason The reason for adding the role.
      */
     async addMemberRole(memberID: string, roleID: string, reason?: string) {
         return this._client.rest.guilds.addMemberRole(this.id, memberID, roleID, reason);
@@ -336,8 +336,8 @@ export default class Guild extends Base {
 
     /**
      * The url of this guild's banner.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     bannerURL(format?: ImageFormat, size?: number) {
         return this.banner === null ? null : this._client.util.formatImage(Routes.BANNER(this.id, this.banner), format, size);
@@ -345,7 +345,7 @@ export default class Guild extends Base {
 
     /**
      * Begine a prune.
-     * @param options - The options for the prune.
+     * @param options The options for the prune.
      */
     async beginPrune(options?: BeginPruneOptions) {
         return this._client.rest.guilds.beginPrune(this.id, options);
@@ -353,7 +353,7 @@ export default class Guild extends Base {
 
     /**
      * Create an auto moderation rule for this guild.
-     * @param options - The options for the rule.
+     * @param options The options for the rule.
      */
     async createAutoModerationRule(options: CreateAutoModerationRuleOptions) {
         return this._client.rest.guilds.createAutoModerationRule(this.id, options);
@@ -361,8 +361,8 @@ export default class Guild extends Base {
 
     /**
      * Create a bon for a user.
-     * @param userID - The ID of the user.
-     * @param options - The options for creating the bon.
+     * @param userID The ID of the user.
+     * @param options The options for creating the bon.
      */
     async createBan(userID: string, options?: CreateBanOptions) {
         return this._client.rest.guilds.createBan(this.id, userID, options);
@@ -370,7 +370,7 @@ export default class Guild extends Base {
 
     /**
      * Create a channel in this guild.
-     * @param options - The options for creating the channel.
+     * @param options The options for creating the channel.
      */
     async createChannel<T extends GuildChannelTypesWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">) {
         return this._client.rest.guilds.createChannel(this.id, type, options);
@@ -378,7 +378,7 @@ export default class Guild extends Base {
 
     /**
      * Create an emoji in this guild.
-     * @param options - The options for creating the emoji.
+     * @param options The options for creating the emoji.
      */
     async createEmoji(options: CreateEmojiOptions) {
         return this._client.rest.guilds.createEmoji(this.id, options);
@@ -386,7 +386,7 @@ export default class Guild extends Base {
 
     /**
      * Create a role.
-     * @param options - The options for creating the role.
+     * @param options The options for creating the role.
      */
     async createRole(options?: CreateRoleOptions) {
         return this._client.rest.guilds.createRole(this.id, options);
@@ -394,7 +394,7 @@ export default class Guild extends Base {
 
     /**
      * Create a scheduled event in this guild.
-     * @param options - The options for creating the scheduled event.
+     * @param options The options for creating the scheduled event.
      */
     async createScheduledEvent(options: CreateScheduledEventOptions) {
         return this._client.rest.guilds.createScheduledEvent(this.id, options);
@@ -402,7 +402,7 @@ export default class Guild extends Base {
 
     /**
      * Create a guild template.
-     * @param options - The options for creating the template.
+     * @param options The options for creating the template.
      */
     async createTemplate(options: CreateTemplateOptions) {
         return this._client.rest.guilds.createTemplate(this.id, options);
@@ -417,8 +417,8 @@ export default class Guild extends Base {
 
     /**
      * Delete an auto moderation rule in this guild.
-     * @param ruleID - The ID of the rule to delete.
-     * @param reason - The reason for deleting the rule.
+     * @param ruleID The ID of the rule to delete.
+     * @param reason The reason for deleting the rule.
      */
     async deleteAutoModerationRule(ruleID: string, reason?: string) {
         return this._client.rest.guilds.deleteAutoModerationRule(this.id, ruleID, reason);
@@ -426,8 +426,8 @@ export default class Guild extends Base {
 
     /**
      * Delete an emoji in this guild.
-     * @param emojiID - The ID of the emoji.
-     * @param reason - The reason for deleting the emoji.
+     * @param emojiID The ID of the emoji.
+     * @param reason The reason for deleting the emoji.
      */
     async deleteEmoji(emojiID: string, reason?: string) {
         return this._client.rest.guilds.deleteEmoji(this.id, emojiID, reason);
@@ -435,8 +435,8 @@ export default class Guild extends Base {
 
     /**
      * Delete an integration.
-     * @param integrationID - The ID of the integration.
-     * @param reason - The reason for deleting the integration.
+     * @param integrationID The ID of the integration.
+     * @param reason The reason for deleting the integration.
      */
     async deleteIntegration(integrationID: string, reason?: string) {
         return this._client.rest.guilds.deleteIntegration(this.id, integrationID, reason);
@@ -444,8 +444,8 @@ export default class Guild extends Base {
 
     /**
      * Delete a role.
-     * @param roleID - The ID of the role to delete.
-     * @param reason - The reason for deleting the role.
+     * @param roleID The ID of the role to delete.
+     * @param reason The reason for deleting the role.
      */
     async deleteRole(roleID: string, reason?: string) {
         return this._client.rest.guilds.deleteRole(this.id, roleID, reason);
@@ -453,8 +453,8 @@ export default class Guild extends Base {
 
     /**
      * Delete a scheduled event.
-     * @param eventID - The ID of the scheduled event.
-     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
+     * @param eventID The ID of the scheduled event.
+     * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     async deleteScheduledEvent(eventID: string, reason?: string) {
         return this._client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
@@ -462,7 +462,7 @@ export default class Guild extends Base {
 
     /**
      * Delete a template.
-     * @param code - The code of the template.
+     * @param code The code of the template.
      */
     async deleteTemplate(code: string) {
         return this._client.rest.guilds.deleteTemplate(this.id, code);
@@ -470,7 +470,7 @@ export default class Guild extends Base {
 
     /**
      * Edit this guild.
-     * @param options - The options for editing the guild.
+     * @param options The options for editing the guild.
      */
     async edit(options: EditGuildOptions) {
         return this._client.rest.guilds.edit(this.id, options);
@@ -478,8 +478,8 @@ export default class Guild extends Base {
 
     /**
      * Edit an existing auto moderation rule in this guild.
-     * @param ruleID - The ID of the rule to edit.
-     * @param options - The options for editing the rule.
+     * @param ruleID The ID of the rule to edit.
+     * @param options The options for editing the rule.
      */
     async editAutoModerationRule(ruleID: string, options: EditAutoModerationRuleOptions) {
         return this._client.rest.guilds.editAutoModerationRule(this.id, ruleID, options);
@@ -487,7 +487,7 @@ export default class Guild extends Base {
 
     /**
      * Edit the positions of channels in this guild.
-     * @param options - The channels to move. Unedited channels do not need to be specifed.
+     * @param options The channels to move. Unedited channels do not need to be specifed.
      */
     async editChannelPositions(options: Array<ModifyChannelPositionsEntry>) {
         return this._client.rest.guilds.editChannelPositions(this.id, options);
@@ -495,7 +495,7 @@ export default class Guild extends Base {
 
     /**
      * Modify the current member in this guild.
-     * @param options - The options for editing the member.
+     * @param options The options for editing the member.
      */
     async editCurrentMember(options: EditCurrentMemberOptions) {
         return this._client.rest.guilds.editCurrentMember(this.id, options);
@@ -503,14 +503,14 @@ export default class Guild extends Base {
 
     /**
      * Edit the current member's voice state in this guild. `channelID` is required, and the current member must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats) for more information.
-     * @param options - The options for editing the voice state.
+     * @param options The options for editing the voice state.
      */
     async editCurrentUserVoiceState(options: EditCurrentUserVoiceStateOptions) {
         return this._client.rest.guilds.editCurrentUserVoiceState(this.id, options);
     }
     /**
      * Edit an existing emoji in this guild.
-     * @param options - The options for editing the emoji.
+     * @param options The options for editing the emoji.
      */
     async editEmoji(emojiID: string, options: EditEmojiOptions) {
         return this._client.rest.guilds.editEmoji(this.id, emojiID, options);
@@ -518,7 +518,7 @@ export default class Guild extends Base {
 
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of this guild. This can only be used by the guild owner.
-     * @param level - The new MFA level.
+     * @param level The new MFA level.
      */
     async editMFALevel(level: MFALevels) {
         return this._client.rest.guilds.editMFALevel(this.id, level);
@@ -526,8 +526,8 @@ export default class Guild extends Base {
 
     /**
      * Edit a member of this guild.
-     * @param memberID - The ID of the member.
-     * @param options - The options for editing the member.
+     * @param memberID The ID of the member.
+     * @param options The options for editing the member.
      */
     async editMember(memberID: string, options: EditMemberOptions) {
         return this._client.rest.guilds.editMember(this.id, memberID, options);
@@ -535,7 +535,7 @@ export default class Guild extends Base {
 
     /**
      * Edit an existing role.
-     * @param options - The options for editing the role.
+     * @param options The options for editing the role.
      */
     async editRole(roleID: string, options: EditRoleOptions) {
         return this._client.rest.guilds.editRole(this.id, roleID, options);
@@ -543,7 +543,7 @@ export default class Guild extends Base {
 
     /**
      * Edit the position of roles in this guild.
-     * @param options - The roles to move.
+     * @param options The roles to move.
      */
     async editRolePositions(options: Array<EditRolePositionsEntry>, reason?: string) {
         return this._client.rest.guilds.editRolePositions(this.id, options, reason);
@@ -551,7 +551,7 @@ export default class Guild extends Base {
 
     /**
      * Edit an existing scheduled event in this guild.
-     * @param options - The options for editing the scheduled event.
+     * @param options The options for editing the scheduled event.
      */
     async editScheduledEvent(options: EditScheduledEventOptions) {
         return this._client.rest.guilds.editScheduledEvent(this.id, options);
@@ -559,8 +559,8 @@ export default class Guild extends Base {
 
     /**
      * Edit a template.
-     * @param code - The code of the template.
-     * @param options - The options for editing the template.
+     * @param code The code of the template.
+     * @param options The options for editing the template.
      */
     async editTemplate(code: string, options: EditGuildTemplateOptions) {
         return this._client.rest.guilds.editTemplate(this.id, code, options);
@@ -568,8 +568,8 @@ export default class Guild extends Base {
 
     /**
      * Edit a guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
-     * @param memberID - The ID of the member.
-     * @param options - The options for editing the voice state.
+     * @param memberID The ID of the member.
+     * @param options The options for editing the voice state.
      */
     async editUserVoiceState(memberID: string, options: EditUserVoiceStateOptions) {
         return this._client.rest.guilds.editUserVoiceState(this.id, memberID, options);
@@ -577,7 +577,7 @@ export default class Guild extends Base {
 
     /**
      * Edit the welcome screen in this guild.
-     * @param options - The options for editing the welcome screen.
+     * @param options The options for editing the welcome screen.
      */
     async editWelcomeScreen(options: EditWelcomeScreenOptions) {
         return this._client.rest.guilds.editWelcomeScreen(this.id, options);
@@ -585,7 +585,7 @@ export default class Guild extends Base {
 
     /**
      * Edit the widget of this guild.
-     * @param options - The options for editing the widget.
+     * @param options The options for editing the widget.
      */
     async editWidget(options: WidgetSettings) {
         return this._client.rest.guilds.editWidget(this.id, options);
@@ -593,7 +593,7 @@ export default class Guild extends Base {
 
     /**
      * Request members from this guild.
-     * @param options - The options for fetching the members.
+     * @param options The options for fetching the members.
      */
     async fetchMembers(options?: RequestGuildMembersOptions) {
         return this.shard.requestGuildMembers(this.id, options);
@@ -608,7 +608,7 @@ export default class Guild extends Base {
 
     /**
      * Get this guild's audit log.
-     * @param options - The options for the audit log.
+     * @param options The options for the audit log.
      */
     async getAuditLog(options?: GetAuditLogOptions) {
         return this._client.rest.guilds.getAuditLog(this.id, options);
@@ -616,7 +616,7 @@ export default class Guild extends Base {
 
     /**
      * Get an auto moderation rule for this guild.
-     * @param ruleID - The ID of the rule to get.
+     * @param ruleID The ID of the rule to get.
      */
     async getAutoModerationRule(ruleID: string) {
         return this._client.rest.guilds.getAutoModerationRule(this.id, ruleID);
@@ -631,7 +631,7 @@ export default class Guild extends Base {
 
     /**
      * Get a ban in this guild.
-     * @param userID - The ID of the user to get the ban of.
+     * @param userID The ID of the user to get the ban of.
      */
     async getBan(userID: string) {
         return this._client.rest.guilds.getBan(this.id, userID);
@@ -639,7 +639,7 @@ export default class Guild extends Base {
 
     /**
      * Get the bans in this guild.
-     * @param options - The options for getting the bans.
+     * @param options The options for getting the bans.
      */
     async getBans(options?: GetBansOptions) {
         return this._client.rest.guilds.getBans(this.id, options);
@@ -654,7 +654,7 @@ export default class Guild extends Base {
 
     /**
      * Get an emoji in this guild.
-     * @param emojiID - The ID of the emoji to get.
+     * @param emojiID The ID of the emoji to get.
      */
     async getEmoji(emojiID: string) {
         return this._client.rest.guilds.getEmoji(this.id, emojiID);
@@ -683,7 +683,7 @@ export default class Guild extends Base {
 
     /**
      * Get a member of this guild.
-     * @param memberID - The ID of the member.
+     * @param memberID The ID of the member.
      */
     async getMember(memberID: string) {
         return this._client.rest.guilds.getMember(this.id, memberID);
@@ -691,7 +691,7 @@ export default class Guild extends Base {
 
     /**
      * Get this guild's members. This requires the `GUILD_MEMBERS` intent.
-     * @param options - The options for getting the members.
+     * @param options The options for getting the members.
      */
     async getMembers(options?: GetMembersOptions) {
         return this._client.rest.guilds.getMembers(this.id, options);
@@ -706,7 +706,7 @@ export default class Guild extends Base {
 
     /**
      * Get the prune count of this guild.
-     * @param options - The options for getting the prune count.
+     * @param options The options for getting the prune count.
      */
     async getPruneCount(options?: GetPruneCountOptions) {
         return this._client.rest.guilds.getPruneCount(this.id, options);
@@ -721,8 +721,8 @@ export default class Guild extends Base {
 
     /**
      * Get a scheduled event.
-     * @param eventID - The ID of the scheduled event to get.
-     * @param withUserCount - If the number of users subscribed to the event should be included.
+     * @param eventID The ID of the scheduled event to get.
+     * @param withUserCount If the number of users subscribed to the event should be included.
      */
     async getScheduledEvent(eventID: string, withUserCount?: number) {
         return this._client.rest.guilds.getScheduledEvent(this.id, eventID, withUserCount);
@@ -730,8 +730,8 @@ export default class Guild extends Base {
 
     /**
      * Get the users subscribed to a scheduled event.
-     * @param eventID - The ID of the scheduled event to get the users of.
-     * @param options - The options for getting the users.
+     * @param eventID The ID of the scheduled event to get the users of.
+     * @param options The options for getting the users.
      */
     async getScheduledEventUsers(eventID: string, options?: GetScheduledEventUsersOptions) {
         return this._client.rest.guilds.getScheduledEventUsers(this.id, eventID, options);
@@ -739,7 +739,7 @@ export default class Guild extends Base {
 
     /**
      * Get this guild's scheduled events
-     * @param withUserCount - If the number of users subscribed to the event should be included.
+     * @param withUserCount If the number of users subscribed to the event should be included.
      */
     async getScheduledEvents(withUserCount?: number) {
         return this._client.rest.guilds.getScheduledEvents(this.id, withUserCount);
@@ -782,7 +782,7 @@ export default class Guild extends Base {
 
     /**
      * Get the widget image of this guild.
-     * @param style - The style of the image.
+     * @param style The style of the image.
      */
     async getWidgetImage(style?: WidgetImageStyle) {
         return this._client.rest.guilds.getWidgetImage(this.id, style);
@@ -804,8 +804,8 @@ export default class Guild extends Base {
 
     /**
      * The url of this guild's icon.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     iconURL(format?: ImageFormat, size?: number) {
         return this.icon === null ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
@@ -820,7 +820,7 @@ export default class Guild extends Base {
 
     /**
      * Get the permissions of a member. If providing an id, the member must be cached.
-     * @param member - The member to get the permissions of.
+     * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member) {
         if (typeof member === "string") member = this.members.get(member)!;
@@ -843,8 +843,8 @@ export default class Guild extends Base {
 
     /**
      * Remove a ban.
-     * @param userID - The ID of the user to remove the ban from.
-     * @param reason - The reason for removing the ban.
+     * @param userID The ID of the user to remove the ban from.
+     * @param reason The reason for removing the ban.
      */
     async removeBan(userID: string, reason?: string) {
         return this._client.rest.guilds.removeBan(this.id, userID, reason);
@@ -852,8 +852,8 @@ export default class Guild extends Base {
 
     /**
      * Remove a member from this guild.
-     * @param memberID - The ID of the user to remove.
-     * @param reason - The reason for the removal.
+     * @param memberID The ID of the user to remove.
+     * @param reason The reason for the removal.
      */
     async removeMember(memberID: string, reason?: string) {
         return this._client.rest.guilds.removeMember(this.id, memberID, reason);
@@ -861,9 +861,9 @@ export default class Guild extends Base {
 
     /**
      * remove a role from a member.
-     * @param memberID - The ID of the member.
-     * @param roleID - The ID of the role to remove.
-     * @param reason - The reason for removing the role.
+     * @param memberID The ID of the member.
+     * @param roleID The ID of the role to remove.
+     * @param reason The reason for removing the role.
      */
     async removeMemberRole(memberID: string, roleID: string, reason?: string) {
         return this._client.rest.guilds.removeMemberRole(this.id, memberID, roleID, reason);
@@ -871,7 +871,7 @@ export default class Guild extends Base {
 
     /**
      * Search the username & nicknames of members in this guild.
-     * @param options - The options for the search.
+     * @param options The options for the search.
      */
     async searchMembers(options: SearchMembersOptions) {
         return this._client.rest.guilds.searchMembers(this.id, options);
@@ -879,7 +879,7 @@ export default class Guild extends Base {
 
     /**
      * Sync a guild template.
-     * @param code - The code of the template to sync.
+     * @param code The code of the template to sync.
      */
     async syncTemplate(code: string) {
         return this._client.rest.guilds.syncTemplate(this.id, code);

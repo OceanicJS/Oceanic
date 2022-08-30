@@ -54,8 +54,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     disconnect(reconnect?: boolean, error?: Error): void;
     /**
      * Edit this shard's status.
-     * @param status - The status.
-     * @param activities - An array of activities.
+     * @param status The status.
+     * @param activities An array of activities.
      */
     editStatus(status: SendStatuses, activities?: Array<BotActivity>): Promise<void>;
     hardReset(): void;
@@ -64,8 +64,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     [inspect.custom](): Base;
     /**
      * Request the members of a guild.
-     * @param guild - The ID of the guild to request the members of.
-     * @param options - The options for requesting the members.
+     * @param guild The ID of the guild to request the members of.
+     * @param options The options for requesting the members.
      */
     requestGuildMembers(guild: string, options?: RequestGuildMembersOptions): Promise<Member[]>;
     reset(): void;
@@ -74,9 +74,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     toString(): string;
     /**
      * Update the voice state of this shard.
-     * @param guildID - The ID of the guild to update the voice state of.
-     * @param channelID - The ID of the voice channel to join. Null to disconnect.
-     * @param options - The options for updating the voice state.
+     * @param guildID The ID of the guild to update the voice state of.
+     * @param channelID The ID of the voice channel to join. Null to disconnect.
+     * @param options The options for updating the voice state.
      */
     updateVoiceState(guildID: string, channelID: string | null, options?: UpdateVoiceStateOptions): void;
 }

@@ -41,7 +41,7 @@ export default class GuildChannel extends Channel {
 
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     async edit(options: EditGuildChannelOptions) {
         return this._client.rest.channels.edit<AnyGuildChannel>(this.id, options);

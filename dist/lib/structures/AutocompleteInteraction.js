@@ -51,7 +51,7 @@ class AutocompleteInteraction extends Interaction_1.default {
     }
     /**
      * Defer this reaction. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags) {
         if (this.acknowledged)
@@ -61,7 +61,7 @@ class AutocompleteInteraction extends Interaction_1.default {
     }
     /**
      * Acknowledge this interaction with a set of choices. This is an initial response, and more than one initial response cannot be used.
-     * @param choices - The choices to send.
+     * @param choices The choices to send.
      */
     async result(choices) {
         if (this.acknowledged)

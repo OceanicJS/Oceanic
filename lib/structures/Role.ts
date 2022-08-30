@@ -58,7 +58,7 @@ export default class Role extends Base {
 
     /**
      * Delete this role.
-     * @param reason - The reason for deleting the role.
+     * @param reason The reason for deleting the role.
      */
     async delete(reason?: string) {
         return this._client.rest.guilds.deleteRole(this.guildID, this.id, reason);

@@ -36,7 +36,7 @@ export default class Role extends Base {
     get mention(): string;
     /**
      * Delete this role.
-     * @param reason - The reason for deleting the role.
+     * @param reason The reason for deleting the role.
      */
     delete(reason?: string): Promise<void>;
     toJSON(): JSONRole;

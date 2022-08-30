@@ -88,7 +88,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     protected update(data: Partial<RawMessage>): void;
     /**
      * Add a reaction to this message.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     createReaction(emoji: string): Promise<void>;
     /**
@@ -97,57 +97,57 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     crosspost(): Promise<Message<AnnouncementChannel>>;
     /**
      * Delete this message.
-     * @param reason - The reason for deleting the message.
+     * @param reason The reason for deleting the message.
      */
     deleteMessage(reason?: string): Promise<void>;
     /**
      * Remove a reaction from this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     deleteReaction(emoji: string, user?: string): Promise<void>;
     /**
      * Remove all, or a specific emoji's reactions from this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     deleteReactions(emoji?: string): Promise<void>;
     /**
      * Delete this message as a webhook.
-     * @param token - The token of the webhook.
-     * @param options - Options for deleting the message.
+     * @param token The token of the webhook.
+     * @param options Options for deleting the message.
      */
     deleteWebhook(token: string, options: DeleteWebhookMessageOptions): Promise<void>;
     /**
      * Edit this message.
-     * @param options - The options for editing the message.
+     * @param options The options for editing the message.
      */
     edit(options: EditMessageOptions): Promise<Message<T>>;
     /**
      * Edit this message as a webhook.
-     * @param token - The token of the webhook.
-     * @param options - The options for editing the message.
+     * @param token The token of the webhook.
+     * @param options The options for editing the message.
      */
     editWebhook(token: string, options: EditWebhookMessageOptions): Promise<Message<AnyGuildTextChannel>>;
     /**
      * Get the users who reacted with a specific emoji on this message.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     getReactions(emoji: string, options?: GetReactionsOptions): Promise<User[]>;
     /**
      * Pin this message.
-     * @param reason - The reason for pinning the message.
+     * @param reason The reason for pinning the message.
      */
     pin(reason?: string): Promise<void>;
     /**
      * Create a thread from this message.
-     * @param options - The options for creating the thread.
+     * @param options The options for creating the thread.
      */
     startThread(options: StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>;
     toJSON(): JSONMessage;
     /**
      * Unpin this message.
-     * @param reason - The reason for unpinning the message.
+     * @param reason The reason for unpinning the message.
      */
     unpin(reason?: string): Promise<void>;
 }

@@ -18,12 +18,12 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     convert(): Promise<TextChannel>;
     /**
      * Crosspost a message in this channel.
-     * @param messageID - The ID of the message to crosspost.
+     * @param messageID The ID of the message to crosspost.
      */
     crosspostMessage(messageID: string): Promise<import("./Message").default<AnnouncementChannel>>;
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     edit(options: EditGuildChannelOptions): Promise<this>;
     toJSON(): JSONAnnouncementChannel;

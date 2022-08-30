@@ -90,74 +90,74 @@ class GroupChannel extends Channel_1.default {
     }
     /**
      * Add a user to this channel.
-     * @param options - The options for adding the user.
+     * @param options The options for adding the user.
      */
     async addRecipient(options) {
         return this._client.rest.channels.addGroupRecipient(this.id, options);
     }
     /**
      * Create an invite for this channel.
-     * @param options - The options for creating the invite.
+     * @param options The options for creating the invite.
      */
     async createInvite(options) {
         return this._client.rest.channels.createInvite(this.id, options);
     }
     /**
      * Create a message in this channel.
-     * @param options - The options for creating the message.
+     * @param options The options for creating the message.
      */
     async createMessage(options) {
         return this._client.rest.channels.createMessage(this.id, options);
     }
     /**
      * Add a reaction to a message in this channel.
-     * @param messageID - The ID of the message to add a reaction to.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param messageID The ID of the message to add a reaction to.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(messageID, emoji) {
         return this._client.rest.channels.createReaction(this.id, messageID, emoji);
     }
     /**
      * Delete a message in this channel.
-     * @param messageID - The ID of the message to delete.
-     * @param reason - The reason for deleting the message.
+     * @param messageID The ID of the message to delete.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(messageID, reason) {
         return this._client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
     /**
      * Remove a reaction from a message in this channel.
-     * @param messageID - The ID of the message to remove a reaction from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param messageID The ID of the message to remove a reaction from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async deleteReaction(messageID, emoji) {
         return this._client.rest.channels.deleteReaction(this.id, messageID, emoji);
     }
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     async edit(options) {
         return this._client.rest.channels.edit(this.id, options);
     }
     /**
      * Edit a message in this channel.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage(messageID, options) {
         return this._client.rest.channels.editMessage(this.id, messageID, options);
     }
     /**
      * Get a message in this channel.
-     * @param messageID - The ID of the message to get.
+     * @param messageID The ID of the message to get.
      */
     async getMessage(messageID) {
         return this._client.rest.channels.getMessage(this.id, messageID);
     }
     /**
      * Get messages in this channel.
-     * @param options - The options for getting the messages. All options are mutually exclusive.
+     * @param options The options for getting the messages. All options are mutually exclusive.
      */
     async getMessages(options) {
         return this._client.rest.channels.getMessages(this.id, options);
@@ -170,32 +170,32 @@ class GroupChannel extends Channel_1.default {
     }
     /**
      * Get the users who reacted with a specific emoji on a message.
-     * @param messageID - The ID of the message to get reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param messageID The ID of the message to get reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(messageID, emoji, options) {
         return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
     /**
      * The url of this application's icon.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     iconURL(format, size) {
         return this.icon === null ? null : this._client.util.formatImage(Routes.APPLICATION_ICON(this.application.id, this.icon), format, size);
     }
     /**
      * Pin a message in this channel.
-     * @param messageID - The ID of the message to pin.
-     * @param reason - The reason for pinning the message.
+     * @param messageID The ID of the message to pin.
+     * @param reason The reason for pinning the message.
      */
     async pinMessage(messageID, reason) {
         return this._client.rest.channels.pinMessage(this.id, messageID, reason);
     }
     /**
      * Remove a user from this channel.
-     * @param userID - The ID of the user to remove.
+     * @param userID The ID of the user to remove.
      */
     async removeRecipient(userID) {
         return this._client.rest.channels.removeGroupRecipient(this.id, userID);
@@ -221,8 +221,8 @@ class GroupChannel extends Channel_1.default {
     }
     /**
      * Unpin a message in this channel.
-     * @param messageID - The ID of the message to unpin.
-     * @param reason - The reason for unpinning the message.
+     * @param messageID The ID of the message to unpin.
+     * @param reason The reason for unpinning the message.
      */
     async unpinMessage(messageID, reason) {
         return this._client.rest.channels.unpinMessage(this.id, messageID, reason);

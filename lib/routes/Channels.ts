@@ -50,8 +50,8 @@ import Channel from "../structures/Channel";
 export default class Channels extends BaseRoute {
     /**
      * Add a user to a group channel.
-     * @param groupID - The ID of the group to add the user to.
-     * @param options - The options for adding the recipient.
+     * @param groupID The ID of the group to add the user to.
+     * @param options The options for adding the recipient.
      */
     async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions) {
         await this._manager.authRequest<null>({
@@ -66,8 +66,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Add a member to a thread.
-     * @param id - The ID of the thread to add them to.
-     * @param userID - The ID of the user to add to the thread.
+     * @param id The ID of the thread to add them to.
+     * @param userID The ID of the user to add to the thread.
      */
     async addThreadMember(id: string, userID: string) {
         await this._manager.authRequest<null>({
@@ -77,7 +77,7 @@ export default class Channels extends BaseRoute {
     }
     /**
      * Create a direct message.
-     * @param recipient - The ID of the recipient of the direct message.
+     * @param recipient The ID of the recipient of the direct message.
      */
     async createDM(recipient: string) {
         return this._manager.authRequest<RawPrivateChannel>({
@@ -91,7 +91,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Create a group dm.
-     * @param options - The options for creating the group dm.
+     * @param options The options for creating the group dm.
      */
     async createGroupDM(options: CreateGroupChannelOptions) {
         return this._manager.authRequest<RawGroupChannel>({
@@ -105,8 +105,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Create an invite for a channel.
-     * @param id - The ID of the channel to create an invite for.
-     * @param options - The options for creating the invite.
+     * @param id The ID of the channel to create an invite for.
+     * @param options The options for creating the invite.
      */
     async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions) {
         const reason = options.reason;
@@ -129,8 +129,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Create a message in a channel.
-     * @param id - The ID of the channel to create the message in.
-     * @param options - The options for creating the message.
+     * @param id The ID of the channel to create the message in.
+     * @param options The options for creating the message.
      */
     async createMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, options: CreateMessageOptions) {
         const files = options.files;
@@ -160,9 +160,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Add a reaction to a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to add a reaction to.
-     * @param emoji - The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to add a reaction to.
+     * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(id: string, messageID: string, emoji: string) {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
@@ -174,8 +174,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Crosspost a message in an announcement channel.
-     * @param id - The ID of the channel to crosspost the message in.
-     * @param messageID - The ID of the message to crosspost.
+     * @param id The ID of the channel to crosspost the message in.
+     * @param messageID The ID of the message to crosspost.
      */
     async crosspostMessage(id: string, messageID: string) {
         return this._manager.authRequest<RawMessage>({
@@ -186,8 +186,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Delete or close a channel.
-     * @param id - The ID of the channel to delete or close.
-     * @param reason - The reason to be displayed in the audit log.
+     * @param id The ID of the channel to delete or close.
+     * @param reason The reason to be displayed in the audit log.
      */
     async delete(id: string, reason?: string) {
         await this._manager.authRequest<RawChannel>({
@@ -199,8 +199,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Delete an invite.
-     * @param code - The code of the invite to delete.
-     * @param reason - The reason for deleting the invite.
+     * @param code The code of the invite to delete.
+     * @param reason The reason for deleting the invite.
      */
     async deleteInvite<T extends InviteChannel = InviteChannel>(code: string, reason?: string) {
         return this._manager.authRequest<RawInvite>({
@@ -212,9 +212,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Delete a message.
-     * @param id - The ID of the channel to delete the message in.
-     * @param messageID - The ID of the message to delete.
-     * @param reason - The reason for deleting the message.
+     * @param id The ID of the channel to delete the message in.
+     * @param messageID The ID of the message to delete.
+     * @param reason The reason for deleting the message.
      */
     async deleteMessage(id: string, messageID: string, reason?: string) {
         await this._manager.authRequest<RawMessage>({
@@ -226,9 +226,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Bulk delete messages.
-     * @param id - The ID of the channel to delete the messages in.
-     * @param messageIDs - The IDs of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
-     * @param reason - The reason for deleting the messages.
+     * @param id The ID of the channel to delete the messages in.
+     * @param messageIDs The IDs of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param reason The reason for deleting the messages.
      */
     async deleteMessages(id: string, messageIDs: Array<string>, reason?: string) {
         await this._manager.authRequest<null>({
@@ -243,9 +243,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Delete a permission overwrite.
-     * @param id - The ID of the channel to delete the permission overwrite in.
-     * @param overwriteID - The ID of the permission overwrite to delete.
-     * @param reason - The reason for deleting the permission overwrite.
+     * @param id The ID of the channel to delete the permission overwrite in.
+     * @param overwriteID The ID of the permission overwrite to delete.
+     * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(id: string, overwriteID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -257,10 +257,10 @@ export default class Channels extends BaseRoute {
 
     /**
      * Remove a reaction from a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to remove a reaction from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param user - The user to remove the reaction from, `@me` for the current user (default).
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to remove a reaction from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(id: string, messageID: string, emoji: string, user = "@me") {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
@@ -272,9 +272,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Remove all, or a specific emoji's reactions from a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to remove reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to remove reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(id: string, messageID: string, emoji?: string) {
         if (emoji && emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
@@ -286,8 +286,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Edit a channel.
-     * @param id - The ID of the channel to edit.
-     * @param options - The options for editing the channel.
+     * @param id The ID of the channel to edit.
+     * @param options The options for editing the channel.
      */
     async edit<T extends AnyChannel = AnyChannel>(id: string, options: EditChannelOptions) {
         const reason = options.reason;
@@ -330,9 +330,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Edit a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string, options: EditMessageOptions) {
         const files = options.files;
@@ -354,9 +354,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Edit a permission overwrite.
-     * @param id - The ID of the channel to edit the permission overwrite for.
-     * @param overwriteID - The ID of the permission overwrite to edit.
-     * @param options - The options for editing the permission overwrite.
+     * @param id The ID of the channel to edit the permission overwrite for.
+     * @param overwriteID The ID of the permission overwrite to edit.
+     * @param options The options for editing the permission overwrite.
      */
     async editPermission(id: string, overwriteID: string, options: EditPermissionOptions) {
         const reason = options.reason;
@@ -375,8 +375,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Follow an announcement channel.
-     * @param id - The ID of the channel to follow the announcement channel to.
-     * @param webhookChannelID - The ID of the channel to follow the announcement channel to.
+     * @param id The ID of the channel to follow the announcement channel to.
+     * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
     async followAnnouncement(id: string, webhookChannelID: string) {
         return this._manager.authRequest<RawFollowedChannel>({
@@ -393,7 +393,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get a channel.
-     * @param id - The ID of the channel to get.
+     * @param id The ID of the channel to get.
      */
     async get<T extends AnyChannel = AnyChannel>(id: string) {
         return this._manager.authRequest<RawChannel>({
@@ -404,8 +404,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get an invite.
-     * @param code - The code of the invite to get.
-     * @param options - The options for getting the invite.
+     * @param code The code of the invite to get.
+     * @param options The options for getting the invite.
      */
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
@@ -425,7 +425,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the invites of a channel.
-     * @param id - The ID of the channel to get the invites of.
+     * @param id The ID of the channel to get the invites of.
      */
     async getInvites<T extends InviteChannel = InviteChannel>(id: string) {
         return this._manager.authRequest<Array<RawInvite>>({
@@ -436,8 +436,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the private archived threads the current user has joined in a channel.
-     * @param id - The ID of the channel to get the archived threads from.
-     * @param options - The options for getting the archived threads.
+     * @param id The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
      */
     async getJoinedPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions) {
         return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
@@ -461,8 +461,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get a message in a channel.
-     * @param id - The ID of the channel the message is in
-     * @param messageID - The ID of the message to get.
+     * @param id The ID of the channel the message is in
+     * @param messageID The ID of the message to get.
      */
     async getMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string) {
         return this._manager.authRequest<RawMessage>({
@@ -473,8 +473,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get messages in a channel.
-     * @param id - The ID of the channel to get messages from.
-     * @param options - The options for getting messages. All are mutually exclusive.
+     * @param id The ID of the channel to get messages from.
+     * @param options The options for getting messages. All are mutually exclusive.
      */
     async getMessages<T extends AnyTextChannel = AnyTextChannel>(id: string, options?: GetChannelMessagesOptions) {
         return this._manager.authRequest<Array<RawMessage>>({
@@ -491,7 +491,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the pinned messages in a channel.
-     * @param id - The ID of the channel to get the pinned messages from.
+     * @param id The ID of the channel to get the pinned messages from.
      */
     async getPinnedMessages<T extends AnyTextChannel = AnyTextChannel>(id: string) {
         return this._manager.authRequest<Array<RawMessage>>({
@@ -502,8 +502,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the private archived threads in a channel.
-     * @param id - The ID of the channel to get the archived threads from.
-     * @param options - The options for getting the archived threads.
+     * @param id The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
      */
     async getPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions) {
         return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
@@ -527,8 +527,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the public archived threads in a channel.
-     * @param id - The ID of the channel to get the archived threads from.
-     * @param options - The options for getting the archived threads.
+     * @param id The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
      */
     async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, options?: GetArchivedThreadsOptions) {
         return this._manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
@@ -552,10 +552,10 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the users who reacted with a specific emoji on a message.
-     * @param id - The ID of the channel the message is in.
-     * @param messageID - The ID of the message to get reactions from.
-     * @param emoji - The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
-     * @param options - The options for getting the reactions.
+     * @param id The ID of the channel the message is in.
+     * @param messageID The ID of the message to get reactions from.
+     * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @param options The options for getting the reactions.
      */
     async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions) {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
@@ -571,8 +571,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get a thread member.
-     * @param id - The ID of the thread.
-     * @param userID - The ID of the user to get the thread member of.
+     * @param id The ID of the thread.
+     * @param userID The ID of the user to get the thread member of.
      */
     async getThreadMember(id: string, userID: string) {
         return this._manager.authRequest<RawThreadMember>({
@@ -588,7 +588,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Get the members of a thread.
-     * @param id - The ID of the thread.
+     * @param id The ID of the thread.
      */
     async getThreadMembers(id: string) {
         return this._manager.authRequest<Array<RawThreadMember>>({
@@ -614,7 +614,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Join a thread.
-     * @param id - The ID of the thread to join.
+     * @param id The ID of the thread to join.
      */
     async joinThread(id: string) {
         await this._manager.authRequest<null>({
@@ -625,7 +625,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Leave a thread.
-     * @param id - The ID of the thread to leave.
+     * @param id The ID of the thread to leave.
      */
     async leaveThread(id: string) {
         await this._manager.authRequest<null>({
@@ -636,9 +636,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Pin a message in a channel.
-     * @param id - The ID of the channel to pin the message in.
-     * @param messageID - The ID of the message to pin.
-     * @param reason - The reason for pinning the message.
+     * @param id The ID of the channel to pin the message in.
+     * @param messageID The ID of the message to pin.
+     * @param reason The reason for pinning the message.
      */
     async pinMessage(id: string, messageID: string, reason?: string) {
         await this._manager.authRequest<null>({
@@ -650,8 +650,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Remove a user from the group channel.
-     * @param groupID - The ID of the group to remove the user from.
-     * @param userID - The ID of the user to remove.
+     * @param groupID The ID of the group to remove the user from.
+     * @param userID The ID of the user to remove.
      */
     async removeGroupRecipient(groupID: string, userID: string) {
         await this._manager.authRequest<null>({
@@ -662,8 +662,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Remove a member from a thread.
-     * @param id - The ID of the thread to remove them from.
-     * @param userID - The ID of the user to remove from the thread.
+     * @param id The ID of the thread to remove them from.
+     * @param userID The ID of the user to remove from the thread.
      */
     async removeThreadMember(id: string, userID: string) {
         await this._manager.authRequest<null>({
@@ -674,7 +674,7 @@ export default class Channels extends BaseRoute {
 
     /**
      * Show a typing indicator in a channel. How long users see this varies from client to client.
-     * @param id - The ID of the channel to show the typing indicator in.
+     * @param id The ID of the channel to show the typing indicator in.
      */
     async sendTyping(id: string) {
         await this._manager.authRequest<null>({
@@ -685,9 +685,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Create a thread from an existing message.
-     * @param id - The ID of the channel to create the thread in.
-     * @param messageID - The ID of the message to create the thread from.
-     * @param {options - The options for starting the thread.
+     * @param id The ID of the channel to create the thread in.
+     * @param messageID The ID of the message to create the thread from.
+     * @param {options The options for starting the thread.
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions) {
         const reason = options.reason;
@@ -706,8 +706,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Create a thread in a forum channel.
-     * @param id - The ID of the channel to start the thread in.
-     * @param options - The options for starting the thread
+     * @param id The ID of the channel to start the thread in.
+     * @param options The options for starting the thread
      */
     async startThreadInForum(id: string, options: StartThreadInForumOptions) {
         const reason = options.reason;
@@ -738,8 +738,8 @@ export default class Channels extends BaseRoute {
 
     /**
      * Create a thread without an existing message.
-     * @param id - The ID of the channel to start the thread in.
-     * @param options - The options for starting the thread.
+     * @param id The ID of the channel to start the thread in.
+     * @param options The options for starting the thread.
      */
     async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions) {
         const reason = options.reason;
@@ -760,9 +760,9 @@ export default class Channels extends BaseRoute {
 
     /**
      * Unpin a message in a channel.
-     * @param id - The ID of the channel to unpin the message in.
-     * @param messageID - The ID of the message to unpin.
-     * @param reason - The reason for unpinning the message.
+     * @param id The ID of the channel to unpin the message in.
+     * @param messageID The ID of the message to unpin.
+     * @param reason The reason for unpinning the message.
      */
     async unpinMessage(id: string, messageID: string, reason?: string) {
         await this._manager.authRequest<null>({

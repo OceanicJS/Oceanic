@@ -70,14 +70,14 @@ class AutoModerationRule extends Base_1.default {
     }
     /**
      * Delete this auto moderation rule.
-     * @param reason - The reason for deleting this rule.
+     * @param reason The reason for deleting this rule.
      */
     async deleteAutoModerationRule(reason) {
         return this._client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
     }
     /**
      * Edit this auto moderation rule.
-     * @param options - The options for editing the rule.
+     * @param options The options for editing the rule.
      */
     async edit(options) {
         return this._client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);

@@ -32,18 +32,18 @@ const Constants_1 = require("../Constants");
 class Interactions extends BaseRoute_1.default {
     /**
      * Create a followup message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param options - The options for creating the followup message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param options The options for creating the followup message.
      */
     async createFollowupMessage(applicationID, interactionToken, options) {
         return this._manager.webhooks.execute(applicationID, interactionToken, options);
     }
     /**
      * Create an initial interaction response.
-     * @param interactionID - The ID of the interaction.
-     * @param interactionToken - The token of the interaction.
-     * @param options - The options for creating the interaction response.
+     * @param interactionID The ID of the interaction.
+     * @param interactionToken The token of the interaction.
+     * @param options The options for creating the interaction response.
      */
     async createInteractionResponse(interactionID, interactionToken, options) {
         let data;
@@ -95,53 +95,53 @@ class Interactions extends BaseRoute_1.default {
     }
     /**
      * Delete a follow up message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param messageID - The ID of the message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param messageID The ID of the message.
      */
     async deleteFollowupMessage(applicationID, interactionToken, messageID) {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
     }
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
      */
     async deleteOriginalMessage(applicationID, interactionToken) {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, "@original");
     }
     /**
      * Edit a followup message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param messageID - The ID of the message.
-     * @param options - The options for editing the followup message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param messageID The ID of the message.
+     * @param options The options for editing the followup message.
      */
     async editFollowupMessage(applicationID, interactionToken, messageID, options) {
         return this._manager.webhooks.editMessage(applicationID, interactionToken, messageID, options);
     }
     /**
      * Edit an original interaction response.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param options - The options for editing the original message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param options The options for editing the original message.
      */
     async editOriginalMessage(applicationID, interactionToken, options) {
         return this._manager.webhooks.editMessage(applicationID, interactionToken, "@original", options);
     }
     /**
      * Get a followup message.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
-     * @param messageID - The ID of the message.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
+     * @param messageID The ID of the message.
      */
     async getFollowupMessage(applicationID, interactionToken, messageID) {
         return this._manager.webhooks.getMessage(applicationID, interactionToken, messageID);
     }
     /**
      * Get an original interaction response.
-     * @param applicationID - The ID of the application.
-     * @param interactionToken - The token of the interaction.
+     * @param applicationID The ID of the application.
+     * @param interactionToken The token of the interaction.
      */
     async getOriginalMessage(applicationID, interactionToken) {
         return this._manager.webhooks.getMessage(applicationID, interactionToken, "@original");

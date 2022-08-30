@@ -102,7 +102,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Create a followup message.
-     * @param options - The options for creating the followup message.
+     * @param options The options for creating the followup message.
      */
     async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent) {
         return this._client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
@@ -110,7 +110,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
-     * @param options - The options for the message.
+     * @param options The options for the message.
      */
     async createMessage(options: InteractionContent) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
@@ -120,7 +120,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Respond to this interaction with a modal. This is an initial response, and more than one initial response cannot be used.
-     * @param options - The options for the modal.
+     * @param options The options for the modal.
      */
     async createModal(options: ModalData) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
@@ -130,7 +130,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
@@ -140,7 +140,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Delete a follow up message.
-     * @param messageID - The ID of the message.
+     * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID: string) {
         return this._client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
@@ -155,8 +155,8 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Edit a followup message.
-     * @param messageID - The ID of the message.
-     * @param options - The options for editing the followup message.
+     * @param messageID The ID of the message.
+     * @param options The options for editing the followup message.
      */
     async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent) {
         return this._client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
@@ -164,7 +164,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Edit the original interaction response.
-     * @param options - The options for editing the original message.
+     * @param options The options for editing the original message.
      */
     async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent) {
         return this._client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
@@ -172,7 +172,7 @@ export default class CommandInteraction extends Interaction {
 
     /**
      * Get a followup message.
-     * @param messageID - The ID of the message.
+     * @param messageID The ID of the message.
      */
     async getFollowup<T extends AnyGuildTextChannel>(messageID: string) {
         return this._client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);

@@ -96,7 +96,7 @@ class GuildScheduledEvent extends Base_1.default {
     }
     /**
      * Delete this scheduled event.
-     * @param reason - The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
+     * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     async deleteScheduledEvent(reason) {
         return this._client.rest.guilds.deleteScheduledEvent(this.guildID, this.id, reason);

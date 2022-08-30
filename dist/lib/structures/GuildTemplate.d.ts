@@ -31,7 +31,7 @@ export default class GuildTemplate {
     protected update(data: Partial<RawGuildTemplate>): void;
     /**
      * Create a guild from this template. This can only be used by bots in less than 10 guilds.
-     * @param options - The options for creating the guild.
+     * @param options The options for creating the guild.
      */
     createGuild(options: CreateGuildFromTemplateOptions): Promise<Guild>;
     /**
@@ -40,7 +40,7 @@ export default class GuildTemplate {
     delete(): Promise<void>;
     /**
      * Edit this template.
-     * @param options - The options for editing the template.
+     * @param options The options for editing the template.
      */
     editTemplate(options: EditGuildTemplateOptions): Promise<GuildTemplate>;
     /**

@@ -18,19 +18,19 @@ export default class CategoryChannel extends GuildChannel {
     protected update(data: Partial<RawCategoryChannel>): void;
     /**
      * Delete a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to delete.
-     * @param reason - The reason for deleting the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to delete.
+     * @param reason The reason for deleting the permission overwrite.
      */
     deletePermission(overwriteID: string, reason?: string): Promise<void>;
     /**
      * Edit this channel.
-     * @param options - The options for editing the channel.
+     * @param options The options for editing the channel.
      */
     edit(options: EditAnyGuildChannelOptions): Promise<this>;
     /**
      * Edit a permission overwrite on this channel.
-     * @param overwriteID - The ID of the permission overwrite to edit.
-     * @param options - The options for editing the permission overwrite.
+     * @param overwriteID The ID of the permission overwrite to edit.
+     * @param options The options for editing the permission overwrite.
      */
     editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void>;
     toJSON(): JSONCategoryChannel;

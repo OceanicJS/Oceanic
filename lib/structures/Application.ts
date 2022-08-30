@@ -80,8 +80,8 @@ export default class Application extends ClientApplication {
 
     /**
      * The url of this application's cover image.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     coverImageURL(format?: ImageFormat, size?: number) {
         return this.coverImage === null ? null : this._client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);

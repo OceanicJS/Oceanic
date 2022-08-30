@@ -56,8 +56,8 @@ export default class User extends Base {
 
     /**
      * The url of this user's avatar (or default avatar, if they have not set an avatar).
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
         return this.avatar === null ? this.defaultAvatarURL() : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);

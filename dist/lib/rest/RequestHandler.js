@@ -82,7 +82,7 @@ class RequestHandler {
     }
     /**
      * Make a request. `null` will be returned if the request results in a `204 NO CONTENT`.
-     * @param options - The options for the request.
+     * @param options The options for the request.
      */
     async request(options) {
         options.method = options.method.toUpperCase();

@@ -18,118 +18,118 @@ class ClientApplication extends Base_1.default {
     }
     /**
      * Overwrite all existing global application commands.
-     * @param options - The commands.
+     * @param options The commands.
      */
     async bulkEditGlobalCommands(options) {
         return this._client.rest.applicationCommands.bulkEditGlobalCommands(this.id, options);
     }
     /**
      * Overwrite all existing application commands in a guild.
-     * @param guildID - The ID of the guild.
-     * @param options - The commands.
+     * @param guildID The ID of the guild.
+     * @param options The commands.
      */
     async bulkEditGuildCommands(guildID, options) {
         return this._client.rest.applicationCommands.bulkEditGuildCommands(this.id, guildID, options);
     }
     /**
      * Create a global application command.
-     * @param options - The options for creating the command.
+     * @param options The options for creating the command.
      */
     async createGlobalCommand(options) {
         return this._client.rest.applicationCommands.createGlobalCommand(this.id, options);
     }
     /**
      * Create a guild application command.
-     * @param guildID - The ID of the guild.
-     * @param options - The options for creating the command.
+     * @param guildID The ID of the guild.
+     * @param options The options for creating the command.
      */
     async createGuildCommand(guildID, options) {
         return this._client.rest.applicationCommands.createGuildCommand(this.id, guildID, options);
     }
     /**
      * Delete a global application command.
-     * @param commandID - The ID of the command.
+     * @param commandID The ID of the command.
      */
     async deleteGlobalCommand(commandID) {
         return this._client.rest.applicationCommands.deleteGlobalCommand(this.id, commandID);
     }
     /**
      * Delete a guild application command.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
      */
     async deleteGuildCommand(guildID, commandID) {
         return this._client.rest.applicationCommands.deleteGuildCommand(this.id, guildID, commandID);
     }
     /**
      * Edit a global application command.
-     * @param commandID - The ID of the command.
-     * @param options - The options for editing the command.
+     * @param commandID The ID of the command.
+     * @param options The options for editing the command.
      */
     async editGlobalCommand(commandID, options) {
         return this._client.rest.applicationCommands.editGlobalCommand(this.id, commandID, options);
     }
     /**
      * Edit a guild application command.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
-     * @param options - The options for editing the command.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
+     * @param options The options for editing the command.
      */
     async editGuildCommand(guildID, commandID, options) {
         return this._client.rest.applicationCommands.editGuildCommand(this.id, guildID, commandID, options);
     }
     /**
      * Edit a guild application command's permissions. This requires a bearer token with the `applications.commands.permissions.update` scope.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
-     * @param options - The options for editing the permissions.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
+     * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(guildID, commandID, options) {
         return this._client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
     }
     /**
      * Get a global application command.
-     * @param commandID - The ID of the command.
-     * @param withLocalizations - If localizations should be included.
+     * @param commandID The ID of the command.
+     * @param withLocalizations If localizations should be included.
      */
     async getGlobalCommand(commandID, withLocalizations) {
         return this._client.rest.applicationCommands.getGlobalCommand(this.id, commandID, withLocalizations);
     }
     /**
      * Get this application's global commands.
-     * @param withLocalizations - If localizations should be included.
+     * @param withLocalizations If localizations should be included.
      */
     async getGlobalCommands(withLocalizations) {
         return this._client.rest.applicationCommands.getGlobalCommands(this.id, withLocalizations);
     }
     /**
      * Get a global application command.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
-     * @param withLocalizations - If localizations should be included.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
+     * @param withLocalizations If localizations should be included.
      */
     async getGuildCommand(guildID, commandID, withLocalizations) {
         return this._client.rest.applicationCommands.getGuildCommand(this.id, guildID, commandID, withLocalizations);
     }
     /**
      * Get this application's commands in a specific guild.
-     * @param guildID - The ID of the guild.
-     * @param withLocalization - If localizations should be included.
+     * @param guildID The ID of the guild.
+     * @param withLocalization If localizations should be included.
      */
     async getGuildCommands(guildID, withLocalizations) {
         return this._client.rest.applicationCommands.getGuildCommands(this.id, guildID, withLocalizations);
     }
     /**
      * Get a command's permissions in a guild.
-     * @param guildID - The ID of the guild.
-     * @param commandID - The ID of the command.
+     * @param guildID The ID of the guild.
+     * @param commandID The ID of the command.
      */
     async getGuildPermission(guildID, commandID) {
         return this._client.rest.applicationCommands.getGuildPermission(this.id, guildID, commandID);
     }
     /**
      * Get the permissions for all commands in a guild.
-     * @param guildID - The ID of the guild.
+     * @param guildID The ID of the guild.
      */
     async getGuildPermissions(guildID) {
         return this._client.rest.applicationCommands.getGuildPermissions(this.id, guildID);

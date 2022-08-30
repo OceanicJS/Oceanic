@@ -47,7 +47,7 @@ class Client extends TypedEmitter_1.default {
     voiceConnections;
     /**
      * @constructor
-     * @param options - The options to create the client with.
+     * @param options The options to create the client with.
      */
     constructor(options) {
         super();
@@ -124,8 +124,8 @@ class Client extends TypedEmitter_1.default {
     }
     /**
      * Edit the client's status across all shards.
-     * @param status - The status.
-     * @param activities - An array of activities.
+     * @param status The status.
+     * @param activities An array of activities.
      */
     async editStatus(status, activities = []) {
         return this.shards.forEach(shard => shard.editStatus(status, activities));
@@ -137,8 +137,8 @@ class Client extends TypedEmitter_1.default {
     }
     /**
      * Join a voice channel.
-     * @param channelID - The ID of the voice channel to join. Null to disconnect.
-     * @param options - The options for joining the voice channel.
+     * @param channelID The ID of the voice channel to join. Null to disconnect.
+     * @param options The options for joining the voice channel.
      */
     async joinVoiceChannel(channelID, options) {
         const channel = this.getChannel(channelID);
@@ -151,7 +151,7 @@ class Client extends TypedEmitter_1.default {
     }
     /**
      * Leave a voice channel.
-     * @param channelID - The ID of the voice channel to leave.
+     * @param channelID The ID of the voice channel to leave.
      */
     async leaveVoiceChannel(channelID) {
         const channel = this.getChannel(channelID);

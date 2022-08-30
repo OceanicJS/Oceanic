@@ -33,12 +33,12 @@ export default class AutocompleteInteraction extends Interaction {
     constructor(data: RawAutocompleteInteraction, client: Client);
     /**
      * Defer this reaction. This is an initial response, and more than one initial response cannot be used.
-     * @param flags - The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     defer(flags?: number): Promise<void>;
     /**
      * Acknowledge this interaction with a set of choices. This is an initial response, and more than one initial response cannot be used.
-     * @param choices - The choices to send.
+     * @param choices The choices to send.
      */
     result(choices: Array<AutocompleteChoice>): Promise<void>;
     toJSON(): JSONAutocompleteInteraction;

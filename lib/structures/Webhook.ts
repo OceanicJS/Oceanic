@@ -62,8 +62,8 @@ export default class Webhook extends Base {
 
     /**
      * The url of this webhook's avatar.
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
         return this.avatar === null ? null : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
@@ -71,7 +71,7 @@ export default class Webhook extends Base {
 
     /**
      * Delete this webhook (requires a bot user, see `deleteToken`).
-     * @param reason - The reason for deleting this webhook.
+     * @param reason The reason for deleting this webhook.
      */
     async delete(reason?: string) {
         return this._client.rest.webhooks.delete(this.id, reason);
@@ -79,9 +79,9 @@ export default class Webhook extends Base {
 
     /**
      * Delete a message from this webhook.
-     * @param messageID - The ID of the message.
-     * @param options - The options for deleting the message.
-     * @param token - The token for the webhook, if not already present.
+     * @param messageID The ID of the message.
+     * @param options The options for deleting the message.
+     * @param token The token for the webhook, if not already present.
      */
     async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string) {
         const t = this.token || token;
@@ -91,7 +91,7 @@ export default class Webhook extends Base {
 
     /**
      * Delete this webhook via its token.
-     * @param token - The token for the webhook, if not already present.
+     * @param token The token for the webhook, if not already present.
      */
     async deleteToken(token?: string) {
         const t = this.token || token;
@@ -101,7 +101,7 @@ export default class Webhook extends Base {
 
     /**
      * Edit this webhook (requires a bot user, see `editToken`).
-     * @param options - The options for editing the webhook.
+     * @param options The options for editing the webhook.
      */
     async edit(options: EditWebhookOptions) {
         return this._client.rest.webhooks.edit(this.id, options);
@@ -109,10 +109,10 @@ export default class Webhook extends Base {
 
     /**
      * Edit a webhook message.
-     * @param id - The ID of the webhook.
-     * @param token - The token of the webhook.
-     * @param messageID - The ID of the message to edit.
-     * @param options - The options for editing the message.
+     * @param id The ID of the webhook.
+     * @param token The token of the webhook.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
      */
     async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
         const t = this.token || token;
@@ -122,8 +122,8 @@ export default class Webhook extends Base {
 
     /**
      * Edit a webhook via its token.
-     * @param options - The options for editing the webhook.
-     * @param token - The token for the webhook, if not already present.
+     * @param options The options for editing the webhook.
+     * @param token The token for the webhook, if not already present.
      */
     async editToken(options: EditWebhookOptions, token?: string) {
         const t = this.token || token;
@@ -133,8 +133,8 @@ export default class Webhook extends Base {
 
     /**
      * Execute the webhook.
-     * @param options - The options for executing the webhook.
-     * @param token - The token for the webhook, if not already present.
+     * @param options The options for executing the webhook.
+     * @param token The token for the webhook, if not already present.
      */
     async execute<T extends AnyGuildTextChannel>(options: ExecuteWebhookWaitOptions, token?: string): Promise<Message<T>>;
     async execute(options: ExecuteWebhookOptions, token?: string): Promise<void>;
@@ -146,8 +146,8 @@ export default class Webhook extends Base {
 
     /**
      * Execute this webhook as github compatible.
-     * @param options - The options to send. See Github's documentation for more information.
-     * @param token - The token for the webhook, if not already present.
+     * @param options The options to send. See Github's documentation for more information.
+     * @param token The token for the webhook, if not already present.
      */
     async executeGithub(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
     async executeGithub<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
@@ -159,8 +159,8 @@ export default class Webhook extends Base {
 
     /**
      * Execute this webhook as slack compatible.
-     * @param options - The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
-     * @param token - The token for the webhook, if not already present.
+     * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
+     * @param token The token for the webhook, if not already present.
      */
     async executeSlack(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
     async executeSlack<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
@@ -172,9 +172,9 @@ export default class Webhook extends Base {
 
     /**
      * Get a webhook message.
-     * @param messageID - The ID of the message.
-     * @param threadID - The ID of the thread the message is in.
-     * @param token - The token for the webhook, if not already present.
+     * @param messageID The ID of the message.
+     * @param threadID The ID of the thread the message is in.
+     * @param token The token for the webhook, if not already present.
      */
     async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string) {
         const t = this.token || token;
@@ -184,8 +184,8 @@ export default class Webhook extends Base {
 
     /**
      * The url of this webhook's `sourceGuild` icon (only present on channel follower webhooks).
-     * @param format - The format the url should be.
-     * @param size - The dimensions of the image.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
      */
     sourceGuildIconURL(format?: ImageFormat, size?: number) {
         return !this.sourceGuild?.icon ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
