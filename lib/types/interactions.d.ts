@@ -48,7 +48,7 @@ export interface DeferredInteractionResponse {
 }
 
 export interface AutocompleteInteractionResponse {
-    data: Array<AutocompleteChoice>;
+    data: { choices: Array<AutocompleteChoice>; };
     type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT;
 }
 

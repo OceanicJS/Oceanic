@@ -74,10 +74,10 @@ export default class AutocompleteInteraction extends Interaction {
      * @param {string} choices[].value - The value of the choice.
      * @returns {Promise<void>}
      */
-    async refer(choices: Array<AutocompleteChoice>) {
+    async result(choices: Array<AutocompleteChoice>) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: choices });
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: { choices } });
     }
 
     override toJSON(): JSONAutocompleteInteraction {
