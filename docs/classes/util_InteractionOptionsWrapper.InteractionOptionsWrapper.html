@@ -15,12 +15,15 @@
 <li><a href="../modules/util_InteractionOptionsWrapper.html">util/InteractionOptionsWrapper</a></li>
 <li><a href="util_InteractionOptionsWrapper.InteractionOptionsWrapper.html">InteractionOptionsWrapper</a></li></ul>
 <h1>Class InteractionOptionsWrapper</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>A wrapper for interaction options.</p>
+</div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li><span class="target">InteractionOptionsWrapper</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L24">lib/util/InteractionOptionsWrapper.ts:24</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L25">lib/util/InteractionOptionsWrapper.ts:25</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -77,14 +80,16 @@
 <h5>resolved: <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/types_interactions.ApplicationCommandInteractionResolvedData.html" class="tsd-signature-type" data-tsd-kind="Interface">ApplicationCommandInteractionResolvedData</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="util_InteractionOptionsWrapper.InteractionOptionsWrapper.html" class="tsd-signature-type" data-tsd-kind="Class">InteractionOptionsWrapper</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L27">lib/util/InteractionOptionsWrapper.ts:27</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L29">lib/util/InteractionOptionsWrapper.ts:29</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="raw" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>raw</span><a href="#raw" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">raw<span class="tsd-signature-symbol">:</span> <a href="../types/types_interactions.InteractionOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptions</a><span class="tsd-signature-symbol">[]</span></div><aside class="tsd-sources">
+<div class="tsd-signature">raw<span class="tsd-signature-symbol">:</span> <a href="../types/types_interactions.InteractionOptions.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptions</a><span class="tsd-signature-symbol">[]</span></div>
+<div class="tsd-comment tsd-typography"><p>The raw options from Discord.</p>
+</div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L26">lib/util/InteractionOptionsWrapper.ts:26</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L28">lib/util/InteractionOptionsWrapper.ts:28</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getAttachment" class="tsd-anchor"></a>
@@ -92,16 +97,22 @@
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getAttachment.getAttachment-1">get<wbr/>Attachment<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsAttachment.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsAttachment</a><a href="#getAttachment.getAttachment-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get an attachment option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsAttachment.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsAttachment</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L32">lib/util/InteractionOptionsWrapper.ts:32</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L40">lib/util/InteractionOptionsWrapper.ts:40</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getAttachment.getAttachment-2">get<wbr/>Attachment<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsAttachment.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsAttachment</a><a href="#getAttachment.getAttachment-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -113,22 +124,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsAttachment.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsAttachment</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L33">lib/util/InteractionOptionsWrapper.ts:33</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L41">lib/util/InteractionOptionsWrapper.ts:41</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getAttachmentValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Attachment<wbr/>Value</span><a href="#getAttachmentValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getAttachmentValue.getAttachmentValue-1">get<wbr/>Attachment<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_Attachment.Attachment.html" class="tsd-signature-type" data-tsd-kind="Class">Attachment</a><a href="#getAttachmentValue.getAttachmentValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get an attachment option value.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present or the attachment cannot be found.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_Attachment.Attachment.html" class="tsd-signature-type" data-tsd-kind="Class">Attachment</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L40">lib/util/InteractionOptionsWrapper.ts:40</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L55">lib/util/InteractionOptionsWrapper.ts:55</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getAttachmentValue.getAttachmentValue-2">get<wbr/>Attachment<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="structures_Attachment.Attachment.html" class="tsd-signature-type" data-tsd-kind="Class">Attachment</a><a href="#getAttachmentValue.getAttachmentValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -140,22 +157,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="structures_Attachment.Attachment.html" class="tsd-signature-type" data-tsd-kind="Class">Attachment</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L41">lib/util/InteractionOptionsWrapper.ts:41</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L56">lib/util/InteractionOptionsWrapper.ts:56</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getBoolean" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Boolean</span><a href="#getBoolean" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getBoolean.getBoolean-1">get<wbr/>Boolean<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsBoolean.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsBoolean</a><a href="#getBoolean.getBoolean-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a boolean option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsBoolean.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsBoolean</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L51">lib/util/InteractionOptionsWrapper.ts:51</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L73">lib/util/InteractionOptionsWrapper.ts:73</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getBoolean.getBoolean-2">get<wbr/>Boolean<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsBoolean.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsBoolean</a><a href="#getBoolean.getBoolean-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -167,22 +190,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsBoolean.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsBoolean</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L52">lib/util/InteractionOptionsWrapper.ts:52</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L74">lib/util/InteractionOptionsWrapper.ts:74</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getBooleanValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Boolean<wbr/>Value</span><a href="#getBooleanValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getBooleanValue.getBooleanValue-1">get<wbr/>Boolean<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><a href="#getBooleanValue.getBooleanValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a boolean option value.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L59">lib/util/InteractionOptionsWrapper.ts:59</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L87">lib/util/InteractionOptionsWrapper.ts:87</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getBooleanValue.getBooleanValue-2">get<wbr/>Boolean<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><a href="#getBooleanValue.getBooleanValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -194,22 +223,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L60">lib/util/InteractionOptionsWrapper.ts:60</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L88">lib/util/InteractionOptionsWrapper.ts:88</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getChannel" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Channel</span><a href="#getChannel" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getChannel.getChannel-1">get<wbr/>Channel<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsChannel</a><a href="#getChannel.getChannel-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a channel option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsChannel</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L65">lib/util/InteractionOptionsWrapper.ts:65</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L99">lib/util/InteractionOptionsWrapper.ts:99</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getChannel.getChannel-2">get<wbr/>Channel<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsChannel</a><a href="#getChannel.getChannel-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -221,22 +256,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsChannel</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L66">lib/util/InteractionOptionsWrapper.ts:66</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L100">lib/util/InteractionOptionsWrapper.ts:100</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getChannelID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>ChannelID</span><a href="#getChannelID" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getChannelID.getChannelID-1">get<wbr/>ChannelID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><a href="#getChannelID.getChannelID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a channel option value (id).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L73">lib/util/InteractionOptionsWrapper.ts:73</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L113">lib/util/InteractionOptionsWrapper.ts:113</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getChannelID.getChannelID-2">get<wbr/>ChannelID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#getChannelID.getChannelID-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -248,12 +289,14 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L74">lib/util/InteractionOptionsWrapper.ts:74</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L114">lib/util/InteractionOptionsWrapper.ts:114</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getChannelValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Channel<wbr/>Value</span><a href="#getChannelValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getChannelValue.getChannelValue-1">get<wbr/>Channel<wbr/>Value<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getChannelValue.getChannelValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a channel option value (channel).</p>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -263,12 +306,16 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present or the channel cannot be found.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L79">lib/util/InteractionOptionsWrapper.ts:79</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L125">lib/util/InteractionOptionsWrapper.ts:125</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getChannelValue.getChannelValue-2">get<wbr/>Channel<wbr/>Value<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getChannelValue.getChannelValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-type-parameters">
@@ -285,22 +332,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L80">lib/util/InteractionOptionsWrapper.ts:80</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L126">lib/util/InteractionOptionsWrapper.ts:126</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getInteger" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Integer</span><a href="#getInteger" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getInteger.getInteger-1">get<wbr/>Integer<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsInteger.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsInteger</a><a href="#getInteger.getInteger-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get an integer option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsInteger.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsInteger</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L90">lib/util/InteractionOptionsWrapper.ts:90</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L142">lib/util/InteractionOptionsWrapper.ts:142</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getInteger.getInteger-2">get<wbr/>Integer<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsInteger.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsInteger</a><a href="#getInteger.getInteger-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -312,22 +365,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsInteger.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsInteger</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L91">lib/util/InteractionOptionsWrapper.ts:91</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L143">lib/util/InteractionOptionsWrapper.ts:143</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getIntegerValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Integer<wbr/>Value</span><a href="#getIntegerValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getIntegerValue.getIntegerValue-1">get<wbr/>Integer<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><a href="#getIntegerValue.getIntegerValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get an integer option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L98">lib/util/InteractionOptionsWrapper.ts:98</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L156">lib/util/InteractionOptionsWrapper.ts:156</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getIntegerValue.getIntegerValue-2">get<wbr/>Integer<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getIntegerValue.getIntegerValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -339,22 +398,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L99">lib/util/InteractionOptionsWrapper.ts:99</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L157">lib/util/InteractionOptionsWrapper.ts:157</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMemberValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Member<wbr/>Value</span><a href="#getMemberValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getMemberValue.getMemberValue-1">get<wbr/>Member<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><a href="#getMemberValue.getMemberValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a user option value (member).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present, or if the member cannot be found.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L104">lib/util/InteractionOptionsWrapper.ts:104</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L168">lib/util/InteractionOptionsWrapper.ts:168</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getMemberValue.getMemberValue-2">get<wbr/>Member<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a><a href="#getMemberValue.getMemberValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -366,22 +431,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="structures_Member.Member.html" class="tsd-signature-type" data-tsd-kind="Class">Member</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L105">lib/util/InteractionOptionsWrapper.ts:105</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L169">lib/util/InteractionOptionsWrapper.ts:169</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMentionable" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Mentionable</span><a href="#getMentionable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getMentionable.getMentionable-1">get<wbr/>Mentionable<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsMentionable.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsMentionable</a><a href="#getMentionable.getMentionable-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a mentionable option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsMentionable.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsMentionable</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L115">lib/util/InteractionOptionsWrapper.ts:115</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L185">lib/util/InteractionOptionsWrapper.ts:185</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getMentionable.getMentionable-2">get<wbr/>Mentionable<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsMentionable.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsMentionable</a><a href="#getMentionable.getMentionable-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -393,22 +464,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsMentionable.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsMentionable</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L116">lib/util/InteractionOptionsWrapper.ts:116</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L186">lib/util/InteractionOptionsWrapper.ts:186</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMentionableID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>MentionableID</span><a href="#getMentionableID" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getMentionableID.getMentionableID-1">get<wbr/>MentionableID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><a href="#getMentionableID.getMentionableID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a mentionable option (id).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L123">lib/util/InteractionOptionsWrapper.ts:123</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L199">lib/util/InteractionOptionsWrapper.ts:199</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getMentionableID.getMentionableID-2">get<wbr/>MentionableID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#getMentionableID.getMentionableID-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -420,12 +497,14 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L124">lib/util/InteractionOptionsWrapper.ts:124</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L200">lib/util/InteractionOptionsWrapper.ts:200</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getMentionableValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Mentionable<wbr/>Value</span><a href="#getMentionableValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getMentionableValue.getMentionableValue-1">get<wbr/>Mentionable<wbr/>Value<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getMentionableValue.getMentionableValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a mentionable option (channel, user, role).</p>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -435,12 +514,16 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present, or if the value cannot be found.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L129">lib/util/InteractionOptionsWrapper.ts:129</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L211">lib/util/InteractionOptionsWrapper.ts:211</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getMentionableValue.getMentionableValue-2">get<wbr/>Mentionable<wbr/>Value<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getMentionableValue.getMentionableValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-type-parameters">
@@ -457,22 +540,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L130">lib/util/InteractionOptionsWrapper.ts:130</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L212">lib/util/InteractionOptionsWrapper.ts:212</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getNumber" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Number</span><a href="#getNumber" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getNumber.getNumber-1">get<wbr/>Number<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsNumber.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsNumber</a><a href="#getNumber.getNumber-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a number option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsNumber.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsNumber</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L140">lib/util/InteractionOptionsWrapper.ts:140</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L228">lib/util/InteractionOptionsWrapper.ts:228</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getNumber.getNumber-2">get<wbr/>Number<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsNumber.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsNumber</a><a href="#getNumber.getNumber-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -484,22 +573,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsNumber.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsNumber</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L141">lib/util/InteractionOptionsWrapper.ts:141</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L229">lib/util/InteractionOptionsWrapper.ts:229</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getNumberValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Number<wbr/>Value</span><a href="#getNumberValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getNumberValue.getNumberValue-1">get<wbr/>Number<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><a href="#getNumberValue.getNumberValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a number option value.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L148">lib/util/InteractionOptionsWrapper.ts:148</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L242">lib/util/InteractionOptionsWrapper.ts:242</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getNumberValue.getNumberValue-2">get<wbr/>Number<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getNumberValue.getNumberValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -511,22 +606,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L149">lib/util/InteractionOptionsWrapper.ts:149</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L243">lib/util/InteractionOptionsWrapper.ts:243</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getRole" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Role</span><a href="#getRole" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getRole.getRole-1">get<wbr/>Role<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsRole.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsRole</a><a href="#getRole.getRole-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a role option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsRole.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsRole</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L154">lib/util/InteractionOptionsWrapper.ts:154</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L254">lib/util/InteractionOptionsWrapper.ts:254</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getRole.getRole-2">get<wbr/>Role<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsRole.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsRole</a><a href="#getRole.getRole-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -538,22 +639,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsRole.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsRole</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L155">lib/util/InteractionOptionsWrapper.ts:155</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L255">lib/util/InteractionOptionsWrapper.ts:255</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getRoleID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>RoleID</span><a href="#getRoleID" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getRoleID.getRoleID-1">get<wbr/>RoleID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><a href="#getRoleID.getRoleID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a role option value (id).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L162">lib/util/InteractionOptionsWrapper.ts:162</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L268">lib/util/InteractionOptionsWrapper.ts:268</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getRoleID.getRoleID-2">get<wbr/>RoleID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#getRoleID.getRoleID-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -565,22 +672,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L163">lib/util/InteractionOptionsWrapper.ts:163</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L269">lib/util/InteractionOptionsWrapper.ts:269</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getRoleValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Role<wbr/>Value</span><a href="#getRoleValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getRoleValue.getRoleValue-1">get<wbr/>Role<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_Role.Role.html" class="tsd-signature-type" data-tsd-kind="Class">Role</a><a href="#getRoleValue.getRoleValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a role option value (role).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present, or if the role cannot be found.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_Role.Role.html" class="tsd-signature-type" data-tsd-kind="Class">Role</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L168">lib/util/InteractionOptionsWrapper.ts:168</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L280">lib/util/InteractionOptionsWrapper.ts:280</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getRoleValue.getRoleValue-2">get<wbr/>Role<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="structures_Role.Role.html" class="tsd-signature-type" data-tsd-kind="Class">Role</a><a href="#getRoleValue.getRoleValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -592,22 +705,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="structures_Role.Role.html" class="tsd-signature-type" data-tsd-kind="Class">Role</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L169">lib/util/InteractionOptionsWrapper.ts:169</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L281">lib/util/InteractionOptionsWrapper.ts:281</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>String</span><a href="#getString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getString.getString-1">get<wbr/>String<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsString.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsString</a><a href="#getString.getString-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a string option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsString.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsString</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L179">lib/util/InteractionOptionsWrapper.ts:179</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L297">lib/util/InteractionOptionsWrapper.ts:297</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getString.getString-2">get<wbr/>String<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsString.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsString</a><a href="#getString.getString-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -619,12 +738,14 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsString.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsString</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L180">lib/util/InteractionOptionsWrapper.ts:180</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L298">lib/util/InteractionOptionsWrapper.ts:298</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getStringValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>String<wbr/>Value</span><a href="#getStringValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getStringValue.getStringValue-1">get<wbr/>String<wbr/>Value<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getStringValue.getStringValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a string option.</p>
+</div>
 <div class="tsd-type-parameters">
 <h4 class="tsd-type-parameters-title">Type Parameters</h4>
 <ul class="tsd-type-parameters">
@@ -634,12 +755,16 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L187">lib/util/InteractionOptionsWrapper.ts:187</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L311">lib/util/InteractionOptionsWrapper.ts:311</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getStringValue.getStringValue-2">get<wbr/>String<wbr/>Value<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><a href="#getStringValue.getStringValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-type-parameters">
@@ -656,20 +781,24 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L188">lib/util/InteractionOptionsWrapper.ts:188</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L312">lib/util/InteractionOptionsWrapper.ts:312</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getSubCommand" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Sub<wbr/>Command</span><a href="#getSubCommand" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getSubCommand.getSubCommand-1">get<wbr/>Sub<wbr/>Command<span class="tsd-signature-symbol">(</span>required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="util_InteractionOptionsWrapper.InteractionOptionsWrapper.html" class="tsd-signature-type" data-tsd-kind="Class">InteractionOptionsWrapper</a><a href="#getSubCommand.getSubCommand-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>If present, returns the top level subcommand. This only goes one level deep, to get the subcommand of a subcommandgroup, you must call this twice in a ro.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="util_InteractionOptionsWrapper.InteractionOptionsWrapper.html" class="tsd-signature-type" data-tsd-kind="Class">InteractionOptionsWrapper</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L193">lib/util/InteractionOptionsWrapper.ts:193</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L323">lib/util/InteractionOptionsWrapper.ts:323</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getSubCommand.getSubCommand-2">get<wbr/>Sub<wbr/>Command<span class="tsd-signature-symbol">(</span>required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="util_InteractionOptionsWrapper.InteractionOptionsWrapper.html" class="tsd-signature-type" data-tsd-kind="Class">InteractionOptionsWrapper</a><a href="#getSubCommand.getSubCommand-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -679,22 +808,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="util_InteractionOptionsWrapper.InteractionOptionsWrapper.html" class="tsd-signature-type" data-tsd-kind="Class">InteractionOptionsWrapper</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L194">lib/util/InteractionOptionsWrapper.ts:194</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L324">lib/util/InteractionOptionsWrapper.ts:324</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getUser" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>User</span><a href="#getUser" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getUser.getUser-1">get<wbr/>User<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsUser.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsUser</a><a href="#getUser.getUser-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a user option.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/types_interactions.InteractionOptionsUser.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsUser</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L203">lib/util/InteractionOptionsWrapper.ts:203</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L339">lib/util/InteractionOptionsWrapper.ts:339</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getUser.getUser-2">get<wbr/>User<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/types_interactions.InteractionOptionsUser.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsUser</a><a href="#getUser.getUser-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -706,22 +841,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../types/types_interactions.InteractionOptionsUser.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionOptionsUser</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L204">lib/util/InteractionOptionsWrapper.ts:204</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L340">lib/util/InteractionOptionsWrapper.ts:340</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getUserID" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>UserID</span><a href="#getUserID" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getUserID.getUserID-1">get<wbr/>UserID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><a href="#getUserID.getUserID-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a user option value (id).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L211">lib/util/InteractionOptionsWrapper.ts:211</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L353">lib/util/InteractionOptionsWrapper.ts:353</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getUserID.getUserID-2">get<wbr/>UserID<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#getUserID.getUserID-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -733,22 +874,28 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L212">lib/util/InteractionOptionsWrapper.ts:212</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L354">lib/util/InteractionOptionsWrapper.ts:354</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getUserValue" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>User<wbr/>Value</span><a href="#getUserValue" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="getUserValue.getUserValue-1">get<wbr/>User<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a><a href="#getUserValue.getUserValue-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Get a user option value (user).</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>name: <span class="tsd-signature-type">string</span></h5></li>
+<h5>name: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>The name of the option.</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> required: <span class="tsd-signature-type">false</span></h5>
+<div class="tsd-comment tsd-typography"><p>If true, an error will be thrown if the option is not present, or if the user cannot be found.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L217">lib/util/InteractionOptionsWrapper.ts:217</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L365">lib/util/InteractionOptionsWrapper.ts:365</a></li></ul></aside></li>
 <li class="tsd-signature tsd-anchor-link" id="getUserValue.getUserValue-2">get<wbr/>User<wbr/>Value<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, required<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a><a href="#getUserValue.getUserValue-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -760,7 +907,7 @@
 <h5>required: <span class="tsd-signature-type">true</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L218">lib/util/InteractionOptionsWrapper.ts:218</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/util/InteractionOptionsWrapper.ts#L366">lib/util/InteractionOptionsWrapper.ts:366</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
