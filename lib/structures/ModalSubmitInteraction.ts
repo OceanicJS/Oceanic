@@ -78,6 +78,16 @@ export default class ModalSubmitInteraction extends Interaction {
     }
 
     /**
+     * Defer this interaction with a `DEFERRED_UPDATE_MESAGE` response.. This is an initial response, and more than one initial response cannot be used.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     */
+    async deferUpdate(flags?: number) {
+        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        this.acknowledged = true;
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: { flags } });
+    }
+
+    /**
      * Delete a follow up message.
      * @param messageID The ID of the message.
      */
@@ -107,6 +117,16 @@ export default class ModalSubmitInteraction extends Interaction {
      */
     async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent) {
         return this._client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
+    }
+
+    /**
+     * Edit the message this interaction is from. If this interaction has already been acknowledged, use `createFollowup`.
+     * @param options The options for editing the message.
+     */
+    async editParent(options: InteractionContent) {
+        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        this.acknowledged = true;
+        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UPDATE_MESSAGE, data: options });
     }
 
     /**

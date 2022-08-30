@@ -64,7 +64,7 @@ interface GatewayOptions {
     guildCreateTimeout?: number;
     /**
      * The [intents](https://discord.com/developers/docs/topics/gateway#list-of-intents) to use. Either a number, array of intent names, array of numbers, or "ALL". All non privileged intents are used by default.
-     * @defaultValue [[AllNonPrivilegedIntents]]
+     * @defaultValue {@link Constants~AllNonPrivilegedIntents | All Non Privileged Intents}
      */
     intents?: number | Array<IntentNames | "ALL" | number>;
     /**

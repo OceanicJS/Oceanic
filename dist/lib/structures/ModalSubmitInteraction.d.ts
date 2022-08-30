@@ -47,6 +47,11 @@ export default class ModalSubmitInteraction extends Interaction {
      */
     defer(flags?: number): Promise<void>;
     /**
+     * Defer this interaction with a `DEFERRED_UPDATE_MESAGE` response.. This is an initial response, and more than one initial response cannot be used.
+     * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
+     */
+    deferUpdate(flags?: number): Promise<void>;
+    /**
      * Delete a follow up message.
      * @param messageID The ID of the message.
      */
@@ -66,6 +71,11 @@ export default class ModalSubmitInteraction extends Interaction {
      * @param options The options for editing the original message.
      */
     editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<import("./Message").default<T>>;
+    /**
+     * Edit the message this interaction is from. If this interaction has already been acknowledged, use `createFollowup`.
+     * @param options The options for editing the message.
+     */
+    editParent(options: InteractionContent): Promise<void>;
     /**
      * Get a followup message.
      * @param messageID The ID of the message.

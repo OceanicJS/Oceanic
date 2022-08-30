@@ -90,7 +90,7 @@ export interface RESTOptions {
     agent?: Agent | null;
     /**
      * The base URL to use for requests - must be a fully qualified url.
-     * @defaultValue https://discordapp.com/api/v{REST_VERSION}
+     * @defaultValue https://discordapp.com/api/v\{REST_VERSION\}
      */
     baseURL?: string;
     /**
@@ -120,7 +120,7 @@ export interface RESTOptions {
     requestTimeout?: number;
     /**
      * The `User-Agent` header to use for requests.
-     * @defaultValue Oceanic/{VERSION} (https://github.com/DonovanDMC/Oceanic)
+     * @defaultValue Oceanic/\{VERSION\} (https://github.com/DonovanDMC/Oceanic)
      */
     userAgent?: string;
 }

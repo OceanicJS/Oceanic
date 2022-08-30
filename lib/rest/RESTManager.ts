@@ -39,7 +39,7 @@ export default class RESTManager {
     get client() { return this._client; }
     get options() { return this._handler.options; }
 
-    /** Alias for {@link RequestHandler.authRequest} */
+    /** Alias for {@link rest/RequestHandler~RequestHandler#authRequest | RequestHandler#authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
         return this._handler.authRequest<T>(options);
     }
@@ -74,7 +74,7 @@ export default class RESTManager {
         });
     }
 
-    /** Alias for {@link RequestHandler.request} */
+    /** Alias for {@link rest/RequestHandler~RequestHandler#request | RequestHandler#request} */
     async request<T = unknown>(options: RequestOptions) {
         return this._handler.request<T>(options);
     }
