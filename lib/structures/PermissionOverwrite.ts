@@ -18,6 +18,9 @@ export default class PermissionOverwrite extends Base {
         this.type = data.type;
     }
 
+    get allow() { return this.permission.allow; }
+    get deny() { return this.permission.deny; }
+
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
     get json() { return this.permission.json; }
 

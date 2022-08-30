@@ -21,26 +21,30 @@ import VoiceState from "./VoiceState";
 import StageInstance from "./StageInstance";
 import Channel from "./Channel";
 import type {
+    DefaultMessageNotificationLevels,
+    ExplicitContentFilterLevels,
+    GuildFeature,
+    GuildNSFWLevels,
+    ImageFormat,
+    MFALevels,
+    PremiumTiers,
+    VerificationLevels
+} from "../Constants";
+import {
     AuditLogActionTypes,
     AutoModerationActionTypes,
     AutoModerationEventTypes,
     AutoModerationKeywordPresetTypes,
     AutoModerationTriggerTypes,
-    DefaultMessageNotificationLevels,
-    ExplicitContentFilterLevels,
     GuildChannelTypesWithoutThreads,
-    GuildFeature,
-    GuildNSFWLevels,
-    ImageFormat,
-    MFALevels,
     OverwriteTypes,
-    PremiumTiers,
     GuildScheduledEventEntityTypes,
     GuildScheduledEventPrivacyLevels,
     GuildScheduledEventStatuses,
     ThreadAutoArchiveDuration,
-    VerificationLevels,
-    VideoQualityModes
+    VideoQualityModes,
+    AllPermissions,
+    Permissions
 } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -1149,6 +1153,40 @@ export default class Guild extends Base {
      */
     iconURL(format?: ImageFormat, size?: number) {
         return this.icon === null ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
+    }
+
+    /**
+     * Leave this guild.
+     *
+     * @returns {Promise<void>}
+     */
+    async leave() {
+        return this._client.rest.guilds.delete(this.id);
+    }
+
+    /**
+     * Get the permissions of a member.
+     *
+     * @param {(String | Member)} member - The member to get the permissions of.
+     * @returns {Permission}
+     */
+    permissionsOf(member: string | Member) {
+        if (typeof member === "string") member = this.members.get(member)!;
+        if (!member) throw new Error("Member not found");
+        if (member.id === this.owner.id) return new Permission(AllPermissions);
+        else {
+            let permissions = this.roles.get(this.id)!.permissions.allow;
+            if (permissions & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+            for (const id of member.roles) {
+                const role = this.roles.get(id);
+                if (!role) continue;
+                if (role.permissions.allow & Permissions.ADMINISTRATOR) {
+                    permissions = AllPermissions;
+                    break;
+                } else permissions |= role.permissions.allow;
+            }
+            return new Permission(permissions);
+        }
     }
 
     /**

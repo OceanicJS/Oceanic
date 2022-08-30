@@ -35,6 +35,8 @@ export default class ComponentInteraction extends Interaction {
     locale: string;
     /** The member associated with the invoking user. */
     member?: Member;
+    /** The permissions of the member associated with the invoking user */
+    memberPermissions?: Permission;
     /** The message the interaction is from. */
     message: Message;
     declare type: InteractionTypes.MESSAGE_COMPONENT;
@@ -49,6 +51,7 @@ export default class ComponentInteraction extends Interaction {
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, this._client, this.guild!.id) : undefined;
+        this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
         this.message = "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, this._client);
         this.user = this._client.users.update((data.user || data.member!.user)!);
 

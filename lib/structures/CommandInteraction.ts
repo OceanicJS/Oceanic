@@ -36,6 +36,8 @@ export default class CommandInteraction extends Interaction {
     locale: string;
     /** The member associated with the invoking user. */
     member?: Member;
+    /** The permissions of the member associated with the invoking user */
+    memberPermissions?: Permission;
     declare type: InteractionTypes.APPLICATION_COMMAND;
     /** The user that invoked this interaction. */
     user: User;
@@ -65,6 +67,7 @@ export default class CommandInteraction extends Interaction {
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, this._client, this.guildID!) : undefined;
+        this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
         this.user = this._client.users.update((data.user || data.member!.user)!);
 
         if (data.data.resolved) {

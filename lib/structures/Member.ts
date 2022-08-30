@@ -74,6 +74,7 @@ export default class Member extends Base {
     get discriminator() { return this.user.discriminator; }
     /** A string that will mention this member. */
     get mention() { return this.user.mention; }
+    get permissions() { return this.guild.permissionsOf(this); }
     /** The user associated with this member's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     get publicUsers() { return this.user.publicFlags; }
     /** If this user associated with this member is an official discord system user. */

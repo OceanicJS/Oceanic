@@ -10,15 +10,17 @@ import type PublicThreadChannel from "./PublicThreadChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import User from "./User";
 import type CategoryChannel from "./CategoryChannel";
-import type {
+import type Member from "./Member";
+import Permission from "./Permission";
+import type { PrivateChannelTypes, TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
+import {
+    AllPermissions,
     InviteTargetTypes,
     OverwriteTypes,
-    PrivateChannelTypes,
-    TextChannelTypes,
-    ThreadAutoArchiveDuration,
-    ThreadChannelTypes
+    Permissions,
+    ThreadChannelTypes,
+    ChannelTypes
 } from "../Constants";
-import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type {
@@ -355,6 +357,33 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      */
     async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
         return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
+    }
+
+    /**
+     * Get the permissions of a member.
+     *
+     * @param {(String | Member)} member - The member to get the permissions of.
+     * @returns {Permission}
+     */
+    permissionsOf(member: string | Member) {
+        if (typeof member === "string") member = this.guild.members.get(member)!;
+        if (!member) throw new Error("Member not found");
+        let permission = this.guild.permissionsOf(member).allow;
+        if (permission & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+        let overwrite = this.permissionOverwrites.get(this.guild.id);
+        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        let deny = 0n;
+        let allow = 0n;
+        for (const id of member.roles) {
+            if ((overwrite = this.permissionOverwrites.get(id))) {
+                deny |= overwrite.deny;
+                allow |= overwrite.allow;
+            }
+        }
+        permission = (permission & ~deny) | allow;
+        overwrite = this.permissionOverwrites.get(member.id);
+        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        return new Permission(permission);
     }
 
     /**
