@@ -10,8 +10,6 @@ import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
-import type AnnouncementChannel from "./AnnouncementChannel";
-import type StageChannel from "./StageChannel";
 import Integration from "./Integration";
 import type Invite from "./Invite";
 import GuildPreview from "./GuildPreview";
@@ -28,7 +26,8 @@ import type {
     ImageFormat,
     MFALevels,
     PremiumTiers,
-    VerificationLevels
+    VerificationLevels,
+    GuildChannelTypesWithoutThreads
 } from "../Constants";
 import {
     AuditLogActionTypes,
@@ -36,7 +35,6 @@ import {
     AutoModerationEventTypes,
     AutoModerationKeywordPresetTypes,
     AutoModerationTriggerTypes,
-    GuildChannelTypesWithoutThreads,
     OverwriteTypes,
     GuildScheduledEventEntityTypes,
     GuildScheduledEventPrivacyLevels,
@@ -62,14 +60,9 @@ import type {
     Ban,
     BeginPruneOptions,
     CreateBanOptions,
-    CreateCategoryChannelOptions,
     CreateChannelOptions,
     CreateEmojiOptions,
-    CreateAnnouncementChannelOptions,
     CreateRoleOptions,
-    CreateStageChannelOptions,
-    CreateTextChannelOptions,
-    CreateVoiceChannelOptions,
     EditCurrentMemberOptions,
     EditCurrentUserVoiceStateOptions,
     EditEmojiOptions,
@@ -467,13 +460,8 @@ export default class Guild extends Base {
      * @param {VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) for the channel.
      * @param {Promise<T>}
      */
-    async createChannel(options: CreateTextChannelOptions): Promise<TextChannel>;
-    async createChannel(options: CreateVoiceChannelOptions): Promise<VoiceChannel>;
-    async createChannel(options: CreateCategoryChannelOptions): Promise<CategoryChannel>;
-    async createChannel(options: CreateAnnouncementChannelOptions): Promise<AnnouncementChannel>;
-    async createChannel(options: CreateStageChannelOptions): Promise<StageChannel>;
-    async createChannel(options: CreateChannelOptions) {
-        return this._client.rest.guilds.createChannel(this.id, options as never) as unknown as AnyGuildChannel;
+    async createChannel<T extends GuildChannelTypesWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">) {
+        return this._client.rest.guilds.createChannel(this.id, type, options);
     }
 
     /**

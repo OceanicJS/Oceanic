@@ -224,9 +224,4 @@ export default class InteractionOptionsWrapper {
         if (!ch && required) throw new Error(`user not present for required option: ${name}`);
         return ch;
     }
-
-    pickSubCommand<T extends string>(names: Array<T> | ReadonlyArray<T>, def?: T) {
-        for (const name of names) if (this.getSubCommand(name)) return name;
-        return def || names[0];
-    }
 }

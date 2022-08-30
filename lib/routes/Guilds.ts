@@ -1,13 +1,7 @@
 import BaseRoute from "./BaseRoute";
 import type {
-    CreateCategoryChannelOptions,
-    CreateChannelOptions,
     CreateEmojiOptions,
     CreateGuildOptions,
-    CreateAnnouncementChannelOptions,
-    CreateStageChannelOptions,
-    CreateTextChannelOptions,
-    CreateVoiceChannelOptions,
     EditEmojiOptions,
     EditGuildOptions,
     GuildEmoji,
@@ -43,7 +37,9 @@ import type {
     EditWelcomeScreenOptions,
     GetVanityURLResponse,
     EditUserVoiceStateOptions,
-    EditCurrentUserVoiceStateOptions
+    EditCurrentUserVoiceStateOptions,
+    CreateChannelReturn,
+    CreateChannelOptions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import Guild from "../structures/Guild";
@@ -93,11 +89,6 @@ import type {
     RawThreadMember,
     ThreadMember
 } from "../types/channels";
-import type StageChannel from "../structures/StageChannel";
-import type TextChannel from "../structures/TextChannel";
-import type VoiceChannel from "../structures/VoiceChannel";
-import type CategoryChannel from "../structures/CategoryChannel";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import Role from "../structures/Role";
 import type { VoiceRegion } from "../types/voice";
 import Invite from "../structures/Invite";
@@ -319,12 +310,7 @@ export default class Guilds extends BaseRoute {
      * @param {VideoQualityModes} [options.videoQualityMode] - [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) for the channel.
      * @param {Promise<T>}
      */
-    async createChannel(id: string, options: CreateTextChannelOptions): Promise<TextChannel>;
-    async createChannel(id: string, options: CreateVoiceChannelOptions): Promise<VoiceChannel>;
-    async createChannel(id: string, options: CreateCategoryChannelOptions): Promise<CategoryChannel>;
-    async createChannel(id: string, options: CreateAnnouncementChannelOptions): Promise<AnnouncementChannel>;
-    async createChannel(id: string, options: CreateStageChannelOptions): Promise<StageChannel>;
-    async createChannel(id: string, options: CreateChannelOptions) {
+    async createChannel<T extends GuildChannelTypesWithoutThreads>(id: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         return this._manager.authRequest<RawGuildChannel>({
@@ -340,12 +326,12 @@ export default class Guilds extends BaseRoute {
                 rate_limit_per_user:           options.rateLimitPerUser,
                 rtc_region:                    options.rtcRegion,
                 topic:                         options.topic,
-                type:                          options.type,
+                type,
                 user_limit:                    options.userLimit,
                 video_quality_mode:            options.videoQualityMode
             },
             reason
-        }).then(data => Channel.from(data, this._client));
+        }).then(data => Channel.from(data, this._client)) as never;
     }
 
     /**

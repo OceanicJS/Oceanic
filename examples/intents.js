@@ -6,7 +6,9 @@ const client = new Client({
     gateway: {
 		// list of intents: https://discord.com/developers/docs/topics/gateway#list-of-intents
 		// they roughly map on to events we use
-        intents: ["GUILDS", "GUILD_MESSAGES"]
+        // most events also list if they require an intent: https://oceanic.owo-whats-this.dev/interfaces/types_client.ClientEvents.html
+        intents: ["GUILDS", "GUILD_MESSAGES", "MESSAGE_CONTENT"] 
+        // if you do not have the MESSAGE_CONTENT intent, various fields like `content`, `components`, `embeds` and more will be empty unless your client is specifically addressed.
     }
 });
 
@@ -28,7 +30,7 @@ bot.on("guildCreate", (guild) => {
 // Message Sent
 // https://oceanic.owo-whats-this.dev/interfaces/types_client.ClientEvents.html#messageCreate
 bot.on("messageCreate", (msg) => {
-    console.log(`New message: ${msg.cleanContent}`);
+    console.log(`New message: ${msg.content}`);
 });
 
 // This event will never be seen as neither `GUILD_MESSAGE_TYPING` or `DIRECT_MESSAGE_TYPING` were included in the intents

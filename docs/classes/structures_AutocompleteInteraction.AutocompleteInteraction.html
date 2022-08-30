@@ -47,6 +47,7 @@
 <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#id" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>id</span></a>
 <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#locale" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>locale</span></a>
 <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#member" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>member?</span></a>
+<a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#memberPermissions" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>member<wbr/>Permissions?</span></a>
 <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#token" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>token</span></a>
 <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#type" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>type</span></a>
 <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#user" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>user</span></a>
@@ -84,7 +85,7 @@
 <h4 class="tsd-returns-title">Returns <a href="structures_AutocompleteInteraction.AutocompleteInteraction.html" class="tsd-signature-type" data-tsd-kind="Class">AutocompleteInteraction</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="structures_Interaction.Interaction.html">Interaction</a>.<a href="structures_Interaction.Interaction.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L34">lib/structures/AutocompleteInteraction.ts:34</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L36">lib/structures/AutocompleteInteraction.ts:36</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="appPermissions" class="tsd-anchor"></a>
@@ -157,6 +158,13 @@
 </div><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L30">lib/structures/AutocompleteInteraction.ts:30</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="memberPermissions" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>member<wbr/>Permissions</span><a href="#memberPermissions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">member<wbr/>Permissions<span class="tsd-signature-symbol">?:</span> <a href="structures_Permission.Permission.html" class="tsd-signature-type" data-tsd-kind="Class">Permission</a></div>
+<div class="tsd-comment tsd-typography"><p>The permissions of the member associated with the invoking user</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L32">lib/structures/AutocompleteInteraction.ts:32</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="token" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>token</span><a href="#token" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -172,14 +180,14 @@
 </div><aside class="tsd-sources">
 <p>Overrides <a href="structures_Interaction.Interaction.html">Interaction</a>.<a href="structures_Interaction.Interaction.html#type">type</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L31">lib/structures/AutocompleteInteraction.ts:31</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L33">lib/structures/AutocompleteInteraction.ts:33</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="user" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>user</span><a href="#user" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">user<span class="tsd-signature-symbol">:</span> <a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a></div>
 <div class="tsd-comment tsd-typography"><p>The user that invoked this interaction.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L33">lib/structures/AutocompleteInteraction.ts:33</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L35">lib/structures/AutocompleteInteraction.ts:35</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="version" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>version</span><a href="#version" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">1</span></div>
@@ -227,7 +235,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L59">lib/structures/AutocompleteInteraction.ts:59</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L62">lib/structures/AutocompleteInteraction.ts:62</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="refer" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>refer</span><a href="#refer" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -245,7 +253,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L74">lib/structures/AutocompleteInteraction.ts:74</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L77">lib/structures/AutocompleteInteraction.ts:77</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="toJSON" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>toJSON</span><a href="#toJSON" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -254,7 +262,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/types_json.JSONAutocompleteInteraction.html" class="tsd-signature-type" data-tsd-kind="Interface">JSONAutocompleteInteraction</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="structures_Interaction.Interaction.html">Interaction</a>.<a href="structures_Interaction.Interaction.html#toJSON">toJSON</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L80">lib/structures/AutocompleteInteraction.ts:80</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/AutocompleteInteraction.ts#L83">lib/structures/AutocompleteInteraction.ts:83</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -441,6 +449,7 @@
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#id" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>id</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#locale" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>locale</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#member" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>member?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#memberPermissions" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>member<wbr/>Permissions?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#token" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>token</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#type" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>type</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_AutocompleteInteraction.AutocompleteInteraction.html#user" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>user</a></li>

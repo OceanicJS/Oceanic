@@ -47,6 +47,7 @@
 <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#id" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>id</span></a>
 <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#locale" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>locale</span></a>
 <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#member" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>member?</span></a>
+<a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#memberPermissions" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>member<wbr/>Permissions?</span></a>
 <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#token" class="tsd-index-link tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>token</span></a>
 <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#type" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>type</span></a>
 <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#user" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>user</span></a>
@@ -91,7 +92,7 @@
 <h4 class="tsd-returns-title">Returns <a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html" class="tsd-signature-type" data-tsd-kind="Class">ModalSubmitInteraction</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="structures_Interaction.Interaction.html">Interaction</a>.<a href="structures_Interaction.Interaction.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L35">lib/structures/ModalSubmitInteraction.ts:35</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L37">lib/structures/ModalSubmitInteraction.ts:37</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="appPermissions" class="tsd-anchor"></a>
@@ -164,6 +165,13 @@
 </div><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L31">lib/structures/ModalSubmitInteraction.ts:31</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="memberPermissions" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>member<wbr/>Permissions</span><a href="#memberPermissions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">member<wbr/>Permissions<span class="tsd-signature-symbol">?:</span> <a href="structures_Permission.Permission.html" class="tsd-signature-type" data-tsd-kind="Class">Permission</a></div>
+<div class="tsd-comment tsd-typography"><p>The permissions of the member associated with the invoking user</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L33">lib/structures/ModalSubmitInteraction.ts:33</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="token" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>token</span><a href="#token" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -179,14 +187,14 @@
 </div><aside class="tsd-sources">
 <p>Overrides <a href="structures_Interaction.Interaction.html">Interaction</a>.<a href="structures_Interaction.Interaction.html#type">type</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L32">lib/structures/ModalSubmitInteraction.ts:32</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L34">lib/structures/ModalSubmitInteraction.ts:34</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="user" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>user</span><a href="#user" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">user<span class="tsd-signature-symbol">:</span> <a href="structures_User.User.html" class="tsd-signature-type" data-tsd-kind="Class">User</a></div>
 <div class="tsd-comment tsd-typography"><p>The user that invoked this interaction.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L34">lib/structures/ModalSubmitInteraction.ts:34</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L36">lib/structures/ModalSubmitInteraction.ts:36</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="version" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>version</span><a href="#version" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">1</span></div>
@@ -237,7 +245,7 @@
 <h5>options: <a href="../types/types_interactions.InteractionContent.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionContent</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L70">lib/structures/ModalSubmitInteraction.ts:70</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L73">lib/structures/ModalSubmitInteraction.ts:73</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Message</span><a href="#createMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -253,7 +261,7 @@
 <h5>options: <a href="../types/types_interactions.InteractionContent.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionContent</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L92">lib/structures/ModalSubmitInteraction.ts:92</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L95">lib/structures/ModalSubmitInteraction.ts:95</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="defer" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>defer</span><a href="#defer" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -271,7 +279,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L104">lib/structures/ModalSubmitInteraction.ts:104</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L107">lib/structures/ModalSubmitInteraction.ts:107</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteFollowup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Followup</span><a href="#deleteFollowup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -289,7 +297,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L116">lib/structures/ModalSubmitInteraction.ts:116</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L119">lib/structures/ModalSubmitInteraction.ts:119</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="deleteOriginal" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>delete<wbr/>Original</span><a href="#deleteOriginal" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -300,7 +308,7 @@
 <h3>Returns</h3></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L125">lib/structures/ModalSubmitInteraction.ts:125</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L128">lib/structures/ModalSubmitInteraction.ts:128</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="editFollowup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>edit<wbr/>Followup</span><a href="#editFollowup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -325,7 +333,7 @@
 <h5>options: <a href="../types/types_interactions.InteractionContent.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionContent</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L149">lib/structures/ModalSubmitInteraction.ts:149</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L152">lib/structures/ModalSubmitInteraction.ts:152</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="editOriginal" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>edit<wbr/>Original</span><a href="#editOriginal" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -346,7 +354,7 @@
 <h5>options: <a href="../types/types_interactions.InteractionContent.html" class="tsd-signature-type" data-tsd-kind="Type alias">InteractionContent</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L172">lib/structures/ModalSubmitInteraction.ts:172</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L175">lib/structures/ModalSubmitInteraction.ts:175</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getFollowup" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Followup</span><a href="#getFollowup" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -369,7 +377,7 @@
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L183">lib/structures/ModalSubmitInteraction.ts:183</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L186">lib/structures/ModalSubmitInteraction.ts:186</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getOriginal" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Original</span><a href="#getOriginal" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -385,7 +393,7 @@
 <h4>T<span class="tsd-signature-symbol"> extends </span><a href="../types/types_channels.AnyGuildTextChannel.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyGuildTextChannel</a></h4></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="structures_Message.Message.html" class="tsd-signature-type" data-tsd-kind="Class">Message</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L193">lib/structures/ModalSubmitInteraction.ts:193</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L196">lib/structures/ModalSubmitInteraction.ts:196</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="toJSON" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>toJSON</span><a href="#toJSON" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -394,7 +402,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/types_json.JSONModalSubmitInteraction.html" class="tsd-signature-type" data-tsd-kind="Interface">JSONModalSubmitInteraction</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="structures_Interaction.Interaction.html">Interaction</a>.<a href="structures_Interaction.Interaction.html#toJSON">toJSON</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L197">lib/structures/ModalSubmitInteraction.ts:197</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OceanicJS/Oceanic/blob/dev/lib/structures/ModalSubmitInteraction.ts#L200">lib/structures/ModalSubmitInteraction.ts:200</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="toString" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>to<wbr/>String</span><a href="#toString" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -581,6 +589,7 @@
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#id" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>id</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#locale" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>locale</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#member" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>member?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#memberPermissions" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>member<wbr/>Permissions?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#token" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>token</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#type" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>type</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="structures_ModalSubmitInteraction.ModalSubmitInteraction.html#user" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>user</a></li>
