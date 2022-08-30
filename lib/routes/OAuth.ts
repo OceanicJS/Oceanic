@@ -167,7 +167,7 @@ export default class OAuth extends BaseRoute {
 
     /**
      * Refresh an existing access token.
-     * @aram options - The options for refreshing the token.
+     * @param options The options for refreshing the token.
      */
     async refreshToken(options: RefreshTokenOptions) {
         const form = new FormData();

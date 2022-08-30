@@ -155,7 +155,7 @@ export interface EditGuildChannelOptions {
     locked?: boolean;
     /** The name of the channel. */
     name?: string;
-    /** [Text, Voice, Announcement] - If the channel is age gated. */
+    /** [Text, Voice, Announcement] If the channel is age gated. */
     nsfw?: string | null;
     /** [Text, Voice, Announcement] The id of the parent category channel. */
     parentID?: string | null;

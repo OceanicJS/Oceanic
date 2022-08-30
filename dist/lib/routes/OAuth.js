@@ -174,7 +174,7 @@ class OAuth extends BaseRoute_1.default {
     }
     /**
      * Refresh an existing access token.
-     * @aram options - The options for refreshing the token.
+     * @param options The options for refreshing the token.
      */
     async refreshToken(options) {
         const form = new undici_1.FormData();
