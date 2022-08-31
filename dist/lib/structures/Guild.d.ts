@@ -62,7 +62,7 @@ export default class Guild extends Base {
     /** The integrations in this guild. */
     integrations: Collection<string, RawIntegration, Integration>;
     /** The date at which this guild was joined. */
-    joinedAt: Date;
+    joinedAt: Date | null;
     /** If this guild is considered large. */
     large: boolean;
     /** The maximum amount of members this guild can have. */

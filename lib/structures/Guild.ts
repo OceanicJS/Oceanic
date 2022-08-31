@@ -114,7 +114,7 @@ export default class Guild extends Base {
     /** The integrations in this guild. */
     integrations: Collection<string, RawIntegration, Integration>;
     /** The date at which this guild was joined. */
-    joinedAt: Date;
+    joinedAt: Date | null;
     /** If this guild is considered large. */
     large: boolean;
     /** The maximum amount of members this guild can have. */
@@ -190,6 +190,7 @@ export default class Guild extends Base {
         this.channels = new Collection(GuildChannel, client) as Collection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
         this.features = [];
         this.integrations = new Collection(Integration, client);
+        this.joinedAt = null;
         this.memberCount = data.member_count || data.approximate_member_count || 0;
         this.members = new Collection(Member, client);
         this.roles = new Collection(Role, client);
@@ -903,7 +904,7 @@ export default class Guild extends Base {
             explicitContentFilter:       this.explicitContentFilter,
             features:                    this.features,
             icon:                        this.icon,
-            joinedAt:                    this.joinedAt.getTime(),
+            joinedAt:                    this.joinedAt?.getTime() || null,
             large:                       this.large,
             maxMembers:                  this.maxMembers,
             maxPresences:                this.maxPresences,

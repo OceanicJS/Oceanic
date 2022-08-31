@@ -229,7 +229,7 @@ export interface JSONGuild extends JSONBase {
     explicitContentFilter: ExplicitContentFilterLevels;
     features: Array<GuildFeature>;
     icon: string | null;
-    joinedAt: number;
+    joinedAt: number | null;
     large: boolean;
     maxMembers?: number;
     maxPresences?: number;
