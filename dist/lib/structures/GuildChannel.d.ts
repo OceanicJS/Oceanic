@@ -3,6 +3,7 @@ import type Guild from "./Guild";
 import type CategoryChannel from "./CategoryChannel";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
+import type ForumChannel from "./ForumChannel";
 import type { GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel } from "../types/channels";
@@ -15,8 +16,8 @@ export default class GuildChannel extends Channel {
     guildID: string;
     /** The name of this channel. */
     name: string;
-    /** The parent of this channel, if applicable. This will be a text/announcement channel if we're in a thread, category otherwise. */
-    parent: TextChannel | AnnouncementChannel | CategoryChannel | null;
+    /** The parent of this channel, if applicable. This will be a text/announcement/forum channel if we're in a thread, category otherwise. */
+    parent: TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null;
     /** The ID of the parent of this channel, if applicable. */
     parentID: string | null;
     type: GuildChannelTypes;

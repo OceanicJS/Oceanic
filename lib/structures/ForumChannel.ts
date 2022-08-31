@@ -1,6 +1,6 @@
 import GuildChannel from "./GuildChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
-import type PublicThreadChannel from "./PublicThreadChannel";
+import PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
@@ -18,7 +18,7 @@ import type {
     RawPublicThreadChannel,
     StartThreadInForumOptions
 } from "../types";
-import type Collection from "../util/Collection";
+import Collection from "../util/Collection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 
@@ -40,6 +40,8 @@ export default class ForumChannel extends GuildChannel {
     lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
+    declare parent: ForumChannel;
+    declare parentID: string;
     /** The permission overwrites of this channel. */
     permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -55,6 +57,32 @@ export default class ForumChannel extends GuildChannel {
     declare type: ChannelTypes.GUILD_FORUM;
     constructor(data: RawForumChannel, client: Client) {
         super(data, client);
+        this.threads = new Collection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client);
+        this.update(data);
+    }
+
+    protected update(data: Partial<RawForumChannel>) {
+        super.update(data);
+        if (data.available_tags !== undefined) this.availableTags = data.available_tags.map(tag => ({
+            emoji:     tag.emoji_id === null && tag.emoji_name === null ? null : { id: tag.emoji_id, name: tag.emoji_name },
+            id:        tag.id,
+            moderated: tag.moderated,
+            name:      tag.name
+        }));
+        if (data.default_auto_archive_duration !== undefined) this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+        if (data.default_reaction_emoji !== undefined) this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
+        if (data.default_thread_rate_limit_per_user !== undefined) this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
+        if (data.flags !== undefined) this.flags = data.flags;
+        if (data.last_message_id !== undefined) {
+            this.lastThread = this.threads.get(data.last_message_id!)!;
+            this.lastThreadID = data.last_message_id;
+        }
+        if (data.nsfw !== undefined) this.nsfw = data.nsfw;
+        if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+        if (data.position !== undefined) this.position = data.position;
+        if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
+        if (data.template !== undefined) this.template = data.template;
+        if (data.topic !== undefined && data.topic !== null) this.topic = data.topic;
     }
 
     /**

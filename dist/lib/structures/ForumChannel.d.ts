@@ -1,12 +1,12 @@
 import GuildChannel from "./GuildChannel";
 import type PermissionOverwrite from "./PermissionOverwrite";
-import type PublicThreadChannel from "./PublicThreadChannel";
+import PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type Client from "../Client";
 import type { CreateInviteOptions, EditForumChannelOptions, EditPermissionOptions, ForumEmoji, ForumTag, GetArchivedThreadsOptions, JSONForumChannel, RawForumChannel, RawOverwrite, RawPublicThreadChannel, StartThreadInForumOptions } from "../types";
-import type Collection from "../util/Collection";
+import Collection from "../util/Collection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 /** Represents a forum channel. Documentation for these is currently scarce, so they may not work entirely correctly. */
 export default class ForumChannel extends GuildChannel {
@@ -26,6 +26,8 @@ export default class ForumChannel extends GuildChannel {
     lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
+    parent: ForumChannel;
+    parentID: string;
     /** The permission overwrites of this channel. */
     permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -40,6 +42,7 @@ export default class ForumChannel extends GuildChannel {
     topic: string;
     type: ChannelTypes.GUILD_FORUM;
     constructor(data: RawForumChannel, client: Client);
+    protected update(data: Partial<RawForumChannel>): void;
     /**
      * Create an invite for this channel.
      * @param options The options for the invite.
