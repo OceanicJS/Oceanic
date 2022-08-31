@@ -33,7 +33,7 @@ import type {
 } from "./json";
 import type { GuildApplicationCommandPermissions } from "./application-commands";
 import type { GuildEmoji, PartialEmoji, Sticker } from "./guilds";
-import type { AnyGatewayInteraction } from "./interactions";
+import type { AnyInteractionGateway } from "./interactions";
 import type { ImageFormat } from "../Constants";
 import type Guild from "../structures/Guild";
 import type UnavailableGuild from "../structures/UnavailableGuild";
@@ -206,7 +206,7 @@ export interface ClientEvents {
     /** @event Emitted when an integration is updated. Requires the `GUILD_INTEGRATIONS` intent. */
     integrationUpdate: [guild: Guild, integration: Integration, oldIntegration: JSONIntegration | null];
     /** @event Emitted when an interaction is created. */
-    interactionCreate: [interaction: AnyGatewayInteraction];
+    interactionCreate: [interaction: AnyInteractionGateway];
     /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent. */
     inviteCreate: [guild: Guild | null, channel: InviteChannel, invite: Invite];
     /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent. */

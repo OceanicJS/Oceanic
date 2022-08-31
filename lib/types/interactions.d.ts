@@ -5,7 +5,8 @@ import type {
     RawAttachment,
     RawChannel,
     RawMessage,
-    ModalActionRow
+    ModalActionRow,
+    AnyGuildTextChannel
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -29,6 +30,8 @@ import type ComponentInteraction from "../structures/ComponentInteraction";
 import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
 import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
+import type PrivateChannel from "../structures/PrivateChannel";
+import type Guild from "../structures/Guild";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
 
@@ -213,8 +216,8 @@ export type InteractionOptionsMentionable = InteractionOptionsStringValue<Applic
 export type InteractionOptionsNumber = InteractionOptionsNumberValue<ApplicationCommandOptionTypes.NUMBER>;
 export type InteractionOptionsAttachment = InteractionOptionsStringValue<ApplicationCommandOptionTypes.ATTACHMENT>;
 
-export type AnyInteraction = PingInteraction | AnyGatewayInteraction;
-export type AnyGatewayInteraction = CommandInteraction | ComponentInteraction | AutocompleteInteraction | ModalSubmitInteraction;
+export type AnyInteraction = PingInteraction | AnyInteractionGateway;
+export type AnyInteractionGateway = AutocompleteInteraction | CommandInteraction | ComponentInteraction | ModalSubmitInteraction;
 
 
 export interface AutocompleteChoice {
@@ -225,3 +228,20 @@ export interface AutocompleteChoice {
     /** The value of the choice. */
     value: string;
 }
+
+
+export type GuildAutocompleteInteraction = Omit<AutocompleteInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: AnyGuildTextChannel; guild: Guild; guildID: string; member: Member; };
+export type PrivateAutocompleteInteraction = Omit<AutocompleteInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: PrivateChannel | undefined; };
+export type AnyAutocompleteInteraction = GuildAutocompleteInteraction | PrivateAutocompleteInteraction;
+
+export type GuildCommandInteraction = Omit<CommandInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: AnyGuildTextChannel; guild: Guild; guildID: string; member: Member; };
+export type PrivateCommandInteraction = Omit<CommandInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: PrivateChannel | undefined; };
+export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
+
+export type GuildComponentInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: AnyGuildTextChannel; guild: Guild; guildID: string; member: Member; };
+export type PrivateComponentInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: PrivateChannel | undefined; };
+export type AnyComponentInteraction = GuildComponentInteraction | PrivateComponentInteraction;
+
+export type GuildModalSubmitInteraction = Omit<ModalSubmitInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: AnyGuildTextChannel; guild: Guild; guildID: string; member: Member; };
+export type PrivateModalSubmitInteraction = Omit<ModalSubmitInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: PrivateChannel | undefined; };
+export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
