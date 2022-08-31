@@ -6,7 +6,7 @@ A NodeJS Library for Discord.
 ## Installation
 NodeJS **16.16.0** or higher is required.
 
-**Do note we are currently in the alpha stage. Releases will be made when I see it. See [Install From Github](#install-from-github) if you wish to install in-dev versions. (due to the nature of an alpha, bugs are being found all the time, so installing in-dev versions is currently your best bet for being up-to-date)**
+**Do note we are currently in the alpha stage. Releases will be made when I see fit. See [Install From Github](#install-from-github) if you wish to install in-dev versions. (due to the nature of an alpha, bugs are being found all the time, so installing in-dev versions is currently your best bet for being up-to-date)**
 
 ```sh
 npm i oceanic.js
