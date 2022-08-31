@@ -1,7 +1,7 @@
 import Shard from "./Shard";
 import type Client from "../Client";
 import Properties from "../util/Properties";
-import { AllNonPrivilegedIntents, Intents } from "../Constants";
+import { AllIntents, AllNonPrivilegedIntents, Intents } from "../Constants";
 import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gateway";
 import { Collection } from "@augu/collections";
 
@@ -58,7 +58,13 @@ export default class ShardManager extends Collection<number, Shard> {
                 for (const intent of options.intents) {
                     if (typeof intent === "number") bitmask |= intent;
                     else if (Intents[intent as keyof typeof Intents]) bitmask |= Intents[intent as keyof typeof Intents];
-                    else this._client.emit("warn", `Unknown intent: ${intent}`);
+                    else {
+                        if (intent === "ALL") {
+                            bitmask = AllIntents;
+                            break;
+                        }
+                        this._client.emit("warn", `Unknown intent: ${intent}`);
+                    }
                 }
                 this.options.intents = bitmask;
             }
