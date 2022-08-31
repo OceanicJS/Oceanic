@@ -116,7 +116,7 @@ export declare enum ChannelTypes {
     GUILD_DIRECTORY = 14,
     GUILD_FORUM = 15
 }
-export declare type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY | ChannelTypes.GUILD_FORUM;
+export declare type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY;
 export declare type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
 export declare type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
 export declare type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
@@ -196,7 +196,10 @@ export declare const AllTextPermissions: bigint;
 export declare const AllVoicePermissions: bigint;
 export declare const AllPermissions: bigint;
 export declare enum ChannelFlags {
-    PINNED = 2
+    /** For threads, if this thread is pinned in a forum channel. */
+    PINNED = 2,
+    /** For forums, if tags are required when creating threads. */
+    FORUM_TAG_REQUIRED = 16
 }
 export declare enum TeamMembershipState {
     INVITED = 1,

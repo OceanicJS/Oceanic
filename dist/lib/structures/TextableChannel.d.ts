@@ -12,7 +12,7 @@ import Permission from "./Permission";
 import type { PrivateChannelTypes, TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
-import type { AnyThreadChannel, CreateInviteOptions, CreateMessageOptions, EditGuildChannelOptions, EditMessageOptions, EditPermissionOptions, GetArchivedThreadsOptions, GetChannelMessagesOptions, GetReactionsOptions, RawMessage, RawAnnouncementChannel, RawOverwrite, RawTextChannel, RawThreadChannel, StartThreadFromMessageOptions, StartThreadWithoutMessageOptions } from "../types/channels";
+import type { CreateInviteOptions, CreateMessageOptions, EditGuildChannelOptions, EditMessageOptions, EditPermissionOptions, GetArchivedThreadsOptions, GetChannelMessagesOptions, GetReactionsOptions, RawMessage, RawAnnouncementChannel, RawOverwrite, RawTextChannel, StartThreadFromMessageOptions, StartThreadWithoutMessageOptions } from "../types/channels";
 import type { Uncached } from "../types/shared";
 import type { JSONTextableChannel } from "../types/json";
 /** Represents a guild text channel. */
@@ -32,8 +32,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     position: number;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
-    /** The threads in this channel. */
-    threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
     /** The topic of the channel. */
     topic: string | null;
     type: Exclude<TextChannelTypes, PrivateChannelTypes>;

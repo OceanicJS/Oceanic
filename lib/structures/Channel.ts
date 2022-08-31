@@ -8,6 +8,7 @@ import type {
     RawAnnouncementThreadChannel,
     RawCategoryChannel,
     RawChannel,
+    RawForumChannel,
     RawGroupChannel,
     RawPrivateChannel,
     RawPrivateThreadChannel,
@@ -39,6 +40,7 @@ export default class Channel extends Base {
             case ChannelTypes.PUBLIC_THREAD: return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
             case ChannelTypes.PRIVATE_THREAD: return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
             case ChannelTypes.GUILD_STAGE_VOICE: return new StageChannel(data as RawStageChannel, client) as T;
+            case ChannelTypes.GUILD_FORUM: return new ForumChannel(data as RawForumChannel, client) as T;
             default: return new Channel(data, client) as T;
         }
     }
@@ -75,4 +77,5 @@ const PublicThreadChannel = (require("./PublicThreadChannel") as typeof import("
 const PrivateThreadChannel = (require("./PrivateThreadChannel") as typeof import("./PrivateThreadChannel")).default;
 const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel")).default;
 const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
+const ForumChannel = (require("./ForumChannel") as typeof import("./ForumChannel")).default;
 /* eslint-enable */

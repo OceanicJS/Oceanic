@@ -238,8 +238,12 @@ export type GuildCommandInteraction = Omit<CommandInteraction, "guild" | "guildI
 export type PrivateCommandInteraction = Omit<CommandInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: PrivateChannel | undefined; };
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
-export type GuildComponentInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: AnyGuildTextChannel; guild: Guild; guildID: string; member: Member; };
-export type PrivateComponentInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: PrivateChannel | undefined; };
+export type GuildComponentButtonInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member" | "data"> & { channel: AnyGuildTextChannel; data: MessageComponentButtonInteractionData; guild: Guild; guildID: string; member: Member; };
+export type GuildComponentSelectMenuInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member" | "data"> & { channel: AnyGuildTextChannel; data: MessageComponentSelectMenuInteractionData; guild: Guild; guildID: string; member: Member; };
+export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
+export type PrivateComponentButtonInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member" | "data"> & { channel: PrivateChannel | undefined; data: MessageComponentButtonInteractionData;  };
+export type PrivateComponentSelectMenuInteraction = Omit<ComponentInteraction, "guild" | "guildID" | "channel" | "member" | "data"> & { channel: PrivateChannel | undefined; data: MessageComponentSelectMenuInteractionData; };
+export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentInteraction = GuildComponentInteraction | PrivateComponentInteraction;
 
 export type GuildModalSubmitInteraction = Omit<ModalSubmitInteraction, "guild" | "guildID" | "channel" | "member"> & { channel: AnyGuildTextChannel; guild: Guild; guildID: string; member: Member; };

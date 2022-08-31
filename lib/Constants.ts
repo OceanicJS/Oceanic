@@ -196,7 +196,7 @@ export enum ChannelTypes {
     GUILD_FORUM          = 15
 }
 
-export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY | ChannelTypes.GUILD_FORUM;
+export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY;
 export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
 export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
 export type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
@@ -357,7 +357,10 @@ export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
 export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
 
 export enum ChannelFlags {
-    PINNED = 1 << 1
+    /** For threads, if this thread is pinned in a forum channel. */
+    PINNED             = 1 << 1,
+    /** For forums, if tags are required when creating threads. */
+    FORUM_TAG_REQUIRED = 1 << 4 // undocumented
 }
 
 export enum TeamMembershipState {

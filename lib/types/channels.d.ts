@@ -31,11 +31,18 @@ import type StageChannel from "../structures/StageChannel";
 import type TextChannel from "../structures/TextChannel";
 import type User from "../structures/User";
 import type VoiceChannel from "../structures/VoiceChannel";
+import type ForumChannel from "../structures/ForumChannel";
 
 export interface RawChannel {
     application_id?: string;
+    available_tags?: Array<RawForumTag>;
     bitrate?: number;
     default_auto_archive_duration?: ThreadAutoArchiveDuration;
+    default_reaction_emoji?: {
+        emoji_id: string | null;
+        emoji_name: string;
+    } | null;
+    default_thread_rate_limit_per_user?: number;
     flags?: number;
     guild_id?: string;
     icon?: string | null;
@@ -56,6 +63,7 @@ export interface RawChannel {
     rate_limit_per_user?: number;
     recipients?: Array<RawUser>;
     rtc_region?: string | null;
+    template?: string;
     thread_metadata?: RawThreadMetadata;
     topic?: string | null;
     total_message_sent?: number;
@@ -76,6 +84,7 @@ export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadCha
 export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> & { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
 export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; };
 export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; };
+export type RawForumChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration">> & { type: ChannelTypes.GUILD_FORUM; };
 
 export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
 
@@ -143,11 +152,17 @@ export interface EditGuildChannelOptions {
     archived?: boolean;
     /** [Thread] The duration after which the thread will be archived. */
     autoArchiveDuration?: ThreadAutoArchiveDuration;
-    /** [Voice, Stage] The bitrate of the channel. Minimum 8000. */
+    /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
+    availableTags?: Array<ForumTag>;
+    /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;
-    /** [Text, Announcement] The default auto archive duration for threads made in this channel. */
+    /** [Announcement, Text] The default auto archive duration for threads made in this channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
-    /** [Thread] The [channel flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) to set on the channel. */
+    /** [Forum] The default auto archive duration for threads. */
+    defaultReactionEmoji?: ForumEmoji | null;
+    /** [Forum] The default reaction emoji for threads. */
+    defaultThreadRateLimitPerUser?: number;
+    /** [Forum, Thread] The {@link Constants.ChannelFlags | Channel Flags} to set on the channel. */
     flags?: number;
     /** [Private Thread] If non-moderators can add other non-moderators to the thread. */
     invitable?: boolean;
@@ -155,23 +170,25 @@ export interface EditGuildChannelOptions {
     locked?: boolean;
     /** The name of the channel. */
     name?: string;
-    /** [Text, Voice, Announcement] If the channel is age gated. */
+    /** [Announcement, Text, Voice] If the channel is age gated. */
     nsfw?: string | null;
-    /** [Text, Voice, Announcement] The id of the parent category channel. */
+    /** [Announcement, Forum, Text, Voice] The id of the parent category channel. */
     parentID?: string | null;
     /** Channel or category specific permissions. */
     permissionOverwrites?: Array<RawOverwrite> | null;
     /** The position of the channel in the channel list. */
     position?: number | null;
-    /** [Thread, Text] The seconds between sending messages for users. Between 0 and 21600. */
+    /** [Forum, Text, Thread] The seconds between sending messages for users. Between 0 and 21600. */
     rateLimitPerUser?: number | null;
     /** The reason to be displayed in the audit log. */
     reason?: string;
-    /** [Voice, Stage] The voice region id of the channel, null for automatic. */
+    /** [Stage, Voice] The voice region id of the channel, null for automatic. */
     rtcRegion?: string | null;
-    /** [Text, Announcement] The topic of the channel. */
+    /** [Forum] Undocumented property. */
+    template?: string;
+    /** [Announcement, Forum, Text, Voice] The topic of the channel. In forum channels, this is the `Guidelines` section. */
     topic?: string | null;
-    /** [Text, Announcement] Provide the opposite type to convert the channel. */
+    /** [Announcement, Text] Provide the opposite type to convert the channel. */
     type?: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
     /** [Voice] The maximum amount of users in the channel. `0` is unlimited, values range 1-99. */
     userLimit?: number | null;
@@ -188,6 +205,7 @@ export type EditStageChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuil
 export type EditThreadChannelOptions = EditPublicThreadChannelOptions | EditPrivateThreadChannelOptions;
 export type EditPublicThreadChannelOptions = Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags">;
 export type EditPrivateThreadChannelOptions = EditPublicThreadChannelOptions & Pick<EditGuildChannelOptions, "invitable">;
+export type EditForumChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "template" | "topic">;
 
 export interface AddGroupRecipientOptions {
     /** The access token of the user to add. */
@@ -484,7 +502,7 @@ export interface RawMessage {
     referenced_message?: RawMessage | null;
     // stickers exists, but is deprecated
     sticker_items?: Array<StickerItem>;
-    thread?: RawChannel;
+    thread?: RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
     timestamp: string;
     tts: boolean;
     type: MessageTypes;
@@ -547,7 +565,7 @@ export interface StickerItem {
 
 
 // @TODO directory & forum
-export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel;
+export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel | ForumChannel;
 export type AnyPrivateChannel = PrivateChannel | GroupChannel;
 export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
 export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
@@ -756,4 +774,30 @@ export interface ThreadMetadata {
 
 export interface PrivateThreadmetadata extends ThreadMetadata {
     invitable: boolean;
+}
+
+export interface RawForumTag {
+    emoji_id: string | null;
+    emoji_name: string | null;
+    id: string;
+    moderated: boolean;
+    name: string;
+}
+
+export interface ForumTag {
+    /** The emoji for this tag. */
+    emoji: ForumEmoji | null;
+    /** The ID of this tag. */
+    id: string;
+    /** If this tag can only be used by moderators. */
+    moderated: boolean;
+    /** The name of this tag. */
+    name: string;
+}
+
+export interface ForumEmoji {
+    /** The ID of this emoji if custom, null otherwise. */
+    id: string | null;
+    /** The unicode codepoint of this emoji if default, null otherwise. */
+    name: string | null;
 }

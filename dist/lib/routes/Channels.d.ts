@@ -251,7 +251,7 @@ export default class Channels extends BaseRoute {
     /**
      * Create a thread in a forum channel.
      * @param id The ID of the channel to start the thread in.
-     * @param options The options for starting the thread
+     * @param options The options for starting the thread.
      */
     startThreadInForum(id: string, options: StartThreadInForumOptions): Promise<PublicThreadChannel>;
     /**

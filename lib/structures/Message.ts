@@ -10,6 +10,7 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
+import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -30,7 +31,9 @@ import type {
     StartThreadFromMessageOptions,
     StickerItem,
     MessageReaction,
-    MessageActionRow
+    MessageActionRow,
+    AnyThreadChannel,
+    RawThreadChannel
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -97,7 +100,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The sticker items on this message. */
     stickerItems?: Array<StickerItem>;
     /** The thread associated with this message, if any. */
-    thread?: AnnouncementThreadChannel | PublicThreadChannel;
+    thread?: AnyThreadChannel;
     /** The timestamp at which this message was sent. */
     timestamp: Date;
     /** If this message was read aloud. */
@@ -205,8 +208,14 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         }
         if (data.sticker_items !== undefined) this.stickerItems = data.sticker_items;
         if (data.thread !== undefined) {
-            if ("threads" in this.channel) this.thread = this.channel.threads.add(Channel.from<AnnouncementThreadChannel | PublicThreadChannel>(data.thread, this._client));
-            else this.thread = Channel.from<AnnouncementThreadChannel | PublicThreadChannel>(data.thread, this._client);
+            const guild = this._client.guilds.get(this.guildID!);
+            if (guild) {
+                this.thread = guild.threads.update(data.thread);
+                if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) (this.channel.threads as Collection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
+            } else {
+                if (this.channel && "threads" in this.channel) this.thread = (this.channel.threads as Collection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
+                else this.thread = Channel.from(data.thread, this._client);
+            }
         }
     }
 

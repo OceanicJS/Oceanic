@@ -658,7 +658,7 @@ class Channels extends BaseRoute_1.default {
     /**
      * Create a thread in a forum channel.
      * @param id The ID of the channel to start the thread in.
-     * @param options The options for starting the thread
+     * @param options The options for starting the thread.
      */
     async startThreadInForum(id, options) {
         const reason = options.reason;

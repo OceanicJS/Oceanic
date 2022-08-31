@@ -27,7 +27,9 @@ import type {
     MessageReaction,
     ThreadMetadata,
     PrivateThreadmetadata,
-    MessageActionRow
+    MessageActionRow,
+    ForumTag,
+    ForumEmoji
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Presence } from "./gateway";
@@ -64,6 +66,7 @@ import type {
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
     rateLimitPerUser: 0;
+    threads: Array<string>;
     type: ChannelTypes.GUILD_ANNOUNCEMENT;
 }
 export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
@@ -202,6 +205,20 @@ export interface JSONExtendedUser extends JSONUser {
     locale?: string;
     mfaEnabled: boolean;
     verified: boolean;
+}
+export interface JSONForumChannel extends JSONGuildChannel {
+    availableTags: Array<ForumTag>;
+    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+    defaultReactionEmoji: ForumEmoji | null;
+    defaultThreadRateLimitPerUser: number;
+    flags: number;
+    lastThread: string | null;
+    permissionOverwrites: Array<JSONPermissionOverwrite>;
+    position: number;
+    rateLimitPerUser: number;
+    template: string;
+    threads: Array<string>;
+    topic: string;
 }
 export interface JSONGroupChannel extends JSONChannel {
     application: string;
@@ -390,7 +407,7 @@ export interface JSONMessage extends JSONBase {
     reactions: Record<string, MessageReaction>;
     referencedMessage?: JSONMessage | null;
     stickerItems?: Array<StickerItem>;
-    thread?: JSONAnnouncementThreadChannel | JSONPublicThreadChannel;
+    thread?: JSONAnnouncementThreadChannel | JSONPublicThreadChannel | JSONPrivateThreadChannel;
     timestamp: number;
     tts: boolean;
     type: MessageTypes;
@@ -498,11 +515,11 @@ export interface JSONTextableChannel extends JSONGuildChannel {
     permissionOverwrites: Array<JSONPermissionOverwrite>;
     position: number;
     rateLimitPerUser: number;
-    threads: Array<string>;
     topic: string | null;
     type: Exclude<TextChannelTypes, PrivateChannelTypes>;
 }
 export interface JSONTextChannel extends JSONTextableChannel {
+    threads: Array<string>;
     type: ChannelTypes.GUILD_TEXT;
 }
 export interface JSONThreadChannel extends JSONGuildChannel {

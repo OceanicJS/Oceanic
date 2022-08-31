@@ -3,7 +3,6 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
-import ThreadChannel from "./ThreadChannel";
 import type Invite from "./Invite";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
@@ -15,7 +14,6 @@ import { AllPermissions, Permissions, ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
 import type {
-    AnyThreadChannel,
     CreateInviteOptions,
     CreateMessageOptions,
     EditGuildChannelOptions,
@@ -28,7 +26,6 @@ import type {
     RawAnnouncementChannel,
     RawOverwrite,
     RawTextChannel,
-    RawThreadChannel,
     StartThreadFromMessageOptions,
     StartThreadWithoutMessageOptions
 } from "../types/channels";
@@ -52,15 +49,12 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     position: number;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
-    /** The threads in this channel. */
-    threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
     /** The topic of the channel. */
     topic: string | null;
     declare type: Exclude<TextChannelTypes, PrivateChannelTypes>;
     constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.messages = new Collection(Message, client);
-        this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
         this.update(data);
     }
@@ -314,7 +308,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
             permissionOverwrites:       this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
             position:                   this.position,
             rateLimitPerUser:           this.rateLimitPerUser,
-            threads:                    this.threads.map(thread => thread.id),
             topic:                      this.topic,
             type:                       this.type
         };

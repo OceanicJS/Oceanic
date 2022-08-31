@@ -36,6 +36,7 @@ import type {
     AnyThreadChannel,
     InviteChannel,
     RawMessage,
+    RawThreadChannel,
     ThreadMember
 } from "../types/channels";
 import type TextChannel from "../structures/TextChannel";
@@ -51,6 +52,7 @@ import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import Debug from "../util/Debug";
 import Interaction from "../structures/Interaction";
+import type Collection from "../util/Collection";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
@@ -794,20 +796,25 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     thread = guild.threads.add(Channel.from(packet.d, this._client));
                     this._client.threadGuildMap[packet.d.id] = guild.id;
                 }
+                const channel = this._client.getChannel(packet.d.parent_id!);
+                if (channel && "threads" in channel) (channel.threads as Collection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
                 this._client.emit("threadCreate", thread);
                 break;
             }
 
             case "THREAD_DELETE": {
-                const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const guild = this._client.guilds.get(packet.d.guild_id);
+                const channel = this._client.getChannel(packet.d.parent_id!);
                 let thread: AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string | null; };
-                if (guild.threads.has(packet.d.id)) thread = guild.threads.get(packet.d.id)!;
-                else thread = {
+                if (guild && guild.threads.has(packet.d.id)) {
+                    thread = guild.threads.get(packet.d.id)!;
+                    guild.threads.delete(packet.d.id);
+                    if (channel && "threads" in channel) channel.threads.delete(packet.d.id);
+                } else thread = {
                     id:       packet.d.id,
                     type:     packet.d.type,
                     parentID: packet.d.parent_id
                 };
-                guild.threads.delete(packet.d.id);
                 this._client.emit("threadDelete", thread);
                 break;
             }
@@ -883,6 +890,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "THREAD_UPDATE": {
                 const guild = this._client.guilds.get(packet.d.guild_id)!;
+                const channel = this._client.getChannel(packet.d.parent_id!);
                 let oldThread: ReturnType<AnyThreadChannel["toJSON"]> | null = null;
                 let thread: AnyThreadChannel;
                 if (guild.threads.has(packet.d.id)) {
@@ -891,6 +899,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 } else {
                     thread = guild.threads.add(Channel.from(packet.d, this._client));
                     this._client.threadGuildMap[packet.d.id] = guild.id;
+                }
+                if (channel && "threads" in channel) {
+                    const threads =  (channel.threads as Collection<string, RawThreadChannel, AnyThreadChannel>);
+                    if (threads.has(packet.d.id)) threads.update(packet.d);
+                    else threads.add(thread);
                 }
                 this._client.emit("threadUpdate", thread as AnnouncementThreadChannel, oldThread as JSONAnnouncementThreadChannel);
                 break;

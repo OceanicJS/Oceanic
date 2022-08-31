@@ -46,6 +46,7 @@ export default class VoiceState extends Base {
         this.selfStream = false;
         this.selfVideo = false;
         this.suppress = false;
+        this.update(data);
     }
 
     protected update(data: Partial<RawVoiceState>) {

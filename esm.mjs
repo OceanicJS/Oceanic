@@ -16,11 +16,12 @@ const Client = (await import("./dist/lib/Client.js")).default.default;
 const ClientApplication = (await import("./dist/lib/structures/ClientApplication.js")).default.default;
 const Constants = (await import("./dist/lib/Constants.js")).default.default;
 const CommandInteraction = (await import("./dist/lib/structures/CommandInteraction.js")).default.default;
-const TypedCollection = (await import("./dist/lib/util/Collection.js")).default.default;
+const TypesCollection = (await import("./dist/lib/util/Collection.js")).default.default;
 const ComponentInteraction = (await import("./dist/lib/structures/ComponentInteraction.js")).default.default;
 const DiscordHTTPError = (await import("./dist/lib/rest/DiscordHTTPError.js")).default.default;
 const DiscordRESTError = (await import("./dist/lib/rest/DiscordRESTError.js")).default.default;
 const ExtendedUser = (await import("./dist/lib/structures/ExtendedUser.js")).default.default;
+const ForumChannel = (await import("./dist/lib/structures/ForumChannel.js")).default.default;
 const GatewayError = (await import("./dist/lib/gateway/GatewayError.js")).default.default;
 const GroupChannel = (await import("./dist/lib/structures/GroupChannel.js")).default.default;
 const Guild = (await import("./dist/lib/structures/Guild.js")).default.default;
@@ -29,7 +30,7 @@ const GuildPreview = (await import("./dist/lib/structures/GuildPreview.js")).def
 const GuildScheduledEvent = (await import("./dist/lib/structures/GuildScheduledEvent.js")).default.default;
 const GuildTemplate = (await import("./dist/lib/structures/GuildTemplate.js")).default.default;
 const Integration = (await import("./dist/lib/structures/Integration.js")).default.default;
-const InteractionOptionsWrapper = (await import("./dist/lib/structures/InteractionOptionsWrapper.js")).default.default;
+const InteractionOptionsWrapper = (await import("./dist/lib/util/InteractionOptionsWrapper.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
@@ -87,6 +88,7 @@ export {
     DiscordHTTPError,
     DiscordRESTError,
     ExtendedUser,
+    ForumChannel,
     GatewayError,
     GroupChannel,
     Guild,

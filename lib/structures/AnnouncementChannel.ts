@@ -1,19 +1,24 @@
 import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
+import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditGuildChannelOptions, RawAnnouncementChannel } from "../types/channels";
+import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
+import Collection from "../util/Collection";
 
 /** Represents a guild news channel. */
 export default class AnnouncementChannel extends TextableChannel<AnnouncementChannel> {
     /** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
     declare parent: CategoryChannel | null;
     declare rateLimitPerUser: 0;
+    /** The threads in this channel. */
+    threads: Collection<string, RawAnnouncementThreadChannel, AnnouncementThreadChannel>;
     declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
     constructor(data: RawAnnouncementChannel, client: Client) {
         super(data, client);
+        this.threads = new Collection(AnnouncementThreadChannel, client);
     }
 
     /**
@@ -43,6 +48,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
         return {
             ...super.toJSON(),
             rateLimitPerUser: 0,
+            threads:          this.threads.map(thread => thread.id),
             type:             this.type
         };
     }

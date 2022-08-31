@@ -1,6 +1,8 @@
 import type { RawUser } from "./users";
 import type {
     AnyThreadChannel,
+    ForumEmoji,
+    ForumTag,
     OverwriteOptions,
     RawChannel,
     RawGuildChannel,
@@ -325,11 +327,19 @@ export interface EditGuildOptions {
 }
 
 export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
-    /** [Text, Announcement] The default auto archive duration for the channel. */
+    /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
+    availableTags?: Array<ForumTag>;
+    /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
+    bitrate?: number | null;
+    /** [Announcement, Text] The default auto archive duration for the channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
+    /** [Forum] The default auto archive duration for threads. */
+    defaultReactionEmoji?: ForumEmoji | null;
+    /** [Forum] The default reaction emoji for threads. */
+    defaultThreadRateLimitPerUser?: number;
     /** The name of the channel. */
     name: string;
-    /** [Text, Voice, Announcement] If the channel is age restricted. */
+    /** [Announcement, Text, Voice] If the channel is age restricted. */
     nsfw?: boolean;
     /** The ID of the category to put this channel in. */
     parentID?: string;
@@ -337,13 +347,13 @@ export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads 
     permissionOverwrites?: Array<OverwriteOptions>;
     /** The position of the channel. */
     position?: number;
-    /** [Text] The seconds between sending messages for users. Between 0 and 21600. */
+    /** [Forum, Text] The seconds between sending messages for users. Between 0 and 21600. */
     rateLimitPerUser?: number;
     /** The reason for creating the channel. */
     reason?: string;
-    /** [Voice] The voice region for the channel. */
+    /** [Stage, Voice] The voice region for the channel. */
     rtcRegion?: string;
-    /** [Text, Voice, Announcement] The topic of the channel. */
+    /** [Announcement, Forum, Text, Voice] The topic of the channel. In forum channels, this is the `Guidelines` section. */
     topic?: string;
     /** The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of channel to create. */
     type: T;

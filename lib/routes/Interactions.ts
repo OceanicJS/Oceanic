@@ -32,7 +32,7 @@ export default class Interactions extends BaseRoute {
                     allowed_mentions: this._client.util.formatAllowedMentions(options.data.allowedMentions),
                     attachments:      options.data.attachments,
                     content:          options.data.content,
-                    components:       options.data.components ? this._client.util.componentsToRaw(options.data.components) : [],
+                    components:       options.data.components ? this._client.util.componentsToRaw(options.data.components) : undefined,
                     embeds:           options.data.embeds,
                     flags:            options.data.flags
                 };
