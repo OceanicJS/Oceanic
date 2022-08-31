@@ -3,6 +3,7 @@ import Message from "./Message";
 import User from "./User";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
+import type Member from "./Member";
 import type { ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -226,6 +227,14 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      */
     async leave() {
         return this._client.rest.channels.leaveThread(this.id);
+    }
+
+    /**
+     * Get the permissions of a member.  If providing an id, the member must be cached. This will go to the parent channel of this thread, as threads themselves do not have permissions.
+     * @param member The member to get the permissions of.
+     */
+    permissionsOf(member: string | Member) {
+        return this.guild.channels.get(this.parentID)!.permissionsOf(member);
     }
 
     /**

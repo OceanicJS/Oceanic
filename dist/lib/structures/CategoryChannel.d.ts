@@ -1,5 +1,7 @@
 import PermissionOverwrite from "./PermissionOverwrite";
 import GuildChannel from "./GuildChannel";
+import type Member from "./Member";
+import Permission from "./Permission";
 import type Client from "../Client";
 import type { ChannelTypes } from "../Constants";
 import Collection from "../util/Collection";
@@ -33,5 +35,10 @@ export default class CategoryChannel extends GuildChannel {
      * @param options The options for editing the permission overwrite.
      */
     editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void>;
+    /**
+     * Get the permissions of a member.  If providing an id, the member must be cached.
+     * @param member The member to get the permissions of.
+     */
+    permissionsOf(member: string | Member): Permission;
     toJSON(): JSONCategoryChannel;
 }

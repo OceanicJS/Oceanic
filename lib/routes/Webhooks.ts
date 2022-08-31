@@ -104,7 +104,7 @@ export default class Webhooks extends BaseRoute {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyGuildTextChannel>(id: string, token: string,messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends AnyGuildTextChannel>(id: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) delete options.files;
         const query = new URLSearchParams();

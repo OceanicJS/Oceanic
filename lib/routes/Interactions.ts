@@ -67,6 +67,7 @@ export default class Interactions extends BaseRoute {
         await this._manager.authRequest<null>({
             method: "POST",
             path:   Routes.INTERACTION_CALLBACK(interactionID, interactionToken),
+            route:  "/interactions/:id/:token/callback",
             json:   {
                 data,
                 type: options.type

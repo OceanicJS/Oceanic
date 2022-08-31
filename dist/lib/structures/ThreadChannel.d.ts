@@ -3,6 +3,7 @@ import Message from "./Message";
 import User from "./User";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
+import type Member from "./Member";
 import type { ThreadChannelTypes } from "../Constants";
 import type Client from "../Client";
 import Collection from "../util/Collection";
@@ -126,6 +127,11 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * Leave this thread.
      */
     leave(): Promise<void>;
+    /**
+     * Get the permissions of a member.  If providing an id, the member must be cached. This will go to the parent channel of this thread, as threads themselves do not have permissions.
+     * @param member The member to get the permissions of.
+     */
+    permissionsOf(member: string | Member): import("./Permission").default;
     /**
      * Pin a message in this thread.
      * @param messageID The ID of the message to pin.

@@ -1,7 +1,10 @@
 import PermissionOverwrite from "./PermissionOverwrite";
 import GuildChannel from "./GuildChannel";
+import type Member from "./Member";
+import Permission from "./Permission";
 import type Client from "../Client";
 import type { ChannelTypes } from "../Constants";
+import { AllPermissions, Permissions } from "../Constants";
 import Collection from "../util/Collection";
 import type {
     EditAnyGuildChannelOptions,
@@ -58,6 +61,31 @@ export default class CategoryChannel extends GuildChannel {
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions) {
         return this._client.rest.channels.editPermission(this.id, overwriteID, options);
+    }
+
+    /**
+     * Get the permissions of a member.  If providing an id, the member must be cached.
+     * @param member The member to get the permissions of.
+     */
+    permissionsOf(member: string | Member) {
+        if (typeof member === "string") member = this.guild.members.get(member)!;
+        if (!member) throw new Error("Member not found");
+        let permission = this.guild.permissionsOf(member).allow;
+        if (permission & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+        let overwrite = this.permissionOverwrites.get(this.guild.id);
+        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        let deny = 0n;
+        let allow = 0n;
+        for (const id of member.roles) {
+            if ((overwrite = this.permissionOverwrites.get(id))) {
+                deny |= overwrite.deny;
+                allow |= overwrite.allow;
+            }
+        }
+        permission = (permission & ~deny) | allow;
+        overwrite = this.permissionOverwrites.get(member.id);
+        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        return new Permission(permission);
     }
 
     override toJSON(): JSONCategoryChannel {
