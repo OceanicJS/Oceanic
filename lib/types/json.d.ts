@@ -19,7 +19,7 @@ import type {
 } from "./guilds";
 import type {
     ChannelMention,
-    Embed,
+    RawEmbed,
     MessageActivity,
     MessageReference,
     RawChannel,
@@ -27,7 +27,7 @@ import type {
     MessageReaction,
     ThreadMetadata,
     PrivateThreadmetadata,
-    MessageActionRow,
+    RawMessageActionRow,
     ForumTag,
     ForumEmoji
 } from "./channels";
@@ -379,10 +379,10 @@ export interface JSONMessage extends JSONBase {
     attachments: Array<JSONAttachment>;
     author: JSONUser;
     channel: string;
-    components?: Array<MessageActionRow>;
+    components?: Array<RawMessageActionRow>;
     content: string;
     editedTimestamp: number | null;
-    embeds: Array<Embed>;
+    embeds: Array<RawEmbed>;
     flags?: number;
     guild?: string;
     interaction?: {

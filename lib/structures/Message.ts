@@ -169,7 +169,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1));
         }
         if (data.edited_timestamp !== undefined) this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
-        if (data.embeds !== undefined) this.embeds = data.embeds;
+        if (data.embeds !== undefined) this.embeds = this.client.util.embedsToParsed(data.embeds);
         if (data.flags !== undefined) this.flags = data.flags;
         if (data.interaction !== undefined) {
             let member: RawMember & { id: string; } | undefined;

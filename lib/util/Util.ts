@@ -18,7 +18,13 @@ import type {
     RawApplicationCommandOption,
     RawMember,
     RawMessageActionRow,
-    RawModalActionRow
+    RawModalActionRow,
+    EmbedOptions,
+    RawEmbedOptions,
+    Embed,
+    RawEmbedField,
+    EmbedField,
+    RawEmbed
 } from "../types";
 import Member from "../structures/Member";
 
@@ -135,6 +141,85 @@ export default class Util {
         }
         if (!Util.BASE64URL_REGEX.test(img)) throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
         return img;
+    }
+
+    embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
+        return embeds.map((embed): Embed => ({
+            author: embed.author ? {
+                name:         embed.author.name,
+                iconUrl:      embed.author.icon_url,
+                proxyIconUrl: embed.author.proxy_icon_url,
+                url:          embed.author.url
+            } : undefined,
+            color:       embed.color,
+            description: embed.description,
+            fields:      embed.fields ? embed.fields.map((field): EmbedField => ({
+                inline: field.inline,
+                name:   field.name,
+                value:  field.value
+            })) : undefined,
+            footer: embed.footer ? {
+                text:         embed.footer.text,
+                iconUrl:      embed.footer.icon_url,
+                proxyIconUrl: embed.footer.proxy_icon_url
+            } : undefined,
+            timestamp: embed.timestamp,
+            title:     embed.title,
+            image:     embed.image ? {
+                url:      embed.image.url,
+                height:   embed.image.height,
+                proxyUrl: embed.image.proxy_url,
+                width:    embed.image.width
+            } : undefined,
+            provider: embed.provider ? {
+                name: embed.provider.name,
+                url:  embed.provider.url
+            } : undefined,
+            thumbnail: embed.thumbnail ? {
+                url:      embed.thumbnail.url,
+                height:   embed.thumbnail.height,
+                proxyUrl: embed.thumbnail.proxy_url,
+                width:    embed.thumbnail.width
+            } : undefined,
+            url:   embed.url,
+            type:  embed.type,
+            video: embed.video ? {
+                height:   embed.video.height,
+                proxyUrl: embed.video.proxy_url,
+                url:      embed.video.url,
+                width:    embed.video.width
+            } : undefined
+        }));
+    }
+
+    embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
+        return embeds.map((embed): RawEmbedOptions => ({
+            author: embed.author ? {
+                name:     embed.author.name,
+                icon_url: embed.author.iconUrl,
+                url:      embed.author.url
+            } : undefined,
+            color:       embed.color,
+            description: embed.description,
+            fields:      embed.fields ? embed.fields.map((field): RawEmbedField => ({
+                inline: field.inline,
+                name:   field.name,
+                value:  field.value
+            })) : undefined,
+            footer: embed.footer ? {
+                text:     embed.footer.text,
+                icon_url: embed.footer.iconUrl
+            } : undefined,
+            timestamp: embed.timestamp,
+            title:     embed.title,
+            image:     embed.image ? {
+                url: embed.image.url
+            } : undefined,
+            thumbnail: embed.thumbnail ? {
+                url: embed.thumbnail.url
+            } : undefined,
+            url: embed.url
+        }));
     }
 
     formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {

@@ -148,7 +148,7 @@ export default class Channels {
                 attachments:       options.attachments,
                 components:        options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:           options.content,
-                embeds:            options.embeds,
+                embeds:            options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : [],
                 flags:             options.flags,
                 sticker_ids:       options.stickerIDs,
                 message_reference: !options.messageReference ? undefined : {
