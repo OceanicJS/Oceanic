@@ -43,51 +43,51 @@ export default class CommandInteraction extends Interaction {
     constructor(data: RawApplicationCommandInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!)!;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!)!;
         this.data = {
             guildID:  data.data.guild_id,
             id:       data.data.id,
             name:     data.data.name,
             options:  new InteractionOptionsWrapper([], null),
             resolved: {
-                attachments: new Collection(Attachment, this._client),
-                channels:    new Collection(Channel, this._client) as Collection<string, RawChannel, AnyChannel>,
-                members:     new Collection(Member, this._client),
-                messages:    new Collection(Message, this._client),
-                roles:       new Collection(Role, this._client),
-                users:       new Collection(User, this._client)
+                attachments: new Collection(Attachment, client),
+                channels:    new Collection(Channel, client) as Collection<string, RawChannel, AnyChannel>,
+                members:     new Collection(Member, client),
+                messages:    new Collection(Message, client),
+                roles:       new Collection(Role, client),
+                users:       new Collection(User, client)
             },
             target:   undefined,
             targetID: data.data.target_id,
             type:     data.data.type
         };
-        this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
-        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, this._client, this.guildID!) : undefined;
+        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, client, this.guildID!) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.user = this._client.users.update((data.user || data.member!.user)!);
+        this.user = client.users.update((data.user || data.member!.user)!);
 
         if (data.data.resolved) {
             if (data.data.resolved.attachments) Object.values(data.data.resolved.attachments).forEach(attachment => this.data.resolved.attachments.update(attachment));
 
             if (data.data.resolved.channels) Object.values(data.data.resolved.channels).forEach(channel => {
-                const ch = this._client.getChannel(channel.id);
+                const ch = client.getChannel(channel.id);
                 if (ch && "update" in ch) (ch as Channel)["update"](channel);
-                this.data.resolved.channels.add(ch || Channel.from(channel, this._client));
+                this.data.resolved.channels.add(ch || Channel.from(channel, client));
             });
 
             if (data.data.resolved.members) Object.entries(data.data.resolved.members).forEach(([id, member]) => {
                 const m = member as unknown as RawMember & { id: string; user: RawUser; };
                 m.id = id;
                 m.user = data.data.resolved!.users![id]!;
-                this.data.resolved.members.add(this.guild instanceof Guild ? this.guild.members.update(m, this.guildID!) : new Member(m, this._client, this.guildID!));
+                this.data.resolved.members.add(this.guild instanceof Guild ? this.guild.members.update(m, this.guildID!) : new Member(m, client, this.guildID!));
             });
 
             if (data.data.resolved.messages) Object.values(data.data.resolved.messages).forEach(message => this.data.resolved.messages.update(message));
 
-            if (data.data.resolved.roles) Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, this._client, this.guild!.id)));
+            if (data.data.resolved.roles) Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guild!.id)));
 
             if (data.data.resolved.users) Object.values(data.data.resolved.users).forEach(user => this.data.resolved.users.update(user));
         }
@@ -105,7 +105,7 @@ export default class CommandInteraction extends Interaction {
      * @param options The options for creating the followup message.
      */
     async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent) {
-        return this._client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
+        return this.client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
     }
 
     /**
@@ -115,7 +115,7 @@ export default class CommandInteraction extends Interaction {
     async createMessage(options: InteractionContent) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
     }
 
     /**
@@ -125,7 +125,7 @@ export default class CommandInteraction extends Interaction {
     async createModal(options: ModalData) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
     }
 
     /**
@@ -135,7 +135,7 @@ export default class CommandInteraction extends Interaction {
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
     }
 
     /**
@@ -143,14 +143,14 @@ export default class CommandInteraction extends Interaction {
      * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID: string) {
-        return this._client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
+        return this.client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
     }
 
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
      */
     async deleteOriginal() {
-        return this._client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
+        return this.client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
     }
 
     /**
@@ -159,7 +159,7 @@ export default class CommandInteraction extends Interaction {
      * @param options The options for editing the followup message.
      */
     async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent) {
-        return this._client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
+        return this.client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
     }
 
     /**
@@ -167,7 +167,7 @@ export default class CommandInteraction extends Interaction {
      * @param options The options for editing the original message.
      */
     async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent) {
-        return this._client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
+        return this.client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
     }
 
     /**
@@ -175,14 +175,14 @@ export default class CommandInteraction extends Interaction {
      * @param messageID The ID of the message.
      */
     async getFollowup<T extends AnyGuildTextChannel>(messageID: string) {
-        return this._client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
+        return this.client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
     }
 
     /**
      * Get the original interaction response.
      */
     async getOriginal<T extends AnyGuildTextChannel>() {
-        return this._client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
+        return this.client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
     }
 
     override toJSON(): JSONCommandInteraction {

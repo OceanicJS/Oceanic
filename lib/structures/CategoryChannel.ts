@@ -49,7 +49,7 @@ export default class CategoryChannel extends GuildChannel {
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string) {
-        return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
+        return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
     /**
@@ -57,7 +57,7 @@ export default class CategoryChannel extends GuildChannel {
      * @param options The options for editing the channel.
      */
     async edit(options: EditAnyGuildChannelOptions) {
-        return this._client.rest.channels.edit<this>(this.id, options);
+        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**
@@ -66,7 +66,7 @@ export default class CategoryChannel extends GuildChannel {
      * @param options The options for editing the permission overwrite.
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions) {
-        return this._client.rest.channels.editPermission(this.id, overwriteID, options);
+        return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
     /**

@@ -41,13 +41,13 @@ export default class AutoModerationRule extends Base {
             },
             type: a.type
         }));
-        this.creator = this._client.users.get(data.creator_id)!;
+        this.creator = client.users.get(data.creator_id)!;
         this.creatorID = data.creator_id;
         this.enabled = data.enabled;
         this.eventType = data.event_type;
         this.exemptChannels = data.exempt_channels;
         this.exemptRoles = data.exempt_roles;
-        this.guild = this._client.guilds.get(data.guild_id)!;
+        this.guild = client.guilds.get(data.guild_id)!;
         this.guildID = data.guild_id;
         this.name = data.name;
         this.triggerMetadata = {
@@ -87,7 +87,7 @@ export default class AutoModerationRule extends Base {
      * @param reason The reason for deleting this rule.
      */
     async deleteAutoModerationRule(reason?: string) {
-        return this._client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
+        return this.client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
     }
 
     /**
@@ -95,7 +95,7 @@ export default class AutoModerationRule extends Base {
      * @param options The options for editing the rule.
      */
     async edit(options: EditAutoModerationRuleOptions) {
-        return this._client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);
+        return this.client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);
     }
 
     override toJSON(): JSONAutoModerationRule {

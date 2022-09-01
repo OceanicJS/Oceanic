@@ -45,17 +45,17 @@ export default class Webhook extends Base {
     user: User | null;
     constructor(data: RawWebhook, client: Client) {
         super(data.id, client);
-        this.application = data.application_id === null ? null : this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
+        this.application = data.application_id === null ? null : client.application?.id === data.application_id ? client.application : { id: data.application_id };
         this.avatar = data.avatar ?? null;
-        this.channel = data.channel_id === null ? null : this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id };
-        this.guild = !data.guild_id ? null : this._client.guilds.get(data.guild_id)!;
+        this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id };
+        this.guild = !data.guild_id ? null : client.guilds.get(data.guild_id)!;
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.sourceChannel = data.source_channel;
         this.sourceGuild = data.source_guild;
         this.token = data.token;
         this.type = data.type;
-        this.user = !data.user ? null : this._client.users.update(data.user);
+        this.user = !data.user ? null : client.users.update(data.user);
     }
 
     get url() { return `${BASE_URL}${Routes.WEBHOOK(this.id, this.token)}`; }
@@ -66,7 +66,7 @@ export default class Webhook extends Base {
      * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
-        return this.avatar === null ? null : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
+        return this.avatar === null ? null : this.client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
 
     /**
@@ -74,7 +74,7 @@ export default class Webhook extends Base {
      * @param reason The reason for deleting this webhook.
      */
     async delete(reason?: string) {
-        return this._client.rest.webhooks.delete(this.id, reason);
+        return this.client.rest.webhooks.delete(this.id, reason);
     }
 
     /**
@@ -86,7 +86,7 @@ export default class Webhook extends Base {
     async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string) {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.deleteMessage(this.id, t, messageID, options);
+        return this.client.rest.webhooks.deleteMessage(this.id, t, messageID, options);
     }
 
     /**
@@ -96,7 +96,7 @@ export default class Webhook extends Base {
     async deleteToken(token?: string) {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.deleteToken(this.id, t);
+        return this.client.rest.webhooks.deleteToken(this.id, t);
     }
 
     /**
@@ -104,7 +104,7 @@ export default class Webhook extends Base {
      * @param options The options for editing the webhook.
      */
     async edit(options: EditWebhookOptions) {
-        return this._client.rest.webhooks.edit(this.id, options);
+        return this.client.rest.webhooks.edit(this.id, options);
     }
 
     /**
@@ -117,7 +117,7 @@ export default class Webhook extends Base {
     async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.editMessage<T>(this.id, t, messageID, options);
+        return this.client.rest.webhooks.editMessage<T>(this.id, t, messageID, options);
     }
 
     /**
@@ -128,7 +128,7 @@ export default class Webhook extends Base {
     async editToken(options: EditWebhookOptions, token?: string) {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.editToken(this.id, t, options);
+        return this.client.rest.webhooks.editToken(this.id, t, options);
     }
 
     /**
@@ -141,7 +141,7 @@ export default class Webhook extends Base {
     async execute<T extends AnyGuildTextChannel>(options: ExecuteWebhookOptions, token?: string): Promise<Message<T> | void> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.execute<T>(this.id, t, options as ExecuteWebhookWaitOptions);
+        return this.client.rest.webhooks.execute<T>(this.id, t, options as ExecuteWebhookWaitOptions);
     }
 
     /**
@@ -154,7 +154,7 @@ export default class Webhook extends Base {
     async executeGithub<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.executeGithub<T>(this.id, t, options as Record<string, unknown>);
+        return this.client.rest.webhooks.executeGithub<T>(this.id, t, options as Record<string, unknown>);
     }
 
     /**
@@ -167,7 +167,7 @@ export default class Webhook extends Base {
     async executeSlack<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.executeSlack<T>(this.id, t, options as Record<string, unknown>);
+        return this.client.rest.webhooks.executeSlack<T>(this.id, t, options as Record<string, unknown>);
     }
 
     /**
@@ -179,7 +179,7 @@ export default class Webhook extends Base {
     async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string) {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
-        return this._client.rest.webhooks.getMessage<T>(this.id, t, messageID, threadID);
+        return this.client.rest.webhooks.getMessage<T>(this.id, t, messageID, threadID);
     }
 
     /**
@@ -188,7 +188,7 @@ export default class Webhook extends Base {
      * @param size The dimensions of the image.
      */
     sourceGuildIconURL(format?: ImageFormat, size?: number) {
-        return !this.sourceGuild?.icon ? null : this._client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
+        return !this.sourceGuild?.icon ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
     }
 
     override toJSON(): JSONWebhook {

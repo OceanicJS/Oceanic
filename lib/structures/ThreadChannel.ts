@@ -75,8 +75,8 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         if (data.flags !== undefined) this.flags = data.flags;
         if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
         if (data.member) {
-            const index = this.members.findIndex(m => m.userID === this._client.user!.id);
-            if (index === -1) this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this._client.user!.id });
+            const index = this.members.findIndex(m => m.userID === this.client.user!.id);
+            if (index === -1) this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this.client.user!.id });
             else {
                 this.members[index] = {
                     ...this.members[index],
@@ -87,7 +87,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         }
         if (data.member_count !== undefined) this.memberCount = data.member_count;
         if (data.message_count !== undefined) this.messageCount = data.message_count;
-        if (data.owner_id !== undefined) this.owner = this._client.users.get(data.owner_id) || { id: data.owner_id };
+        if (data.owner_id !== undefined) this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
         if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
         if (data.thread_metadata !== undefined) {
             this.threadMetadata = {
@@ -108,7 +108,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param userID The ID of the user to add to the thread.
      */
     async addMember(userID: string) {
-        return this._client.rest.channels.addThreadMember(this.id, userID);
+        return this.client.rest.channels.addThreadMember(this.id, userID);
     }
 
     /**
@@ -116,7 +116,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param options The options for creating the message.
      */
     async createMessage(options: CreateMessageOptions): Promise<Message<T>> {
-        return this._client.rest.channels.createMessage<T>(this.id, options);
+        return this.client.rest.channels.createMessage<T>(this.id, options);
     }
 
     /**
@@ -125,7 +125,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(messageID: string, emoji: string) {
-        return this._client.rest.channels.createReaction(this.id, messageID, emoji);
+        return this.client.rest.channels.createReaction(this.id, messageID, emoji);
     }
 
     /**
@@ -134,7 +134,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param reason The reason for deleting the message.
      */
     async deleteMessage(messageID: string, reason?: string) {
-        return this._client.rest.channels.deleteMessage(this.id, messageID, reason);
+        return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
 
     /**
@@ -143,7 +143,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(messageIDs: Array<string>, reason?: string) {
-        return this._client.rest.channels.deleteMessages(this.id, messageIDs, reason);
+        return this.client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
 
     /**
@@ -153,7 +153,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(messageID: string, emoji: string, user = "@me") {
-        return this._client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
+        return this.client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
     }
 
     /**
@@ -162,7 +162,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(messageID: string, emoji?: string) {
-        return this._client.rest.channels.deleteReactions(this.id, messageID, emoji);
+        return this.client.rest.channels.deleteReactions(this.id, messageID, emoji);
     }
 
     /**
@@ -170,7 +170,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param options The options for editing the channel.
      */
     override async edit(options: EditThreadChannelOptions) {
-        return this._client.rest.channels.edit<AnyThreadChannel>(this.id, options);
+        return this.client.rest.channels.edit<AnyThreadChannel>(this.id, options);
     }
 
     /**
@@ -179,7 +179,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param options The options for editing the message.
      */
     async editMessage(messageID: string, options: EditMessageOptions) {
-        return this._client.rest.channels.editMessage(this.id, messageID, options);
+        return this.client.rest.channels.editMessage(this.id, messageID, options);
     }
 
     /**
@@ -187,14 +187,14 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param userID The ID of the user to get the thread member of.
      */
     async getMember(userID: string) {
-        return this._client.rest.channels.getThreadMember(this.id, userID);
+        return this.client.rest.channels.getThreadMember(this.id, userID);
     }
 
     /**
      * Get the members of this thread.
      */
     async getMembers() {
-        return this._client.rest.channels.getThreadMembers(this.id);
+        return this.client.rest.channels.getThreadMembers(this.id);
     }
 
     /**
@@ -202,7 +202,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to get.
      */
     async getMessage(messageID: string): Promise<Message<T>> {
-        return this._client.rest.channels.getMessage<T>(this.id, messageID);
+        return this.client.rest.channels.getMessage<T>(this.id, messageID);
     }
 
     /**
@@ -210,14 +210,14 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param options The options for getting the messages. All options are mutually exclusive.
      */
     async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        return this._client.rest.channels.getMessages<T>(this.id, options);
+        return this.client.rest.channels.getMessages<T>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this thread.
      */
     async getPinnedMessages(): Promise<Array<Message<T>>> {
-        return this._client.rest.channels.getPinnedMessages<T>(this.id);
+        return this.client.rest.channels.getPinnedMessages<T>(this.id);
     }
 
     /**
@@ -227,21 +227,21 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param options The options for getting the reactions.
      */
     async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
-        return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
+        return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
     /**
      * Join this thread.
      */
     async join() {
-        return this._client.rest.channels.joinThread(this.id);
+        return this.client.rest.channels.joinThread(this.id);
     }
 
     /**
      * Leave this thread.
      */
     async leave() {
-        return this._client.rest.channels.leaveThread(this.id);
+        return this.client.rest.channels.leaveThread(this.id);
     }
 
     /**
@@ -258,7 +258,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param reason The reason for pinning the message.
      */
     async pinMessage(messageID: string, reason?: string) {
-        return this._client.rest.channels.pinMessage(this.id, messageID, reason);
+        return this.client.rest.channels.pinMessage(this.id, messageID, reason);
     }
 
     /**
@@ -266,14 +266,14 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param userID The ID of the user to remove from the thread.
      */
     async removeMember(userID: string) {
-        return this._client.rest.channels.removeThreadMember(this.id, userID);
+        return this.client.rest.channels.removeThreadMember(this.id, userID);
     }
 
     /**
      * Show a typing indicator in this thread.
      */
     async sendTyping() {
-        return this._client.rest.channels.sendTyping(this.id);
+        return this.client.rest.channels.sendTyping(this.id);
     }
 
     override toJSON(): JSONThreadChannel {
@@ -298,6 +298,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param reason The reason for unpinning the message.
      */
     async unpinMessage(messageID: string, reason?: string) {
-        return this._client.rest.channels.unpinMessage(this.id, messageID, reason);
+        return this.client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
 }

@@ -90,7 +90,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for the invite.
      */
     async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", T>> {
-        return this._client.rest.channels.createInvite<"withMetadata", T>(this.id, options);
+        return this.client.rest.channels.createInvite<"withMetadata", T>(this.id, options);
     }
 
     /**
@@ -98,7 +98,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for the message.
      */
     async createMessage(options: CreateMessageOptions): Promise<Message<T>> {
-        return this._client.rest.channels.createMessage<T>(this.id, options);
+        return this.client.rest.channels.createMessage<T>(this.id, options);
     }
 
     /**
@@ -107,7 +107,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(messageID: string, emoji: string) {
-        return this._client.rest.channels.createReaction(this.id, messageID, emoji);
+        return this.client.rest.channels.createReaction(this.id, messageID, emoji);
     }
 
     /**
@@ -116,7 +116,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param reason The reason for deleting the message.
      */
     async deleteMessage(messageID: string, reason?: string) {
-        return this._client.rest.channels.deleteMessage(this.id, messageID, reason);
+        return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
 
     /**
@@ -125,7 +125,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(messageIDs: Array<string>, reason?: string) {
-        return this._client.rest.channels.deleteMessages(this.id, messageIDs, reason);
+        return this.client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
 
     /**
@@ -134,7 +134,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string) {
-        return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
+        return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
     /**
@@ -144,7 +144,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(messageID: string, emoji: string, user = "@me") {
-        return this._client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
+        return this.client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
     }
 
     /**
@@ -153,7 +153,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(messageID: string, emoji?: string) {
-        return this._client.rest.channels.deleteReactions(this.id, messageID, emoji);
+        return this.client.rest.channels.deleteReactions(this.id, messageID, emoji);
     }
 
     /**
@@ -161,7 +161,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for editing the channel.
      */
     async edit(options: EditGuildChannelOptions) {
-        return this._client.rest.channels.edit<TextChannel | AnnouncementChannel>(this.id, options);
+        return this.client.rest.channels.edit<TextChannel | AnnouncementChannel>(this.id, options);
     }
 
     /**
@@ -170,7 +170,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for editing the message.
      */
     async editMessage(messageID: string, options: EditMessageOptions) {
-        return this._client.rest.channels.editMessage(this.id, messageID, options);
+        return this.client.rest.channels.editMessage(this.id, messageID, options);
     }
 
     /**
@@ -179,14 +179,14 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for editing the permission overwrite.
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions) {
-        return this._client.rest.channels.editPermission(this.id, overwriteID, options);
+        return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
     /**
      * Get the invites of this channel.
      */
     async getInvites(): Promise<Array<Invite<"withMetadata", T>>> {
-        return this._client.rest.channels.getInvites<T>(this.id);
+        return this.client.rest.channels.getInvites<T>(this.id);
     }
 
     /**
@@ -194,7 +194,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for getting the joined private archived threads.
      */
     async getJoinedPrivateArchivedThreads(options?: GetArchivedThreadsOptions) {
-        return this._client.rest.channels.getJoinedPrivateArchivedThreads(this.id, options);
+        return this.client.rest.channels.getJoinedPrivateArchivedThreads(this.id, options);
     }
 
     /**
@@ -202,7 +202,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param messageID The ID of the message to get.
      */
     async getMessage(messageID: string): Promise<Message<T>> {
-        return this._client.rest.channels.getMessage<T>(this.id, messageID);
+        return this.client.rest.channels.getMessage<T>(this.id, messageID);
     }
 
     /**
@@ -210,14 +210,14 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for getting the messages. All options are mutually exclusive.
      */
     async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        return this._client.rest.channels.getMessages<T>(this.id, options);
+        return this.client.rest.channels.getMessages<T>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this channel.
      */
     async getPinnedMessages(): Promise<Array<Message<T>>> {
-        return this._client.rest.channels.getPinnedMessages<T>(this.id);
+        return this.client.rest.channels.getPinnedMessages<T>(this.id);
     }
 
     /**
@@ -225,7 +225,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for getting the private archived threads.
      */
     async getPrivateArchivedThreads(options?: GetArchivedThreadsOptions) {
-        return this._client.rest.channels.getPrivateArchivedThreads(this.id, options);
+        return this.client.rest.channels.getPrivateArchivedThreads(this.id, options);
     }
 
     /**
@@ -233,7 +233,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for getting the public archived threads.
      */
     async getPublicArchivedThreads(options?: GetArchivedThreadsOptions) {
-        return this._client.rest.channels.getPublicArchivedThreads<T extends TextChannel ? PublicThreadChannel : AnnouncementThreadChannel>(this.id, options);
+        return this.client.rest.channels.getPublicArchivedThreads<T extends TextChannel ? PublicThreadChannel : AnnouncementThreadChannel>(this.id, options);
     }
 
     /**
@@ -243,7 +243,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for getting the reactions.
      */
     async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
-        return this._client.rest.channels.getReactions(this.id, messageID, emoji, options);
+        return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
     /**
@@ -277,14 +277,14 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param reason The reason for pinning the message.
      */
     async pinMessage(messageID: string, reason?: string) {
-        return this._client.rest.channels.pinMessage(this.id, messageID, reason);
+        return this.client.rest.channels.pinMessage(this.id, messageID, reason);
     }
 
     /**
      * Show a typing indicator in this channel. How long users see this varies from client to client.
      */
     async sendTyping() {
-        return this._client.rest.channels.sendTyping(this.id);
+        return this.client.rest.channels.sendTyping(this.id);
     }
 
     /**
@@ -293,7 +293,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for creating the thread.
      */
     async startThreadFromMessage(messageID: string, options: StartThreadFromMessageOptions) {
-        return this._client.rest.channels.startThreadFromMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, messageID, options);
+        return this.client.rest.channels.startThreadFromMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, messageID, options);
     }
 
     /**
@@ -301,7 +301,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param options The options for creating the thread.
      */
     async startThreadWithoutMessage(options: StartThreadWithoutMessageOptions) {
-        return this._client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, options);
+        return this.client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, options);
     }
 
     override toJSON(): JSONTextableChannel {
@@ -325,6 +325,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param reason The reason for unpinning the message.
      */
     async unpinMessage(messageID: string, reason?: string) {
-        return this._client.rest.channels.unpinMessage(this.id, messageID, reason);
+        return this.client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
 }

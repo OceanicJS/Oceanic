@@ -49,7 +49,7 @@ export default class VoiceState extends Base {
         this.selfStream = false;
         this.selfVideo = false;
         this.suppress = false;
-        this.user = this._client.users.get(this.id)!;
+        this.user = client.users.get(this.id)!;
         this.update(data);
     }
 
@@ -57,18 +57,18 @@ export default class VoiceState extends Base {
         if (data.channel_id !== undefined) {
             if (data.channel_id === null) this.channel = null;
             else {
-                const ch = this._client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
-                if (!ch) this._client.emit("warn", `Missing channel for VoiceState ${this.id}`);
+                const ch = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
+                if (!ch) this.client.emit("warn", `Missing channel for VoiceState ${this.id}`);
                 else this.channel = ch;
             }
         }
         if (data.deaf !== undefined) this.deaf = data.deaf;
         if (data.guild_id !== undefined) {
-            const guild = this._client.guilds.get(data.guild_id);
-            if (!guild) this._client.emit("warn", `Missing guild for VoiceState ${this.id}`);
+            const guild = this.client.guilds.get(data.guild_id);
+            if (!guild) this.client.emit("warn", `Missing guild for VoiceState ${this.id}`);
             else this.guild = guild;
         }
-        if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this._client, this.guildID!);
+        if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);
         if (data.mute !== undefined) this.mute = data.mute;
         if (data.request_to_speak_timestamp !== undefined) this.requestToSpeakTimestamp = data.request_to_speak_timestamp  === null ? null : new Date(data.request_to_speak_timestamp);
         if (data.self_deaf !== undefined) this.selfDeaf = data.self_deaf;
@@ -76,7 +76,7 @@ export default class VoiceState extends Base {
         if (data.self_stream !== undefined) this.selfStream = data.self_stream;
         if (data.self_video !== undefined) this.selfVideo = data.self_video;
         if (data.suppress !== undefined) this.suppress = data.suppress;
-        if (data.user_id !== undefined) this.user = this._client.users.get(data.user_id)!;
+        if (data.user_id !== undefined) this.user = this.client.users.get(data.user_id)!;
     }
 
     toJSON(): JSONVoiceState {

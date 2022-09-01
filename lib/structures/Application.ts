@@ -56,7 +56,7 @@ export default class Application extends ClientApplication {
         this.description = data.description;
         this.icon = null;
         this.name = data.name;
-        this.owner = this._client.users.update(data.owner);
+        this.owner = client.users.update(data.owner);
         this.rpcOrigins = [];
         this.team = null;
         this.verifyKey = data.verify_key;
@@ -71,19 +71,19 @@ export default class Application extends ClientApplication {
         if (data.custom_install_url !== undefined) this.customInstallURL = data.custom_install_url;
         if (data.description !== undefined) this.description = data.description;
         if (data.guild_id !== undefined) {
-            this.guild = this._client.guilds.get(data.guild_id);
+            this.guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
         }
         if (data.icon !== undefined) this.icon = data.icon;
         if (data.install_params !== undefined) this.installParams = data.install_params;
         if (data.name !== undefined) this.name = data.name;
-        if (data.owner !== undefined) this.owner = this._client.users.update(data.owner);
+        if (data.owner !== undefined) this.owner = this.client.users.update(data.owner);
         if (data.primary_sku_id !== undefined) this.primarySKUID = data.primary_sku_id;
         if (data.privacy_policy_url !== undefined) this.privacyPolicyURL = data.privacy_policy_url;
         if (data.rpc_origins !== undefined) this.rpcOrigins = data.rpc_origins;
         if (data.slug !== undefined) this.slug = data.slug;
         if (data.tags !== undefined) this.tags = data.tags;
-        if (data.team !== undefined) this.team = data.team ? new Team(data.team, this._client) : null;
+        if (data.team !== undefined) this.team = data.team ? new Team(data.team, this.client) : null;
         if (data.terms_of_service_url !== undefined) this.termsOfServiceURL = data.terms_of_service_url;
         if (data.verify_key !== undefined) this.verifyKey = data.verify_key;
     }
@@ -94,7 +94,7 @@ export default class Application extends ClientApplication {
      * @param size The dimensions of the image.
      */
     coverImageURL(format?: ImageFormat, size?: number) {
-        return this.coverImage === null ? null : this._client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
+        return this.coverImage === null ? null : this.client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
     }
 
     override toJSON(): JSONApplication {

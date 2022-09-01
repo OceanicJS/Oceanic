@@ -44,15 +44,15 @@ export default class ComponentInteraction extends Interaction {
     constructor(data: RawMessageComponentInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!)!;
-        this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!)!;
+        this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
-        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, this._client, this.guild!.id) : undefined;
+        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, client, this.guildID!) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.message = "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, this._client);
-        this.user = this._client.users.update((data.user || data.member!.user)!);
+        this.message = "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, client);
+        this.user = client.users.update((data.user || data.member!.user)!);
 
         switch (data.data.component_type) {
             case ComponentTypes.BUTTON: {
@@ -78,7 +78,7 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for creating the followup message.
      */
     async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent) {
-        return this._client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
+        return this.client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
     }
 
     /**
@@ -88,7 +88,7 @@ export default class ComponentInteraction extends Interaction {
     async createMessage(options: InteractionContent) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
     }
 
     /**
@@ -98,7 +98,7 @@ export default class ComponentInteraction extends Interaction {
     async createModal(options: ModalData) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
     }
 
     /**
@@ -108,7 +108,7 @@ export default class ComponentInteraction extends Interaction {
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
     }
 
     /**
@@ -118,7 +118,7 @@ export default class ComponentInteraction extends Interaction {
     async deferUpdate(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: { flags } });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: { flags } });
     }
 
     /**
@@ -126,14 +126,14 @@ export default class ComponentInteraction extends Interaction {
      * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID: string) {
-        return this._client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
+        return this.client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
     }
 
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
      */
     async deleteOriginal() {
-        return this._client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
+        return this.client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
     }
 
     /**
@@ -142,7 +142,7 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for editing the followup message.
      */
     async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent) {
-        return this._client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
+        return this.client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
     }
 
     /**
@@ -150,7 +150,7 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for editing the original message.
      */
     async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent) {
-        return this._client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
+        return this.client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
     }
 
     /**
@@ -160,7 +160,7 @@ export default class ComponentInteraction extends Interaction {
     async editParent(options: InteractionContent) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UPDATE_MESSAGE, data: options });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UPDATE_MESSAGE, data: options });
     }
 
     /**
@@ -168,14 +168,14 @@ export default class ComponentInteraction extends Interaction {
      * @param messageID The ID of the message.
      */
     async getFollowup<T extends AnyGuildTextChannel>(messageID: string) {
-        return this._client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
+        return this.client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
     }
 
     /**
      * Get the original interaction response.
      */
     async getOriginal<T extends AnyGuildTextChannel>() {
-        return this._client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
+        return this.client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
     }
 
     override toJSON(): JSONComponentInteraction {

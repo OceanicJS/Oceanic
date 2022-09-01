@@ -58,7 +58,7 @@ export default class StageChannel extends GuildChannel {
      * @param options The options to create an invite with.
      */
     async createInvite(options: CreateInviteOptions) {
-        return this._client.rest.channels.createInvite(this.id, options);
+        return this.client.rest.channels.createInvite(this.id, options);
     }
 
     /**
@@ -67,7 +67,7 @@ export default class StageChannel extends GuildChannel {
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string) {
-        return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
+        return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
     /**
@@ -75,7 +75,7 @@ export default class StageChannel extends GuildChannel {
      * @param options The options for editing the channel.
      */
     async edit(options: EditStageChannelOptions) {
-        return this._client.rest.channels.edit<this>(this.id, options);
+        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**
@@ -84,7 +84,7 @@ export default class StageChannel extends GuildChannel {
      * @param options The options for editing the permission overwrite.
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions) {
-        return this._client.rest.channels.editPermission(this.id, overwriteID, options);
+        return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
     /**
@@ -92,7 +92,7 @@ export default class StageChannel extends GuildChannel {
      * @param options The options to join the channel with.
      */
     async join(options?: UpdateVoiceStateOptions) {
-        return this._client.joinVoiceChannel(this.id, options);
+        return this.client.joinVoiceChannel(this.id, options);
     }
 
     /**

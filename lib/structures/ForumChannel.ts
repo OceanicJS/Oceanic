@@ -108,7 +108,7 @@ export default class ForumChannel extends GuildChannel {
      * @param options The options for the invite.
      */
     async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", this>> {
-        return this._client.rest.channels.createInvite<"withMetadata", this>(this.id, options);
+        return this.client.rest.channels.createInvite<"withMetadata", this>(this.id, options);
     }
 
     /**
@@ -117,7 +117,7 @@ export default class ForumChannel extends GuildChannel {
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string) {
-        return this._client.rest.channels.deletePermission(this.id, overwriteID, reason);
+        return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
     /**
@@ -125,7 +125,7 @@ export default class ForumChannel extends GuildChannel {
      * @param options The options for editing the channel
      */
     override async edit(options: EditForumChannelOptions) {
-        return this._client.rest.channels.edit<this>(this.id, options);
+        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**
@@ -134,14 +134,14 @@ export default class ForumChannel extends GuildChannel {
      * @param options The options for editing the permission overwrite.
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions) {
-        return this._client.rest.channels.editPermission(this.id, overwriteID, options);
+        return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
     /**
      * Get the invites of this channel.
      */
     async getInvites(): Promise<Array<Invite<"withMetadata", this>>> {
-        return this._client.rest.channels.getInvites<this>(this.id);
+        return this.client.rest.channels.getInvites<this>(this.id);
     }
 
     /**
@@ -149,7 +149,7 @@ export default class ForumChannel extends GuildChannel {
      * @param options The options for getting the public archived threads.
      */
     async getPublicArchivedThreads(options?: GetArchivedThreadsOptions) {
-        return this._client.rest.channels.getPublicArchivedThreads<PublicThreadChannel>(this.id, options);
+        return this.client.rest.channels.getPublicArchivedThreads<PublicThreadChannel>(this.id, options);
     }
 
     /**
@@ -183,7 +183,7 @@ export default class ForumChannel extends GuildChannel {
      * @param options The options for starting the thread.
      */
     async startThread(options: StartThreadInForumOptions) {
-        return this._client.rest.channels.startThreadInForum(this.id, options);
+        return this.client.rest.channels.startThreadInForum(this.id, options);
     }
 
     toJSON(): JSONForumChannel {

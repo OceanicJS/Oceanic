@@ -31,7 +31,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
      * @param options The options for editing the channel
      */
     override async edit(options: EditTextChannelOptions) {
-        return this._client.rest.channels.edit<this>(this.id, options);
+        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**
@@ -39,7 +39,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
      * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
     async followAnnouncement(webhookChannelID: string) {
-        return this._client.rest.channels.followAnnouncement(this.id, webhookChannelID);
+        return this.client.rest.channels.followAnnouncement(this.id, webhookChannelID);
     }
 
     toJSON(): JSONTextChannel {

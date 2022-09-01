@@ -35,16 +35,16 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     version: string;
     constructor(data: RawApplicationCommand, client: Client) {
         super(data.id, client);
-        this.application = this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
+        this.application = client.application?.id === data.application_id ? client.application : { id: data.application_id };
         this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
         this.description = data.description as never;
         this.descriptionLocalizations = data.description_localizations;
         this.dmPermission = data.dm_permission;
-        this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = !data.guild_id ? undefined : data.guild_id;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
-        this.options = data.options?.map(o => this._client.util.optionToParsed(o));
+        this.options = data.options?.map(o => client.util.optionToParsed(o));
         this.type = (data.type || ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;
     }
@@ -53,7 +53,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Delete this command.
      */
     async delete() {
-        return this.guildID ? this._client.rest.applicationCommands.deleteGuildCommand(this.application.id, this.guildID, this.id) : this._client.rest.applicationCommands.deleteGlobalCommand(this.application.id, this.id);
+        return this.guildID ? this.client.rest.applicationCommands.deleteGuildCommand(this.application.id, this.guildID, this.id) : this.client.rest.applicationCommands.deleteGlobalCommand(this.application.id, this.id);
     }
 
     /**
@@ -61,7 +61,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * @param options The options for editing the command.
      */
     async edit(options: TypeToEdit<T>) {
-        return this.guildID ? this._client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this._client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
+        return this.guildID ? this.client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this.client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
     }
 
     /**
@@ -70,7 +70,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      */
     async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions) {
         if (!this.guildID) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
-        return this._client.rest.applicationCommands.editGuildCommandPermissions(this.application.id, this.guildID, this.id, options);
+        return this.client.rest.applicationCommands.editGuildCommandPermissions(this.application.id, this.guildID, this.id, options);
     }
 
     /**
@@ -78,7 +78,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      */
     async getGuildPermission() {
         if (!this.guildID) throw new Error("getGuildPermission cannot be used on global commands.");
-        return this._client.rest.applicationCommands.getGuildPermission(this.application.id, this.guildID, this.id);
+        return this.client.rest.applicationCommands.getGuildPermission(this.application.id, this.guildID, this.id);
     }
 
     /**

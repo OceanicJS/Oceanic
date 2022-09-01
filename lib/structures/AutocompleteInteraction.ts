@@ -36,7 +36,7 @@ export default class AutocompleteInteraction extends Interaction {
     constructor(data: RawAutocompleteInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = this._client.getChannel<AnyTextChannel>(data.channel_id!)!;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!)!;
         this.data = {
             guildID: data.data.guild_id,
             id:      data.data.id,
@@ -44,13 +44,13 @@ export default class AutocompleteInteraction extends Interaction {
             options: new InteractionOptionsWrapper(data.data.options || [], null),
             type:    data.data.type
         };
-        this.guild = !data.guild_id ? undefined : this._client.guilds.get(data.guild_id);
+        this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
-        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, this._client, this.guild!.id) : undefined;
+        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, client, this.guildID) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.user = this._client.users.update((data.user || data.member!.user)!);
+        this.user = client.users.update((data.user || data.member!.user)!);
     }
 
     /**
@@ -60,7 +60,7 @@ export default class AutocompleteInteraction extends Interaction {
     async defer(flags?: number) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
     }
 
     /**
@@ -70,7 +70,7 @@ export default class AutocompleteInteraction extends Interaction {
     async result(choices: Array<AutocompleteChoice>) {
         if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
         this.acknowledged = true;
-        return this._client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: { choices } });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: { choices } });
     }
 
     override toJSON(): JSONAutocompleteInteraction {

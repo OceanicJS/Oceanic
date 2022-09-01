@@ -26,7 +26,7 @@ export default class Team extends Base {
     protected update(data: Partial<RawTeam>) {
         if (data.icon !== undefined) this.icon = data.icon;
         if (data.name !== undefined) this.name = data.name;
-        if (data.owner_user_id !== undefined) this.owner = this._client.users.get(data.owner_user_id) || { id: data.owner_user_id };
+        if (data.owner_user_id !== undefined) this.owner = this.client.users.get(data.owner_user_id) || { id: data.owner_user_id };
         if (data.members !== undefined) {
             for (const member of this.members) {
                 if (!data.members.find(m => m.user.id === member.user.id)) this.members.splice(this.members.indexOf(member), 1);
@@ -37,7 +37,7 @@ export default class Team extends Base {
                         membershipState: member.membership_state,
                         permissions:     member.permissions,
                         teamID:          member.team_id,
-                        user:            this._client.users.update(member.user)
+                        user:            this.client.users.update(member.user)
                     });
                 }
             }

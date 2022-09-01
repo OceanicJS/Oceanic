@@ -10,7 +10,6 @@ import Base from "../structures/Base";
 import { WebSocket } from "ws";
 import { inspect } from "util";
 export default class Shard extends TypedEmitter<ShardEvents> {
-    private _client;
     private _connectTimeout;
     private _getAllUsersCount;
     private _getAllUsersQueue;
@@ -18,6 +17,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     private _heartbeatInterval;
     private _requestMembersPromise;
     private _sharedZLib;
+    client: Client;
     connectAttempts: number;
     connecting: boolean;
     globalBucket: Bucket;

@@ -267,11 +267,7 @@ export default class Guild extends Base {
      * @param options The options for editing the emoji.
      */
     editEmoji(emojiID: string, options: EditEmojiOptions): Promise<{
-        user: User | undefined; /**
-         * Edit an existing auto moderation rule in this guild.
-         * @param ruleID The ID of the rule to edit.
-         * @param options The options for editing the rule.
-         */
+        user: User | undefined;
         name: string;
         roles: string[];
         managed: boolean;

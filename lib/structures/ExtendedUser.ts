@@ -36,7 +36,7 @@ export default class ExtendedUser extends User {
      * @param options The options for editing the user.
      */
     async edit(options: EditSelfUserOptions) {
-        return this._client.rest.users.editSelf(options);
+        return this.client.rest.users.editSelf(options);
     }
 
     override toJSON(): JSONExtendedUser {

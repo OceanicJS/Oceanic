@@ -51,7 +51,7 @@ export default class Member extends Base {
         this.avatar = null;
         this.communicationDisabledUntil = null;
         this.deaf = !!data.deaf;
-        this.guild = this._client.guilds.get(guildID)!;
+        this.guild = client.guilds.get(guildID)!;
         this.guildID = guildID;
         this.joinedAt = null;
         this.mute = !!data.mute;
@@ -75,7 +75,7 @@ export default class Member extends Base {
         if (data.pending !== undefined) this.pending = data.pending;
         if (data.premium_since !== undefined) this.premiumSince = data.premium_since === null ? null : new Date(data.premium_since);
         if (data.roles !== undefined) this.roles = data.roles;
-        if (data.user !== undefined) this.user = this._client.users.update(data.user);
+        if (data.user !== undefined) this.user = this.client.users.update(data.user);
     }
 
     /** If the member associated with the user is a bot. */
@@ -101,7 +101,7 @@ export default class Member extends Base {
      * @param roleID The ID of the role to add.
      */
     async addRole(roleID: string, reason?: string) {
-        await this._client.rest.guilds.addMemberRole(this.guildID, this.id, roleID, reason);
+        await this.client.rest.guilds.addMemberRole(this.guildID, this.id, roleID, reason);
     }
 
     /**
@@ -110,7 +110,7 @@ export default class Member extends Base {
      * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
-        return this.avatar === null ? this.user.avatarURL(format, size) : this._client.util.formatImage(this.avatar, format, size);
+        return this.avatar === null ? this.user.avatarURL(format, size) : this.client.util.formatImage(this.avatar, format, size);
     }
 
     /**
@@ -118,7 +118,7 @@ export default class Member extends Base {
      * @param options The options for the ban.
      */
     async ban(options?: CreateBanOptions) {
-        await this._client.rest.guilds.createBan(this.guildID, this.id, options);
+        await this.client.rest.guilds.createBan(this.guildID, this.id, options);
     }
 
     /**
@@ -126,7 +126,7 @@ export default class Member extends Base {
      * @param options The options for editing the member.
      */
     async edit(options: EditMemberOptions) {
-        return this._client.rest.guilds.editMember(this.guildID, this.id, options);
+        return this.client.rest.guilds.editMember(this.guildID, this.id, options);
     }
 
     /**
@@ -134,7 +134,7 @@ export default class Member extends Base {
      * @param options The options for editing the voice state.
      */
     async editVoiceState(options: EditUserVoiceStateOptions) {
-        return this._client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
+        return this.client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
     }
 
     /**
@@ -142,7 +142,7 @@ export default class Member extends Base {
      * @param reason The reason for the kick.
      */
     async kick(reason?: string) {
-        await this._client.rest.guilds.removeMember(this.guildID, this.id, reason);
+        await this.client.rest.guilds.removeMember(this.guildID, this.id, reason);
     }
 
     /**
@@ -151,7 +151,7 @@ export default class Member extends Base {
      * @param reason The reason for removing the role.
      */
     async removeRole(roleID: string, reason?: string) {
-        await this._client.rest.guilds.removeMemberRole(this.guildID, this.id, roleID, reason);
+        await this.client.rest.guilds.removeMemberRole(this.guildID, this.id, roleID, reason);
     }
 
     override toJSON(): JSONMember {
@@ -179,6 +179,6 @@ export default class Member extends Base {
      * @param reason The reason for removing the ban.
      */
     async unban(reason?: string) {
-        await this._client.rest.guilds.removeBan(this.guildID, this.id, reason);
+        await this.client.rest.guilds.removeBan(this.guildID, this.id, reason);
     }
 }

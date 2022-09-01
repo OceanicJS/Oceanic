@@ -51,7 +51,7 @@ export default class Integration extends Base {
 
     protected update(data: Partial<RawIntegration>) {
         if (data.account !== undefined) this.account = data.account;
-        if (data.application !== undefined) this.application = new PartialApplication(data.application, this._client);
+        if (data.application !== undefined) this.application = new PartialApplication(data.application, this.client);
         if (data.enable_emoticons !== undefined) this.enableEmoticons = data.enable_emoticons;
         if (data.enabled !== undefined) this.enabled = data.enabled;
         if (data.expire_behavior !== undefined) this.expireBehavior = data.expire_behavior;
@@ -63,7 +63,7 @@ export default class Integration extends Base {
         if (data.synced_at !== undefined) this.syncedAt = new Date(data.synced_at);
         if (data.syncing !== undefined) this.syncing = data.syncing;
         if (data.type !== undefined) this.type = data.type;
-        if (data.user !== undefined) this.user = new User(data.user, this._client);
+        if (data.user !== undefined) this.user = new User(data.user, this.client);
     }
 
     override toJSON(): JSONIntegration {

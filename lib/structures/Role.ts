@@ -34,7 +34,7 @@ export default class Role extends Base {
     constructor(data: RawRole, client: Client, guildID: string) {
         super(data.id, client);
         this.color = data.color;
-        this.guild = this._client.guilds.get(guildID)!;
+        this.guild = client.guilds.get(guildID)!;
         this.guildID = guildID;
         this.hoist = !!data.hoist;
         this.icon = null;
@@ -70,7 +70,7 @@ export default class Role extends Base {
      * @param reason The reason for deleting the role.
      */
     async delete(reason?: string) {
-        return this._client.rest.guilds.deleteRole(this.guildID, this.id, reason);
+        return this.client.rest.guilds.deleteRole(this.guildID, this.id, reason);
     }
 
     override toJSON(): JSONRole {

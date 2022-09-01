@@ -30,7 +30,7 @@ export default class ClientApplication extends Base {
      * @param options The commands.
      */
     async bulkEditGlobalCommands(options: Array<CreateApplicationCommandOptions>) {
-        return this._client.rest.applicationCommands.bulkEditGlobalCommands(this.id, options);
+        return this.client.rest.applicationCommands.bulkEditGlobalCommands(this.id, options);
     }
 
     /**
@@ -39,7 +39,7 @@ export default class ClientApplication extends Base {
      * @param options The commands.
      */
     async bulkEditGuildCommands(guildID: string, options: Array<CreateGuildApplicationCommandOptions>) {
-        return this._client.rest.applicationCommands.bulkEditGuildCommands(this.id, guildID, options);
+        return this.client.rest.applicationCommands.bulkEditGuildCommands(this.id, guildID, options);
     }
 
     /**
@@ -47,7 +47,7 @@ export default class ClientApplication extends Base {
      * @param options The options for creating the command.
      */
     async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(options: T) {
-        return this._client.rest.applicationCommands.createGlobalCommand<T>(this.id, options);
+        return this.client.rest.applicationCommands.createGlobalCommand<T>(this.id, options);
     }
 
     /**
@@ -56,7 +56,7 @@ export default class ClientApplication extends Base {
      * @param options The options for creating the command.
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(guildID: string, options: T) {
-        return this._client.rest.applicationCommands.createGuildCommand<T>(this.id, guildID, options);
+        return this.client.rest.applicationCommands.createGuildCommand<T>(this.id, guildID, options);
     }
 
     /**
@@ -64,7 +64,7 @@ export default class ClientApplication extends Base {
      * @param commandID The ID of the command.
      */
     async deleteGlobalCommand(commandID: string) {
-        return this._client.rest.applicationCommands.deleteGlobalCommand(this.id, commandID);
+        return this.client.rest.applicationCommands.deleteGlobalCommand(this.id, commandID);
     }
 
     /**
@@ -73,7 +73,7 @@ export default class ClientApplication extends Base {
      * @param commandID The ID of the command.
      */
     async deleteGuildCommand(guildID: string, commandID: string) {
-        return this._client.rest.applicationCommands.deleteGuildCommand(this.id, guildID, commandID);
+        return this.client.rest.applicationCommands.deleteGuildCommand(this.id, guildID, commandID);
     }
 
     /**
@@ -82,7 +82,7 @@ export default class ClientApplication extends Base {
      * @param options The options for editing the command.
      */
     async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(commandID: string, options: T) {
-        return this._client.rest.applicationCommands.editGlobalCommand<T>(this.id, commandID, options);
+        return this.client.rest.applicationCommands.editGlobalCommand<T>(this.id, commandID, options);
     }
 
     /**
@@ -92,7 +92,7 @@ export default class ClientApplication extends Base {
      * @param options The options for editing the command.
      */
     async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(guildID: string, commandID: string, options: T) {
-        return this._client.rest.applicationCommands.editGuildCommand<T>(this.id, guildID, commandID, options);
+        return this.client.rest.applicationCommands.editGuildCommand<T>(this.id, guildID, commandID, options);
     }
 
     /**
@@ -102,7 +102,7 @@ export default class ClientApplication extends Base {
      * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions) {
-        return this._client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
+        return this.client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
     }
 
     /**
@@ -111,7 +111,7 @@ export default class ClientApplication extends Base {
      * @param withLocalizations If localizations should be included.
      */
     async getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(commandID: string, withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGlobalCommand<W, T>(this.id, commandID, withLocalizations);
+        return this.client.rest.applicationCommands.getGlobalCommand<W, T>(this.id, commandID, withLocalizations);
     }
 
     /**
@@ -119,7 +119,7 @@ export default class ClientApplication extends Base {
      * @param withLocalizations If localizations should be included.
      */
     async getGlobalCommands<W extends boolean = false>(withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGlobalCommands<W>(this.id, withLocalizations);
+        return this.client.rest.applicationCommands.getGlobalCommands<W>(this.id, withLocalizations);
     }
 
     /**
@@ -129,7 +129,7 @@ export default class ClientApplication extends Base {
      * @param withLocalizations If localizations should be included.
      */
     async getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(guildID: string, commandID: string, withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGuildCommand<W, T>(this.id, guildID, commandID, withLocalizations);
+        return this.client.rest.applicationCommands.getGuildCommand<W, T>(this.id, guildID, commandID, withLocalizations);
     }
 
     /**
@@ -138,7 +138,7 @@ export default class ClientApplication extends Base {
      * @param withLocalization If localizations should be included.
      */
     async getGuildCommands<W extends boolean = false>(guildID: string, withLocalizations?: W) {
-        return this._client.rest.applicationCommands.getGuildCommands<W>(this.id, guildID, withLocalizations);
+        return this.client.rest.applicationCommands.getGuildCommands<W>(this.id, guildID, withLocalizations);
     }
 
     /**
@@ -147,7 +147,7 @@ export default class ClientApplication extends Base {
      * @param commandID The ID of the command.
      */
     async getGuildPermission(guildID: string, commandID: string) {
-        return this._client.rest.applicationCommands.getGuildPermission(this.id, guildID, commandID);
+        return this.client.rest.applicationCommands.getGuildPermission(this.id, guildID, commandID);
     }
 
     /**
@@ -155,7 +155,7 @@ export default class ClientApplication extends Base {
      * @param guildID The ID of the guild.
      */
     async getGuildPermissions(guildID: string) {
-        return this._client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
+        return this.client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
     }
 
     override toJSON(): JSONClientApplication {

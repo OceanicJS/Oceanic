@@ -64,21 +64,21 @@ export default class User extends Base {
      * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number) {
-        return this.avatar === null ? this.defaultAvatarURL() : this._client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
+        return this.avatar === null ? this.defaultAvatarURL() : this.client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
 
     /**
      * Create a direct message with this user.
      */
     async createDM() {
-        return this._client.rest.channels.createDM(this.id);
+        return this.client.rest.channels.createDM(this.id);
     }
 
     /**
      * The url of this user's default avatar.
      */
     defaultAvatarURL() {
-        return this._client.util.formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
+        return this.client.util.formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
     }
 
     override toJSON(): JSONUser {

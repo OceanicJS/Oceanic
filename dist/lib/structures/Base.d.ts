@@ -4,7 +4,7 @@ import type { JSONBase } from "../types/json";
 import { inspect } from "util";
 /** A base class which most other classes extend. */
 export default abstract class Base {
-    protected _client: Client;
+    client: Client;
     id: string;
     constructor(id: string, client: Client);
     static getCreatedAt(id: string): Date;

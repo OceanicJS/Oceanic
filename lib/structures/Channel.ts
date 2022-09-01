@@ -54,7 +54,7 @@ export default class Channel extends Base {
      * Close a direct message, leave a group channel, or delete a guild channel.
      */
     async delete() {
-        await this._client.rest.channels.delete(this.id);
+        await this.client.rest.channels.delete(this.id);
     }
 
     override toJSON(): JSONChannel {

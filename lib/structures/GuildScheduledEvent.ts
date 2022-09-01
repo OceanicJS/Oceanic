@@ -45,7 +45,7 @@ export default class GuildScheduledEvent extends Base {
         this.entityID = null;
         this.entityMetadata = null;
         this.entityType = data.entity_type;
-        this.guild = this._client.guilds.get(data.guild_id)!;
+        this.guild = client.guilds.get(data.guild_id)!;
         this.guildID = data.guild_id;
         this.image = null;
         this.name = data.name;
@@ -54,12 +54,12 @@ export default class GuildScheduledEvent extends Base {
         this.scheduledStartTime = new Date(data.scheduled_start_time);
         this.status = data.status;
         this.userCount = 0;
-        if (data.creator) this.creator = this._client.users.update(data.creator);
+        if (data.creator) this.creator = client.users.update(data.creator);
         this.update(data);
     }
 
     protected update(data: Partial<RawScheduledEvent>) {
-        if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this._client.getChannel<StageChannel>(data.channel_id)!;
+        if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id)!;
         if (data.description !== undefined) this.description = data.description;
         if (data.entity_id !== undefined) this.entityID = data.entity_id;
         if (data.entity_metadata !== undefined) this.entityMetadata = data.entity_metadata;
@@ -78,7 +78,7 @@ export default class GuildScheduledEvent extends Base {
      * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
     async deleteScheduledEvent(reason?: string) {
-        return this._client.rest.guilds.deleteScheduledEvent(this.guildID, this.id, reason);
+        return this.client.rest.guilds.deleteScheduledEvent(this.guildID, this.id, reason);
     }
 
     /**
@@ -87,7 +87,7 @@ export default class GuildScheduledEvent extends Base {
      * @param size The size of the image.
      */
     imageURL(format?: ImageFormat, size?: number) {
-        return !this.image ? null : this._client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
+        return !this.image ? null : this.client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
     }
 
     override toJSON(): JSONScheduledEvent {

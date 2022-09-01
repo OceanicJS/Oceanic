@@ -5,11 +5,11 @@ import { inspect } from "util";
 
 /** A base class which most other classes extend. */
 export default abstract class Base {
-    protected _client!: Client;
+    client!: Client;
     id: string;
     constructor(id: string, client: Client) {
         this.id = id;
-        Properties.looseDefine(this, "_client", client);
+        Properties.define(this, "client", client);
     }
 
     static getCreatedAt(id: string) {
