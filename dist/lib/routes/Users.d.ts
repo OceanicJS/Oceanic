@@ -1,7 +1,9 @@
-import BaseRoute from "./BaseRoute";
 import type { EditSelfUserOptions } from "../types/users";
 import ExtendedUser from "../structures/ExtendedUser";
-export default class Users extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class Users {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Edit the currently authenticated user.
      * @param options The options to edit with.

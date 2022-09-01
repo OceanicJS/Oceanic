@@ -1,5 +1,5 @@
 export default class Properties<C = unknown> {
-    private obj;
+    #private;
     constructor(obj: unknown);
     static define<T, K extends keyof T>(obj: T, property: K, value: T[K], writable?: boolean, configurable?: boolean, enumerable?: boolean): Properties<T>;
     static looseDefine<T>(obj: T, property: string, value: unknown, writable?: boolean, configurable?: boolean, enumerable?: boolean): Properties<T>;

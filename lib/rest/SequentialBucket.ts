@@ -7,11 +7,11 @@ import type { LatencyRef } from "../types/request-handler";
 
 /** A ratelimit bucket. */
 export default class SequentialBucket {
-    private _queue: Array<(cb: () => void) => void> = [];
     last: number;
     latencyRef: LatencyRef;
     limit: number;
     processing: NodeJS.Timeout | boolean = false;
+    #queue: Array<(cb: () => void) => void> = [];
     remaining: number;
     reset: number;
     constructor(limit: number, latencyRef: LatencyRef) {
@@ -21,7 +21,7 @@ export default class SequentialBucket {
     }
 
     private check(force = false) {
-        if (this._queue.length === 0) {
+        if (this.#queue.length === 0) {
             if (this.processing) {
                 if (typeof this.processing !== "boolean") clearTimeout(this.processing);
                 this.processing = false;
@@ -45,8 +45,8 @@ export default class SequentialBucket {
         }
         --this.remaining;
         this.processing = true;
-        this._queue.shift()!(() => {
-            if (this._queue.length > 0) this.check(true);
+        this.#queue.shift()!(() => {
+            if (this.#queue.length > 0) this.check(true);
             else this.processing = false;
         });
     }
@@ -57,8 +57,8 @@ export default class SequentialBucket {
      * @param priority- If true, the item will be added to the front of the queue/
      */
     queue(func: (cb: () => void) => void, priority = false) {
-        if (priority) this._queue.unshift(func);
-        else this._queue.push(func);
+        if (priority) this.#queue.unshift(func);
+        else this.#queue.push(func);
         this.check();
     }
 }

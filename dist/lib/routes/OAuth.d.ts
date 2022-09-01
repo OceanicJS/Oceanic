@@ -1,9 +1,11 @@
-import BaseRoute from "./BaseRoute";
 import type { AuthorizationInformation, ClientCredentialsTokenOptions, ClientCredentialsTokenResponse, Connection, ExchangeCodeOptions, ExchangeCodeResponse, OAuthURLOptions, RefreshTokenOptions, RevokeTokenOptions } from "../types/oauth";
 import Application from "../structures/Application";
 import Member from "../structures/Member";
 import Guild from "../structures/Guild";
-export default class OAuth extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class OAuth {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
      * @param options The options to for the client credentials grant.

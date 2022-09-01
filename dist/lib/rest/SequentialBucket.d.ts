@@ -6,7 +6,7 @@
 import type { LatencyRef } from "../types/request-handler";
 /** A ratelimit bucket. */
 export default class SequentialBucket {
-    private _queue;
+    #private;
     last: number;
     latencyRef: LatencyRef;
     limit: number;

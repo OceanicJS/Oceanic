@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import BaseRoute from "./BaseRoute";
 import type { CreateEmojiOptions, CreateGuildOptions, EditEmojiOptions, EditGuildOptions, GuildEmoji, ModifyChannelPositionsEntry, RawGuild, GetActiveThreadsResponse, GetMembersOptions, SearchMembersOptions, AddMemberOptions, EditMemberOptions, EditCurrentMemberOptions, GetBansOptions, Ban, CreateBanOptions, CreateRoleOptions, EditRolePositionsEntry, EditRoleOptions, GetPruneCountOptions, BeginPruneOptions, WidgetSettings, RawWidget, Widget, WidgetImageStyle, WelcomeScreen, EditWelcomeScreenOptions, GetVanityURLResponse, EditUserVoiceStateOptions, EditCurrentUserVoiceStateOptions, CreateChannelReturn, CreateChannelOptions } from "../types/guilds";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions } from "../types/auto-moderation";
 import type { GuildChannelTypesWithoutThreads, MFALevels } from "../Constants";
@@ -15,7 +14,10 @@ import type { VoiceRegion } from "../types/voice";
 import Invite from "../structures/Invite";
 import Integration from "../structures/Integration";
 import AutoModerationRule from "../structures/AutoModerationRule";
-export default class Guilds extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class Guilds {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Add a member to a guild. Requires an access token with the `guilds.join` scope.
      *

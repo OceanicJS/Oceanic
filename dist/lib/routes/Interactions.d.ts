@@ -1,7 +1,9 @@
-import BaseRoute from "./BaseRoute";
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
 import type { AnyGuildTextChannel } from "../types/channels";
-export default class Interactions extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class Interactions {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Create a followup message.
      * @param applicationID The ID of the application.

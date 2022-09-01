@@ -1,7 +1,9 @@
-import BaseRoute from "./BaseRoute";
 import type { AnyApplicationCommand, ApplicationCommandOptionConversion, CreateApplicationCommandOptions, EditApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RESTGuildApplicationCommandPermissions, CreateGuildApplicationCommandOptions, EditGuildApplicationCommandOptions } from "../types/application-commands";
 import ApplicationCommand from "../structures/ApplicationCommand";
-export default class ApplicationCommands extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class ApplicationCommands {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Overwrite all existing global application commands.
      * @param applicationID The ID of the application.

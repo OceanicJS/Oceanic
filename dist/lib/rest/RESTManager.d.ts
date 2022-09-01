@@ -10,8 +10,7 @@ import ApplicationCommands from "../routes/ApplicationCommands";
 import Interactions from "../routes/Interactions";
 import type { GetBotGatewayResponse, GetGatewayResponse } from "../types/gateway";
 export default class RESTManager {
-    private _client;
-    private _handler;
+    #private;
     applicationCommands: ApplicationCommands;
     channels: Channels;
     guilds: Guilds;

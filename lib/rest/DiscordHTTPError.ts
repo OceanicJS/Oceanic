@@ -3,18 +3,15 @@ import type { JSONDiscordHTTPError } from "../types/json";
 import type { Response } from "undici";
 
 export default class DiscordHTTPError extends Error {
-    method!: RESTMethod;
+    method: RESTMethod;
     name = "DiscordHTTPError";
-    resBody!: Record<string, unknown> | null;
-    response!: Response;
-    constructor(res: Response, resBody: unknown | null, method: string, stack?: string) {
+    resBody: Record<string, unknown> | null;
+    response: Response;
+    constructor(res: Response, resBody: unknown | null, method: RESTMethod, stack?: string) {
         super();
-
-        Object.defineProperties(this, {
-            response: { value: res, enumerable: false },
-            resBody:  { value: resBody, enumerable: false },
-            method:   { value: method, enumerable: false }
-        });
+        this.method = method;
+        this.response = res;
+        this.resBody = resBody as DiscordHTTPError["resBody"];
 
         let message = `${res.status} ${res.statusText} on ${this.method} ${this.path}`;
         const errors = DiscordHTTPError.flattenErrors(resBody as Record<string, unknown>);

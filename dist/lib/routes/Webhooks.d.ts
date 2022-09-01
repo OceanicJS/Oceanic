@@ -1,9 +1,11 @@
-import BaseRoute from "./BaseRoute";
 import type { CreateWebhookOptions, DeleteWebhookMessageOptions, EditWebhookMessageOptions, EditWebhookOptions, EditWebhookTokenOptions, ExecuteWebhookOptions, ExecuteWebhookWaitOptions, RawWebhook } from "../types/webhooks";
 import type { AnyGuildTextChannel } from "../types/channels";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
-export default class Webhooks extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class Webhooks {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Creat a channel webhook.
      * @param channelID The ID of the channel to create the webhook in.

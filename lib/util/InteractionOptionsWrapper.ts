@@ -23,9 +23,10 @@ import type Attachment from "../structures/Attachment";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
-    private resolved: ApplicationCommandInteractionResolvedData | null;
     /** The raw options from Discord.  */
     raw: Array<InteractionOptions>;
+    /** Then resolved data for this options instance. */
+    resolved: ApplicationCommandInteractionResolvedData | null;
     constructor(data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
         this.raw = data;
         this.resolved = resolved;
