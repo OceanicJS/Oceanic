@@ -1,5 +1,5 @@
 import GuildChannel from "./GuildChannel";
-import type PermissionOverwrite from "./PermissionOverwrite";
+import PermissionOverwrite from "./PermissionOverwrite";
 import PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
@@ -39,7 +39,7 @@ export default class ForumChannel extends GuildChannel {
     /** The threads in this channel. */
     threads: Collection<string, RawPublicThreadChannel, PublicThreadChannel>;
     /** The `guidelines` of this forum channel. */
-    topic: string;
+    topic: string | null;
     type: ChannelTypes.GUILD_FORUM;
     constructor(data: RawForumChannel, client: Client);
     protected update(data: Partial<RawForumChannel>): void;

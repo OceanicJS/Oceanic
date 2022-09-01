@@ -1,5 +1,5 @@
 import GuildChannel from "./GuildChannel";
-import type PermissionOverwrite from "./PermissionOverwrite";
+import PermissionOverwrite from "./PermissionOverwrite";
 import PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
@@ -53,11 +53,24 @@ export default class ForumChannel extends GuildChannel {
     /** The threads in this channel. */
     threads: Collection<string, RawPublicThreadChannel, PublicThreadChannel>;
     /** The `guidelines` of this forum channel. */
-    topic: string;
+    topic: string | null;
     declare type: ChannelTypes.GUILD_FORUM;
     constructor(data: RawForumChannel, client: Client) {
         super(data, client);
+        this.availableTags = [];
+        this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+        this.defaultReactionEmoji = null;
+        this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
+        this.flags = data.flags;
+        this.lastThread = null;
+        this.lastThreadID = data.last_message_id;
+        this.nsfw = data.nsfw;
+        this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.position = data.position;
+        this.rateLimitPerUser = 0;
+        this.template = data.template;
         this.threads = new Collection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client);
+        this.topic = data.topic;
         this.update(data);
     }
 
@@ -78,7 +91,12 @@ export default class ForumChannel extends GuildChannel {
             this.lastThreadID = data.last_message_id;
         }
         if (data.nsfw !== undefined) this.nsfw = data.nsfw;
-        if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+        if (data.permission_overwrites !== undefined) {
+            for (const id of this.permissionOverwrites.keys()) {
+                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) this.permissionOverwrites.delete(id);
+            }
+            for (const overwrite of data.permission_overwrites) this.permissionOverwrites.update(overwrite);
+        }
         if (data.position !== undefined) this.position = data.position;
         if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
         if (data.template !== undefined) this.template = data.template;

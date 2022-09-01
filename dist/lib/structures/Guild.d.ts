@@ -2,7 +2,7 @@
 import Role from "./Role";
 import Base from "./Base";
 import Member from "./Member";
-import type GuildScheduledEvent from "./GuildScheduledEvent";
+import GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
@@ -267,7 +267,11 @@ export default class Guild extends Base {
      * @param options The options for editing the emoji.
      */
     editEmoji(emojiID: string, options: EditEmojiOptions): Promise<{
-        user: User | undefined;
+        user: User | undefined; /**
+         * Edit an existing auto moderation rule in this guild.
+         * @param ruleID The ID of the rule to edit.
+         * @param options The options for editing the rule.
+         */
         name: string;
         roles: string[];
         managed: boolean;

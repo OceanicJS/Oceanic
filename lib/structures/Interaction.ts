@@ -16,7 +16,7 @@ import type { Uncached } from "../types/shared";
 import type { JSONInteraction } from "../types/json";
 
 export default class Interaction extends Base {
-    protected acknowledged: boolean;
+    protected acknowledged!: boolean;
     /** The application this interaction is for. This can be a partial object with only an `id` property. */
     application: ClientApplication | Uncached;
     /** The token of this interaction. */

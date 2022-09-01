@@ -17,11 +17,12 @@ export default class ClientApplication extends Base {
     flags: number;
     constructor(data: RawClientApplication, client: Client) {
         super(data.id, client);
+        this.flags = data.flags;
         this.update(data);
     }
 
     protected update(data: Partial<RawClientApplication>): void {
-        if (typeof data.flags !== "undefined") this.flags = data.flags;
+        if (data.flags !== undefined) this.flags = data.flags;
     }
 
     /**

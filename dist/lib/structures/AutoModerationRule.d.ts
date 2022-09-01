@@ -1,17 +1,18 @@
 import Base from "./Base";
-import User from "./User";
+import type User from "./User";
 import type Guild from "./Guild";
 import type Client from "../Client";
 import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
-import type { Uncached } from "../types/shared";
 import type { JSONAutoModerationRule } from "../types/json";
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
     /** The creator of this rule. This can be a partial object with just an `id` property. */
-    creator: User | Uncached;
+    creator: User;
+    /** The ID of the creator of this rule. */
+    creatorID: string;
     /** If this rule is enabled. */
     enabled: boolean;
     /** The [event type](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types) of this rule. */

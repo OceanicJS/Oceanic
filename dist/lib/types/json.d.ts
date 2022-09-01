@@ -130,7 +130,7 @@ export interface JSONAutocompleteInteraction extends JSONInteraction {
 }
 export interface JSONAutoModerationRule extends JSONBase {
     actions: Array<AutoModerationAction>;
-    creator: JSONUser | string;
+    creator: string;
     enabled: boolean;
     eventType: AutoModerationEventTypes;
     exemptChannels: Array<string>;
@@ -218,14 +218,14 @@ export interface JSONForumChannel extends JSONGuildChannel {
     rateLimitPerUser: number;
     template: string;
     threads: Array<string>;
-    topic: string;
+    topic: string | null;
 }
 export interface JSONGroupChannel extends JSONChannel {
     application: string;
     icon: string | null;
     managed: boolean;
     name: string | null;
-    nicks?: Record<"id" | "nick", string>;
+    nicks: Array<Record<"id" | "nick", string>>;
     owner: string | JSONUser;
     recipients: Array<JSONUser>;
     type: ChannelTypes.GROUP_DM;
@@ -562,8 +562,8 @@ export interface JSONVoiceChannel extends JSONGuildChannel {
 export interface JSONVoiceState extends JSONBase {
     channel: string | null;
     deaf: boolean;
-    guild: string;
-    member: JSONMember;
+    guild?: string;
+    member?: JSONMember;
     mute: boolean;
     requestToSpeakTimestamp: number | null;
     selfDeaf: boolean;

@@ -12,9 +12,9 @@ import type { JSONGuildChannel } from "../types/json";
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
     /** The guild associated with this channel. */
-    guild: Guild;
+    guild!: Guild;
     /** The id of the guild this channel is in. */
-    guildID: string;
+    guildID!: string;
     /** The name of this channel. */
     name: string;
     /** The parent of this channel, if applicable. This will be a text/announcement/forum channel if we're in a thread, category otherwise. */
@@ -24,7 +24,9 @@ export default class GuildChannel extends Channel {
     declare type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client) {
         super(data, client);
+        this.name = data.name;
         this.parent = null;
+        this.parentID = null;
     }
 
     protected update(data: Partial<RawGuildChannel>) {

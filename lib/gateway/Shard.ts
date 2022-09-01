@@ -81,33 +81,33 @@ try {
 
 /* eslint-disable @typescript-eslint/unbound-method */
 export default class Shard extends TypedEmitter<ShardEvents> {
-    private _client: Client;
-    private _connectTimeout: NodeJS.Timeout | null;
-    private _getAllUsersCount: Record<string, true>;
-    private _getAllUsersQueue: Array<string>;
-    private _guildCreateTimeout: NodeJS.Timeout | null;
-    private _heartbeatInterval: NodeJS.Timeout | null;
-    private _requestMembersPromise: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
+    private _client!: Client;
+    private _connectTimeout!: NodeJS.Timeout | null;
+    private _getAllUsersCount!: Record<string, true>;
+    private _getAllUsersQueue!: Array<string>;
+    private _guildCreateTimeout!: NodeJS.Timeout | null;
+    private _heartbeatInterval!: NodeJS.Timeout | null;
+    private _requestMembersPromise!: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    private _sharedZLib: Pako.Inflate | Inflate;
-    connectAttempts: number;
-    connecting: boolean;
-    globalBucket: Bucket;
+    private _sharedZLib!: Pako.Inflate | Inflate;
+    connectAttempts!: number;
+    connecting!: boolean;
+    globalBucket!: Bucket;
     id: number;
-    lastHeartbeatAck: boolean;
-    lastHeartbeatReceived: number;
-    lastHeartbeatSent: number;
-    latency: number;
-    preReady: boolean;
-    presence: Required<UpdatePresenceOptions>;
-    presenceUpdateBucket: Bucket;
-    ready: boolean;
-    reconnectInterval: number;
-    resumeURL: string | null;
-    sequence: number;
-    sessionID: string | null;
-    status: ShardStatus;
-    ws: WebSocket | null;
+    lastHeartbeatAck!: boolean;
+    lastHeartbeatReceived!: number;
+    lastHeartbeatSent!: number;
+    latency!: number;
+    preReady!: boolean;
+    presence!: Required<UpdatePresenceOptions>;
+    presenceUpdateBucket!: Bucket;
+    ready!: boolean;
+    reconnectInterval!: number;
+    resumeURL!: string | null;
+    sequence!: number;
+    sessionID!: string | null;
+    status!: ShardStatus;
+    ws!: WebSocket | null;
     constructor(id: number, client: Client) {
         super();
         Properties.new(this)

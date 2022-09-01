@@ -50,6 +50,16 @@ export default class Application extends ClientApplication {
     verifyKey: string;
     constructor(data: RESTApplication, client: Client) {
         super(data, client);
+        this.botPublic = !!data.bot_public;
+        this.botRequireCodeGrant = !!data.bot_require_code_grant;
+        this.coverImage = null;
+        this.description = data.description;
+        this.icon = null;
+        this.name = data.name;
+        this.owner = this._client.users.update(data.owner);
+        this.rpcOrigins = [];
+        this.team = null;
+        this.verifyKey = data.verify_key;
         this.update(data);
     }
 

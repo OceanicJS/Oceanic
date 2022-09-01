@@ -24,7 +24,7 @@ export default class GroupChannel extends Channel {
     /** The name of this group channel. */
     name: string | null;
     /** The nicknames used when creating this group channel. */
-    nicks?: Record<"id" | "nick", string>;
+    nicks: Array<Record<"id" | "nick", string>>;
     /** The owner of this group channel. This can be a partial object with just an `id`. */
     owner: User | Uncached;
     /** The other recipients in this group channel. */

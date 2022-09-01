@@ -1,10 +1,9 @@
 import Base from "./Base";
-import User from "./User";
+import type User from "./User";
 import type Guild from "./Guild";
 import type Client from "../Client";
 import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
-import type { Uncached } from "../types/shared";
 import type { JSONAutoModerationRule } from "../types/json";
 
 /** Represents an auto moderation rule. */
@@ -12,7 +11,9 @@ export default class AutoModerationRule extends Base {
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
     /** The creator of this rule. This can be a partial object with just an `id` property. */
-    creator: User | Uncached;
+    creator: User;
+    /** The ID of the creator of this rule. */
+    creatorID: string;
     /** If this rule is enabled. */
     enabled: boolean;
     /** The [event type](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-event-types) of this rule. */
@@ -33,11 +34,29 @@ export default class AutoModerationRule extends Base {
     triggerType: AutoModerationTriggerTypes;
     constructor(data: RawAutoModerationRule, client: Client) {
         super(data.id, client);
-        if (data.creator_id !== undefined) this.creator = this._client.users.get(data.creator_id) || { id: data.creator_id };
-        if (data.guild_id !== undefined) {
-            this.guild = this._client.guilds.get(data.guild_id)!;
-            this.guildID = data.guild_id;
-        }
+        this.actions = data.actions.map(a => ({
+            metadata: {
+                channelID:       a.metadata.channel_id,
+                durationSeconds: a.metadata.duration_seconds
+            },
+            type: a.type
+        }));
+        this.creator = this._client.users.get(data.creator_id)!;
+        this.creatorID = data.creator_id;
+        this.enabled = data.enabled;
+        this.eventType = data.event_type;
+        this.exemptChannels = data.exempt_channels;
+        this.exemptRoles = data.exempt_roles;
+        this.guild = this._client.guilds.get(data.guild_id)!;
+        this.guildID = data.guild_id;
+        this.name = data.name;
+        this.triggerMetadata = {
+            allowList:         data.trigger_metadata.allow_list,
+            keywordFilter:     data.trigger_metadata.keyword_filter,
+            mentionTotalLimit: data.trigger_metadata.mention_total_limit,
+            presets:           data.trigger_metadata.presets
+        };
+        this.triggerType = data.trigger_type;
         this.update(data);
     }
 
@@ -83,7 +102,7 @@ export default class AutoModerationRule extends Base {
         return {
             ...super.toJSON(),
             actions:         this.actions,
-            creator:         this.creator instanceof User ? this.creator.toJSON() : this.creator.id,
+            creator:         this.creatorID,
             enabled:         this.enabled,
             eventType:       this.eventType,
             exemptChannels:  this.exemptChannels,

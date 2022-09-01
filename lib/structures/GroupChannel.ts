@@ -36,7 +36,7 @@ export default class GroupChannel extends Channel {
     /** The name of this group channel. */
     name: string | null;
     /** The nicknames used when creating this group channel. */
-    nicks?: Record<"id" | "nick", string>;
+    nicks: Array<Record<"id" | "nick", string>>;
     /** The owner of this group channel. This can be a partial object with just an `id`. */
     owner: User | Uncached;
     /** The other recipients in this group channel. */
@@ -44,8 +44,14 @@ export default class GroupChannel extends Channel {
     declare type: ChannelTypes.GROUP_DM;
     constructor(data: RawGroupChannel, client: Client) {
         super(data, client);
+        this.application = { id: data.application_id };
+        this.icon = null;
         this.lastMessage = null;
+        this.managed = false;
         this.messages = new Collection(Message, client);
+        this.name = data.name;
+        this.nicks = [];
+        this.owner = { id: data.owner_id };
         this.recipients = new Collection(User, client);
         data.recipients.forEach(r => this.recipients.add(this._client.users.update(r)));
         this.update(data);

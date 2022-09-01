@@ -6,7 +6,6 @@ import type Client from "../Client";
 import type { CreateBanOptions, EditMemberOptions, EditUserVoiceStateOptions, RawMember } from "../types/guilds";
 import type { JSONMember } from "../types/json";
 import type { Presence } from "../types/gateway";
-import { assert } from "tsafe";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
@@ -41,15 +40,26 @@ export default class Member extends Base {
     /** The user associated with this member. */
     user: User;
     constructor(data: RawMember, client: Client, guildID: string) {
-        assert(data.user, "Member recieved without accompanying user.");
-        super(data.user.id, client);
+        let user: User | undefined, id: string | undefined;
+        if ("id" in data && !data.user) {
+            user = client.users.get(id = (data as unknown as { id: string; }).id);
+        } else if (data.user) {
+            id = (user = client.users.update(data.user)).id;
+        }
+        if (!user) throw new Error(`Member recieved without a user${!id ? "or id." : `: ${id}`}`);
+        super(user.id, client);
         this.avatar = null;
         this.communicationDisabledUntil = null;
+        this.deaf = !!data.deaf;
+        this.guild = this._client.guilds.get(guildID)!;
+        this.guildID = guildID;
+        this.joinedAt = null;
+        this.mute = !!data.mute;
         this.nick = null;
         this.pending = false;
         this.premiumSince = null;
-        this.guild = this._client.guilds.get(guildID)!;
-        this.guildID = guildID;
+        this.roles = [];
+        this.user = user;
         this.update(data);
     }
 

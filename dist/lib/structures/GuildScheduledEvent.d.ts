@@ -23,8 +23,8 @@ export default class GuildScheduledEvent extends Base {
     guild: Guild;
     /** The id of the guild this scheduled event belongs to. */
     guildID: string;
-    /** The cover */
-    image?: string | null;
+    /** The cover image of this event. */
+    image: string | null;
     /** The name of the event. */
     name: string;
     /** The [privacy level](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level) of the event. */

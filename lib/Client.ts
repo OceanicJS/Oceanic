@@ -31,25 +31,25 @@ try {
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
-    application: ClientApplication;
-    channelGuildMap: Record<string, string>;
-    gatewayURL: string;
-    groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
-    guildShardMap: Record<string, number>;
-    guilds: Collection<string, RawGuild, Guild>;
-    options: ClientInstanceOptions;
-    privateChannels: Collection<string, RawPrivateChannel, PrivateChannel>;
+    application!: ClientApplication;
+    channelGuildMap!: Record<string, string>;
+    gatewayURL!: string;
+    groupChannels!: Collection<string, RawGroupChannel, GroupChannel>;
+    guildShardMap!: Record<string, number>;
+    guilds!: Collection<string, RawGuild, Guild>;
+    options!: ClientInstanceOptions;
+    privateChannels!: Collection<string, RawPrivateChannel, PrivateChannel>;
     ready = false;
-    rest: RESTManager;
-    shards: ShardManager;
+    rest!: RESTManager;
+    shards!: ShardManager;
     startTime = 0;
-    threadGuildMap: Record<string, string>;
-    unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
+    threadGuildMap!: Record<string, string>;
+    unavailableGuilds!: Collection<string, RawUnavailableGuild, UnavailableGuild>;
     /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
-    user: ExtendedUser;
-    users: Collection<string, RawUser, User>;
-    util: Util;
-    voiceConnections: VoiceConnectionManager;
+    user!: ExtendedUser;
+    users!: Collection<string, RawUser, User>;
+    util!: Util;
+    voiceConnections!: VoiceConnectionManager;
     /**
      * @constructor
      * @param options The options to create the client with.

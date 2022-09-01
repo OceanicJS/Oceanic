@@ -14,15 +14,15 @@ import * as Routes from "../util/Routes";
 import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
 
 export default class RESTManager {
-    private _client: Client;
-    private _handler: RequestHandler;
-    applicationCommands: ApplicationCommands;
-    channels: Channels;
-    guilds: Guilds;
-    interactions: Interactions;
-    oauth: OAuth;
-    users: Users;
-    webhooks: Webhooks;
+    private _client!: Client;
+    private _handler!: RequestHandler;
+    applicationCommands!: ApplicationCommands;
+    channels!: Channels;
+    guilds!: Guilds;
+    interactions!: Interactions;
+    oauth!: OAuth;
+    users!: Users;
+    webhooks!: Webhooks;
     constructor(client: Client, options?: RESTOptions) {
         Properties.new(this)
             .looseDefine("_client", client)

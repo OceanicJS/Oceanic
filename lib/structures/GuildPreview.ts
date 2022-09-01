@@ -28,6 +28,16 @@ export default class GuildPreview extends Base {
     stickers: Array<Sticker>;
     constructor(data: RawGuildPreview, client: Client) {
         super(data.id, client);
+        this.approximateMemberCount = 0;
+        this.approximatePresenceCount = 0;
+        this.description = null;
+        this.discoverySplash = null;
+        this.emojis = [];
+        this.features = [];
+        this.icon = null;
+        this.name = data.name;
+        this.splash = null;
+        this.stickers = [];
         this.update(data);
     }
 

@@ -3,10 +3,10 @@ import type { JSONDiscordHTTPError } from "../types/json";
 import type { Response } from "undici";
 
 export default class DiscordHTTPError extends Error {
-    method: RESTMethod;
+    method!: RESTMethod;
     name = "DiscordHTTPError";
-    resBody: Record<string, unknown> | null;
-    response: Response;
+    resBody!: Record<string, unknown> | null;
+    response!: Response;
     constructor(res: Response, resBody: unknown | null, method: string, stack?: string) {
         super();
 

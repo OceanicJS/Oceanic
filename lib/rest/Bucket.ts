@@ -20,6 +20,7 @@ export default class Bucket {
         this.latencyRef = options?.latencyRef || { latency: 0 };
         this.lastReset = this.tokens = this.lastSend = 0;
         this.reservedTokens = options?.reservedTokens || 0;
+        this.timeout = null;
     }
 
     private check() {

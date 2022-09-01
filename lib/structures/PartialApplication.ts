@@ -20,6 +20,9 @@ export default class PartialApplication extends Base {
     verifyKey?: string;
     constructor(data: RawPartialApplication, client: Client) {
         super(data.id, client);
+        this.description = data.description;
+        this.icon = null;
+        this.name = data.name;
         this.verifyKey = data.verify_key;
         this.update(data);
     }

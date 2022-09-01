@@ -10,7 +10,7 @@ import type { JSONStageInstance } from "../types/json";
 
 export default class StageInstance extends Base {
     /** The associated stage channel. */
-    channel: StageChannel;
+    channel!: StageChannel;
     /** @deprecated If the stage channel is discoverable */
     discoverableDisabled: boolean;
     /** The guild of the associated stage channel. */
@@ -25,8 +25,11 @@ export default class StageInstance extends Base {
     topic: string;
     constructor(data: RawStageInstance, client: Client) {
         super(data.id, client);
+        this.discoverableDisabled = !!data.discoverable_disabled;
         this.guild = this._client.guilds.get(data.guild_id)!;
         this.guildID = data.guild_id;
+        this.privacyLevel = data.privacy_level;
+        this.topic = data.topic;
         this.update(data);
     }
 

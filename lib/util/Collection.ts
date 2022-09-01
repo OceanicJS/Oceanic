@@ -7,8 +7,8 @@ export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Clie
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class Collection<K extends string | number, M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends PolarCollection<K, C> {
-    protected _baseObject: AnyClass<M, C, E>;
-    protected _client: Client;
+    protected _baseObject!: AnyClass<M, C, E>;
+    protected _client!: Client;
     constructor(baseObject: AnyClass<M, C, E>, client: Client) {
         super();
         if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");

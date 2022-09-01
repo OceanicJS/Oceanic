@@ -25,8 +25,12 @@ export default class User extends Base {
     username: string;
     constructor(data: RawUser, client: Client) {
         super(data.id, client);
+        this.avatar = null;
         this.bot = !!data.bot;
+        this.discriminator = data.discriminator;
+        this.publicFlags = 0;
         this.system = !!data.system;
+        this.username = data.username;
         this.update(data);
     }
 

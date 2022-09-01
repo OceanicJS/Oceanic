@@ -3,7 +3,7 @@
 	"compilerOptions": {
 		"outDir": "dist",
 		"baseUrl": "lib",
-		"strictPropertyInitialization": false,
+		"strictPropertyInitialization": true,
 		"skipLibCheck": false,
 		"inlineSourceMap": true,
 		"target": "ES2022",

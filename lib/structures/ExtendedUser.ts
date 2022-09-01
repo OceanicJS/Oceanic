@@ -17,6 +17,8 @@ export default class ExtendedUser extends User {
     verified: boolean;
     constructor(data: RawOAuthUser, client: Client) {
         super(data, client);
+        this.email = data.email;
+        this.flags = data.flags;
         this.verified = !!data.verified;
         this.mfaEnabled = !!data.mfa_enabled;
         this.update(data);

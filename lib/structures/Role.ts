@@ -33,9 +33,18 @@ export default class Role extends Base {
     unicodeEmoji: string | null;
     constructor(data: RawRole, client: Client, guildID: string) {
         super(data.id, client);
+        this.color = data.color;
         this.guild = this._client.guilds.get(guildID)!;
         this.guildID = guildID;
-        this.managed = data.managed;
+        this.hoist = !!data.hoist;
+        this.icon = null;
+        this.managed = !!data.managed;
+        this.mentionable = !!data.mentionable;
+        this.name = data.name;
+        this.permissions = new Permission(data.permissions);
+        this.position = data.position;
+        this.tags = {};
+        this.unicodeEmoji = null;
         this.update(data);
     }
 

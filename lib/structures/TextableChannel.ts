@@ -54,8 +54,14 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     declare type: Exclude<TextChannelTypes, PrivateChannelTypes>;
     constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
         super(data, client);
+        this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+        this.lastMessage = null;
         this.messages = new Collection(Message, client);
+        this.nsfw = data.nsfw;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.position = data.position;
+        this.rateLimitPerUser = data.rate_limit_per_user;
+        this.topic = data.topic;
         this.update(data);
     }
 

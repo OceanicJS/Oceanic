@@ -31,7 +31,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The channel this message was created in. This can be a partial object with only an `id` property. */
     channel: T;
     /** The components on this message. */
-    components?: Array<MessageActionRow>;
+    components: Array<MessageActionRow>;
     /** The content of this message. */
     content: string;
     /** The timestamp at which this message was last edited. */
@@ -39,7 +39,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The embeds on this message. */
     embeds: Array<Embed>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
-    flags?: number;
+    flags: number;
     /** The ID of the guild this message is in. */
     guildID?: string;
     /** The interaction info, if this message was the result of an interaction. */
@@ -70,7 +70,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     position?: number;
     /** The reactions on this message. */
     reactions: Record<string, MessageReaction>;
-    /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, */
+    /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, this will be the message that's referenced. */
     referencedMessage?: Message | null;
     /** The sticker items on this message. */
     stickerItems?: Array<StickerItem>;

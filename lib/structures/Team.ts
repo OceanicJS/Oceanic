@@ -16,7 +16,10 @@ export default class Team extends Base {
     owner: User | Uncached;
     constructor(data: RawTeam, client: Client) {
         super(data.id, client);
+        this.icon = null;
         this.members = [];
+        this.name = data.name;
+        this.owner = { id: data.owner_user_id };
         this.update(data);
     }
 

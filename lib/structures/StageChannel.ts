@@ -35,7 +35,11 @@ export default class StageChannel extends GuildChannel {
     voiceMembers: Collection<string, RawMember, Member, [guildID: string]>;
     constructor(data: RawStageChannel, client: Client) {
         super(data, client);
+        this.bitrate = data.bitrate;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.position = data.position;
+        this.rtcRegion = data.rtc_region;
+        this.topic = data.topic;
         this.voiceMembers = new Collection(Member, client);
         this.update(data);
     }

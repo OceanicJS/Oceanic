@@ -17,10 +17,10 @@ import { FormData, fetch, File as UFile } from "undici";
 
 /** The primary means of communicating with Discord via rest. */
 export default class RequestHandler {
-    private _manager: RESTManager;
+    private _manager!: RESTManager;
     globalBlock = false;
-    latencyRef: LatencyRef;
-    options: RequestHandlerInstanceOptions;
+    latencyRef!: LatencyRef;
+    options!: RequestHandlerInstanceOptions;
     ratelimits: Record<string, SequentialBucket> = {};
     readyQueue: Array<() => void> = [];
     constructor(manager: RESTManager, options: RESTOptions = {}) {

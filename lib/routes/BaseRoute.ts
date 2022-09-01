@@ -2,7 +2,7 @@ import type RESTManager from "../rest/RESTManager";
 import Properties from "../util/Properties";
 
 export default abstract class BaseRoute {
-    protected _manager: RESTManager;
+    protected _manager!: RESTManager;
     constructor(manager: RESTManager) {
         Properties.looseDefine(this, "_manager", manager);
     }

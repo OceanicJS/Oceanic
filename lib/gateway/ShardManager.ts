@@ -6,10 +6,10 @@ import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gatew
 import { Collection } from "@augu/collections";
 
 export default class ShardManager extends Collection<number, Shard> {
-    private _buckets: Record<number, number>;
-    private _client: Client;
-    private _connectQueue: Array<Shard>;
-    private _connectTimeout: NodeJS.Timeout | null;
+    private _buckets!: Record<number, number>;
+    private _client!: Client;
+    private _connectQueue!: Array<Shard>;
+    private _connectTimeout!: NodeJS.Timeout | null;
     options: ShardManagerInstanceOptions;
     constructor(client: Client, options: GatewayOptions = {}) {
         super();

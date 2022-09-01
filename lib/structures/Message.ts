@@ -55,7 +55,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The channel this message was created in. This can be a partial object with only an `id` property. */
     channel: T;
     /** The components on this message. */
-    components?: Array<MessageActionRow>;
+    components: Array<MessageActionRow>;
     /** The content of this message. */
     content: string;
     /** The timestamp at which this message was last edited. */
@@ -63,7 +63,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The embeds on this message. */
     embeds: Array<Embed>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
-    flags?: number;
+    flags: number;
     /** The ID of the guild this message is in. */
     guildID?: string;
     /** The interaction info, if this message was the result of an interaction. */
@@ -94,7 +94,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     position?: number;
     /** The reactions on this message. */
     reactions: Record<string, MessageReaction>;
-    /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, */
+    /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, this will be the message that's referenced. */
     referencedMessage?: Message | null;
     // stickers exists, but is deprecated
     /** The sticker items on this message. */
@@ -115,6 +115,11 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.channel = (this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
             id: data.channel_id
         }) as T;
+        this.components = [];
+        this.content = data.content;
+        this.editedTimestamp = null;
+        this.embeds = [];
+        this.flags = 0;
         this.guildID = data.guild_id;
         this.mentions = {
             channels: [],
@@ -123,6 +128,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             roles:    [],
             users:    []
         };
+        this.pinned = !!data.pinned;
         this.reactions = {};
         this.timestamp = new Date(data.timestamp);
         this.tts = data.tts;
@@ -173,7 +179,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             };
             this.interaction = {
                 id:     data.interaction.id,
-                member: this.channel instanceof GuildChannel && this.channel.guild instanceof Guild && member ? this.channel.guild.members.update(member, this.channel.guildID) : undefined,
+                member: this.channel instanceof GuildChannel && this.channel.guild instanceof Guild && member ? this.channel.guild.members.update({ ...member, user: data.interaction.user, id: data.interaction.user.id }, this.channel.guildID) : undefined,
                 name:   data.interaction.name,
                 type:   data.interaction.type,
                 user:   this._client.users.update(data.interaction.user)

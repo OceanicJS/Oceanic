@@ -1,7 +1,7 @@
 import Base from "./Base";
 import type VoiceChannel from "./VoiceChannel";
 import type StageChannel from "./StageChannel";
-import type Member from "./Member";
+import Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
@@ -15,9 +15,11 @@ export default class VoiceState extends Base {
     /** If the associated member is deafened. */
     deaf: boolean;
     /** The guild this voice state is a part of. */
-    guild: Guild;
+    guild?: Guild;
+    /** The ID of the guild this voice state is a part of. */
+    guildID?: string;
     /** The member associated with this voice state. */
-    member: Member;
+    member?: Member;
     /** If the associated member is muted. */
     mute: boolean;
     /** The time at which the associated member requested to speak. */
@@ -31,7 +33,7 @@ export default class VoiceState extends Base {
     /** If the associated member is has their camera on. */
     selfVideo: boolean;
     /** The id of the associated member's voice session. */
-    sessionID: string;
+    sessionID!: string;
     /** If the associated member is suppressed. */
     suppress: boolean;
     /** The user associated with this voice state. */
@@ -41,11 +43,13 @@ export default class VoiceState extends Base {
         this.channel = null;
         this.deaf = false;
         this.mute = false;
+        this.requestToSpeakTimestamp = null;
         this.selfDeaf = false;
         this.selfMute = false;
         this.selfStream = false;
         this.selfVideo = false;
         this.suppress = false;
+        this.user = this._client.users.get(this.id)!;
         this.update(data);
     }
 
@@ -64,7 +68,7 @@ export default class VoiceState extends Base {
             if (!guild) this._client.emit("warn", `Missing guild for VoiceState ${this.id}`);
             else this.guild = guild;
         }
-        if (data.member !== undefined) this.member = this.guild.members.update({ ...data.member, id: this.id }, this.guild.id);
+        if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this._client, this.guildID!);
         if (data.mute !== undefined) this.mute = data.mute;
         if (data.request_to_speak_timestamp !== undefined) this.requestToSpeakTimestamp = data.request_to_speak_timestamp  === null ? null : new Date(data.request_to_speak_timestamp);
         if (data.self_deaf !== undefined) this.selfDeaf = data.self_deaf;
@@ -80,8 +84,8 @@ export default class VoiceState extends Base {
             ...super.toJSON(),
             channel:                 this.channel?.id || null,
             deaf:                    this.deaf,
-            guild:                   this.guild.id,
-            member:                  this.member.toJSON(),
+            guild:                   this.guildID,
+            member:                  this.member?.toJSON(),
             mute:                    this.mute,
             requestToSpeakTimestamp: this.requestToSpeakTimestamp ? this.requestToSpeakTimestamp.getTime() : null,
             selfDeaf:                this.selfDeaf,

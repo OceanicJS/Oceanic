@@ -51,8 +51,23 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     declare type: ThreadChannelTypes;
     constructor(data: RawThreadChannel, client: Client) {
         super(data, client);
+        this.flags = data.flags;
+        this.lastMessage = null;
+        this.memberCount = 0;
         this.members = [];
+        this.messageCount = 0;
         this.messages = new Collection(Message, client);
+        this.owner = { id: data.owner_id };
+        this.rateLimitPerUser = data.rate_limit_per_user;
+        this.threadMetadata = {
+            archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
+            archived:            !!data.thread_metadata.archived,
+            autoArchiveDuration: data.thread_metadata.auto_archive_duration,
+            createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
+            locked:              !!data.thread_metadata.locked
+        };
+        this.totalMessageSent = 0;
+        if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
         this.update(data);
     }
 

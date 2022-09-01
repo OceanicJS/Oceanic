@@ -50,9 +50,15 @@ export default class VoiceChannel extends GuildChannel {
     voiceMembers: Collection<string, RawMember, Member, [guildID: string]>;
     constructor(data: RawVoiceChannel, client: Client) {
         super(data, client);
+        this.bitrate = data.bitrate;
         this.lastMessage = null;
         this.messages = new Collection(Message, client);
+        this.nsfw = false;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.position = data.position;
+        this.rtcRegion = data.rtc_region;
+        this.topic = data.topic;
+        this.videoQualityMode = data.video_quality_mode;
         this.voiceMembers = new Collection(Member, client);
         this.update(data);
     }

@@ -28,13 +28,19 @@ export default class CategoryChannel extends GuildChannel {
         super(data, client);
         this.channels = new Collection(GuildChannel, client);
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.position = data.position;
         this.update(data);
     }
 
     protected update(data: Partial<RawCategoryChannel>) {
         super.update(data);
         if (data.position !== undefined) this.position = data.position;
-        if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+        if (data.permission_overwrites !== undefined) {
+            for (const id of this.permissionOverwrites.keys()) {
+                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) this.permissionOverwrites.delete(id);
+            }
+            for (const overwrite of data.permission_overwrites) this.permissionOverwrites.update(overwrite);
+        }
     }
 
     /**

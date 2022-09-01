@@ -25,8 +25,8 @@ export default class GuildScheduledEvent extends Base {
     guild: Guild;
     /** The id of the guild this scheduled event belongs to. */
     guildID: string;
-    /** The cover */
-    image?: string | null;
+    /** The cover image of this event. */
+    image: string | null;
     /** The name of the event. */
     name: string;
     /** The [privacy level](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-privacy-level) of the event. */
@@ -41,10 +41,20 @@ export default class GuildScheduledEvent extends Base {
     userCount: number;
     constructor(data: RawScheduledEvent, client: Client) {
         super(data.id, client);
-        if (data.creator) this.creator = this._client.users.update(data.creator);
+        this.channel = null;
+        this.entityID = null;
+        this.entityMetadata = null;
+        this.entityType = data.entity_type;
         this.guild = this._client.guilds.get(data.guild_id)!;
         this.guildID = data.guild_id;
+        this.image = null;
+        this.name = data.name;
+        this.privacyLevel = data.privacy_level;
+        this.scheduledEndTime = data.scheduled_end_time ? new Date(data.scheduled_end_time) : null;
+        this.scheduledStartTime = new Date(data.scheduled_start_time);
+        this.status = data.status;
         this.userCount = 0;
+        if (data.creator) this.creator = this._client.users.update(data.creator);
         this.update(data);
     }
 

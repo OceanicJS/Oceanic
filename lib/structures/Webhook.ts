@@ -45,7 +45,7 @@ export default class Webhook extends Base {
     user: User | null;
     constructor(data: RawWebhook, client: Client) {
         super(data.id, client);
-        if (data.application_id !== undefined) this.application = data.application_id === null ? null : this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
+        this.application = data.application_id === null ? null : this._client.application?.id === data.application_id ? this._client.application : { id: data.application_id };
         this.avatar = data.avatar ?? null;
         this.channel = data.channel_id === null ? null : this._client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id };
         this.guild = !data.guild_id ? null : this._client.guilds.get(data.guild_id)!;

@@ -1,7 +1,7 @@
 import Base from "./Base";
 import type VoiceChannel from "./VoiceChannel";
 import type StageChannel from "./StageChannel";
-import type Member from "./Member";
+import Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
@@ -14,9 +14,11 @@ export default class VoiceState extends Base {
     /** If the associated member is deafened. */
     deaf: boolean;
     /** The guild this voice state is a part of. */
-    guild: Guild;
+    guild?: Guild;
+    /** The ID of the guild this voice state is a part of. */
+    guildID?: string;
     /** The member associated with this voice state. */
-    member: Member;
+    member?: Member;
     /** If the associated member is muted. */
     mute: boolean;
     /** The time at which the associated member requested to speak. */

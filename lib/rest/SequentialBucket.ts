@@ -13,10 +13,11 @@ export default class SequentialBucket {
     limit: number;
     processing: NodeJS.Timeout | boolean = false;
     remaining: number;
-    reset = 0;
+    reset: number;
     constructor(limit: number, latencyRef: LatencyRef) {
         this.limit = this.remaining = limit;
         this.latencyRef = latencyRef;
+        this.last = this.reset = 0;
     }
 
     private check(force = false) {

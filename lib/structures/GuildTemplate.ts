@@ -3,7 +3,6 @@ import type User from "./User";
 import type Client from "../Client";
 import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
-import type { Uncached } from "../types/shared";
 import type { JSONGuildTemplate } from "../types/json";
 
 export default class GuildTemplate {
@@ -23,7 +22,9 @@ export default class GuildTemplate {
     /** A snapshot of the guild. */
     serializedSourceGuild: Partial<RawGuild>;
     /** The source guild of this template. */
-    sourceGuild: Guild | Uncached;
+    sourceGuild: Guild;
+    /** The ID of the source guild of this template. */
+    sourceGuildID: string;
     /** When this template was last updated. */
     updatedAt: Date;
     /** The amount of times this template has been used. */
@@ -33,6 +34,14 @@ export default class GuildTemplate {
         this.code = data.code;
         this.createdAt = new Date(data.created_at);
         this.creator = this._client.users.update(data.creator);
+        this.description = null;
+        this.isDirty = null;
+        this.name = data.name;
+        this.serializedSourceGuild = data.serialized_source_guild;
+        this.sourceGuild = this._client.guilds.get(data.source_guild_id)!;
+        this.sourceGuildID = data.source_guild_id;
+        this.updatedAt = new Date(data.updated_at);
+        this.usageCount = data.usage_count;
         this.update(data);
     }
 
@@ -41,7 +50,10 @@ export default class GuildTemplate {
         if (data.is_dirty !== undefined) this.isDirty = data.is_dirty;
         if (data.name !== undefined) this.name = data.name;
         if (data.serialized_source_guild !== undefined) this.serializedSourceGuild = data.serialized_source_guild;
-        if (data.source_guild_id !== undefined) this.sourceGuild = this._client.guilds.get(data.source_guild_id) || { id: data.source_guild_id };
+        if (data.source_guild_id !== undefined) {
+            this.sourceGuild = this._client.guilds.get(data.source_guild_id)!;
+            this.sourceGuildID = data.source_guild_id;
+        }
         if (data.updated_at !== undefined) this.updatedAt = new Date(data.updated_at);
         if (data.usage_count !== undefined) this.usageCount = data.usage_count;
     }

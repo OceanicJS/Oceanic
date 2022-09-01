@@ -3,7 +3,6 @@ import type User from "./User";
 import type Client from "../Client";
 import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
-import type { Uncached } from "../types/shared";
 import type { JSONGuildTemplate } from "../types/json";
 export default class GuildTemplate {
     protected _client: Client;
@@ -22,7 +21,9 @@ export default class GuildTemplate {
     /** A snapshot of the guild. */
     serializedSourceGuild: Partial<RawGuild>;
     /** The source guild of this template. */
-    sourceGuild: Guild | Uncached;
+    sourceGuild: Guild;
+    /** The ID of the source guild of this template. */
+    sourceGuildID: string;
     /** When this template was last updated. */
     updatedAt: Date;
     /** The amount of times this template has been used. */
