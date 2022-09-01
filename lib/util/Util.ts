@@ -144,82 +144,104 @@ export default class Util {
     }
 
     embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
-        return embeds.map((embed): Embed => ({
-            author: embed.author ? {
-                name:         embed.author.name,
-                iconUrl:      embed.author.icon_url,
-                proxyIconUrl: embed.author.proxy_icon_url,
-                url:          embed.author.url
-            } : undefined,
-            color:       embed.color,
-            description: embed.description,
-            fields:      embed.fields ? embed.fields.map((field): EmbedField => ({
-                inline: field.inline,
-                name:   field.name,
-                value:  field.value
-            })) : undefined,
-            footer: embed.footer ? {
-                text:         embed.footer.text,
-                iconUrl:      embed.footer.icon_url,
-                proxyIconUrl: embed.footer.proxy_icon_url
-            } : undefined,
-            timestamp: embed.timestamp,
-            title:     embed.title,
-            image:     embed.image ? {
-                url:      embed.image.url,
-                height:   embed.image.height,
-                proxyUrl: embed.image.proxy_url,
-                width:    embed.image.width
-            } : undefined,
-            provider: embed.provider ? {
+        return embeds.map((embed) => {
+            const parsedEmbed: Embed = {};
+
+            if (embed.author) {
+                parsedEmbed.author = {
+                    name:         embed.author.name,
+                    iconUrl:      embed.author.icon_url,
+                    proxyIconUrl: embed.author.proxy_icon_url,
+                    url:          embed.author.url
+                };
+            }
+            if (embed.color) parsedEmbed.color = embed.color;
+            if (embed.description) parsedEmbed.description = embed.description;
+            if (embed.fields) {
+                parsedEmbed.fields = embed.fields.map((field): EmbedField => ({
+                    inline: field.inline,
+                    name:   field.name,
+                    value:  field.value
+                }));
+            }
+            if (embed.footer) {
+                parsedEmbed.footer = {
+                    text:         embed.footer.text,
+                    iconUrl:      embed.footer.icon_url,
+                    proxyIconUrl: embed.footer.proxy_icon_url
+                };
+            }
+            if (embed.timestamp) parsedEmbed.timestamp = embed.timestamp;
+            if (embed.title) parsedEmbed.title = embed.title;
+            if (embed.image) {
+                parsedEmbed.image = {
+                    url:      embed.image.url,
+                    height:   embed.image.height,
+                    proxyUrl: embed.image.proxy_url,
+                    width:    embed.image.width
+                };
+            }
+            if (embed.provider) parsedEmbed.provider = {
                 name: embed.provider.name,
                 url:  embed.provider.url
-            } : undefined,
-            thumbnail: embed.thumbnail ? {
+            };
+            if (embed.thumbnail) parsedEmbed.thumbnail = {
                 url:      embed.thumbnail.url,
                 height:   embed.thumbnail.height,
                 proxyUrl: embed.thumbnail.proxy_url,
                 width:    embed.thumbnail.width
-            } : undefined,
-            url:   embed.url,
-            type:  embed.type,
-            video: embed.video ? {
-                height:   embed.video.height,
-                proxyUrl: embed.video.proxy_url,
-                url:      embed.video.url,
-                width:    embed.video.width
-            } : undefined
-        }));
+            };
+            if (embed.url) parsedEmbed.url = embed.url;
+            if (embed.type) parsedEmbed.type =  embed.type;
+            if (embed.video) {
+                parsedEmbed.video = {
+                    height:   embed.video.height,
+                    proxyUrl: embed.video.proxy_url,
+                    url:      embed.video.url,
+                    width:    embed.video.width
+                };
+            }
+
+            return parsedEmbed;
+        });
     }
 
     embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
-        return embeds.map((embed): RawEmbedOptions => ({
-            author: embed.author ? {
-                name:     embed.author.name,
-                icon_url: embed.author.iconUrl,
-                url:      embed.author.url
-            } : undefined,
-            color:       embed.color,
-            description: embed.description,
-            fields:      embed.fields ? embed.fields.map((field): RawEmbedField => ({
-                inline: field.inline,
-                name:   field.name,
-                value:  field.value
-            })) : undefined,
-            footer: embed.footer ? {
-                text:     embed.footer.text,
-                icon_url: embed.footer.iconUrl
-            } : undefined,
-            timestamp: embed.timestamp,
-            title:     embed.title,
-            image:     embed.image ? {
-                url: embed.image.url
-            } : undefined,
-            thumbnail: embed.thumbnail ? {
-                url: embed.thumbnail.url
-            } : undefined,
-            url: embed.url
-        }));
+        return embeds.map((embed) => {
+            const rawEmbed: RawEmbedOptions = {};
+
+            if (embed.author) {
+                rawEmbed.author = {
+                    name:     embed.author.name,
+                    icon_url: embed.author.iconUrl,
+                    url:      embed.author.url
+                };
+            }
+            if (embed.color) rawEmbed.color = embed.color;
+            if (embed.description) rawEmbed.description = embed.description;
+            if (embed.fields) {
+                rawEmbed.fields = embed.fields.map((field): RawEmbedField => ({
+                    inline: field.inline,
+                    name:   field.name,
+                    value:  field.value
+                }));
+            }
+            if (embed.timestamp) rawEmbed.timestamp = embed.timestamp;
+            if (embed.title) rawEmbed.title = embed.title;
+            if (embed.image) {
+                rawEmbed.image = {
+                    url: embed.image.url
+                };
+            }
+            if (embed.thumbnail) {
+                rawEmbed.thumbnail = {
+                    url: embed.thumbnail.url
+                };
+            }
+            if (embed.url) rawEmbed.url = embed.url;
+
+            return rawEmbed;
+        });
     }
 
     formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {
