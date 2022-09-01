@@ -83,7 +83,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     }
 
     async connect() {
-        if (!this.options.auth || !this.options.auth.startsWith("Bot ")) throw new Error("You must provide a bot token to connect.");
+        if (!this.options.auth || !this.options.auth.startsWith("Bot ")) throw new Error("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
         let url: string, data: GetBotGatewayResponse | undefined;
         try {
             if (this.shards.options.maxShards === -1 || this.shards.options.concurrency === -1) {
