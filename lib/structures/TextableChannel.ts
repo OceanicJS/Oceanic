@@ -55,7 +55,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.lastMessage = null;
+        this.lastMessage = data.last_message_id === null ? null : { id: data.last_message_id };
         this.messages = new Collection(Message, client);
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);

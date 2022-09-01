@@ -797,7 +797,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.client.threadGuildMap[packet.d.id] = guild.id;
                 }
                 const channel = this.client.getChannel(packet.d.parent_id!);
-                if (channel && "threads" in channel) (channel.threads as Collection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
+                if (channel) {
+                    if ("threads" in channel) (channel.threads as Collection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
+                    if (channel.type === ChannelTypes.GUILD_FORUM) channel.lastThread = thread;
+                }
                 this.client.emit("threadCreate", thread);
                 break;
             }
@@ -809,7 +812,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild && guild.threads.has(packet.d.id)) {
                     thread = guild.threads.get(packet.d.id)!;
                     guild.threads.delete(packet.d.id);
-                    if (channel && "threads" in channel) channel.threads.delete(packet.d.id);
+                    if (channel) {
+                        if ("threads" in channel) channel.threads.delete(packet.d.id);
+                        if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThread?.id === packet.d.id) channel.lastThread = null;
+                    }
                 } else thread = {
                     id:       packet.d.id,
                     type:     packet.d.type,

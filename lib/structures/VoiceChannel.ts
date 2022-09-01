@@ -51,7 +51,7 @@ export default class VoiceChannel extends GuildChannel {
     constructor(data: RawVoiceChannel, client: Client) {
         super(data, client);
         this.bitrate = data.bitrate;
-        this.lastMessage = null;
+        this.lastMessage = data.last_message_id === null ? null : { id: data.last_message_id };
         this.messages = new Collection(Message, client);
         this.nsfw = false;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
@@ -66,6 +66,7 @@ export default class VoiceChannel extends GuildChannel {
     protected update(data: Partial<RawVoiceChannel>) {
         super.update(data);
         if (data.bitrate !== undefined) this.bitrate = data.bitrate;
+        if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
         if (data.nsfw !== undefined) this.nsfw = data.nsfw;
         if (data.position !== undefined) this.position = data.position;
         if (data.rtc_region !== undefined) this.rtcRegion = data.rtc_region;

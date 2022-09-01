@@ -5,7 +5,7 @@ import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type Client from "../Client";
-import type { CreateInviteOptions, EditForumChannelOptions, EditPermissionOptions, ForumEmoji, ForumTag, GetArchivedThreadsOptions, JSONForumChannel, RawForumChannel, RawOverwrite, RawPublicThreadChannel, StartThreadInForumOptions } from "../types";
+import type { CreateInviteOptions, EditForumChannelOptions, EditPermissionOptions, ForumEmoji, ForumTag, GetArchivedThreadsOptions, JSONForumChannel, RawForumChannel, RawOverwrite, RawPublicThreadChannel, StartThreadInForumOptions, Uncached } from "../types";
 import Collection from "../util/Collection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 /** Represents a forum channel. Documentation for these is currently scarce, so they may not work entirely correctly. */
@@ -21,9 +21,7 @@ export default class ForumChannel extends GuildChannel {
     /** The flags for this channel, see {@link Constants.ChannelFlags}. */
     flags: number;
     /** The most recently created thread. */
-    lastThread: PublicThreadChannel | null;
-    /** The ID of the most ecently created thread. */
-    lastThreadID: string | null;
+    lastThread: PublicThreadChannel | Uncached | null;
     /** If this channel is age gated. */
     nsfw: boolean;
     parent: ForumChannel;

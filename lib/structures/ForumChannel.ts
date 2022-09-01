@@ -16,7 +16,8 @@ import type {
     RawForumChannel,
     RawOverwrite,
     RawPublicThreadChannel,
-    StartThreadInForumOptions
+    StartThreadInForumOptions,
+    Uncached
 } from "../types";
 import Collection from "../util/Collection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
@@ -35,9 +36,7 @@ export default class ForumChannel extends GuildChannel {
     /** The flags for this channel, see {@link Constants.ChannelFlags}. */
     flags: number;
     /** The most recently created thread. */
-    lastThread: PublicThreadChannel | null;
-    /** The ID of the most ecently created thread. */
-    lastThreadID: string | null;
+    lastThread: PublicThreadChannel | Uncached | null;
     /** If this channel is age gated. */
     nsfw: boolean;
     declare parent: ForumChannel;
@@ -62,8 +61,7 @@ export default class ForumChannel extends GuildChannel {
         this.defaultReactionEmoji = null;
         this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
         this.flags = data.flags;
-        this.lastThread = null;
-        this.lastThreadID = data.last_message_id;
+        this.lastThread = data.last_message_id === null ? null : { id: data.last_message_id };
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
         this.position = data.position;
@@ -87,8 +85,7 @@ export default class ForumChannel extends GuildChannel {
         if (data.default_thread_rate_limit_per_user !== undefined) this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
         if (data.flags !== undefined) this.flags = data.flags;
         if (data.last_message_id !== undefined) {
-            this.lastThread = this.threads.get(data.last_message_id!)!;
-            this.lastThreadID = data.last_message_id;
+            this.lastThread = this.threads.get(data.last_message_id!) || { id: data.last_message_id! };
         }
         if (data.nsfw !== undefined) this.nsfw = data.nsfw;
         if (data.permission_overwrites !== undefined) {
@@ -194,7 +191,7 @@ export default class ForumChannel extends GuildChannel {
             defaultReactionEmoji:          this.defaultReactionEmoji,
             defaultThreadRateLimitPerUser: this.defaultThreadRateLimitPerUser,
             flags:                         this.flags,
-            lastThread:                    this.lastThreadID,
+            lastThread:                    this.lastThread === null ? null : this.lastThread.id,
             permissionOverwrites:          this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
             position:                      this.position,
             rateLimitPerUser:              this.rateLimitPerUser,
