@@ -87,7 +87,7 @@ export default class CommandInteraction extends Interaction {
 
             if (data.data.resolved.messages) Object.values(data.data.resolved.messages).forEach(message => this.data.resolved.messages.update(message));
 
-            if (data.data.resolved.roles) Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guild!.id)));
+            if (data.data.resolved.roles) Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guildID!)));
 
             if (data.data.resolved.users) Object.values(data.data.resolved.users).forEach(user => this.data.resolved.users.update(user));
         }

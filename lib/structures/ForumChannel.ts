@@ -161,7 +161,7 @@ export default class ForumChannel extends GuildChannel {
         if (!member) throw new Error("Member not found");
         let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
-        let overwrite = this.permissionOverwrites.get(this.guild.id);
+        let overwrite = this.permissionOverwrites.get(this.guildID);
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
         let deny = 0n;
         let allow = 0n;
