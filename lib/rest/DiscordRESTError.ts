@@ -3,32 +3,29 @@ import type { JSONDiscordRESTError } from "../types/json";
 import type { Response } from "undici";
 
 export default class DiscordRESTError extends Error {
-    code!: number;
-    method!: RESTMethod;
+    code: number;
+    method: RESTMethod;
     name = "DiscordRESTError";
-    resBody!: Record<string, unknown> | null;
-    response!: Response;
-    constructor(res: Response, resBody: Record<string, unknown>, method: string, stack?: string) {
+    resBody: Record<string, unknown> | null;
+    response: Response;
+    constructor(res: Response, resBody: Record<string, unknown>, method: RESTMethod, stack?: string) {
         super();
-
-        Object.defineProperties(this, {
-            response: { value: res, enumerable: false },
-            resBody:  { value: resBody, enumerable: false },
-            method:   { value: method, enumerable: false },
-            code:     { value: Number(resBody.code), enumerable: true }
-        });
+        this.code = Number(resBody.code);
+        this.method = method;
+        this.response = res;
+        this.resBody = resBody as DiscordRESTError["resBody"];
 
         let message = "message" in resBody ? `${(resBody as {message: string; }).message} on ${this.method} ${this.path}` : `Unknown Error on ${this.method} ${this.path}`;
-        if ("errors" in resBody) message += `\n  ${DiscordRESTError.flattenErrors((resBody as { errors: Record<string, unknown>;}).errors).join("\n  ")}`;
+        if ("errors" in resBody) message += `\n ${DiscordRESTError.flattenErrors((resBody as { errors: Record<string, unknown>;}).errors).join("\n ")}`;
         else {
             const errors = DiscordRESTError.flattenErrors(resBody);
-            if (errors.length > 0) message += `\n  ${errors.join("\n  ")}`;
+            if (errors.length > 0) message += `\n ${errors.join("\n ")}`;
         }
         Object.defineProperty(this, "message", {
             enumerable: false,
             value:      message
         });
-        if (stack) this.stack = this.name + ": " + this.message + "\n" + stack;
+        if (stack) this.stack = `${this.name}: ${this.message}\n${stack}`;
         else Error.captureStackTrace(this, DiscordRESTError);
     }
 

@@ -5,7 +5,6 @@ import type RESTManager from "./RESTManager";
 import type { RESTMethod } from "../Constants";
 import { API_URL, RESTMethods, USER_AGENT } from "../Constants";
 import Base from "../structures/Base";
-import Properties from "../util/Properties";
 import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
 import type { RESTOptions } from "../types/client";
 import { FormData, fetch, File as UFile } from "undici";
@@ -17,33 +16,32 @@ import { FormData, fetch, File as UFile } from "undici";
 
 /** The primary means of communicating with Discord via rest. */
 export default class RequestHandler {
-    private _manager!: RESTManager;
     globalBlock = false;
-    latencyRef!: LatencyRef;
-    options!: RequestHandlerInstanceOptions;
+    latencyRef: LatencyRef;
+    #manager: RESTManager;
+    options: RequestHandlerInstanceOptions;
     ratelimits: Record<string, SequentialBucket> = {};
     readyQueue: Array<() => void> = [];
     constructor(manager: RESTManager, options: RESTOptions = {}) {
         if (options && options.baseURL && options.baseURL.endsWith("/")) options.baseURL = options.baseURL.slice(0, -1);
-        Properties.new(this)
-            .looseDefine("_manager", manager)
-            .define("options", {
-                agent:                      options.agent,
-                baseURL:                    options.baseURL || API_URL,
-                disableLatencyCompensation: !!options.disableLatencyCompensation,
-                host:                       options.host || options.baseURL ? new URL(this.options.baseURL).host : new URL(API_URL).host,
-                latencyThreshold:           options.latencyThreshold ?? 30000,
-                ratelimiterOffset:          options.ratelimiterOffset ?? 0,
-                requestTimeout:             options.requestTimeout ?? 15000,
-                userAgent:                  options.userAgent || USER_AGENT
-            })
-            .define("latencyRef", {
-                lastTimeOffsetCheck: 0,
-                latency:             options.ratelimiterOffset || 0,
-                raw:                 new Array(10).fill(options.ratelimiterOffset) as Array<number>,
-                timeOffsets:         new Array(10).fill(0) as Array<number>,
-                timeoffset:          0
-            });
+        this.#manager = manager;
+        this.options = {
+            agent:                      options.agent,
+            baseURL:                    options.baseURL || API_URL,
+            disableLatencyCompensation: !!options.disableLatencyCompensation,
+            host:                       options.host ? options.host : options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host,
+            latencyThreshold:           options.latencyThreshold ?? 30000,
+            ratelimiterOffset:          options.ratelimiterOffset ?? 0,
+            requestTimeout:             options.requestTimeout ?? 15000,
+            userAgent:                  options.userAgent || USER_AGENT
+        };
+        this.latencyRef = {
+            lastTimeOffsetCheck: 0,
+            latency:             options.ratelimiterOffset || 0,
+            raw:                 new Array(10).fill(options.ratelimiterOffset) as Array<number>,
+            timeOffsets:         new Array(10).fill(0) as Array<number>,
+            timeoffset:          0
+        };
 
     }
 
@@ -98,7 +96,7 @@ export default class RequestHandler {
                 const headers: Record<string, string> = {};
                 try {
                     if (typeof options.auth === "string") headers.Authorization = options.auth;
-                    else if (options.auth && this._manager.client.options.auth) headers.Authorization = this._manager.client.options.auth;
+                    else if (options.auth && this.#manager.client.options.auth) headers.Authorization = this.#manager.client.options.auth;
                     if (options.reason) headers["X-Audit-Log-Reason"] = encodeURIComponent(options.reason);
 
                     let reqBody: string | FormData | undefined;
@@ -149,12 +147,12 @@ export default class RequestHandler {
                             try {
                                 resBody = JSON.parse(b) as Record<string, unknown>;
                             } catch (err) {
-                                this._manager.client.emit("error", err as Error);
+                                this.#manager.client.emit("error", err as Error);
                                 resBody = b;
                             }
                         } else resBody = Buffer.from(await res.arrayBuffer());
                     }
-                    this._manager.client.emit("request", {
+                    this.#manager.client.emit("request", {
                         method:       options.method,
                         path:         options.path,
                         route,
@@ -167,14 +165,14 @@ export default class RequestHandler {
                     if (this.latencyRef.lastTimeOffsetCheck < (Date.now() - 5000)) {
                         const timeOffset = headerNow + 500 - (this.latencyRef.lastTimeOffsetCheck = Date.now());
                         if (this.latencyRef.timeoffset - this.latencyRef.latency >= this.options.latencyThreshold && timeOffset - this.latencyRef.latency >= this.options.latencyThreshold) {
-                            this._manager.client.emit("warn", `Your clock is ${this.latencyRef.timeoffset}ms behind Discord's server clock. Please check your connection and system time.`);
+                            this.#manager.client.emit("warn", `Your clock is ${this.latencyRef.timeoffset}ms behind Discord's server clock. Please check your connection and system time.`);
                         }
                         this.latencyRef.timeoffset = this.latencyRef.timeoffset - ~~(this.latencyRef.timeOffsets.shift()! / 10) + ~~(timeOffset / 10);
                         this.latencyRef.timeOffsets.push(timeOffset);
                     }
                     if (res.headers.has("x-ratelimit-limit")) this.ratelimits[route].limit = Number(res.headers.get("x-ratelimit-limit"));
                     if (options.method !== "GET" && (!res.headers.has("x-ratelimit-remaining") || !res.headers.has("x-ratelimit-limit")) && this.ratelimits[route].limit !== 1) {
-                        this._manager.client.emit("debug", [`Missing ratelimit headers for SequentialBucket(${this.ratelimits[route].remaining}/${this.ratelimits[route].limit}) with non-default limit\n`,
+                        this.#manager.client.emit("debug", [`Missing ratelimit headers for SequentialBucket(${this.ratelimits[route].remaining}/${this.ratelimits[route].limit}) with non-default limit\n`,
                             `${res.status} ${res.headers.get("content-type")!}: ${options.method} ${route} | ${res.headers.get("cf-ray")!}\n`,
                             `content-type = ${res.headers.get("content-type")!}\n`,
                             `x-ratelimit-remaining = " + ${res.headers.get("x-ratelimit-remaining")!}\n`,
@@ -194,7 +192,7 @@ export default class RequestHandler {
                         if (route.endsWith("/reactions/:id") && (resetTime - headerNow) === 1000) resetTime = now + 250;
                         this.ratelimits[route].reset = Math.max(resetTime - this.latencyRef.latency, now);
                     } else this.ratelimits[route].reset = now;
-                    if (res.status !== 429) this._manager.client.emit("debug", `${now} ${route} ${res.status}: ${latency}ms (${this.latencyRef.latency}ms avg) | ${this.ratelimits[route].remaining}/${this.ratelimits[route].limit} left | Reset ${this.ratelimits[route].reset} (${this.ratelimits[route].reset - now}ms left)`);
+                    if (res.status !== 429) this.#manager.client.emit("debug", `${now} ${route} ${res.status}: ${latency}ms (${this.latencyRef.latency}ms avg) | ${this.ratelimits[route].remaining}/${this.ratelimits[route].limit} left | Reset ${this.ratelimits[route].reset} (${this.ratelimits[route].reset - now}ms left)`);
                     if (res.status > 300) {
                         if (res.status === 429) {
                             let delay = retryAfter;
@@ -205,7 +203,7 @@ export default class RequestHandler {
                                     reject(err);
                                 }
                             }
-                            this._manager.client.emit("debug", `${res.headers.has("x-ratelimit-global") ? "Global" : "Unexpected"} RateLimit: ${JSON.stringify(resBody)}\n${now} ${route} ${res.status}: ${latency}ms (${this.latencyRef.latency}ms avg) | ${this.ratelimits[route].remaining}/${this.ratelimits[route].limit} left | Reset ${delay} (${this.ratelimits[route].reset - now}ms left) | Scope ${res.headers.get("x-ratelimit-scope")!}`);
+                            this.#manager.client.emit("debug", `${res.headers.has("x-ratelimit-global") ? "Global" : "Unexpected"} RateLimit: ${JSON.stringify(resBody)}\n${now} ${route} ${res.status}: ${latency}ms (${this.latencyRef.latency}ms avg) | ${this.ratelimits[route].remaining}/${this.ratelimits[route].limit} left | Reset ${delay} (${this.ratelimits[route].reset - now}ms left) | Scope ${res.headers.get("x-ratelimit-scope")!}`);
                             if (delay) {
                                 setTimeout(() => {
                                     cb();
@@ -219,7 +217,7 @@ export default class RequestHandler {
                                 return;
                             }
                         } else if (res.status === 502 && ++attempts < 4) {
-                            this._manager.client.emit("debug", `Unexpected 502 on ${options.method} ${route}`);
+                            this.#manager.client.emit("debug", `Unexpected 502 on ${options.method} ${route}`);
                             setTimeout(() => {
                                 this.request<T>(options).then(resolve).catch(reject);
                             }, Math.floor(Math.random() * 1900 + 100));
@@ -245,7 +243,7 @@ export default class RequestHandler {
                         cb();
                         reject(new Error(`Request Timed Out (>${this.options.requestTimeout}ms) on ${options.method} ${options.path}`));
                     }
-                    this._manager.client.emit("error", err as Error);
+                    this.#manager.client.emit("error", err as Error);
                 }
             }
             if (this.globalBlock && options.auth) {

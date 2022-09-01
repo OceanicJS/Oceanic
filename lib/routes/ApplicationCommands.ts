@@ -1,4 +1,3 @@
-import BaseRoute from "./BaseRoute";
 import * as Routes from "../util/Routes";
 import type {
     AnyApplicationCommand,
@@ -16,8 +15,14 @@ import type {
 } from "../types/application-commands";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import type { RequestOptions } from "../types/request-handler";
+import type RESTManager from "../rest/RESTManager";
 
-export default class ApplicationCommands extends BaseRoute {
+export default class ApplicationCommands {
+    #manager: RESTManager;
+    constructor(manager: RESTManager) {
+        this.#manager = manager;
+    }
+
     /**
      * Overwrite all existing global application commands.
      * @param applicationID The ID of the application.
@@ -25,7 +30,7 @@ export default class ApplicationCommands extends BaseRoute {
      */
     async bulkEditGlobalCommands(applicationID: string, options: Array<CreateApplicationCommandOptions>) {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+        return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method: "PUT",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             json:   opts.map(opt => ({
@@ -35,10 +40,10 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
+                options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }))
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client)));
+        }).then(data => data.map(d => new ApplicationCommand(d, this.#manager.client)));
     }
 
     /**
@@ -49,7 +54,7 @@ export default class ApplicationCommands extends BaseRoute {
      */
     async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>) {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+        return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method: "PUT",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   opts.map(opt => ({
@@ -59,10 +64,10 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
+                options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }))
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client)));
+        }).then(data => data.map(d => new ApplicationCommand(d, this.#manager.client)));
     }
 
     /**
@@ -72,7 +77,7 @@ export default class ApplicationCommands extends BaseRoute {
      */
     async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, options: T) {
         const opt = options as CreateChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this.#manager.authRequest<RawApplicationCommand>({
             method: "POST",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             json:   {
@@ -82,10 +87,10 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
+                options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this.#manager.client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -96,7 +101,7 @@ export default class ApplicationCommands extends BaseRoute {
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T) {
         const opt = options as CreateChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this.#manager.authRequest<RawApplicationCommand>({
             method: "POST",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   {
@@ -106,10 +111,10 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => this._client.util.optionToRaw(o)),
+                options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this.#manager.client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -118,7 +123,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param commandID The ID ID the command to delete.
      */
     async deleteGlobalCommand(applicationID: string, commandID: string) {
-        await this._manager.authRequest<RawApplicationCommand>({
+        await this.#manager.authRequest<RawApplicationCommand>({
             method: "DELETE",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID)
         });
@@ -131,7 +136,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param commandID The ID of the command to delete.
      */
     async deleteGuildCommand(applicationID: string, guildID: string, commandID: string) {
-        await this._manager.authRequest<RawApplicationCommand>({
+        await this.#manager.authRequest<RawApplicationCommand>({
             method: "DELETE",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID)
         });
@@ -145,7 +150,7 @@ export default class ApplicationCommands extends BaseRoute {
      */
     async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T) {
         const opt = options as EditChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this.#manager.authRequest<RawApplicationCommand>({
             method: "PATCH",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
             json:   {
@@ -155,9 +160,9 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => this._client.util.optionToRaw(o))
+                options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o))
             }
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this.#manager.client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -169,7 +174,7 @@ export default class ApplicationCommands extends BaseRoute {
      */
     async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T) {
         const opt = options as EditChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this.#manager.authRequest<RawApplicationCommand>({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
             json:   {
@@ -179,9 +184,9 @@ export default class ApplicationCommands extends BaseRoute {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
-                options:                    opt.options?.map(o => this._client.util.optionToRaw(o))
+                options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o))
             }
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as ApplicationCommandOptionConversion<T>);
+        }).then(data => new ApplicationCommand(data, this.#manager.client) as unknown as ApplicationCommandOptionConversion<T>);
     }
 
     /**
@@ -192,7 +197,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions) {
-        return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
+        return (options.accessToken ? this.#manager.request.bind(this.#manager) : this.#manager.authRequest.bind(this.#manager))({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
             json:   {
@@ -219,11 +224,11 @@ export default class ApplicationCommands extends BaseRoute {
     async getGlobalCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, commandID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this.#manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
             query
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as T);
+        }).then(data => new ApplicationCommand(data, this.#manager.client) as unknown as T);
     }
 
     /**
@@ -234,11 +239,11 @@ export default class ApplicationCommands extends BaseRoute {
     async getGlobalCommands<W extends boolean = false>(applicationID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+        return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             query
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
+        }).then(data => data.map(d => new ApplicationCommand(d, this.#manager.client) as unknown as AnyApplicationCommand<W>));
     }
 
     /**
@@ -251,11 +256,11 @@ export default class ApplicationCommands extends BaseRoute {
     async getGuildCommand<W extends boolean = false, T extends AnyApplicationCommand<W> = AnyApplicationCommand<W>>(applicationID: string, guildID: string, commandID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this.#manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
             query
-        }).then(data => new ApplicationCommand(data, this._client) as unknown as T);
+        }).then(data => new ApplicationCommand(data, this.#manager.client) as unknown as T);
     }
 
     /**
@@ -267,11 +272,11 @@ export default class ApplicationCommands extends BaseRoute {
     async getGuildCommands<W extends boolean = false>(applicationID: string, guildID: string, withLocalizations?: W) {
         const query = new URLSearchParams();
         if (withLocalizations) query.set("with_localizations", "true");
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+        return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             query
-        }).then(data => data.map(d => new ApplicationCommand(d, this._client) as unknown as AnyApplicationCommand<W>));
+        }).then(data => data.map(d => new ApplicationCommand(d, this.#manager.client) as unknown as AnyApplicationCommand<W>));
     }
 
     /**
@@ -281,7 +286,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param commandID The ID of the command.
      */
     async getGuildPermission(applicationID: string, guildID: string, commandID: string) {
-        return this._manager.authRequest<RawGuildApplicationCommandPermissions>({
+        return this.#manager.authRequest<RawGuildApplicationCommandPermissions>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID)
         }).then(data => ({
@@ -298,7 +303,7 @@ export default class ApplicationCommands extends BaseRoute {
      * @param guildID The ID of the guild.
      */
     async getGuildPermissions(applicationID: string, guildID: string) {
-        return this._manager.authRequest<Array<RawGuildApplicationCommandPermissions>>({
+        return this.#manager.authRequest<Array<RawGuildApplicationCommandPermissions>>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSIONS(applicationID, guildID)
         }).then(data => data.map(d => ({

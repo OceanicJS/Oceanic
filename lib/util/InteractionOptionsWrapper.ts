@@ -20,13 +20,13 @@ import type {
     InteractionOptionsWithValue
 } from "../types";
 import type Attachment from "../structures/Attachment";
-import { assert } from "tsafe";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
-    private resolved: ApplicationCommandInteractionResolvedData | null;
     /** The raw options from Discord.  */
     raw: Array<InteractionOptions>;
+    /** Then resolved data for this options instance. */
+    resolved: ApplicationCommandInteractionResolvedData | null;
     constructor(data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
         this.raw = data;
         this.resolved = resolved;
@@ -62,7 +62,7 @@ export default class InteractionOptionsWrapper {
     getAttachmentValue(name: string, required?: false): Attachment | undefined;
     getAttachmentValue(name: string, required: true): Attachment;
     getAttachmentValue(name: string, required?: boolean) {
-        assert(this.resolved, "attempt to use getAttachmentValue with null resolved");
+        if (this.resolved === null) throw new Error("attempt to use getAttachmentValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getAttachment(name, required as false)?.value)) return undefined;
         const a = this.resolved.attachments.get(val);
@@ -123,7 +123,7 @@ export default class InteractionOptionsWrapper {
     getChannelValue<T extends AnyChannel = AnyChannel>(name: string, required?: false): T | undefined;
     getChannelValue<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
     getChannelValue(name: string, required?: boolean) {
-        assert(this.resolved, "attempt to use getChannelValue with null resolved");
+        if (this.resolved === null) throw new Error("attempt to use getChannelValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getChannel(name, required as false)?.value)) return undefined;
         const ch = this.resolved.channels.get(val);
@@ -161,7 +161,7 @@ export default class InteractionOptionsWrapper {
     getMemberValue(name: string, required?: false): Member | undefined;
     getMemberValue(name: string, required: true): Member;
     getMemberValue(name: string, required?: boolean) {
-        assert(this.resolved, "attempt to use getMemberValue with null resolved");
+        if (this.resolved === null) throw new Error("attempt to use getMemberValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getUser(name, required as false)?.value)) return undefined;
         const ch = this.resolved.members.get(val);
@@ -199,7 +199,7 @@ export default class InteractionOptionsWrapper {
     getMentionableValue<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required?: false): T | undefined;
     getMentionableValue<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
     getMentionableValue(name: string, required?: boolean) {
-        assert(this.resolved, "attempt to use getMentionableValue with null resolved");
+        if (this.resolved === null) throw new Error("attempt to use getMentionableValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getChannel(name, required as false)?.value)) return undefined;
         const ch = this.resolved.channels.get(val);
@@ -259,7 +259,7 @@ export default class InteractionOptionsWrapper {
     getRoleValue(name: string, required?: false): Role | undefined;
     getRoleValue(name: string, required: true): Role;
     getRoleValue(name: string, required?: boolean) {
-        assert(this.resolved, "attempt to use getRoleValue with null resolved");
+        if (this.resolved === null) throw new Error("attempt to use getRoleValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getRole(name, required as false)?.value)) return undefined;
         const ch = this.resolved.roles.get(val);
@@ -341,7 +341,7 @@ export default class InteractionOptionsWrapper {
     getUserValue(name: string, required?: false): User | undefined;
     getUserValue(name: string, required: true): User;
     getUserValue(name: string, required?: boolean) {
-        assert(this.resolved, "attempt to use getUserValue with null resolved");
+        if (this.resolved === null) throw new Error("attempt to use getUserValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getUser(name, required as false)?.value)) return undefined;
         const ch = this.resolved.users.get(val);

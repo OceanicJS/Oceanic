@@ -50,16 +50,16 @@ import Message from "../structures/Message";
 import type { Uncached } from "../types/shared";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import Debug from "../util/Debug";
 import Interaction from "../structures/Interaction";
 import type Collection from "../util/Collection";
+import { is } from "../util/Util";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
 import type { Inflate } from "zlib-sync";
-import { assert, is } from "tsafe";
 import { randomBytes } from "crypto";
 import { inspect } from "util";
+import assert from "assert";
 
 /* eslint-disable */
 let Erlpack: typeof import("erlpack") | undefined;
@@ -81,32 +81,31 @@ try {
 
 /* eslint-disable @typescript-eslint/unbound-method */
 export default class Shard extends TypedEmitter<ShardEvents> {
-    private _connectTimeout!: NodeJS.Timeout | null;
-    private _getAllUsersCount!: Record<string, true>;
-    private _getAllUsersQueue!: Array<string>;
-    private _guildCreateTimeout!: NodeJS.Timeout | null;
-    private _heartbeatInterval!: NodeJS.Timeout | null;
-    private _requestMembersPromise!: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
-    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-    private _sharedZLib!: Pako.Inflate | Inflate;
     client!: Client;
-    connectAttempts!: number;
-    connecting!: boolean;
+    connectAttempts: number;
+    #connectTimeout: NodeJS.Timeout | null;
+    connecting: boolean;
+    #getAllUsersCount: Record<string, true>;
+    #getAllUsersQueue: Array<string>;
     globalBucket!: Bucket;
+    #guildCreateTimeout: NodeJS.Timeout | null;
+    #heartbeatInterval: NodeJS.Timeout | null;
     id: number;
-    lastHeartbeatAck!: boolean;
-    lastHeartbeatReceived!: number;
-    lastHeartbeatSent!: number;
-    latency!: number;
-    preReady!: boolean;
+    lastHeartbeatAck: boolean;
+    lastHeartbeatReceived: number;
+    lastHeartbeatSent: number;
+    latency: number;
+    preReady: boolean;
     presence!: Required<UpdatePresenceOptions>;
     presenceUpdateBucket!: Bucket;
-    ready!: boolean;
-    reconnectInterval!: number;
-    resumeURL!: string | null;
-    sequence!: number;
-    sessionID!: string | null;
-    status!: ShardStatus;
+    ready: boolean;
+    reconnectInterval: number;
+    #requestMembersPromise: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
+    resumeURL: string | null;
+    sequence: number;
+    sessionID: string | null;
+    #sharedZLib!: Pako.Inflate | Inflate;
+    status: ShardStatus;
     ws!: WebSocket | null;
     constructor(id: number, client: Client) {
         super();
@@ -120,19 +119,38 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.onWSError = this.onWSError.bind(this);
         this.onWSMessage = this.onWSMessage.bind(this);
         this.onWSOpen = this.onWSOpen.bind(this);
+        this.connectAttempts = 0;
+        this.#connectTimeout = null;
+        this.connecting = false;
+        this.#getAllUsersCount = {};
+        this.#getAllUsersQueue = [];
+        this.#guildCreateTimeout = null;
+        this.#heartbeatInterval = null;
         this.id = id;
+        this.lastHeartbeatAck = true;
+        this.lastHeartbeatReceived = 0;
+        this.lastHeartbeatSent = 0;
+        this.latency = Infinity;
+        this.preReady = false;
+        this.ready = false;
+        this.reconnectInterval = 1000;
+        this.#requestMembersPromise = {};
+        this.resumeURL = null;
+        this.sequence = 0;
+        this.sessionID = null;
+        this.status = "disconnected";
         this.hardReset();
     }
 
     private async checkReady() {
         if (!this.ready) {
-            if (this._getAllUsersQueue.length > 0) {
-                const id = this._getAllUsersQueue.shift()!;
+            if (this.#getAllUsersQueue.length > 0) {
+                const id = this.#getAllUsersQueue.shift()!;
                 await this.requestGuildMembers(id);
-                this._getAllUsersQueue.splice(this._getAllUsersQueue.indexOf(id), 1);
+                this.#getAllUsersQueue.splice(this.#getAllUsersQueue.indexOf(id), 1);
                 return;
             }
-            if (Object.keys(this._getAllUsersCount).length === 0) {
+            if (Object.keys(this.#getAllUsersCount).length === 0) {
                 this.ready = true;
                 this.emit("ready");
             }
@@ -157,7 +175,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (this.client.shards.options.compress) {
             if (!ZlibSync) throw new Error("Cannot use compression without pako or zlib-sync.");
             this.client.emit("debug", "Initializing zlib-sync-based compression");
-            this._sharedZLib = new ZlibSync.Inflate({
+            this.#sharedZLib = new ZlibSync.Inflate({
                 chunkSize: 128 * 1024
             });
         }
@@ -175,7 +193,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.ws.on("message", this.onWSMessage);
         this.ws.on("open", this.onWSOpen);
 
-        this._connectTimeout = setTimeout(() => {
+        this.#connectTimeout = setTimeout(() => {
             if (this.connecting) {
                 this.disconnect(undefined, new Error("Connection timeout"));
             }
@@ -409,16 +427,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.client.emit("warn", "Recieved GUILD_MEMBERS_CHUNK without a nonce.");
                     break;
                 }
-                if (this._requestMembersPromise[packet.d.nonce]) this._requestMembersPromise[packet.d.nonce].members.push(...members);
+                if (this.#requestMembersPromise[packet.d.nonce]) this.#requestMembersPromise[packet.d.nonce].members.push(...members);
 
                 if (packet.d.chunk_index >= packet.d.chunk_count - 1) {
-                    if (this._requestMembersPromise[packet.d.nonce]) {
-                        clearTimeout(this._requestMembersPromise[packet.d.nonce].timeout);
-                        this._requestMembersPromise[packet.d.nonce].resolve(this._requestMembersPromise[packet.d.nonce].members);
-                        delete this._requestMembersPromise[packet.d.nonce];
+                    if (this.#requestMembersPromise[packet.d.nonce]) {
+                        clearTimeout(this.#requestMembersPromise[packet.d.nonce].timeout);
+                        this.#requestMembersPromise[packet.d.nonce].resolve(this.#requestMembersPromise[packet.d.nonce].members);
+                        delete this.#requestMembersPromise[packet.d.nonce];
                     }
-                    if (this._getAllUsersCount[guild.id]) {
-                        delete this._getAllUsersCount[guild.id];
+                    if (this.#getAllUsersCount[guild.id]) {
+                        delete this.#getAllUsersCount[guild.id];
                         void this.checkReady();
                     }
                 }
@@ -734,7 +752,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.connectAttempts = 0;
                 this.reconnectInterval = 1000;
                 this.connecting = false;
-                if (this._connectTimeout) clearInterval(this._connectTimeout);
+                if (this.#connectTimeout) clearInterval(this.#connectTimeout);
                 this.status = "ready";
                 this.client.shards["_ready"](this.id);
                 this.client.application = new ClientApplication(packet.d.application, this.client);
@@ -763,7 +781,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.connectAttempts = 0;
                 this.reconnectInterval = 1000;
                 this.connecting = false;
-                if (this._connectTimeout) clearInterval(this._connectTimeout);
+                if (this.#connectTimeout) clearInterval(this.#connectTimeout);
                 this.status = "ready";
                 this.client.shards["_ready"](this.id);
                 break;
@@ -991,7 +1009,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     private onPacket(packet: AnyReceivePacket) {
-        Debug("ws:recieve", packet);
         if ("s" in packet && packet.s) {
             if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming") {
                 this.client.emit("warn", `Non-consecutive sequence (${this.sequence} -> ${packet.s})`, this.id);
@@ -1022,12 +1039,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case GatewayOPCodes.HELLO: {
-                if (this._heartbeatInterval) clearInterval(this._heartbeatInterval);
-                this._heartbeatInterval = setInterval(() => this.heartbeat(false), packet.d.heartbeat_interval);
+                if (this.#heartbeatInterval) clearInterval(this.#heartbeatInterval);
+                this.#heartbeatInterval = setInterval(() => this.heartbeat(false), packet.d.heartbeat_interval);
 
                 this.connecting = false;
-                if (this._connectTimeout) clearTimeout(this._connectTimeout);
-                this._connectTimeout = null;
+                if (this.#connectTimeout) clearTimeout(this.#connectTimeout);
+                this.#connectTimeout = null;
                 if (this.sessionID) this.resume();
                 else {
                     this.identify();
@@ -1168,20 +1185,20 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             assert(is<Buffer>(data));
             if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
-                    this._sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
-                    if (this._sharedZLib.err) {
-                        this.client.emit("error", new Error(`zlib error ${this._sharedZLib.err}: ${this._sharedZLib.msg || ""}`));
+                    this.#sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
+                    if (this.#sharedZLib.err) {
+                        this.client.emit("error", new Error(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg || ""}`));
                         return;
                     }
 
-                    data = Buffer.from(this._sharedZLib.result || "");
+                    data = Buffer.from(this.#sharedZLib.result || "");
                     if (Erlpack) {
                         return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
                     } else {
                         return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
                     }
                 } else {
-                    this._sharedZLib.push(data, false);
+                    this.#sharedZLib.push(data, false);
                 }
             } else if (Erlpack) {
                 return this.onPacket(Erlpack.unpack(data) as AnyReceivePacket);
@@ -1200,15 +1217,15 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     private async restartGuildCreateTimeout() {
-        if (this._guildCreateTimeout) {
-            clearTimeout(this._guildCreateTimeout);
-            this._guildCreateTimeout = null;
+        if (this.#guildCreateTimeout) {
+            clearTimeout(this.#guildCreateTimeout);
+            this.#guildCreateTimeout = null;
         }
         if (!this.ready) {
             if (this.client.unavailableGuilds.size === 0) {
                 return this.checkReady();
             }
-            this._guildCreateTimeout = setTimeout(this.checkReady.bind(this), this.client.shards.options.guildCreateTimeout);
+            this.#guildCreateTimeout = setTimeout(this.checkReady.bind(this), this.client.shards.options.guildCreateTimeout);
         }
     }
 
@@ -1237,9 +1254,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     disconnect(reconnect = this.client.shards.options.autoReconnect, error?: Error) {
         if (!this.ws) return;
 
-        if (this._heartbeatInterval) {
-            clearInterval(this._heartbeatInterval);
-            this._heartbeatInterval = null;
+        if (this.#heartbeatInterval) {
+            clearInterval(this.#heartbeatInterval);
+            this.#heartbeatInterval = null;
         }
 
         if (this.ws.readyState !== WebSocket.CLOSED) {
@@ -1306,8 +1323,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.reconnectInterval = 1000;
         this.connectAttempts = 0;
         this.ws = null;
-        this._heartbeatInterval = null;
-        this._guildCreateTimeout = null;
+        this.#heartbeatInterval = null;
+        this.#guildCreateTimeout = null;
         this.globalBucket = new Bucket(120, 60000, { reservedTokens: 5 });
         this.presence = JSON.parse(JSON.stringify(this.client.shards.options.presence)) as Shard["presence"];
         this.presenceUpdateBucket = new Bucket(5, 20000);
@@ -1322,7 +1339,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.emit("debug", "Heartbeat timeout; " + JSON.stringify({
                     lastReceived: this.lastHeartbeatReceived,
                     lastSent:     this.lastHeartbeatSent,
-                    interval:     this._heartbeatInterval,
+                    interval:     this.#heartbeatInterval,
                     status:       this.status,
                     timestamp:    Date.now()
                 }));
@@ -1370,12 +1387,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (opts.presences && (!(this.client.shards.options.intents & Intents.GUILD_PRESENCES))) throw new Error("Cannot request presences without the GUILD_PRESENCES intent.");
         if (opts.user_ids && opts.user_ids.length > 100) throw new Error("Cannot request more than 100 users at once.");
         this.send(GatewayOPCodes.REQUEST_GUILD_MEMBERS, opts);
-        return new Promise<Array<Member>>((resolve, reject) => this._requestMembersPromise[opts.nonce] = {
+        return new Promise<Array<Member>>((resolve, reject) => this.#requestMembersPromise[opts.nonce] = {
             members:  [],
             received: 0,
             timeout:  setTimeout(() => {
-                resolve(this._requestMembersPromise[opts.nonce].members);
-                delete this._requestMembersPromise[opts.nonce];
+                resolve(this.#requestMembersPromise[opts.nonce].members);
+                delete this.#requestMembersPromise[opts.nonce];
             }, options?.timeout ?? this.client.rest.options.requestTimeout),
             resolve,
             reject
@@ -1386,25 +1403,25 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.connecting = false;
         this.ready = false;
         this.preReady = false;
-        if (this._requestMembersPromise !== undefined) {
-            for (const guildID in this._requestMembersPromise) {
-                if (!this._requestMembersPromise[guildID]) {
+        if (this.#requestMembersPromise !== undefined) {
+            for (const guildID in this.#requestMembersPromise) {
+                if (!this.#requestMembersPromise[guildID]) {
                     continue;
                 }
-                clearTimeout(this._requestMembersPromise[guildID].timeout);
-                this._requestMembersPromise[guildID].resolve(this._requestMembersPromise[guildID].received);
+                clearTimeout(this.#requestMembersPromise[guildID].timeout);
+                this.#requestMembersPromise[guildID].resolve(this.#requestMembersPromise[guildID].received);
             }
         }
-        this._requestMembersPromise = {};
-        this._getAllUsersCount = {};
-        this._getAllUsersQueue = [];
+        this.#requestMembersPromise = {};
+        this.#getAllUsersCount = {};
+        this.#getAllUsersQueue = [];
         this.latency = Infinity;
         this.lastHeartbeatAck = true;
         this.lastHeartbeatReceived = 0;
         this.lastHeartbeatSent = 0;
         this.status = "disconnected";
-        if (this._connectTimeout) clearTimeout(this._connectTimeout);
-        this._connectTimeout = null;
+        if (this.#connectTimeout) clearTimeout(this.#connectTimeout);
+        this.#connectTimeout = null;
     }
 
     resume() {
@@ -1425,7 +1442,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.ws.send(d);
                     if (typeof data === "object" && data && "token" in data) (data as { token: string; }).token = "[REMOVED]";
                     this.client.emit("debug", JSON.stringify({ op, d: data }), this.id);
-                    Debug("ws:send", { op, d: data });
                 }
             };
             if (op === GatewayOPCodes.PRESENCE_UPDATE) {

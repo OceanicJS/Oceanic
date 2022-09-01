@@ -1,4 +1,3 @@
-import BaseRoute from "./BaseRoute";
 import type {
     AddGroupRecipientOptions,
     AnyChannel,
@@ -46,15 +45,21 @@ import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
+import type RESTManager from "../rest/RESTManager";
 
-export default class Channels extends BaseRoute {
+export default class Channels {
+    #manager: RESTManager;
+    constructor(manager: RESTManager) {
+        this.#manager = manager;
+    }
+
     /**
      * Add a user to a group channel.
      * @param groupID The ID of the group to add the user to.
      * @param options The options for adding the recipient.
      */
     async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.GROUP_RECIPIENT(groupID, options.userID),
             json:   {
@@ -70,7 +75,7 @@ export default class Channels extends BaseRoute {
      * @param userID The ID of the user to add to the thread.
      */
     async addThreadMember(id: string, userID: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
         });
@@ -80,13 +85,13 @@ export default class Channels extends BaseRoute {
      * @param recipient The ID of the recipient of the direct message.
      */
     async createDM(recipient: string) {
-        return this._manager.authRequest<RawPrivateChannel>({
+        return this.#manager.authRequest<RawPrivateChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
             json:   {
                 recipient_id: recipient
             } }
-        ).then(data => this._client.privateChannels.update(data));
+        ).then(data => this.#manager.client.privateChannels.update(data));
     }
 
     /**
@@ -94,13 +99,13 @@ export default class Channels extends BaseRoute {
      * @param options The options for creating the group dm.
      */
     async createGroupDM(options: CreateGroupChannelOptions) {
-        return this._manager.authRequest<RawGroupChannel>({
+        return this.#manager.authRequest<RawGroupChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
             json:   {
                 access_tokens: options.accessTokens,
                 nicks:         options.nicks
-            } }).then(data => this._client.groupChannels.update(data));
+            } }).then(data => this.#manager.client.groupChannels.update(data));
     }
 
     /**
@@ -111,7 +116,7 @@ export default class Channels extends BaseRoute {
     async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        return this._manager.authRequest<RawInvite>({
+        return this.#manager.authRequest<RawInvite>({
             method: "POST",
             path:   Routes.CHANNEL_INVITES(id),
             json:   {
@@ -124,7 +129,7 @@ export default class Channels extends BaseRoute {
                 unique:                options.unique
             },
             reason
-        }).then(data => new Invite<T, CH>(data, this._client));
+        }).then(data => new Invite<T, CH>(data, this.#manager.client));
     }
 
     /**
@@ -135,13 +140,13 @@ export default class Channels extends BaseRoute {
     async createMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, options: CreateMessageOptions) {
         const files = options.files;
         if (options.files) delete options.files;
-        return this._manager.authRequest<RawMessage>({
+        return this.#manager.authRequest<RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(id),
             json:   {
-                allowed_mentions:  this._client.util.formatAllowedMentions(options.allowedMentions),
+                allowed_mentions:  this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:       options.attachments,
-                components:        options.components ? this._client.util.componentsToRaw(options.components) : [],
+                components:        options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:           options.content,
                 embeds:            options.embeds,
                 flags:             options.flags,
@@ -155,7 +160,7 @@ export default class Channels extends BaseRoute {
                 tts: options.tts
             },
             files
-        }).then(data => new Message<T>(data, this._client));
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
@@ -166,7 +171,7 @@ export default class Channels extends BaseRoute {
      */
     async createReaction(id: string, messageID: string, emoji: string) {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_REACTION_USER(id, messageID, emoji, "@me")
         });
@@ -178,10 +183,10 @@ export default class Channels extends BaseRoute {
      * @param messageID The ID of the message to crosspost.
      */
     async crosspostMessage(id: string, messageID: string) {
-        return this._manager.authRequest<RawMessage>({
+        return this.#manager.authRequest<RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES_CROSSPOST(id, messageID)
-        }).then(data => new Message<AnnouncementChannel>(data, this._client));
+        }).then(data => new Message<AnnouncementChannel>(data, this.#manager.client));
     }
 
     /**
@@ -190,7 +195,7 @@ export default class Channels extends BaseRoute {
      * @param reason The reason to be displayed in the audit log.
      */
     async delete(id: string, reason?: string) {
-        await this._manager.authRequest<RawChannel>({
+        await this.#manager.authRequest<RawChannel>({
             method: "DELETE",
             path:   Routes.CHANNEL(id),
             reason
@@ -203,11 +208,11 @@ export default class Channels extends BaseRoute {
      * @param reason The reason for deleting the invite.
      */
     async deleteInvite<T extends InviteChannel = InviteChannel>(code: string, reason?: string) {
-        return this._manager.authRequest<RawInvite>({
+        return this.#manager.authRequest<RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),
             reason
-        }).then(data => new Invite<"withMetadata", T>(data, this._client));
+        }).then(data => new Invite<"withMetadata", T>(data, this.#manager.client));
     }
 
     /**
@@ -217,7 +222,7 @@ export default class Channels extends BaseRoute {
      * @param reason The reason for deleting the message.
      */
     async deleteMessage(id: string, messageID: string, reason?: string) {
-        await this._manager.authRequest<RawMessage>({
+        await this.#manager.authRequest<RawMessage>({
             method: "DELETE",
             path:   Routes.CHANNEL_MESSAGE(id, messageID),
             reason
@@ -231,7 +236,7 @@ export default class Channels extends BaseRoute {
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(id: string, messageIDs: Array<string>, reason?: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(id),
             json:   {
@@ -248,7 +253,7 @@ export default class Channels extends BaseRoute {
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(id: string, overwriteID: string, reason?: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_PERMISSION(id, overwriteID),
             reason
@@ -264,7 +269,7 @@ export default class Channels extends BaseRoute {
      */
     async deleteReaction(id: string, messageID: string, emoji: string, user = "@me") {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_REACTION_USER(id, messageID, emoji, user)
         });
@@ -278,7 +283,7 @@ export default class Channels extends BaseRoute {
      */
     async deleteReactions(id: string, messageID: string, emoji?: string) {
         if (emoji && emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   !emoji ? Routes.CHANNEL_REACTIONS(id, messageID) : Routes.CHANNEL_REACTION(id, messageID, emoji)
         });
@@ -294,13 +299,13 @@ export default class Channels extends BaseRoute {
         if (options.reason) delete options.reason;
         if (options.icon) {
             try {
-                options.icon = this._client.util.convertImage(options.icon);
+                options.icon = this.#manager.client.util.convertImage(options.icon);
             } catch (err) {
                 throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
             }
         }
 
-        return this._manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawChannel>({
             method: "PATCH",
             path:   Routes.CHANNEL(id),
             json:   {
@@ -325,7 +330,7 @@ export default class Channels extends BaseRoute {
                 video_quality_mode:            options.videoQualityMode
             },
             reason
-        }).then(data => Channel.from<T>(data, this._client));
+        }).then(data => Channel.from<T>(data, this.#manager.client));
     }
 
     /**
@@ -337,19 +342,19 @@ export default class Channels extends BaseRoute {
     async editMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string, options: EditMessageOptions) {
         const files = options.files;
         if (options.files) delete options.files;
-        return this._manager.authRequest<RawMessage>({
+        return this.#manager.authRequest<RawMessage>({
             method: "PATCH",
             path:   Routes.CHANNEL_MESSAGE(id, messageID),
             json:   {
-                allowed_mentions: this._client.util.formatAllowedMentions(options.allowedMentions),
+                allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components ? this._client.util.componentsToRaw(options.components) : [],
+                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds,
                 flags:            options.flags
             },
             files
-        }).then(data => new Message<T>(data, this._client));
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
@@ -361,7 +366,7 @@ export default class Channels extends BaseRoute {
     async editPermission(id: string, overwriteID: string, options: EditPermissionOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_PERMISSION(id, overwriteID),
             json:   {
@@ -379,7 +384,7 @@ export default class Channels extends BaseRoute {
      * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
     async followAnnouncement(id: string, webhookChannelID: string) {
-        return this._manager.authRequest<RawFollowedChannel>({
+        return this.#manager.authRequest<RawFollowedChannel>({
             method: "POST",
             path:   Routes.CHANNEL_FOLLOWERS(id),
             json:   {
@@ -396,10 +401,10 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the channel to get.
      */
     async get<T extends AnyChannel = AnyChannel>(id: string) {
-        return this._manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawChannel>({
             method: "GET",
             path:   Routes.CHANNEL(id)
-        }).then(data => Channel.from<T>(data, this._client));
+        }).then(data => Channel.from<T>(data, this.#manager.client));
     }
 
     /**
@@ -416,11 +421,11 @@ export default class Channels extends BaseRoute {
         if (options?.guildScheduledEventID) query.set("guild_scheduled_event_id", options.guildScheduledEventID);
         if (options?.withCounts) query.set("with_counts", "true");
         if (options?.withExpiration) query.set("with_expiration", "true");
-        return this._manager.authRequest<RawInvite>({
+        return this.#manager.authRequest<RawInvite>({
             method: "GET",
             path:   Routes.INVITE(code),
             query
-        }).then(data => new Invite<never, T>(data, this._client));
+        }).then(data => new Invite<never, T>(data, this.#manager.client));
     }
 
     /**
@@ -428,10 +433,10 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the channel to get the invites of.
      */
     async getInvites<T extends InviteChannel = InviteChannel>(id: string) {
-        return this._manager.authRequest<Array<RawInvite>>({
+        return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(id)
-        }).then(data => data.map(invite => new Invite<"withMetadata", T>(invite, this._client)));
+        }).then(data => data.map(invite => new Invite<"withMetadata", T>(invite, this.#manager.client)));
     }
 
     /**
@@ -440,7 +445,7 @@ export default class Channels extends BaseRoute {
      * @param options The options for getting the archived threads.
      */
     async getJoinedPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions) {
-        return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+        return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(id),
             json:   {
@@ -455,7 +460,7 @@ export default class Channels extends BaseRoute {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as ThreadMember),
-            threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this._client))
+            threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this.#manager.client))
         }) as ArchivedThreads<PrivateThreadChannel>);
     }
 
@@ -465,10 +470,10 @@ export default class Channels extends BaseRoute {
      * @param messageID The ID of the message to get.
      */
     async getMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string) {
-        return this._manager.authRequest<RawMessage>({
+        return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(id, messageID)
-        }).then(data => new Message<T>(data, this._client));
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
@@ -477,7 +482,7 @@ export default class Channels extends BaseRoute {
      * @param options The options for getting messages. All are mutually exclusive.
      */
     async getMessages<T extends AnyTextChannel = AnyTextChannel>(id: string, options?: GetChannelMessagesOptions) {
-        return this._manager.authRequest<Array<RawMessage>>({
+        return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGES(id),
             json:   {
@@ -486,7 +491,7 @@ export default class Channels extends BaseRoute {
                 before: options?.before,
                 limit:  options?.limit
             }
-        }).then(data => data.map(d => new Message<T>(d, this._client)));
+        }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
     }
 
     /**
@@ -494,10 +499,10 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the channel to get the pinned messages from.
      */
     async getPinnedMessages<T extends AnyTextChannel = AnyTextChannel>(id: string) {
-        return this._manager.authRequest<Array<RawMessage>>({
+        return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(id)
-        }).then(data => data.map(d => new Message<T>(d, this._client)));
+        }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
     }
 
     /**
@@ -506,7 +511,7 @@ export default class Channels extends BaseRoute {
      * @param options The options for getting the archived threads.
      */
     async getPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions) {
-        return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+        return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(id),
             json:   {
@@ -521,7 +526,7 @@ export default class Channels extends BaseRoute {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as ThreadMember),
-            threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this._client))
+            threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this.#manager.client))
         }) as ArchivedThreads<PrivateThreadChannel>);
     }
 
@@ -531,7 +536,7 @@ export default class Channels extends BaseRoute {
      * @param options The options for getting the archived threads.
      */
     async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, options?: GetArchivedThreadsOptions) {
-        return this._manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
+        return this.#manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(id),
             json:   {
@@ -546,7 +551,7 @@ export default class Channels extends BaseRoute {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as ThreadMember),
-            threads: data.threads.map(d => Channel.from<T>(d, this._client))
+            threads: data.threads.map(d => Channel.from<T>(d, this.#manager.client))
         }) as ArchivedThreads<T>);
     }
 
@@ -559,14 +564,14 @@ export default class Channels extends BaseRoute {
      */
     async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions) {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
-        return this._manager.authRequest<Array<RawUser>>({
+        return this.#manager.authRequest<Array<RawUser>>({
             method: "GET",
             path:   Routes.CHANNEL_REACTION(id, messageID, emoji),
             json:   {
                 after: options?.after,
                 limit: options?.limit
             }
-        }).then(data => data.map(d => this._client.users.update(d)));
+        }).then(data => data.map(d => this.#manager.client.users.update(d)));
     }
 
     /**
@@ -575,7 +580,7 @@ export default class Channels extends BaseRoute {
      * @param userID The ID of the user to get the thread member of.
      */
     async getThreadMember(id: string, userID: string) {
-        return this._manager.authRequest<RawThreadMember>({
+        return this.#manager.authRequest<RawThreadMember>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
         }).then(data => ({
@@ -591,7 +596,7 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the thread.
      */
     async getThreadMembers(id: string) {
-        return this._manager.authRequest<Array<RawThreadMember>>({
+        return this.#manager.authRequest<Array<RawThreadMember>>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBERS(id)
         }).then(data => data.map(d => ({
@@ -606,7 +611,7 @@ export default class Channels extends BaseRoute {
      * Get the list of usable voice regions.
      */
     async getVoiceRegions() {
-        return this._manager.authRequest<Array<VoiceRegion>>({
+        return this.#manager.authRequest<Array<VoiceRegion>>({
             method: "GET",
             path:   Routes.VOICE_REGIONS
         });
@@ -617,7 +622,7 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the thread to join.
      */
     async joinThread(id: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, "@me")
         });
@@ -628,7 +633,7 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the thread to leave.
      */
     async leaveThread(id: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, "@me")
         });
@@ -641,7 +646,7 @@ export default class Channels extends BaseRoute {
      * @param reason The reason for pinning the message.
      */
     async pinMessage(id: string, messageID: string, reason?: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_PINNED_MESSAGE(id, messageID),
             reason
@@ -654,7 +659,7 @@ export default class Channels extends BaseRoute {
      * @param userID The ID of the user to remove.
      */
     async removeGroupRecipient(groupID: string, userID: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.GROUP_RECIPIENT(groupID, userID)
         });
@@ -666,7 +671,7 @@ export default class Channels extends BaseRoute {
      * @param userID The ID of the user to remove from the thread.
      */
     async removeThreadMember(id: string, userID: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
         });
@@ -677,7 +682,7 @@ export default class Channels extends BaseRoute {
      * @param id The ID of the channel to show the typing indicator in.
      */
     async sendTyping(id: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.CHANNEL_TYPING(id)
         });
@@ -692,7 +697,7 @@ export default class Channels extends BaseRoute {
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        return this._manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawChannel>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGE_THREADS(id, messageID),
             json:   {
@@ -701,7 +706,7 @@ export default class Channels extends BaseRoute {
                 rate_limit_per_user:   options.rateLimitPerUser
             },
             reason
-        }).then(data => Channel.from<T>(data, this._client));
+        }).then(data => Channel.from<T>(data, this.#manager.client));
     }
 
     /**
@@ -714,15 +719,15 @@ export default class Channels extends BaseRoute {
         if (options.reason) delete options.reason;
         const files = options.message.files;
         if (options.message.files) delete options.message.files;
-        return this._manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(id),
             json:   {
                 auto_archive_duration: options.autoArchiveDuration,
                 message:               {
-                    allowed_mentions: this._client.util.formatAllowedMentions(options.message.allowedMentions),
+                    allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.message.allowedMentions),
                     attachments:      options.message.attachments,
-                    components:       options.message.components ? this._client.util.componentsToRaw(options.message.components) : [],
+                    components:       options.message.components ? this.#manager.client.util.componentsToRaw(options.message.components) : [],
                     content:          options.message.content,
                     embeds:           options.message.embeds,
                     flags:            options.message.flags,
@@ -733,7 +738,7 @@ export default class Channels extends BaseRoute {
             },
             reason,
             files
-        }).then(data => Channel.from<PublicThreadChannel>(data, this._client));
+        }).then(data => Channel.from<PublicThreadChannel>(data, this.#manager.client));
     }
 
     /**
@@ -744,7 +749,7 @@ export default class Channels extends BaseRoute {
     async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        return this._manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(id),
             json:   {
@@ -755,7 +760,7 @@ export default class Channels extends BaseRoute {
                 type:                  options.type
             },
             reason
-        }).then(data => Channel.from<T>(data, this._client));
+        }).then(data => Channel.from<T>(data, this.#manager.client));
     }
 
     /**
@@ -765,7 +770,7 @@ export default class Channels extends BaseRoute {
      * @param reason The reason for unpinning the message.
      */
     async unpinMessage(id: string, messageID: string, reason?: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_PINNED_MESSAGE(id, messageID),
             reason

@@ -1,4 +1,3 @@
-import Properties from "./Properties";
 import { CDN_URL } from "./Routes";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
@@ -26,10 +25,10 @@ import Member from "../structures/Member";
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
     static BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
-    private _client!: Client;
+    #client!: Client;
 
     constructor(client: Client) {
-        Properties.looseDefine(this, "_client", client);
+        this.#client = client;
     }
 
     /** @hidden intentionally not documented - this is an internal function */
@@ -143,7 +142,7 @@ export default class Util {
             parse: []
         };
 
-        if (!allowed) return this.formatAllowedMentions(this._client.options.allowedMentions);
+        if (!allowed) return this.formatAllowedMentions(this.#client.options.allowedMentions);
 
         if (allowed.everyone === true) result.parse.push("everyone");
 
@@ -159,8 +158,8 @@ export default class Util {
     }
 
     formatImage(url: string, format?: ImageFormat, size?: number) {
-        if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) format = url.includes("/a_") ? "gif" : this._client.options.defaultImageFormat;
-        if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this._client.options.defaultImageSize;
+        if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) format = url.includes("/a_") ? "gif" : this.#client.options.defaultImageFormat;
+        if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.#client.options.defaultImageSize;
         return `${CDN_URL}${url}.${format}?size=${size}`;
     }
 
@@ -205,6 +204,10 @@ export default class Util {
     }
 
     updateMember(guildID: string, memberID: string, member: RawMember) {
-        return this._client.guilds.has(guildID) ? this._client.guilds.get(guildID)!.members.update({ ...member, id: memberID }, guildID) : new Member(member, this._client, guildID);
+        return this.#client.guilds.has(guildID) ? this.#client.guilds.get(guildID)!.members.update({ ...member, id: memberID }, guildID) : new Member(member, this.#client, guildID);
     }
+}
+
+export function is<T>(input: unknown): input is T {
+    return true;
 }

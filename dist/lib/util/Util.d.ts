@@ -5,8 +5,8 @@ import type { AllowedMentions, ApplicationCommandOptions, MessageActionRow, Moda
 import Member from "../structures/Member";
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
+    #private;
     static BASE64URL_REGEX: RegExp;
-    private _client;
     constructor(client: Client);
     /** @hidden intentionally not documented - this is an internal function */
     _convertImage(image: Buffer | string, name: string): string;
@@ -19,3 +19,4 @@ export default class Util {
     optionToRaw(option: ApplicationCommandOptions): RawApplicationCommandOption;
     updateMember(guildID: string, memberID: string, member: RawMember): Member;
 }
+export declare function is<T>(input: unknown): input is T;

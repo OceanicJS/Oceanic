@@ -8,7 +8,7 @@ import type { RESTOptions } from "../types/client";
  */
 /** The primary means of communicating with Discord via rest. */
 export default class RequestHandler {
-    private _manager;
+    #private;
     globalBlock: boolean;
     latencyRef: LatencyRef;
     options: RequestHandlerInstanceOptions;

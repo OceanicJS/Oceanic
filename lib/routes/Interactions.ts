@@ -1,11 +1,16 @@
-import BaseRoute from "./BaseRoute";
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
 import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel } from "../types/channels";
+import type RESTManager from "../rest/RESTManager";
 
-export default class Interactions extends BaseRoute {
+export default class Interactions {
+    #manager: RESTManager;
+    constructor(manager: RESTManager) {
+        this.#manager = manager;
+    }
+
     /**
      * Create a followup message.
      * @param applicationID The ID of the application.
@@ -13,7 +18,7 @@ export default class Interactions extends BaseRoute {
      * @param options The options for creating the followup message.
      */
     async createFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
-        return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
+        return this.#manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
     }
 
     /**
@@ -29,10 +34,10 @@ export default class Interactions extends BaseRoute {
             case InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE:
             case InteractionResponseTypes.UPDATE_MESSAGE: {
                 data = {
-                    allowed_mentions: this._client.util.formatAllowedMentions(options.data.allowedMentions),
+                    allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.data.allowedMentions),
                     attachments:      options.data.attachments,
                     content:          options.data.content,
-                    components:       options.data.components ? this._client.util.componentsToRaw(options.data.components) : undefined,
+                    components:       options.data.components ? this.#manager.client.util.componentsToRaw(options.data.components) : undefined,
                     embeds:           options.data.embeds,
                     flags:            options.data.flags
                 };
@@ -53,7 +58,7 @@ export default class Interactions extends BaseRoute {
             case InteractionResponseTypes.MODAL: {
                 data = {
                     custom_id:  options.data.customID,
-                    components: this._client.util.componentsToRaw(options.data.components),
+                    components: this.#manager.client.util.componentsToRaw(options.data.components),
                     title:      options.data.title
                 };
                 break;
@@ -64,7 +69,7 @@ export default class Interactions extends BaseRoute {
                 break;
             }
         }
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.INTERACTION_CALLBACK(interactionID, interactionToken),
             route:  "/interactions/:id/:token/callback",
@@ -82,7 +87,7 @@ export default class Interactions extends BaseRoute {
      * @param messageID The ID of the message.
      */
     async deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string) {
-        await this._manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
+        await this.#manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
     }
 
     /**
@@ -91,7 +96,7 @@ export default class Interactions extends BaseRoute {
      * @param interactionToken The token of the interaction.
      */
     async deleteOriginalMessage(applicationID: string, interactionToken: string) {
-        await this._manager.webhooks.deleteMessage(applicationID, interactionToken, "@original");
+        await this.#manager.webhooks.deleteMessage(applicationID, interactionToken, "@original");
     }
 
     /**
@@ -102,7 +107,7 @@ export default class Interactions extends BaseRoute {
      * @param options The options for editing the followup message.
      */
     async editFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent) {
-        return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
+        return this.#manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
     }
 
     /**
@@ -112,7 +117,7 @@ export default class Interactions extends BaseRoute {
      * @param options The options for editing the original message.
      */
     async editOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent) {
-        return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, "@original", options);
+        return this.#manager.webhooks.editMessage<T>(applicationID, interactionToken, "@original", options);
     }
 
     /**
@@ -122,7 +127,7 @@ export default class Interactions extends BaseRoute {
      * @param messageID The ID of the message.
      */
     async getFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string) {
-        return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
+        return this.#manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
     }
 
     /**
@@ -131,6 +136,6 @@ export default class Interactions extends BaseRoute {
      * @param interactionToken The token of the interaction.
      */
     async getOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string) {
-        return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, "@original");
+        return this.#manager.webhooks.getMessage<T>(applicationID, interactionToken, "@original");
     }
 }

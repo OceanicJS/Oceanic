@@ -1,4 +1,3 @@
-import BaseRoute from "./BaseRoute";
 import type {
     CreateWebhookOptions,
     DeleteWebhookMessageOptions,
@@ -13,8 +12,13 @@ import type { AnyGuildTextChannel, RawMessage } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
+import type RESTManager from "../rest/RESTManager";
 
-export default class Webhooks extends BaseRoute {
+export default class Webhooks {
+    #manager: RESTManager;
+    constructor(manager: RESTManager) {
+        this.#manager = manager;
+    }
     /**
      * Creat a channel webhook.
      * @param channelID The ID of the channel to create the webhook in.
@@ -23,8 +27,8 @@ export default class Webhooks extends BaseRoute {
     async create(channelID: string, options: CreateWebhookOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
-        return this._manager.authRequest<RawWebhook>({
+        if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
+        return this.#manager.authRequest<RawWebhook>({
             method: "POST",
             path:   Routes.CHANNEL_WEBHOOKS(channelID),
             json:   {
@@ -32,7 +36,7 @@ export default class Webhooks extends BaseRoute {
                 name:   options.name
             },
             reason
-        }).then(data => new Webhook(data, this._client));
+        }).then(data => new Webhook(data, this.#manager.client));
     }
 
     /**
@@ -41,7 +45,7 @@ export default class Webhooks extends BaseRoute {
      * @param reason The reason for deleting the webhook.
      */
     async delete(id: string, reason?: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.WEBHOOK(id),
             reason
@@ -58,7 +62,7 @@ export default class Webhooks extends BaseRoute {
     async deleteMessage(id: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions) {
         const query = new URLSearchParams();
         if (options?.threadID) query.set("thread_id", options.threadID);
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.WEBHOOK_MESSAGE(id, token, messageID)
         });
@@ -70,7 +74,7 @@ export default class Webhooks extends BaseRoute {
      * @param token The token of the webhook.
      */
     async deleteToken(id: string, token: string) {
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.WEBHOOK(id, token)
         });
@@ -84,8 +88,8 @@ export default class Webhooks extends BaseRoute {
     async edit(id: string, options: EditWebhookOptions) {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
-        return this._manager.authRequest<RawWebhook>({
+        if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
+        return this.#manager.authRequest<RawWebhook>({
             method: "PATCH",
             path:   Routes.WEBHOOK(id),
             json:   {
@@ -94,7 +98,7 @@ export default class Webhooks extends BaseRoute {
                 name:       options.name
             },
             reason
-        }).then(data => new Webhook(data, this._client));
+        }).then(data => new Webhook(data, this.#manager.client));
     }
 
     /**
@@ -109,19 +113,19 @@ export default class Webhooks extends BaseRoute {
         if (options.files) delete options.files;
         const query = new URLSearchParams();
         if (options.threadID) query.set("thread_id", options.threadID);
-        return this._manager.authRequest<RawMessage>({
+        return this.#manager.authRequest<RawMessage>({
             method: "PATCH",
             path:   Routes.WEBHOOK_MESSAGE(id, token, messageID),
             json:   {
-                allowed_mentions: this._client.util.formatAllowedMentions(options.allowedMentions),
+                allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components ? this._client.util.componentsToRaw(options.components) : [],
+                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds
             },
             query,
             files
-        }).then(data => new Message<T>(data, this._client));
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
@@ -130,15 +134,15 @@ export default class Webhooks extends BaseRoute {
      * @param options The options for editing the webhook.
      */
     async editToken(id: string, token: string, options: EditWebhookTokenOptions) {
-        if (options.avatar) options.avatar = this._client.util._convertImage(options.avatar, "avatar");
-        return this._manager.authRequest<RawWebhook>({
+        if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
+        return this.#manager.authRequest<RawWebhook>({
             method: "PATCH",
             path:   Routes.WEBHOOK(id, token),
             json:   {
                 avatar: options.avatar,
                 name:   options.name
             }
-        }).then(data => new Webhook(data, this._client));
+        }).then(data => new Webhook(data, this.#manager.client));
     }
 
     /**
@@ -155,15 +159,15 @@ export default class Webhooks extends BaseRoute {
         const query = new URLSearchParams();
         if (options.wait) query.set("wait", "true");
         if (options.threadID) query.set("thread_id", options.threadID);
-        return this._manager.authRequest<RawMessage | null>({
+        return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
             path:   Routes.WEBHOOK(id, token),
             query,
             json:   {
-                allowed_mentions: this._client.util.formatAllowedMentions(options.allowedMentions),
+                allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
                 avatar_url:       options.avatarURL,
-                components:       options.components ? this._client.util.componentsToRaw(options.components) : [],
+                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
                 embeds:           options.embeds,
                 flags:            options.flags,
@@ -173,7 +177,7 @@ export default class Webhooks extends BaseRoute {
             },
             files
         }).then(res => {
-            if (options.wait && res !== null) return new Message(res, this._client);
+            if (options.wait && res !== null) return new Message(res, this.#manager.client);
         });
     }
 
@@ -188,13 +192,13 @@ export default class Webhooks extends BaseRoute {
     async executeGithub<T extends AnyGuildTextChannel>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
         if (options.wait) query.set("wait", "true");
-        return this._manager.authRequest<RawMessage | null>({
+        return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
             path:   Routes.WEBHOOK_PLATFORM(id, token, "github"),
             query,
             json:   options
         }).then(res => {
-            if (options.wait && res !== null) return new Message(res, this._client);
+            if (options.wait && res !== null) return new Message(res, this.#manager.client);
         });
     }
 
@@ -209,13 +213,13 @@ export default class Webhooks extends BaseRoute {
     async executeSlack<T extends AnyGuildTextChannel>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
         if (options.wait) query.set("wait", "true");
-        return this._manager.authRequest<RawMessage | null>({
+        return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
             path:   Routes.WEBHOOK_PLATFORM(id, token, "slack"),
             query,
             json:   options
         }).then(res => {
-            if (options.wait && res !== null) return new Message(res, this._client);
+            if (options.wait && res !== null) return new Message(res, this.#manager.client);
         });
     }
 
@@ -225,10 +229,10 @@ export default class Webhooks extends BaseRoute {
      * @param token The token of the webhook.
      */
     async get(id: string, token?: string) {
-        return this._manager.authRequest<RawWebhook>({
+        return this.#manager.authRequest<RawWebhook>({
             method: "GET",
             path:   Routes.WEBHOOK(id, token)
-        }).then(data => new Webhook(data, this._client));
+        }).then(data => new Webhook(data, this.#manager.client));
     }
 
     /**
@@ -236,7 +240,7 @@ export default class Webhooks extends BaseRoute {
      * @param channelID The ID of the channel to get the webhooks of.
      */
     async getChannel(channelID: string) {
-        return this._manager.authRequest<Array<RawWebhook>>({
+        return this.#manager.authRequest<Array<RawWebhook>>({
             method: "GET",
             path:   Routes.CHANNEL_WEBHOOKS(channelID)
         });
@@ -247,7 +251,7 @@ export default class Webhooks extends BaseRoute {
      * @param guildID The ID of the guild to get the webhooks of.
      */
     async getGuild(guildID: string) {
-        return this._manager.authRequest<Array<RawWebhook>>({
+        return this.#manager.authRequest<Array<RawWebhook>>({
             method: "GET",
             path:   Routes.GUILD_WEBHOOKS(guildID)
         });
@@ -263,9 +267,9 @@ export default class Webhooks extends BaseRoute {
     async getMessage<T extends AnyGuildTextChannel>(id: string, token: string, messageID: string, threadID?: string) {
         const query = new URLSearchParams();
         if (threadID) query.set("thread_id", threadID);
-        return this._manager.authRequest<RawMessage>({
+        return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.WEBHOOK_MESSAGE(id, token, messageID)
-        }).then(data => new Message<T>(data, this._client));
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 }

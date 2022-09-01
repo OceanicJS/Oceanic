@@ -5,7 +5,7 @@
 /// <reference types="node" />
 /** A bucket. */
 export default class Bucket {
-    private _queue;
+    #private;
     interval: number;
     lastReset: number;
     lastSend: number;

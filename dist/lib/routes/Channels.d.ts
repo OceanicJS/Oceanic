@@ -1,4 +1,3 @@
-import BaseRoute from "./BaseRoute";
 import type { AddGroupRecipientOptions, AnyChannel, AnyTextChannel, ArchivedThreads, CreateInviteOptions, CreateMessageOptions, EditChannelOptions, EditMessageOptions, EditPermissionOptions, FollowedChannel, GetChannelMessagesOptions, GetArchivedThreadsOptions, GetReactionsOptions, InviteChannel, ThreadMember, StartThreadFromMessageOptions, StartThreadInForumOptions, StartThreadWithoutMessageOptions, GetInviteWithCountsAndExpirationOptions, GetInviteWithCountsOptions, GetInviteWithExpirationOptions, GetInviteWithNoneOptions, InviteInfoTypes } from "../types/channels";
 import Message from "../structures/Message";
 import type { CreateGroupChannelOptions } from "../types/users";
@@ -8,7 +7,10 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
-export default class Channels extends BaseRoute {
+import type RESTManager from "../rest/RESTManager";
+export default class Channels {
+    #private;
+    constructor(manager: RESTManager);
     /**
      * Add a user to a group channel.
      * @param groupID The ID of the group to add the user to.

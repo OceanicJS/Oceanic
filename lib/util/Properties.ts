@@ -1,7 +1,7 @@
 export default class Properties<C = unknown> {
-    private obj: unknown;
+    #object: unknown;
     constructor(obj: unknown) {
-        this.obj = obj;
+        this.#object = obj;
     }
 
     static define<T, K extends keyof T>(obj: T, property: K, value: T[K], writable = false, configurable = false, enumerable = false) {
@@ -17,12 +17,12 @@ export default class Properties<C = unknown> {
     }
 
     define<K extends keyof C>(property: K, value: C[K], writable = false, configurable = false, enumerable = false) {
-        Object.defineProperty(this.obj, property, { value, writable, configurable, enumerable });
+        Object.defineProperty(this.#object, property, { value, writable, configurable, enumerable });
         return this;
     }
 
     looseDefine(property: string, value: unknown, writable = false, configurable = false, enumerable = false) {
-        Object.defineProperty(this.obj, property, { value, writable, configurable, enumerable });
+        Object.defineProperty(this.#object, property, { value, writable, configurable, enumerable });
         return this;
     }
 }

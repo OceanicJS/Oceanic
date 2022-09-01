@@ -1,4 +1,3 @@
-import BaseRoute from "./BaseRoute";
 import type {
     AuthorizationInformation,
     ClientCredentialsTokenOptions,
@@ -24,9 +23,14 @@ import Member from "../structures/Member";
 import Guild from "../structures/Guild";
 import Webhook from "../structures/Webhook";
 import Integration from "../structures/Integration";
+import type RESTManager from "../rest/RESTManager";
 import { FormData } from "undici";
 
-export default class OAuth extends BaseRoute {
+export default class OAuth {
+    #manager: RESTManager;
+    constructor(manager: RESTManager) {
+        this.#manager = manager;
+    }
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
      * @param options The options to for the client credentials grant.
@@ -35,11 +39,11 @@ export default class OAuth extends BaseRoute {
         const form = new FormData();
         form.append("grant_type", "client_credentials");
         form.append("scope", options.scopes.join(" "));
-        return this._manager.request<RawClientCredentialsTokenResponse>({
+        return this.#manager.request<RawClientCredentialsTokenResponse>({
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
             form,
-            auth:   (options.clientID || this._client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID || this._client.application?.id}:${options.clientSecret}`).toString("base64")}` : true
+            auth:   (options.clientID || this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID || this.#manager.client.application?.id}:${options.clientSecret}`).toString("base64")}` : true
         }).then(data => ({
             accessToken: data.access_token,
             expiresIn:   data.expires_in,
@@ -78,7 +82,7 @@ export default class OAuth extends BaseRoute {
         form.append("code", options.code);
         form.append("grant_type", "authorization_code");
         form.append("redirect_uri", options.redirectURI);
-        return this._manager.authRequest<RawExchangeCodeResponse>({
+        return this.#manager.authRequest<RawExchangeCodeResponse>({
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
             form
@@ -88,7 +92,7 @@ export default class OAuth extends BaseRoute {
             refreshToken: data.refresh_token,
             scopes:       data.scope.split(" "),
             tokenType:    data.token_type,
-            webhook:      !data.webhook ? null : new Webhook(data.webhook, this._client)
+            webhook:      !data.webhook ? null : new Webhook(data.webhook, this.#manager.client)
         }) as ExchangeCodeResponse);
     }
 
@@ -96,10 +100,10 @@ export default class OAuth extends BaseRoute {
      * Get the OAuth application information.
      */
     async getApplication() {
-        return this._manager.authRequest<RESTApplication>({
+        return this.#manager.authRequest<RESTApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION
-        }).then(data => new Application(data, this._client));
+        }).then(data => new Application(data, this.#manager.client));
     }
 
     /**
@@ -108,14 +112,14 @@ export default class OAuth extends BaseRoute {
      * Note: OAuth only. Bots cannot use this.
      */
     async getCurrentAuthorizationInformation() {
-        return this._manager.authRequest<RawAuthorizationInformation>({
+        return this.#manager.authRequest<RawAuthorizationInformation>({
             method: "GET",
             path:   Routes.OAUTH_INFO
         }).then(data => ({
-            application: new PartialApplication(data.application, this._client),
+            application: new PartialApplication(data.application, this.#manager.client),
             expires:     new Date(data.expires),
             scopes:      data.scopes,
-            user:        this._client.users.update(data.user)
+            user:        this.#manager.client.users.update(data.user)
         }) as AuthorizationInformation);
     }
 
@@ -125,13 +129,13 @@ export default class OAuth extends BaseRoute {
      * Note: Requires the `connections` scope when using oauth.
      */
     async getCurrentConnections() {
-        return this._manager.authRequest<Array<RawConnection>>({
+        return this.#manager.authRequest<Array<RawConnection>>({
             method: "GET",
             path:   Routes.OAUTH_CONNECTIONS
         }).then(data => data.map(connection => ({
             friendSync:   connection.friend_sync,
             id: 	         connection.id,
-            integrations: connection.integrations?.map(integration => new Integration(integration, this._client)),
+            integrations: connection.integrations?.map(integration => new Integration(integration, this.#manager.client)),
             name:         connection.name,
             revoked:      connection.revoked,
             showActivity: connection.show_activity,
@@ -148,20 +152,20 @@ export default class OAuth extends BaseRoute {
      * @param guild the ID of the guild
      */
     async getCurrentGuildMember(guild: string) {
-        return this._manager.authRequest<RawMember>({
+        return this.#manager.authRequest<RawMember>({
             method: "GET",
             path:   Routes.OAUTH_GUILD_MEMBER(guild)
-        }).then(data => new Member(data, this._client, guild));
+        }).then(data => new Member(data, this.#manager.client, guild));
     }
 
     /**
      * Get the currently authenticated user's guilds.
      */
     async getCurrentGuilds() {
-        return this._manager.authRequest<Array<RawGuild>>({
+        return this.#manager.authRequest<Array<RawGuild>>({
             method: "GET",
             path:   Routes.OAUTH_GUILDS
-        }).then(data => data.map(d => new Guild(d, this._client)));
+        }).then(data => data.map(d => new Guild(d, this.#manager.client)));
     }
 
 
@@ -175,7 +179,7 @@ export default class OAuth extends BaseRoute {
         form.append("client_secret", options.clientSecret);
         form.append("grant_type", "refresh_token");
         form.append("refresh_token", options.refreshToken);
-        return this._manager.authRequest<RawExchangeCodeResponse>({
+        return this.#manager.authRequest<RawExchangeCodeResponse>({
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
             form
@@ -185,7 +189,7 @@ export default class OAuth extends BaseRoute {
             refreshToken: data.refresh_token,
             scopes:       data.scope.split(" "),
             tokenType:    data.token_type,
-            webhook: 	    !data.webhook ? undefined : new Webhook(data.webhook, this._client)
+            webhook: 	    !data.webhook ? undefined : new Webhook(data.webhook, this.#manager.client)
         }) as ExchangeCodeResponse);
     }
 
@@ -199,7 +203,7 @@ export default class OAuth extends BaseRoute {
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
         form.append("token", options.token);
-        await this._manager.authRequest<null>({
+        await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.OAUTH_TOKEN_REVOKE,
             form

@@ -1,4 +1,3 @@
-import Properties from "./util/Properties";
 import { ChannelTypes, GATEWAY_VERSION } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import Collection from "./util/Collection";
@@ -32,54 +31,54 @@ try {
 export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
     application!: ClientApplication;
-    channelGuildMap!: Record<string, string>;
+    channelGuildMap: Record<string, string>;
     gatewayURL!: string;
-    groupChannels!: Collection<string, RawGroupChannel, GroupChannel>;
-    guildShardMap!: Record<string, number>;
-    guilds!: Collection<string, RawGuild, Guild>;
-    options!: ClientInstanceOptions;
-    privateChannels!: Collection<string, RawPrivateChannel, PrivateChannel>;
-    ready = false;
-    rest!: RESTManager;
-    shards!: ShardManager;
+    groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
+    guildShardMap: Record<string, number>;
+    guilds: Collection<string, RawGuild, Guild>;
+    options: ClientInstanceOptions;
+    privateChannels: Collection<string, RawPrivateChannel, PrivateChannel>;
+    ready: boolean;
+    rest: RESTManager;
+    shards: ShardManager;
     startTime = 0;
-    threadGuildMap!: Record<string, string>;
-    unavailableGuilds!: Collection<string, RawUnavailableGuild, UnavailableGuild>;
+    threadGuildMap: Record<string, string>;
+    unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
     /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
     user!: ExtendedUser;
-    users!: Collection<string, RawUser, User>;
-    util!: Util;
-    voiceConnections!: VoiceConnectionManager;
+    users: Collection<string, RawUser, User>;
+    util: Util;
+    voiceConnections: VoiceConnectionManager;
     /**
      * @constructor
      * @param options The options to create the client with.
      */
     constructor(options?: ClientOptions) {
         super();
-        Properties.new(this)
-            .define("options", {
-                allowedMentions: options?.allowedMentions || {
-                    everyone:    false,
-                    repliedUser: false,
-                    users:       true,
-                    roles:       true
-                },
-                auth:               options?.auth || null,
-                defaultImageFormat: options?.defaultImageFormat || "png",
-                defaultImageSize:   options?.defaultImageSize || 4096
-            })
-            .define("channelGuildMap", {})
-            .define("groupChannels", new Collection(GroupChannel, this))
-            .define("guilds", new Collection(Guild, this))
-            .define("privateChannels", new Collection(PrivateChannel, this))
-            .define("guildShardMap", {})
-            .define("rest", new RESTManager(this, options?.rest))
-            .define("shards", new ShardManager(this, options?.gateway))
-            .define("threadGuildMap", {})
-            .define("unavailableGuilds", new Collection(UnavailableGuild, this))
-            .define("users", new Collection(User, this))
-            .define("util", new Util(this))
-            .define("voiceConnections", new VoiceConnectionManager(this));
+        this.options = {
+            allowedMentions: options?.allowedMentions || {
+                everyone:    false,
+                repliedUser: false,
+                users:       true,
+                roles:       true
+            },
+            auth:               options?.auth || null,
+            defaultImageFormat: options?.defaultImageFormat || "png",
+            defaultImageSize:   options?.defaultImageSize || 4096
+        };
+        this.channelGuildMap = {};
+        this.groupChannels = new Collection(GroupChannel, this);
+        this.guilds = new Collection(Guild, this);
+        this.privateChannels = new Collection(PrivateChannel, this);
+        this.ready = false;
+        this.guildShardMap = {};
+        this.rest = new RESTManager(this, options?.rest);
+        this.shards = new ShardManager(this, options?.gateway);
+        this.threadGuildMap = {};
+        this.unavailableGuilds = new Collection(UnavailableGuild, this);
+        this.users = new Collection(User, this);
+        this.util = new Util(this);
+        this.voiceConnections = new VoiceConnectionManager(this);
     }
 
     async connect() {

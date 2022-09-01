@@ -1,23 +1,21 @@
 import Shard from "./Shard";
 import type Client from "../Client";
-import Properties from "../util/Properties";
 import { AllIntents, AllNonPrivilegedIntents, Intents } from "../Constants";
 import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gateway";
 import { Collection } from "@augu/collections";
 
 export default class ShardManager extends Collection<number, Shard> {
-    private _buckets!: Record<number, number>;
-    private _client!: Client;
-    private _connectQueue!: Array<Shard>;
-    private _connectTimeout!: NodeJS.Timeout | null;
+    #buckets!: Record<number, number>;
+    #client!: Client;
+    #connectQueue!: Array<Shard>;
+    #connectTimeout!: NodeJS.Timeout | null;
     options: ShardManagerInstanceOptions;
     constructor(client: Client, options: GatewayOptions = {}) {
         super();
-        Properties.new(this)
-            .looseDefine("_buckets", new Map())
-            .looseDefine("_client", client)
-            .looseDefine("_connectQueue", [])
-            .looseDefine("_connectTimeout", null, true);
+        this.#buckets = {};
+        this.#client = client;
+        this.#connectQueue = [];
+        this.#connectTimeout = null;
         this.options = {
             autoReconnect:        options.autoReconnect ?? true,
             compress:             options.compress ?? false,
@@ -63,7 +61,7 @@ export default class ShardManager extends Collection<number, Shard> {
                             bitmask = AllIntents;
                             break;
                         }
-                        this._client.emit("warn", `Unknown intent: ${intent}`);
+                        this.#client.emit("warn", `Unknown intent: ${intent}`);
                     }
                 }
                 this.options.intents = bitmask;
@@ -77,50 +75,50 @@ export default class ShardManager extends Collection<number, Shard> {
 
     private _ready(id: number) {
         const rateLimitKey = (id % this.options.concurrency) || 0;
-        this._buckets[rateLimitKey] = Date.now();
+        this.#buckets[rateLimitKey] = Date.now();
 
         this.tryConnect();
     }
 
     connect(shard: Shard) {
-        this._connectQueue.push(shard);
+        this.#connectQueue.push(shard);
         this.tryConnect();
     }
 
     spawn(id: number) {
         let shard = this.get(id);
         if (!shard) {
-            shard = new Shard(id, this._client);
+            shard = new Shard(id, this.#client);
             this.set(id, shard);
             shard
                 .on("ready", () => {
-                    this._client.emit("shardReady", id);
-                    if (this._client.ready) return;
+                    this.#client.emit("shardReady", id);
+                    if (this.#client.ready) return;
                     for (const other of this.values()) {
                         if (!other.ready) return;
                     }
-                    this._client.ready = true;
-                    this._client.startTime = Date.now();
-                    this._client.emit("ready");
+                    this.#client.ready = true;
+                    this.#client.startTime = Date.now();
+                    this.#client.emit("ready");
                 })
                 .on("resume", () => {
-                    this._client.emit("shardResume", id);
-                    if (this._client.ready) return;
+                    this.#client.emit("shardResume", id);
+                    if (this.#client.ready) return;
                     for (const other of this.values()) {
                         if (!other.ready) return;
                     }
-                    this._client.ready = true;
-                    this._client.startTime = Date.now();
-                    this._client.emit("ready");
+                    this.#client.ready = true;
+                    this.#client.startTime = Date.now();
+                    this.#client.emit("ready");
                 })
                 .on("disconnect", (error) => {
-                    this._client.emit("shardDisconnect", error, id);
+                    this.#client.emit("shardDisconnect", error, id);
                     for (const other of this.values()) {
                         if (other.ready) return;
                     }
-                    this._client.ready = false;
-                    this._client.startTime = 0;
-                    this._client.emit("disconnect");
+                    this.#client.ready = false;
+                    this.#client.startTime = 0;
+                    this.#client.emit("disconnect");
                 });
         }
 
@@ -128,21 +126,21 @@ export default class ShardManager extends Collection<number, Shard> {
     }
 
     tryConnect() {
-        if (this._connectQueue.length === 0) return;
+        if (this.#connectQueue.length === 0) return;
 
-        for (const shard of this._connectQueue) {
+        for (const shard of this.#connectQueue) {
             const rateLimitKey = (shard.id % this.options.concurrency) || 0;
-            const lastConnect = this._buckets[rateLimitKey] || 0;
+            const lastConnect = this.#buckets[rateLimitKey] || 0;
             if (!shard.sessionID && Date.now() - lastConnect < 5000) continue;
 
             if (this.some(s => s.connecting && ((s.id % this.options.concurrency) || 0) === rateLimitKey)) continue;
             shard.connect();
-            this._buckets[rateLimitKey] = Date.now();
-            this._connectQueue.splice(this._connectQueue.findIndex(s => s.id === shard.id), 1);
+            this.#buckets[rateLimitKey] = Date.now();
+            this.#connectQueue.splice(this.#connectQueue.findIndex(s => s.id === shard.id), 1);
         }
-        if (!this._connectTimeout && this._connectQueue.length > 0) {
-            this._connectTimeout = setTimeout(() => {
-                this._connectTimeout = null;
+        if (!this.#connectTimeout && this.#connectQueue.length > 0) {
+            this.#connectTimeout = setTimeout(() => {
+                this.#connectTimeout = null;
                 this.tryConnect();
             }, 500);
         }

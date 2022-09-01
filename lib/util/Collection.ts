@@ -1,4 +1,3 @@
-import Properties from "./Properties";
 import type Client from "../Client";
 import Base from "../structures/Base";
 import { Collection as PolarCollection } from "@augu/collections";
@@ -7,14 +6,13 @@ export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Clie
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class Collection<K extends string | number, M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends PolarCollection<K, C> {
-    protected _baseObject!: AnyClass<M, C, E>;
-    protected _client!: Client;
+    #baseObject: AnyClass<M, C, E>;
+    #client: Client;
     constructor(baseObject: AnyClass<M, C, E>, client: Client) {
         super();
         if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");
-        Properties.new(this)
-            .looseDefine("_baseObject", baseObject)
-            .looseDefine("_client", client);
+        this.#baseObject = baseObject;
+        this.#client = client;
     }
 
     add<T extends C>(value: T) {
@@ -29,13 +27,13 @@ export default class Collection<K extends string | number, M extends Record<stri
     }
 
     update(value: C | Partial<M> & { id?: K; }, ...extra: E) {
-        if (value instanceof this._baseObject) {
+        if (value instanceof this.#baseObject) {
             if ("update" in value) value["update"].call(value, value);
             return value;
         }
         // if the object does not have a direct id, we're forced to construct a whole new object
         let item = "id" in value && value.id ? this.get(value.id as K) : undefined;
-        if (!item) item = this.add(new this._baseObject(value as M, this._client, ...extra));
+        if (!item) item = this.add(new this.#baseObject(value as M, this.#client, ...extra));
         else if ("update" in item) item["update"].call(item, value);
         return item;
     }

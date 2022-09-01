@@ -7,7 +7,7 @@ export default class DiscordRESTError extends Error {
     name: string;
     resBody: Record<string, unknown> | null;
     response: Response;
-    constructor(res: Response, resBody: Record<string, unknown>, method: string, stack?: string);
+    constructor(res: Response, resBody: Record<string, unknown>, method: RESTMethod, stack?: string);
     static flattenErrors(errors: Record<string, unknown>, keyPrefix?: string): string[];
     get headers(): import("undici").Headers;
     get path(): string;

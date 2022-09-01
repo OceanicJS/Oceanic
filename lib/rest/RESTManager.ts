@@ -3,7 +3,6 @@ import type Client from "../Client";
 import Channels from "../routes/Channels";
 import Guilds from "../routes/Guilds";
 import Users from "../routes/Users";
-import Properties from "../util/Properties";
 import OAuth from "../routes/OAuth";
 import Webhooks from "../routes/Webhooks";
 import type { RESTOptions } from "../types/client";
@@ -14,34 +13,33 @@ import * as Routes from "../util/Routes";
 import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
 
 export default class RESTManager {
-    private _client!: Client;
-    private _handler!: RequestHandler;
-    applicationCommands!: ApplicationCommands;
-    channels!: Channels;
-    guilds!: Guilds;
-    interactions!: Interactions;
-    oauth!: OAuth;
-    users!: Users;
-    webhooks!: Webhooks;
+    applicationCommands: ApplicationCommands;
+    channels: Channels;
+    #client: Client;
+    guilds: Guilds;
+    #handler: RequestHandler;
+    interactions: Interactions;
+    oauth: OAuth;
+    users: Users;
+    webhooks: Webhooks;
     constructor(client: Client, options?: RESTOptions) {
-        Properties.new(this)
-            .looseDefine("_client", client)
-            .looseDefine("_handler", new RequestHandler(this, options))
-            .define("applicationCommands", new ApplicationCommands(this))
-            .define("channels", new Channels(this))
-            .define("guilds", new Guilds(this))
-            .define("interactions", new Interactions(this))
-            .define("oauth", new OAuth(this))
-            .define("users", new Users(this))
-            .define("webhooks", new Webhooks(this));
+        this.applicationCommands = new ApplicationCommands(this);
+        this.channels = new Channels(this);
+        this.#client = client;
+        this.guilds = new Guilds(this);
+        this.#handler = new RequestHandler(this, options);
+        this.interactions = new Interactions(this);
+        this.oauth = new OAuth(this);
+        this.users = new Users(this);
+        this.webhooks = new Webhooks(this);
     }
 
-    get client() { return this._client; }
-    get options() { return this._handler.options; }
+    get client() { return this.#client; }
+    get options() { return this.#handler.options; }
 
     /** Alias for {@link rest/RequestHandler~RequestHandler#authRequest | RequestHandler#authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
-        return this._handler.authRequest<T>(options);
+        return this.#handler.authRequest<T>(options);
     }
 
     /**
@@ -76,6 +74,6 @@ export default class RESTManager {
 
     /** Alias for {@link rest/RequestHandler~RequestHandler#request | RequestHandler#request} */
     async request<T = unknown>(options: RequestOptions) {
-        return this._handler.request<T>(options);
+        return this.#handler.request<T>(options);
     }
 }
