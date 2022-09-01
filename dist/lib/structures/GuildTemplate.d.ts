@@ -5,7 +5,7 @@ import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuild
 import type { RawGuild } from "../types/guilds";
 import type { JSONGuildTemplate } from "../types/json";
 export default class GuildTemplate {
-    protected _client: Client;
+    client: Client;
     /** The code of the template. */
     code: string;
     /** When this template was created. */

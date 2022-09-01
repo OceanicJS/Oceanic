@@ -8,13 +8,13 @@ import type { InviteTargetTypes } from "../Constants";
 import type { JSONInvite } from "../types/json";
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> {
-    protected _client: Client;
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. */
     channel?: CH | PartialInviteChannel;
+    client: Client;
     /** The code of this invite. */
     code: string;
     /** When this invite was created. */

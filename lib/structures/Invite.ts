@@ -23,13 +23,13 @@ import type { JSONInvite } from "../types/json";
 
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> {
-    protected _client!: Client;
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. */
     channel?: CH | PartialInviteChannel;
+    client!: Client;
     /** The code of this invite. */
     code: string;
     /** When this invite was created. */
@@ -72,29 +72,29 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         let guild: Guild | undefined;
         if (data.guild) {
-            if (this._client.guilds.has(data.guild.id)) guild = this._client.guilds.update(data.guild as RawGuild);
-            else guild = new Guild(data.guild as RawGuild, this._client);
+            if (this.client.guilds.has(data.guild.id)) guild = this.client.guilds.update(data.guild as RawGuild);
+            else guild = new Guild(data.guild as RawGuild, this.client);
             this.guild = guild;
         }
 
         let channel: Channel | PartialInviteChannel | undefined;
         if (data.channel) {
-            channel = this._client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
+            channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
             if (channel && channel instanceof Channel) channel["update"](data.channel);
             else if (data.channel.type === ChannelTypes.GROUP_DM) channel = data.channel as PartialInviteChannel;
-            else channel = Channel.from(data.channel, this._client);
+            else channel = Channel.from(data.channel, this.client);
             this.channel = channel as CH;
         }
-        if (data.inviter) this.inviter = this._client.users.update(data.inviter);
+        if (data.inviter) this.inviter = this.client.users.update(data.inviter);
         if (data.stage_instance) this.stageInstance = {
             members:          data.stage_instance.members.map(member => guild!.members.update(member, guild!.id)),
             participantCount: data.stage_instance.participant_count,
             speakerCount:     data.stage_instance.speaker_count,
             topic:            data.stage_instance.topic
         };
-        if (data.target_application !== undefined) this.targetApplication = new PartialApplication(data.target_application, this._client);
+        if (data.target_application !== undefined) this.targetApplication = new PartialApplication(data.target_application, this.client);
         if (data.guild_scheduled_event !== undefined) this.guildScheduledEvent = guild!.scheduledEvents.update(data.guild_scheduled_event);
-        if (data.target_user !== undefined) this.targetUser = this._client.users.update(data.target_user);
+        if (data.target_user !== undefined) this.targetUser = this.client.users.update(data.target_user);
         if ("created_at" in data) {
             if (data.created_at !== undefined) this.createdAt = new Date(data.created_at) as never;
             if (data.uses !== undefined) this.uses = data.uses as never;
@@ -109,7 +109,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
      * @param reason The reason for deleting this invite.
      */
     async deleteInvite(reason?: string) {
-        return this._client.rest.channels.deleteInvite<CH>(this.code, reason);
+        return this.client.rest.channels.deleteInvite<CH>(this.code, reason);
     }
 
     toJSON(): JSONInvite {

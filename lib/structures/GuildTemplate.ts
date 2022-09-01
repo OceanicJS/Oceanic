@@ -6,7 +6,7 @@ import type { RawGuild } from "../types/guilds";
 import type { JSONGuildTemplate } from "../types/json";
 
 export default class GuildTemplate {
-    protected _client: Client;
+    client: Client;
     /** The code of the template. */
     code: string;
     /** When this template was created. */
@@ -30,15 +30,15 @@ export default class GuildTemplate {
     /** The amount of times this template has been used. */
     usageCount: number;
     constructor(data: RawGuildTemplate, client: Client) {
-        this._client = client;
+        this.client = client;
         this.code = data.code;
         this.createdAt = new Date(data.created_at);
-        this.creator = this._client.users.update(data.creator);
+        this.creator = this.client.users.update(data.creator);
         this.description = null;
         this.isDirty = null;
         this.name = data.name;
         this.serializedSourceGuild = data.serialized_source_guild;
-        this.sourceGuild = this._client.guilds.get(data.source_guild_id)!;
+        this.sourceGuild = this.client.guilds.get(data.source_guild_id)!;
         this.sourceGuildID = data.source_guild_id;
         this.updatedAt = new Date(data.updated_at);
         this.usageCount = data.usage_count;
@@ -51,7 +51,7 @@ export default class GuildTemplate {
         if (data.name !== undefined) this.name = data.name;
         if (data.serialized_source_guild !== undefined) this.serializedSourceGuild = data.serialized_source_guild;
         if (data.source_guild_id !== undefined) {
-            this.sourceGuild = this._client.guilds.get(data.source_guild_id)!;
+            this.sourceGuild = this.client.guilds.get(data.source_guild_id)!;
             this.sourceGuildID = data.source_guild_id;
         }
         if (data.updated_at !== undefined) this.updatedAt = new Date(data.updated_at);
@@ -63,14 +63,14 @@ export default class GuildTemplate {
      * @param options The options for creating the guild.
      */
     async createGuild(options: CreateGuildFromTemplateOptions) {
-        return this._client.rest.guilds.createFromTemplate(this.code, options);
+        return this.client.rest.guilds.createFromTemplate(this.code, options);
     }
 
     /**
      * Delete this template.
      */
     async delete() {
-        return this._client.rest.guilds.deleteTemplate(this.sourceGuild.id, this.code);
+        return this.client.rest.guilds.deleteTemplate(this.sourceGuild.id, this.code);
     }
 
     /**
@@ -78,14 +78,14 @@ export default class GuildTemplate {
      * @param options The options for editing the template.
      */
     async editTemplate(options: EditGuildTemplateOptions) {
-        return this._client.rest.guilds.editTemplate(this.sourceGuild.id, this.code, options);
+        return this.client.rest.guilds.editTemplate(this.sourceGuild.id, this.code, options);
     }
 
     /**
      * Sync this template.
      */
     async syncTemplate() {
-        return this._client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);
+        return this.client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);
     }
 
     toJSON(): JSONGuildTemplate {
