@@ -50,14 +50,12 @@ import Message from "../structures/Message";
 import type { Uncached } from "../types/shared";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import Debug from "../util/Debug";
 import Interaction from "../structures/Interaction";
 import type Collection from "../util/Collection";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
 import type { Inflate } from "zlib-sync";
-import { assert, is } from "tsafe";
 import { randomBytes } from "crypto";
 import { inspect } from "util";
 
@@ -991,7 +989,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     private onPacket(packet: AnyReceivePacket) {
-        Debug("ws:recieve", packet);
         if ("s" in packet && packet.s) {
             if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming") {
                 this.client.emit("warn", `Non-consecutive sequence (${this.sequence} -> ${packet.s})`, this.id);
@@ -1161,7 +1158,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             } else if (Array.isArray(data)) { // Fragmented messages
                 data = Buffer.concat(data); // Copyfull concat is slow, but no alternative
             }
-            assert(is<Buffer>(data));
+            this.client.util.assert(this.client.util.is<Buffer>(data));
             if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
                     this._sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
@@ -1418,7 +1415,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.ws.send(d);
                     if (typeof data === "object" && data && "token" in data) (data as { token: string; }).token = "[REMOVED]";
                     this.client.emit("debug", JSON.stringify({ op, d: data }), this.id);
-                    Debug("ws:send", { op, d: data });
                 }
             };
             if (op === GatewayOPCodes.PRESENCE_UPDATE) {

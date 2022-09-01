@@ -49,8 +49,6 @@
   },
   "dependencies": {
     "@augu/collections": "^1.1.0",
-    "debug": "^4.3.4",
-    "tsafe": "^1.0.0",
     "undici": "^5.10.0",
     "ws": "^8.8.1"
   },
