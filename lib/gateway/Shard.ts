@@ -1075,8 +1075,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (code) {
             this.client.emit("debug", `${code === 1000 ? "Clean" : "Unclean"} WS close: ${code}: ${reason}`, this.id);
             switch (code) {
+                case 1001: {
+                    err = new GatewayError("CloudFlare WebSocket proxy restarting.", code);
+                    break;
+                }
                 case 1006: {
-                    err = new Error("Connection reset by peer. This is a network issue. If you are concerned, talk to your ISP or host.");
+                    err = new GatewayError("Connection reset by peer. This is a network issue. If you are concerned, talk to your ISP or host.", code);
                     break;
                 }
                 case GatewayCloseCodes.UNKNOWN_OPCODE: {
@@ -1275,7 +1279,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.ws = null;
         this.reset();
 
-        if (error) this.client.emit("error", error, this.id);
+        if (error) {
+            if (error instanceof GatewayError && [1001, 1006].includes(error.code)) this.client.emit("debug", error.message, this.id);
+            else this.client.emit("error", error, this.id);
+        }
 
         this.emit("disconnect", error);
 
