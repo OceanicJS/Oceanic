@@ -81,13 +81,13 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
     /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. **/
     get application() {
-        if (!this._application) throw new Error("Can only access `client.application` when using a gateway connection and having one shard marked as READY.");
+        if (!this._application) throw new Error("Can only access `client.application` when using a gateway connection and having at least one shard marked as READY.");
         else return this._application;
     }
 
     /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. **/
     get user() {
-        if (!this._user) throw new Error("Can only access `client.user` when using a gateway connection and having one shard marked as READY.");
+        if (!this._user) throw new Error("Can only access `client.user` when using a gateway connection and having at least one shard marked as READY.");
         else return this._user;
     }
 
