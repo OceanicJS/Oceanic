@@ -33,13 +33,19 @@
   },
   "homepage": "https://github.com/OceanicJS/Oceanic#readme",
   "devDependencies": {
-    "@types/debug": "^4.1.7",
     "@types/node": "^16.11.56",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.3",
-    "@uwu-codes/eslint-config": "^1.0.55",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "eslint": "^8.22.0",
-    "ts-node": "^10.9.1"
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-newlines": "^1.2.3",
+    "eslint-plugin-jsdoc": "^39.3.6",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "typescript": "^4.8.2"
   },
   "dependencies": {
     "@augu/collections": "^1.1.0",

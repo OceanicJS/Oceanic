@@ -21,6 +21,7 @@ import type StageChannel from "./structures/StageChannel";
 import Util from "./util/Util";
 
 /* eslint-disable */
+/* @ts-ignore */
 let Erlpack: typeof import("erlpack") | undefined;
 try {
     Erlpack = require("erlpack");
