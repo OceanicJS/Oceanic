@@ -46,6 +46,7 @@ import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
 import type RESTManager from "../rest/RESTManager";
+import type PrivateChannel from "../structures/PrivateChannel";
 
 export default class Channels {
     #manager: RESTManager;
@@ -85,6 +86,8 @@ export default class Channels {
      * @param recipient The ID of the recipient of the direct message.
      */
     async createDM(recipient: string) {
+        let cache: PrivateChannel | null;
+        if ((cache = this.#manager.client.privateChannels.find(ch => ch.recipient.id === recipient))) return cache;
         return this.#manager.authRequest<RawPrivateChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
