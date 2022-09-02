@@ -18,7 +18,11 @@ import type {
     RawApplicationCommandOption,
     RawMember,
     RawMessageActionRow,
-    RawModalActionRow
+    RawModalActionRow,
+    EmbedOptions,
+    RawEmbedOptions,
+    Embed,
+    RawEmbed
 } from "../types";
 import Member from "../structures/Member";
 
@@ -135,6 +139,113 @@ export default class Util {
         }
         if (!Util.BASE64URL_REGEX.test(img)) throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
         return img;
+    }
+
+    embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
+        return embeds.map(embed => {
+            const parsedEmbed: Embed = {};
+
+            if (embed.author) {
+                parsedEmbed.author = {
+                    name:         embed.author.name,
+                    iconURL:      embed.author.icon_url,
+                    proxyIconURL: embed.author.proxy_icon_url,
+                    url:          embed.author.url
+                };
+            }
+            if (embed.color) parsedEmbed.color = embed.color;
+            if (embed.description) parsedEmbed.description = embed.description;
+            if (embed.fields) {
+                parsedEmbed.fields = embed.fields.map(field => ({
+                    inline: field.inline,
+                    name:   field.name,
+                    value:  field.value
+                }));
+            }
+            if (embed.footer) {
+                parsedEmbed.footer = {
+                    text:         embed.footer.text,
+                    iconURL:      embed.footer.icon_url,
+                    proxyIconURL: embed.footer.proxy_icon_url
+                };
+            }
+            if (embed.timestamp) parsedEmbed.timestamp = embed.timestamp;
+            if (embed.title) parsedEmbed.title = embed.title;
+            if (embed.image) {
+                parsedEmbed.image = {
+                    url:      embed.image.url,
+                    height:   embed.image.height,
+                    proxyURL: embed.image.proxy_url,
+                    width:    embed.image.width
+                };
+            }
+            if (embed.provider) parsedEmbed.provider = {
+                name: embed.provider.name,
+                url:  embed.provider.url
+            };
+            if (embed.thumbnail) parsedEmbed.thumbnail = {
+                url:      embed.thumbnail.url,
+                height:   embed.thumbnail.height,
+                proxyURL: embed.thumbnail.proxy_url,
+                width:    embed.thumbnail.width
+            };
+            if (embed.url) parsedEmbed.url = embed.url;
+            if (embed.type) parsedEmbed.type =  embed.type;
+            if (embed.video) {
+                parsedEmbed.video = {
+                    height:   embed.video.height,
+                    proxyURL: embed.video.proxy_url,
+                    url:      embed.video.url,
+                    width:    embed.video.width
+                };
+            }
+
+            return parsedEmbed;
+        });
+    }
+
+    embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
+        return embeds.map(embed => {
+            const rawEmbed: RawEmbedOptions = {};
+
+            if (embed.author) {
+                rawEmbed.author = {
+                    name:     embed.author.name,
+                    icon_url: embed.author.iconURL,
+                    url:      embed.author.url
+                };
+            }
+            if (embed.color) rawEmbed.color = embed.color;
+            if (embed.description) rawEmbed.description = embed.description;
+            if (embed.fields) {
+                rawEmbed.fields = embed.fields.map(field => ({
+                    inline: field.inline,
+                    name:   field.name,
+                    value:  field.value
+                }));
+            }
+            if (embed.footer) {
+                rawEmbed.footer = {
+                    text:     embed.footer.text,
+                    icon_url: embed.footer.iconURL
+                };
+            }
+            if (embed.timestamp) rawEmbed.timestamp = embed.timestamp;
+            if (embed.title) rawEmbed.title = embed.title;
+            if (embed.image) {
+                rawEmbed.image = {
+                    url: embed.image.url
+                };
+            }
+            if (embed.thumbnail) {
+                rawEmbed.thumbnail = {
+                    url: embed.thumbnail.url
+                };
+            }
+            if (embed.url) rawEmbed.url = embed.url;
+
+            return rawEmbed;
+        });
     }
 
     formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {

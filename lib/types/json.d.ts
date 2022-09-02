@@ -19,7 +19,6 @@ import type {
 } from "./guilds";
 import type {
     ChannelMention,
-    Embed,
     MessageActivity,
     MessageReference,
     RawChannel,
@@ -27,9 +26,10 @@ import type {
     MessageReaction,
     ThreadMetadata,
     PrivateThreadmetadata,
-    MessageActionRow,
     ForumTag,
-    ForumEmoji
+    ForumEmoji,
+    MessageActionRow,
+    Embed
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Presence } from "./gateway";
