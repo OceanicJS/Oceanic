@@ -12,7 +12,8 @@
     }
   },
   "scripts": {
-    "lint": "eslint lib --ext .ts --fix",
+    "lint": "eslint lib --ext .ts",
+    "lint:fix": "eslint lib --ext .ts --fix",
     "prepare": "node build"
   },
   "repository": {
