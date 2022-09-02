@@ -29,8 +29,8 @@ try {
 
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
-    application!: ClientApplication;
+    private _application?: ClientApplication;
+    private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
     groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
@@ -44,8 +44,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
     startTime = 0;
     threadGuildMap: Record<string, string>;
     unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
-    /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
-    user!: ExtendedUser;
     users: Collection<string, RawUser, User>;
     util: Util;
     voiceConnections: VoiceConnectionManager;
@@ -79,6 +77,18 @@ export default class Client extends TypedEmitter<ClientEvents> {
         this.users = new Collection(User, this);
         this.util = new Util(this);
         this.voiceConnections = new VoiceConnectionManager(this);
+    }
+
+    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. **/
+    get application() {
+        if (!this._application) throw new Error("Cannot access `client.application` without having at least one shard marked as READY.");
+        else return this._application;
+    }
+
+    /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. **/
+    get user() {
+        if (!this._user) throw new Error("Cannot access `client.user` without having at least one shard marked as READY.");
+        else return this._user;
     }
 
     async connect() {

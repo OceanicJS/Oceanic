@@ -666,11 +666,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
                     if (message.reactions[name]) {
                         message.reactions[name].count++;
-                        if (packet.d.user_id === this.client.user!.id) message.reactions[name].me = true;
+                        if (packet.d.user_id === this.client.user.id) message.reactions[name].me = true;
                     } else {
                         message.reactions[name] = {
                             count: 1,
-                            me:    packet.d.user_id === this.client.user!.id
+                            me:    packet.d.user_id === this.client.user.id
                         };
                     }
                 }
@@ -687,7 +687,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
                     if (message.reactions[name]) {
                         message.reactions[name].count--;
-                        if (packet.d.user_id === this.client.user!.id) message.reactions[name].me = false;
+                        if (packet.d.user_id === this.client.user.id) message.reactions[name].me = false;
                         if (message.reactions[name].count === 0) delete message.reactions[name];
                     }
                 }
@@ -755,8 +755,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (this.#connectTimeout) clearInterval(this.#connectTimeout);
                 this.status = "ready";
                 this.client.shards["_ready"](this.id);
-                this.client.application = new ClientApplication(packet.d.application, this.client);
-                if (!this.client.user) this.client.user = this.client.users.add(new ExtendedUser(packet.d.user as RawOAuthUser, this.client));
+                this.client["_application"] = new ClientApplication(packet.d.application, this.client);
+                if (!this.client["_user"]) this.client["_user"] = this.client.users.add(new ExtendedUser(packet.d.user as RawOAuthUser, this.client));
                 else this.client.users.update(packet.d.user as unknown as RawUser);
 
                 let url = packet.d.resume_gateway_url;
