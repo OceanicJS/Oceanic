@@ -132,6 +132,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
         }
         for (const id of this.shards.options.shardIDs) this.shards.spawn(id);
     }
+
     /**
      * Edit the client's status across all shards.
      * @param status The status.
