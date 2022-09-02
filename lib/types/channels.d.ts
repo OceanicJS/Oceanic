@@ -345,7 +345,6 @@ export interface RawEmbedImage extends EmbedImageBase, EmbedImageOptions {
 export interface EmbedImageOptions {
     url: string;
 }
-}
 
 export interface EmbedImage extends EmbedImageBase, EmbedImageOptions {
     proxyURL?: string;
