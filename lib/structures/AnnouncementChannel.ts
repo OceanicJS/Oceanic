@@ -10,8 +10,8 @@ import Collection from "../util/Collection";
 
 /** Represents a guild news channel. */
 export default class AnnouncementChannel extends TextableChannel<AnnouncementChannel> {
-    /** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
     declare parent: CategoryChannel | null;
+    /** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
     declare rateLimitPerUser: 0;
     /** The threads in this channel. */
     threads: Collection<string, RawAnnouncementThreadChannel, AnnouncementThreadChannel>;

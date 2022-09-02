@@ -114,7 +114,7 @@ export default class Member extends Base {
     }
 
     /**
-     * Create a bon for this member.
+     * Create a ban for this member.
      * @param options The options for the ban.
      */
     async ban(options?: CreateBanOptions) {
