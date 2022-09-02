@@ -19,7 +19,6 @@ import type {
 } from "./guilds";
 import type {
     ChannelMention,
-    RawEmbed,
     MessageActivity,
     MessageReference,
     RawChannel,
@@ -29,7 +28,8 @@ import type {
     PrivateThreadmetadata,
     ForumTag,
     ForumEmoji,
-    MessageActionRow
+    MessageActionRow,
+    Embed
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Presence } from "./gateway";
@@ -382,7 +382,7 @@ export interface JSONMessage extends JSONBase {
     components?: Array<MessageActionRow>;
     content: string;
     editedTimestamp: number | null;
-    embeds: Array<RawEmbed>;
+    embeds: Array<Embed>;
     flags?: number;
     guild?: string;
     interaction?: {
