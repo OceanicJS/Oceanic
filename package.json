@@ -39,10 +39,7 @@
     "@uwu-codes/eslint-config": "^1.0.55",
     "@uwu-codes/tsconfig": "^1.0.1",
     "eslint": "^8.22.0",
-    "ts-node": "^10.9.1",
-    "typedoc": "^0.23.10",
-    "typedoc-plugin-extras": "^2.3.0",
-    "typedoc-plugin-rename-defaults": "^0.6.4"
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@augu/collections": "^1.1.0",
