@@ -248,11 +248,11 @@ export interface EmbedOptionsBase {
 }
 
 export interface RawEmbedOptions extends EmbedOptionsBase {
-    author?: RawEmbedAuthor;
+    author?: RawEmbedAuthorOptions;
     fields?: Array<EmbedField>;
-    footer?: RawEmbedFooter;
-    image?: EmbedImageOptions;
-    thumbnail?: EmbedImageOptions;
+    footer?: RawEmbedFooterOptions;
+    image?: RawEmbedImageOptions;
+    thumbnail?: RawEmbedImageOptions;
 }
 
 export interface EmbedOptions extends EmbedOptionsBase {
@@ -303,6 +303,10 @@ export interface EmbedAuthorOptions extends EmbedAuthorBase {
     iconURL?: string;
 }
 
+export interface RawEmbedAuthorOptions extends EmbedAuthorBase {
+    icon_url?: string;
+}
+
 export interface EmbedAuthor extends EmbedAuthorOptions {
     iconURL?: string;
     proxyIconURL?: string;
@@ -313,6 +317,10 @@ export interface EmbedFooterBase {
 
 export interface EmbedFooterOptions extends EmbedFooterBase {
     iconURL?: string;
+}
+
+export interface RawEmbedFooterOptions extends EmbedFooterBase {
+    icon_url?: string;
 }
 
 export interface RawEmbedFooter extends EmbedFooterBase {
@@ -335,6 +343,9 @@ export interface RawEmbedImage extends EmbedImageBase, EmbedImageOptions {
 }
 
 export interface EmbedImageOptions {
+    url: string;
+}
+export interface RawEmbedImageOptions {
     url: string;
 }
 
