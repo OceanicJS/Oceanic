@@ -27,9 +27,9 @@ import type {
     MessageReaction,
     ThreadMetadata,
     PrivateThreadmetadata,
-    RawMessageActionRow,
     ForumTag,
-    ForumEmoji
+    ForumEmoji,
+    MessageActionRow
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Presence } from "./gateway";
@@ -379,7 +379,7 @@ export interface JSONMessage extends JSONBase {
     attachments: Array<JSONAttachment>;
     author: JSONUser;
     channel: string;
-    components?: Array<RawMessageActionRow>;
+    components?: Array<MessageActionRow>;
     content: string;
     editedTimestamp: number | null;
     embeds: Array<RawEmbed>;

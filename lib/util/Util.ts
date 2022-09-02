@@ -22,8 +22,6 @@ import type {
     EmbedOptions,
     RawEmbedOptions,
     Embed,
-    RawEmbedField,
-    EmbedField,
     RawEmbed
 } from "../types";
 import Member from "../structures/Member";
@@ -158,7 +156,7 @@ export default class Util {
             if (embed.color) parsedEmbed.color = embed.color;
             if (embed.description) parsedEmbed.description = embed.description;
             if (embed.fields) {
-                parsedEmbed.fields = embed.fields.map((field): EmbedField => ({
+                parsedEmbed.fields = embed.fields.map(field => ({
                     inline: field.inline,
                     name:   field.name,
                     value:  field.value
@@ -220,7 +218,7 @@ export default class Util {
             if (embed.color) rawEmbed.color = embed.color;
             if (embed.description) rawEmbed.description = embed.description;
             if (embed.fields) {
-                rawEmbed.fields = embed.fields.map((field): RawEmbedField => ({
+                rawEmbed.fields = embed.fields.map(field => ({
                     inline: field.inline,
                     name:   field.name,
                     value:  field.value

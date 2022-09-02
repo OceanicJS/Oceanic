@@ -239,7 +239,7 @@ export interface CreateMessageOptions {
     tts?: boolean;
 }
 
-export interface RawEmbedOptionsBase {
+export interface EmbedOptionsBase {
     color?: number;
     description?: string;
     timestamp?: string;
@@ -247,158 +247,124 @@ export interface RawEmbedOptionsBase {
     url?: string;
 }
 
-export interface RawEmbedOptions extends RawEmbedOptionsBase {
-    author?: RawEmbedAuthorOptions;
-    fields?: Array<RawEmbedField>;
-    footer?: RawEmbedFooterOptions;
-    image?: RawEmbedImageOptions;
-    thumbnail?: RawEmbedThumbnailOptions;
+export interface RawEmbedOptions extends EmbedOptionsBase {
+    author?: RawEmbedAuthor;
+    fields?: Array<EmbedField>;
+    footer?: RawEmbedFooter;
+    image?: EmbedImageOptions;
+    thumbnail?: EmbedImageOptions;
 }
 
-export interface EmbedOptions extends RawEmbedOptionsBase {
+export interface EmbedOptions extends EmbedOptionsBase {
     author?: EmbedAuthorOptions;
     fields?: Array<EmbedField>;
     footer?: EmbedFooterOptions;
     image?: EmbedImageOptions;
-    thumbnail?: EmbedThumbnailOptions;
+    thumbnail?: EmbedImageOptions;
 }
 
-export interface RawEmbedBase {
-    color?: number;
-    description?: string;
-    timestamp?: string;
-    title?: string;
+export interface EmbedBase extends EmbedOptionsBase {
     type?: EmbedType;
-    url?: string;
 }
 
-export interface RawEmbed extends RawEmbedBase {
+export interface RawEmbed extends EmbedBase {
     author?: RawEmbedAuthor;
-    fields?: Array<RawEmbedField>;
+    fields?: Array<EmbedField>;
     footer?: RawEmbedFooter;
     image?: RawEmbedImage;
-    provider?: RawEmbedProvider;
-    thumbnail?: RawEmbedThumbnail;
+    provider?: EmbedProvider;
+    thumbnail?: RawEmbedImage;
     video?: RawEmbedVideo;
 }
 
-export interface Embed extends RawEmbedBase {
+export interface Embed extends EmbedBase {
     author?: EmbedAuthor;
     fields?: Array<EmbedField>;
     footer?: EmbedFooter;
     image?: EmbedImage;
     provider?: EmbedProvider;
-    thumbnail?: EmbedThumbnail;
+    thumbnail?: EmbedImage;
     video?: EmbedVideo;
 }
 
 export type EmbedType = "rich" | "image" | "video" | "gifv" | "article" | "link";
 
-export interface RawEmbedFooterOptionsBase {
-    text: string;
-}
-export interface RawEmbedFooterOptions extends RawEmbedFooterOptionsBase {
-    icon_url?: string;
-}
-
-export interface EmbedFooterOptions extends RawEmbedFooterOptionsBase {
-    iconURL?: string;
-}
-
-export interface RawEmbedImageOptions {
-    url: string;
-}
-
-export type EmbedImageOptions = RawEmbedImageOptions;
-
-export interface RawEmbedThumbnailOptions {
-    url: string;
-}
-
-export type EmbedThumbnailOptions = RawEmbedThumbnailOptions;
-
-export interface RawEmbedAuthorOptionsBase {
+export interface EmbedAuthorBase {
     name: string;
     url?: string;
 }
 
-export interface RawEmbedAuthorOptions extends RawEmbedAuthorOptionsBase {
+export interface RawEmbedAuthor extends EmbedAuthorBase {
     icon_url?: string;
+    proxy_icon_url?: string;
 }
 
-export interface EmbedAuthorOptions extends RawEmbedAuthorOptionsBase {
+export interface EmbedAuthorOptions extends EmbedAuthorBase {
     iconURL?: string;
 }
 
-export interface RawEmbedField {
+export interface EmbedAuthor extends EmbedAuthorOptions {
+    iconURL?: string;
+    proxyIconURL?: string;
+}
+export interface EmbedFooterBase {
+    text: string;
+}
+
+export interface EmbedFooterOptions extends EmbedFooterBase {
+    iconURL?: string;
+}
+
+export interface RawEmbedFooter extends EmbedFooterBase {
+    icon_url?: string;
+    proxy_icon_url?: string;
+}
+
+export interface EmbedFooter extends EmbedFooterOptions {
+    iconURL?: string;
+    proxyIconURL?: string;
+}
+
+export interface EmbedImageBase {
+    height?: number;
+    width?: number;
+}
+
+export interface RawEmbedImage extends EmbedImageBase, EmbedImageOptions {
+    proxy_url?: string;
+}
+
+export interface EmbedImageOptions {
+    url: string;
+}
+
+export interface EmbedImage extends EmbedImageBase, EmbedImageOptions {
+    proxyURL?: string;
+}
+
+export interface EmbedField {
     inline?: boolean;
     name: string;
     value: string;
 }
 
-export type EmbedField = RawEmbedField;
-
-export interface RawEmbedFooter extends RawEmbedFooterOptions {
-    proxy_icon_url?: string;
-}
-
-export interface EmbedFooter extends EmbedFooterOptions {
-    proxyIconURL?: string;
-}
-
-export interface RawEmbedImageBase {
-    height?: number;
-    width?: number;
-}
-
-export interface RawEmbedImage extends RawEmbedImageBase, RawEmbedImageOptions {
-    proxy_url?: string;
-}
-
-export interface EmbedImage extends RawEmbedImageBase, EmbedImageOptions {
-    proxyURL?: string;
-}
-
-export interface RawEmbedThumbnailBase {
-    height?: number;
-    width?: number;
-}
-
-export interface RawEmbedThumbnail extends RawEmbedThumbnailBase, RawEmbedThumbnailOptions {
-    proxy_url?: string;
-}
-
-export interface EmbedThumbnail extends RawEmbedThumbnailBase, EmbedThumbnailOptions {
-    proxyURL?: string;
-}
-
-export interface RawEmbedVideoBase {
+export interface EmbedVideoBase {
     height?: number;
     url?: string;
     width?: number;
 }
 
-export interface RawEmbedVideo extends RawEmbedVideoBase {
+export interface RawEmbedVideo extends EmbedVideoBase {
     proxy_url?: string;
 }
 
-export interface EmbedVideo extends RawEmbedVideoBase {
+export interface EmbedVideo extends EmbedVideoBase {
     proxyURL?: string;
 }
 
-export interface RawEmbedProvider {
+export interface EmbedProvider {
     name?: string;
     url?: string;
-}
-
-export type EmbedProvider = RawEmbedProvider;
-
-export interface RawEmbedAuthor extends RawEmbedAuthorOptions {
-    proxy_icon_url?: string;
-}
-
-export interface EmbedAuthor extends EmbedAuthorOptions {
-    proxyIconURL?: string;
 }
 
 export interface AllowedMentions {
