@@ -1,5 +1,4 @@
 {
-	"extends": "@uwu-codes/tsconfig",
 	"compilerOptions": {
 		"outDir": "dist",
 		"baseUrl": "lib",

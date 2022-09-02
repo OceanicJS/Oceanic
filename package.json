@@ -38,7 +38,6 @@
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.3",
     "@uwu-codes/eslint-config": "^1.0.55",
-    "@uwu-codes/tsconfig": "^1.0.1",
     "eslint": "^8.22.0",
     "ts-node": "^10.9.1"
   },
