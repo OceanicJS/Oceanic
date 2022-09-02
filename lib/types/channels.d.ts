@@ -302,7 +302,7 @@ export interface RawEmbedFooterOptions extends RawEmbedFooterOptionsBase {
 }
 
 export interface EmbedFooterOptions extends RawEmbedFooterOptionsBase {
-    iconUrl?: string;
+    iconURL?: string;
 }
 
 export interface RawEmbedImageOptions {
@@ -327,7 +327,7 @@ export interface RawEmbedAuthorOptions extends RawEmbedAuthorOptionsBase {
 }
 
 export interface EmbedAuthorOptions extends RawEmbedAuthorOptionsBase {
-    iconUrl?: string;
+    iconURL?: string;
 }
 
 export interface RawEmbedField {
@@ -343,7 +343,7 @@ export interface RawEmbedFooter extends RawEmbedFooterOptions {
 }
 
 export interface EmbedFooter extends EmbedFooterOptions {
-    proxyIconUrl?: string;
+    proxyIconURL?: string;
 }
 
 export interface RawEmbedImageBase {
@@ -356,7 +356,7 @@ export interface RawEmbedImage extends RawEmbedImageBase, RawEmbedImageOptions {
 }
 
 export interface EmbedImage extends RawEmbedImageBase, EmbedImageOptions {
-    proxyUrl?: string;
+    proxyURL?: string;
 }
 
 export interface RawEmbedThumbnailBase {
@@ -369,7 +369,7 @@ export interface RawEmbedThumbnail extends RawEmbedThumbnailBase, RawEmbedThumbn
 }
 
 export interface EmbedThumbnail extends RawEmbedThumbnailBase, EmbedThumbnailOptions {
-    proxyUrl?: string;
+    proxyURL?: string;
 }
 
 export interface RawEmbedVideoBase {
@@ -383,7 +383,7 @@ export interface RawEmbedVideo extends RawEmbedVideoBase {
 }
 
 export interface EmbedVideo extends RawEmbedVideoBase {
-    proxyUrl?: string;
+    proxyURL?: string;
 }
 
 export interface RawEmbedProvider {
@@ -398,7 +398,7 @@ export interface RawEmbedAuthor extends RawEmbedAuthorOptions {
 }
 
 export interface EmbedAuthor extends EmbedAuthorOptions {
-    proxyIconUrl?: string;
+    proxyIconURL?: string;
 }
 
 export interface AllowedMentions {

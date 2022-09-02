@@ -144,14 +144,14 @@ export default class Util {
     }
 
     embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
-        return embeds.map((embed) => {
+        return embeds.map(embed => {
             const parsedEmbed: Embed = {};
 
             if (embed.author) {
                 parsedEmbed.author = {
                     name:         embed.author.name,
-                    iconUrl:      embed.author.icon_url,
-                    proxyIconUrl: embed.author.proxy_icon_url,
+                    iconURL:      embed.author.icon_url,
+                    proxyIconURL: embed.author.proxy_icon_url,
                     url:          embed.author.url
                 };
             }
@@ -167,8 +167,8 @@ export default class Util {
             if (embed.footer) {
                 parsedEmbed.footer = {
                     text:         embed.footer.text,
-                    iconUrl:      embed.footer.icon_url,
-                    proxyIconUrl: embed.footer.proxy_icon_url
+                    iconURL:      embed.footer.icon_url,
+                    proxyIconURL: embed.footer.proxy_icon_url
                 };
             }
             if (embed.timestamp) parsedEmbed.timestamp = embed.timestamp;
@@ -177,7 +177,7 @@ export default class Util {
                 parsedEmbed.image = {
                     url:      embed.image.url,
                     height:   embed.image.height,
-                    proxyUrl: embed.image.proxy_url,
+                    proxyURL: embed.image.proxy_url,
                     width:    embed.image.width
                 };
             }
@@ -188,7 +188,7 @@ export default class Util {
             if (embed.thumbnail) parsedEmbed.thumbnail = {
                 url:      embed.thumbnail.url,
                 height:   embed.thumbnail.height,
-                proxyUrl: embed.thumbnail.proxy_url,
+                proxyURL: embed.thumbnail.proxy_url,
                 width:    embed.thumbnail.width
             };
             if (embed.url) parsedEmbed.url = embed.url;
@@ -196,7 +196,7 @@ export default class Util {
             if (embed.video) {
                 parsedEmbed.video = {
                     height:   embed.video.height,
-                    proxyUrl: embed.video.proxy_url,
+                    proxyURL: embed.video.proxy_url,
                     url:      embed.video.url,
                     width:    embed.video.width
                 };
@@ -207,13 +207,13 @@ export default class Util {
     }
 
     embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
-        return embeds.map((embed) => {
+        return embeds.map(embed => {
             const rawEmbed: RawEmbedOptions = {};
 
             if (embed.author) {
                 rawEmbed.author = {
                     name:     embed.author.name,
-                    icon_url: embed.author.iconUrl,
+                    icon_url: embed.author.iconURL,
                     url:      embed.author.url
                 };
             }
@@ -225,6 +225,12 @@ export default class Util {
                     name:   field.name,
                     value:  field.value
                 }));
+            }
+            if (embed.footer) {
+                rawEmbed.footer = {
+                    text:     embed.footer.text,
+                    icon_url: embed.footer.iconURL
+                };
             }
             if (embed.timestamp) rawEmbed.timestamp = embed.timestamp;
             if (embed.title) rawEmbed.title = embed.title;
