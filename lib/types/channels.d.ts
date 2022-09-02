@@ -251,8 +251,8 @@ export interface RawEmbedOptions extends EmbedOptionsBase {
     author?: RawEmbedAuthorOptions;
     fields?: Array<EmbedField>;
     footer?: RawEmbedFooterOptions;
-    image?: RawEmbedImageOptions;
-    thumbnail?: RawEmbedImageOptions;
+    image?: EmbedImageOptions;
+    thumbnail?: EmbedImageOptions;
 }
 
 export interface EmbedOptions extends EmbedOptionsBase {
@@ -345,8 +345,6 @@ export interface RawEmbedImage extends EmbedImageBase, EmbedImageOptions {
 export interface EmbedImageOptions {
     url: string;
 }
-export interface RawEmbedImageOptions {
-    url: string;
 }
 
 export interface EmbedImage extends EmbedImageBase, EmbedImageOptions {
