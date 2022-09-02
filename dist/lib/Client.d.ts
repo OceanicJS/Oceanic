@@ -18,8 +18,8 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    /** The client's partial application (only set when using a gateway connection, at least one shard must be READY for this to be set). */
-    application: ClientApplication;
+    private _application?;
+    private _user?;
     channelGuildMap: Record<string, string>;
     gatewayURL: string;
     groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
@@ -33,8 +33,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
     startTime: number;
     threadGuildMap: Record<string, string>;
     unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
-    /** The client's user (only set when using a gateway connection, at least one shard must be READY for this to be set). */
-    user: ExtendedUser;
     users: Collection<string, RawUser, User>;
     util: Util;
     voiceConnections: VoiceConnectionManager;
@@ -43,6 +41,10 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param options The options to create the client with.
      */
     constructor(options?: ClientOptions);
+    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. **/
+    get application(): ClientApplication;
+    /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. **/
+    get user(): ExtendedUser;
     connect(): Promise<void>;
     /**
      * Edit the client's status across all shards.
