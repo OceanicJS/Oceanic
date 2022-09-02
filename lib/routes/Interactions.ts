@@ -38,7 +38,7 @@ export default class Interactions {
                     attachments:      options.data.attachments,
                     content:          options.data.content,
                     components:       options.data.components ? this.#manager.client.util.componentsToRaw(options.data.components) : undefined,
-                    embeds:           options.data.embeds,
+                    embeds:           options.data.embeds ? this.#manager.client.util.embedsToRaw(options.data.embeds) : undefined,
                     flags:            options.data.flags
                 };
                 break;

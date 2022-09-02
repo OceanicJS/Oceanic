@@ -52,7 +52,7 @@ export default class VoiceChannel extends GuildChannel {
         super(data, client);
         this.bitrate = data.bitrate;
         this.lastMessage = data.last_message_id === null ? null : { id: data.last_message_id };
-        this.messages = new Collection(Message, client);
+        this.messages = new Collection(Message, client, client.options.collectionLimits.messages);
         this.nsfw = false;
         this.permissionOverwrites = new Collection(PermissionOverwrite, client);
         this.position = data.position;

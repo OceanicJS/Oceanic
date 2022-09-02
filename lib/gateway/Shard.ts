@@ -418,6 +418,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "GUILD_MEMBERS_CHUNK": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
 
+                guild["updateMemberLimit"](packet.d.members.length);
                 const members = packet.d.members.map(member => guild.members.update({ ...member, id: member.user!.id }, guild.id));
                 if (packet.d.presences) packet.d.presences.forEach(presence => {
                     const member = guild.members.get(presence.user.id);
@@ -1370,12 +1371,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     /**
      * Request the members of a guild.
-     * @param guild The ID of the guild to request the members of.
+     * @param guildID The ID of the guild to request the members of.
      * @param options The options for requesting the members.
      */
-    async requestGuildMembers(guild: string, options?: RequestGuildMembersOptions) {
+    async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions) {
         const opts = {
-            guild_id:  guild,
+            guild_id:  guildID,
             limit:     options?.limit ?? 0,
             user_ids:  options?.userIDs,
             query:     options?.query,
@@ -1383,7 +1384,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             presences: options?.presences ?? false
         };
         if (!opts.user_ids && !opts.query) opts.query = "";
-        if (!opts.query && !opts.user_ids && (!(this.client.shards.options.intents & Intents.GUILD_MEMBERS))) throw new Error("Cannot request all members without the GUILD_MEMBERS intent.");
+        if (!opts.query && !opts.user_ids) {
+            if (!(this.client.shards.options.intents & Intents.GUILD_MEMBERS)) throw new Error("Cannot request all members without the GUILD_MEMBERS intent.");
+            const guild = this.client.guilds.get(guildID);
+            if (guild) guild["updateMemberLimit"](true);
+        }
         if (opts.presences && (!(this.client.shards.options.intents & Intents.GUILD_PRESENCES))) throw new Error("Cannot request presences without the GUILD_PRESENCES intent.");
         if (opts.user_ids && opts.user_ids.length > 100) throw new Error("Cannot request more than 100 users at once.");
         this.send(GatewayOPCodes.REQUEST_GUILD_MEMBERS, opts);

@@ -202,7 +202,7 @@ export default class Guild extends Base {
         this.joinedAt = null;
         this.large = (data.member_count || data.approximate_member_count || 0) >= client.shards.options.largeThreshold;
         this.memberCount = data.member_count || data.approximate_member_count || 0;
-        this.members = new Collection(Member, client);
+        this.members = new Collection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? Infinity);
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
         this.nsfwLevel = data.nsfw_level;
@@ -282,6 +282,23 @@ export default class Guild extends Base {
                 } */
             }
         }
+    }
+
+    // true = `memberCount`
+    private updateMemberLimit(toAdd: true | number) {
+        const original = this.members.limit;
+        const num = toAdd === true ? this.memberCount : this.members.limit + toAdd;
+        const round = 10 ** (Math.floor(Math.log10(num)) - 1);
+        if (toAdd === true) {
+            const limit = Math.round(num / round) * round + round;
+            if (this.members.limit >= limit) return;
+            this.members.limit = limit;
+        } else {
+            const limit = Math.round((this.members.size + toAdd) / round) * round + round;
+            if (this.members.limit >= limit) return;
+            this.members.limit = limit;
+        }
+        this.client.emit("debug", `The limit of the members collection of guild ${this.id} has been updated from ${original} to ${this.members.limit} to accomidate at least ${toAdd === true ? this.memberCount : this.members.size + toAdd} members.`);
     }
 
     protected update(data: Partial<RawGuild>) {

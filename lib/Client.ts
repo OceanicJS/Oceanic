@@ -60,21 +60,26 @@ export default class Client extends TypedEmitter<ClientEvents> {
                 users:       true,
                 roles:       true
             },
-            auth:               options?.auth || null,
+            auth:             options?.auth || null,
+            collectionLimits: {
+                members:  options?.collectionLimits?.members ?? 1000,
+                messages: options?.collectionLimits?.messages ?? 100,
+                users:    options?.collectionLimits?.users ?? Infinity
+            },
             defaultImageFormat: options?.defaultImageFormat || "png",
             defaultImageSize:   options?.defaultImageSize || 4096
         };
         this.channelGuildMap = {};
-        this.groupChannels = new Collection(GroupChannel, this);
+        this.groupChannels = new Collection(GroupChannel, this, 10);
         this.guilds = new Collection(Guild, this);
-        this.privateChannels = new Collection(PrivateChannel, this);
+        this.privateChannels = new Collection(PrivateChannel, this, 25);
         this.ready = false;
         this.guildShardMap = {};
         this.rest = new RESTManager(this, options?.rest);
         this.shards = new ShardManager(this, options?.gateway);
         this.threadGuildMap = {};
         this.unavailableGuilds = new Collection(UnavailableGuild, this);
-        this.users = new Collection(User, this);
+        this.users = new Collection(User, this, this.options.collectionLimits.users);
         this.util = new Util(this);
         this.voiceConnections = new VoiceConnectionManager(this);
     }

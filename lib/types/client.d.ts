@@ -65,6 +65,8 @@ export interface ClientOptions {
     allowedMentions?: AllowedMentions;
     /** Fully qualified authorization string (e.x. Bot [TOKEN]) - you MUST prefix it yourself */
     auth?: string | null;
+    /** The maximum number of items that can be present in various collections. */
+    collectionLimits?: CollectionLimitsOptions;
     /**
      * The default image format to use.
      * @defaultValue png
@@ -80,7 +82,7 @@ export interface ClientOptions {
     /** The options for the request handler. */
     rest?: RESTOptions;
 }
-type ClientInstanceOptions = Required<Omit<ClientOptions, "rest" | "gateway">>;
+type ClientInstanceOptions = Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits">> & { collectionLimits: Required<CollectionLimitsOptions>; };
 
 export interface RESTOptions {
     /**
@@ -123,6 +125,26 @@ export interface RESTOptions {
      * @defaultValue Oceanic/\{VERSION\} (https://github.com/DonovanDMC/Oceanic)
      */
     userAgent?: string;
+}
+
+export interface CollectionLimitsOptions {
+    /**
+     * The maximum number of members to cache. A number to apply to all guilds individually, or a dictionary of guild IDs to member limits. Any not present will be `Infinity`.
+     *
+     * Note: If you request members from the gateway, this will be increased (on the specific guild) as meeded to accomidate those members.
+     * @defaultValue 1000
+     */
+    members?: number | Record<string, number>;
+    /**
+     * The maximum number of messages to cache.
+     * @defaultValue 100
+     */
+    messages?: number;
+    /**
+     * The maximum number of users to cache globally.
+     * @defaultValue Infinity
+     */
+    users?: number;
 }
 
 // @TODO document events

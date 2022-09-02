@@ -48,7 +48,7 @@ export default class GroupChannel extends Channel {
         this.icon = null;
         this.lastMessage = null;
         this.managed = false;
-        this.messages = new Collection(Message, client);
+        this.messages = new Collection(Message, client, client.options.collectionLimits.messages);
         this.name = data.name;
         this.nicks = [];
         this.owner = { id: data.owner_id };

@@ -8,16 +8,27 @@ export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Clie
 export default class Collection<K extends string | number, M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends PolarCollection<K, C> {
     #baseObject: AnyClass<M, C, E>;
     #client: Client;
-    constructor(baseObject: AnyClass<M, C, E>, client: Client) {
+    limit: number;
+    constructor(baseObject: AnyClass<M, C, E>, client: Client, limit = Infinity) {
         super();
         if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");
         this.#baseObject = baseObject;
         this.#client = client;
+        this.limit = limit;
     }
 
     add<T extends C>(value: T) {
         if ("id" in value) {
+            if (this.limit === 0) return value;
             this.set(value.id as K, value);
+
+            if (this.limit && this.size > this.limit) {
+                const iter = this.keys();
+                while (this.size > this.limit) {
+                    this.delete((iter.next().value as C).id as K);
+                }
+            }
+
             return value;
         } else {
             const err = new Error("Collection.add: value must have an id property");
