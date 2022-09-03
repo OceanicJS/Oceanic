@@ -56,30 +56,37 @@ import { is } from "../util/Util";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import type { Inflate } from "zlib-sync";
 import { randomBytes } from "crypto";
 import { inspect } from "util";
 import assert from "assert";
 
-/* eslint-disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
     Erlpack = require("erlpack");
 } catch { }
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 let ZlibSync: typeof import("pako") | typeof import("zlib-sync") | undefined, zlibConstants: typeof import("pako").constants | typeof import("zlib-sync") | undefined;
 try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
     ZlibSync = require("zlib-sync");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
     zlibConstants = require("zlib-sync");
 } catch {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
         ZlibSync = require("pako");
-    zlibConstants = require("pako").constants;
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        zlibConstants = require("pako").constants;
     } catch {}
 }
-/* eslint-enable */
 
-
-/* eslint-disable @typescript-eslint/unbound-method */
 export default class Shard extends TypedEmitter<ShardEvents> {
     client!: Client;
     connectAttempts: number;
@@ -175,6 +182,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (this.client.shards.options.compress) {
             if (!ZlibSync) throw new Error("Cannot use compression without pako or zlib-sync.");
             this.client.emit("debug", "Initializing zlib-sync-based compression");
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             this.#sharedZLib = new ZlibSync.Inflate({
                 chunkSize: 128 * 1024
             });
@@ -188,10 +196,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             this.ws = new WebSocket(this.client.gatewayURL, this.client.shards.options.ws);
         }
 
+        /* eslint-disable @typescript-eslint/unbound-method */
         this.ws.on("close", this.onWSClose);
         this.ws.on("error", this.onWSError);
         this.ws.on("message", this.onWSMessage);
         this.ws.on("open", this.onWSOpen);
+        /* eslint-enable @typescript-eslint/unbound-method */
 
         this.#connectTimeout = setTimeout(() => {
             if (this.connecting) {
@@ -1186,22 +1196,29 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             assert(is<Buffer>(data));
             if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (this.#sharedZLib.err) {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                         this.client.emit("error", new Error(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg || ""}`));
                         return;
                     }
 
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
                     data = Buffer.from(this.#sharedZLib.result || "");
                     if (Erlpack) {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                         return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
                     } else {
                         return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
                     }
                 } else {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, false);
                 }
             } else if (Erlpack) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 return this.onPacket(Erlpack.unpack(data) as AnyReceivePacket);
             } else {
                 return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
@@ -1443,6 +1460,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             let i = 0, waitFor = 1;
             const func = () => {
                 if (++i >= waitFor && this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     const d = Erlpack ? Erlpack.pack({ op, d: data }) : JSON.stringify({ op, d: data });
                     this.ws.send(d);
                     if (typeof data === "object" && data && "token" in data) (data as { token: string; }).token = "[REMOVED]";

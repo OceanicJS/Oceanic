@@ -20,12 +20,13 @@ import type VoiceChannel from "./structures/VoiceChannel";
 import type StageChannel from "./structures/StageChannel";
 import Util from "./util/Util";
 
-/* eslint-disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     Erlpack = require("erlpack");
 } catch {}
-/* eslint-enable */
 
 /** The primary class for interfacing with Discord. */
 export default class Client extends TypedEmitter<ClientEvents> {

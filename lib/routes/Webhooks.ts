@@ -121,7 +121,7 @@ export default class Webhooks {
                 attachments:      options.attachments,
                 components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
-                embeds:           options.embeds
+                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : []
             },
             query,
             files
@@ -169,7 +169,7 @@ export default class Webhooks {
                 avatar_url:       options.avatarURL,
                 components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
-                embeds:           options.embeds,
+                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : [],
                 flags:            options.flags,
                 thread_name:      options.threadName,
                 tts:              options.tts,

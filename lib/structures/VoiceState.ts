@@ -64,6 +64,7 @@ export default class VoiceState extends Base {
         }
         if (data.deaf !== undefined) this.deaf = data.deaf;
         if (data.guild_id !== undefined) {
+            this.guildID = data.guild_id;
             const guild = this.client.guilds.get(data.guild_id);
             if (!guild) this.client.emit("warn", `Missing guild for VoiceState ${this.id}`);
             else this.guild = guild;
