@@ -312,28 +312,32 @@
 			{
 				"default": {
 					"memberTypes": [
-						"signature",
-						"private-static-field",
-						"protected-static-field",
-						"static-field",
-						"private-field",
-						"protected-field",
-						"field",
-						"private-constructor",
-						"protected-constructor",
-						"constructor",
-						"private-static-method",
-						"protected-static-method",
-						"static-method",
-						"private-method",
-						"protected-method",
-						"private-get",
-						"protected-get",
-						"get",
-						"private-set",
-						"protected-set",
-						"set",
-						"method"
+                        "signature",
+                        "private-static-field",
+                        "protected-static-field",
+                        "static-field",
+                        "private-field",
+                        "protected-field",
+                        "field",
+                        "abstract-field",
+                        "private-abstract-method",
+                        "protected-abstract-method",
+                        "abstract-method",
+                        "private-constructor",
+                        "protected-constructor",
+                        "constructor",
+                        "private-static-method",
+                        "protected-static-method",
+                        "static-method",
+                        "private-method",
+                        "protected-method",
+                        "private-get",
+                        "protected-get",
+                        "get",
+                        "private-set",
+                        "protected-set",
+                        "set",
+                        "method"
 					],
 					"order": "alphabetically"
 				}
@@ -347,8 +351,6 @@
 				"SwitchCase": 1
 			}
 		],
-		"jsdoc/newline-after-description": ["error", "never"],
-		"@typescript-eslint/ban-ts-comment": "off",
-		"@typescript-eslint/consistent-type-imports": "off"
+		"jsdoc/newline-after-description": ["error", "never"]
 	}
 }
