@@ -353,7 +353,7 @@ export default class Channels {
                 attachments:      options.attachments,
                 components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
                 content:          options.content,
-                embeds:           options.embeds,
+                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : [],
                 flags:            options.flags
             },
             files
@@ -732,7 +732,7 @@ export default class Channels {
                     attachments:      options.message.attachments,
                     components:       options.message.components ? this.#manager.client.util.componentsToRaw(options.message.components) : [],
                     content:          options.message.content,
-                    embeds:           options.message.embeds,
+                    embeds:           options.message.embeds ? this.#manager.client.util.embedsToRaw(options.message.embeds) : [],
                     flags:            options.message.flags,
                     sticker_ids:      options.message.stickerIDs
                 },
