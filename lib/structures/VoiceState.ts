@@ -40,7 +40,6 @@ export default class VoiceState extends Base {
     user: User;
     constructor(data: RawVoiceState, client: Client) {
         super(data.user_id, client);
-        this.channel = null;
         this.deaf = false;
         this.mute = false;
         this.requestToSpeakTimestamp = null;
@@ -49,25 +48,25 @@ export default class VoiceState extends Base {
         this.selfStream = false;
         this.selfVideo = false;
         this.suppress = false;
-        this.user = client.users.get(this.id)!;
         this.update(data);
     }
 
     protected update(data: Partial<RawVoiceState>) {
-        if (data.channel_id !== undefined) {
-            if (data.channel_id === null) this.channel = null;
-            else {
-                const ch = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
-                if (!ch) this.client.emit("warn", `Missing channel for VoiceState ${this.id}`);
-                else this.channel = ch;
-            }
-        }
         if (data.deaf !== undefined) this.deaf = data.deaf;
         if (data.guild_id !== undefined) {
+            this.guildID = data.guild_id;
             const guild = this.client.guilds.get(data.guild_id);
             if (!guild) this.client.emit("warn", `Missing guild for VoiceState ${this.id}`);
             else this.guild = guild;
         }
+        if (data.channel_id !== undefined) {
+            if (data.channel_id === null) this.channel = null;
+            else {
+                const ch = this.guild?.channels.get<VoiceChannel | StageChannel>(data.channel_id);
+                if (!ch) this.client.emit("warn", `Missing channel for VoiceState ${this.id}`);
+                else this.channel = ch;
+            }
+        } else this.channel = null;
         if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);
         if (data.mute !== undefined) this.mute = data.mute;
         if (data.request_to_speak_timestamp !== undefined) this.requestToSpeakTimestamp = data.request_to_speak_timestamp  === null ? null : new Date(data.request_to_speak_timestamp);
@@ -94,7 +93,7 @@ export default class VoiceState extends Base {
             selfVideo:               this.selfVideo,
             sessionID:               this.sessionID,
             suppress:                this.suppress,
-            user:                    this.user.toJSON()
+            user:                    this.user?.toJSON()
         };
     }
 }
