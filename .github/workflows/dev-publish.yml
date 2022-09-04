@@ -29,4 +29,7 @@ jobs:
       with:
         token: ${{ secrets.NPM_TOKEN }}
         tag: dev
-        dry-run: true
+    - name: Deprecate Old Versions
+      run: npx npm-deprecate
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
