@@ -12,6 +12,8 @@ import type { JSONVoiceState } from "../types/json";
 export default class VoiceState extends Base {
     /** The channel the user is connected to. */
     channel: VoiceChannel | StageChannel | null;
+    /** The ID of the channel the user is connected to. */
+    channelID: string | null;
     /** If the associated member is deafened. */
     deaf: boolean;
     /** The guild this voice state is a part of. */
@@ -41,6 +43,7 @@ export default class VoiceState extends Base {
     constructor(data: RawVoiceState, client: Client) {
         super(data.user_id, client);
         this.channel = null;
+        this.channelID = data.channel_id;
         this.deaf = false;
         this.mute = false;
         this.requestToSpeakTimestamp = null;
@@ -55,18 +58,20 @@ export default class VoiceState extends Base {
 
     protected update(data: Partial<RawVoiceState>) {
         if (data.channel_id !== undefined) {
+            this.channelID = data.channel_id;
             if (data.channel_id === null) this.channel = null;
             else {
                 const ch = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
-                if (!ch) this.client.emit("warn", `Missing channel for VoiceState ${this.id}`);
-                else this.channel = ch;
+                if (!ch) {
+                    if (!this.channel || this.channel.id !== data.channel_id) this.client.emit("warn", `Missing channel for VoiceState ${this.id}`);
+                } else this.channel = ch;
             }
         }
         if (data.deaf !== undefined) this.deaf = data.deaf;
         if (data.guild_id !== undefined) {
             this.guildID = data.guild_id;
             const guild = this.client.guilds.get(data.guild_id);
-            if (!guild) this.client.emit("warn", `Missing guild for VoiceState ${this.id}`);
+            if (!guild && !this.guild) this.client.emit("warn", `Missing guild for VoiceState ${this.id}`);
             else this.guild = guild;
         }
         if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);

@@ -15,6 +15,7 @@ import Permission from "./Permission";
 import VoiceState from "./VoiceState";
 import StageInstance from "./StageInstance";
 import Channel from "./Channel";
+import StageChannel from "./StageChannel";
 import type {
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
@@ -272,8 +273,10 @@ export default class Guild extends Base {
             for (const voiceState of data.voice_states) {
                 if (!this.members.has(voiceState.user_id) || !voiceState.channel_id) continue;
                 voiceState.guild_id = this.id;
-                this.voiceStates.update({ ...voiceState, id: voiceState.user_id });
-                const channel = this.channels.get(voiceState.channel_id);
+                const state = this.voiceStates.update({ ...voiceState, id: voiceState.user_id });
+                state.guild = this;
+                const channel = this.channels.get(voiceState.channel_id) as VoiceChannel | StageChannel;
+                state.channel = channel;
                 const member = this.members.update({ id: voiceState.user_id, deaf: voiceState.deaf, mute: voiceState.mute }, this.id);
                 if (channel && "voiceMembers" in channel) channel.voiceMembers.add(member);
                 // @TODO voice

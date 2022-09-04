@@ -119,9 +119,9 @@ export default class Webhooks {
             json:   {
                 allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
+                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : undefined,
                 content:          options.content,
-                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : []
+                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : undefined
             },
             query,
             files
@@ -167,9 +167,9 @@ export default class Webhooks {
                 allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
                 avatar_url:       options.avatarURL,
-                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
+                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : undefined,
                 content:          options.content,
-                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : [],
+                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : undefined,
                 flags:            options.flags,
                 thread_name:      options.threadName,
                 tts:              options.tts,

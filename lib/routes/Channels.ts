@@ -149,9 +149,9 @@ export default class Channels {
             json:   {
                 allowed_mentions:  this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:       options.attachments,
-                components:        options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
+                components:        options.components ? this.#manager.client.util.componentsToRaw(options.components) : undefined,
                 content:           options.content,
-                embeds:            options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : [],
+                embeds:            options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : undefined,
                 flags:             options.flags,
                 sticker_ids:       options.stickerIDs,
                 message_reference: !options.messageReference ? undefined : {
@@ -351,9 +351,9 @@ export default class Channels {
             json:   {
                 allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
                 attachments:      options.attachments,
-                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : [],
+                components:       options.components ? this.#manager.client.util.componentsToRaw(options.components) : undefined,
                 content:          options.content,
-                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : [],
+                embeds:           options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : undefined,
                 flags:            options.flags
             },
             files
@@ -730,9 +730,9 @@ export default class Channels {
                 message:               {
                     allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.message.allowedMentions),
                     attachments:      options.message.attachments,
-                    components:       options.message.components ? this.#manager.client.util.componentsToRaw(options.message.components) : [],
+                    components:       options.message.components ? this.#manager.client.util.componentsToRaw(options.message.components) : undefined,
                     content:          options.message.content,
-                    embeds:           options.message.embeds ? this.#manager.client.util.embedsToRaw(options.message.embeds) : [],
+                    embeds:           options.message.embeds ? this.#manager.client.util.embedsToRaw(options.message.embeds) : undefined,
                     flags:            options.message.flags,
                     sticker_ids:      options.message.stickerIDs
                 },
