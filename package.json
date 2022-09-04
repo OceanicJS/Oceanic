@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "eslint lib --ext .ts",
     "lint:fix": "eslint lib --ext .ts --fix",
-    "prepare": "node build"
+    "prepublishOnly": "node build"
   },
   "repository": {
     "type": "git",
