@@ -61,18 +61,13 @@ export default class VoiceState extends Base {
             this.channelID = data.channel_id;
             if (data.channel_id === null) this.channel = null;
             else {
-                const ch = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
-                if (!ch) {
-                    if (!this.channel || this.channel.id !== data.channel_id) this.client.emit("warn", `Missing channel for VoiceState ${this.id}`);
-                } else this.channel = ch;
+                this.channel = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id)!;
             }
         }
         if (data.deaf !== undefined) this.deaf = data.deaf;
         if (data.guild_id !== undefined) {
             this.guildID = data.guild_id;
-            const guild = this.client.guilds.get(data.guild_id);
-            if (!guild && !this.guild) this.client.emit("warn", `Missing guild for VoiceState ${this.id}`);
-            else this.guild = guild;
+            this.guild = this.client.guilds.get(data.guild_id)!;
         }
         if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);
         if (data.mute !== undefined) this.mute = data.mute;
