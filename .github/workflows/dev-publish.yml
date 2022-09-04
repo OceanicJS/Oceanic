@@ -16,7 +16,7 @@ jobs:
       run: |
         git config user.email "<>"
         git config user.name "GitHub Actions"
-        npm version patch
+        npm --no-git-tag-version version patch
         hash=$(git rev-parse --short dev)
         version=$(jq -r .version package.json)
         v="$version-dev.$hash"
