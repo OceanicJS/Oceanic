@@ -321,6 +321,7 @@ export default class Guild extends Base {
         if (data.explicit_content_filter !== undefined) this.explicitContentFilter = data.explicit_content_filter;
         if (data.features !== undefined) this.features = data.features;
         if (data.icon !== undefined) this.icon = data.icon;
+        if (data.joined_at !== undefined) this.joinedAt = new Date(data.joined_at);
         if (data.max_members !== undefined) this.maxMembers = data.max_members;
         if (data.max_presences !== undefined) this.maxPresences = data.max_presences;
         if (data.max_video_channel_users !== undefined) this.maxVideoChannelUsers = data.max_video_channel_users;
