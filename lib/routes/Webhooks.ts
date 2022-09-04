@@ -176,9 +176,7 @@ export default class Webhooks {
                 username:         options.username
             },
             files
-        }).then(res => {
-            if (options.wait && res !== null) return new Message(res, this.#manager.client);
-        });
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
@@ -197,9 +195,7 @@ export default class Webhooks {
             path:   Routes.WEBHOOK_PLATFORM(id, token, "github"),
             query,
             json:   options
-        }).then(res => {
-            if (options.wait && res !== null) return new Message(res, this.#manager.client);
-        });
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
@@ -218,9 +214,7 @@ export default class Webhooks {
             path:   Routes.WEBHOOK_PLATFORM(id, token, "slack"),
             query,
             json:   options
-        }).then(res => {
-            if (options.wait && res !== null) return new Message(res, this.#manager.client);
-        });
+        }).then(data => new Message<T>(data, this.#manager.client));
     }
 
     /**
