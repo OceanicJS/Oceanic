@@ -91,6 +91,10 @@ export default class Client extends TypedEmitter<ClientEvents> {
         else return this._application;
     }
 
+    get uptime() {
+        return this.startTime ? Date.now() - this.startTime : 0;
+    }
+
     /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. **/
     get user() {
         if (!this._user) throw new Error("Cannot access `client.user` without having at least one shard marked as READY.");

@@ -11,12 +11,12 @@ import type {
     RawModalSubmitInteraction
 } from "../types/interactions";
 import { InteractionTypes } from "../Constants";
-import Properties from "../util/Properties";
 import type { Uncached } from "../types/shared";
 import type { JSONInteraction } from "../types/json";
 
 export default class Interaction extends Base {
-    protected acknowledged!: boolean;
+    /** If this interaction has been acknowledged. */
+    acknowledged: boolean;
     /** The application this interaction is for. This can be a partial object with only an `id` property. */
     application: ClientApplication | Uncached;
     /** The token of this interaction. */
@@ -27,7 +27,7 @@ export default class Interaction extends Base {
     version: 1;
     constructor(data: AnyRawInteraction, client: Client) {
         super(data.id, client);
-        Properties.looseDefine(this, "acknowledged", false, true);
+        this.acknowledged = false;
         this.application = client.application?.id === data.application_id ? client.application : { id: data.application_id };
         this.token = data.token;
         this.type = data.type;
