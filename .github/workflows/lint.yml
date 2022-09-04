@@ -1,12 +1,12 @@
-name: Lint
-on: [push, pull_request]
+name: ESLint
+on: [push, pull_request, workflow_call]
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install Dependencies
       run: npm i
     - name: Run ESLint

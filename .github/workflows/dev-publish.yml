@@ -1,0 +1,29 @@
+name: Publish Dev Version
+on: [push, workflow_dispatch]
+
+jobs:
+  lint:
+    name: ESLint
+    uses: ./.github/workflows/lint.yml
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+  publish:
+    runs-on: ubuntu-latest
+    needs: [lint, build]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Dependencies
+      run: npm i
+    - name: Set Version
+      run: |
+        hash=$(git rev-parse --short dev)
+        version=$(jq -r .version package.json)
+        v="$version+$hash"
+        echo "Setting Version: $v"
+        contents=$(jq --arg version "$v" '.version = $version' package.json) && echo -E "${contents}" > package.json && echo -E "${contents}" > dist/package.json
+    - uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
+        tag: dev
+        dry-run: true
