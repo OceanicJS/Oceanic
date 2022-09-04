@@ -19,7 +19,7 @@ jobs:
         npm version patch
         hash=$(git rev-parse --short dev)
         version=$(jq -r .version package.json)
-        v="$version-dev+$hash"
+        v="$version-dev.$hash"
         echo "Setting Version: $v"
         contents=$(jq --arg version "$v" '.version = $version' package.json) && echo -E "${contents}" > package.json
     - uses: JS-DevTools/npm-publish@v1
