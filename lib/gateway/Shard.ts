@@ -730,6 +730,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "MESSAGE_UPDATE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
                 const oldMessage = channel && "messages" in channel ? channel.messages.get(packet.d.id)?.toJSON() || null : null;
+                if (!oldMessage && !packet.d.author) {
+                    this.client.emit("debug", `Got partial MESSAGE_UPDATE: ${packet.d.id} for channel ${packet.d.channel_id}, discarding.`);
+                    break;
+                }
                 const message = channel && "messages" in channel ? channel.messages.update(packet.d) : new Message(packet.d as RawMessage, this.client);
                 this.client.emit("messageUpdate", message, oldMessage);
                 break;
