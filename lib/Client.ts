@@ -63,7 +63,10 @@ export default class Client extends TypedEmitter<ClientEvents> {
             },
             auth:             options?.auth || null,
             collectionLimits: {
-                members:  options?.collectionLimits?.members ?? 1000,
+                members: options?.collectionLimits?.members === undefined ?  Infinity : typeof options.collectionLimits.members === "object" ? {
+                    unknown: Infinity,
+                    ...options.collectionLimits.members
+                } : options.collectionLimits.members,
                 messages: options?.collectionLimits?.messages ?? 100,
                 users:    options?.collectionLimits?.users ?? Infinity
             },

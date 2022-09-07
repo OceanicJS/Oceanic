@@ -203,7 +203,7 @@ export default class Guild extends Base {
         this.joinedAt = null;
         this.large = (data.member_count || data.approximate_member_count || 0) >= client.shards.options.largeThreshold;
         this.memberCount = data.member_count || data.approximate_member_count || 0;
-        this.members = new TypedCollection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? Infinity);
+        this.members = new TypedCollection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? client.options.collectionLimits.members.unknown ?? Infinity);
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
         this.nsfwLevel = data.nsfw_level;
