@@ -105,18 +105,7 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a channel option value (id).
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getChannelID(name: string, required?: false): string | undefined;
-    getChannelID(name: string, required: true): string;
-    getChannelID(name: string, required?: boolean) {
-        return  this.getChannel(name, required as false)?.value;
-    }
-
-    /**
-     * Get a channel option value (channel).
+     * Get a channel option value.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
@@ -154,7 +143,7 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a user option value (member).
+     * Get a user option value (as a member).
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the member cannot be found.
      */
@@ -181,17 +170,6 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a mentionable option (id).
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getMentionableID(name: string, required?: false): string | undefined;
-    getMentionableID(name: string, required: true): string;
-    getMentionableID(name: string, required?: boolean) {
-        return  this.getMentionable(name, required as false)?.value;
-    }
-
-    /**
      * Get a mentionable option (channel, user, role).
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the value cannot be found.
@@ -203,7 +181,9 @@ export default class InteractionOptionsWrapper {
         let val: string | undefined;
         if (!(val = this.getChannel(name, required as false)?.value)) return undefined;
         const ch = this.resolved.channels.get(val);
-        if (!ch && required) throw new Error(`channel not present for required option: ${name}`);
+        const role = this.resolved.roles.get(val);
+        const user = this.resolved.users.get(val);
+        if ((!ch && !role && !user) && required) throw new Error(`value not present for required option: ${name}`);
         return ch;
     }
 
@@ -238,17 +218,6 @@ export default class InteractionOptionsWrapper {
     getRole(name: string, required: true): InteractionOptionsRole;
     getRole(name: string, required?: boolean) {
         return this._getOption(name, required, ApplicationCommandOptionTypes.ROLE);
-    }
-
-    /**
-     * Get a role option value (id).
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getRoleID(name: string, required?: false): string | undefined;
-    getRoleID(name: string, required: true): string;
-    getRoleID(name: string, required?: boolean) {
-        return  this.getRole(name, required as false)?.value;
     }
 
     /**
@@ -323,18 +292,7 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a user option value (id).
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getUserID(name: string, required?: false): string | undefined;
-    getUserID(name: string, required: true): string;
-    getUserID(name: string, required?: boolean) {
-        return  this.getUser(name, required as false)?.value;
-    }
-
-    /**
-     * Get a user option value (user).
+     * Get a user option value.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the user cannot be found.
      */
