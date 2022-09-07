@@ -42,32 +42,43 @@ export default class InteractionOptionsWrapper {
         else return opt;
     }
 
-    /**
-     * Get an attachment option.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getAttachment(name: string, required?: false): InteractionOptionsAttachment | undefined;
-    getAttachment(name: string, required: true): InteractionOptionsAttachment;
-    getAttachment(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.ATTACHMENT);
-    }
-
 
     /**
      * Get an attachment option value.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the attachment cannot be found.
      */
-    getAttachmentValue(name: string, required?: false): Attachment | undefined;
-    getAttachmentValue(name: string, required: true): Attachment;
-    getAttachmentValue(name: string, required?: boolean) {
+    getAttachment(name: string, required?: false): Attachment | undefined;
+    getAttachment(name: string, required: true): Attachment;
+    getAttachment(name: string, required?: boolean) {
         if (this.resolved === null) throw new Error("attempt to use getAttachmentValue with null resolved");
         let val: string | undefined;
-        if (!(val = this.getAttachment(name, required as false)?.value)) return undefined;
+        if (!(val = this.getAttachmentOption(name, required as false)?.value)) return undefined;
         const a = this.resolved.attachments.get(val);
         if (!a && required) throw new Error(`attachment not present for required option: ${name}`);
         return a;
+    }
+
+    /**
+     * Get an attachment option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getAttachmentOption(name: string, required?: false): InteractionOptionsAttachment | undefined;
+    getAttachmentOption(name: string, required: true): InteractionOptionsAttachment;
+    getAttachmentOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.ATTACHMENT);
+    }
+
+    /**
+     * Get a boolean option value.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getBoolean(name: string, required?: false): boolean | undefined;
+    getBoolean(name: string, required: true): boolean;
+    getBoolean(name: string, required?: boolean) {
+        return this.getBooleanOption(name, required as false)?.value;
     }
 
 
@@ -76,32 +87,10 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getBoolean(name: string, required?: false): InteractionOptionsBoolean | undefined;
-    getBoolean(name: string, required: true): InteractionOptionsBoolean;
-    getBoolean(name: string, required?: boolean) {
+    getBooleanOption(name: string, required?: false): InteractionOptionsBoolean | undefined;
+    getBooleanOption(name: string, required: true): InteractionOptionsBoolean;
+    getBooleanOption(name: string, required?: boolean) {
         return this._getOption(name, required, ApplicationCommandOptionTypes.BOOLEAN);
-    }
-
-    /**
-     * Get a boolean option value.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getBooleanValue(name: string, required?: false): boolean | undefined;
-    getBooleanValue(name: string, required: true): boolean;
-    getBooleanValue(name: string, required?: boolean) {
-        return this.getBoolean(name, required as false)?.value;
-    }
-
-    /**
-     * Get a channel option.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getChannel(name: string, required?: false): InteractionOptionsChannel | undefined;
-    getChannel(name: string, required: true): InteractionOptionsChannel;
-    getChannel(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.CHANNEL);
     }
 
     /**
@@ -109,26 +98,37 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
-    getChannelValue<T extends AnyChannel = AnyChannel>(name: string, required?: false): T | undefined;
-    getChannelValue<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
-    getChannelValue(name: string, required?: boolean) {
+    getChannel<T extends AnyChannel = AnyChannel>(name: string, required?: false): T | undefined;
+    getChannel<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
+    getChannel(name: string, required?: boolean) {
         if (this.resolved === null) throw new Error("attempt to use getChannelValue with null resolved");
         let val: string | undefined;
-        if (!(val = this.getChannel(name, required as false)?.value)) return undefined;
+        if (!(val = this.getChannelOption(name, required as false)?.value)) return undefined;
         const ch = this.resolved.channels.get(val);
         if (!ch && required) throw new Error(`channel not present for required option: ${name}`);
         return ch;
     }
 
     /**
-     * Get an integer option.
+     * Get a channel option.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getInteger(name: string, required?: false): InteractionOptionsInteger | undefined;
-    getInteger(name: string, required: true): InteractionOptionsInteger;
+    getChannelOption(name: string, required?: false): InteractionOptionsChannel | undefined;
+    getChannelOption(name: string, required: true): InteractionOptionsChannel;
+    getChannelOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.CHANNEL);
+    }
+
+    /**
+     * Get an integer option value.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getInteger(name: string, required?: false): number | undefined;
+    getInteger(name: string, required: true): number;
     getInteger(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.INTEGER);
+        return this.getIntegerOption(name, required as false)?.value;
     }
 
     /**
@@ -136,10 +136,10 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getIntegerValue(name: string, required?: false): number | undefined;
-    getIntegerValue(name: string, required: true): number;
-    getIntegerValue(name: string, required?: boolean) {
-        return this.getInteger(name, required as false)?.value;
+    getIntegerOption(name: string, required?: false): InteractionOptionsInteger | undefined;
+    getIntegerOption(name: string, required: true): InteractionOptionsInteger;
+    getIntegerOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.INTEGER);
     }
 
     /**
@@ -147,39 +147,28 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the member cannot be found.
      */
-    getMemberValue(name: string, required?: false): Member | undefined;
-    getMemberValue(name: string, required: true): Member;
-    getMemberValue(name: string, required?: boolean) {
+    getMember(name: string, required?: false): Member | undefined;
+    getMember(name: string, required: true): Member;
+    getMember(name: string, required?: boolean) {
         if (this.resolved === null) throw new Error("attempt to use getMemberValue with null resolved");
         let val: string | undefined;
-        if (!(val = this.getUser(name, required as false)?.value)) return undefined;
+        if (!(val = this.getUserOption(name, required as false)?.value)) return undefined;
         const ch = this.resolved.members.get(val);
         if (!ch && required) throw new Error(`member not present for required option: ${name}`);
         return ch;
     }
 
     /**
-     * Get a mentionable option.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getMentionable(name: string, required?: false): InteractionOptionsMentionable | undefined;
-    getMentionable(name: string, required: true): InteractionOptionsMentionable;
-    getMentionable(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.MENTIONABLE);
-    }
-
-    /**
-     * Get a mentionable option (channel, user, role).
+     * Get a mentionable option value (channel, user, role).
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the value cannot be found.
      */
-    getMentionableValue<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required?: false): T | undefined;
-    getMentionableValue<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
-    getMentionableValue(name: string, required?: boolean) {
+    getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required?: false): T | undefined;
+    getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
+    getMentionable(name: string, required?: boolean) {
         if (this.resolved === null) throw new Error("attempt to use getMentionableValue with null resolved");
         let val: string | undefined;
-        if (!(val = this.getChannel(name, required as false)?.value)) return undefined;
+        if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) return undefined;
         const ch = this.resolved.channels.get(val);
         const role = this.resolved.roles.get(val);
         const user = this.resolved.users.get(val);
@@ -188,14 +177,14 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a number option.
+     * Get a mentionable option.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getNumber(name: string, required?: false): InteractionOptionsNumber | undefined;
-    getNumber(name: string, required: true): InteractionOptionsNumber;
-    getNumber(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
+    getMentionableOption(name: string, required?: false): InteractionOptionsMentionable | undefined;
+    getMentionableOption(name: string, required: true): InteractionOptionsMentionable;
+    getMentionableOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.MENTIONABLE);
     }
 
     /**
@@ -203,10 +192,37 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getNumberValue(name: string, required?: false): number | undefined;
-    getNumberValue(name: string, required: true): number;
-    getNumberValue(name: string, required?: boolean) {
-        return this.getNumber(name, required as false)?.value;
+    getNumber(name: string, required?: false): number | undefined;
+    getNumber(name: string, required: true): number;
+    getNumber(name: string, required?: boolean) {
+        return this.getNumberOption(name, required as false)?.value;
+    }
+
+    /**
+     * Get a number option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getNumberOption(name: string, required?: false): InteractionOptionsNumber | undefined;
+    getNumberOption(name: string, required: true): InteractionOptionsNumber;
+    getNumberOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
+    }
+
+    /**
+     * Get a role option value.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present, or if the role cannot be found.
+     */
+    getRole(name: string, required?: false): Role | undefined;
+    getRole(name: string, required: true): Role;
+    getRole(name: string, required?: boolean) {
+        if (this.resolved === null) throw new Error("attempt to use getRoleValue with null resolved");
+        let val: string | undefined;
+        if (!(val = this.getRoleOption(name, required as false)?.value)) return undefined;
+        const ch = this.resolved.roles.get(val);
+        if (!ch && required) throw new Error(`role not present for required option: ${name}`);
+        return ch;
     }
 
     /**
@@ -214,37 +230,21 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getRole(name: string, required?: false): InteractionOptionsRole | undefined;
-    getRole(name: string, required: true): InteractionOptionsRole;
-    getRole(name: string, required?: boolean) {
+    getRoleOption(name: string, required?: false): InteractionOptionsRole | undefined;
+    getRoleOption(name: string, required: true): InteractionOptionsRole;
+    getRoleOption(name: string, required?: boolean) {
         return this._getOption(name, required, ApplicationCommandOptionTypes.ROLE);
     }
 
     /**
-     * Get a role option value (role).
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present, or if the role cannot be found.
-     */
-    getRoleValue(name: string, required?: false): Role | undefined;
-    getRoleValue(name: string, required: true): Role;
-    getRoleValue(name: string, required?: boolean) {
-        if (this.resolved === null) throw new Error("attempt to use getRoleValue with null resolved");
-        let val: string | undefined;
-        if (!(val = this.getRole(name, required as false)?.value)) return undefined;
-        const ch = this.resolved.roles.get(val);
-        if (!ch && required) throw new Error(`role not present for required option: ${name}`);
-        return ch;
-    }
-
-    /**
-     * Get a string option.
+     * Get a string option value.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getString(name: string, required?: false): InteractionOptionsString | undefined;
-    getString(name: string, required: true): InteractionOptionsString;
+    getString<T extends string = string>(name: string, required?: false): T | undefined;
+    getString<T extends string = string>(name: string, required: true): T;
     getString(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.STRING);
+        return this.getStringOption(name, required as false)?.value;
     }
 
     /**
@@ -252,10 +252,10 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getStringValue<T extends string = string>(name: string, required?: false): T | undefined;
-    getStringValue<T extends string = string>(name: string, required: true): T;
-    getStringValue(name: string, required?: boolean) {
-        return this.getString(name, required as false)?.value;
+    getStringOption(name: string, required?: false): InteractionOptionsString | undefined;
+    getStringOption(name: string, required: true): InteractionOptionsString;
+    getStringOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.STRING);
     }
 
     /**
@@ -281,29 +281,29 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a user option.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getUser(name: string, required?: false): InteractionOptionsUser | undefined;
-    getUser(name: string, required: true): InteractionOptionsUser;
-    getUser(name: string, required?: boolean) {
-        return this._getOption(name, required, ApplicationCommandOptionTypes.USER);
-    }
-
-    /**
      * Get a user option value.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the user cannot be found.
      */
-    getUserValue(name: string, required?: false): User | undefined;
-    getUserValue(name: string, required: true): User;
-    getUserValue(name: string, required?: boolean) {
+    getUser(name: string, required?: false): User | undefined;
+    getUser(name: string, required: true): User;
+    getUser(name: string, required?: boolean) {
         if (this.resolved === null) throw new Error("attempt to use getUserValue with null resolved");
         let val: string | undefined;
-        if (!(val = this.getUser(name, required as false)?.value)) return undefined;
+        if (!(val = this.getUserOption(name, required as false)?.value)) return undefined;
         const ch = this.resolved.users.get(val);
         if (!ch && required) throw new Error(`user not present for required option: ${name}`);
         return ch;
+    }
+
+    /**
+     * Get a user option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getUserOption(name: string, required?: false): InteractionOptionsUser | undefined;
+    getUserOption(name: string, required: true): InteractionOptionsUser;
+    getUserOption(name: string, required?: boolean) {
+        return this._getOption(name, required, ApplicationCommandOptionTypes.USER);
     }
 }
