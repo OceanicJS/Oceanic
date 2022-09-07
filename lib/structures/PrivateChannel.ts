@@ -13,7 +13,7 @@ import type {
     RawPrivateChannel
 } from "../types/channels";
 import type { Uncached } from "../types/shared";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type { JSONPrivateChannel } from "../types/json";
 
 /** Represents a direct message with a user. */
@@ -21,13 +21,13 @@ export default class PrivateChannel extends Channel {
     /** The last message sent in this channel, if any. This can be a partial object with only an `id` property. */
     lastMessage: Message | Uncached | null;
     /** The cached messages in this channel. */
-    messages: Collection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message>;
     /** The other user in this direct message. */
     recipient: User;
     declare type: ChannelTypes.DM;
     constructor(data: RawPrivateChannel, client: Client) {
         super(data, client);
-        this.messages = new Collection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.lastMessage = null;
         this.recipient = client.users.update(data.recipients[0]);
     }

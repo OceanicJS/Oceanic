@@ -7,7 +7,7 @@ import type Member from "./Member";
 import type { ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type {
     AnyThreadChannel,
     CreateMessageOptions,
@@ -37,7 +37,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     /** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
     messageCount: number;
     /** The cached messages in this channel. */
-    messages: Collection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message>;
     /** The creator of this thread. */
     owner: User | Uncached;
     declare parent: TextChannel | AnnouncementChannel;
@@ -56,7 +56,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         this.memberCount = 0;
         this.members = [];
         this.messageCount = 0;
-        this.messages = new Collection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.owner = { id: data.owner_id };
         this.rateLimitPerUser = data.rate_limit_per_user;
         this.threadMetadata = {

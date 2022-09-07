@@ -1,6 +1,6 @@
 import { ChannelTypes, GATEWAY_VERSION } from "./Constants";
 import RESTManager from "./rest/RESTManager";
-import Collection from "./util/Collection";
+import TypedCollection from "./util/TypedCollection";
 import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import User from "./structures/User";
@@ -34,18 +34,18 @@ export default class Client extends TypedEmitter<ClientEvents> {
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
-    groupChannels: Collection<string, RawGroupChannel, GroupChannel>;
+    groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
-    guilds: Collection<string, RawGuild, Guild>;
+    guilds: TypedCollection<string, RawGuild, Guild>;
     options: ClientInstanceOptions;
-    privateChannels: Collection<string, RawPrivateChannel, PrivateChannel>;
+    privateChannels: TypedCollection<string, RawPrivateChannel, PrivateChannel>;
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
     startTime = 0;
     threadGuildMap: Record<string, string>;
-    unavailableGuilds: Collection<string, RawUnavailableGuild, UnavailableGuild>;
-    users: Collection<string, RawUser, User>;
+    unavailableGuilds: TypedCollection<string, RawUnavailableGuild, UnavailableGuild>;
+    users: TypedCollection<string, RawUser, User>;
     util: Util;
     voiceConnections: VoiceConnectionManager;
     /**
@@ -71,16 +71,16 @@ export default class Client extends TypedEmitter<ClientEvents> {
             defaultImageSize:   options?.defaultImageSize || 4096
         };
         this.channelGuildMap = {};
-        this.groupChannels = new Collection(GroupChannel, this, 10);
-        this.guilds = new Collection(Guild, this);
-        this.privateChannels = new Collection(PrivateChannel, this, 25);
+        this.groupChannels = new TypedCollection(GroupChannel, this, 10);
+        this.guilds = new TypedCollection(Guild, this);
+        this.privateChannels = new TypedCollection(PrivateChannel, this, 25);
         this.ready = false;
         this.guildShardMap = {};
         this.rest = new RESTManager(this, options?.rest);
         this.shards = new ShardManager(this, options?.gateway);
         this.threadGuildMap = {};
-        this.unavailableGuilds = new Collection(UnavailableGuild, this);
-        this.users = new Collection(User, this, this.options.collectionLimits.users);
+        this.unavailableGuilds = new TypedCollection(UnavailableGuild, this);
+        this.users = new TypedCollection(User, this, this.options.collectionLimits.users);
         this.util = new Util(this);
         this.voiceConnections = new VoiceConnectionManager(this);
     }

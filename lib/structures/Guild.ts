@@ -30,7 +30,7 @@ import type {
 import { AllPermissions, Permissions } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type {
     AnyGuildChannel,
     AnyGuildChannelWithoutThreads,
@@ -93,11 +93,11 @@ export default class Guild extends Base {
     /** The approximate number of non-offline members in this guild (if retreived with counts). */
     approximatePresenceCount?: number;
     /** The auto moderation rules in this guild. */
-    autoModerationRules: Collection<string, RawAutoModerationRule, AutoModerationRule>;
+    autoModerationRules: TypedCollection<string, RawAutoModerationRule, AutoModerationRule>;
     /** The hash of this guild's banner. */
     banner: string | null;
     /** The channels in this guild. */
-    channels: Collection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
+    channels: TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
     /** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
     defaultMessageNotifications: DefaultMessageNotificationLevels;
     /** The description of this guild. */
@@ -113,7 +113,7 @@ export default class Guild extends Base {
     /** The icon hash of this guild. */
     icon: string | null;
     /** The integrations in this guild. */
-    integrations: Collection<string, RawIntegration, Integration>;
+    integrations: TypedCollection<string, RawIntegration, Integration>;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -127,7 +127,7 @@ export default class Guild extends Base {
     /** The number of members in this guild. */
     memberCount: number;
     /** The cached members in this guild. */
-    members: Collection<string, RawMember, Member, [guildID: string]>;
+    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
     /** The required [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) for moderators of this guild. */
     mfaLevel: MFALevels;
     /** The name of this guild. */
@@ -153,15 +153,15 @@ export default class Guild extends Base {
     /** @deprecated The region of this guild.*/
     region?: string | null;
     /** The roles in this guild. */
-    roles: Collection<string, RawRole, Role, [guildID: string]>;
+    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
     /** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
     rulesChannel: TextChannel | Uncached | null;
     /** The scheduled events in this guild. */
-    scheduledEvents: Collection<string, RawScheduledEvent, GuildScheduledEvent>;
+    scheduledEvents: TypedCollection<string, RawScheduledEvent, GuildScheduledEvent>;
     /** The invite splash hash of this guild. */
     splash: string | null;
     /** The stage instances in this guild. */
-    stageInstances: Collection<string, RawStageInstance, StageInstance>;
+    stageInstances: TypedCollection<string, RawStageInstance, StageInstance>;
     /** The custom stickers of this guild. */
     stickers: Array<Sticker>;
     /** The id of the channel where welcome messages and boosts notices are posted. */
@@ -169,7 +169,7 @@ export default class Guild extends Base {
     /** The [flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags) for the system channel. */
     systemChannelFlags: number;
     /** The threads in this guild. */
-    threads: Collection<string, RawThreadChannel, AnyThreadChannel>;
+    threads: TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
     /** If this guild is unavailable. */
     unavailable: boolean;
     /** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
@@ -177,7 +177,7 @@ export default class Guild extends Base {
     /** The [verfication level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
     /** The voice states of members in voice channels. */
-    voiceStates: Collection<string, RawVoiceState, VoiceState>;
+    voiceStates: TypedCollection<string, RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
     welcomeScreen?: WelcomeScreen;
     /** The id of the channel the widget will generate an invite to, or `null` if set to no invite. */
@@ -189,9 +189,9 @@ export default class Guild extends Base {
         this.afkChannel = null;
         this.afkTimeout = 0;
         this.application = null;
-        this.autoModerationRules = new Collection(AutoModerationRule, client);
+        this.autoModerationRules = new TypedCollection(AutoModerationRule, client);
         this.banner = null;
-        this.channels = new Collection(GuildChannel, client) as Collection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
+        this.channels = new TypedCollection(GuildChannel, client) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
@@ -199,11 +199,11 @@ export default class Guild extends Base {
         this.explicitContentFilter = data.explicit_content_filter;
         this.features = [];
         this.icon = null;
-        this.integrations = new Collection(Integration, client);
+        this.integrations = new TypedCollection(Integration, client);
         this.joinedAt = null;
         this.large = (data.member_count || data.approximate_member_count || 0) >= client.shards.options.largeThreshold;
         this.memberCount = data.member_count || data.approximate_member_count || 0;
-        this.members = new Collection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? Infinity);
+        this.members = new TypedCollection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? Infinity);
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
         this.nsfwLevel = data.nsfw_level;
@@ -212,19 +212,19 @@ export default class Guild extends Base {
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
         this.premiumTier = data.premium_tier;
         this.publicUpdatesChannel = null;
-        this.roles = new Collection(Role, client);
+        this.roles = new TypedCollection(Role, client);
         this.rulesChannel = null;
-        this.scheduledEvents = new Collection(GuildScheduledEvent, client);
+        this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client);
         this.splash = null;
-        this.stageInstances = new Collection(StageInstance, client);
+        this.stageInstances = new TypedCollection(StageInstance, client);
         this.stickers = [];
         this.systemChannel = null;
         this.systemChannelFlags = data.system_channel_flags;
-        this.threads = new Collection(ThreadChannel, client) as Collection<string, RawThreadChannel, AnyThreadChannel>;
+        this.threads = new TypedCollection(ThreadChannel, client) as TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
-        this.voiceStates = new Collection(VoiceState, client);
+        this.voiceStates = new TypedCollection(VoiceState, client);
         data.roles.forEach(role => this.roles.update(role, data.id));
         this.update(data);
 

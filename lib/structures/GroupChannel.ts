@@ -17,7 +17,7 @@ import type {
     RawMessage
 } from "../types/channels";
 import type { RawUser } from "../types/users";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type { Uncached } from "../types/shared";
 import type { JSONGroupChannel } from "../types/json";
 
@@ -32,7 +32,7 @@ export default class GroupChannel extends Channel {
     /** If this group channel is managed by an application. */
     managed: boolean;
     /** The cached messages in this channel. */
-    messages: Collection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message>;
     /** The name of this group channel. */
     name: string | null;
     /** The nicknames used when creating this group channel. */
@@ -40,7 +40,7 @@ export default class GroupChannel extends Channel {
     /** The owner of this group channel. This can be a partial object with just an `id`. */
     owner: User | Uncached;
     /** The other recipients in this group channel. */
-    recipients: Collection<string, RawUser, User>;
+    recipients: TypedCollection<string, RawUser, User>;
     declare type: ChannelTypes.GROUP_DM;
     constructor(data: RawGroupChannel, client: Client) {
         super(data, client);
@@ -48,11 +48,11 @@ export default class GroupChannel extends Channel {
         this.icon = null;
         this.lastMessage = null;
         this.managed = false;
-        this.messages = new Collection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.name = data.name;
         this.nicks = [];
         this.owner = { id: data.owner_id };
-        this.recipients = new Collection(User, client);
+        this.recipients = new TypedCollection(User, client);
         data.recipients.forEach(r => this.recipients.add(client.users.update(r)));
         this.update(data);
     }

@@ -86,7 +86,7 @@ export default class Channels {
      * @param recipient The ID of the recipient of the direct message.
      */
     async createDM(recipient: string) {
-        let cache: PrivateChannel | null;
+        let cache: PrivateChannel | undefined;
         if ((cache = this.#manager.client.privateChannels.find(ch => ch.recipient.id === recipient))) return cache;
         return this.#manager.authRequest<RawPrivateChannel>({
             method: "POST",

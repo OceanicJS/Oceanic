@@ -51,8 +51,8 @@ import type { Uncached } from "../types/shared";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import Interaction from "../structures/Interaction";
-import type Collection from "../util/Collection";
 import { is } from "../util/Util";
+import TypedCollection from "../util/TypedCollection";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
@@ -831,7 +831,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 const channel = this.client.getChannel(packet.d.parent_id!);
                 if (channel) {
-                    if ("threads" in channel) (channel.threads as Collection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
+                    if ("threads" in channel) (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
                     if (channel.type === ChannelTypes.GUILD_FORUM) channel.lastThread = thread;
                 }
                 this.client.emit("threadCreate", thread);
@@ -940,7 +940,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.client.threadGuildMap[packet.d.id] = guild.id;
                 }
                 if (channel && "threads" in channel) {
-                    const threads =  (channel.threads as Collection<string, RawThreadChannel, AnyThreadChannel>);
+                    const threads =  (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>);
                     if (threads.has(packet.d.id)) threads.update(packet.d);
                     else threads.add(thread);
                 }

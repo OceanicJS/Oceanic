@@ -7,16 +7,16 @@ import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditTextChannelOptions, RawPrivateThreadChannel, RawPublicThreadChannel, RawTextChannel } from "../types/channels";
 import type { JSONTextChannel } from "../types/json";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild text channel. */
 export default class TextChannel extends TextableChannel<TextChannel> {
     /** The threads in this channel. */
-    threads: Collection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+    threads: TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
     declare type: ChannelTypes.GUILD_TEXT;
     constructor(data: RawTextChannel, client: Client) {
         super(data, client);
-        this.threads = new Collection(ThreadChannel, client) as Collection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+        this.threads = new TypedCollection(ThreadChannel, client) as TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
     }
 
     /**

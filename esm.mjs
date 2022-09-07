@@ -54,6 +54,7 @@ const Team = (await import("./dist/lib/structures/Team.js")).default.default;
 const TextableChannel = (await import("./dist/lib/structures/TextableChannel.js")).default.default;
 const TextChannel = (await import("./dist/lib/structures/TextChannel.js")).default.default;
 const ThreadChannel = (await import("./dist/lib/structures/ThreadChannel.js")).default.default;
+const TypedCollection = (await import("./dist/lib/util/TypedCollection.js")).default.default;
 const TypedEmitter = (await import("./dist/lib/util/TypedEmitter.js")).default.default;
 const UnavailableGuild = (await import("./dist/lib/structures/UnavailableGuild.js")).default.default;
 const User = (await import("./dist/lib/structures/User.js")).default.default;
@@ -120,6 +121,7 @@ export {
     TextableChannel,
     TextChannel,
     ThreadChannel,
+    TypedCollection,
     TypedEmitter,
     UnavailableGuild,
     User,

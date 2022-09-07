@@ -7,7 +7,7 @@ import Role from "./Role";
 import User from "./User";
 import Guild from "./Guild";
 import Permission from "./Permission";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type { InteractionTypes } from "../Constants";
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
 import type { ApplicationCommandInteractionData, InteractionContent, ModalData, RawApplicationCommandInteraction } from "../types/interactions";
@@ -50,12 +50,12 @@ export default class CommandInteraction extends Interaction {
             name:     data.data.name,
             options:  new InteractionOptionsWrapper([], null),
             resolved: {
-                attachments: new Collection(Attachment, client),
-                channels:    new Collection(Channel, client) as Collection<string, RawChannel, AnyChannel>,
-                members:     new Collection(Member, client),
-                messages:    new Collection(Message, client),
-                roles:       new Collection(Role, client),
-                users:       new Collection(User, client)
+                attachments: new TypedCollection(Attachment, client),
+                channels:    new TypedCollection(Channel, client) as TypedCollection<string, RawChannel, AnyChannel>,
+                members:     new TypedCollection(Member, client),
+                messages:    new TypedCollection(Message, client),
+                roles:       new TypedCollection(Role, client),
+                users:       new TypedCollection(User, client)
             },
             target:   undefined,
             targetID: data.data.target_id,

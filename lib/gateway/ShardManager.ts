@@ -2,7 +2,7 @@ import Shard from "./Shard";
 import type Client from "../Client";
 import { AllIntents, AllNonPrivilegedIntents, Intents } from "../Constants";
 import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gateway";
-import { Collection } from "@augu/collections";
+import Collection from "../util/Collection";
 
 export default class ShardManager extends Collection<number, Shard> {
     #buckets!: Record<number, number>;

@@ -13,7 +13,7 @@ import type TextChannel from "./TextChannel";
 import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import type Client from "../Client";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type { MessageTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
@@ -49,7 +49,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      */
     application?: PartialApplication | ClientApplication | Uncached;
     /** The attachments on this message. */
-    attachments: Collection<string, RawAttachment, Attachment>;
+    attachments: TypedCollection<string, RawAttachment, Attachment>;
     /** The author of this message. */
     author: User;
     /** The channel this message was created in. This can be a partial object with only an `id` property. */
@@ -111,7 +111,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     webhook?: Uncached;
     constructor(data: RawMessage, client: Client) {
         super(data.id, client);
-        this.attachments = new Collection(Attachment, client);
+        this.attachments = new TypedCollection(Attachment, client);
         this.channel = (client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
             id: data.channel_id
         }) as T;
@@ -217,9 +217,9 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             const guild = this.client.guilds.get(this.guildID!);
             if (guild) {
                 this.thread = guild.threads.update(data.thread);
-                if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) (this.channel.threads as Collection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
+                if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) (this.channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
             } else {
-                if (this.channel && "threads" in this.channel) this.thread = (this.channel.threads as Collection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
+                if (this.channel && "threads" in this.channel) this.thread = (this.channel.threads as TypedCollection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
                 else this.thread = Channel.from(data.thread, this.client);
             }
         }

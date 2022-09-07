@@ -7,7 +7,7 @@ import Permission from "./Permission";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type {
     CreateInviteOptions,
     CreateMessageOptions,
@@ -32,12 +32,12 @@ export default class VoiceChannel extends GuildChannel {
     /** The last message sent in this channel. This can be a partial object with only an `id` property. This will only be present if a message has been sent within the current session. */
     lastMessage: Message | Uncached | null;
     /** The cached messages in this channel. */
-    messages: Collection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message>;
     /** If this channel is age gated. */
     nsfw: boolean;
     declare parent: CategoryChannel | null;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The id of the voice region of the channel, `null` is automatic. */
@@ -47,19 +47,19 @@ export default class VoiceChannel extends GuildChannel {
     declare type: ChannelTypes.GUILD_VOICE;
     /** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
     videoQualityMode: VideoQualityModes;
-    voiceMembers: Collection<string, RawMember, Member, [guildID: string]>;
+    voiceMembers: TypedCollection<string, RawMember, Member, [guildID: string]>;
     constructor(data: RawVoiceChannel, client: Client) {
         super(data, client);
         this.bitrate = data.bitrate;
         this.lastMessage = data.last_message_id === null ? null : { id: data.last_message_id };
-        this.messages = new Collection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.nsfw = false;
-        this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.rtcRegion = data.rtc_region;
         this.topic = data.topic;
         this.videoQualityMode = data.video_quality_mode;
-        this.voiceMembers = new Collection(Member, client);
+        this.voiceMembers = new TypedCollection(Member, client);
         this.update(data);
     }
 

@@ -6,7 +6,7 @@ import Permission from "./Permission";
 import type { ChannelTypes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type {
     CreateInviteOptions,
     EditPermissionOptions,
@@ -24,7 +24,7 @@ export default class StageChannel extends GuildChannel {
     bitrate: number;
     declare parent: CategoryChannel | null;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The id of the voice region of the channel, `null` is automatic. */
@@ -32,15 +32,15 @@ export default class StageChannel extends GuildChannel {
     /** The topic of the channel. */
     topic: string | null;
     declare type: ChannelTypes.GUILD_STAGE_VOICE;
-    voiceMembers: Collection<string, RawMember, Member, [guildID: string]>;
+    voiceMembers: TypedCollection<string, RawMember, Member, [guildID: string]>;
     constructor(data: RawStageChannel, client: Client) {
         super(data, client);
         this.bitrate = data.bitrate;
-        this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.rtcRegion = data.rtc_region;
         this.topic = data.topic;
-        this.voiceMembers = new Collection(Member, client);
+        this.voiceMembers = new TypedCollection(Member, client);
         this.update(data);
     }
 

@@ -56,6 +56,7 @@ export { default as Team } from "./structures/Team";
 export { default as TextableChannel } from "./structures/TextableChannel";
 export { default as TextChannel } from "./structures/TextChannel";
 export { default as ThreadChannel } from "./structures/ThreadChannel";
+export { default as TypedCollection } from "./util/TypedCollection";
 export { default as TypedEmitter } from "./util/TypedEmitter";
 export { default as UnavailableGuild } from "./structures/UnavailableGuild";
 export { default as User } from "./structures/User";

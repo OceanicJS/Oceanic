@@ -19,7 +19,7 @@ import type {
     StartThreadInForumOptions,
     Uncached
 } from "../types";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 
@@ -42,7 +42,7 @@ export default class ForumChannel extends GuildChannel {
     declare parent: ForumChannel;
     declare parentID: string;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators creating threads. */
@@ -50,7 +50,7 @@ export default class ForumChannel extends GuildChannel {
     /** Undocumented property. */
     template: string;
     /** The threads in this channel. */
-    threads: Collection<string, RawPublicThreadChannel, PublicThreadChannel>;
+    threads: TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>;
     /** The `guidelines` of this forum channel. */
     topic: string | null;
     declare type: ChannelTypes.GUILD_FORUM;
@@ -63,11 +63,11 @@ export default class ForumChannel extends GuildChannel {
         this.flags = data.flags;
         this.lastThread = data.last_message_id === null ? null : { id: data.last_message_id };
         this.nsfw = data.nsfw;
-        this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.rateLimitPerUser = 0;
         this.template = data.template;
-        this.threads = new Collection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client);
+        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client);
         this.topic = data.topic;
         this.update(data);
     }

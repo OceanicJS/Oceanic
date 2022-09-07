@@ -5,7 +5,7 @@ import Permission from "./Permission";
 import type Client from "../Client";
 import type { ChannelTypes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 import type {
     EditAnyGuildChannelOptions,
     EditPermissionOptions,
@@ -18,16 +18,16 @@ import type { JSONCategoryChannel } from "../types/json";
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {
     /** The channels in this category. */
-    channels: Collection<string, RawGuildChannel, GuildChannel>;
+    channels: TypedCollection<string, RawGuildChannel, GuildChannel>;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: Collection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     declare type: ChannelTypes.GUILD_CATEGORY;
     constructor(data: RawCategoryChannel, client: Client) {
         super(data, client);
-        this.channels = new Collection(GuildChannel, client);
-        this.permissionOverwrites = new Collection(PermissionOverwrite, client);
+        this.channels = new TypedCollection(GuildChannel, client);
+        this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.update(data);
     }

@@ -18,7 +18,6 @@ import type {
     InteractionTypes,
     MessageComponentTypes
 } from "../Constants";
-import type Collection from "../util/Collection";
 import type Attachment from "../structures/Attachment";
 import type Member from "../structures/Member";
 import type Message from "../structures/Message";
@@ -32,6 +31,7 @@ import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type Guild from "../structures/Guild";
+import TypedCollection from "../util/TypedCollection";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
 
@@ -160,12 +160,12 @@ export interface RawApplicationCommandInteractionResolvedData {
 }
 
 export interface ApplicationCommandInteractionResolvedData {
-    attachments: Collection<string, RawAttachment, Attachment>;
-    channels: Collection<string, RawChannel, AnyChannel>;
-    members: Collection<string, RawMember, Member, [guildID: string]>;
-    messages: Collection<string, RawMessage, Message>;
-    roles: Collection<string, RawRole, Role, [guildID: string]>;
-    users: Collection<string, RawUser, User>;
+    attachments: TypedCollection<string, RawAttachment, Attachment>;
+    channels: TypedCollection<string, RawChannel, AnyChannel>;
+    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
+    messages: TypedCollection<string, RawMessage, Message>;
+    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
+    users: TypedCollection<string, RawUser, User>;
 }
 
 export type InteractionOptions = InteractionOptionsWithOptions | InteractionOptionsWithValue;

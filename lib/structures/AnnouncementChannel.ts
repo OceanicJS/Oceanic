@@ -6,7 +6,7 @@ import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
-import Collection from "../util/Collection";
+import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild news channel. */
 export default class AnnouncementChannel extends TextableChannel<AnnouncementChannel> {
@@ -14,11 +14,11 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     /** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
     declare rateLimitPerUser: 0;
     /** The threads in this channel. */
-    threads: Collection<string, RawAnnouncementThreadChannel, AnnouncementThreadChannel>;
+    threads: TypedCollection<string, RawAnnouncementThreadChannel, AnnouncementThreadChannel>;
     declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
     constructor(data: RawAnnouncementChannel, client: Client) {
         super(data, client);
-        this.threads = new Collection(AnnouncementThreadChannel, client);
+        this.threads = new TypedCollection(AnnouncementThreadChannel, client);
     }
 
     /**
