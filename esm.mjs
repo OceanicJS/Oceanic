@@ -16,7 +16,7 @@ const Client = (await import("./dist/lib/Client.js")).default.default;
 const ClientApplication = (await import("./dist/lib/structures/ClientApplication.js")).default.default;
 const Constants = (await import("./dist/lib/Constants.js")).default;
 const CommandInteraction = (await import("./dist/lib/structures/CommandInteraction.js")).default.default;
-const TypedCollection = (await import("./dist/lib/util/Collection.js")).default.default;
+const Collection = (await import("./dist/lib/util/Collection.js")).default.default;
 const ComponentInteraction = (await import("./dist/lib/structures/ComponentInteraction.js")).default.default;
 const DiscordHTTPError = (await import("./dist/lib/rest/DiscordHTTPError.js")).default.default;
 const DiscordRESTError = (await import("./dist/lib/rest/DiscordRESTError.js")).default.default;
@@ -63,7 +63,6 @@ const VoiceState = (await import("./dist/lib/structures/VoiceState.js")).default
 const Webhook = (await import("./dist/lib/structures/Webhook.js")).default.default;
 
 export * from "./dist/lib/Constants.js";
-export { Collection } from "@augu/collections";
 
 export {
     Channel,
@@ -83,7 +82,7 @@ export {
     ClientApplication,
     Constants,
     CommandInteraction,
-    TypedCollection,
+    Collection as TypedCollection,
     ComponentInteraction,
     DiscordHTTPError,
     DiscordRESTError,
