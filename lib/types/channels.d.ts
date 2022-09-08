@@ -485,7 +485,7 @@ export interface SelectOption {
 export interface RawTextInput {
     custom_id: string;
     label: string;
-    max_length?: boolean;
+    max_length?: number;
     min_length?: number;
     placeholder?: string;
     required?: boolean;
@@ -497,7 +497,7 @@ export interface RawTextInput {
 export interface TextInput {
     customID: string;
     label: string;
-    maxLength?: boolean;
+    maxLength?: number;
     minLength?: number;
     placeholder?: string;
     required?: boolean;
