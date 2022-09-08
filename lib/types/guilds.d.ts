@@ -453,7 +453,7 @@ export interface EditMemberOptions {
     /** The reason for editing the member. */
     reason?: string;
     /** The new roles of the member. */
-    roles?: string;
+    roles?: Array<string>;
 }
 
 export type EditCurrentMemberOptions = Pick<EditMemberOptions, "nick" | "reason">;
