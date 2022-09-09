@@ -14,7 +14,7 @@ import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
-import type { MessageTypes } from "../Constants";
+import { BASE_URL, MessageTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
     AnyGuildTextChannel,
@@ -38,6 +38,7 @@ import type {
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import type { JSONMessage } from "../types/json";
+import * as Routes from "../util/Routes";
 
 export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
@@ -277,6 +278,11 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             }
 
         }
+    }
+
+    /** A link to this message. */
+    get jumpLink(): string {
+        return `${BASE_URL}${Routes.MESSAGE_LINK(this.guildID || "@me", this.channel.id, this.id)}`;
     }
 
     /**
