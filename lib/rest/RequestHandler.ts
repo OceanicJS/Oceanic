@@ -177,17 +177,18 @@ export default class RequestHandler {
                     let resBody: Buffer | string | Record<string, unknown> | null;
                     if (res.status === 204) {
                         resBody = null;
-                    } else
-                    if (res.headers.get("content-type") === "application/json") {
-                        const b = await res.text();
-                        try {
-                            resBody = JSON.parse(b) as Record<string, unknown>;
-                        } catch (err) {
-                            this.#manager.client.emit("error", err as Error);
-                            resBody = b;
-                        }
                     } else {
-                        resBody = Buffer.from(await res.arrayBuffer());
+                        if (res.headers.get("content-type") === "application/json") {
+                            const b = await res.text();
+                            try {
+                                resBody = JSON.parse(b) as Record<string, unknown>;
+                            } catch (err) {
+                                this.#manager.client.emit("error", err as Error);
+                                resBody = b;
+                            }
+                        } else {
+                            resBody = Buffer.from(await res.arrayBuffer());
+                        }
                     }
 
                     this.#manager.client.emit("request", {

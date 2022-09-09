@@ -248,11 +248,12 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         if (data.referenced_message !== undefined) {
             if (data.referenced_message === null) {
                 this.referencedMessage = null;
-            } else
-            if ("messages" in this.channel) {
-                this.referencedMessage = this.channel.messages.update(data.referenced_message);
             } else {
-                this.referencedMessage = new Message(data.referenced_message, this.client);
+                if ("messages" in this.channel) {
+                    this.referencedMessage = this.channel.messages.update(data.referenced_message);
+                } else {
+                    this.referencedMessage = new Message(data.referenced_message, this.client);
+                }
             }
         }
 
@@ -267,11 +268,12 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
                 if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) {
                     (this.channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
                 }
-            } else
-            if (this.channel && "threads" in this.channel) {
-                this.thread = (this.channel.threads as TypedCollection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
             } else {
-                this.thread = Channel.from(data.thread, this.client);
+                if (this.channel && "threads" in this.channel) {
+                    this.thread = (this.channel.threads as TypedCollection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
+                } else {
+                    this.thread = Channel.from(data.thread, this.client);
+                }
             }
 
         }

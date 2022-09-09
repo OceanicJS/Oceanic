@@ -309,19 +309,19 @@ export default class InteractionOptionsWrapper {
             } else {
                 return undefined;
             }
-        } else
-        // nested
-        if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
-            const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
-            if (!sub?.options) {
-                return [opt.name];
-            } else {
-                return [opt.name, sub.name];
-            }
         } else {
-            return [opt.name];
+        // nested
+            if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
+                const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
+                if (!sub?.options) {
+                    return [opt.name];
+                } else {
+                    return [opt.name, sub.name];
+                }
+            } else {
+                return [opt.name];
+            }
         }
-
     }
 
     /**
