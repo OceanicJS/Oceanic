@@ -8,14 +8,13 @@ const client = new Client({
     }
 });
 
-
-client.on("ready", () => console.log("Ready As", client.user.tag));
+client.on("ready", () => console.log("Ready as ", client.user.tag));
 
 client.on("messageCreate", async(msg) => {
     if(msg.content.includes("!embed")) {
-		// up to 10 in one message
 		await client.rest.channels.createMessage(msg.channel.id, {
 			// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedOptions.html
+			// up to 10 in one message
 			embeds: [
 				{
 					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedAuthorOptions.html
@@ -85,7 +84,7 @@ client.on("messageCreate", async(msg) => {
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something Went Wrong", error);
+    console.error("Something went wrong: ", error);
 });
 
 // connect to Discord

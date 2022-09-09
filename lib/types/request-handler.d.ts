@@ -33,7 +33,7 @@ export interface RawRequest {
     path: string;
     /** the body sent with the request */
     requestBody: string | FormData | undefined;
-    /** the body we recieved */
+    /** the body we received */
     responseBody: Buffer | string | Record<string, unknown> | null;
     /** the name of the route used in the request */
     route: string;

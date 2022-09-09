@@ -1,7 +1,7 @@
-// the application command management functions are on ClientApplication (client.application) & ApplicationCommands(client.rest.applicationCommands)
+// the application command management functions are on ClientApplication (client.application) & client.rest.applicationCommands
 // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html
 // https://oceanic.owo-whats-this.dev/classes/routes_ApplicationCommands.ApplicationCommands.html
-const { ApplicationCommandOptionTypes, ApplicationCommandTypes, Client } =  require("oceanic.js");
+const { ApplicationCommandOptionTypes, ApplicationCommandTypes, Client } = require("oceanic.js");
 
 const client = new Client({
     auth: "Bot [TOKEN]",
@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 client.on("ready", async() => {
-    console.log("Ready as", client.user.tag);
+    console.log("Ready as ", client.user.tag);
 
     // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#createGlobalCommand
     // Create a single command
@@ -57,7 +57,7 @@ client.on("ready", async() => {
     await client.application.bulkEditGlobalCommands([
         {
             type: ApplicationCommandTypes.USER, // This will display in the `Apps` context menu, when clicking on a user.
-            // These commands do not have options, and cannot have a description. They will have a `target` property when recieved
+            // These commands do not have options, and cannot have a description. They will have a `target` property when received
             name: "User Info",
             nameLocalizations: {
                 "es-ES": "Información del usuario"
@@ -100,7 +100,7 @@ client.on("ready", async() => {
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something Went Wrong", error);
+    console.error("Something went wrong: ", error);
 });
 
 // connect to Discord

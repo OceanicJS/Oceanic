@@ -459,7 +459,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     });
                 }
                 if (!packet.d.nonce) {
-                    this.client.emit("warn", "Recieved GUILD_MEMBERS_CHUNK without a nonce.");
+                    this.client.emit("warn", "Received GUILD_MEMBERS_CHUNK without a nonce.");
                     break;
                 }
                 if (this.#requestMembersPromise[packet.d.nonce]) {
@@ -1208,17 +1208,17 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     break;
                 }
                 case GatewayCloseCodes.UNKNOWN_OPCODE: {
-                    err = new GatewayError("Gateway recieved an unknown opcode.", code);
+                    err = new GatewayError("Gateway received an unknown opcode.", code);
                     break;
                 }
 
                 case GatewayCloseCodes.DECODE_ERROR: {
-                    err = new GatewayError("Gateway recieved an improperly encoded packet.", code);
+                    err = new GatewayError("Gateway received an improperly encoded packet.", code);
                     break;
                 }
 
                 case GatewayCloseCodes.NOT_AUTHENTICATED: {
-                    err = new GatewayError("Gateway recieved a packet before authentication.", code);
+                    err = new GatewayError("Gateway received a packet before authentication.", code);
                     this.sessionID = null;
                     break;
                 }
@@ -1232,12 +1232,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
 
                 case GatewayCloseCodes.ALREADY_AUTHENTICATED: {
-                    err = new GatewayError("Gateway recieved an authentication attempt while already authenticated.", code);
+                    err = new GatewayError("Gateway received an authentication attempt while already authenticated.", code);
                     break;
                 }
 
                 case GatewayCloseCodes.INVALID_SEQUENCE: {
-                    err = new GatewayError("Gateway recieved an invalid sequence.", code);
+                    err = new GatewayError("Gateway received an invalid sequence.", code);
                     this.sequence = 0;
                     break;
                 }

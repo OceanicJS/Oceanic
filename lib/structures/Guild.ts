@@ -165,7 +165,7 @@ export default class Guild extends Base {
     premiumSubscriptionCount?: number;
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
-    /** The id of the channel where notices from Discord are recieved. Only present in guilds with the `COMMUNITY` feature. */
+    /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannel: AnyGuildTextChannel | Uncached | null;
     /** @deprecated The region of this guild.*/
     region?: string | null;

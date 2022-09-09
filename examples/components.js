@@ -7,7 +7,7 @@ const client = new Client({
     }
 });
 
-client.on("ready", () => console.log("Ready As", client.user.tag));
+client.on("ready", () => console.log("Ready as ", client.user.tag));
 
 client.on("messageCreate", async(msg) => {
     if(msg.content.includes("!component")) {
@@ -34,7 +34,7 @@ client.on("messageCreate", async(msg) => {
                         },
                         {
                             type: ComponentTypes.BUTTON,
-                            style: ButtonStyles.PRIMARY, 
+                            style: ButtonStyles.PRIMARY,
                             customID: "some-other-string",
                             label: "This Is Disabled",
                             disabled: true
@@ -42,7 +42,7 @@ client.on("messageCreate", async(msg) => {
                         {
                             // https://oceanic.owo-whats-this.dev/interfaces/types_channels.URLButton.html
                             type: ComponentTypes.BUTTON,
-                            style: ButtonStyles.LINK, 
+                            style: ButtonStyles.LINK,
                             label: "Open Link",
                             url: "https://oceanic.owo-whats-this.dev"
                         },
@@ -81,7 +81,7 @@ client.on("messageCreate", async(msg) => {
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something Went Wrong", error);
+    console.error("Something went wrong: ", error);
 });
 
 // connect to Discord

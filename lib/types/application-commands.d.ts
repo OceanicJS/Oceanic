@@ -3,8 +3,6 @@ import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, 
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
 
-// @TODO `name_localized` and `description_localized`
-
 export interface RawApplicationCommand {
     application_id: string;
     default_member_permissions: string | null;

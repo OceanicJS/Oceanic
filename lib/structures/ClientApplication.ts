@@ -16,7 +16,7 @@ import type {
 import type { JSONClientApplication } from "../types/json";
 import { ApplicationCommandTypes } from "../Constants";
 
-/** A representation of the authorized client's application (typically recieved via gateway). */
+/** A representation of the authorized client's application (typically received via gateway). */
 export default class ClientApplication extends Base {
     /** This application's [public flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
     flags: number;

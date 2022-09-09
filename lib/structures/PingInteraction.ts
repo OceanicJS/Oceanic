@@ -5,7 +5,7 @@ import type { RawPingInteraction } from "../types/interactions";
 import type Client from "../Client";
 import type { JSONPingInteraction } from "../types/json";
 
-/** Represents a PING interaction. This will not be recieved over a gateway connection. */
+/** Represents a PING interaction. This will not be received over a gateway connection. */
 export default class PingInteraction extends Interaction {
     declare type: InteractionTypes.PING;
     constructor(data: RawPingInteraction, client: Client) {

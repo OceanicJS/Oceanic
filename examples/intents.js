@@ -7,24 +7,22 @@ const client = new Client({
 		// list of intents: https://discord.com/developers/docs/topics/gateway#list-of-intents
 		// they roughly map on to events we use
         // most events also list if they require an intent: https://oceanic.owo-whats-this.dev/interfaces/types_client.ClientEvents.html
-        intents: ["GUILDS", "GUILD_MESSAGES", "MESSAGE_CONTENT"] 
+        intents: ["GUILDS", "GUILD_MESSAGES", "MESSAGE_CONTENT"]
         // if you do not have the MESSAGE_CONTENT intent, various fields like `content`, `components`, `embeds` and more will be empty unless your client is specifically addressed.
     }
 });
 
-
-client.on("ready", () => console.log("Ready As", client.user.tag));
-
+client.on("ready", () => console.log("Ready as ", client.user.tag));
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something Went Wrong", error);
+    console.error("Something went wrong: ", error);
 });
 
 // New Guild Joined
 // https://oceanic.owo-whats-this.dev/interfaces/types_client.ClientEvents.html#guildCreate
-bot.on("guildCreate", (guild) => { 
-    console.log("Guild Joined:", guild.name);
+bot.on("guildCreate", (guild) => {
+    console.log("Guild Joined: ", guild.name);
 });
 
 // Message Sent

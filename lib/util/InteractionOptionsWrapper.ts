@@ -58,7 +58,7 @@ export default class InteractionOptionsWrapper {
     getAttachment(name: string, required: true): Attachment;
     getAttachment(name: string, required?: boolean): Attachment | undefined {
         if (this.resolved === null) {
-            throw new Error("attempt to use getAttachmentValue with null resolved");
+            throw new Error("Attempt to use getAttachmentValue with null resolved.");
         }
         let val: string | undefined;
         if (!(val = this.getAttachmentOption(name, required as false)?.value)) {
@@ -66,7 +66,7 @@ export default class InteractionOptionsWrapper {
         }
         const a = this.resolved.attachments.get(val);
         if (!a && required) {
-            throw new Error(`attachment not present for required option: ${name}`);
+            throw new Error(`Attachment not present for required option: ${name}`);
         }
         return a;
     }
@@ -114,7 +114,7 @@ export default class InteractionOptionsWrapper {
     getChannel<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
     getChannel(name: string, required?: boolean): AnyChannel | undefined {
         if (this.resolved === null) {
-            throw new Error("attempt to use getChannelValue with null resolved");
+            throw new Error("Attempt to use getChannelValue with null resolved.");
         }
         let val: string | undefined;
         if (!(val = this.getChannelOption(name, required as false)?.value)) {
@@ -122,7 +122,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.channels.get(val);
         if (!ch && required) {
-            throw new Error(`channel not present for required option: ${name}`);
+            throw new Error(`Channel not present for required option: ${name}`);
         }
         return ch;
     }
@@ -169,7 +169,7 @@ export default class InteractionOptionsWrapper {
     getMember(name: string, required: true): Member;
     getMember(name: string, required?: boolean): Member | undefined {
         if (this.resolved === null) {
-            throw new Error("attempt to use getMemberValue with null resolved");
+            throw new Error("Attempt to use getMemberValue with null resolved.");
         }
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) {
@@ -177,7 +177,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.members.get(val);
         if (!ch && required) {
-            throw new Error(`member not present for required option: ${name}`);
+            throw new Error(`Member not present for required option: ${name}`);
         }
         return ch;
     }
@@ -191,7 +191,7 @@ export default class InteractionOptionsWrapper {
     getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
     getMentionable(name: string, required?: boolean): AnyChannel | User | Role | undefined {
         if (this.resolved === null) {
-            throw new Error("attempt to use getMentionableValue with null resolved");
+            throw new Error("Attempt to use getMentionableValue with null resolved.");
         }
         let val: string | undefined;
         if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) {
@@ -201,7 +201,7 @@ export default class InteractionOptionsWrapper {
         const role = this.resolved.roles.get(val);
         const user = this.resolved.users.get(val);
         if ((!ch && !role && !user) && required) {
-            throw new Error(`value not present for required option: ${name}`);
+            throw new Error(`Value not present for required option: ${name}`);
         }
         return ch;
     }
@@ -248,7 +248,7 @@ export default class InteractionOptionsWrapper {
     getRole(name: string, required: true): Role;
     getRole(name: string, required?: boolean): Role | undefined {
         if (this.resolved === null) {
-            throw new Error("attempt to use getRoleValue with null resolved");
+            throw new Error("Attempt to use getRoleValue with null resolved.");
         }
         let val: string | undefined;
         if (!(val = this.getRoleOption(name, required as false)?.value)) {
@@ -256,7 +256,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.roles.get(val);
         if (!ch && required) {
-            throw new Error(`role not present for required option: ${name}`);
+            throw new Error(`Role not present for required option: ${name}`);
         }
         return ch;
     }
@@ -305,7 +305,7 @@ export default class InteractionOptionsWrapper {
         const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
         if (!opt?.options) {
             if (required) {
-                throw new Error("Missing required option: subcommand/subcommandgroup");
+                throw new Error("Missing required option: SubCommand/SubCommandGroup.");
             } else {
                 return undefined;
             }
@@ -333,7 +333,7 @@ export default class InteractionOptionsWrapper {
     getUser(name: string, required: true): User;
     getUser(name: string, required?: boolean): User | undefined {
         if (this.resolved === null) {
-            throw new Error("attempt to use getUserValue with null resolved");
+            throw new Error("Attempt to use getUserValue with null resolved.");
         }
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) {
@@ -341,7 +341,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.users.get(val);
         if (!ch && required) {
-            throw new Error(`user not present for required option: ${name}`);
+            throw new Error(`User not present for required option: ${name}`);
         }
         return ch;
     }

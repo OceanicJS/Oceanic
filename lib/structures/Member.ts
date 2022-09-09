@@ -50,7 +50,7 @@ export default class Member extends Base {
         }
 
         if (!user) {
-            throw new Error(`Member recieved without a user${!id ? "or id." : `: ${id}`}`);
+            throw new Error(`Member received without a user${!id ? "or id." : `: ${id}`}`);
         }
         super(user.id, client);
         this.avatar = null;
