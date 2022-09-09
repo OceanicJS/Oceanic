@@ -24,7 +24,7 @@ export default class ExtendedUser extends User {
         this.update(data);
     }
 
-    protected update(data: Partial<RawOAuthUser>) {
+    protected update(data: Partial<RawOAuthUser>): void {
         super.update(data);
         if (data.email !== undefined) this.email = data.email;
         if (data.flags !== undefined) this.flags = data.flags;
@@ -35,7 +35,7 @@ export default class ExtendedUser extends User {
      * Modify this user.
      * @param options The options for editing the user.
      */
-    async edit(options: EditSelfUserOptions) {
+    async edit(options: EditSelfUserOptions): Promise<ExtendedUser> {
         return this.client.rest.users.editSelf(options);
     }
 

@@ -2,6 +2,7 @@ import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users"
 import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";
+import User from "../structures/User";
 
 export default class Users {
     #manager: RESTManager;
@@ -11,9 +12,11 @@ export default class Users {
 
     /**
      * Edit the currently authenticated user.
+     *
+     * Note: This does not touch the client's cache in any way.
      * @param options The options to edit with.
      */
-    async editSelf(options: EditSelfUserOptions) {
+    async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
         if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
         return this.#manager.authRequest<RawOAuthUser>({
             method: "PATCH",
@@ -26,7 +29,7 @@ export default class Users {
      * Get a user.
      * @param id the ID of the user
      */
-    async get(id: string) {
+    async get(id: string): Promise<User> {
         return this.#manager.authRequest<RawUser>({
             method: "GET",
             path:   Routes.USER(id)
@@ -35,8 +38,10 @@ export default class Users {
 
     /**
      * Get the currently authenticated user's information.
+     *
+     * Note: This does not touch the client's cache in any way.
      */
-    async getCurrentUser() {
+    async getCurrentUser(): Promise<ExtendedUser> {
         return this.#manager.authRequest<RawOAuthUser>({
             method: "GET",
             path:   Routes.OAUTH_CURRENT_USER
@@ -47,7 +52,7 @@ export default class Users {
      * Leave a guild.
      * @param id The ID of the guild to leave.
      */
-    async leaveGuild(id: string) {
+    async leaveGuild(id: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.OAUTH_GUILD(id)

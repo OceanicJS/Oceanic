@@ -48,7 +48,7 @@ export default class Role extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawRole>) {
+    protected update(data: Partial<RawRole>): void {
         if (data.color !== undefined) this.color = data.color;
         if (data.hoist !== undefined) this.hoist = data.hoist;
         if (data.icon !== undefined) this.icon = data.icon || null;
@@ -61,7 +61,7 @@ export default class Role extends Base {
     }
 
     /** A string that will mention this role. */
-    get mention() {
+    get mention(): string {
         return `<@&${this.id}>`;
     }
 
@@ -69,7 +69,7 @@ export default class Role extends Base {
      * Delete this role.
      * @param reason The reason for deleting the role.
      */
-    async delete(reason?: string) {
+    async delete(reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteRole(this.guildID, this.id, reason);
     }
 

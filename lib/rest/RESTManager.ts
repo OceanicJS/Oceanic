@@ -34,18 +34,18 @@ export default class RESTManager {
         this.webhooks = new Webhooks(this);
     }
 
-    get client() { return this.#client; }
-    get options() { return this.#handler.options; }
+    get client(): Client { return this.#client; }
+    get options(): RESTOptions { return this.#handler.options; }
 
     /** Alias for {@link rest/RequestHandler~RequestHandler#authRequest | RequestHandler#authRequest} */
-    async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
+    async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T> {
         return this.#handler.authRequest<T>(options);
     }
 
     /**
      * Get the gateway information related to your bot client.
      */
-    async getBotGateway() {
+    async getBotGateway(): Promise<GetBotGatewayResponse> {
         return this.authRequest<RawGetBotGatewayResponse>({
             method: "GET",
             path:   Routes.GATEWAY_BOT
@@ -59,13 +59,13 @@ export default class RESTManager {
                 resetAfter:     data.session_start_limit.reset_after,
                 maxConcurrency: data.session_start_limit.max_concurrency
             }
-        }) as GetBotGatewayResponse);
+        }));
     }
 
     /**
      * Get the gateway information.
      */
-    async getGateway() {
+    async getGateway(): Promise<GetGatewayResponse> {
         return this.request<GetGatewayResponse>({
             method: "GET",
             path:   Routes.GATEWAY
@@ -73,7 +73,7 @@ export default class RESTManager {
     }
 
     /** Alias for {@link rest/RequestHandler~RequestHandler#request | RequestHandler#request} */
-    async request<T = unknown>(options: RequestOptions) {
+    async request<T = unknown>(options: RequestOptions): Promise<T> {
         return this.#handler.request<T>(options);
     }
 }

@@ -4,6 +4,8 @@ import Message from "./Message";
 import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
+import Invite from "./Invite";
+import User from "./User";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
@@ -63,7 +65,7 @@ export default class VoiceChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawVoiceChannel>) {
+    protected update(data: Partial<RawVoiceChannel>): void {
         super.update(data);
         if (data.bitrate !== undefined) this.bitrate = data.bitrate;
         if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
@@ -79,7 +81,7 @@ export default class VoiceChannel extends GuildChannel {
      * Create an invite for this channel.
      * @param options The options for creating the invite.
      */
-    async createInvite(options: CreateInviteOptions) {
+    async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", this>> {
         return this.client.rest.channels.createInvite<"withMetadata", this>(this.id, options);
     }
 
@@ -87,7 +89,7 @@ export default class VoiceChannel extends GuildChannel {
      * Create a message in this channel.
      * @param options The options for creating the message.
      */
-    async createMessage(options: CreateMessageOptions) {
+    async createMessage(options: CreateMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.createMessage<this>(this.id, options);
     }
 
@@ -96,7 +98,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async createReaction(messageID: string, emoji: string) {
+    async createReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.createReaction(this.id, messageID, emoji);
     }
 
@@ -105,7 +107,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageID The ID of the message to delete.
      * @param reason The reason for deleting the message.
      */
-    async deleteMessage(messageID: string, reason?: string) {
+    async deleteMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
 
@@ -114,7 +116,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageIDs The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
-    async deleteMessages(messageIDs: Array<string>, reason?: string) {
+    async deleteMessages(messageIDs: Array<string>, reason?: string): Promise<void> {
         return this.client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
 
@@ -123,7 +125,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      */
-    async deletePermission(overwriteID: string, reason?: string) {
+    async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
@@ -133,7 +135,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
-    async deleteReaction(messageID: string, emoji: string, user = "@me") {
+    async deleteReaction(messageID: string, emoji: string, user = "@me"): Promise<void> {
         return this.client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
     }
 
@@ -142,7 +144,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageID The ID of the message to remove reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
-    async deleteReactions(messageID: string, emoji?: string) {
+    async deleteReactions(messageID: string, emoji?: string): Promise<void> {
         return this.client.rest.channels.deleteReactions(this.id, messageID, emoji);
     }
 
@@ -150,7 +152,7 @@ export default class VoiceChannel extends GuildChannel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditVoiceChannelOptions) {
+    async edit(options: EditVoiceChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
@@ -159,7 +161,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions) {
+    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.editMessage<this>(this.id, messageID, options);
     }
 
@@ -168,14 +170,14 @@ export default class VoiceChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(overwriteID: string, options: EditPermissionOptions) {
+    async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
     /**
      * Get the invites of this channel.
      */
-    async getInvites() {
+    async getInvites(): Promise<Array<Invite<"withMetadata", this>>> {
         return this.client.rest.channels.getInvites<this>(this.id);
     }
 
@@ -183,7 +185,7 @@ export default class VoiceChannel extends GuildChannel {
      * Get a message in this channel.
      * @param messageID The ID of the message to get.
      */
-    async getMessage(messageID: string) {
+    async getMessage(messageID: string): Promise<Message<this>> {
         return this.client.rest.channels.getMessage<this>(this.id, messageID);
     }
 
@@ -191,14 +193,14 @@ export default class VoiceChannel extends GuildChannel {
      * Get messages in this channel.
      * @param options The options for getting the messages. All options are mutually exclusive.
      */
-    async getMessages(options?: GetChannelMessagesOptions) {
+    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getMessages<this>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this channel.
      */
-    async getPinnedMessages() {
+    async getPinnedMessages(): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getPinnedMessages<this>(this.id);
     }
 
@@ -208,7 +210,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
+    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>>{
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
@@ -216,7 +218,7 @@ export default class VoiceChannel extends GuildChannel {
      * Join this voice channel.
      * @param options The options for joining the voice channel.
      */
-    async join(options?: UpdateVoiceStateOptions) {
+    async join(options?: UpdateVoiceStateOptions): Promise<void> {
         return this.client.joinVoiceChannel(this.id, options);
     }
 
@@ -224,7 +226,7 @@ export default class VoiceChannel extends GuildChannel {
      * Get the permissions of a member.
      * @param member The member to get the permissions of.  If providing an ID, the member must be cached.
      */
-    permissionsOf(member: string | Member) {
+    permissionsOf(member: string | Member): Permission {
         if (typeof member === "string") member = this.guild.members.get(member)!;
         if (!member) throw new Error("Member not found");
         let permission = this.guild.permissionsOf(member).allow;
@@ -233,12 +235,12 @@ export default class VoiceChannel extends GuildChannel {
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
         let deny = 0n;
         let allow = 0n;
-        for (const id of member.roles) {
+        for (const id of member.roles)
             if ((overwrite = this.permissionOverwrites.get(id))) {
                 deny |= overwrite.deny;
                 allow |= overwrite.allow;
             }
-        }
+
         permission = (permission & ~deny) | allow;
         overwrite = this.permissionOverwrites.get(member.id);
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
@@ -250,14 +252,14 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
      */
-    async pinMessage(messageID: string, reason?: string) {
+    async pinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.pinMessage(this.id, messageID, reason);
     }
 
     /**
      * Show a typing indicator in this channel. How long users see this varies from client to client.
      */
-    async sendTyping() {
+    async sendTyping(): Promise<void> {
         return this.client.rest.channels.sendTyping(this.id);
     }
 
@@ -282,7 +284,7 @@ export default class VoiceChannel extends GuildChannel {
      * @param messageID The ID of the message to unpin.
      * @param reason The reason for unpinning the message.
      */
-    async unpinMessage(messageID: string, reason?: string) {
+    async unpinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
 }

@@ -1,6 +1,6 @@
 import type { RESTMethod } from "../Constants";
 import type { JSONDiscordHTTPError } from "../types/json";
-import type { Response } from "undici";
+import type { Headers, Response } from "undici";
 
 export default class DiscordHTTPError extends Error {
     method: RESTMethod;
@@ -24,19 +24,19 @@ export default class DiscordHTTPError extends Error {
         else Error.captureStackTrace(this, DiscordHTTPError);
     }
 
-    static flattenErrors(errors: Record<string, unknown>, keyPrefix = "") {
+    static flattenErrors(errors: Record<string, unknown>, keyPrefix = ""): Array<string> {
         let messages: Array<string> = [];
         for (const fieldName in errors) {
             if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") continue;
-            if (Array.isArray(errors[fieldName])) messages = messages.concat((errors[fieldName] as Array<string>).map((str) => `${`${keyPrefix}${fieldName}`}: ${str}`));
+            if (Array.isArray(errors[fieldName])) messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
         }
         return messages;
     }
 
-    get headers() { return this.response.headers; }
-    get path() { return new URL(this.response.url).pathname; }
-    get status() { return this.response.status; }
-    get statusText() { return this.response.statusText; }
+    get headers(): Headers { return this.response.headers; }
+    get path(): string { return new URL(this.response.url).pathname; }
+    get status(): number { return this.response.status; }
+    get statusText(): string { return this.response.statusText; }
 
     toJSON(): JSONDiscordHTTPError {
         return {

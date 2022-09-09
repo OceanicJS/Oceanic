@@ -1,6 +1,6 @@
 import type { RESTMethod } from "../Constants";
 import type { JSONDiscordRESTError } from "../types/json";
-import type { Response } from "undici";
+import type { Headers, Response } from "undici";
 
 export default class DiscordRESTError extends Error {
     code: number;
@@ -29,21 +29,21 @@ export default class DiscordRESTError extends Error {
         else Error.captureStackTrace(this, DiscordRESTError);
     }
 
-    static flattenErrors(errors: Record<string, unknown>, keyPrefix = "") {
+    static flattenErrors(errors: Record<string, unknown>, keyPrefix = ""): Array<string> {
         let messages: Array<string> = [];
         for (const fieldName in errors) {
             if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") continue;
             if ("_errors" in (errors[fieldName] as object)) messages = messages.concat((errors[fieldName] as { _errors: Array<{ message: string; }>; })._errors.map((err: { message: string; }) => `${`${keyPrefix}${fieldName}`}: ${err.message}`));
-            else if (Array.isArray(errors[fieldName])) messages = messages.concat((errors[fieldName] as Array<string>).map((str) => `${`${keyPrefix}${fieldName}`}: ${str}`));
+            else if (Array.isArray(errors[fieldName])) messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
             else if (typeof errors[fieldName] === "object") messages = messages.concat(DiscordRESTError.flattenErrors(errors[fieldName] as Record<string, unknown>, `${keyPrefix}${fieldName}.`));
         }
         return messages;
     }
 
-    get headers() { return this.response.headers; }
-    get path() { return new URL(this.response.url).pathname; }
-    get status() { return this.response.status; }
-    get statusText() { return this.response.statusText; }
+    get headers(): Headers { return this.response.headers; }
+    get path(): string { return new URL(this.response.url).pathname; }
+    get status(): number { return this.response.status; }
+    get statusText(): string { return this.response.statusText; }
 
     toJSON(): JSONDiscordRESTError {
         return {

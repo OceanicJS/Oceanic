@@ -27,7 +27,7 @@ export default class PartialApplication extends Base {
         this.update(data);
     }
 
-    protected update(data: RawPartialApplication) {
+    protected update(data: RawPartialApplication): void {
         if (data.bot_public !== undefined) this.botPublic = data.bot_public;
         if (data.bot_require_code_grant !== undefined) this.botRequireCodeGrant = data.bot_require_code_grant;
         if (data.description !== undefined) this.description = data.description;
@@ -40,7 +40,7 @@ export default class PartialApplication extends Base {
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    iconURL(format?: ImageFormat, size?: number) {
+    iconURL(format?: ImageFormat, size?: number): string | null {
         return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);
     }
 

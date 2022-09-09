@@ -33,7 +33,7 @@ export default class StageInstance extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawStageInstance>) {
+    protected update(data: Partial<RawStageInstance>): void {
         if (data.channel_id !== undefined) this.channel = this.client.getChannel(data.channel_id)!;
         if (data.discoverable_disabled !== undefined) this.discoverableDisabled = data.discoverable_disabled;
         if (data.guild_scheduled_event_id !== undefined) this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined) || { id: data.guild_scheduled_event_id };

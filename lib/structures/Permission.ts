@@ -1,4 +1,4 @@
-import type { Permission as PermissionNames } from "../Constants";
+import type { PermissionName as PermissionNames } from "../Constants";
 import { Permissions } from "../Constants";
 import Properties from "../util/Properties";
 import type { JSONPermission } from "../types/json";
@@ -16,13 +16,13 @@ export default class Permission {
     }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
-    get json() {
+    get json(): Record<keyof typeof Permissions, boolean> {
         if (!this._json) {
             const json = {} as Record<keyof typeof Permissions, boolean>;
-            for (const perm of Object.keys(Permissions) as Array<keyof typeof Permissions>) {
+            for (const perm of Object.keys(Permissions) as Array<keyof typeof Permissions>)
                 if (this.allow & Permissions[perm]) json[perm] = true;
                 else if (this.deny & Permissions[perm]) json[perm] = false;
-            }
+
             return (this._json = json);
         } else return this._json;
     }
@@ -31,10 +31,10 @@ export default class Permission {
      * Check if this permissions instance has the given permissions allowed
      * @param permissions The permissions to check for.
      */
-    has(...permissions: Array<PermissionNames>) {
-        for (const perm of permissions) {
+    has(...permissions: Array<PermissionNames>): boolean {
+        for (const perm of permissions)
             if (!(this.allow & Permissions[perm])) return false;
-        }
+
         return true;
     }
 
@@ -45,7 +45,7 @@ export default class Permission {
         };
     }
 
-    toString() {
+    toString(): string {
         return `[${this.constructor.name} +${this.allow} -${this.deny}]`;
     }
 }

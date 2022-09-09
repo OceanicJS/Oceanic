@@ -45,7 +45,7 @@ export default class GuildTemplate {
         this.update(data);
     }
 
-    protected update(data: Partial<RawGuildTemplate>) {
+    protected update(data: Partial<RawGuildTemplate>): void {
         if (data.description !== undefined) this.description = data.description;
         if (data.is_dirty !== undefined) this.isDirty = data.is_dirty;
         if (data.name !== undefined) this.name = data.name;
@@ -62,14 +62,14 @@ export default class GuildTemplate {
      * Create a guild from this template. This can only be used by bots in less than 10 guilds.
      * @param options The options for creating the guild.
      */
-    async createGuild(options: CreateGuildFromTemplateOptions) {
+    async createGuild(options: CreateGuildFromTemplateOptions): Promise<Guild> {
         return this.client.rest.guilds.createFromTemplate(this.code, options);
     }
 
     /**
      * Delete this template.
      */
-    async delete() {
+    async delete(): Promise<void> {
         return this.client.rest.guilds.deleteTemplate(this.sourceGuild.id, this.code);
     }
 
@@ -77,14 +77,14 @@ export default class GuildTemplate {
      * Edit this template.
      * @param options The options for editing the template.
      */
-    async editTemplate(options: EditGuildTemplateOptions) {
+    async editTemplate(options: EditGuildTemplateOptions): Promise<GuildTemplate> {
         return this.client.rest.guilds.editTemplate(this.sourceGuild.id, this.code, options);
     }
 
     /**
      * Sync this template.
      */
-    async syncTemplate() {
+    async syncTemplate(): Promise<GuildTemplate> {
         return this.client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);
     }
 

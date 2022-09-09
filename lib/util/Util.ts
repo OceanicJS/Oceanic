@@ -36,7 +36,7 @@ export default class Util {
     }
 
     /** @hidden intentionally not documented - this is an internal function */
-    _convertImage(image: Buffer | string, name: string) {
+    _convertImage(image: Buffer | string, name: string): string {
         try {
             return this.convertImage(image);
         } catch (err) {
@@ -48,7 +48,7 @@ export default class Util {
         return components.map(row => ({
             type:       row.type,
             components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON) {
+                if (component.type === ComponentTypes.BUTTON)
                     if (component.style === ButtonStyles.LINK) return component;
                     else return {
                         customID: component.custom_id,
@@ -58,7 +58,7 @@ export default class Util {
                         style:    component.style,
                         type:     component.type
                     };
-                } else if (component.type === ComponentTypes.SELECT_MENU) return {
+                else if (component.type === ComponentTypes.SELECT_MENU) return {
                     customID:    component.custom_id,
                     disabled:    component.disabled,
                     maxValues:   component.max_values,
@@ -66,7 +66,7 @@ export default class Util {
                     options:     component.options,
                     placeholder: component.placeholder,
                     type:        component.type
-                }; else if (component.type === ComponentTypes.TEXT_INPUT) {
+                }; else if (component.type === ComponentTypes.TEXT_INPUT)
                     return {
                         customID:    component.custom_id,
                         label:       component.label,
@@ -78,7 +78,7 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                } else return component;
+                else return component;
             })
         })) as never;
     }
@@ -87,7 +87,7 @@ export default class Util {
         return components.map(row => ({
             type:       row.type,
             components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON) {
+                if (component.type === ComponentTypes.BUTTON)
                     if (component.style === ButtonStyles.LINK) return component;
                     else return {
                         custom_id: component.customID,
@@ -97,7 +97,7 @@ export default class Util {
                         style:     component.style,
                         type:      component.type
                     };
-                } else if (component.type === ComponentTypes.SELECT_MENU) {
+                else if (component.type === ComponentTypes.SELECT_MENU)
                     return {
                         custom_id:   component.customID,
                         disabled:    component.disabled,
@@ -107,7 +107,7 @@ export default class Util {
                         placeholder: component.placeholder,
                         type:        component.type
                     };
-                } else if (component.type === ComponentTypes.TEXT_INPUT) {
+                else if (component.type === ComponentTypes.TEXT_INPUT)
                     return {
                         custom_id:   component.customID,
                         label:       component.label,
@@ -119,12 +119,12 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                } else return component;
+                else return component;
             })
         })) as never;
     }
 
-    convertImage(img: Buffer | string) {
+    convertImage(img: Buffer | string): string {
         if (Buffer.isBuffer(img)) {
             const b64 = img.toString("base64");
             let mime: string | undefined;
@@ -145,40 +145,40 @@ export default class Util {
         return embeds.map(embed => {
             const parsedEmbed: Embed = {};
 
-            if (embed.author) {
+            if (embed.author)
                 parsedEmbed.author = {
                     name:         embed.author.name,
                     iconURL:      embed.author.icon_url,
                     proxyIconURL: embed.author.proxy_icon_url,
                     url:          embed.author.url
                 };
-            }
+
             if (embed.color) parsedEmbed.color = embed.color;
             if (embed.description) parsedEmbed.description = embed.description;
-            if (embed.fields) {
+            if (embed.fields)
                 parsedEmbed.fields = embed.fields.map(field => ({
                     inline: field.inline,
                     name:   field.name,
                     value:  field.value
                 }));
-            }
-            if (embed.footer) {
+
+            if (embed.footer)
                 parsedEmbed.footer = {
                     text:         embed.footer.text,
                     iconURL:      embed.footer.icon_url,
                     proxyIconURL: embed.footer.proxy_icon_url
                 };
-            }
+
             if (embed.timestamp) parsedEmbed.timestamp = embed.timestamp;
             if (embed.title) parsedEmbed.title = embed.title;
-            if (embed.image) {
+            if (embed.image)
                 parsedEmbed.image = {
                     url:      embed.image.url,
                     height:   embed.image.height,
                     proxyURL: embed.image.proxy_url,
                     width:    embed.image.width
                 };
-            }
+
             if (embed.provider) parsedEmbed.provider = {
                 name: embed.provider.name,
                 url:  embed.provider.url
@@ -191,14 +191,14 @@ export default class Util {
             };
             if (embed.url) parsedEmbed.url = embed.url;
             if (embed.type) parsedEmbed.type =  embed.type;
-            if (embed.video) {
+            if (embed.video)
                 parsedEmbed.video = {
                     height:   embed.video.height,
                     proxyURL: embed.video.proxy_url,
                     url:      embed.video.url,
                     width:    embed.video.width
                 };
-            }
+
 
             return parsedEmbed;
         });
@@ -208,40 +208,40 @@ export default class Util {
         return embeds.map(embed => {
             const rawEmbed: RawEmbedOptions = {};
 
-            if (embed.author) {
+            if (embed.author)
                 rawEmbed.author = {
                     name:     embed.author.name,
                     icon_url: embed.author.iconURL,
                     url:      embed.author.url
                 };
-            }
+
             if (embed.color) rawEmbed.color = embed.color;
             if (embed.description) rawEmbed.description = embed.description;
-            if (embed.fields) {
+            if (embed.fields)
                 rawEmbed.fields = embed.fields.map(field => ({
                     inline: field.inline,
                     name:   field.name,
                     value:  field.value
                 }));
-            }
-            if (embed.footer) {
+
+            if (embed.footer)
                 rawEmbed.footer = {
                     text:     embed.footer.text,
                     icon_url: embed.footer.iconURL
                 };
-            }
+
             if (embed.timestamp) rawEmbed.timestamp = embed.timestamp;
             if (embed.title) rawEmbed.title = embed.title;
-            if (embed.image) {
+            if (embed.image)
                 rawEmbed.image = {
                     url: embed.image.url
                 };
-            }
-            if (embed.thumbnail) {
+
+            if (embed.thumbnail)
                 rawEmbed.thumbnail = {
                     url: embed.thumbnail.url
                 };
-            }
+
             if (embed.url) rawEmbed.url = embed.url;
 
             return rawEmbed;
@@ -268,7 +268,7 @@ export default class Util {
         return result;
     }
 
-    formatImage(url: string, format?: ImageFormat, size?: number) {
+    formatImage(url: string, format?: ImageFormat, size?: number): string {
         if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) format = url.includes("/a_") ? "gif" : this.#client.options.defaultImageFormat;
         if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.#client.options.defaultImageSize;
         return `${CDN_URL}${url}.${format}?size=${size}`;
@@ -314,7 +314,7 @@ export default class Util {
         } as RawApplicationCommandOption;
     }
 
-    updateMember(guildID: string, memberID: string, member: RawMember) {
+    updateMember(guildID: string, memberID: string, member: RawMember): Member {
         return this.#client.guilds.has(guildID) ? this.#client.guilds.get(guildID)!.members.update({ ...member, id: memberID }, guildID) : new Member(member, this.#client, guildID);
     }
 }

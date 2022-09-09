@@ -60,26 +60,19 @@ export interface RawApplicationCommandOptionChoice {
     value: string;
 }
 
-export type AnyApplicationCommand<W extends boolean = false> = ChatInputApplicationCommand<W> | UserApplicationCommand<W> | MessageApplicationCommand<W>;
+export type AnyApplicationCommand = ChatInputApplicationCommand | UserApplicationCommand | MessageApplicationCommand;
 export type ApplicationCommandOptions = ApplicationCommandOptionsWithOptions | ApplicationCommandOptionsWithValue;
 export type ApplicationCommandOptionsWithOptions = ApplicationCommandOptionsSubCommand | ApplicationCommandOptionsSubCommandGroup;
 export type ApplicationCommandOptionsWithValue = ApplicationCommandOptionsString | ApplicationCommandOptionsInteger | ApplicationCommandOptionsBoolean | ApplicationCommandOptionsUser | ApplicationCommandOptionsChannel | ApplicationCommandOptionsRole | ApplicationCommandOptionsMentionable | ApplicationCommandOptionsNumber | ApplicationCommandOptionsAttachment;
-export type ChatInputApplicationCommand<W extends boolean = false> = WithLang<ApplicationCommand<ApplicationCommandTypes.CHAT_INPUT>, W>;
-export type UserApplicationCommand<W extends boolean = false> = WithLang<ApplicationCommand<ApplicationCommandTypes.USER>, W>;
-export type MessageApplicationCommand<W extends boolean = false> = WithLang<ApplicationCommand<ApplicationCommandTypes.MESSAGE>, W>;
+export type ChatInputApplicationCommand = ApplicationCommand<ApplicationCommandTypes.CHAT_INPUT>;
+export type UserApplicationCommand = ApplicationCommand<ApplicationCommandTypes.USER>;
+export type MessageApplicationCommand = ApplicationCommand<ApplicationCommandTypes.MESSAGE>;
 
 export type ApplicationCommandOptionConversion<T extends EditApplicationCommandOptions | CreateApplicationCommandOptions> =
     T extends EditChatInputApplicationCommandOptions | CreateChatInputApplicationCommandOptions ? ChatInputApplicationCommand :
         T extends EditUserApplicationCommandOptions | CreateUserApplicationCommandOptions ? UserApplicationCommand :
             T extends EditMessageApplicationCommandOptions | CreateMessageApplicationCommandOptions ? MessageApplicationCommand :
                 never;
-
-export type LangNames = "descriptionLocalizations" | "nameLocalizations";
-type WithLang<T extends ApplicationCommand, W extends boolean, V = Omit<T, "descriptionLocalizations" | "nameLocalizations">> = & (W extends false ? V : V & {
-    descriptionLocalizations: Record<string, string> |  null;
-    nameLocalizations: Record<string, string> |  null;
-});
-
 export interface ApplicationCommandOptionBase<T extends ApplicationCommandOptionTypes = ApplicationCommandOptionTypes> {
     description: string;
     descriptionLocalizations?: Record<string, string>;

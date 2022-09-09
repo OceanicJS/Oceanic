@@ -53,6 +53,7 @@ import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChan
 import Interaction from "../structures/Interaction";
 import { is } from "../util/Util";
 import TypedCollection from "../util/TypedCollection";
+import Guild from "../structures/Guild";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
@@ -149,7 +150,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.hardReset();
     }
 
-    private async checkReady() {
+    private async checkReady(): Promise<void> {
         if (!this.ready) {
             if (this.#getAllUsersQueue.length > 0) {
                 const id = this.#getAllUsersQueue.shift()!;
@@ -164,19 +165,19 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    private createGuild(data: RawGuild) {
+    private createGuild(data: RawGuild): Guild {
         this.client.guildShardMap[data.id] = this.id;
         const guild = this.client.guilds.update(data);
-        if (this.client.shards.options.getAllUsers && guild.members.size > guild.memberCount) {
+        if (this.client.shards.options.getAllUsers && guild.members.size > guild.memberCount)
             void this.requestGuildMembers(guild.id, {
                 presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES
             });
-        }
+
 
         return guild;
     }
 
-    private initialize() {
+    private initialize(): void {
         if (!this._token) return this.disconnect(false, new Error("Invalid Token"));
         this.status = "connecting";
         if (this.client.shards.options.compress) {
@@ -188,13 +189,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             });
         }
         if (this.sessionID) {
-            if (this.resumeURL === null) {
+            if (this.resumeURL === null)
                 this.client.emit("warn", "Resume url is not currently present. Discord may disconnect you quicker.", this.id);
-            }
+
             this.ws = new WebSocket(this.resumeURL || this.client.gatewayURL, this.client.shards.options.ws);
-        } else {
+        } else
             this.ws = new WebSocket(this.client.gatewayURL, this.client.shards.options.ws);
-        }
+
 
         /* eslint-disable @typescript-eslint/unbound-method */
         this.ws.on("close", this.onWSClose);
@@ -204,13 +205,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         /* eslint-enable @typescript-eslint/unbound-method */
 
         this.#connectTimeout = setTimeout(() => {
-            if (this.connecting) {
+            if (this.connecting)
                 this.disconnect(undefined, new Error("Connection timeout"));
-            }
+
         }, this.client.shards.options.connectionTimeout);
     }
 
-    private async onDispatch(packet: AnyDispatchPacket) {
+    private async onDispatch(packet: AnyDispatchPacket): Promise<void> {
         this.client.emit("packet", packet, this.id);
         switch (packet.t) {
             case "APPLICATION_COMMAND_PERMISSIONS_UPDATE": {
@@ -305,12 +306,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 let channel: AnyGuildChannelWithoutThreads;
                 if (guild.channels.has(packet.d.id)) channel = guild.channels.get(packet.d.id)!;
                 else channel = Channel.from(packet.d, this.client);
-                if (channel instanceof VoiceChannel || channel instanceof StageChannel) {
+                if (channel instanceof VoiceChannel || channel instanceof StageChannel)
                     channel.voiceMembers.forEach(member => {
                         (channel as VoiceChannel).voiceMembers.delete(member.id);
                         this.client.emit("voiceChannelLeave", member, channel as VoiceChannel);
                     });
-                }
+
                 guild.channels.delete(packet.d.id);
                 this.client.emit("channelDelete", channel);
                 break;
@@ -364,10 +365,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "GUILD_CREATE": {
                 if (!packet.d.unavailable) {
                     const guild = this.createGuild(packet.d);
-                    if (this.ready) {
+                    if (this.ready)
                         if (this.client.unavailableGuilds.delete(guild.id)) this.client.emit("guildAvailable", guild);
                         else this.client.emit("guildCreate", guild);
-                    } else {
+                    else {
                         this.client.unavailableGuilds.delete(guild.id);
                         void this.restartGuildCreateTimeout();
                     }
@@ -383,7 +384,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
                 this.client.guilds.delete(packet.d.id);
-                if (guild) guild.channels.forEach((channel) => {
+                if (guild) guild.channels.forEach(channel => {
                     delete this.client.channelGuildMap[channel.id];
                 });
                 if (packet.d.unavailable) this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
@@ -655,12 +656,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         const message = channel.messages.get(id)!;
                         channel.messages.delete(id);
                         return message;
-                    } else {
+                    } else
                         return {
                             channel: channel || { id: packet.d.channel_id },
                             id
                         };
-                    }
+
                 }));
                 break;
             }
@@ -678,12 +679,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     if (message.reactions[name]) {
                         message.reactions[name].count++;
                         if (packet.d.user_id === this.client.user.id) message.reactions[name].me = true;
-                    } else {
+                    } else
                         message.reactions[name] = {
                             count: 1,
                             me:    packet.d.user_id === this.client.user.id
                         };
-                    }
+
                 }
                 this.client.emit("messageReactionAdd", message, reactor, packet.d.emoji);
                 break;
@@ -860,10 +861,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "THREAD_LIST_SYNC": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
-                for (const thread of packet.d.threads) {
+                for (const thread of packet.d.threads)
                     if (guild.threads.has(thread.id)) guild.threads.update(thread);
                     else guild.threads.add(Channel.from<AnyThreadChannel>(thread, this.client));
-                }
+
                 break;
             }
 
@@ -906,13 +907,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     let member: ThreadMember;
                     const index = thread.members.findIndex(m => m.userID === rawMember.id);
                     if (index === -1) member = thread.members[thread.members.push({ flags: rawMember.flags, id: rawMember.id, joinTimestamp: new Date(rawMember.join_timestamp), userID: rawMember.user_id })];
-                    else {
+                    else
                         member = thread.members[index] = {
                             ...thread.members[index],
                             flags:         rawMember.flags,
                             joinTimestamp: new Date(rawMember.join_timestamp)
                         };
-                    }
+
                     addedMembers.push(member);
                 });
                 packet.d.removed_member_ids.forEach(id => {
@@ -986,22 +987,22 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                             oldChannel = null;
                         }
                     }
-                    if (packet.d.channel_id && (newChannel = guild.channels.get(packet.d.channel_id) as VoiceChannel | StageChannel) && (newChannel.type === ChannelTypes.GUILD_VOICE || newChannel.type === ChannelTypes.GUILD_STAGE_VOICE)) {
+                    if (packet.d.channel_id && (newChannel = guild.channels.get(packet.d.channel_id) as VoiceChannel | StageChannel) && (newChannel.type === ChannelTypes.GUILD_VOICE || newChannel.type === ChannelTypes.GUILD_STAGE_VOICE))
                         if (oldChannel) {
                             oldChannel.voiceMembers.delete(member.id);
                             this.client.emit("voiceChannelSwitch", newChannel.voiceMembers.add(member), newChannel, oldChannel);
-                        } else {
+                        } else
                             this.client.emit("voiceChannelJoin", newChannel.voiceMembers.add(member), newChannel);
-                        }
-                    } else if (oldChannel) {
+
+                    else if (oldChannel) {
                         oldChannel.voiceMembers.delete(member.id);
                         this.client.emit("voiceChannelLeave", member, oldChannel);
                     }
                 }
 
-                if (JSON.stringify(oldState) !== JSON.stringify(state.toJSON())) {
+                if (JSON.stringify(oldState) !== JSON.stringify(state.toJSON()))
                     this.client.emit("voiceStateUpdate", member, oldState);
-                }
+
                 break;
             }
 
@@ -1023,11 +1024,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    private onPacket(packet: AnyReceivePacket) {
+    private onPacket(packet: AnyReceivePacket): void {
         if ("s" in packet && packet.s) {
-            if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming") {
+            if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming")
                 this.client.emit("warn", `Non-consecutive sequence (${this.sequence} -> ${packet.s})`, this.id);
-            }
+
             this.sequence = packet.s;
         }
 
@@ -1083,7 +1084,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    private onWSClose(code: number, r: Buffer) {
+    private onWSClose(code: number, r: Buffer): void {
         const reason = r.toString();
         let err: Error | undefined;
         let reconnect: boolean | undefined;
@@ -1183,22 +1184,22 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    private onWSError(err: Error) {
+    private onWSError(err: Error): void {
         this.client.emit("error", err, this.id);
     }
 
-    private onWSMessage(data: Data) {
+    private onWSMessage(data: Data): void {
         if (typeof data === "string") data = Buffer.from(data);
         try {
             if (data instanceof ArrayBuffer) {
-                if (this.client.shards.options.compress || Erlpack) {
+                if (this.client.shards.options.compress || Erlpack)
                     data = Buffer.from(data);
-                }
-            } else if (Array.isArray(data)) { // Fragmented messages
+
+            } else if (Array.isArray(data))  // Fragmented messages
                 data = Buffer.concat(data); // Copyfull concat is slow, but no alternative
-            }
+
             assert(is<Buffer>(data));
-            if (this.client.shards.options.compress) {
+            if (this.client.shards.options.compress)
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
@@ -1211,47 +1212,47 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
                     data = Buffer.from(this.#sharedZLib.result || "");
-                    if (Erlpack) {
+                    if (Erlpack)
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                         return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
-                    } else {
+                    else
                         return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
-                    }
-                } else {
+
+                } else
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, false);
-                }
-            } else if (Erlpack) {
+
+            else if (Erlpack)
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 return this.onPacket(Erlpack.unpack(data) as AnyReceivePacket);
-            } else {
+            else
                 return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
-            }
+
         } catch (err) {
             this.client.emit("error", err as Error, this.id);
         }
     }
 
-    private onWSOpen() {
+    private onWSOpen(): void {
         this.status = "handshaking";
         this.client.emit("connect", this.id);
         this.lastHeartbeatAck = true;
     }
 
-    private async restartGuildCreateTimeout() {
+    private async restartGuildCreateTimeout(): Promise<void> {
         if (this.#guildCreateTimeout) {
             clearTimeout(this.#guildCreateTimeout);
             this.#guildCreateTimeout = null;
         }
         if (!this.ready) {
-            if (this.client.unavailableGuilds.size === 0) {
+            if (this.client.unavailableGuilds.size === 0)
                 return this.checkReady();
-            }
+
             this.#guildCreateTimeout = setTimeout(this.checkReady.bind(this), this.client.shards.options.guildCreateTimeout);
         }
     }
 
-    private sendPresenceUpdate() {
+    private sendPresenceUpdate(): void {
         this.send(GatewayOPCodes.PRESENCE_UPDATE, {
             activities: this.presence.activities,
             afk:        !!this.presence.afk,
@@ -1260,10 +1261,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         });
     }
 
-    private get _token() { return this.client.options.auth!; }
+    private get _token(): string { return this.client.options.auth!; }
 
     /** Connect this shard. */
-    connect() {
+    connect(): void {
         if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
             this.client.emit("error", new Error("Shard#connect called while existing connection is established."), this.id);
             return;
@@ -1273,7 +1274,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.initialize();
     }
 
-    disconnect(reconnect = this.client.shards.options.autoReconnect, error?: Error) {
+    disconnect(reconnect = this.client.shards.options.autoReconnect, error?: Error): void {
         if (!this.ws) return;
 
         if (this.#heartbeatInterval) {
@@ -1284,15 +1285,15 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (this.ws.readyState !== WebSocket.CLOSED) {
             this.ws.removeAllListeners();
             try {
-                if (reconnect && this.sessionID) {
+                if (reconnect && this.sessionID)
                     if (this.ws.readyState !== WebSocket.OPEN) this.ws.close(4999, "Reconnect");
                     else {
                         this.client.emit("debug", `Closing websocket (state: ${this.ws.readyState})`, this.id);
                         this.ws.terminate();
                     }
-                } else {
+                else
                     this.ws.close(1000, "Normal Close");
-                }
+
             } catch (err) {
                 this.client.emit("error", err as Error, this.id);
             }
@@ -1301,10 +1302,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.ws = null;
         this.reset();
 
-        if (error) {
+        if (error)
             if (error instanceof GatewayError && [1001, 1006].includes(error.code)) this.client.emit("debug", error.message, this.id);
             else this.client.emit("error", error, this.id);
-        }
+
 
         this.emit("disconnect", error);
 
@@ -1313,7 +1314,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             this.sessionID = null;
         }
 
-        if (reconnect) {
+        if (reconnect)
             if (this.sessionID) {
                 this.client.emit("debug", `Immediately reconnecting for potential resume | Attempt ${this.connectAttempts}`, this.id);
                 this.client.shards.connect(this);
@@ -1324,7 +1325,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }, this.reconnectInterval);
                 this.reconnectInterval = Math.min(Math.round(this.reconnectInterval * (Math.random() * 2 + 1)), 30000);
             }
-        } else this.hardReset();
+        else this.hardReset();
     }
 
     /**
@@ -1332,13 +1333,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
      * @param status The status.
      * @param activities An array of activities.
      */
-    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []) {
+    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []): Promise<void> {
         this.presence.status = status;
         this.presence.activities = activities;
         return this.sendPresenceUpdate();
     }
 
-    hardReset() {
+    hardReset(): void {
         this.reset();
         this.sequence = 0;
         this.sessionID = null;
@@ -1353,7 +1354,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.resumeURL = null;
     }
 
-    heartbeat(requested = false) {
+    heartbeat(requested = false): void {
         // discord/discord-api-docs#1619
         if (this.status === "resuming" || this.status === "identifying") return;
         if (!requested) {
@@ -1373,7 +1374,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.send(GatewayOPCodes.HEARTBEAT, this.sequence, true);
     }
 
-    identify() {
+    identify(): void {
         const data = {
             token:           this._token,
             properties:      this.client.shards.options.connectionProperties,
@@ -1386,8 +1387,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.send(GatewayOPCodes.IDENTIFY, data);
     }
 
-    [inspect.custom]() {
-        return Base.prototype[inspect.custom].call(this);
+    [inspect.custom](): this {
+        return Base.prototype[inspect.custom].call(this) as never;
     }
 
     /**
@@ -1395,7 +1396,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
      * @param guildID The ID of the guild to request the members of.
      * @param options The options for requesting the members.
      */
-    async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions) {
+    async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions): Promise<Array<Member>> {
         const opts = {
             guild_id:  guildID,
             limit:     options?.limit ?? 0,
@@ -1425,19 +1426,19 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         });
     }
 
-    reset() {
+    reset(): void {
         this.connecting = false;
         this.ready = false;
         this.preReady = false;
-        if (this.#requestMembersPromise !== undefined) {
+        if (this.#requestMembersPromise !== undefined)
             for (const guildID in this.#requestMembersPromise) {
-                if (!this.#requestMembersPromise[guildID]) {
+                if (!this.#requestMembersPromise[guildID])
                     continue;
-                }
+
                 clearTimeout(this.#requestMembersPromise[guildID].timeout);
                 this.#requestMembersPromise[guildID].resolve(this.#requestMembersPromise[guildID].received);
             }
-        }
+
         this.#requestMembersPromise = {};
         this.#getAllUsersCount = {};
         this.#getAllUsersQueue = [];
@@ -1450,7 +1451,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.#connectTimeout = null;
     }
 
-    resume() {
+    resume(): void {
         this.status = "resuming";
         this.send(GatewayOPCodes.RESUME, {
             token:      this._token,
@@ -1459,10 +1460,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         });
     }
 
-    send(op: GatewayOPCodes, data: unknown, priority = false) {
+    send(op: GatewayOPCodes, data: unknown, priority = false): void {
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
             let i = 0, waitFor = 1;
-            const func = () => {
+            const func = (): void => {
                 if (++i >= waitFor && this.ws && this.ws.readyState === WebSocket.OPEN) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     const d = Erlpack ? Erlpack.pack({ op, d: data }) : JSON.stringify({ op, d: data });
@@ -1479,7 +1480,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    toString() {
+    toString(): str {
         return Base.prototype.toString.call(this);
     }
 
@@ -1489,7 +1490,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
      * @param channelID The ID of the voice channel to join. Null to disconnect.
      * @param options The options for updating the voice state.
      */
-    updateVoiceState(guildID: string, channelID: string | null, options?: UpdateVoiceStateOptions) {
+    updateVoiceState(guildID: string, channelID: string | null, options?: UpdateVoiceStateOptions): void {
         this.send(GatewayOPCodes.VOICE_STATE_UPDATE, {
             channel_id: channelID,
             guild_id:   guildID,

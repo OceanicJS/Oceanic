@@ -25,7 +25,7 @@ The documentation under `dev` is always for the latest commit. If something isn'
 
 ## Links
 * [Examples](https://github.com/DonovanDMC/Oceanic/tree/dev/examples)
-* [v0.0.10 Documentation](https://oceanic.owo-whats-this.dev/v0.0.10)
+* [Release Documentation](https://oceanic.owo-whats-this.dev/latest)
 * [Development Documentation](https://oceanic.owo-whats-this.dev/dev)
 * [Discord Server](https://discord.gg/xZ4AhdYrf9)
 * [Source](https://github.com/DonovanDMC/Oceanic)

@@ -19,16 +19,16 @@ export default class TypedCollection<K extends string | number, M extends Record
     }
 
     /** @hidden */
-    add<T extends C>(value: T) {
+    add<T extends C>(value: T): T {
         if ("id" in value) {
             if (this.limit === 0) return value;
             this.set(value.id as K, value);
 
             if (this.limit && this.size > this.limit) {
                 const iter = this.keys();
-                while (this.size > this.limit) {
-                    this.delete(iter.next().value as K);
-                }
+                while (this.size > this.limit)
+                    this.delete((iter.next().value as C).id as K);
+
             }
 
             return value;
@@ -40,7 +40,7 @@ export default class TypedCollection<K extends string | number, M extends Record
     }
 
     /** @hidden */
-    update(value: C | Partial<M> & { id?: K; }, ...extra: E) {
+    update(value: C | Partial<M> & { id?: K; }, ...extra: E): C {
         if (value instanceof this.#baseObject) {
             if ("update" in value) value["update"].call(value, value);
             return value;

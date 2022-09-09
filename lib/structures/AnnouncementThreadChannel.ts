@@ -17,7 +17,7 @@ export default class AnnouncementThreadChannel extends ThreadChannel<Announcemen
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    override async edit(options: EditPublicThreadChannelOptions) {
+    override async edit(options: EditPublicThreadChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 

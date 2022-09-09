@@ -45,7 +45,7 @@ export default class RequestHandler {
 
     }
 
-    private getRoute(path: string, method: string) {
+    private getRoute(path: string, method: string): string {
         let route = path.replace(/\/([a-z-]+)\/(?:[\d]{15,21})/g, function(match, p) {
             return p === "channels" || p === "guilds" || p === "webhooks" ? match : `/${p as string}/:id`;
         }).replace(/\/reactions\/[^/]+/g, "/reactions/:id").replace(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/, "/webhooks/$1/:token");
@@ -55,9 +55,9 @@ export default class RequestHandler {
             if (Date.now() - this.latencyRef.latency - createdAt >= 1000 * 60 * 60 * 24 * 14) method += "_OLD";
             else if (Date.now() - this.latencyRef.latency - createdAt <= 1000 * 10) method += "_NEW";
             route = method + route;
-        } else if (method === "GET" && /\/guilds\/[0-9]+\/channels$/.test(route)) {
+        } else if (method === "GET" && /\/guilds\/[0-9]+\/channels$/.test(route))
             route = "/guilds/:id/channels";
-        }
+
         if (method === "PUT" || method === "DELETE") {
             const index = route.indexOf("/reactions");
             if (index !== -1) route = "MODIFY" + route.slice(0, index + 10);
@@ -65,13 +65,13 @@ export default class RequestHandler {
         return route;
     }
 
-    private globalUnblock() {
+    private globalUnblock(): void {
         this.globalBlock = false;
         while (this.readyQueue.length > 0) this.readyQueue.shift()!();
     }
 
     /** same as `request`, but with `auth` always set to `true`. */
-    async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">) {
+    async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T> {
         return this.request<T>({
             ...options,
             auth: true
@@ -82,7 +82,7 @@ export default class RequestHandler {
      * Make a request. `null` will be returned if the request results in a `204 NO CONTENT`.
      * @param options The options for the request.
      */
-    async request<T = unknown>(options: RequestOptions) {
+    async request<T = unknown>(options: RequestOptions): Promise<T> {
         options.method = options.method.toUpperCase() as RESTMethod;
         if (!RESTMethods.includes(options.method)) throw new Error(`Invalid method "${options.method}.`);
         const _stackHolder = {};
@@ -92,7 +92,7 @@ export default class RequestHandler {
         if (!this.ratelimits[route]) this.ratelimits[route] = new SequentialBucket(1, this.latencyRef);
         let attempts = 0;
         return new Promise<T>((resolve, reject) => {
-            async function attempt(this: RequestHandler, cb: () => void) {
+            async function attempt(this: RequestHandler, cb: () => void): Promise<void> {
                 const headers: Record<string, string> = {};
                 try {
                     if (typeof options.auth === "string") headers.Authorization = options.auth;
@@ -141,17 +141,17 @@ export default class RequestHandler {
                     }
                     let resBody: Buffer | string | Record<string, unknown> | null;
                     if (res.status === 204) resBody = null;
-                    else {
-                        if (res.headers.get("content-type") === "application/json") {
-                            const b = await res.text();
-                            try {
-                                resBody = JSON.parse(b) as Record<string, unknown>;
-                            } catch (err) {
-                                this.#manager.client.emit("error", err as Error);
-                                resBody = b;
-                            }
-                        } else resBody = Buffer.from(await res.arrayBuffer());
-                    }
+                    else
+                    if (res.headers.get("content-type") === "application/json") {
+                        const b = await res.text();
+                        try {
+                            resBody = JSON.parse(b) as Record<string, unknown>;
+                        } catch (err) {
+                            this.#manager.client.emit("error", err as Error);
+                            resBody = b;
+                        }
+                    } else resBody = Buffer.from(await res.arrayBuffer());
+
                     this.#manager.client.emit("request", {
                         method:       options.method,
                         path:         options.path,
@@ -164,14 +164,14 @@ export default class RequestHandler {
                     const now = Date.now();
                     if (this.latencyRef.lastTimeOffsetCheck < (Date.now() - 5000)) {
                         const timeOffset = headerNow + 500 - (this.latencyRef.lastTimeOffsetCheck = Date.now());
-                        if (this.latencyRef.timeoffset - this.latencyRef.latency >= this.options.latencyThreshold && timeOffset - this.latencyRef.latency >= this.options.latencyThreshold) {
+                        if (this.latencyRef.timeoffset - this.latencyRef.latency >= this.options.latencyThreshold && timeOffset - this.latencyRef.latency >= this.options.latencyThreshold)
                             this.#manager.client.emit("warn", `Your clock is ${this.latencyRef.timeoffset}ms behind Discord's server clock. Please check your connection and system time.`);
-                        }
+
                         this.latencyRef.timeoffset = this.latencyRef.timeoffset - ~~(this.latencyRef.timeOffsets.shift()! / 10) + ~~(timeOffset / 10);
                         this.latencyRef.timeOffsets.push(timeOffset);
                     }
                     if (res.headers.has("x-ratelimit-limit")) this.ratelimits[route].limit = Number(res.headers.get("x-ratelimit-limit"));
-                    if (options.method !== "GET" && (!res.headers.has("x-ratelimit-remaining") || !res.headers.has("x-ratelimit-limit")) && this.ratelimits[route].limit !== 1) {
+                    if (options.method !== "GET" && (!res.headers.has("x-ratelimit-remaining") || !res.headers.has("x-ratelimit-limit")) && this.ratelimits[route].limit !== 1)
                         this.#manager.client.emit("debug", [`Missing ratelimit headers for SequentialBucket(${this.ratelimits[route].remaining}/${this.ratelimits[route].limit}) with non-default limit\n`,
                             `${res.status} ${res.headers.get("content-type")!}: ${options.method} ${route} | ${res.headers.get("cf-ray")!}\n`,
                             `content-type = ${res.headers.get("content-type")!}\n`,
@@ -179,15 +179,15 @@ export default class RequestHandler {
                             `x-ratelimit-limit = " + ${res.headers.get("x-ratelimit-limit")!}\n`,
                             `x-ratelimit-reset = " + ${res.headers.get("x-ratelimit-reset")!}\n`,
                             `x-ratelimit-global = " + ${res.headers.get("x-ratelimit-global")!}`].join("\n"));
-                    }
+
                     this.ratelimits[route].remaining = !res.headers.has("x-ratelimit-remaining") ? 1 : Number(res.headers.get("x-ratelimit-remaining")) || 0;
                     const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") || res.headers.get("retry-after") || 0) * 1000;
-                    if (retryAfter >= 0) {
+                    if (retryAfter >= 0)
                         if (res.headers.has("x-ratelimit-global")) {
                             this.globalBlock = true;
                             setTimeout(this.globalUnblock.bind(this), retryAfter || 1);
                         } else this.ratelimits[route].reset = (retryAfter || 1) + now;
-                    } else if (res.headers.has("x-ratelimit-reset")) {
+                    else if (res.headers.has("x-ratelimit-reset")) {
                         let resetTime = Number(res.headers.get("x-ratelimit-reset")) * 1000;
                         if (route.endsWith("/reactions/:id") && (resetTime - headerNow) === 1000) resetTime = now + 250;
                         this.ratelimits[route].reset = Math.max(resetTime - this.latencyRef.latency, now);
@@ -196,13 +196,13 @@ export default class RequestHandler {
                     if (res.status > 300) {
                         if (res.status === 429) {
                             let delay = retryAfter;
-                            if (res.headers.get("x-ratelimit-scope") === "shared") {
+                            if (res.headers.get("x-ratelimit-scope") === "shared")
                                 try {
                                     delay = (resBody as { retry_after: number; }).retry_after * 1000;
                                 } catch (err) {
                                     reject(err);
                                 }
-                            }
+
                             this.#manager.client.emit("debug", `${res.headers.has("x-ratelimit-global") ? "Global" : "Unexpected"} RateLimit: ${JSON.stringify(resBody)}\n${now} ${route} ${res.status}: ${latency}ms (${this.latencyRef.latency}ms avg) | ${this.ratelimits[route].remaining}/${this.ratelimits[route].limit} left | Reset ${delay} (${this.ratelimits[route].reset - now}ms left) | Scope ${res.headers.get("x-ratelimit-scope")!}`);
                             if (delay) {
                                 setTimeout(() => {
@@ -227,11 +227,11 @@ export default class RequestHandler {
                         let { stack } = _stackHolder as { stack: string; };
                         if (stack.startsWith("Error\n")) stack = stack.substring(6);
                         let err;
-                        if (resBody && typeof resBody === "object" && "code" in resBody) {
+                        if (resBody && typeof resBody === "object" && "code" in resBody)
                             err = new DiscordRESTError(res, resBody, options.method, stack);
-                        } else {
+                        else
                             err = new DiscordHTTPError(res, resBody, options.method, stack);
-                        }
+
                         reject(err);
                         return;
                     }
@@ -246,11 +246,11 @@ export default class RequestHandler {
                     this.#manager.client.emit("error", err as Error);
                 }
             }
-            if (this.globalBlock && options.auth) {
+            if (this.globalBlock && options.auth)
                 (options.priority ? this.readyQueue.unshift.bind(this.readyQueue) : this.readyQueue.push.bind(this.readyQueue))(() => {
                     this.ratelimits[route].queue(attempt.bind(this), options.priority);
                 });
-            } else this.ratelimits[route].queue(attempt.bind(this), options.priority);
+            else this.ratelimits[route].queue(attempt.bind(this), options.priority);
         });
     }
 }

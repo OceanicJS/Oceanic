@@ -49,7 +49,7 @@ export default class Integration extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawIntegration>) {
+    protected update(data: Partial<RawIntegration>): void {
         if (data.account !== undefined) this.account = data.account;
         if (data.application !== undefined) this.application = new PartialApplication(data.application, this.client);
         if (data.enable_emoticons !== undefined) this.enableEmoticons = data.enable_emoticons;

@@ -621,6 +621,7 @@ export interface StickerItem {
 // @TODO directory & forum
 export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel | ForumChannel;
 export type AnyPrivateChannel = PrivateChannel | GroupChannel;
+export type AnyEditableChannel = Exclude<AnyChannel, PrivateChannel>;
 export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
 export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
 export type AnyTextChannelWithoutThreads = Exclude<AnyTextChannel, AnyThreadChannel>;

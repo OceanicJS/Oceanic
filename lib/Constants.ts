@@ -304,7 +304,7 @@ export const Permissions = {
     MODERATE_MEMBERS:                    1099511627776n,
     VIEW_CREATOR_MONETIZATION_ANALYTICS: 2199023255552n
 } as const;
-export type Permission = keyof typeof Permissions;
+export type PermissionName = keyof typeof Permissions;
 export const AllGuildPermissions = Permissions.KICK_MEMBERS |
     Permissions.BAN_MEMBERS |
     Permissions.ADMINISTRATOR |

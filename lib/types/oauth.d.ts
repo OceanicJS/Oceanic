@@ -1,7 +1,7 @@
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
 import type { RawIntegration } from "./guilds";
-import type { ConnectionService, Permission, TeamMembershipState, VisibilityTypes } from "../Constants";
+import type { ConnectionService, PermissionName, TeamMembershipState, VisibilityTypes } from "../Constants";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
@@ -50,7 +50,7 @@ export interface RawTeamMember {
 }
 
 export interface InstallParams {
-    permissions: Array<Permission>;
+    permissions: Array<PermissionName>;
     scopes: Array<string>;
 }
 
@@ -150,6 +150,9 @@ export interface RefreshTokenOptions {
     /** The refresh token from when the code was exchanged. */
     refreshToken: string;
 }
+
+export type RawRefreshTokenResponse = Omit<RawExchangeCodeResponse, "webhook">;
+export type RefreshTokenResponse = Omit<ExchangeCodeResponse, "webhook">;
 
 export interface ClientCredentialsTokenOptions {
     /** The id of the client to perform the authorization with. This can be omitted if the global authorization is the proper (Basic base64(clientID:clientSecret)) already, or if connected to the gateway and ready. */

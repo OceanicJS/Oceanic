@@ -33,7 +33,8 @@ import type {
     RawThreadMember,
     InviteInfoTypes,
     RawPrivateChannel,
-    RawGroupChannel
+    RawGroupChannel,
+    AnyEditableChannel
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -47,6 +48,8 @@ import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
 import type RESTManager from "../rest/RESTManager";
 import type PrivateChannel from "../structures/PrivateChannel";
+import GroupChannel from "../structures/GroupChannel";
+import User from "../structures/User";
 
 export default class Channels {
     #manager: RESTManager;
@@ -59,7 +62,7 @@ export default class Channels {
      * @param groupID The ID of the group to add the user to.
      * @param options The options for adding the recipient.
      */
-    async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions) {
+    async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.GROUP_RECIPIENT(groupID, options.userID),
@@ -75,7 +78,7 @@ export default class Channels {
      * @param id The ID of the thread to add them to.
      * @param userID The ID of the user to add to the thread.
      */
-    async addThreadMember(id: string, userID: string) {
+    async addThreadMember(id: string, userID: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
@@ -85,7 +88,7 @@ export default class Channels {
      * Create a direct message.
      * @param recipient The ID of the recipient of the direct message.
      */
-    async createDM(recipient: string) {
+    async createDM(recipient: string): Promise<PrivateChannel> {
         let cache: PrivateChannel | undefined;
         if ((cache = this.#manager.client.privateChannels.find(ch => ch.recipient.id === recipient))) return cache;
         return this.#manager.authRequest<RawPrivateChannel>({
@@ -101,7 +104,7 @@ export default class Channels {
      * Create a group dm.
      * @param options The options for creating the group dm.
      */
-    async createGroupDM(options: CreateGroupChannelOptions) {
+    async createGroupDM(options: CreateGroupChannelOptions): Promise<GroupChannel> {
         return this.#manager.authRequest<RawGroupChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
@@ -116,7 +119,7 @@ export default class Channels {
      * @param id The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
      */
-    async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions) {
+    async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         return this.#manager.authRequest<RawInvite>({
@@ -140,7 +143,7 @@ export default class Channels {
      * @param id The ID of the channel to create the message in.
      * @param options The options for creating the message.
      */
-    async createMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, options: CreateMessageOptions) {
+    async createMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, options: CreateMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) delete options.files;
         return this.#manager.authRequest<RawMessage>({
@@ -172,7 +175,7 @@ export default class Channels {
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async createReaction(id: string, messageID: string, emoji: string) {
+    async createReaction(id: string, messageID: string, emoji: string): Promise<void> {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
         await this.#manager.authRequest<null>({
             method: "PUT",
@@ -185,7 +188,7 @@ export default class Channels {
      * @param id The ID of the channel to crosspost the message in.
      * @param messageID The ID of the message to crosspost.
      */
-    async crosspostMessage(id: string, messageID: string) {
+    async crosspostMessage(id: string, messageID: string): Promise<Message<AnnouncementChannel>> {
         return this.#manager.authRequest<RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES_CROSSPOST(id, messageID)
@@ -197,7 +200,7 @@ export default class Channels {
      * @param id The ID of the channel to delete or close.
      * @param reason The reason to be displayed in the audit log.
      */
-    async delete(id: string, reason?: string) {
+    async delete(id: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<RawChannel>({
             method: "DELETE",
             path:   Routes.CHANNEL(id),
@@ -210,7 +213,7 @@ export default class Channels {
      * @param code The code of the invite to delete.
      * @param reason The reason for deleting the invite.
      */
-    async deleteInvite<T extends InviteChannel = InviteChannel>(code: string, reason?: string) {
+    async deleteInvite<T extends InviteChannel = InviteChannel>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
         return this.#manager.authRequest<RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),
@@ -224,7 +227,7 @@ export default class Channels {
      * @param messageID The ID of the message to delete.
      * @param reason The reason for deleting the message.
      */
-    async deleteMessage(id: string, messageID: string, reason?: string) {
+    async deleteMessage(id: string, messageID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<RawMessage>({
             method: "DELETE",
             path:   Routes.CHANNEL_MESSAGE(id, messageID),
@@ -238,7 +241,7 @@ export default class Channels {
      * @param messageIDs The IDs of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
-    async deleteMessages(id: string, messageIDs: Array<string>, reason?: string) {
+    async deleteMessages(id: string, messageIDs: Array<string>, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(id),
@@ -255,7 +258,7 @@ export default class Channels {
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      */
-    async deletePermission(id: string, overwriteID: string, reason?: string) {
+    async deletePermission(id: string, overwriteID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_PERMISSION(id, overwriteID),
@@ -270,7 +273,7 @@ export default class Channels {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
-    async deleteReaction(id: string, messageID: string, emoji: string, user = "@me") {
+    async deleteReaction(id: string, messageID: string, emoji: string, user = "@me"): Promise<void> {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
         await this.#manager.authRequest<null>({
             method: "DELETE",
@@ -284,7 +287,7 @@ export default class Channels {
      * @param messageID The ID of the message to remove reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
-    async deleteReactions(id: string, messageID: string, emoji?: string) {
+    async deleteReactions(id: string, messageID: string, emoji?: string): Promise<void> {
         if (emoji && emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
         await this.#manager.authRequest<null>({
             method: "DELETE",
@@ -297,16 +300,16 @@ export default class Channels {
      * @param id The ID of the channel to edit.
      * @param options The options for editing the channel.
      */
-    async edit<T extends AnyChannel = AnyChannel>(id: string, options: EditChannelOptions) {
+    async edit<T extends AnyEditableChannel = AnyEditableChannel>(id: string, options: EditChannelOptions): Promise<T> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
-        if (options.icon) {
+        if (options.icon)
             try {
                 options.icon = this.#manager.client.util.convertImage(options.icon);
             } catch (err) {
                 throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
             }
-        }
+
 
         return this.#manager.authRequest<RawChannel>({
             method: "PATCH",
@@ -342,7 +345,7 @@ export default class Channels {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string, options: EditMessageOptions) {
+    async editMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) delete options.files;
         return this.#manager.authRequest<RawMessage>({
@@ -366,7 +369,7 @@ export default class Channels {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(id: string, overwriteID: string, options: EditPermissionOptions) {
+    async editPermission(id: string, overwriteID: string, options: EditPermissionOptions): Promise<void> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         await this.#manager.authRequest<null>({
@@ -386,7 +389,7 @@ export default class Channels {
      * @param id The ID of the channel to follow the announcement channel to.
      * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
-    async followAnnouncement(id: string, webhookChannelID: string) {
+    async followAnnouncement(id: string, webhookChannelID: string): Promise<FollowedChannel> {
         return this.#manager.authRequest<RawFollowedChannel>({
             method: "POST",
             path:   Routes.CHANNEL_FOLLOWERS(id),
@@ -396,14 +399,14 @@ export default class Channels {
         }).then(data => ({
             channelID: data.channel_id,
             webhookID: data.webhook_id
-        }) as FollowedChannel);
+        }));
     }
 
     /**
      * Get a channel.
      * @param id The ID of the channel to get.
      */
-    async get<T extends AnyChannel = AnyChannel>(id: string) {
+    async get<T extends AnyChannel = AnyChannel>(id: string): Promise<T> {
         return this.#manager.authRequest<RawChannel>({
             method: "GET",
             path:   Routes.CHANNEL(id)
@@ -419,7 +422,7 @@ export default class Channels {
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions) {
+    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
         const query = new URLSearchParams();
         if (options?.guildScheduledEventID) query.set("guild_scheduled_event_id", options.guildScheduledEventID);
         if (options?.withCounts) query.set("with_counts", "true");
@@ -435,7 +438,7 @@ export default class Channels {
      * Get the invites of a channel.
      * @param id The ID of the channel to get the invites of.
      */
-    async getInvites<T extends InviteChannel = InviteChannel>(id: string) {
+    async getInvites<T extends InviteChannel = InviteChannel>(id: string): Promise<Array<Invite<"withMetadata", T>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(id)
@@ -447,7 +450,7 @@ export default class Channels {
      * @param id The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
      */
-    async getJoinedPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions) {
+    async getJoinedPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
         return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(id),
@@ -464,7 +467,7 @@ export default class Channels {
                 userID:        m.user_id
             }) as ThreadMember),
             threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this.#manager.client))
-        }) as ArchivedThreads<PrivateThreadChannel>);
+        }));
     }
 
     /**
@@ -472,7 +475,7 @@ export default class Channels {
      * @param id The ID of the channel the message is in
      * @param messageID The ID of the message to get.
      */
-    async getMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string) {
+    async getMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string): Promise<Message<T>> {
         return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(id, messageID)
@@ -484,7 +487,7 @@ export default class Channels {
      * @param id The ID of the channel to get messages from.
      * @param options The options for getting messages. All are mutually exclusive.
      */
-    async getMessages<T extends AnyTextChannel = AnyTextChannel>(id: string, options?: GetChannelMessagesOptions) {
+    async getMessages<T extends AnyTextChannel = AnyTextChannel>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
         return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGES(id),
@@ -501,7 +504,7 @@ export default class Channels {
      * Get the pinned messages in a channel.
      * @param id The ID of the channel to get the pinned messages from.
      */
-    async getPinnedMessages<T extends AnyTextChannel = AnyTextChannel>(id: string) {
+    async getPinnedMessages<T extends AnyTextChannel = AnyTextChannel>(id: string): Promise<Array<Message<T>>> {
         return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(id)
@@ -513,7 +516,7 @@ export default class Channels {
      * @param id The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
      */
-    async getPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions) {
+    async getPrivateArchivedThreads(id: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
         return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(id),
@@ -530,7 +533,7 @@ export default class Channels {
                 userID:        m.user_id
             }) as ThreadMember),
             threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this.#manager.client))
-        }) as ArchivedThreads<PrivateThreadChannel>);
+        }));
     }
 
     /**
@@ -538,7 +541,7 @@ export default class Channels {
      * @param id The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
      */
-    async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, options?: GetArchivedThreadsOptions) {
+    async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<T>> {
         return this.#manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(id),
@@ -555,7 +558,7 @@ export default class Channels {
                 userID:        m.user_id
             }) as ThreadMember),
             threads: data.threads.map(d => Channel.from<T>(d, this.#manager.client))
-        }) as ArchivedThreads<T>);
+        }));
     }
 
     /**
@@ -565,7 +568,7 @@ export default class Channels {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions) {
+    async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
         if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
         return this.#manager.authRequest<Array<RawUser>>({
             method: "GET",
@@ -582,7 +585,7 @@ export default class Channels {
      * @param id The ID of the thread.
      * @param userID The ID of the user to get the thread member of.
      */
-    async getThreadMember(id: string, userID: string) {
+    async getThreadMember(id: string, userID: string): Promise<ThreadMember> {
         return this.#manager.authRequest<RawThreadMember>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
@@ -591,14 +594,14 @@ export default class Channels {
             id:            data.id,
             joinTimestamp: new Date(data.join_timestamp),
             userID:        data.user_id
-        }) as ThreadMember);
+        }));
     }
 
     /**
      * Get the members of a thread.
      * @param id The ID of the thread.
      */
-    async getThreadMembers(id: string) {
+    async getThreadMembers(id: string): Promise<Array<ThreadMember>> {
         return this.#manager.authRequest<Array<RawThreadMember>>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBERS(id)
@@ -607,13 +610,13 @@ export default class Channels {
             id:            d.id,
             joinTimestamp: new Date(d.join_timestamp),
             userID:        d.user_id
-        }) as ThreadMember));
+        })));
     }
 
     /**
      * Get the list of usable voice regions.
      */
-    async getVoiceRegions() {
+    async getVoiceRegions(): Promise<Array<VoiceRegion>> {
         return this.#manager.authRequest<Array<VoiceRegion>>({
             method: "GET",
             path:   Routes.VOICE_REGIONS
@@ -624,7 +627,7 @@ export default class Channels {
      * Join a thread.
      * @param id The ID of the thread to join.
      */
-    async joinThread(id: string) {
+    async joinThread(id: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, "@me")
@@ -635,7 +638,7 @@ export default class Channels {
      * Leave a thread.
      * @param id The ID of the thread to leave.
      */
-    async leaveThread(id: string) {
+    async leaveThread(id: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, "@me")
@@ -648,7 +651,7 @@ export default class Channels {
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
      */
-    async pinMessage(id: string, messageID: string, reason?: string) {
+    async pinMessage(id: string, messageID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_PINNED_MESSAGE(id, messageID),
@@ -661,7 +664,7 @@ export default class Channels {
      * @param groupID The ID of the group to remove the user from.
      * @param userID The ID of the user to remove.
      */
-    async removeGroupRecipient(groupID: string, userID: string) {
+    async removeGroupRecipient(groupID: string, userID: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.GROUP_RECIPIENT(groupID, userID)
@@ -673,7 +676,7 @@ export default class Channels {
      * @param id The ID of the thread to remove them from.
      * @param userID The ID of the user to remove from the thread.
      */
-    async removeThreadMember(id: string, userID: string) {
+    async removeThreadMember(id: string, userID: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_THREAD_MEMBER(id, userID)
@@ -684,7 +687,7 @@ export default class Channels {
      * Show a typing indicator in a channel. How long users see this varies from client to client.
      * @param id The ID of the channel to show the typing indicator in.
      */
-    async sendTyping(id: string) {
+    async sendTyping(id: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.CHANNEL_TYPING(id)
@@ -697,7 +700,7 @@ export default class Channels {
      * @param messageID The ID of the message to create the thread from.
      * @param {options The options for starting the thread.
      */
-    async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions) {
+    async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         return this.#manager.authRequest<RawChannel>({
@@ -717,7 +720,7 @@ export default class Channels {
      * @param id The ID of the channel to start the thread in.
      * @param options The options for starting the thread.
      */
-    async startThreadInForum(id: string, options: StartThreadInForumOptions) {
+    async startThreadInForum(id: string, options: StartThreadInForumOptions): Promise<PublicThreadChannel> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         const files = options.message.files;
@@ -749,7 +752,7 @@ export default class Channels {
      * @param id The ID of the channel to start the thread in.
      * @param options The options for starting the thread.
      */
-    async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions) {
+    async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions): Promise<T> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         return this.#manager.authRequest<RawChannel>({
@@ -772,7 +775,7 @@ export default class Channels {
      * @param messageID The ID of the message to unpin.
      * @param reason The reason for unpinning the message.
      */
-    async unpinMessage(id: string, messageID: string, reason?: string) {
+    async unpinMessage(id: string, messageID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_PINNED_MESSAGE(id, messageID),

@@ -10,7 +10,9 @@ import type {
     RawClientCredentialsTokenResponse,
     RawConnection,
     RawExchangeCodeResponse,
+    RawRefreshTokenResponse,
     RefreshTokenOptions,
+    RefreshTokenResponse,
     RESTApplication,
     RevokeTokenOptions
 } from "../types/oauth";
@@ -35,7 +37,7 @@ export default class OAuth {
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
      * @param options The options to for the client credentials grant.
      */
-    async clientCredentialsGrant(options: ClientCredentialsTokenOptions) {
+    async clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse> {
         const form = new FormData();
         form.append("grant_type", "client_credentials");
         form.append("scope", options.scopes.join(" "));
@@ -48,15 +50,16 @@ export default class OAuth {
             accessToken: data.access_token,
             expiresIn:   data.expires_in,
             scopes:      data.scope.split(" "),
-            tokenType:   data.token_type
-        }) as ClientCredentialsTokenResponse);
+            tokenType:   data.token_type,
+            webhook:     !data.webhook ? null : new Webhook(data.webhook, this.#manager.client)
+        }));
     }
 
     /**
      * Construct an oauth authorization url.
      * @param options The options to construct the url with.
      */
-    constructURL(options: OAuthURLOptions) {
+    constructURL(options: OAuthURLOptions): string {
         const params: Array<string> = [
             `client_id=${options.clientID}`,
             `response_type=${options.responseType || "code"}`,
@@ -75,7 +78,7 @@ export default class OAuth {
      * Exchange a code for an access token.
      * @param options The options for exchanging the code.
      */
-    async exchangeCode(options: ExchangeCodeOptions) {
+    async exchangeCode(options: ExchangeCodeOptions): Promise<ExchangeCodeResponse> {
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
@@ -93,13 +96,13 @@ export default class OAuth {
             scopes:       data.scope.split(" "),
             tokenType:    data.token_type,
             webhook:      !data.webhook ? null : new Webhook(data.webhook, this.#manager.client)
-        }) as ExchangeCodeResponse);
+        }));
     }
 
     /**
      * Get the OAuth application information.
      */
-    async getApplication() {
+    async getApplication(): Promise<Application> {
         return this.#manager.authRequest<RESTApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION
@@ -111,7 +114,7 @@ export default class OAuth {
      *
      * Note: OAuth only. Bots cannot use this.
      */
-    async getCurrentAuthorizationInformation() {
+    async getCurrentAuthorizationInformation(): Promise<AuthorizationInformation> {
         return this.#manager.authRequest<RawAuthorizationInformation>({
             method: "GET",
             path:   Routes.OAUTH_INFO
@@ -120,7 +123,7 @@ export default class OAuth {
             expires:     new Date(data.expires),
             scopes:      data.scopes,
             user:        this.#manager.client.users.update(data.user)
-        }) as AuthorizationInformation);
+        }));
     }
 
     /**
@@ -128,7 +131,7 @@ export default class OAuth {
      *
      * Note: Requires the `connections` scope when using oauth.
      */
-    async getCurrentConnections() {
+    async getCurrentConnections(): Promise<Array<Connection>> {
         return this.#manager.authRequest<Array<RawConnection>>({
             method: "GET",
             path:   Routes.OAUTH_CONNECTIONS
@@ -142,7 +145,7 @@ export default class OAuth {
             type:         connection.type,
             verified:     connection.verified,
             visibility:   connection.visibility
-        }) as Connection));
+        })));
     }
 
     /**
@@ -151,7 +154,7 @@ export default class OAuth {
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
      * @param guild the ID of the guild
      */
-    async getCurrentGuildMember(guild: string) {
+    async getCurrentGuildMember(guild: string): Promise<Member> {
         return this.#manager.authRequest<RawMember>({
             method: "GET",
             path:   Routes.OAUTH_GUILD_MEMBER(guild)
@@ -160,8 +163,10 @@ export default class OAuth {
 
     /**
      * Get the currently authenticated user's guilds.
+     *
+     * Note: This does NOT add the guilds to the client's cache.
      */
-    async getCurrentGuilds() {
+    async getCurrentGuilds(): Promise<Array<Guild>> {
         return this.#manager.authRequest<Array<RawGuild>>({
             method: "GET",
             path:   Routes.OAUTH_GUILDS
@@ -173,13 +178,13 @@ export default class OAuth {
      * Refresh an existing access token.
      * @param options The options for refreshing the token.
      */
-    async refreshToken(options: RefreshTokenOptions) {
+    async refreshToken(options: RefreshTokenOptions): Promise<RefreshTokenResponse> {
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
         form.append("grant_type", "refresh_token");
         form.append("refresh_token", options.refreshToken);
-        return this.#manager.authRequest<RawExchangeCodeResponse>({
+        return this.#manager.authRequest<RawRefreshTokenResponse>({
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
             form
@@ -188,9 +193,8 @@ export default class OAuth {
             expiresIn:    data.expires_in,
             refreshToken: data.refresh_token,
             scopes:       data.scope.split(" "),
-            tokenType:    data.token_type,
-            webhook: 	    !data.webhook ? undefined : new Webhook(data.webhook, this.#manager.client)
-        }) as ExchangeCodeResponse);
+            tokenType:    data.token_type
+        }));
     }
 
 
@@ -198,7 +202,7 @@ export default class OAuth {
      * Revoke an access token.
      * @param options The options for revoking the token.
      */
-    async revokeToken(options: RevokeTokenOptions) {
+    async revokeToken(options: RevokeTokenOptions): Promise<void> {
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);

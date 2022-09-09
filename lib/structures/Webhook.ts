@@ -58,14 +58,14 @@ export default class Webhook extends Base {
         this.user = !data.user ? null : client.users.update(data.user);
     }
 
-    get url() { return `${BASE_URL}${Routes.WEBHOOK(this.id, this.token)}`; }
+    get url(): string { return `${BASE_URL}${Routes.WEBHOOK(this.id, this.token)}`; }
 
     /**
      * The url of this webhook's avatar.
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    avatarURL(format?: ImageFormat, size?: number) {
+    avatarURL(format?: ImageFormat, size?: number): string | null {
         return this.avatar === null ? null : this.client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
 
@@ -73,7 +73,7 @@ export default class Webhook extends Base {
      * Delete this webhook (requires a bot user, see `deleteToken`).
      * @param reason The reason for deleting this webhook.
      */
-    async delete(reason?: string) {
+    async delete(reason?: string): Promise<void> {
         return this.client.rest.webhooks.delete(this.id, reason);
     }
 
@@ -83,7 +83,7 @@ export default class Webhook extends Base {
      * @param options The options for deleting the message.
      * @param token The token for the webhook, if not already present.
      */
-    async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string) {
+    async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string): Promise<void> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
         return this.client.rest.webhooks.deleteMessage(this.id, t, messageID, options);
@@ -93,7 +93,7 @@ export default class Webhook extends Base {
      * Delete this webhook via its token.
      * @param token The token for the webhook, if not already present.
      */
-    async deleteToken(token?: string) {
+    async deleteToken(token?: string): Promise<void> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
         return this.client.rest.webhooks.deleteToken(this.id, t);
@@ -103,7 +103,7 @@ export default class Webhook extends Base {
      * Edit this webhook (requires a bot user, see `editToken`).
      * @param options The options for editing the webhook.
      */
-    async edit(options: EditWebhookOptions) {
+    async edit(options: EditWebhookOptions): Promise<Webhook> {
         return this.client.rest.webhooks.edit(this.id, options);
     }
 
@@ -125,7 +125,7 @@ export default class Webhook extends Base {
      * @param options The options for editing the webhook.
      * @param token The token for the webhook, if not already present.
      */
-    async editToken(options: EditWebhookOptions, token?: string) {
+    async editToken(options: EditWebhookOptions, token?: string): Promise<Webhook> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
         return this.client.rest.webhooks.editToken(this.id, t, options);
@@ -176,7 +176,7 @@ export default class Webhook extends Base {
      * @param threadID The ID of the thread the message is in.
      * @param token The token for the webhook, if not already present.
      */
-    async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string) {
+    async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string): Promise<Message<T>> {
         const t = this.token || token;
         if (!t) throw new Error("Token is not present on webhook, and was not provided in options.");
         return this.client.rest.webhooks.getMessage<T>(this.id, t, messageID, threadID);
@@ -187,7 +187,7 @@ export default class Webhook extends Base {
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    sourceGuildIconURL(format?: ImageFormat, size?: number) {
+    sourceGuildIconURL(format?: ImageFormat, size?: number): string | null {
         return !this.sourceGuild?.icon ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
     }
 

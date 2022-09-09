@@ -20,7 +20,7 @@ export default class SequentialBucket {
         this.last = this.reset = 0;
     }
 
-    private check(force = false) {
+    private check(force = false): void {
         if (this.#queue.length === 0) {
             if (this.processing) {
                 if (typeof this.processing !== "boolean") clearTimeout(this.processing);
@@ -56,7 +56,7 @@ export default class SequentialBucket {
      * @param func The function to queue.
      * @param priority- If true, the item will be added to the front of the queue/
      */
-    queue(func: (cb: () => void) => void, priority = false) {
+    queue(func: (cb: () => void) => void, priority = false): void {
         if (priority) this.#queue.unshift(func);
         else this.#queue.push(func);
         this.check();

@@ -1,6 +1,6 @@
 import Base from "./Base";
 import Permission from "./Permission";
-import type { OverwriteTypes, Permission as PermissionNames } from "../Constants";
+import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants";
 import type Client from "../Client";
 import Properties from "../util/Properties";
 import type { RawOverwrite } from "../types/channels";
@@ -18,17 +18,17 @@ export default class PermissionOverwrite extends Base {
         this.type = data.type;
     }
 
-    get allow() { return this.permission.allow; }
-    get deny() { return this.permission.deny; }
+    get allow(): bigint { return this.permission.allow; }
+    get deny(): bigint { return this.permission.deny; }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
-    get json() { return this.permission.json; }
+    get json(): Record<keyof typeof Permissions, boolean> { return this.permission.json; }
 
     /**
      *Check if this permissions instance has the given permissions allowed
      * @param permissions The permissions to check for.
      */
-    has(...permissions: Array<PermissionNames>) {
+    has(...permissions: Array<PermissionNames>): boolean {
         return this.permission.has(...permissions);
     }
 

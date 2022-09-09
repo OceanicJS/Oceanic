@@ -24,7 +24,7 @@ export default class Webhooks {
      * @param channelID The ID of the channel to create the webhook in.
      * @param options The options to create the webhook with.
      */
-    async create(channelID: string, options: CreateWebhookOptions) {
+    async create(channelID: string, options: CreateWebhookOptions): Promise<Webhook> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
@@ -44,7 +44,7 @@ export default class Webhooks {
      * @param id The ID of the webhook.
      * @param reason The reason for deleting the webhook.
      */
-    async delete(id: string, reason?: string) {
+    async delete(id: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.WEBHOOK(id),
@@ -59,7 +59,7 @@ export default class Webhooks {
      * @param messageID The ID of the message.
      * @param options The options for deleting the message.
      */
-    async deleteMessage(id: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions) {
+    async deleteMessage(id: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions): Promise<void> {
         const query = new URLSearchParams();
         if (options?.threadID) query.set("thread_id", options.threadID);
         await this.#manager.authRequest<null>({
@@ -73,7 +73,7 @@ export default class Webhooks {
      * @param id The ID of the webhook.
      * @param token The token of the webhook.
      */
-    async deleteToken(id: string, token: string) {
+    async deleteToken(id: string, token: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.WEBHOOK(id, token)
@@ -85,7 +85,7 @@ export default class Webhooks {
      * @param id The ID of the webhook.
      * @param options The options tofor editing the webhook.
      */
-    async edit(id: string, options: EditWebhookOptions) {
+    async edit(id: string, options: EditWebhookOptions): Promise<Webhook> {
         const reason = options.reason;
         if (options.reason) delete options.reason;
         if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
@@ -133,7 +133,7 @@ export default class Webhooks {
      * @param id The ID of the webhook.
      * @param options The options for editing the webhook.
      */
-    async editToken(id: string, token: string, options: EditWebhookTokenOptions) {
+    async editToken(id: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {
         if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
         return this.#manager.authRequest<RawWebhook>({
             method: "PATCH",
@@ -228,7 +228,7 @@ export default class Webhooks {
      * @param id The ID of the webhook.
      * @param token The token of the webhook.
      */
-    async get(id: string, token?: string) {
+    async get(id: string, token?: string): Promise<Webhook> {
         return this.#manager.authRequest<RawWebhook>({
             method: "GET",
             path:   Routes.WEBHOOK(id, token)
@@ -239,22 +239,22 @@ export default class Webhooks {
      * Get the webhooks in the specified channel.
      * @param channelID The ID of the channel to get the webhooks of.
      */
-    async getChannel(channelID: string) {
+    async getForChannel(channelID: string): Promise<Array<Webhook>> {
         return this.#manager.authRequest<Array<RawWebhook>>({
             method: "GET",
             path:   Routes.CHANNEL_WEBHOOKS(channelID)
-        });
+        }).then(data => data.map(d => new Webhook(d, this.#manager.client)));
     }
 
     /**
      * Get the webhooks in the specified guild.
      * @param guildID The ID of the guild to get the webhooks of.
      */
-    async getGuild(guildID: string) {
+    async getForGuild(guildID: string): Promise<Array<Webhook>> {
         return this.#manager.authRequest<Array<RawWebhook>>({
             method: "GET",
             path:   Routes.GUILD_WEBHOOKS(guildID)
-        });
+        }).then(data => data.map(d => new Webhook(d, this.#manager.client)));
     }
 
     /**
@@ -264,7 +264,7 @@ export default class Webhooks {
      * @param messageID The ID of the message.
      * @param threadID The ID of the thread the message is in.
      */
-    async getMessage<T extends AnyGuildTextChannel>(id: string, token: string, messageID: string, threadID?: string) {
+    async getMessage<T extends AnyGuildTextChannel>(id: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
         const query = new URLSearchParams();
         if (threadID) query.set("thread_id", threadID);
         return this.#manager.authRequest<RawMessage>({

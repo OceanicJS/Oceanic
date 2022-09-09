@@ -4,6 +4,7 @@ import User from "./User";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type Member from "./Member";
+import Permission from "./Permission";
 import type { ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -71,19 +72,19 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         this.update(data);
     }
 
-    protected update(data: Partial<RawThreadChannel>) {
+    protected update(data: Partial<RawThreadChannel>): void {
         if (data.flags !== undefined) this.flags = data.flags;
         if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
         if (data.member) {
             const index = this.members.findIndex(m => m.userID === this.client.user!.id);
             if (index === -1) this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this.client.user!.id });
-            else {
+            else
                 this.members[index] = {
                     ...this.members[index],
                     flags:         data.member.flags,
                     joinTimestamp: new Date(data.member.join_timestamp)
                 };
-            }
+
         }
         if (data.member_count !== undefined) this.memberCount = data.member_count;
         if (data.message_count !== undefined) this.messageCount = data.message_count;
@@ -107,7 +108,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * Add a member to this thread.
      * @param userID The ID of the user to add to the thread.
      */
-    async addMember(userID: string) {
+    async addMember(userID: string): Promise<void> {
         return this.client.rest.channels.addThreadMember(this.id, userID);
     }
 
@@ -124,7 +125,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async createReaction(messageID: string, emoji: string) {
+    async createReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.createReaction(this.id, messageID, emoji);
     }
 
@@ -133,7 +134,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to delete.
      * @param reason The reason for deleting the message.
      */
-    async deleteMessage(messageID: string, reason?: string) {
+    async deleteMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
 
@@ -142,7 +143,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageIDs The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
-    async deleteMessages(messageIDs: Array<string>, reason?: string) {
+    async deleteMessages(messageIDs: Array<string>, reason?: string): Promise<void> {
         return this.client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
 
@@ -152,7 +153,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
-    async deleteReaction(messageID: string, emoji: string, user = "@me") {
+    async deleteReaction(messageID: string, emoji: string, user = "@me"): Promise<void> {
         return this.client.rest.channels.deleteReaction(this.id, messageID, emoji, user);
     }
 
@@ -161,7 +162,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to remove reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
-    async deleteReactions(messageID: string, emoji?: string) {
+    async deleteReactions(messageID: string, emoji?: string): Promise<void> {
         return this.client.rest.channels.deleteReactions(this.id, messageID, emoji);
     }
 
@@ -169,7 +170,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * Edit this thread.
      * @param options The options for editing the channel.
      */
-    override async edit(options: EditThreadChannelOptions) {
+    override async edit(options: EditThreadChannelOptions): Promise<AnyThreadChannel> {
         return this.client.rest.channels.edit<AnyThreadChannel>(this.id, options);
     }
 
@@ -178,22 +179,22 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions) {
-        return this.client.rest.channels.editMessage(this.id, messageID, options);
+    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<T>> {
+        return this.client.rest.channels.editMessage<T>(this.id, messageID, options);
     }
 
     /**
      * Get a thread member in this thread.
      * @param userID The ID of the user to get the thread member of.
      */
-    async getMember(userID: string) {
+    async getMember(userID: string): Promise<ThreadMember> {
         return this.client.rest.channels.getThreadMember(this.id, userID);
     }
 
     /**
      * Get the members of this thread.
      */
-    async getMembers() {
+    async getMembers(): Promise<Array<ThreadMember>> {
         return this.client.rest.channels.getThreadMembers(this.id);
     }
 
@@ -226,21 +227,21 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
+    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
     /**
      * Join this thread.
      */
-    async join() {
+    async join(): Promise<void> {
         return this.client.rest.channels.joinThread(this.id);
     }
 
     /**
      * Leave this thread.
      */
-    async leave() {
+    async leave(): Promise<void> {
         return this.client.rest.channels.leaveThread(this.id);
     }
 
@@ -248,7 +249,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * Get the permissions of a member.  If providing an id, the member must be cached. This will go to the parent channel of this thread, as threads themselves do not have permissions.
      * @param member The member to get the permissions of.
      */
-    permissionsOf(member: string | Member) {
+    permissionsOf(member: string | Member): Permission {
         return this.guild.channels.get(this.parentID)!.permissionsOf(member);
     }
 
@@ -257,7 +258,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
      */
-    async pinMessage(messageID: string, reason?: string) {
+    async pinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.pinMessage(this.id, messageID, reason);
     }
 
@@ -265,14 +266,14 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * Remove a member from this thread.
      * @param userID The ID of the user to remove from the thread.
      */
-    async removeMember(userID: string) {
+    async removeMember(userID: string): Promise<void> {
         return this.client.rest.channels.removeThreadMember(this.id, userID);
     }
 
     /**
      * Show a typing indicator in this thread.
      */
-    async sendTyping() {
+    async sendTyping(): Promise<void> {
         return this.client.rest.channels.sendTyping(this.id);
     }
 
@@ -297,7 +298,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param messageID The ID of the message to unpin.
      * @param reason The reason for unpinning the message.
      */
-    async unpinMessage(messageID: string, reason?: string) {
+    async unpinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
 }

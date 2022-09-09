@@ -31,7 +31,7 @@ export default class GuildChannel extends Channel {
         this.parentID = null;
     }
 
-    protected update(data: Partial<RawGuildChannel>) {
+    protected update(data: Partial<RawGuildChannel>): void {
         super.update(data);
         if (data.guild_id !== undefined) {
             this.guild = this.client.guilds.get(data.guild_id)!;
@@ -48,8 +48,8 @@ export default class GuildChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGuildChannelOptions) {
-        return this.client.rest.channels.edit<AnyGuildChannel>(this.id, options);
+    async edit(options: EditGuildChannelOptions): Promise<AnyGuildChannel> {
+        return this.client.rest.channels.edit(this.id, options);
     }
 
     override toJSON(): JSONGuildChannel {

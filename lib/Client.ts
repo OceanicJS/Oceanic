@@ -88,23 +88,24 @@ export default class Client extends TypedEmitter<ClientEvents> {
         this.voiceConnections = new VoiceConnectionManager(this);
     }
 
-    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. **/
-    get application() {
+    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
+    get application(): ClientApplication {
         if (!this._application) throw new Error("Cannot access `client.application` without having at least one shard marked as READY.");
         else return this._application;
     }
 
-    get uptime() {
+    get uptime(): number {
         return this.startTime ? Date.now() - this.startTime : 0;
     }
 
-    /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. **/
-    get user() {
+    /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. */
+    get user(): ExtendedUser {
         if (!this._user) throw new Error("Cannot access `client.user` without having at least one shard marked as READY.");
         else return this._user;
     }
 
-    async connect() {
+    /** Connect the client to Discord. */
+    async connect(): Promise<void> {
         if (!this.options.auth || !this.options.auth.startsWith("Bot ")) throw new Error("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
         let url: string, data: GetBotGatewayResponse | undefined;
         try {
@@ -134,13 +135,12 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
         if (!Array.isArray(this.shards.options.shardIDs)) this.shards.options.shardIDs = [];
 
-        if (this.shards.options.shardIDs.length === 0) {
-            if (this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined) {
-                for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++) {
+        if (this.shards.options.shardIDs.length === 0)
+            if (this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined)
+                for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++)
                     this.shards.options.shardIDs.push(i);
-                }
-            }
-        }
+
+
         for (const id of this.shards.options.shardIDs) this.shards.spawn(id);
     }
 
@@ -149,7 +149,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param status The status.
      * @param activities An array of activities.
      */
-    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []) {
+    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []): Promise<void>{
         return this.shards.forEach(shard => shard.editStatus(status, activities));
     }
 
@@ -163,7 +163,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param channelID The ID of the voice channel to join. Null to disconnect.
      * @param options The options for joining the voice channel.
      */
-    async joinVoiceChannel(channelID: string, options?: UpdateVoiceStateOptions) {
+    async joinVoiceChannel(channelID: string, options?: UpdateVoiceStateOptions): Promise<void> {
         const channel = this.getChannel<VoiceChannel | StageChannel>(channelID);
         if (!channel) throw new Error("Invalid channel. Make sure the id is correct, and the channel is cached.");
         if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) throw new Error("Only voice & stage channels can be joined.");
@@ -175,7 +175,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * Leave a voice channel.
      * @param channelID The ID of the voice channel to leave.
      */
-    async leaveVoiceChannel(channelID: string) {
+    async leaveVoiceChannel(channelID: string): Promise<void> {
         const channel = this.getChannel<VoiceChannel | StageChannel>(channelID);
         if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) return;
         this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, null, { selfDeaf: false, selfMute: false });

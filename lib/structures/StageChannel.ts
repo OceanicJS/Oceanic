@@ -3,6 +3,7 @@ import PermissionOverwrite from "./PermissionOverwrite";
 import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
+import Invite from "./Invite";
 import type { ChannelTypes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
@@ -11,6 +12,8 @@ import type {
     CreateInviteOptions,
     EditPermissionOptions,
     EditStageChannelOptions,
+    InviteChannel,
+    InviteInfoTypes,
     RawOverwrite,
     RawStageChannel
 } from "../types/channels";
@@ -44,7 +47,7 @@ export default class StageChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawStageChannel>) {
+    protected update(data: Partial<RawStageChannel>): void {
         super.update(data);
         if (data.bitrate !== undefined) this.bitrate = data.bitrate;
         if (data.position !== undefined) this.position = data.position;
@@ -57,7 +60,7 @@ export default class StageChannel extends GuildChannel {
      * Create an invite for this channel.
      * @param options The options to create an invite with.
      */
-    async createInvite(options: CreateInviteOptions) {
+    async createInvite(options: CreateInviteOptions): Promise<Invite<InviteInfoTypes, InviteChannel>> {
         return this.client.rest.channels.createInvite(this.id, options);
     }
 
@@ -66,7 +69,7 @@ export default class StageChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      */
-    async deletePermission(overwriteID: string, reason?: string) {
+    async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
@@ -74,7 +77,7 @@ export default class StageChannel extends GuildChannel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditStageChannelOptions) {
+    async edit(options: EditStageChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
@@ -83,7 +86,7 @@ export default class StageChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(overwriteID: string, options: EditPermissionOptions) {
+    async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
@@ -91,7 +94,7 @@ export default class StageChannel extends GuildChannel {
      * Join this stage channel.
      * @param options The options to join the channel with.
      */
-    async join(options?: UpdateVoiceStateOptions) {
+    async join(options?: UpdateVoiceStateOptions): Promise<void> {
         return this.client.joinVoiceChannel(this.id, options);
     }
 
@@ -99,7 +102,7 @@ export default class StageChannel extends GuildChannel {
      * Get the permissions of a member.  If providing an id, the member must be cached.
      * @param member The member to get the permissions of.
      */
-    permissionsOf(member: string | Member) {
+    permissionsOf(member: string | Member): Permission {
         if (typeof member === "string") member = this.guild.members.get(member)!;
         if (!member) throw new Error("Member not found");
         let permission = this.guild.permissionsOf(member).allow;
@@ -108,12 +111,12 @@ export default class StageChannel extends GuildChannel {
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
         let deny = 0n;
         let allow = 0n;
-        for (const id of member.roles) {
+        for (const id of member.roles)
             if ((overwrite = this.permissionOverwrites.get(id))) {
                 deny |= overwrite.deny;
                 allow |= overwrite.allow;
             }
-        }
+
         permission = (permission & ~deny) | allow;
         overwrite = this.permissionOverwrites.get(member.id);
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;

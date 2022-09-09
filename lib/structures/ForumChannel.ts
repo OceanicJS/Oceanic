@@ -6,6 +6,7 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import type Client from "../Client";
 import type {
+    ArchivedThreads,
     CreateInviteOptions,
     EditForumChannelOptions,
     EditPermissionOptions,
@@ -72,7 +73,7 @@ export default class ForumChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawForumChannel>) {
+    protected update(data: Partial<RawForumChannel>): void {
         super.update(data);
         if (data.available_tags !== undefined) this.availableTags = data.available_tags.map(tag => ({
             emoji:     tag.emoji_id === null && tag.emoji_name === null ? null : { id: tag.emoji_id, name: tag.emoji_name },
@@ -84,14 +85,14 @@ export default class ForumChannel extends GuildChannel {
         if (data.default_reaction_emoji !== undefined) this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
         if (data.default_thread_rate_limit_per_user !== undefined) this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
         if (data.flags !== undefined) this.flags = data.flags;
-        if (data.last_message_id !== undefined) {
+        if (data.last_message_id !== undefined)
             this.lastThread = this.threads.get(data.last_message_id!) || { id: data.last_message_id! };
-        }
+
         if (data.nsfw !== undefined) this.nsfw = data.nsfw;
         if (data.permission_overwrites !== undefined) {
-            for (const id of this.permissionOverwrites.keys()) {
+            for (const id of this.permissionOverwrites.keys())
                 if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) this.permissionOverwrites.delete(id);
-            }
+
             for (const overwrite of data.permission_overwrites) this.permissionOverwrites.update(overwrite);
         }
         if (data.position !== undefined) this.position = data.position;
@@ -113,7 +114,7 @@ export default class ForumChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      */
-    async deletePermission(overwriteID: string, reason?: string) {
+    async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
     }
 
@@ -121,7 +122,7 @@ export default class ForumChannel extends GuildChannel {
      * Edit this channel.
      * @param options The options for editing the channel
      */
-    override async edit(options: EditForumChannelOptions) {
+    override async edit(options: EditForumChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
@@ -130,7 +131,7 @@ export default class ForumChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(overwriteID: string, options: EditPermissionOptions) {
+    async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
@@ -145,7 +146,7 @@ export default class ForumChannel extends GuildChannel {
      * Get the public archived threads in this channel.
      * @param options The options for getting the public archived threads.
      */
-    async getPublicArchivedThreads(options?: GetArchivedThreadsOptions) {
+    async getPublicArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PublicThreadChannel>> {
         return this.client.rest.channels.getPublicArchivedThreads<PublicThreadChannel>(this.id, options);
     }
 
@@ -153,7 +154,7 @@ export default class ForumChannel extends GuildChannel {
      * Get the permissions of a member.  If providing an id, the member must be cached.
      * @param member The member to get the permissions of.
      */
-    permissionsOf(member: string | Member) {
+    permissionsOf(member: string | Member): Permission {
         if (typeof member === "string") member = this.guild.members.get(member)!;
         if (!member) throw new Error("Member not found");
         let permission = this.guild.permissionsOf(member).allow;
@@ -162,12 +163,12 @@ export default class ForumChannel extends GuildChannel {
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
         let deny = 0n;
         let allow = 0n;
-        for (const id of member.roles) {
+        for (const id of member.roles)
             if ((overwrite = this.permissionOverwrites.get(id))) {
                 deny |= overwrite.deny;
                 allow |= overwrite.allow;
             }
-        }
+
         permission = (permission & ~deny) | allow;
         overwrite = this.permissionOverwrites.get(member.id);
         if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
@@ -179,7 +180,7 @@ export default class ForumChannel extends GuildChannel {
      * Create a thread in a forum channel.
      * @param options The options for starting the thread.
      */
-    async startThread(options: StartThreadInForumOptions) {
+    async startThread(options: StartThreadInForumOptions): Promise<PublicThreadChannel> {
         return this.client.rest.channels.startThreadInForum(this.id, options);
     }
 

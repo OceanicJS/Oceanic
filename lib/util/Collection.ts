@@ -1,13 +1,14 @@
 /** A {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map | Map} with some Array-like additions. */
 export default class Collection<K, V> extends Map<K, V> {
-    get empty() {
+    /** If this collection is empty. */
+    get empty(): boolean {
         return this.size === 0;
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every | Array#every } */
     every<T extends V, ThisArg = Collection<K, V>>(predicate: (value: V, index: number, array: Array<V>) => value is T, thisArg?: ThisArg): this is Array<T>;
     every<ThisArg = Collection<K, V>>(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg): boolean;
-    every(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown) {
+    every(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown): boolean {
         return this.toArray().every(predicate, thisArg);
 
     }
@@ -16,19 +17,19 @@ export default class Collection<K, V> extends Map<K, V> {
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter | Array#filter } */
     filter<S extends V, ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, array: Array<V>) => value is S, thisArg?: ThisArg): Array<S>;
     filter<ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg): Array<V>;
-    filter(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown) {
+    filter(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown): Array<V> {
         return this.toArray().filter(predicate, thisArg) as Array<V>;
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find | Array#find } */
     find<S extends V, ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, obj: Array<V>) => value is S, thisArg?: ThisArg): S | undefined;
     find<ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, obj: Array<V>) => unknown, thisArg?: ThisArg): V | undefined;
-    find(predicate: (value: V, index: number, obj: Array<V>) => unknown, thisArg?: unknown) {
+    find(predicate: (value: V, index: number, obj: Array<V>) => unknown, thisArg?: unknown): V | undefined {
         return this.toArray().find(predicate, thisArg);
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex | Array#findIndex } */
-    findIndex(predicate: (value: V, index: number, obj: Array<V>) => unknown, thisArg?: unknown) {
+    findIndex(predicate: (value: V, index: number, obj: Array<V>) => unknown, thisArg?: unknown): number {
         return this.toArray().findIndex(predicate, thisArg);
     }
 
@@ -67,14 +68,14 @@ export default class Collection<K, V> extends Map<K, V> {
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map | Array#map } */
-    map<T>(predicate: (value: V, index: number, obj: Array<V>) => T, thisArg?: unknown) {
+    map<T>(predicate: (value: V, index: number, obj: Array<V>) => T, thisArg?: unknown): Array<T> {
         return this.toArray().map(predicate, thisArg);
     }
 
     /**
      * Pick a random element from the collection, or undefined if the collection is empty.
      */
-    random() {
+    random(): V | undefined {
         if (this.empty) return undefined;
         const iterable = Array.from(this.values());
 
@@ -85,7 +86,7 @@ export default class Collection<K, V> extends Map<K, V> {
     reduce(predicate: (previousValue: V, currentValue: V, currentIndex: number, array: Array<V>) => V): V;
     reduce(predicate: (previousValue: V, currentValue: V, currentIndex: number, array: Array<V>) => V, initialValue: V): V;
     reduce<T>(predicate: (previousValue: T, currentValue: V, currentIndex: number, array: Array<V>) => T, initialValue: T): T;
-    reduce<T>(predicate: (previousValue: T, currentValue: V, currentIndex: number, array: Array<V>) => T, initialValue?: T) {
+    reduce<T>(predicate: (previousValue: T, currentValue: V, currentIndex: number, array: Array<V>) => T, initialValue?: T): T {
         return this.toArray().reduce(predicate, initialValue!);
     }
 
@@ -93,17 +94,17 @@ export default class Collection<K, V> extends Map<K, V> {
     reduceRight(predicate: (previousValue: V, currentValue: V, currentIndex: number, array: Array<V>) => V): V;
     reduceRight(predicate: (previousValue: V, currentValue: V, currentIndex: number, array: Array<V>) => V, initialValue: V): V;
     reduceRight<T>(predicate: (previousValue: T, currentValue: V, currentIndex: number, array: Array<V>) => T, initialValue: T): T;
-    reduceRight<T>(predicate: (previousValue: T, currentValue: V, currentIndex: number, array: Array<V>) => T, initialValue?: T) {
+    reduceRight<T>(predicate: (previousValue: T, currentValue: V, currentIndex: number, array: Array<V>) => T, initialValue?: T): T {
         return this.toArray().reduceRight(predicate, initialValue!);
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some | Array#some } */
-    some<ThisArg = Collection<K, V>>(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg) {
+    some<ThisArg = Collection<K, V>>(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg): boolean {
         return this.toArray().some(predicate, thisArg);
     }
 
     /** Get the values of this collection as an array. */
-    toArray() {
+    toArray(): Array<V> {
         return Array.from(this.values());
     }
 }

@@ -63,7 +63,7 @@ export default class Application extends ClientApplication {
         this.update(data);
     }
 
-    protected update(data: Partial<RESTApplication>) {
+    protected update(data: Partial<RESTApplication>): void {
         super.update(data);
         if (data.bot_public !== undefined) this.botPublic = data.bot_public;
         if (data.bot_require_code_grant !== undefined) this.botRequireCodeGrant = data.bot_require_code_grant;
@@ -93,7 +93,7 @@ export default class Application extends ClientApplication {
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    coverImageURL(format?: ImageFormat, size?: number) {
+    coverImageURL(format?: ImageFormat, size?: number): string | null {
         return this.coverImage === null ? null : this.client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
     }
 

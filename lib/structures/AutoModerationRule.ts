@@ -60,7 +60,7 @@ export default class AutoModerationRule extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawAutoModerationRule>) {
+    protected update(data: Partial<RawAutoModerationRule>): void {
         if (data.actions !== undefined) this.actions = data.actions.map(a => ({
             metadata: {
                 channelID:       a.metadata.channel_id,
@@ -86,7 +86,7 @@ export default class AutoModerationRule extends Base {
      * Delete this auto moderation rule.
      * @param reason The reason for deleting this rule.
      */
-    async deleteAutoModerationRule(reason?: string) {
+    async deleteAutoModerationRule(reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteAutoModerationRule(this.guildID, this.id, reason);
     }
 
@@ -94,7 +94,7 @@ export default class AutoModerationRule extends Base {
      * Edit this auto moderation rule.
      * @param options The options for editing the rule.
      */
-    async edit(options: EditAutoModerationRuleOptions) {
+    async edit(options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
         return this.client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);
     }
 

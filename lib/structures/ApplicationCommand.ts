@@ -4,7 +4,14 @@ import type Guild from "./Guild";
 import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
 import { ApplicationCommandTypes } from "../Constants";
-import type { ApplicationCommandOptions, EditApplicationCommandPermissionsOptions, RawApplicationCommand, TypeToEdit } from "../types/application-commands";
+import type {
+    ApplicationCommandOptionConversion,
+    ApplicationCommandOptions,
+    EditApplicationCommandPermissionsOptions,
+    RawApplicationCommand,
+    RESTGuildApplicationCommandPermissions,
+    TypeToEdit
+} from "../types/application-commands";
 import type { Uncached } from "../types/shared";
 import type { JSONApplicationCommand } from "../types/json";
 
@@ -52,7 +59,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /**
      * Delete this command.
      */
-    async delete() {
+    async delete(): Promise<void> {
         return this.guildID ? this.client.rest.applicationCommands.deleteGuildCommand(this.application.id, this.guildID, this.id) : this.client.rest.applicationCommands.deleteGlobalCommand(this.application.id, this.id);
     }
 
@@ -60,7 +67,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Edit this command.
      * @param options The options for editing the command.
      */
-    async edit(options: TypeToEdit<T>) {
+    async edit(options: TypeToEdit<T>): Promise<ApplicationCommandOptionConversion<TypeToEdit<T>>> {
         return this.guildID ? this.client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this.client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
     }
 
@@ -68,7 +75,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Edit this command's permissions (guild commands only). This requires a bearer token with the `applications.commands.permissions.update` scope.
      * @param options The options for editing the permissions.
      */
-    async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions) {
+    async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
         if (!this.guildID) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
         return this.client.rest.applicationCommands.editGuildCommandPermissions(this.application.id, this.guildID, this.id, options);
     }
@@ -76,7 +83,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /**
      * Get this command's permissions (guild commands only).
      */
-    async getGuildPermission() {
+    async getGuildPermission(): Promise<RESTGuildApplicationCommandPermissions> {
         if (!this.guildID) throw new Error("getGuildPermission cannot be used on global commands.");
         return this.client.rest.applicationCommands.getGuildPermission(this.application.id, this.guildID, this.id);
     }
@@ -85,7 +92,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Get a mention for this command.
      * @param sub The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
      */
-    mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]) {
+    mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]): string {
         let text = `${this.name}`;
         if (sub?.length) text += ` ${sub.slice(0, 2).join(" ")}`;
         return `<${text}:${this.id}>`;

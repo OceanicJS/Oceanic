@@ -5,7 +5,15 @@ import type PrivateThreadChannel from "./PrivateThreadChannel";
 import ThreadChannel from "./ThreadChannel";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditTextChannelOptions, RawPrivateThreadChannel, RawPublicThreadChannel, RawTextChannel } from "../types/channels";
+import type {
+    ArchivedThreads,
+    EditTextChannelOptions,
+    FollowedChannel,
+    GetArchivedThreadsOptions,
+    RawPrivateThreadChannel,
+    RawPublicThreadChannel,
+    RawTextChannel
+} from "../types/channels";
 import type { JSONTextChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 
@@ -22,7 +30,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
     /**
      * Convert this text channel to a announcement channel.
      */
-    async convert() {
+    async convert(): Promise<AnnouncementChannel> {
         return this.edit({ type: ChannelTypes.GUILD_ANNOUNCEMENT })  as unknown as AnnouncementChannel;
     }
 
@@ -30,7 +38,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
      * Edit this channel.
      * @param options The options for editing the channel
      */
-    override async edit(options: EditTextChannelOptions) {
+    override async edit(options: EditTextChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
@@ -38,8 +46,24 @@ export default class TextChannel extends TextableChannel<TextChannel> {
      * Follow an announcement channel to this channel.
      * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      */
-    async followAnnouncement(webhookChannelID: string) {
+    async followAnnouncement(webhookChannelID: string): Promise<FollowedChannel> {
         return this.client.rest.channels.followAnnouncement(this.id, webhookChannelID);
+    }
+
+    /**
+     * Get the private archived threads the current user has joined in this channel.
+     * @param options The options for getting the joined private archived threads.
+     */
+    async getJoinedPrivateArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+        return this.client.rest.channels.getJoinedPrivateArchivedThreads(this.id, options);
+    }
+
+    /**
+     * Get the private archived threads in this channel.
+     * @param options The options for getting the private archived threads.
+     */
+    async getPrivateArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+        return this.client.rest.channels.getPrivateArchivedThreads(this.id, options);
     }
 
     toJSON(): JSONTextChannel {

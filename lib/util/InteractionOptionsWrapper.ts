@@ -32,7 +32,7 @@ export default class InteractionOptionsWrapper {
         this.resolved = resolved;
     }
 
-    private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes) {
+    private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes): T | undefined {
         let baseOptions: Array<InteractionOptionsWithValue> | undefined;
         const sub = this.getSubCommand(false);
         if (sub?.length === 1) baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
@@ -50,7 +50,7 @@ export default class InteractionOptionsWrapper {
      */
     getAttachment(name: string, required?: false): Attachment | undefined;
     getAttachment(name: string, required: true): Attachment;
-    getAttachment(name: string, required?: boolean) {
+    getAttachment(name: string, required?: boolean): Attachment | undefined {
         if (this.resolved === null) throw new Error("attempt to use getAttachmentValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getAttachmentOption(name, required as false)?.value)) return undefined;
@@ -66,7 +66,7 @@ export default class InteractionOptionsWrapper {
      */
     getAttachmentOption(name: string, required?: false): InteractionOptionsAttachment | undefined;
     getAttachmentOption(name: string, required: true): InteractionOptionsAttachment;
-    getAttachmentOption(name: string, required?: boolean) {
+    getAttachmentOption(name: string, required?: boolean): InteractionOptionsAttachment | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.ATTACHMENT);
     }
 
@@ -77,7 +77,7 @@ export default class InteractionOptionsWrapper {
      */
     getBoolean(name: string, required?: false): boolean | undefined;
     getBoolean(name: string, required: true): boolean;
-    getBoolean(name: string, required?: boolean) {
+    getBoolean(name: string, required?: boolean): boolean | undefined {
         return this.getBooleanOption(name, required as false)?.value;
     }
 
@@ -89,7 +89,7 @@ export default class InteractionOptionsWrapper {
      */
     getBooleanOption(name: string, required?: false): InteractionOptionsBoolean | undefined;
     getBooleanOption(name: string, required: true): InteractionOptionsBoolean;
-    getBooleanOption(name: string, required?: boolean) {
+    getBooleanOption(name: string, required?: boolean): InteractionOptionsBoolean | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.BOOLEAN);
     }
 
@@ -100,7 +100,7 @@ export default class InteractionOptionsWrapper {
      */
     getChannel<T extends AnyChannel = AnyChannel>(name: string, required?: false): T | undefined;
     getChannel<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
-    getChannel(name: string, required?: boolean) {
+    getChannel(name: string, required?: boolean): AnyChannel | undefined {
         if (this.resolved === null) throw new Error("attempt to use getChannelValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getChannelOption(name, required as false)?.value)) return undefined;
@@ -116,7 +116,7 @@ export default class InteractionOptionsWrapper {
      */
     getChannelOption(name: string, required?: false): InteractionOptionsChannel | undefined;
     getChannelOption(name: string, required: true): InteractionOptionsChannel;
-    getChannelOption(name: string, required?: boolean) {
+    getChannelOption(name: string, required?: boolean): InteractionOptionsChannel | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.CHANNEL);
     }
 
@@ -127,7 +127,7 @@ export default class InteractionOptionsWrapper {
      */
     getInteger(name: string, required?: false): number | undefined;
     getInteger(name: string, required: true): number;
-    getInteger(name: string, required?: boolean) {
+    getInteger(name: string, required?: boolean): number | undefined {
         return this.getIntegerOption(name, required as false)?.value;
     }
 
@@ -138,7 +138,7 @@ export default class InteractionOptionsWrapper {
      */
     getIntegerOption(name: string, required?: false): InteractionOptionsInteger | undefined;
     getIntegerOption(name: string, required: true): InteractionOptionsInteger;
-    getIntegerOption(name: string, required?: boolean) {
+    getIntegerOption(name: string, required?: boolean): InteractionOptionsInteger | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.INTEGER);
     }
 
@@ -149,7 +149,7 @@ export default class InteractionOptionsWrapper {
      */
     getMember(name: string, required?: false): Member | undefined;
     getMember(name: string, required: true): Member;
-    getMember(name: string, required?: boolean) {
+    getMember(name: string, required?: boolean): Member | undefined {
         if (this.resolved === null) throw new Error("attempt to use getMemberValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) return undefined;
@@ -165,7 +165,7 @@ export default class InteractionOptionsWrapper {
      */
     getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required?: false): T | undefined;
     getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
-    getMentionable(name: string, required?: boolean) {
+    getMentionable(name: string, required?: boolean): AnyChannel | User | Role | undefined {
         if (this.resolved === null) throw new Error("attempt to use getMentionableValue with null resolved");
         let val: string | undefined;
         if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) return undefined;
@@ -183,7 +183,7 @@ export default class InteractionOptionsWrapper {
      */
     getMentionableOption(name: string, required?: false): InteractionOptionsMentionable | undefined;
     getMentionableOption(name: string, required: true): InteractionOptionsMentionable;
-    getMentionableOption(name: string, required?: boolean) {
+    getMentionableOption(name: string, required?: boolean): InteractionOptionsMentionable | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.MENTIONABLE);
     }
 
@@ -194,7 +194,7 @@ export default class InteractionOptionsWrapper {
      */
     getNumber(name: string, required?: false): number | undefined;
     getNumber(name: string, required: true): number;
-    getNumber(name: string, required?: boolean) {
+    getNumber(name: string, required?: boolean): number | undefined {
         return this.getNumberOption(name, required as false)?.value;
     }
 
@@ -205,7 +205,7 @@ export default class InteractionOptionsWrapper {
      */
     getNumberOption(name: string, required?: false): InteractionOptionsNumber | undefined;
     getNumberOption(name: string, required: true): InteractionOptionsNumber;
-    getNumberOption(name: string, required?: boolean) {
+    getNumberOption(name: string, required?: boolean): InteractionOptionsNumber | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
     }
 
@@ -216,7 +216,7 @@ export default class InteractionOptionsWrapper {
      */
     getRole(name: string, required?: false): Role | undefined;
     getRole(name: string, required: true): Role;
-    getRole(name: string, required?: boolean) {
+    getRole(name: string, required?: boolean): Role | undefined {
         if (this.resolved === null) throw new Error("attempt to use getRoleValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getRoleOption(name, required as false)?.value)) return undefined;
@@ -232,7 +232,7 @@ export default class InteractionOptionsWrapper {
      */
     getRoleOption(name: string, required?: false): InteractionOptionsRole | undefined;
     getRoleOption(name: string, required: true): InteractionOptionsRole;
-    getRoleOption(name: string, required?: boolean) {
+    getRoleOption(name: string, required?: boolean): InteractionOptionsRole | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.ROLE);
     }
 
@@ -243,7 +243,7 @@ export default class InteractionOptionsWrapper {
      */
     getString<T extends string = string>(name: string, required?: false): T | undefined;
     getString<T extends string = string>(name: string, required: true): T;
-    getString(name: string, required?: boolean) {
+    getString(name: string, required?: boolean): string | undefined {
         return this.getStringOption(name, required as false)?.value;
     }
 
@@ -254,7 +254,7 @@ export default class InteractionOptionsWrapper {
      */
     getStringOption(name: string, required?: false): InteractionOptionsString | undefined;
     getStringOption(name: string, required: true): InteractionOptionsString;
-    getStringOption(name: string, required?: boolean) {
+    getStringOption(name: string, required?: boolean): InteractionOptionsString | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.STRING);
     }
 
@@ -265,19 +265,19 @@ export default class InteractionOptionsWrapper {
      */
     getSubCommand(required?: false): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined;
     getSubCommand(required: true): [subcommand: string] | [subcommandGroup: string, subcommand: string];
-    getSubCommand(required?: boolean) {
+    getSubCommand(required?: boolean): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined {
         const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
-        if (!opt?.options) {
+        if (!opt?.options)
             if (required) throw new Error("Missing required option: subcommand/subcommandgroup");
             else return undefined;
-        } else {
-            // nested
-            if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
-                const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
-                if (!sub?.options) return [opt.name];
-                else return [opt.name, sub.name];
-            } else return [opt.name];
-        }
+        else
+        // nested
+        if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
+            const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
+            if (!sub?.options) return [opt.name];
+            else return [opt.name, sub.name];
+        } else return [opt.name];
+
     }
 
     /**
@@ -287,7 +287,7 @@ export default class InteractionOptionsWrapper {
      */
     getUser(name: string, required?: false): User | undefined;
     getUser(name: string, required: true): User;
-    getUser(name: string, required?: boolean) {
+    getUser(name: string, required?: boolean): User | undefined {
         if (this.resolved === null) throw new Error("attempt to use getUserValue with null resolved");
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) return undefined;
@@ -303,7 +303,7 @@ export default class InteractionOptionsWrapper {
      */
     getUserOption(name: string, required?: false): InteractionOptionsUser | undefined;
     getUserOption(name: string, required: true): InteractionOptionsUser;
-    getUserOption(name: string, required?: boolean) {
+    getUserOption(name: string, required?: boolean): InteractionOptionsUser | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.USER);
     }
 }

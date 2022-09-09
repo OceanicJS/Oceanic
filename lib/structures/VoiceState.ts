@@ -56,13 +56,13 @@ export default class VoiceState extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawVoiceState>) {
+    protected update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
             if (data.channel_id === null) this.channel = null;
-            else {
+            else
                 this.channel = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id)!;
-            }
+
         }
         if (data.deaf !== undefined) this.deaf = data.deaf;
         if (data.guild_id !== undefined) {

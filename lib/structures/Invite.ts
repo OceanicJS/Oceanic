@@ -66,7 +66,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         this.update(data);
     }
 
-    protected update(data: Partial<RawInvite> | Partial<RawInviteWithMetadata>) {
+    protected update(data: Partial<RawInvite> | Partial<RawInviteWithMetadata>): void {
         if (data.approximate_member_count !== undefined) this.approximateMemberCount = data.approximate_member_count;
         if (data.approximate_presence_count !== undefined) this.approximatePresenceCount = data.approximate_presence_count;
 
@@ -108,7 +108,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
      * Delete this invite.
      * @param reason The reason for deleting this invite.
      */
-    async deleteInvite(reason?: string) {
+    async deleteInvite(reason?: string): Promise<Invite<"withMetadata", CH>> {
         return this.client.rest.channels.deleteInvite<CH>(this.code, reason);
     }
 

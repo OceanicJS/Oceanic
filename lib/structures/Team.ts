@@ -23,24 +23,24 @@ export default class Team extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawTeam>) {
+    protected update(data: Partial<RawTeam>): void {
         if (data.icon !== undefined) this.icon = data.icon;
         if (data.name !== undefined) this.name = data.name;
         if (data.owner_user_id !== undefined) this.owner = this.client.users.get(data.owner_user_id) || { id: data.owner_user_id };
         if (data.members !== undefined) {
-            for (const member of this.members) {
+            for (const member of this.members)
                 if (!data.members.find(m => m.user.id === member.user.id)) this.members.splice(this.members.indexOf(member), 1);
-            }
-            for (const member of data.members) {
-                if (!this.members.find(m => m.user.id === member.user.id)) {
+
+            for (const member of data.members)
+                if (!this.members.find(m => m.user.id === member.user.id))
                     this.members.push({
                         membershipState: member.membership_state,
                         permissions:     member.permissions,
                         teamID:          member.team_id,
                         user:            this.client.users.update(member.user)
                     });
-                }
-            }
+
+
         }
     }
 

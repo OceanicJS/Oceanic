@@ -40,20 +40,20 @@ export default class ShardManager extends Collection<number, Shard> {
                 afk:		      options.presence?.afk ?? false,
                 status:		   options.presence?.status ?? "online"
             },
-            reconnectDelay:       options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
+            reconnectDelay:       options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
             seedVoiceConnections: options.seedVoiceConnections ?? false,
             shardIDs:             options.shardIDs ?? [],
             ws:                   options.ws ?? {}
         };
 
-        if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {
+        if (this.options.lastShardID === -1 && this.options.maxShards !== -1)
             this.options.lastShardID = this.options.maxShards - 1;
-        }
+
 
         if (Object.hasOwn(options, "intents")) {
             if (Array.isArray(options.intents)) {
                 let bitmask = 0;
-                for (const intent of options.intents) {
+                for (const intent of options.intents)
                     if (typeof intent === "number") bitmask |= intent;
                     else if (Intents[intent as keyof typeof Intents]) bitmask |= Intents[intent as keyof typeof Intents];
                     else {
@@ -63,29 +63,29 @@ export default class ShardManager extends Collection<number, Shard> {
                         }
                         this.#client.emit("warn", `Unknown intent: ${intent}`);
                     }
-                }
+
                 this.options.intents = bitmask;
             }
         } else this.options.intents = AllNonPrivilegedIntents;
 
-        if (this.options.getAllUsers && !(this.options.intents & Intents.GUILD_MEMBERS)) {
+        if (this.options.getAllUsers && !(this.options.intents & Intents.GUILD_MEMBERS))
             throw new Error("Guild members cannot be requested without the GUILD_MEMBERS intent");
-        }
+
     }
 
-    private _ready(id: number) {
+    private _ready(id: number): void {
         const rateLimitKey = (id % this.options.concurrency) || 0;
         this.#buckets[rateLimitKey] = Date.now();
 
         this.tryConnect();
     }
 
-    connect(shard: Shard) {
+    connect(shard: Shard): void {
         this.#connectQueue.push(shard);
         this.tryConnect();
     }
 
-    spawn(id: number) {
+    spawn(id: number): void {
         let shard = this.get(id);
         if (!shard) {
             shard = new Shard(id, this.#client);
@@ -94,9 +94,9 @@ export default class ShardManager extends Collection<number, Shard> {
                 .on("ready", () => {
                     this.#client.emit("shardReady", id);
                     if (this.#client.ready) return;
-                    for (const other of this.values()) {
+                    for (const other of this.values())
                         if (!other.ready) return;
-                    }
+
                     this.#client.ready = true;
                     this.#client.startTime = Date.now();
                     this.#client.emit("ready");
@@ -104,18 +104,18 @@ export default class ShardManager extends Collection<number, Shard> {
                 .on("resume", () => {
                     this.#client.emit("shardResume", id);
                     if (this.#client.ready) return;
-                    for (const other of this.values()) {
+                    for (const other of this.values())
                         if (!other.ready) return;
-                    }
+
                     this.#client.ready = true;
                     this.#client.startTime = Date.now();
                     this.#client.emit("ready");
                 })
-                .on("disconnect", (error) => {
+                .on("disconnect", error => {
                     this.#client.emit("shardDisconnect", error, id);
-                    for (const other of this.values()) {
+                    for (const other of this.values())
                         if (other.ready) return;
-                    }
+
                     this.#client.ready = false;
                     this.#client.startTime = 0;
                     this.#client.emit("disconnect");
@@ -125,7 +125,7 @@ export default class ShardManager extends Collection<number, Shard> {
         if (shard.status === "disconnected") return this.connect(shard);
     }
 
-    tryConnect() {
+    tryConnect(): void {
         if (this.#connectQueue.length === 0) return;
 
         for (const shard of this.#connectQueue) {
@@ -138,11 +138,11 @@ export default class ShardManager extends Collection<number, Shard> {
             this.#buckets[rateLimitKey] = Date.now();
             this.#connectQueue.splice(this.#connectQueue.findIndex(s => s.id === shard.id), 1);
         }
-        if (!this.#connectTimeout && this.#connectQueue.length > 0) {
+        if (!this.#connectTimeout && this.#connectQueue.length > 0)
             this.#connectTimeout = setTimeout(() => {
                 this.#connectTimeout = null;
                 this.tryConnect();
             }, 500);
-        }
+
     }
 }

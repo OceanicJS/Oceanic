@@ -1,4 +1,5 @@
 import Base from "./Base";
+import PrivateChannel from "./PrivateChannel";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -34,7 +35,7 @@ export default class User extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawUser>) {
+    protected update(data: Partial<RawUser>): void {
         if (data.accent_color !== undefined) this.accentColor = data.accent_color;
         if (data.avatar !== undefined) this.avatar = data.avatar;
         if (data.banner !== undefined) this.banner = data.banner;
@@ -44,17 +45,17 @@ export default class User extends Base {
     }
 
     /** The default avatar value of this user (discriminator modulo 5). */
-    get defaultAvatar() {
+    get defaultAvatar(): number {
         return Number(this.discriminator) % 5;
     }
 
     /** A string that will mention this user. */
-    get mention() {
+    get mention(): string {
         return `<@${this.id}>`;
     }
 
     /** a combination of this user's username and discriminator. */
-    get tag() {
+    get tag(): string {
         return `${this.username}#${this.discriminator}`;
     }
 
@@ -63,21 +64,21 @@ export default class User extends Base {
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    avatarURL(format?: ImageFormat, size?: number) {
+    avatarURL(format?: ImageFormat, size?: number): string {
         return this.avatar === null ? this.defaultAvatarURL() : this.client.util.formatImage(Routes.USER_AVATAR(this.id, this.avatar), format, size);
     }
 
     /**
      * Create a direct message with this user.
      */
-    async createDM() {
+    async createDM(): Promise<PrivateChannel> {
         return this.client.rest.channels.createDM(this.id);
     }
 
     /**
      * The url of this user's default avatar.
      */
-    defaultAvatarURL() {
+    defaultAvatarURL(): string {
         return this.client.util.formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
     }
 

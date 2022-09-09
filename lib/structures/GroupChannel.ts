@@ -2,6 +2,7 @@ import Channel from "./Channel";
 import User from "./User";
 import Message from "./Message";
 import type ClientApplication from "./ClientApplication";
+import Invite from "./Invite";
 import type { ChannelTypes, ImageFormat } from "../Constants";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
@@ -13,6 +14,8 @@ import type {
     EditMessageOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
+    InviteChannel,
+    InviteInfoTypes,
     RawGroupChannel,
     RawMessage
 } from "../types/channels";
@@ -57,7 +60,7 @@ export default class GroupChannel extends Channel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawGroupChannel>) {
+    protected update(data: Partial<RawGroupChannel>): void {
         super.update(data);
         if (data.application_id !== undefined) this.application = this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id } ;
         if (data.icon !== undefined) this.icon = data.icon;
@@ -68,13 +71,13 @@ export default class GroupChannel extends Channel {
         if (data.owner_id !== undefined) this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
         if (data.type !== undefined) this.type = data.type;
         if (data.recipients !== undefined) {
-            for (const id of this.recipients.keys()) {
+            for (const id of this.recipients.keys())
                 if (!data.recipients.find(r => r.id === id)) this.recipients.delete(id);
-            }
 
-            for (const r of data.recipients) {
+
+            for (const r of data.recipients)
                 if (!this.recipients.has(r.id)) this.recipients.add(this.client.users.update(r));
-            }
+
         }
     }
 
@@ -82,7 +85,7 @@ export default class GroupChannel extends Channel {
      * Add a user to this channel.
      * @param options The options for adding the user.
      */
-    async addRecipient(options: AddGroupRecipientOptions) {
+    async addRecipient(options: AddGroupRecipientOptions): Promise<void> {
         return this.client.rest.channels.addGroupRecipient(this.id, options);
     }
 
@@ -90,7 +93,7 @@ export default class GroupChannel extends Channel {
      * Create an invite for this channel.
      * @param options The options for creating the invite.
      */
-    async createInvite(options: CreateInviteOptions) {
+    async createInvite(options: CreateInviteOptions): Promise<Invite<InviteInfoTypes, InviteChannel>> {
         return this.client.rest.channels.createInvite(this.id, options);
     }
 
@@ -98,7 +101,7 @@ export default class GroupChannel extends Channel {
      * Create a message in this channel.
      * @param options The options for creating the message.
      */
-    async createMessage(options: CreateMessageOptions) {
+    async createMessage(options: CreateMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.createMessage<this>(this.id, options);
     }
 
@@ -107,7 +110,7 @@ export default class GroupChannel extends Channel {
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async createReaction(messageID: string, emoji: string) {
+    async createReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.createReaction(this.id, messageID, emoji);
     }
 
@@ -116,7 +119,7 @@ export default class GroupChannel extends Channel {
      * @param messageID The ID of the message to delete.
      * @param reason The reason for deleting the message.
      */
-    async deleteMessage(messageID: string, reason?: string) {
+    async deleteMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
 
@@ -125,7 +128,7 @@ export default class GroupChannel extends Channel {
      * @param messageID The ID of the message to remove a reaction from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async deleteReaction(messageID: string, emoji: string) {
+    async deleteReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.deleteReaction(this.id, messageID, emoji);
     }
 
@@ -133,7 +136,7 @@ export default class GroupChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGroupDMOptions) {
+    async edit(options: EditGroupDMOptions): Promise<GroupChannel> {
         return this.client.rest.channels.edit<GroupChannel>(this.id, options);
     }
 
@@ -142,7 +145,7 @@ export default class GroupChannel extends Channel {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions) {
+    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.editMessage<this>(this.id, messageID, options);
     }
 
@@ -150,7 +153,7 @@ export default class GroupChannel extends Channel {
      * Get a message in this channel.
      * @param messageID The ID of the message to get.
      */
-    async getMessage(messageID: string) {
+    async getMessage(messageID: string): Promise<Message<this>> {
         return this.client.rest.channels.getMessage<this>(this.id, messageID);
     }
 
@@ -158,14 +161,14 @@ export default class GroupChannel extends Channel {
      * Get messages in this channel.
      * @param options The options for getting the messages. All options are mutually exclusive.
      */
-    async getMessages(options?: GetChannelMessagesOptions) {
+    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getMessages<this>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this channel.
      */
-    async getPinnedMessages() {
+    async getPinnedMessages(): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getPinnedMessages<this>(this.id);
     }
 
@@ -175,7 +178,7 @@ export default class GroupChannel extends Channel {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
+    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
@@ -184,7 +187,7 @@ export default class GroupChannel extends Channel {
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    iconURL(format?: ImageFormat, size?: number) {
+    iconURL(format?: ImageFormat, size?: number): string | null {
         return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.application.id, this.icon), format, size);
     }
 
@@ -193,7 +196,7 @@ export default class GroupChannel extends Channel {
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
      */
-    async pinMessage(messageID: string, reason?: string) {
+    async pinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.pinMessage(this.id, messageID, reason);
     }
 
@@ -201,14 +204,14 @@ export default class GroupChannel extends Channel {
      * Remove a user from this channel.
      * @param userID The ID of the user to remove.
      */
-    async removeRecipient(userID: string) {
+    async removeRecipient(userID: string): Promise<void> {
         return this.client.rest.channels.removeGroupRecipient(this.id, userID);
     }
 
     /**
      * Show a typing indicator in this channel.
      */
-    async sendTyping() {
+    async sendTyping(): Promise<void> {
         return this.client.rest.channels.sendTyping(this.id);
     }
 
@@ -231,7 +234,7 @@ export default class GroupChannel extends Channel {
      * @param messageID The ID of the message to unpin.
      * @param reason The reason for unpinning the message.
      */
-    async unpinMessage(messageID: string, reason?: string) {
+    async unpinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
 }

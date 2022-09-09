@@ -32,7 +32,7 @@ export default class PrivateChannel extends Channel {
         this.recipient = client.users.update(data.recipients[0]);
     }
 
-    protected update(data: Partial<RawPrivateChannel>) {
+    protected update(data: Partial<RawPrivateChannel>): void {
         if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
     }
 
@@ -40,7 +40,7 @@ export default class PrivateChannel extends Channel {
      * Create a message in this channel.
      * @param options The options for creating the message.
      */
-    async createMessage(options: CreateMessageOptions) {
+    async createMessage(options: CreateMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.createMessage<this>(this.id, options);
     }
 
@@ -49,7 +49,7 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async createReaction(messageID: string, emoji: string) {
+    async createReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.createReaction(this.id, messageID, emoji);
     }
 
@@ -58,7 +58,7 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to delete.
      * @param reason The reason for deleting the message.
      */
-    async deleteMessage(messageID: string, reason?: string) {
+    async deleteMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
     }
 
@@ -67,7 +67,7 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to remove a reaction from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
-    async deleteReaction(messageID: string, emoji: string) {
+    async deleteReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.deleteReaction(this.id, messageID, emoji);
     }
 
@@ -76,7 +76,7 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions) {
+    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.editMessage<this>(this.id, messageID, options);
     }
 
@@ -84,7 +84,7 @@ export default class PrivateChannel extends Channel {
      * Get a message in this channel.
      * @param messageID The ID of the message to get.
      */
-    async getMessage(messageID: string) {
+    async getMessage(messageID: string): Promise<Message<this>> {
         return this.client.rest.channels.getMessage<this>(this.id, messageID);
     }
 
@@ -92,14 +92,14 @@ export default class PrivateChannel extends Channel {
      * Get messages in this channel.
      * @param options The options for getting the messages. All options are mutually exclusive.
      */
-    async getMessages(options?: GetChannelMessagesOptions) {
+    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getMessages<this>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this channel.
      */
-    async getPinnedMessages() {
+    async getPinnedMessages(): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getPinnedMessages<this>(this.id);
     }
 
@@ -109,7 +109,7 @@ export default class PrivateChannel extends Channel {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions) {
+    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
@@ -118,14 +118,14 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
      */
-    async pinMessage(messageID: string, reason?: string) {
+    async pinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.pinMessage(this.id, messageID, reason);
     }
 
     /**
      * Show a typing indicator in this channel.
      */
-    async sendTyping() {
+    async sendTyping(): Promise<void> {
         return this.client.rest.channels.sendTyping(this.id);
     }
 
@@ -144,7 +144,7 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to unpin.
      * @param reason The ID for unpinning the message.
      */
-    async unpinMessage(messageID: string, reason?: string) {
+    async unpinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.unpinMessage(this.id, messageID, reason);
     }
 }

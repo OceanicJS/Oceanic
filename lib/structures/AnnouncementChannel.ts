@@ -2,6 +2,7 @@ import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
 import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
+import Message from "./Message";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
@@ -24,15 +25,15 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     /**
      * Convert this news channel to a text channel.
      */
-    async convert() {
-        return super.convert() as unknown as TextChannel;
+    async convert(): Promise<TextChannel> {
+        return super.convert() as never;
     }
 
     /**
      * Crosspost a message in this channel.
      * @param messageID The ID of the message to crosspost.
      */
-    async crosspostMessage(messageID: string) {
+    async crosspostMessage(messageID: string): Promise<Message<AnnouncementChannel>> {
         return this.client.rest.channels.crosspostMessage(this.id, messageID);
     }
 
@@ -40,7 +41,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    override async edit(options: EditGuildChannelOptions) {
+    override async edit(options: EditGuildChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 

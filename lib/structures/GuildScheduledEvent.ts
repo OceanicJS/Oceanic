@@ -58,7 +58,7 @@ export default class GuildScheduledEvent extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawScheduledEvent>) {
+    protected update(data: Partial<RawScheduledEvent>): void {
         if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id)!;
         if (data.description !== undefined) this.description = data.description;
         if (data.entity_id !== undefined) this.entityID = data.entity_id;
@@ -77,7 +77,7 @@ export default class GuildScheduledEvent extends Base {
      * Delete this scheduled event.
      * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      */
-    async deleteScheduledEvent(reason?: string) {
+    async deleteScheduledEvent(reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteScheduledEvent(this.guildID, this.id, reason);
     }
 
@@ -86,7 +86,7 @@ export default class GuildScheduledEvent extends Base {
      * @param format The format of the image.
      * @param size The size of the image.
      */
-    imageURL(format?: ImageFormat, size?: number) {
+    imageURL(format?: ImageFormat, size?: number): string | null {
         return !this.image ? null : this.client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
     }
 
