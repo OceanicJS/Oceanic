@@ -158,142 +158,77 @@ export default class Util {
     }
 
     embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
-        return embeds.map(embed => {
-            const parsedEmbed: Embed = {};
-
-            if (embed.author !== undefined) {
-                parsedEmbed.author = {
-                    name:         embed.author.name,
-                    iconURL:      embed.author.icon_url,
-                    proxyIconURL: embed.author.proxy_icon_url,
-                    url:          embed.author.url
-                };
-            }
-
-            if (embed.color !== undefined) {
-                parsedEmbed.color = embed.color;
-            }
-            if (embed.description !== undefined) {
-                parsedEmbed.description = embed.description;
-            }
-            if (embed.fields !== undefined) {
-                parsedEmbed.fields = embed.fields.map(field => ({
-                    inline: field.inline,
-                    name:   field.name,
-                    value:  field.value
-                }));
-            }
-
-            if (embed.footer !== undefined) {
-                parsedEmbed.footer = {
-                    text:         embed.footer.text,
-                    iconURL:      embed.footer.icon_url,
-                    proxyIconURL: embed.footer.proxy_icon_url
-                };
-            }
-
-            if (embed.timestamp !== undefined) {
-                parsedEmbed.timestamp = embed.timestamp;
-            }
-            if (embed.title !== undefined) {
-                parsedEmbed.title = embed.title;
-            }
-            if (embed.image !== undefined) {
-                parsedEmbed.image = {
-                    url:      embed.image.url,
-                    height:   embed.image.height,
-                    proxyURL: embed.image.proxy_url,
-                    width:    embed.image.width
-                };
-            }
-
-            if (embed.provider !== undefined) {
-                parsedEmbed.provider = {
-                    name: embed.provider.name,
-                    url:  embed.provider.url
-                };
-            }
-            if (embed.thumbnail !== undefined) {
-                parsedEmbed.thumbnail = {
-                    url:      embed.thumbnail.url,
-                    height:   embed.thumbnail.height,
-                    proxyURL: embed.thumbnail.proxy_url,
-                    width:    embed.thumbnail.width
-                };
-            }
-            if (embed.url !== undefined) {
-                parsedEmbed.url = embed.url;
-            }
-            if (embed.type !== undefined) {
-                parsedEmbed.type =  embed.type;
-            }
-            if (embed.video !== undefined) {
-                parsedEmbed.video = {
-                    height:   embed.video.height,
-                    proxyURL: embed.video.proxy_url,
-                    url:      embed.video.url,
-                    width:    embed.video.width
-                };
-            }
-
-
-            return parsedEmbed;
-        });
+        return embeds.map(embed => ({
+            author: embed.author !== undefined ? {
+                name:         embed.author.name,
+                iconURL:      embed.author.icon_url,
+                proxyIconURL: embed.author.proxy_icon_url
+            } : undefined,
+            color:       embed.color,
+            description: embed.description,
+            fields:      embed.fields?.map(field => ({
+                inline: field.inline,
+                name:   field.name,
+                value:  field.value
+            })),
+            footer: embed.footer !== undefined ? {
+                text:         embed.footer.text,
+                iconURL:      embed.footer.icon_url,
+                proxyIconURL: embed.footer.proxy_icon_url
+            } : undefined,
+            timestamp: embed.timestamp,
+            title:     embed.title,
+            image:     embed.image !== undefined ? {
+                url:      embed.image.url,
+                height:   embed.image.height,
+                proxyURL: embed.image.proxy_url,
+                width:    embed.image.width
+            } : undefined,
+            provider: embed.provider !== undefined ? {
+                name: embed.provider.name,
+                url:  embed.provider.url
+            } : undefined,
+            thumbnail: embed.thumbnail !== undefined ? {
+                url:      embed.thumbnail.url,
+                height:   embed.thumbnail.height,
+                proxyURL: embed.thumbnail.proxy_url,
+                width:    embed.thumbnail.width
+            } : undefined,
+            url:   embed.url,
+            type:  embed.type,
+            video: embed.video !== undefined ? {
+                height:   embed.video.height,
+                proxyURL: embed.video.proxy_url,
+                url:      embed.video.url,
+                width:    embed.video.width
+            } : undefined
+        }));
     }
 
     embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
-        return embeds.map(embed => {
-            const rawEmbed: RawEmbedOptions = {};
-
-            if (embed.author !== undefined) {
-                rawEmbed.author = {
-                    name:     embed.author.name,
-                    icon_url: embed.author.iconURL,
-                    url:      embed.author.url
-                };
-            }
-
-            if (embed.color !== undefined) {
-                rawEmbed.color = embed.color;
-            }
-            if (embed.description !== undefined) {
-                rawEmbed.description = embed.description;
-            }
-            if (embed.fields !== undefined) {
-                rawEmbed.fields = embed.fields.map(field => ({
-                    inline: field.inline,
-                    name:   field.name,
-                    value:  field.value
-                }));
-            }
-
-            if (embed.footer !== undefined) {
-                rawEmbed.footer = {
-                    text:     embed.footer.text,
-                    icon_url: embed.footer.iconURL
-                };
-            }
-
-            if (embed.timestamp !== undefined) {
-                rawEmbed.timestamp = embed.timestamp;
-            }
-            if (embed.title !== undefined) {
-                rawEmbed.title = embed.title;
-            }
-            if (embed.image !== undefined) {
-                rawEmbed.image = { url: embed.image.url };
-            }
-
-            if (embed.thumbnail !== undefined) {
-                rawEmbed.thumbnail = { url: embed.thumbnail.url };
-            }
-
-            if (embed.url !== undefined) {
-                rawEmbed.url = embed.url;
-            }
-
-            return rawEmbed;
-        });
+        return embeds.map(embed => ({
+            author: embed.author !== undefined ? {
+                name:     embed.author.name,
+                icon_url: embed.author.iconURL,
+                url:      embed.author.url
+            } :  undefined,
+            color:       embed.color,
+            description: embed.description,
+            fields:      embed.fields?.map(field => ({
+                inline: field.inline,
+                name:   field.name,
+                value:  field.value
+            })),
+            footer: embed.footer !== undefined ? {
+                text:     embed.footer.text,
+                icon_url: embed.footer.iconURL
+            } : undefined,
+            timestamp: embed.timestamp,
+            title:     embed.title,
+            image:     embed.image !== undefined ? { url: embed.image.url } : undefined,
+            thumbnail: embed.thumbnail !== undefined ? { url: embed.thumbnail.url } : undefined,
+            url:       embed.url
+        }));
     }
 
     formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {
