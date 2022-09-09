@@ -37,7 +37,7 @@ import type CategoryChannel from "../structures/CategoryChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type StageChannel from "../structures/StageChannel";
 
-// @TODO channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
+// channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only
 export interface RawGuild {
     afk_channel_id: string | null;

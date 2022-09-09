@@ -24,6 +24,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     description: T extends ApplicationCommandTypes.CHAT_INPUT ? string : "";
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
     descriptionLocalizations?: Record<string, string> | null;
+    /** The description of this application command in the requested locale. */
+    descriptionLocalized?: string;
     /** If this command can be used in direct messages (global commands only). */
     dmPermission?: boolean;
     /** The guild this command is in (guild commands only). */
@@ -34,6 +36,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
     nameLocalizations?: Record<string, string> | null;
+    /** The description of this application command in the requested locale. */
+    nameLocalized?: string;
     /** The options on this command. Only valid for `CHAT_INPUT`. */
     options?: Array<ApplicationCommandOptions>;
     /** The [type](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types) of this command. */
@@ -46,11 +50,13 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
         this.description = data.description as never;
         this.descriptionLocalizations = data.description_localizations;
+        this.descriptionLocalized = data.description_localized;
         this.dmPermission = data.dm_permission;
         this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = !data.guild_id ? undefined : data.guild_id;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
+        this.nameLocalized = data.name_localized;
         this.options = data.options?.map(o => client.util.optionToParsed(o));
         this.type = (data.type || ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;

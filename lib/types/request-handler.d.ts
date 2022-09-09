@@ -9,6 +9,7 @@ export interface RequestOptions {
     auth?: boolean | string;
     files?: Array<File>;
     form?: FormData;
+    headers?: Record<string, string>;
     json?: unknown;
     method: RESTMethod;
     path: string;

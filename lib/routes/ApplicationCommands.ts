@@ -11,7 +11,8 @@ import type {
     RawApplicationCommand,
     RawGuildApplicationCommandPermissions,
     CreateGuildApplicationCommandOptions,
-    EditGuildApplicationCommandOptions
+    EditGuildApplicationCommandOptions,
+    GetApplicationCommandOptions
 } from "../types/application-commands";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import type { RequestOptions } from "../types/request-handler";
@@ -217,34 +218,36 @@ export default class ApplicationCommands {
      * Get a global application command.
      * @param applicationID The ID of the application.
      * @param commandID The ID of the command.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, withLocalizations?: boolean): Promise<T> {
+    async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         const query = new URLSearchParams();
-        if (withLocalizations) {
+        if (options?.withLocalizations) {
             query.set("with_localizations", "true");
         }
         return this.#manager.authRequest<RawApplicationCommand>({
-            method: "GET",
-            path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
-            query
+            method:  "GET",
+            path:    Routes.APPLICATION_COMMAND(applicationID, commandID),
+            query,
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
         }).then(data => new ApplicationCommand(data, this.#manager.client) as never);
     }
 
     /**
      * Get an application's global commands.
      * @param applicationID The ID of the application.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGlobalCommands(applicationID: string, withLocalizations?: boolean): Promise<Array<AnyApplicationCommand>> {
+    async getGlobalCommands(applicationID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
-        if (withLocalizations) {
+        if (options?.withLocalizations) {
             query.set("with_localizations", "true");
         }
         return this.#manager.authRequest<Array<RawApplicationCommand>>({
-            method: "GET",
-            path:   Routes.APPLICATION_COMMANDS(applicationID),
-            query
+            method:  "GET",
+            path:    Routes.APPLICATION_COMMANDS(applicationID),
+            query,
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
         }).then(data => data.map(d => new ApplicationCommand(d, this.#manager.client)) as never);
     }
 
@@ -253,17 +256,18 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, withLocalizations?: boolean): Promise<T> {
+    async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         const query = new URLSearchParams();
-        if (withLocalizations) {
+        if (options?.withLocalizations) {
             query.set("with_localizations", "true");
         }
         return this.#manager.authRequest<RawApplicationCommand>({
-            method: "GET",
-            path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
-            query
+            method:  "GET",
+            path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
+            query,
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
         }).then(data => new ApplicationCommand(data, this.#manager.client) as never);
     }
 
@@ -271,17 +275,18 @@ export default class ApplicationCommands {
      * Get an application's application commands in a specific guild.
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGuildCommands(applicationID: string, guildID: string, withLocalizations?: boolean): Promise<Array<AnyApplicationCommand>> {
+    async getGuildCommands(applicationID: string, guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
-        if (withLocalizations) {
+        if (options?.withLocalizations) {
             query.set("with_localizations", "true");
         }
         return this.#manager.authRequest<Array<RawApplicationCommand>>({
-            method: "GET",
-            path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
-            query
+            method:  "GET",
+            path:    Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
+            query,
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
         }).then(data => data.map(d => new ApplicationCommand(d, this.#manager.client)) as never);
     }
 

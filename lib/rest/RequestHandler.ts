@@ -109,7 +109,7 @@ export default class RequestHandler {
         let attempts = 0;
         return new Promise<T>((resolve, reject) => {
             async function attempt(this: RequestHandler, cb: () => void): Promise<void> {
-                const headers: Record<string, string> = {};
+                const headers: Record<string, string> = options.headers ?? {};
                 try {
                     if (typeof options.auth === "string") {
                         headers.Authorization = options.auth;

@@ -10,11 +10,13 @@ export interface RawApplicationCommand {
     default_member_permissions: string | null;
     description: string;
     description_localizations?: Record<string, string> | null;
+    description_localized?: string;
     dm_permission?: boolean;
     guild_id?: string;
     id: string;
     name: string;
     name_localizations?: Record<string, string> | null;
+    name_localized?: string;
     options?: Array<RawApplicationCommandOption>;
     type: ApplicationCommandTypes;
     version: string;
@@ -26,12 +28,14 @@ export interface RawApplicationCommandOption {
     choices?: Array<RawApplicationCommandOptionChoice>;
     description: string;
     description_localizations?: Record<string, string> | null;
+    description_localized?: string;
     max_length?: number;
     max_value?: number;
     min_length?: number;
     min_value?: number;
     name: string;
     name_localizations?: Record<string, string> | null;
+    name_localized?: string;
     options?: Array<RawApplicationCommandOption>;
     required?: boolean;
     type: ApplicationCommandOptionTypes;
@@ -73,11 +77,17 @@ export type ApplicationCommandOptionConversion<T extends EditApplicationCommandO
         T extends EditUserApplicationCommandOptions | CreateUserApplicationCommandOptions ? UserApplicationCommand :
             T extends EditMessageApplicationCommandOptions | CreateMessageApplicationCommandOptions ? MessageApplicationCommand :
                 never;
+
+// @TODO remove descriptionLocalized and nameLocalized from when creating
 export interface ApplicationCommandOptionBase<T extends ApplicationCommandOptionTypes = ApplicationCommandOptionTypes> {
     description: string;
     descriptionLocalizations?: Record<string, string>;
+    /** The description of this application command in the requested locale. This cannot be sent. */
+    descriptionLocalized?: string;
     name: string;
     nameLocalizations?: Record<string, string>;
+    /** The description of this application command in the requested locale. This cannot be sent. */
+    nameLocalized?: string;
     required?: T extends ApplicationCommandOptionTypes.SUB_COMMAND | ApplicationCommandOptionTypes.SUB_COMMAND_GROUP ? never : boolean;
     type: T;
 }
@@ -211,3 +221,11 @@ T extends ApplicationCommandTypes.CHAT_INPUT ? EditChatInputApplicationCommandOp
     T extends ApplicationCommandTypes.USER ? EditUserApplicationCommandOptions :
         T extends ApplicationCommandTypes.MESSAGE ? EditMessageApplicationCommandOptions :
             never;
+
+
+export interface GetApplicationCommandOptions {
+    /** The [locale](https://discord.com/developers/docs/reference#locales) to recieve localized responses for (`descriptionLocalized`, `nameLocalized`). If no localization for the locale is present, the properties will not be present. */
+    locale?: string;
+    /** If localizations should be included. */
+    withLocalizations?: boolean;
+}

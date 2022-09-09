@@ -10,6 +10,7 @@ import type {
     EditApplicationCommandOptions,
     EditApplicationCommandPermissionsOptions,
     EditGuildApplicationCommandOptions,
+    GetApplicationCommandOptions,
     RESTGuildApplicationCommandPermissions
 } from "../types/application-commands";
 import type { JSONClientApplication } from "../types/json";
@@ -114,37 +115,37 @@ export default class ClientApplication extends Base {
     /**
      * Get a global application command.
      * @param commandID The ID of the command.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(commandID: string, withLocalizations?: boolean): Promise<T> {
-        return this.client.rest.applicationCommands.getGlobalCommand<T>(this.id, commandID, withLocalizations);
+    async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
+        return this.client.rest.applicationCommands.getGlobalCommand<T>(this.id, commandID, options);
     }
 
     /**
      * Get this application's global commands.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGlobalCommands(withLocalizations?: boolean): Promise<Array<AnyApplicationCommand>> {
-        return this.client.rest.applicationCommands.getGlobalCommands(this.id, withLocalizations);
+    async getGlobalCommands(options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
+        return this.client.rest.applicationCommands.getGlobalCommands(this.id, options);
     }
 
     /**
      * Get a global application command.
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command.
-     * @param withLocalizations If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(guildID: string, commandID: string, withLocalizations?: boolean): Promise<T> {
-        return this.client.rest.applicationCommands.getGuildCommand<T>(this.id, guildID, commandID, withLocalizations);
+    async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
+        return this.client.rest.applicationCommands.getGuildCommand<T>(this.id, guildID, commandID, options);
     }
 
     /**
      * Get this application's commands in a specific guild.
      * @param guildID The ID of the guild.
-     * @param withLocalization If localizations should be included.
+     * @param options The options for getting the command.
      */
-    async getGuildCommands(guildID: string, withLocalizations?: boolean): Promise<Array<AnyApplicationCommand>> {
-        return this.client.rest.applicationCommands.getGuildCommands(this.id, guildID, withLocalizations);
+    async getGuildCommands(guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
+        return this.client.rest.applicationCommands.getGuildCommands(this.id, guildID, options);
     }
 
     /**
