@@ -3,6 +3,7 @@ import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
+import { Uncached } from "./shared";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -32,6 +33,7 @@ import type TextChannel from "../structures/TextChannel";
 import type User from "../structures/User";
 import type VoiceChannel from "../structures/VoiceChannel";
 import type ForumChannel from "../structures/ForumChannel";
+import Message from "../structures/Message";
 
 export interface RawChannel {
     application_id?: string;
@@ -856,3 +858,6 @@ export interface ForumEmoji {
     /** The unicode codepoint of this emoji if default, null otherwise. */
     name: string | null;
 }
+
+export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; id: string; };
+export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string; };

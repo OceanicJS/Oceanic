@@ -8,7 +8,7 @@ import Guild from "./structures/Guild";
 import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
 import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
-import type { ClientEvents, ClientInstanceOptions, ClientOptions } from "./types/client";
+import type {  ClientInstanceOptions, ClientOptions } from "./types/client";
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
@@ -19,6 +19,7 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import type VoiceChannel from "./structures/VoiceChannel";
 import type StageChannel from "./structures/StageChannel";
 import Util from "./util/Util";
+import { ClientEvents } from "./types/events";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -28,7 +29,7 @@ try {
     Erlpack = require("erlpack");
 } catch {}
 
-/** The primary class for interfacing with Discord. */
+/** The primary class for interfacing with Discord. See {@link types/events~ClientEvents | Client Events} for a list of events. */
 export default class Client extends TypedEmitter<ClientEvents> {
     private _application?: ClientApplication;
     private _user?: ExtendedUser;

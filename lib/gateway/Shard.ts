@@ -2,7 +2,6 @@ import GatewayError from "./GatewayError";
 import type Client from "../Client";
 import Properties from "../util/Properties";
 import TypedEmitter from "../util/TypedEmitter";
-import type { ShardEvents } from "../types/client";
 import Bucket from "../rest/Bucket";
 import {
     ChannelTypes,
@@ -35,6 +34,7 @@ import type {
     AnyTextChannel,
     AnyThreadChannel,
     InviteChannel,
+    PossiblyUncachedThread,
     RawMessage,
     RawThreadChannel,
     ThreadMember
@@ -54,6 +54,7 @@ import Interaction from "../structures/Interaction";
 import { is } from "../util/Util";
 import TypedCollection from "../util/TypedCollection";
 import Guild from "../structures/Guild";
+import { ShardEvents } from "../types/events";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
@@ -88,6 +89,7 @@ try {
     } catch {}
 }
 
+/** Represents a gateway connection to Discord. See {@link types/events~ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<ShardEvents> {
     client!: Client;
     connectAttempts: number;
@@ -920,7 +922,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "THREAD_DELETE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const channel = this.client.getChannel(packet.d.parent_id!);
-                let thread: AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string | null; };
+                let thread: PossiblyUncachedThread;
                 if (guild && guild.threads.has(packet.d.id)) {
                     thread = guild.threads.get(packet.d.id)!;
                     guild.threads.delete(packet.d.id);
@@ -936,7 +938,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     thread = {
                         id:       packet.d.id,
                         type:     packet.d.type,
-                        parentID: packet.d.parent_id
+                        parentID: packet.d.parent_id!
                     };
                 }
                 this.client.emit("threadDelete", thread);
