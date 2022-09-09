@@ -83,7 +83,7 @@ export {
     ClientApplication,
     Constants,
     CommandInteraction,
-    Collection as TypedCollection,
+    Collection,
     ComponentInteraction,
     DiscordHTTPError,
     DiscordRESTError,
