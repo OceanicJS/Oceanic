@@ -14,7 +14,7 @@ npm i oceanic.js
 
 This module is in its early alpha stages. See the `examples` folder on github for some examples, and visit [this site](https://oceanic.owo-whats-this.dev) for documentation.
 
-#### Development Builds
+### Development Builds
 ```sh
 npm i oceanic.js@dev
 ```
@@ -22,6 +22,11 @@ npm i oceanic.js@dev
 The documentation under `dev` is always for the latest commit. If something isn't working that's in the documentaion, you're likely looking at the wrong documentation.
 
 <hr>
+
+### Optional Dependencies
+* `pako` - Compression (gateway)
+* `zlib-sync` - Compression (gateway, faster than pako)
+* `erlpack` - Encoding (gateway, alternative to JSON)
 
 ## Links
 * [Examples](https://github.com/DonovanDMC/Oceanic/tree/dev/examples)

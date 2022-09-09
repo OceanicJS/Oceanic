@@ -55,10 +55,5 @@
   },
   "engines": {
     "node": ">=16.16.0"
-  },
-  "optionalDependencies": {
-    "erlpack": "^0.1.4",
-    "pako": "^2.0.4",
-    "zlib-sync": "^0.1.7"
   }
 }
