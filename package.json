@@ -28,6 +28,9 @@
     "api"
   ],
   "author": "Donovan Daniels <hewwo@yiff.rocks>",
+  "contributors": [
+    "Nuckyz (https://github.com/Nuckyz)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/OceanicJS/Oceanic/issues"
