@@ -1,4 +1,4 @@
-import type { Uncached } from "./shared";
+import type { Uncached, ExclusifyUnion } from "./shared";
 import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, GuildChannelTypes } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
@@ -94,13 +94,10 @@ export interface ApplicationCommandOptionBase<T extends ApplicationCommandOption
 
 type ApplicationCommandOptionsTypesWithAutocomplete = ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER | ApplicationCommandOptionTypes.STRING;
 type ApplicationCommandOptionsTypesWithChoices = ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER | ApplicationCommandOptionTypes.STRING;
-type ApplicationCommandOptionAutocomplete<T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER | ApplicationCommandOptionTypes.STRING> = (ApplicationCommandOptionBase<T> & ApplicationCommandOptionsAutocomplete);
-type ApplicationCommandOptionChannelTypes<T extends ApplicationCommandOptionTypes.CHANNEL> = (ApplicationCommandOptionBase<T> & ApplicationCommandOptionsChannelTypes);
-type ApplicationCommandOptionChoices<T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER | ApplicationCommandOptionTypes.STRING> = (ApplicationCommandOptionBase<T> & ApplicationCommandOptionsChoices<T>);
-type ApplicationCommandOptionMinMaxValue<T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER> = (ApplicationCommandOptionBase<T> & ApplicationCommandOptionsMinMaxValue);
-type ApplicationCommandOptionMinMaxLength<T extends ApplicationCommandOptionTypes.STRING> = (ApplicationCommandOptionBase<T> & ApplicationCommandOptionsMinMaxLength);
 
-interface ApplicationCommandOptionsChoices<T extends ApplicationCommandOptionsTypesWithChoices = ApplicationCommandOptionsTypesWithChoices> { choices?: Array<ApplicationCommandOptionsChoice<T>>; }
+interface ApplicationCommandOptionsChoices<T extends ApplicationCommandOptionsTypesWithChoices = ApplicationCommandOptionsTypesWithChoices> {
+    choices?: Array<ApplicationCommandOptionsChoice<T>>;
+}
 
 interface ApplicationCommandOptionsChoice<T extends ApplicationCommandOptionsTypesWithChoices = ApplicationCommandOptionsTypesWithChoices> {
     name: string;
@@ -119,28 +116,32 @@ interface ApplicationCommandOptionsMinMaxValue {
     maxValue?: number;
     minValue?: number;
 }
-interface ApplicationCommandOptionsAutocomplete {
-    autocomplete?: boolean;
-}
+
 interface ApplicationCommandOptionsMinMaxLength {
     maxLength?: number;
     minLength?: number;
 }
+
+interface ApplicationCommandOptionsAutocomplete {
+    autocomplete?: boolean;
+}
+
 interface ApplicationCommandOptionsSubCommand extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.SUB_COMMAND> {
     options?: Array<ApplicationCommandOptionsWithValue>;
 }
+
 interface ApplicationCommandOptionsSubCommandGroup extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.SUB_COMMAND_GROUP> {
     options?: Array<ApplicationCommandOptionsSubCommand | ApplicationCommandOptionsWithValue>;
 }
 
 type ApplicationCommandOptionsAttachment  = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT>;
 type ApplicationCommandOptionsBoolean     = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.BOOLEAN>;
-type ApplicationCommandOptionsChannel     = ApplicationCommandOptionChannelTypes<ApplicationCommandOptionTypes.CHANNEL>;
-type ApplicationCommandOptionsInteger     = ApplicationCommandOptionAutocomplete<ApplicationCommandOptionTypes.INTEGER> | ApplicationCommandOptionChoices<ApplicationCommandOptionTypes.INTEGER> | ApplicationCommandOptionMinMaxValue<ApplicationCommandOptionTypes.INTEGER>;
+type ApplicationCommandOptionsChannel     = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.CHANNEL> & ApplicationCommandOptionsChannelTypes;
+type ApplicationCommandOptionsInteger     = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;
 type ApplicationCommandOptionsMentionable = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.MENTIONABLE>;
-type ApplicationCommandOptionsNumber      = ApplicationCommandOptionAutocomplete<ApplicationCommandOptionTypes.NUMBER> | ApplicationCommandOptionChoices<ApplicationCommandOptionTypes.NUMBER> | ApplicationCommandOptionMinMaxValue<ApplicationCommandOptionTypes.NUMBER>;
+type ApplicationCommandOptionsNumber      = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.NUMBER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.NUMBER>>;
 type ApplicationCommandOptionsRole        = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ROLE>;
-type ApplicationCommandOptionsString      = ApplicationCommandOptionAutocomplete<ApplicationCommandOptionTypes.STRING> | ApplicationCommandOptionChoices<ApplicationCommandOptionTypes.STRING> | ApplicationCommandOptionMinMaxLength<ApplicationCommandOptionTypes.STRING>;
+type ApplicationCommandOptionsString      = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxLength | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
 type ApplicationCommandOptionsUser        = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.USER>;
 
 // desc, options
