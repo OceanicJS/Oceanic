@@ -200,10 +200,8 @@ export default class ApplicationCommands {
         return (options.accessToken ? this.#manager.request.bind(this.#manager) : this.#manager.authRequest.bind(this.#manager))({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
-            json:   {
-                permissions: options.permissions
-            },
-            auth: options.accessToken
+            json:   { permissions: options.permissions },
+            auth:   options.accessToken
         } as Omit<RequestOptions, "auth">).then(data => {
             const d = data as RawGuildApplicationCommandPermissions;
             return {
@@ -223,7 +221,9 @@ export default class ApplicationCommands {
      */
     async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, withLocalizations?: boolean): Promise<T> {
         const query = new URLSearchParams();
-        if (withLocalizations) query.set("with_localizations", "true");
+        if (withLocalizations) {
+            query.set("with_localizations", "true");
+        }
         return this.#manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
@@ -238,7 +238,9 @@ export default class ApplicationCommands {
      */
     async getGlobalCommands(applicationID: string, withLocalizations?: boolean): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
-        if (withLocalizations) query.set("with_localizations", "true");
+        if (withLocalizations) {
+            query.set("with_localizations", "true");
+        }
         return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
@@ -255,7 +257,9 @@ export default class ApplicationCommands {
      */
     async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, withLocalizations?: boolean): Promise<T> {
         const query = new URLSearchParams();
-        if (withLocalizations) query.set("with_localizations", "true");
+        if (withLocalizations) {
+            query.set("with_localizations", "true");
+        }
         return this.#manager.authRequest<RawApplicationCommand>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
@@ -271,7 +275,9 @@ export default class ApplicationCommands {
      */
     async getGuildCommands(applicationID: string, guildID: string, withLocalizations?: boolean): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
-        if (withLocalizations) query.set("with_localizations", "true");
+        if (withLocalizations) {
+            query.set("with_localizations", "true");
+        }
         return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),

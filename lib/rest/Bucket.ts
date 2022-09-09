@@ -24,7 +24,9 @@ export default class Bucket {
     }
 
     private check(): void {
-        if (this.timeout || this.#queue.length === 0) return;
+        if (this.timeout || this.#queue.length === 0) {
+            return;
+        }
         if (this.lastReset + this.interval + this.tokenLimit * this.latencyRef.latency < Date.now()) {
             this.lastReset = Date.now();
             this.tokens = Math.max(0, this.tokens - this.tokenLimit);
@@ -50,11 +52,12 @@ export default class Bucket {
             }
         }
 
-        if (this.#queue.length > 0 && !this.timeout)
+        if (this.#queue.length > 0 && !this.timeout) {
             this.timeout = setTimeout(() => {
                 this.timeout = null;
                 this.check();
             }, this.tokens < this.tokenLimit ? this.latencyRef.latency : Math.max(0, this.lastReset + this.interval + this.tokenLimit * this.latencyRef.latency - Date.now()));
+        }
 
 
     }
@@ -65,8 +68,11 @@ export default class Bucket {
      * @param priority If true, the item will be added to the front of the queue.
      */
     queue(func: () => void, priority = false): void {
-        if (priority) this.#queue.unshift({ func, priority });
-        else this.#queue.push({ func, priority });
+        if (priority) {
+            this.#queue.unshift({ func, priority });
+        } else {
+            this.#queue.push({ func, priority });
+        }
         this.check();
     }
 }

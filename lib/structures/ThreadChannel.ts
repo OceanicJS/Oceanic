@@ -68,28 +68,44 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             locked:              !!data.thread_metadata.locked
         };
         this.totalMessageSent = 0;
-        if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+        if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) {
+            (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+        }
         this.update(data);
     }
 
     protected update(data: Partial<RawThreadChannel>): void {
-        if (data.flags !== undefined) this.flags = data.flags;
-        if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.last_message_id !== undefined) {
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+        }
         if (data.member) {
             const index = this.members.findIndex(m => m.userID === this.client.user!.id);
-            if (index === -1) this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this.client.user!.id });
-            else
+            if (index === -1) {
+                this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this.client.user!.id });
+            } else {
                 this.members[index] = {
                     ...this.members[index],
                     flags:         data.member.flags,
                     joinTimestamp: new Date(data.member.join_timestamp)
                 };
+            }
 
         }
-        if (data.member_count !== undefined) this.memberCount = data.member_count;
-        if (data.message_count !== undefined) this.messageCount = data.message_count;
-        if (data.owner_id !== undefined) this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
-        if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
+        if (data.member_count !== undefined) {
+            this.memberCount = data.member_count;
+        }
+        if (data.message_count !== undefined) {
+            this.messageCount = data.message_count;
+        }
+        if (data.owner_id !== undefined) {
+            this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
+        }
+        if (data.rate_limit_per_user !== undefined) {
+            this.rateLimitPerUser = data.rate_limit_per_user;
+        }
         if (data.thread_metadata !== undefined) {
             this.threadMetadata = {
                 archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
@@ -98,10 +114,14 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
                 createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
                 locked:              !!data.thread_metadata.locked
             };
-            if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+            if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) {
+                (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+            }
 
         }
-        if (data.total_message_sent !== undefined) this.totalMessageSent = data.total_message_sent;
+        if (data.total_message_sent !== undefined) {
+            this.totalMessageSent = data.total_message_sent;
+        }
     }
 
     /**

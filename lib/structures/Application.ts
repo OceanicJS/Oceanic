@@ -65,27 +65,61 @@ export default class Application extends ClientApplication {
 
     protected update(data: Partial<RESTApplication>): void {
         super.update(data);
-        if (data.bot_public !== undefined) this.botPublic = data.bot_public;
-        if (data.bot_require_code_grant !== undefined) this.botRequireCodeGrant = data.bot_require_code_grant;
-        if (data.cover_image !== undefined) this.coverImage = data.cover_image;
-        if (data.custom_install_url !== undefined) this.customInstallURL = data.custom_install_url;
-        if (data.description !== undefined) this.description = data.description;
+        if (data.bot_public !== undefined) {
+            this.botPublic = data.bot_public;
+        }
+        if (data.bot_require_code_grant !== undefined) {
+            this.botRequireCodeGrant = data.bot_require_code_grant;
+        }
+        if (data.cover_image !== undefined) {
+            this.coverImage = data.cover_image;
+        }
+        if (data.custom_install_url !== undefined) {
+            this.customInstallURL = data.custom_install_url;
+        }
+        if (data.description !== undefined) {
+            this.description = data.description;
+        }
         if (data.guild_id !== undefined) {
             this.guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
         }
-        if (data.icon !== undefined) this.icon = data.icon;
-        if (data.install_params !== undefined) this.installParams = data.install_params;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.owner !== undefined) this.owner = this.client.users.update(data.owner);
-        if (data.primary_sku_id !== undefined) this.primarySKUID = data.primary_sku_id;
-        if (data.privacy_policy_url !== undefined) this.privacyPolicyURL = data.privacy_policy_url;
-        if (data.rpc_origins !== undefined) this.rpcOrigins = data.rpc_origins;
-        if (data.slug !== undefined) this.slug = data.slug;
-        if (data.tags !== undefined) this.tags = data.tags;
-        if (data.team !== undefined) this.team = data.team ? new Team(data.team, this.client) : null;
-        if (data.terms_of_service_url !== undefined) this.termsOfServiceURL = data.terms_of_service_url;
-        if (data.verify_key !== undefined) this.verifyKey = data.verify_key;
+        if (data.icon !== undefined) {
+            this.icon = data.icon;
+        }
+        if (data.install_params !== undefined) {
+            this.installParams = data.install_params;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.owner !== undefined) {
+            this.owner = this.client.users.update(data.owner);
+        }
+        if (data.primary_sku_id !== undefined) {
+            this.primarySKUID = data.primary_sku_id;
+        }
+        if (data.privacy_policy_url !== undefined) {
+            this.privacyPolicyURL = data.privacy_policy_url;
+        }
+        if (data.rpc_origins !== undefined) {
+            this.rpcOrigins = data.rpc_origins;
+        }
+        if (data.slug !== undefined) {
+            this.slug = data.slug;
+        }
+        if (data.tags !== undefined) {
+            this.tags = data.tags;
+        }
+        if (data.team !== undefined) {
+            this.team = data.team ? new Team(data.team, this.client) : null;
+        }
+        if (data.terms_of_service_url !== undefined) {
+            this.termsOfServiceURL = data.terms_of_service_url;
+        }
+        if (data.verify_key !== undefined) {
+            this.verifyKey = data.verify_key;
+        }
     }
 
     /**

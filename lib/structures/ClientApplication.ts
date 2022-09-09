@@ -26,7 +26,9 @@ export default class ClientApplication extends Base {
     }
 
     protected update(data: Partial<RawClientApplication>): void {
-        if (data.flags !== undefined) this.flags = data.flags;
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
     }
 
     /**

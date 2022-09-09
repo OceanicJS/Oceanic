@@ -33,7 +33,9 @@ export default class PrivateChannel extends Channel {
     }
 
     protected update(data: Partial<RawPrivateChannel>): void {
-        if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+        if (data.last_message_id !== undefined) {
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+        }
     }
 
     /**

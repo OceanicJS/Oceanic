@@ -245,61 +245,73 @@ export default class Guild extends Base {
         data.roles.forEach(role => this.roles.update(role, data.id));
         this.update(data);
 
-        if (data.channels)
+        if (data.channels) {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
                 this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client)).guild = this;
             }
+        }
 
 
-        if (data.threads)
+        if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
                 this.threads.add(Channel.from<AnyThreadChannel>(threadData, client)).guild = this;
                 client.threadGuildMap[threadData.id] = this.id;
             }
+        }
 
 
-        if (data.members)
-            for (const member of data.members)
+        if (data.members) {
+            for (const member of data.members) {
                 this.members.update({ ...member, id: member.user!.id }, this.id).guild = this;
+            }
+        }
 
 
-        if (data.stage_instances)
+        if (data.stage_instances) {
             for (const stageInstance of data.stage_instances) {
                 stageInstance.guild_id = this.id;
                 this.stageInstances.update(stageInstance).guild = this;
             }
+        }
 
 
-        if (data.presences)
+        if (data.presences) {
             for (const presence of data.presences) {
                 const member = this.members.get(presence.user.id);
                 if (member) {
                     delete (presence as { user?: PresenceUpdate["user"]; }).user;
                     member.presence = presence;
-                } else
+                } else {
                     client.emit("debug", `Rogue presence (user: ${presence.user.id}, guild: ${this.id})`);
+                }
 
             }
+        }
 
 
-        if (data.voice_states)
+        if (data.voice_states) {
             for (const voiceState of data.voice_states) {
-                if (!this.members.has(voiceState.user_id) || !voiceState.channel_id) continue;
+                if (!this.members.has(voiceState.user_id) || !voiceState.channel_id) {
+                    continue;
+                }
                 voiceState.guild_id = this.id;
                 const state = this.voiceStates.update({ ...voiceState, id: voiceState.user_id });
                 state.guild = this;
                 const channel = this.channels.get(voiceState.channel_id) as VoiceChannel | StageChannel;
                 state.channel = channel;
                 const member = this.members.update({ id: voiceState.user_id, deaf: voiceState.deaf, mute: voiceState.mute }, this.id);
-                if (channel && "voiceMembers" in channel) channel.voiceMembers.add(member);
+                if (channel && "voiceMembers" in channel) {
+                    channel.voiceMembers.add(member);
+                }
                 // @TODO voice
-                /* if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user!.id && !client.voiceConnections.has(this.id)) {
+            /* if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user!.id && !client.voiceConnections.has(this.id)) {
                     process.nextTick(() => client.joinVoiceChannel(voiceState.channel_id!));
                 } */
             }
+        }
 
     }
 
@@ -310,72 +322,158 @@ export default class Guild extends Base {
         const round = 10 ** (Math.floor(Math.log10(num)) - 1);
         if (toAdd === true) {
             const limit = Math.round(num / round) * round + round;
-            if (this.members.limit >= limit) return;
+            if (this.members.limit >= limit) {
+                return;
+            }
             this.members.limit = limit;
         } else {
             const limit = Math.round((this.members.size + toAdd) / round) * round + round;
-            if (this.members.limit >= limit) return;
+            if (this.members.limit >= limit) {
+                return;
+            }
             this.members.limit = limit;
         }
         this.client.emit("debug", `The limit of the members collection of guild ${this.id} has been updated from ${original} to ${this.members.limit} to accomidate at least ${toAdd === true ? this.memberCount : this.members.size + toAdd} members.`);
     }
 
     protected update(data: Partial<RawGuild>): void {
-        if (data.afk_channel_id !== undefined) this.afkChannel = data.afk_channel_id === null ? null : this.client.getChannel(data.afk_channel_id) || { id: data.afk_channel_id };
-        if (data.afk_timeout !== undefined) this.afkTimeout = data.afk_timeout;
-        if (data.application_id !== undefined) this.application = data.application_id === null ? null : this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id };
-        if (data.approximate_member_count !== undefined) this.approximateMemberCount = data.approximate_member_count;
-        if (data.approximate_presence_count !== undefined) this.approximatePresenceCount = data.approximate_presence_count;
-        if (data.banner !== undefined) this.banner = data.banner;
-        if (data.default_message_notifications !== undefined) this.defaultMessageNotifications = data.default_message_notifications;
-        if (data.description !== undefined) this.description = data.description;
-        if (data.discovery_splash !== undefined) this.discoverySplash = data.discovery_splash;
-        if (data.emojis !== undefined) this.emojis = data.emojis.map(emoji => ({
-            ...emoji,
-            user: !emoji.user ? undefined : this.client.users.update(emoji.user)
-        }));
-        if (data.explicit_content_filter !== undefined) this.explicitContentFilter = data.explicit_content_filter;
-        if (data.features !== undefined) this.features = data.features;
-        if (data.icon !== undefined) this.icon = data.icon;
-        if (data.joined_at !== undefined) this.joinedAt = new Date(data.joined_at);
-        if (data.max_members !== undefined) this.maxMembers = data.max_members;
-        if (data.max_presences !== undefined) this.maxPresences = data.max_presences;
-        if (data.max_video_channel_users !== undefined) this.maxVideoChannelUsers = data.max_video_channel_users;
-        if (data.member_count !== undefined) this.memberCount = data.member_count;
-        if (data.mfa_level !== undefined) this.mfaLevel = data.mfa_level;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.nsfw_level !== undefined) this.nsfwLevel = data.nsfw_level;
-        if (data.owner !== undefined) this.oauthOwner = data.owner;
-        if (data.owner_id !== undefined) this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
-        if (data.permissions !== undefined) this.permissions = new Permission(data.permissions);
-        if (data.preferred_locale !== undefined) this.preferredLocale = data.preferred_locale;
-        if (data.premium_progress_bar_enabled !== undefined) this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
-        if (data.premium_subscription_count !== undefined) this.premiumSubscriptionCount = data.premium_subscription_count;
-        if (data.premium_tier !== undefined) this.premiumTier = data.premium_tier;
-        if (data.public_updates_channel_id !== undefined) this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel(data.public_updates_channel_id) || { id: data.public_updates_channel_id };
-        if (data.region !== undefined) this.region = data.region;
-        if (data.rules_channel_id !== undefined) this.rulesChannel = data.rules_channel_id === null ? null : this.client.getChannel(data.rules_channel_id) || { id: data.rules_channel_id };
-        if (data.splash !== undefined) this.splash = data.splash;
-        if (data.stickers !== undefined) this.stickers = data.stickers;
-        if (data.system_channel_flags !== undefined) this.systemChannelFlags = data.system_channel_flags;
-        if (data.system_channel_id !== undefined) this.systemChannel = data.system_channel_id === null ? null : this.client.getChannel(data.system_channel_id) || { id: data.system_channel_id };
-        if (data.vanity_url_code !== undefined) this.vanityURLCode = data.vanity_url_code;
-        if (data.verification_level !== undefined) this.verificationLevel = data.verification_level;
-        if (data.welcome_screen !== undefined) this.welcomeScreen = {
-            description:     data.welcome_screen.description,
-            welcomeChannels: data.welcome_screen.welcome_channels.map(channel => ({
-                channelID:   channel.channel_id,
-                description: channel.description,
-                emojiID:     channel.emoji_id,
-                emojiName:   channel.emoji_name
-            }))
-        };
-        if (data.widget_channel_id !== undefined) this.widgetChannel = data.widget_channel_id === null ? null : this.client.getChannel(data.widget_channel_id) || { id: data.widget_channel_id };
-        if (data.widget_enabled !== undefined) this.widgetEnabled = data.widget_enabled;
+        if (data.afk_channel_id !== undefined) {
+            this.afkChannel = data.afk_channel_id === null ? null : this.client.getChannel(data.afk_channel_id) || { id: data.afk_channel_id };
+        }
+        if (data.afk_timeout !== undefined) {
+            this.afkTimeout = data.afk_timeout;
+        }
+        if (data.application_id !== undefined) {
+            this.application = data.application_id === null ? null : this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id };
+        }
+        if (data.approximate_member_count !== undefined) {
+            this.approximateMemberCount = data.approximate_member_count;
+        }
+        if (data.approximate_presence_count !== undefined) {
+            this.approximatePresenceCount = data.approximate_presence_count;
+        }
+        if (data.banner !== undefined) {
+            this.banner = data.banner;
+        }
+        if (data.default_message_notifications !== undefined) {
+            this.defaultMessageNotifications = data.default_message_notifications;
+        }
+        if (data.description !== undefined) {
+            this.description = data.description;
+        }
+        if (data.discovery_splash !== undefined) {
+            this.discoverySplash = data.discovery_splash;
+        }
+        if (data.emojis !== undefined) {
+            this.emojis = data.emojis.map(emoji => ({
+                ...emoji,
+                user: !emoji.user ? undefined : this.client.users.update(emoji.user)
+            }));
+        }
+        if (data.explicit_content_filter !== undefined) {
+            this.explicitContentFilter = data.explicit_content_filter;
+        }
+        if (data.features !== undefined) {
+            this.features = data.features;
+        }
+        if (data.icon !== undefined) {
+            this.icon = data.icon;
+        }
+        if (data.joined_at !== undefined) {
+            this.joinedAt = new Date(data.joined_at);
+        }
+        if (data.max_members !== undefined) {
+            this.maxMembers = data.max_members;
+        }
+        if (data.max_presences !== undefined) {
+            this.maxPresences = data.max_presences;
+        }
+        if (data.max_video_channel_users !== undefined) {
+            this.maxVideoChannelUsers = data.max_video_channel_users;
+        }
+        if (data.member_count !== undefined) {
+            this.memberCount = data.member_count;
+        }
+        if (data.mfa_level !== undefined) {
+            this.mfaLevel = data.mfa_level;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.nsfw_level !== undefined) {
+            this.nsfwLevel = data.nsfw_level;
+        }
+        if (data.owner !== undefined) {
+            this.oauthOwner = data.owner;
+        }
+        if (data.owner_id !== undefined) {
+            this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
+        }
+        if (data.permissions !== undefined) {
+            this.permissions = new Permission(data.permissions);
+        }
+        if (data.preferred_locale !== undefined) {
+            this.preferredLocale = data.preferred_locale;
+        }
+        if (data.premium_progress_bar_enabled !== undefined) {
+            this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
+        }
+        if (data.premium_subscription_count !== undefined) {
+            this.premiumSubscriptionCount = data.premium_subscription_count;
+        }
+        if (data.premium_tier !== undefined) {
+            this.premiumTier = data.premium_tier;
+        }
+        if (data.public_updates_channel_id !== undefined) {
+            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel(data.public_updates_channel_id) || { id: data.public_updates_channel_id };
+        }
+        if (data.region !== undefined) {
+            this.region = data.region;
+        }
+        if (data.rules_channel_id !== undefined) {
+            this.rulesChannel = data.rules_channel_id === null ? null : this.client.getChannel(data.rules_channel_id) || { id: data.rules_channel_id };
+        }
+        if (data.splash !== undefined) {
+            this.splash = data.splash;
+        }
+        if (data.stickers !== undefined) {
+            this.stickers = data.stickers;
+        }
+        if (data.system_channel_flags !== undefined) {
+            this.systemChannelFlags = data.system_channel_flags;
+        }
+        if (data.system_channel_id !== undefined) {
+            this.systemChannel = data.system_channel_id === null ? null : this.client.getChannel(data.system_channel_id) || { id: data.system_channel_id };
+        }
+        if (data.vanity_url_code !== undefined) {
+            this.vanityURLCode = data.vanity_url_code;
+        }
+        if (data.verification_level !== undefined) {
+            this.verificationLevel = data.verification_level;
+        }
+        if (data.welcome_screen !== undefined) {
+            this.welcomeScreen = {
+                description:     data.welcome_screen.description,
+                welcomeChannels: data.welcome_screen.welcome_channels.map(channel => ({
+                    channelID:   channel.channel_id,
+                    description: channel.description,
+                    emojiID:     channel.emoji_id,
+                    emojiName:   channel.emoji_name
+                }))
+            };
+        }
+        if (data.widget_channel_id !== undefined) {
+            this.widgetChannel = data.widget_channel_id === null ? null : this.client.getChannel(data.widget_channel_id) || { id: data.widget_channel_id };
+        }
+        if (data.widget_enabled !== undefined) {
+            this.widgetEnabled = data.widget_enabled;
+        }
     }
 
     /** The shard this guild is on. Gateway only. */
-    get shard(): Shard { return this.client.shards.get(this.client.guildShardMap[this.id])!; }
+    get shard(): Shard {
+        return this.client.shards.get(this.client.guildShardMap[this.id])!;
+    }
 
     /**
      * Add a member to this guild. Requires an access token with the `guilds.join` scope.
@@ -887,19 +985,30 @@ export default class Guild extends Base {
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (typeof member === "string") member = this.members.get(member)!;
-        if (!member) throw new Error("Member not found");
-        if (member.id === this.owner.id) return new Permission(AllPermissions);
-        else {
+        if (typeof member === "string") {
+            member = this.members.get(member)!;
+        }
+        if (!member) {
+            throw new Error("Member not found");
+        }
+        if (member.id === this.owner.id) {
+            return new Permission(AllPermissions);
+        } else {
             let permissions = this.roles.get(this.id)!.permissions.allow;
-            if (permissions & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+            if (permissions & Permissions.ADMINISTRATOR) {
+                return new Permission(AllPermissions);
+            }
             for (const id of member.roles) {
                 const role = this.roles.get(id);
-                if (!role) continue;
+                if (!role) {
+                    continue;
+                }
                 if (role.permissions.allow & Permissions.ADMINISTRATOR) {
                     permissions = AllPermissions;
                     break;
-                } else permissions |= role.permissions.allow;
+                } else {
+                    permissions |= role.permissions.allow;
+                }
             }
             return new Permission(permissions);
         }

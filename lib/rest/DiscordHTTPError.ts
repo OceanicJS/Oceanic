@@ -15,28 +15,45 @@ export default class DiscordHTTPError extends Error {
 
         let message = `${res.status} ${res.statusText} on ${this.method} ${this.path}`;
         const errors = DiscordHTTPError.flattenErrors(resBody as Record<string, unknown>);
-        if (errors.length > 0) message += `\n  ${errors.join("\n  ")}`;
+        if (errors.length > 0) {
+            message += `\n  ${errors.join("\n  ")}`;
+        }
         Object.defineProperty(this, "message", {
             enumerable: false,
             value:      message
         });
-        if (stack) this.stack = this.name + ": " + this.message + "\n" + stack;
-        else Error.captureStackTrace(this, DiscordHTTPError);
+        if (stack) {
+            this.stack = this.name + ": " + this.message + "\n" + stack;
+        } else {
+            Error.captureStackTrace(this, DiscordHTTPError);
+        }
     }
 
     static flattenErrors(errors: Record<string, unknown>, keyPrefix = ""): Array<string> {
         let messages: Array<string> = [];
         for (const fieldName in errors) {
-            if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") continue;
-            if (Array.isArray(errors[fieldName])) messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
+            if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") {
+                continue;
+            }
+            if (Array.isArray(errors[fieldName])) {
+                messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
+            }
         }
         return messages;
     }
 
-    get headers(): Headers { return this.response.headers; }
-    get path(): string { return new URL(this.response.url).pathname; }
-    get status(): number { return this.response.status; }
-    get statusText(): string { return this.response.statusText; }
+    get headers(): Headers {
+        return this.response.headers;
+    }
+    get path(): string {
+        return new URL(this.response.url).pathname;
+    }
+    get status(): number {
+        return this.response.status;
+    }
+    get statusText(): string {
+        return this.response.statusText;
+    }
 
     toJSON(): JSONDiscordHTTPError {
         return {

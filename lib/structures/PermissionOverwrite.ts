@@ -18,11 +18,17 @@ export default class PermissionOverwrite extends Base {
         this.type = data.type;
     }
 
-    get allow(): bigint { return this.permission.allow; }
-    get deny(): bigint { return this.permission.deny; }
+    get allow(): bigint {
+        return this.permission.allow;
+    }
+    get deny(): bigint {
+        return this.permission.deny;
+    }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
-    get json(): Record<keyof typeof Permissions, boolean> { return this.permission.json; }
+    get json(): Record<keyof typeof Permissions, boolean> {
+        return this.permission.json;
+    }
 
     /**
      *Check if this permissions instance has the given permissions allowed

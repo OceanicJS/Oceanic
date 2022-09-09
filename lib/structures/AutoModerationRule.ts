@@ -61,25 +61,41 @@ export default class AutoModerationRule extends Base {
     }
 
     protected update(data: Partial<RawAutoModerationRule>): void {
-        if (data.actions !== undefined) this.actions = data.actions.map(a => ({
-            metadata: {
-                channelID:       a.metadata.channel_id,
-                durationSeconds: a.metadata.duration_seconds
-            },
-            type: a.type
-        }));
-        if (data.enabled !== undefined) this.enabled = data.enabled;
-        if (data.event_type !== undefined) this.eventType = data.event_type;
-        if (data.exempt_channels !== undefined) this.exemptChannels = data.exempt_channels;
-        if (data.exempt_roles !== undefined) this.exemptRoles = data.exempt_roles;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.trigger_metadata !== undefined) this.triggerMetadata = {
-            allowList:         data.trigger_metadata.allow_list,
-            keywordFilter:     data.trigger_metadata.keyword_filter,
-            mentionTotalLimit: data.trigger_metadata.mention_total_limit,
-            presets:           data.trigger_metadata.presets
-        };
-        if (data.trigger_type !== undefined) this.triggerType = data.trigger_type;
+        if (data.actions !== undefined) {
+            this.actions = data.actions.map(a => ({
+                metadata: {
+                    channelID:       a.metadata.channel_id,
+                    durationSeconds: a.metadata.duration_seconds
+                },
+                type: a.type
+            }));
+        }
+        if (data.enabled !== undefined) {
+            this.enabled = data.enabled;
+        }
+        if (data.event_type !== undefined) {
+            this.eventType = data.event_type;
+        }
+        if (data.exempt_channels !== undefined) {
+            this.exemptChannels = data.exempt_channels;
+        }
+        if (data.exempt_roles !== undefined) {
+            this.exemptRoles = data.exempt_roles;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.trigger_metadata !== undefined) {
+            this.triggerMetadata = {
+                allowList:         data.trigger_metadata.allow_list,
+                keywordFilter:     data.trigger_metadata.keyword_filter,
+                mentionTotalLimit: data.trigger_metadata.mention_total_limit,
+                presets:           data.trigger_metadata.presets
+            };
+        }
+        if (data.trigger_type !== undefined) {
+            this.triggerType = data.trigger_type;
+        }
     }
 
     /**

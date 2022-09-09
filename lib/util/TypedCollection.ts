@@ -12,7 +12,9 @@ export default class TypedCollection<K extends string | number, M extends Record
     limit: number;
     constructor(baseObject: AnyClass<M, C, E>, client: Client, limit = Infinity) {
         super();
-        if (!(baseObject.prototype instanceof Base)) throw new Error("baseObject must be a class that extends Base");
+        if (!(baseObject.prototype instanceof Base)) {
+            throw new Error("baseObject must be a class that extends Base");
+        }
         this.#baseObject = baseObject;
         this.#client = client;
         this.limit = limit;
@@ -21,13 +23,16 @@ export default class TypedCollection<K extends string | number, M extends Record
     /** @hidden */
     add<T extends C>(value: T): T {
         if ("id" in value) {
-            if (this.limit === 0) return value;
+            if (this.limit === 0) {
+                return value;
+            }
             this.set(value.id as K, value);
 
             if (this.limit && this.size > this.limit) {
                 const iter = this.keys();
-                while (this.size > this.limit)
+                while (this.size > this.limit) {
                     this.delete((iter.next().value as C).id as K);
+                }
 
             }
 
@@ -42,13 +47,18 @@ export default class TypedCollection<K extends string | number, M extends Record
     /** @hidden */
     update(value: C | Partial<M> & { id?: K; }, ...extra: E): C {
         if (value instanceof this.#baseObject) {
-            if ("update" in value) value["update"].call(value, value);
+            if ("update" in value) {
+                value["update"].call(value, value);
+            }
             return value;
         }
         // if the object does not have a direct id, we're forced to construct a whole new object
         let item = "id" in value && value.id ? this.get(value.id as K) : undefined;
-        if (!item) item = this.add(new this.#baseObject(value as M, this.#client, ...extra));
-        else if ("update" in item) item["update"].call(item, value);
+        if (!item) {
+            item = this.add(new this.#baseObject(value as M, this.#client, ...extra));
+        } else if ("update" in item) {
+            item["update"].call(item, value);
+        }
         return item;
     }
 }

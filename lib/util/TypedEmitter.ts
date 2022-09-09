@@ -19,7 +19,9 @@ declare interface TypedEmitter<Events extends Record<string | symbol, any>> exte
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
     emit<K extends keyof Events>(eventName: K, ...args: Events[K]): boolean {
-        if (this.listenerCount(eventName) === 0) return false;
+        if (this.listenerCount(eventName) === 0) {
+            return false;
+        }
         return super.emit(eventName as string, ...args as Array<any>);
     }
 }

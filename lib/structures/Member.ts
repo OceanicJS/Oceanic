@@ -43,12 +43,15 @@ export default class Member extends Base {
     user: User;
     constructor(data: RawMember, client: Client, guildID: string) {
         let user: User | undefined, id: string | undefined;
-        if ("id" in data && !data.user)
+        if ("id" in data && !data.user) {
             user = client.users.get(id = (data as unknown as { id: string; }).id);
-        else if (data.user)
+        } else if (data.user) {
             id = (user = client.users.update(data.user)).id;
+        }
 
-        if (!user) throw new Error(`Member recieved without a user${!id ? "or id." : `: ${id}`}`);
+        if (!user) {
+            throw new Error(`Member recieved without a user${!id ? "or id." : `: ${id}`}`);
+        }
         super(user.id, client);
         this.avatar = null;
         this.communicationDisabledUntil = null;
@@ -66,38 +69,80 @@ export default class Member extends Base {
     }
 
     protected update(data: Partial<RawMember>): void {
-        if (data.avatar !== undefined) this.avatar = data.avatar;
-        if (data.communication_disabled_until !== undefined) this.communicationDisabledUntil = data.communication_disabled_until === null ? null : new Date(data.communication_disabled_until);
-        if (data.deaf !== undefined) this.deaf = data.deaf;
-        if (data.flags !== undefined) this.flags = data.flags;
-        if (data.is_pending !== undefined) this.isPending = data.is_pending;
-        if (data.joined_at !== undefined) this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
-        if (data.mute !== undefined) this.mute = data.mute;
-        if (data.nick !== undefined) this.nick = data.nick;
-        if (data.pending !== undefined) this.pending = data.pending;
-        if (data.premium_since !== undefined) this.premiumSince = data.premium_since === null ? null : new Date(data.premium_since);
-        if (data.roles !== undefined) this.roles = data.roles;
-        if (data.user !== undefined) this.user = this.client.users.update(data.user);
+        if (data.avatar !== undefined) {
+            this.avatar = data.avatar;
+        }
+        if (data.communication_disabled_until !== undefined) {
+            this.communicationDisabledUntil = data.communication_disabled_until === null ? null : new Date(data.communication_disabled_until);
+        }
+        if (data.deaf !== undefined) {
+            this.deaf = data.deaf;
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.is_pending !== undefined) {
+            this.isPending = data.is_pending;
+        }
+        if (data.joined_at !== undefined) {
+            this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
+        }
+        if (data.mute !== undefined) {
+            this.mute = data.mute;
+        }
+        if (data.nick !== undefined) {
+            this.nick = data.nick;
+        }
+        if (data.pending !== undefined) {
+            this.pending = data.pending;
+        }
+        if (data.premium_since !== undefined) {
+            this.premiumSince = data.premium_since === null ? null : new Date(data.premium_since);
+        }
+        if (data.roles !== undefined) {
+            this.roles = data.roles;
+        }
+        if (data.user !== undefined) {
+            this.user = this.client.users.update(data.user);
+        }
     }
 
     /** If the member associated with the user is a bot. */
-    get bot(): boolean { return this.user.bot; }
+    get bot(): boolean {
+        return this.user.bot;
+    }
     /** The 4 digits after the username of the user associated with this member. */
-    get discriminator(): string { return this.user.discriminator; }
+    get discriminator(): string {
+        return this.user.discriminator;
+    }
     /** A string that will mention this member. */
-    get mention(): string { return this.user.mention; }
+    get mention(): string {
+        return this.user.mention;
+    }
     /** The permissions of this member. */
-    get permissions(): Permission { return this.guild.permissionsOf(this); }
+    get permissions(): Permission {
+        return this.guild.permissionsOf(this);
+    }
     /** The user associated with this member's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
-    get publicFlags(): number { return this.user.publicFlags; }
+    get publicFlags(): number {
+        return this.user.publicFlags;
+    }
     /** If this user associated with this member is an official discord system user. */
-    get system(): boolean { return this.user.system; }
+    get system(): boolean {
+        return this.user.system;
+    }
     /** a combination of the user associated with this member's username and discriminator. */
-    get tag(): string { return this.user.tag; }
+    get tag(): string {
+        return this.user.tag;
+    }
     /** The user associated ith this member's username. */
-    get username(): string { return this.user.username; }
+    get username(): string {
+        return this.user.username;
+    }
     /** The voice state of this member. */
-    get voiceState(): VoiceState | null { return this.guild instanceof Guild ? this.guild.voiceStates.get(this.id) || null : null; }
+    get voiceState(): VoiceState | null {
+        return this.guild instanceof Guild ? this.guild.voiceStates.get(this.id) || null : null;
+    }
 
     /**
      * Add a role to this member.

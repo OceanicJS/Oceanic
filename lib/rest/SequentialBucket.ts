@@ -23,12 +23,16 @@ export default class SequentialBucket {
     private check(force = false): void {
         if (this.#queue.length === 0) {
             if (this.processing) {
-                if (typeof this.processing !== "boolean") clearTimeout(this.processing);
+                if (typeof this.processing !== "boolean") {
+                    clearTimeout(this.processing);
+                }
                 this.processing = false;
             }
             return;
         }
-        if (this.processing && !force) return;
+        if (this.processing && !force) {
+            return;
+        }
         const now = Date.now();
         const offset = this.latencyRef.latency;
         if (!this.reset || this.reset < now - offset) {
@@ -46,8 +50,11 @@ export default class SequentialBucket {
         --this.remaining;
         this.processing = true;
         this.#queue.shift()!(() => {
-            if (this.#queue.length > 0) this.check(true);
-            else this.processing = false;
+            if (this.#queue.length > 0) {
+                this.check(true);
+            } else {
+                this.processing = false;
+            }
         });
     }
 
@@ -57,8 +64,11 @@ export default class SequentialBucket {
      * @param priority- If true, the item will be added to the front of the queue/
      */
     queue(func: (cb: () => void) => void, priority = false): void {
-        if (priority) this.#queue.unshift(func);
-        else this.#queue.push(func);
+        if (priority) {
+            this.#queue.unshift(func);
+        } else {
+            this.#queue.push(func);
+        }
         this.check();
     }
 }

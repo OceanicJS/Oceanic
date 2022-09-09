@@ -26,9 +26,15 @@ export default class ExtendedUser extends User {
 
     protected update(data: Partial<RawOAuthUser>): void {
         super.update(data);
-        if (data.email !== undefined) this.email = data.email;
-        if (data.flags !== undefined) this.flags = data.flags;
-        if (data.locale !== undefined) this.locale = data.locale;
+        if (data.email !== undefined) {
+            this.email = data.email;
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.locale !== undefined) {
+            this.locale = data.locale;
+        }
     }
 
     /**

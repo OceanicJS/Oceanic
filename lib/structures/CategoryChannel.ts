@@ -34,12 +34,19 @@ export default class CategoryChannel extends GuildChannel {
 
     protected update(data: Partial<RawCategoryChannel>): void {
         super.update(data);
-        if (data.position !== undefined) this.position = data.position;
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
         if (data.permission_overwrites !== undefined) {
-            for (const id of this.permissionOverwrites.keys())
-                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) this.permissionOverwrites.delete(id);
+            for (const id of this.permissionOverwrites.keys()) {
+                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) {
+                    this.permissionOverwrites.delete(id);
+                }
+            }
 
-            for (const overwrite of data.permission_overwrites) this.permissionOverwrites.update(overwrite);
+            for (const overwrite of data.permission_overwrites) {
+                this.permissionOverwrites.update(overwrite);
+            }
         }
     }
 
@@ -74,23 +81,34 @@ export default class CategoryChannel extends GuildChannel {
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (typeof member === "string") member = this.guild.members.get(member)!;
-        if (!member) throw new Error("Member not found");
+        if (typeof member === "string") {
+            member = this.guild.members.get(member)!;
+        }
+        if (!member) {
+            throw new Error("Member not found");
+        }
         let permission = this.guild.permissionsOf(member).allow;
-        if (permission & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+        if (permission & Permissions.ADMINISTRATOR) {
+            return new Permission(AllPermissions);
+        }
         let overwrite = this.permissionOverwrites.get(this.guildID);
-        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        if (overwrite) {
+            permission = (permission & ~overwrite.deny) | overwrite.allow;
+        }
         let deny = 0n;
         let allow = 0n;
-        for (const id of member.roles)
+        for (const id of member.roles) {
             if ((overwrite = this.permissionOverwrites.get(id))) {
                 deny |= overwrite.deny;
                 allow |= overwrite.allow;
             }
+        }
 
         permission = (permission & ~deny) | allow;
         overwrite = this.permissionOverwrites.get(member.id);
-        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        if (overwrite) {
+            permission = (permission & ~overwrite.deny) | overwrite.allow;
+        }
         return new Permission(permission);
     }
 

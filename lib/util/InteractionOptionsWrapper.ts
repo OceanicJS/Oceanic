@@ -35,11 +35,17 @@ export default class InteractionOptionsWrapper {
     private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes): T | undefined {
         let baseOptions: Array<InteractionOptionsWithValue> | undefined;
         const sub = this.getSubCommand(false);
-        if (sub?.length === 1) baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        else if (sub?.length === 2) baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        if (sub?.length === 1) {
+            baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        } else if (sub?.length === 2) {
+            baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        }
         const opt = (baseOptions || this.raw).find(o => o.name === name && o.type === type) as T | undefined;
-        if (!opt && required) throw new Error(`Missing required option: ${name}`);
-        else return opt;
+        if (!opt && required) {
+            throw new Error(`Missing required option: ${name}`);
+        } else {
+            return opt;
+        }
     }
 
 
@@ -51,11 +57,17 @@ export default class InteractionOptionsWrapper {
     getAttachment(name: string, required?: false): Attachment | undefined;
     getAttachment(name: string, required: true): Attachment;
     getAttachment(name: string, required?: boolean): Attachment | undefined {
-        if (this.resolved === null) throw new Error("attempt to use getAttachmentValue with null resolved");
+        if (this.resolved === null) {
+            throw new Error("attempt to use getAttachmentValue with null resolved");
+        }
         let val: string | undefined;
-        if (!(val = this.getAttachmentOption(name, required as false)?.value)) return undefined;
+        if (!(val = this.getAttachmentOption(name, required as false)?.value)) {
+            return undefined;
+        }
         const a = this.resolved.attachments.get(val);
-        if (!a && required) throw new Error(`attachment not present for required option: ${name}`);
+        if (!a && required) {
+            throw new Error(`attachment not present for required option: ${name}`);
+        }
         return a;
     }
 
@@ -101,11 +113,17 @@ export default class InteractionOptionsWrapper {
     getChannel<T extends AnyChannel = AnyChannel>(name: string, required?: false): T | undefined;
     getChannel<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
     getChannel(name: string, required?: boolean): AnyChannel | undefined {
-        if (this.resolved === null) throw new Error("attempt to use getChannelValue with null resolved");
+        if (this.resolved === null) {
+            throw new Error("attempt to use getChannelValue with null resolved");
+        }
         let val: string | undefined;
-        if (!(val = this.getChannelOption(name, required as false)?.value)) return undefined;
+        if (!(val = this.getChannelOption(name, required as false)?.value)) {
+            return undefined;
+        }
         const ch = this.resolved.channels.get(val);
-        if (!ch && required) throw new Error(`channel not present for required option: ${name}`);
+        if (!ch && required) {
+            throw new Error(`channel not present for required option: ${name}`);
+        }
         return ch;
     }
 
@@ -150,11 +168,17 @@ export default class InteractionOptionsWrapper {
     getMember(name: string, required?: false): Member | undefined;
     getMember(name: string, required: true): Member;
     getMember(name: string, required?: boolean): Member | undefined {
-        if (this.resolved === null) throw new Error("attempt to use getMemberValue with null resolved");
+        if (this.resolved === null) {
+            throw new Error("attempt to use getMemberValue with null resolved");
+        }
         let val: string | undefined;
-        if (!(val = this.getUserOption(name, required as false)?.value)) return undefined;
+        if (!(val = this.getUserOption(name, required as false)?.value)) {
+            return undefined;
+        }
         const ch = this.resolved.members.get(val);
-        if (!ch && required) throw new Error(`member not present for required option: ${name}`);
+        if (!ch && required) {
+            throw new Error(`member not present for required option: ${name}`);
+        }
         return ch;
     }
 
@@ -166,13 +190,19 @@ export default class InteractionOptionsWrapper {
     getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required?: false): T | undefined;
     getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
     getMentionable(name: string, required?: boolean): AnyChannel | User | Role | undefined {
-        if (this.resolved === null) throw new Error("attempt to use getMentionableValue with null resolved");
+        if (this.resolved === null) {
+            throw new Error("attempt to use getMentionableValue with null resolved");
+        }
         let val: string | undefined;
-        if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) return undefined;
+        if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) {
+            return undefined;
+        }
         const ch = this.resolved.channels.get(val);
         const role = this.resolved.roles.get(val);
         const user = this.resolved.users.get(val);
-        if ((!ch && !role && !user) && required) throw new Error(`value not present for required option: ${name}`);
+        if ((!ch && !role && !user) && required) {
+            throw new Error(`value not present for required option: ${name}`);
+        }
         return ch;
     }
 
@@ -217,11 +247,17 @@ export default class InteractionOptionsWrapper {
     getRole(name: string, required?: false): Role | undefined;
     getRole(name: string, required: true): Role;
     getRole(name: string, required?: boolean): Role | undefined {
-        if (this.resolved === null) throw new Error("attempt to use getRoleValue with null resolved");
+        if (this.resolved === null) {
+            throw new Error("attempt to use getRoleValue with null resolved");
+        }
         let val: string | undefined;
-        if (!(val = this.getRoleOption(name, required as false)?.value)) return undefined;
+        if (!(val = this.getRoleOption(name, required as false)?.value)) {
+            return undefined;
+        }
         const ch = this.resolved.roles.get(val);
-        if (!ch && required) throw new Error(`role not present for required option: ${name}`);
+        if (!ch && required) {
+            throw new Error(`role not present for required option: ${name}`);
+        }
         return ch;
     }
 
@@ -267,16 +303,24 @@ export default class InteractionOptionsWrapper {
     getSubCommand(required: true): [subcommand: string] | [subcommandGroup: string, subcommand: string];
     getSubCommand(required?: boolean): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined {
         const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
-        if (!opt?.options)
-            if (required) throw new Error("Missing required option: subcommand/subcommandgroup");
-            else return undefined;
-        else
+        if (!opt?.options) {
+            if (required) {
+                throw new Error("Missing required option: subcommand/subcommandgroup");
+            } else {
+                return undefined;
+            }
+        } else
         // nested
         if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
             const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
-            if (!sub?.options) return [opt.name];
-            else return [opt.name, sub.name];
-        } else return [opt.name];
+            if (!sub?.options) {
+                return [opt.name];
+            } else {
+                return [opt.name, sub.name];
+            }
+        } else {
+            return [opt.name];
+        }
 
     }
 
@@ -288,11 +332,17 @@ export default class InteractionOptionsWrapper {
     getUser(name: string, required?: false): User | undefined;
     getUser(name: string, required: true): User;
     getUser(name: string, required?: boolean): User | undefined {
-        if (this.resolved === null) throw new Error("attempt to use getUserValue with null resolved");
+        if (this.resolved === null) {
+            throw new Error("attempt to use getUserValue with null resolved");
+        }
         let val: string | undefined;
-        if (!(val = this.getUserOption(name, required as false)?.value)) return undefined;
+        if (!(val = this.getUserOption(name, required as false)?.value)) {
+            return undefined;
+        }
         const ch = this.resolved.users.get(val);
-        if (!ch && required) throw new Error(`user not present for required option: ${name}`);
+        if (!ch && required) {
+            throw new Error(`user not present for required option: ${name}`);
+        }
         return ch;
     }
 

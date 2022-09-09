@@ -102,7 +102,9 @@ export default class Guilds {
                 roles:        options.roles
             }
         }).then(data => data === null ? undefined : this.#manager.client.util.updateMember(id, userID, data));
-        if (res !== undefined) return res;
+        if (res !== undefined) {
+            return res;
+        }
     }
 
     /**
@@ -127,7 +129,9 @@ export default class Guilds {
      */
     async beginPrune(id: string, options?: BeginPruneOptions): Promise<number | null> {
         const reason = options?.reason;
-        if (options?.reason) delete options.reason;
+        if (options?.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<{ pruned: number | null; }>({
             method: "POST",
             path:   Routes.GUILD_PRUNE(id),
@@ -147,7 +151,9 @@ export default class Guilds {
      * @param options The options for creating the guild.
      */
     async create(options: CreateGuildOptions): Promise<Guild> {
-        if (options.icon) options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        if (options.icon) {
+            options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        }
         return this.#manager.authRequest<RawGuild>({
             method: "POST",
             path:   Routes.GUILDS,
@@ -175,7 +181,9 @@ export default class Guilds {
      */
     async createAutoModerationRule(id: string, options: CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawAutoModerationRule>({
             method: "POST",
             path:   Routes.GUILD_AUTOMOD_RULES(id),
@@ -211,14 +219,16 @@ export default class Guilds {
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
         const reason = options?.reason;
-        if (options?.reason) delete options.reason;
-        if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) options.deleteMessageSeconds = options.deleteMessageDays * 86400;
+        if (options?.reason) {
+            delete options.reason;
+        }
+        if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) {
+            options.deleteMessageSeconds = options.deleteMessageDays * 86400;
+        }
         await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.GUILD_BAN(guildID, userID),
-            json:   {
-                delete_message_seconds: options?.deleteMessageSeconds
-            },
+            json:   { delete_message_seconds: options?.deleteMessageSeconds },
             reason
         });
     }
@@ -230,7 +240,9 @@ export default class Guilds {
      */
     async createChannel<T extends GuildChannelTypesWithoutThreads>(id: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawGuildChannel>({
             method: "POST",
             path:   Routes.GUILD_CHANNELS(id),
@@ -259,8 +271,12 @@ export default class Guilds {
      */
     async createEmoji(id: string, options: CreateEmojiOptions): Promise<GuildEmoji> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
-        if (options.image) options.image = this.#manager.client.util._convertImage(options.image, "image");
+        if (options.reason) {
+            delete options.reason;
+        }
+        if (options.image) {
+            options.image = this.#manager.client.util._convertImage(options.image, "image");
+        }
         return this.#manager.authRequest<RawGuildEmoji>({
             method: "POST",
             path:   Routes.GUILD_EMOJIS(id),
@@ -284,7 +300,9 @@ export default class Guilds {
      * @param options The options for creating the guild.
      */
     async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions): Promise<Guild> {
-        if (options.icon) options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        if (options.icon) {
+            options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        }
         return this.#manager.authRequest<RawGuild>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATE_CODE(code),
@@ -302,8 +320,12 @@ export default class Guilds {
      */
     async createRole(id: string, options?: CreateRoleOptions): Promise<Role> {
         const reason = options?.reason;
-        if (options?.reason) delete options.reason;
-        if (options?.icon) options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        if (options?.reason) {
+            delete options.reason;
+        }
+        if (options?.icon) {
+            options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        }
         return this.#manager.authRequest<RawRole>({
             method: "POST",
             path:   Routes.GUILD_ROLES(id),
@@ -327,17 +349,19 @@ export default class Guilds {
      */
     async createScheduledEvent(id: string, options: CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
-        if (options.image) options.image = this.#manager.client.util._convertImage(options.image, "image");
+        if (options.reason) {
+            delete options.reason;
+        }
+        if (options.image) {
+            options.image = this.#manager.client.util._convertImage(options.image, "image");
+        }
         return this.#manager.authRequest<RawScheduledEvent>({
             method: "POST",
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
             json:   {
-                channel_id:      options.channelID,
-                description:     options.description,
-                entity_metadata: !options.entityMetadata ? undefined : {
-                    location: options.entityMetadata.location
-                },
+                channel_id:           options.channelID,
+                description:          options.description,
+                entity_metadata:      !options.entityMetadata ? undefined : { location: options.entityMetadata.location },
                 entity_type:          options.entityType,
                 image:                options.image,
                 name:                 options.name,
@@ -467,11 +491,21 @@ export default class Guilds {
      */
     async edit(id: string, options: EditGuildOptions): Promise<Guild> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
-        if (options.banner) options.banner = this.#manager.client.util._convertImage(options.banner, "banner");
-        if (options.discoverySplash) options.discoverySplash = this.#manager.client.util._convertImage(options.discoverySplash, "discovery splash");
-        if (options.icon) options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
-        if (options.splash) options.splash = this.#manager.client.util._convertImage(options.splash, "splash");
+        if (options.reason) {
+            delete options.reason;
+        }
+        if (options.banner) {
+            options.banner = this.#manager.client.util._convertImage(options.banner, "banner");
+        }
+        if (options.discoverySplash) {
+            options.discoverySplash = this.#manager.client.util._convertImage(options.discoverySplash, "discovery splash");
+        }
+        if (options.icon) {
+            options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        }
+        if (options.splash) {
+            options.splash = this.#manager.client.util._convertImage(options.splash, "splash");
+        }
         return this.#manager.authRequest<RawGuild>({
             method: "PATCH",
             path:   Routes.GUILD(id),
@@ -509,7 +543,9 @@ export default class Guilds {
      */
     async editAutoModerationRule(id: string, ruleID: string, options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawAutoModerationRule>({
             method: "PATCH",
             path:   Routes.GUILD_AUTOMOD_RULE(id, ruleID),
@@ -561,13 +597,13 @@ export default class Guilds {
      */
     async editCurrentMember(id: string, options: EditCurrentMemberOptions): Promise<Member> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(id, "@me"),
-            json:   {
-                nick: options.nick
-            },
+            json:   { nick: options.nick },
             reason
         }).then(data => this.#manager.client.util.updateMember(id, data.user!.id, data));
     }
@@ -596,7 +632,9 @@ export default class Guilds {
      */
     async editEmoji(id: string, emojiID: string, options: EditEmojiOptions): Promise<GuildEmoji> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawGuildEmoji>({
             method: "POST",
             path:   Routes.GUILD_EMOJI(id, emojiID),
@@ -620,9 +658,7 @@ export default class Guilds {
         return this.#manager.authRequest<MFALevels>({
             method: "PATCH",
             path:   Routes.GUILD_MFA(id),
-            json:   {
-                level
-            }
+            json:   { level }
         });
     }
 
@@ -634,7 +670,9 @@ export default class Guilds {
      */
     async editMember(id: string, memberID: string, options: EditMemberOptions): Promise<Member> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(id, memberID),
@@ -657,8 +695,12 @@ export default class Guilds {
      */
     async editRole(id: string, roleID: string, options: EditRoleOptions): Promise<Role> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
-        if (options.icon) options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        if (options.reason) {
+            delete options.reason;
+        }
+        if (options.icon) {
+            options.icon = this.#manager.client.util._convertImage(options.icon, "icon");
+        }
         return this.#manager.authRequest<RawRole>({
             method: "PATCH",
             path:   Routes.GUILD_ROLE(id, roleID),
@@ -700,17 +742,19 @@ export default class Guilds {
      */
     async editScheduledEvent(id: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
-        if (options.image) options.image = this.#manager.client.util._convertImage(options.image, "image");
+        if (options.reason) {
+            delete options.reason;
+        }
+        if (options.image) {
+            options.image = this.#manager.client.util._convertImage(options.image, "image");
+        }
         return this.#manager.authRequest<RawScheduledEvent>({
             method: "POST",
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
             json:   {
-                channel_id:      options.channelID,
-                description:     options.description,
-                entity_metadata: !options.entityMetadata ? undefined : {
-                    location: options.entityMetadata.location
-                },
+                channel_id:           options.channelID,
+                description:          options.description,
+                entity_metadata:      !options.entityMetadata ? undefined : { location: options.entityMetadata.location },
                 entity_type:          options.entityType,
                 image:                options.image,
                 name:                 options.name,
@@ -765,7 +809,9 @@ export default class Guilds {
      */
     async editWelcomeScreen(id: string, options: EditWelcomeScreenOptions): Promise<WelcomeScreen> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawWelcomeScreen>({
             method: "PATCH",
             path:   Routes.GUILD_WELCOME_SCREEN(id),
@@ -832,7 +878,9 @@ export default class Guilds {
      */
     async get(id: string, withCounts?: number): Promise<Guild> {
         const query = new URLSearchParams();
-        if (withCounts) query.set("with_counts", withCounts.toString());
+        if (withCounts) {
+            query.set("with_counts", withCounts.toString());
+        }
         return this.#manager.authRequest<RawGuild>({
             method: "GET",
             path:   Routes.GUILD(id),
@@ -867,10 +915,18 @@ export default class Guilds {
     async getAuditLog(id: string, options?: GetAuditLogOptions): Promise<AuditLog> {
         const guild = this.#manager.client.guilds.get(id);
         const query = new URLSearchParams();
-        if (options?.actionType) query.set("action_type", options.actionType.toString());
-        if (options?.before) query.set("before", options.before);
-        if (options?.limit) query.set("limit", options.limit.toString());
-        if (options?.userID) query.set("user_id", options.userID);
+        if (options?.actionType) {
+            query.set("action_type", options.actionType.toString());
+        }
+        if (options?.before) {
+            query.set("before", options.before);
+        }
+        if (options?.limit) {
+            query.set("limit", options.limit.toString());
+        }
+        if (options?.userID) {
+            query.set("user_id", options.userID);
+        }
         return this.#manager.authRequest<RawAuditLog>({
             method: "GET",
             path:   Routes.GUILD_AUDIT_LOG(id),
@@ -932,9 +988,15 @@ export default class Guilds {
      */
     async getBans(id: string, options?: GetBansOptions): Promise<Array<Ban>> {
         const query = new URLSearchParams();
-        if (options?.after) query.set("after", options.after);
-        if (options?.before) query.set("before", options.before);
-        if (options?.limit) query.set("limit", options.limit.toString());
+        if (options?.after) {
+            query.set("after", options.after);
+        }
+        if (options?.before) {
+            query.set("before", options.before);
+        }
+        if (options?.limit) {
+            query.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<Array<RawBan>>({
             method: "GET",
             path:   Routes.GUILD_BANS(id),
@@ -1026,8 +1088,12 @@ export default class Guilds {
      */
     async getMembers(id: string, options?: GetMembersOptions): Promise<Array<Member>> {
         const query = new URLSearchParams();
-        if (options?.after) query.set("after", options.after);
-        if (options?.limit) query.set("limit", options.limit.toString());
+        if (options?.after) {
+            query.set("after", options.after);
+        }
+        if (options?.limit) {
+            query.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<Array<RawMember>>({
             method: "GET",
             path:   Routes.GUILD_MEMBERS(id),
@@ -1053,8 +1119,12 @@ export default class Guilds {
      */
     async getPruneCount(id: string, options?: GetPruneCountOptions): Promise<number> {
         const query = new URLSearchParams();
-        if (options?.days) query.set("days", options.days.toString());
-        if (options?.includeRoles) query.set("include_roles", options.includeRoles.join(","));
+        if (options?.days) {
+            query.set("days", options.days.toString());
+        }
+        if (options?.includeRoles) {
+            query.set("include_roles", options.includeRoles.join(","));
+        }
         return this.#manager.authRequest<{ pruned: number; }>({
             method: "GET",
             path:   Routes.GUILD_PRUNE(id),
@@ -1082,7 +1152,9 @@ export default class Guilds {
      */
     async getScheduledEvent(id: string, eventID: string, withUserCount?: number): Promise<GuildScheduledEvent> {
         const query = new URLSearchParams();
-        if (withUserCount) query.set("with_user_count", withUserCount.toString());
+        if (withUserCount) {
+            query.set("with_user_count", withUserCount.toString());
+        }
         return this.#manager.authRequest<RawScheduledEvent>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT(id, eventID),
@@ -1099,10 +1171,18 @@ export default class Guilds {
     async getScheduledEventUsers(id: string, eventID: string, options?: GetScheduledEventUsersOptions): Promise<Array<ScheduledEventUser>> {
         const guild = this.#manager.client.guilds.get(id);
         const query = new URLSearchParams();
-        if (options?.after) query.set("after", options.after);
-        if (options?.before) query.set("before", options.before);
-        if (options?.limit) query.set("limit", options.limit.toString());
-        if (options?.withMember !== undefined) query.set("with_member", options.withMember ? "true" : "false");
+        if (options?.after) {
+            query.set("after", options.after);
+        }
+        if (options?.before) {
+            query.set("before", options.before);
+        }
+        if (options?.limit) {
+            query.set("limit", options.limit.toString());
+        }
+        if (options?.withMember !== undefined) {
+            query.set("with_member", options.withMember ? "true" : "false");
+        }
         return this.#manager.authRequest<Array<RawScheduledEventUser>>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT_USERS(id, eventID)
@@ -1121,7 +1201,9 @@ export default class Guilds {
     async getScheduledEvents(id: string, withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
         const guild = this.#manager.client.guilds.get(id);
         const query = new URLSearchParams();
-        if (withUserCount) query.set("with_user_count", withUserCount.toString());
+        if (withUserCount) {
+            query.set("with_user_count", withUserCount.toString());
+        }
         return this.#manager.authRequest<Array<RawScheduledEvent>>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
@@ -1226,7 +1308,9 @@ export default class Guilds {
      */
     async getWidgetImage(id: string, style?: WidgetImageStyle): Promise<Buffer> {
         const query = new URLSearchParams();
-        if (style) query.set("style", style.toString());
+        if (style) {
+            query.set("style", style.toString());
+        }
         return this.#manager.request<Buffer>({
             method: "GET",
             path:   Routes.GUILD_WIDGET_IMAGE(id),
@@ -1310,7 +1394,9 @@ export default class Guilds {
     async searchMembers(id: string, options: SearchMembersOptions): Promise<Array<Member>> {
         const query = new URLSearchParams();
         query.set("query", options.query);
-        if (options.limit) query.set("limit", options.limit.toString());
+        if (options.limit) {
+            query.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<Array<RawMember>>({
             method: "GET",
             path:   Routes.GUILD_SEARCH_MEMBERS(id),

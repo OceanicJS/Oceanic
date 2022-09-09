@@ -140,13 +140,7 @@
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/unified-signatures": "error",
     "arrow-body-style": ["error", "as-needed"],
-    "brace-style": [
-      "error",
-      "1tbs",
-      {
-        "allowSingleLine": true
-      }
-    ],
+    "brace-style": ["error", "1tbs"],
     "comma-dangle": "error",
     "complexity": "off",
     "dot-notation": "off",
@@ -303,6 +297,7 @@
     "@typescript-eslint/explicit-function-return-type": "error",
     "jsdoc/newline-after-description": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
-    "curly": ["error", "multi"]
+    "curly": ["error", "all"],
+    "object-curly-newline": ["error", { "multiline": true }]
   }
 }

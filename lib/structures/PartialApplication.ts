@@ -28,11 +28,21 @@ export default class PartialApplication extends Base {
     }
 
     protected update(data: RawPartialApplication): void {
-        if (data.bot_public !== undefined) this.botPublic = data.bot_public;
-        if (data.bot_require_code_grant !== undefined) this.botRequireCodeGrant = data.bot_require_code_grant;
-        if (data.description !== undefined) this.description = data.description;
-        if (data.icon !== undefined) this.icon = data.icon;
-        if (data.name !== undefined) this.name = data.name;
+        if (data.bot_public !== undefined) {
+            this.botPublic = data.bot_public;
+        }
+        if (data.bot_require_code_grant !== undefined) {
+            this.botRequireCodeGrant = data.bot_require_code_grant;
+        }
+        if (data.description !== undefined) {
+            this.description = data.description;
+        }
+        if (data.icon !== undefined) {
+            this.icon = data.icon;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
     }
 
     /**

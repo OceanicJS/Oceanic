@@ -46,16 +46,28 @@ export default class GuildTemplate {
     }
 
     protected update(data: Partial<RawGuildTemplate>): void {
-        if (data.description !== undefined) this.description = data.description;
-        if (data.is_dirty !== undefined) this.isDirty = data.is_dirty;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.serialized_source_guild !== undefined) this.serializedSourceGuild = data.serialized_source_guild;
+        if (data.description !== undefined) {
+            this.description = data.description;
+        }
+        if (data.is_dirty !== undefined) {
+            this.isDirty = data.is_dirty;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.serialized_source_guild !== undefined) {
+            this.serializedSourceGuild = data.serialized_source_guild;
+        }
         if (data.source_guild_id !== undefined) {
             this.sourceGuild = this.client.guilds.get(data.source_guild_id)!;
             this.sourceGuildID = data.source_guild_id;
         }
-        if (data.updated_at !== undefined) this.updatedAt = new Date(data.updated_at);
-        if (data.usage_count !== undefined) this.usageCount = data.usage_count;
+        if (data.updated_at !== undefined) {
+            this.updatedAt = new Date(data.updated_at);
+        }
+        if (data.usage_count !== undefined) {
+            this.usageCount = data.usage_count;
+        }
     }
 
     /**

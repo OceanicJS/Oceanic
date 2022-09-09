@@ -34,8 +34,12 @@ export default class RESTManager {
         this.webhooks = new Webhooks(this);
     }
 
-    get client(): Client { return this.#client; }
-    get options(): RESTOptions { return this.#handler.options; }
+    get client(): Client {
+        return this.#client;
+    }
+    get options(): RESTOptions {
+        return this.#handler.options;
+    }
 
     /** Alias for {@link rest/RequestHandler~RequestHandler#authRequest | RequestHandler#authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T> {

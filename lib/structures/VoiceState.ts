@@ -59,25 +59,47 @@ export default class VoiceState extends Base {
     protected update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
-            if (data.channel_id === null) this.channel = null;
-            else
+            if (data.channel_id === null) {
+                this.channel = null;
+            } else {
                 this.channel = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id)!;
+            }
 
         }
-        if (data.deaf !== undefined) this.deaf = data.deaf;
+        if (data.deaf !== undefined) {
+            this.deaf = data.deaf;
+        }
         if (data.guild_id !== undefined) {
             this.guildID = data.guild_id;
             this.guild = this.client.guilds.get(data.guild_id)!;
         }
-        if (data.member !== undefined) this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);
-        if (data.mute !== undefined) this.mute = data.mute;
-        if (data.request_to_speak_timestamp !== undefined) this.requestToSpeakTimestamp = data.request_to_speak_timestamp  === null ? null : new Date(data.request_to_speak_timestamp);
-        if (data.self_deaf !== undefined) this.selfDeaf = data.self_deaf;
-        if (data.self_mute !== undefined) this.selfMute = data.self_mute;
-        if (data.self_stream !== undefined) this.selfStream = data.self_stream;
-        if (data.self_video !== undefined) this.selfVideo = data.self_video;
-        if (data.suppress !== undefined) this.suppress = data.suppress;
-        if (data.user_id !== undefined) this.user = this.client.users.get(data.user_id)!;
+        if (data.member !== undefined) {
+            this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);
+        }
+        if (data.mute !== undefined) {
+            this.mute = data.mute;
+        }
+        if (data.request_to_speak_timestamp !== undefined) {
+            this.requestToSpeakTimestamp = data.request_to_speak_timestamp  === null ? null : new Date(data.request_to_speak_timestamp);
+        }
+        if (data.self_deaf !== undefined) {
+            this.selfDeaf = data.self_deaf;
+        }
+        if (data.self_mute !== undefined) {
+            this.selfMute = data.self_mute;
+        }
+        if (data.self_stream !== undefined) {
+            this.selfStream = data.self_stream;
+        }
+        if (data.self_video !== undefined) {
+            this.selfVideo = data.self_video;
+        }
+        if (data.suppress !== undefined) {
+            this.suppress = data.suppress;
+        }
+        if (data.user_id !== undefined) {
+            this.user = this.client.users.get(data.user_id)!;
+        }
     }
 
     toJSON(): JSONVoiceState {

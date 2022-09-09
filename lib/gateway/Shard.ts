@@ -168,33 +168,36 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     private createGuild(data: RawGuild): Guild {
         this.client.guildShardMap[data.id] = this.id;
         const guild = this.client.guilds.update(data);
-        if (this.client.shards.options.getAllUsers && guild.members.size > guild.memberCount)
-            void this.requestGuildMembers(guild.id, {
-                presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES
-            });
+        if (this.client.shards.options.getAllUsers && guild.members.size > guild.memberCount) {
+            void this.requestGuildMembers(guild.id, { presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES });
+        }
 
 
         return guild;
     }
 
     private initialize(): void {
-        if (!this._token) return this.disconnect(false, new Error("Invalid Token"));
+        if (!this._token) {
+            return this.disconnect(false, new Error("Invalid Token"));
+        }
         this.status = "connecting";
         if (this.client.shards.options.compress) {
-            if (!ZlibSync) throw new Error("Cannot use compression without pako or zlib-sync.");
+            if (!ZlibSync) {
+                throw new Error("Cannot use compression without pako or zlib-sync.");
+            }
             this.client.emit("debug", "Initializing zlib-sync-based compression");
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-            this.#sharedZLib = new ZlibSync.Inflate({
-                chunkSize: 128 * 1024
-            });
+            this.#sharedZLib = new ZlibSync.Inflate({ chunkSize: 128 * 1024 });
         }
         if (this.sessionID) {
-            if (this.resumeURL === null)
+            if (this.resumeURL === null) {
                 this.client.emit("warn", "Resume url is not currently present. Discord may disconnect you quicker.", this.id);
+            }
 
             this.ws = new WebSocket(this.resumeURL || this.client.gatewayURL, this.client.shards.options.ws);
-        } else
+        } else {
             this.ws = new WebSocket(this.client.gatewayURL, this.client.shards.options.ws);
+        }
 
 
         /* eslint-disable @typescript-eslint/unbound-method */
@@ -205,8 +208,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         /* eslint-enable @typescript-eslint/unbound-method */
 
         this.#connectTimeout = setTimeout(() => {
-            if (this.connecting)
+            if (this.connecting) {
                 this.disconnect(undefined, new Error("Connection timeout"));
+            }
 
         }, this.client.shards.options.connectionTimeout);
     }
@@ -292,8 +296,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "CHANNEL_CREATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
                 let channel: AnyGuildChannelWithoutThreads;
-                if (guild.channels.has(packet.d.id)) channel = guild.channels.update(packet.d);
-                else {
+                if (guild.channels.has(packet.d.id)) {
+                    channel = guild.channels.update(packet.d);
+                } else {
                     channel = guild.channels.add(Channel.from(packet.d, this.client));
                     this.client.channelGuildMap[packet.d.id] = guild.id;
                 }
@@ -304,13 +309,17 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "CHANNEL_DELETE": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
                 let channel: AnyGuildChannelWithoutThreads;
-                if (guild.channels.has(packet.d.id)) channel = guild.channels.get(packet.d.id)!;
-                else channel = Channel.from(packet.d, this.client);
-                if (channel instanceof VoiceChannel || channel instanceof StageChannel)
+                if (guild.channels.has(packet.d.id)) {
+                    channel = guild.channels.get(packet.d.id)!;
+                } else {
+                    channel = Channel.from(packet.d, this.client);
+                }
+                if (channel instanceof VoiceChannel || channel instanceof StageChannel) {
                     channel.voiceMembers.forEach(member => {
                         (channel as VoiceChannel).voiceMembers.delete(member.id);
                         this.client.emit("voiceChannelLeave", member, channel as VoiceChannel);
                     });
+                }
 
                 guild.channels.delete(packet.d.id);
                 this.client.emit("channelDelete", channel);
@@ -365,10 +374,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "GUILD_CREATE": {
                 if (!packet.d.unavailable) {
                     const guild = this.createGuild(packet.d);
-                    if (this.ready)
-                        if (this.client.unavailableGuilds.delete(guild.id)) this.client.emit("guildAvailable", guild);
-                        else this.client.emit("guildCreate", guild);
-                    else {
+                    if (this.ready) {
+                        if (this.client.unavailableGuilds.delete(guild.id)) {
+                            this.client.emit("guildAvailable", guild);
+                        } else {
+                            this.client.emit("guildCreate", guild);
+                        }
+                    } else {
                         this.client.unavailableGuilds.delete(guild.id);
                         void this.restartGuildCreateTimeout();
                     }
@@ -384,11 +396,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
                 this.client.guilds.delete(packet.d.id);
-                if (guild) guild.channels.forEach(channel => {
-                    delete this.client.channelGuildMap[channel.id];
-                });
-                if (packet.d.unavailable) this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
-                else this.client.emit("guildDelete", guild || { id: packet.d.id });
+                if (guild) {
+                    guild.channels.forEach(channel => {
+                        delete this.client.channelGuildMap[channel.id];
+                    });
+                }
+                if (packet.d.unavailable) {
+                    this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
+                } else {
+                    this.client.emit("guildDelete", guild || { id: packet.d.id });
+                }
                 break;
             }
 
@@ -431,15 +448,21 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                 guild["updateMemberLimit"](packet.d.members.length);
                 const members = packet.d.members.map(member => guild.members.update({ ...member, id: member.user!.id }, guild.id));
-                if (packet.d.presences) packet.d.presences.forEach(presence => {
-                    const member = guild.members.get(presence.user.id);
-                    if (member) member.presence = presence;
-                });
+                if (packet.d.presences) {
+                    packet.d.presences.forEach(presence => {
+                        const member = guild.members.get(presence.user.id);
+                        if (member) {
+                            member.presence = presence;
+                        }
+                    });
+                }
                 if (!packet.d.nonce) {
                     this.client.emit("warn", "Recieved GUILD_MEMBERS_CHUNK without a nonce.");
                     break;
                 }
-                if (this.#requestMembersPromise[packet.d.nonce]) this.#requestMembersPromise[packet.d.nonce].members.push(...members);
+                if (this.#requestMembersPromise[packet.d.nonce]) {
+                    this.#requestMembersPromise[packet.d.nonce].members.push(...members);
+                }
 
                 if (packet.d.chunk_index >= packet.d.chunk_count - 1) {
                     if (this.#requestMembersPromise[packet.d.nonce]) {
@@ -459,7 +482,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_MEMBER_REMOVE": {
-                if (packet.d.user.id === this.client.user.id) break;
+                if (packet.d.user.id === this.client.user.id) {
+                    break;
+                }
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 if (!guild) {
                     this.client.emit("debug", `Missing guild in GUILD_MEMBER_REMOVE: ${packet.d.guild_id}`);
@@ -471,7 +496,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild.members.has(packet.d.user.id)) {
                     member = guild.members.get(packet.d.user.id)!;
                     member["update"]({ user: packet.d.user });
-                } else member = this.client.users.update(packet.d.user);
+                } else {
+                    member = this.client.users.update(packet.d.user);
+                }
                 this.client.emit("guildMemberRemove", member, guild);
                 break;
             }
@@ -526,8 +553,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     break;
                 }
                 let event: GuildScheduledEvent;
-                if (guild.scheduledEvents.has(packet.d.id)) event = guild.scheduledEvents.get(packet.d.id)!;
-                else event = new GuildScheduledEvent(packet.d, this.client);
+                if (guild.scheduledEvents.has(packet.d.id)) {
+                    event = guild.scheduledEvents.get(packet.d.id)!;
+                } else {
+                    event = new GuildScheduledEvent(packet.d, this.client);
+                }
                 this.client.emit("guildScheduledEventDelete", event);
                 break;
             }
@@ -546,9 +576,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_SCHEDULED_EVENT_USER_ADD": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                if (!guild) this.client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_USER_ADD: ${packet.d.guild_id}`);
+                if (!guild) {
+                    this.client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_USER_ADD: ${packet.d.guild_id}`);
+                }
                 const event = guild && guild.scheduledEvents.get(packet.d.guild_scheduled_event_id) || { id: packet.d.guild_scheduled_event_id };
-                if ("userCount" in event) event.userCount++;
+                if ("userCount" in event) {
+                    event.userCount++;
+                }
                 const user = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
                 this.client.emit("guildScheduledEventUserAdd", event, user);
                 break;
@@ -556,9 +590,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_SCHEDULED_EVENT_USER_REMOVE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                if (!guild) this.client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_USER_REMOVE: ${packet.d.guild_id}`);
+                if (!guild) {
+                    this.client.emit("debug", `Missing guild in GUILD_SCHEDULED_EVENT_USER_REMOVE: ${packet.d.guild_id}`);
+                }
                 const event = guild && guild.scheduledEvents.get(packet.d.guild_scheduled_event_id) || { id: packet.d.guild_scheduled_event_id };
-                if ("userCount" in event) event.userCount--;
+                if ("userCount" in event) {
+                    event.userCount--;
+                }
                 const user = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
                 this.client.emit("guildScheduledEventUserRemove", event, user);
                 break;
@@ -636,7 +674,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "MESSAGE_CREATE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
                 const message = channel ? channel.messages.update(packet.d) : new Message(packet.d, this.client);
-                if (channel) channel.lastMessage = message;
+                if (channel) {
+                    channel.lastMessage = message;
+                }
                 this.client.emit("messageCreate", message);
                 break;
             }
@@ -644,7 +684,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "MESSAGE_DELETE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
                 const message = channel?.messages.get(packet.d.id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.id };
-                if (channel) channel.messages.delete(packet.d.id);
+                if (channel) {
+                    channel.messages.delete(packet.d.id);
+                }
                 this.client.emit("messageDelete", message);
                 break;
             }
@@ -656,11 +698,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         const message = channel.messages.get(id)!;
                         channel.messages.delete(id);
                         return message;
-                    } else
+                    } else {
                         return {
                             channel: channel || { id: packet.d.channel_id },
                             id
                         };
+                    }
 
                 }));
                 break;
@@ -671,19 +714,25 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
                 const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
                 let reactor: Member | User | Uncached;
-                if (guild && packet.d.member) reactor = guild.members.update({ ...packet.d.member, id: packet.d.user_id }, guild.id);
-                else reactor = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                if (guild && packet.d.member) {
+                    reactor = guild.members.update({ ...packet.d.member, id: packet.d.user_id }, guild.id);
+                } else {
+                    reactor = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                }
 
                 if (message instanceof Message) {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
                     if (message.reactions[name]) {
                         message.reactions[name].count++;
-                        if (packet.d.user_id === this.client.user.id) message.reactions[name].me = true;
-                    } else
+                        if (packet.d.user_id === this.client.user.id) {
+                            message.reactions[name].me = true;
+                        }
+                    } else {
                         message.reactions[name] = {
                             count: 1,
                             me:    packet.d.user_id === this.client.user.id
                         };
+                    }
 
                 }
                 this.client.emit("messageReactionAdd", message, reactor, packet.d.emoji);
@@ -699,8 +748,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
                     if (message.reactions[name]) {
                         message.reactions[name].count--;
-                        if (packet.d.user_id === this.client.user.id) message.reactions[name].me = false;
-                        if (message.reactions[name].count === 0) delete message.reactions[name];
+                        if (packet.d.user_id === this.client.user.id) {
+                            message.reactions[name].me = false;
+                        }
+                        if (message.reactions[name].count === 0) {
+                            delete message.reactions[name];
+                        }
                     }
                 }
                 this.client.emit("messageReactionRemove", message, reactor, packet.d.emoji);
@@ -711,7 +764,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
                 const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
 
-                if (message instanceof Message) message.reactions = {};
+                if (message instanceof Message) {
+                    message.reactions = {};
+                }
                 this.client.emit("messageReactionRemoveAll", message);
                 break;
             }
@@ -722,7 +777,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                 if (message instanceof Message) {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-                    if (message.reactions[name]) delete message.reactions[name];
+                    if (message.reactions[name]) {
+                        delete message.reactions[name];
+                    }
                 }
                 this.client.emit("messageReactionRemoveEmoji", message, packet.d.emoji);
                 break;
@@ -745,7 +802,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (user) {
                     const oldUser = user.toJSON();
                     user["update"](packet.d.user);
-                    if (JSON.stringify(oldUser) !== JSON.stringify(user.toJSON())) this.client.emit("userUpdate", user, oldUser);
+                    if (JSON.stringify(oldUser) !== JSON.stringify(user.toJSON())) {
+                        this.client.emit("userUpdate", user, oldUser);
+                    }
                 }
 
                 const guild = this.client.guilds.get(packet.d.guild_id);
@@ -768,16 +827,25 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.connectAttempts = 0;
                 this.reconnectInterval = 1000;
                 this.connecting = false;
-                if (this.#connectTimeout) clearInterval(this.#connectTimeout);
+                if (this.#connectTimeout) {
+                    clearInterval(this.#connectTimeout);
+                }
                 this.status = "ready";
                 this.client.shards["_ready"](this.id);
                 this.client["_application"] = new ClientApplication(packet.d.application, this.client);
-                if (!this.client["_user"]) this.client["_user"] = this.client.users.add(new ExtendedUser(packet.d.user as RawOAuthUser, this.client));
-                else this.client.users.update(packet.d.user as unknown as RawUser);
+                if (!this.client["_user"]) {
+                    this.client["_user"] = this.client.users.add(new ExtendedUser(packet.d.user as RawOAuthUser, this.client));
+                } else {
+                    this.client.users.update(packet.d.user as unknown as RawUser);
+                }
 
                 let url = packet.d.resume_gateway_url;
-                if (url.includes("?")) url = url.slice(0, url.indexOf("?"));
-                if (!url.endsWith("/")) url += "/";
+                if (url.includes("?")) {
+                    url = url.slice(0, url.indexOf("?"));
+                }
+                if (!url.endsWith("/")) {
+                    url += "/";
+                }
                 this.resumeURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
 
                 packet.d.guilds.forEach(guild => {
@@ -788,8 +856,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.preReady = true;
                 this.emit("preReady");
 
-                if (this.client.unavailableGuilds.size > 0 && packet.d.guilds.length > 0) void this.restartGuildCreateTimeout();
-                else void this.checkReady();
+                if (this.client.unavailableGuilds.size > 0 && packet.d.guilds.length > 0) {
+                    void this.restartGuildCreateTimeout();
+                } else {
+                    void this.checkReady();
+                }
                 break;
             }
 
@@ -797,7 +868,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.connectAttempts = 0;
                 this.reconnectInterval = 1000;
                 this.connecting = false;
-                if (this.#connectTimeout) clearInterval(this.#connectTimeout);
+                if (this.#connectTimeout) {
+                    clearInterval(this.#connectTimeout);
+                }
                 this.status = "ready";
                 this.client.shards["_ready"](this.id);
                 break;
@@ -825,15 +898,20 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "THREAD_CREATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
                 let thread: AnyThreadChannel;
-                if (guild.threads.has(packet.d.id)) thread = guild.threads.update(packet.d);
-                else {
+                if (guild.threads.has(packet.d.id)) {
+                    thread = guild.threads.update(packet.d);
+                } else {
                     thread = guild.threads.add(Channel.from(packet.d, this.client));
                     this.client.threadGuildMap[packet.d.id] = guild.id;
                 }
                 const channel = this.client.getChannel(packet.d.parent_id!);
                 if (channel) {
-                    if ("threads" in channel) (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
-                    if (channel.type === ChannelTypes.GUILD_FORUM) channel.lastThread = thread;
+                    if ("threads" in channel) {
+                        (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
+                    }
+                    if (channel.type === ChannelTypes.GUILD_FORUM) {
+                        channel.lastThread = thread;
+                    }
                 }
                 this.client.emit("threadCreate", thread);
                 break;
@@ -847,23 +925,33 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     thread = guild.threads.get(packet.d.id)!;
                     guild.threads.delete(packet.d.id);
                     if (channel) {
-                        if ("threads" in channel) channel.threads.delete(packet.d.id);
-                        if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThread?.id === packet.d.id) channel.lastThread = null;
+                        if ("threads" in channel) {
+                            channel.threads.delete(packet.d.id);
+                        }
+                        if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThread?.id === packet.d.id) {
+                            channel.lastThread = null;
+                        }
                     }
-                } else thread = {
-                    id:       packet.d.id,
-                    type:     packet.d.type,
-                    parentID: packet.d.parent_id
-                };
+                } else {
+                    thread = {
+                        id:       packet.d.id,
+                        type:     packet.d.type,
+                        parentID: packet.d.parent_id
+                    };
+                }
                 this.client.emit("threadDelete", thread);
                 break;
             }
 
             case "THREAD_LIST_SYNC": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
-                for (const thread of packet.d.threads)
-                    if (guild.threads.has(thread.id)) guild.threads.update(thread);
-                    else guild.threads.add(Channel.from<AnyThreadChannel>(thread, this.client));
+                for (const thread of packet.d.threads) {
+                    if (guild.threads.has(thread.id)) {
+                        guild.threads.update(thread);
+                    } else {
+                        guild.threads.add(Channel.from<AnyThreadChannel>(thread, this.client));
+                    }
+                }
 
                 break;
             }
@@ -877,12 +965,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 let oldMember: ThreadMember | null = null, member: ThreadMember;
                 const index = thread.members.findIndex(m => m.userID === packet.d.user_id);
-                if (index === -1) member = thread.members[thread.members.push({
-                    id:            packet.d.id,
-                    flags:         packet.d.flags,
-                    joinTimestamp: new Date(packet.d.join_timestamp),
-                    userID:        packet.d.user_id
-                })]; else {
+                if (index === -1) {
+                    member = thread.members[thread.members.push({
+                        id:            packet.d.id,
+                        flags:         packet.d.flags,
+                        joinTimestamp: new Date(packet.d.join_timestamp),
+                        userID:        packet.d.user_id
+                    })];
+                } else {
                     oldMember = { ...thread.members[index] };
                     member = thread.members[index] = {
                         ...thread.members[index],
@@ -906,13 +996,15 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 packet.d.added_members.forEach(rawMember => {
                     let member: ThreadMember;
                     const index = thread.members.findIndex(m => m.userID === rawMember.id);
-                    if (index === -1) member = thread.members[thread.members.push({ flags: rawMember.flags, id: rawMember.id, joinTimestamp: new Date(rawMember.join_timestamp), userID: rawMember.user_id })];
-                    else
+                    if (index === -1) {
+                        member = thread.members[thread.members.push({ flags: rawMember.flags, id: rawMember.id, joinTimestamp: new Date(rawMember.join_timestamp), userID: rawMember.user_id })];
+                    } else {
                         member = thread.members[index] = {
                             ...thread.members[index],
                             flags:         rawMember.flags,
                             joinTimestamp: new Date(rawMember.join_timestamp)
                         };
+                    }
 
                     addedMembers.push(member);
                 });
@@ -942,8 +1034,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 if (channel && "threads" in channel) {
                     const threads =  (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>);
-                    if (threads.has(packet.d.id)) threads.update(packet.d);
-                    else threads.add(thread);
+                    if (threads.has(packet.d.id)) {
+                        threads.update(packet.d);
+                    } else {
+                        threads.add(thread);
+                    }
                 }
                 this.client.emit("threadUpdate", thread as AnnouncementThreadChannel, oldThread as JSONAnnouncementThreadChannel);
                 break;
@@ -970,7 +1065,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "VOICE_STATE_UPDATE": {
-                if (!packet.d.guild_id) break; // @TODO voice states without guilds?
+                if (!packet.d.guild_id) {
+                    break;
+                } // @TODO voice states without guilds?
                 // @TODO voice
                 packet.d.self_stream = !!packet.d.self_stream;
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
@@ -987,21 +1084,22 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                             oldChannel = null;
                         }
                     }
-                    if (packet.d.channel_id && (newChannel = guild.channels.get(packet.d.channel_id) as VoiceChannel | StageChannel) && (newChannel.type === ChannelTypes.GUILD_VOICE || newChannel.type === ChannelTypes.GUILD_STAGE_VOICE))
+                    if (packet.d.channel_id && (newChannel = guild.channels.get(packet.d.channel_id) as VoiceChannel | StageChannel) && (newChannel.type === ChannelTypes.GUILD_VOICE || newChannel.type === ChannelTypes.GUILD_STAGE_VOICE)) {
                         if (oldChannel) {
                             oldChannel.voiceMembers.delete(member.id);
                             this.client.emit("voiceChannelSwitch", newChannel.voiceMembers.add(member), newChannel, oldChannel);
-                        } else
+                        } else {
                             this.client.emit("voiceChannelJoin", newChannel.voiceMembers.add(member), newChannel);
-
-                    else if (oldChannel) {
+                        }
+                    } else if (oldChannel) {
                         oldChannel.voiceMembers.delete(member.id);
                         this.client.emit("voiceChannelLeave", member, oldChannel);
                     }
                 }
 
-                if (JSON.stringify(oldState) !== JSON.stringify(state.toJSON()))
+                if (JSON.stringify(oldState) !== JSON.stringify(state.toJSON())) {
                     this.client.emit("voiceStateUpdate", member, oldState);
+                }
 
                 break;
             }
@@ -1026,8 +1124,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     private onPacket(packet: AnyReceivePacket): void {
         if ("s" in packet && packet.s) {
-            if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming")
+            if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming") {
                 this.client.emit("warn", `Non-consecutive sequence (${this.sequence} -> ${packet.s})`, this.id);
+            }
 
             this.sequence = packet.s;
         }
@@ -1055,14 +1154,19 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case GatewayOPCodes.HELLO: {
-                if (this.#heartbeatInterval) clearInterval(this.#heartbeatInterval);
+                if (this.#heartbeatInterval) {
+                    clearInterval(this.#heartbeatInterval);
+                }
                 this.#heartbeatInterval = setInterval(() => this.heartbeat(false), packet.d.heartbeat_interval);
 
                 this.connecting = false;
-                if (this.#connectTimeout) clearTimeout(this.#connectTimeout);
+                if (this.#connectTimeout) {
+                    clearTimeout(this.#connectTimeout);
+                }
                 this.#connectTimeout = null;
-                if (this.sessionID) this.resume();
-                else {
+                if (this.sessionID) {
+                    this.resume();
+                } else {
                     this.identify();
                     this.heartbeat();
                 }
@@ -1075,7 +1179,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.lastHeartbeatAck = true;
                 this.lastHeartbeatReceived = Date.now();
                 this.latency = this.lastHeartbeatReceived - this.lastHeartbeatSent;
-                if (isNaN(this.latency)) this.latency = Infinity;
+                if (isNaN(this.latency)) {
+                    this.latency = Infinity;
+                }
                 break;
             }
 
@@ -1189,44 +1295,50 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     private onWSMessage(data: Data): void {
-        if (typeof data === "string") data = Buffer.from(data);
+        if (typeof data === "string") {
+            data = Buffer.from(data);
+        }
         try {
             if (data instanceof ArrayBuffer) {
-                if (this.client.shards.options.compress || Erlpack)
+                if (this.client.shards.options.compress || Erlpack) {
                     data = Buffer.from(data);
+                }
 
-            } else if (Array.isArray(data))  // Fragmented messages
-                data = Buffer.concat(data); // Copyfull concat is slow, but no alternative
+            } else if (Array.isArray(data)) {
+                data = Buffer.concat(data);
+            }
 
             assert(is<Buffer>(data));
-            if (this.client.shards.options.compress)
+            if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (this.#sharedZLib.err) {
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                         this.client.emit("error", new Error(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg || ""}`));
                         return;
                     }
 
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
                     data = Buffer.from(this.#sharedZLib.result || "");
-                    if (Erlpack)
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                        return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
-                    else
-                        return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
-
-                } else
+                    if (Erlpack) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                    this.#sharedZLib.push(data, false);
+                        return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
+                    } else {
+                        return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
+                    }
 
-            else if (Erlpack)
+                } else {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                    this.#sharedZLib.push(data, false);
+                }
+            } else if (Erlpack) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 return this.onPacket(Erlpack.unpack(data) as AnyReceivePacket);
-            else
+            } else {
                 return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
+            }
 
         } catch (err) {
             this.client.emit("error", err as Error, this.id);
@@ -1245,8 +1357,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             this.#guildCreateTimeout = null;
         }
         if (!this.ready) {
-            if (this.client.unavailableGuilds.size === 0)
+            if (this.client.unavailableGuilds.size === 0) {
                 return this.checkReady();
+            }
 
             this.#guildCreateTimeout = setTimeout(this.checkReady.bind(this), this.client.shards.options.guildCreateTimeout);
         }
@@ -1261,7 +1374,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         });
     }
 
-    private get _token(): string { return this.client.options.auth!; }
+    private get _token(): string {
+        return this.client.options.auth!;
+    }
 
     /** Connect this shard. */
     connect(): void {
@@ -1275,7 +1390,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     disconnect(reconnect = this.client.shards.options.autoReconnect, error?: Error): void {
-        if (!this.ws) return;
+        if (!this.ws) {
+            return;
+        }
 
         if (this.#heartbeatInterval) {
             clearInterval(this.#heartbeatInterval);
@@ -1285,14 +1402,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (this.ws.readyState !== WebSocket.CLOSED) {
             this.ws.removeAllListeners();
             try {
-                if (reconnect && this.sessionID)
-                    if (this.ws.readyState !== WebSocket.OPEN) this.ws.close(4999, "Reconnect");
-                    else {
+                if (reconnect && this.sessionID) {
+                    if (this.ws.readyState !== WebSocket.OPEN) {
+                        this.ws.close(4999, "Reconnect");
+                    } else {
                         this.client.emit("debug", `Closing websocket (state: ${this.ws.readyState})`, this.id);
                         this.ws.terminate();
                     }
-                else
+                } else {
                     this.ws.close(1000, "Normal Close");
+                }
 
             } catch (err) {
                 this.client.emit("error", err as Error, this.id);
@@ -1302,9 +1421,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.ws = null;
         this.reset();
 
-        if (error)
-            if (error instanceof GatewayError && [1001, 1006].includes(error.code)) this.client.emit("debug", error.message, this.id);
-            else this.client.emit("error", error, this.id);
+        if (error) {
+            if (error instanceof GatewayError && [1001, 1006].includes(error.code)) {
+                this.client.emit("debug", error.message, this.id);
+            } else {
+                this.client.emit("error", error, this.id);
+            }
+        }
 
 
         this.emit("disconnect", error);
@@ -1314,7 +1437,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             this.sessionID = null;
         }
 
-        if (reconnect)
+        if (reconnect) {
             if (this.sessionID) {
                 this.client.emit("debug", `Immediately reconnecting for potential resume | Attempt ${this.connectAttempts}`, this.id);
                 this.client.shards.connect(this);
@@ -1325,7 +1448,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }, this.reconnectInterval);
                 this.reconnectInterval = Math.min(Math.round(this.reconnectInterval * (Math.random() * 2 + 1)), 30000);
             }
-        else this.hardReset();
+        } else {
+            this.hardReset();
+        }
     }
 
     /**
@@ -1356,7 +1481,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     heartbeat(requested = false): void {
         // discord/discord-api-docs#1619
-        if (this.status === "resuming" || this.status === "identifying") return;
+        if (this.status === "resuming" || this.status === "identifying") {
+            return;
+        }
         if (!requested) {
             if (!this.lastHeartbeatAck) {
                 this.client.emit("debug", "Heartbeat timeout; " + JSON.stringify({
@@ -1405,14 +1532,24 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             nonce:     randomBytes(16).toString("hex"),
             presences: options?.presences ?? false
         };
-        if (!opts.user_ids && !opts.query) opts.query = "";
-        if (!opts.query && !opts.user_ids) {
-            if (!(this.client.shards.options.intents & Intents.GUILD_MEMBERS)) throw new Error("Cannot request all members without the GUILD_MEMBERS intent.");
-            const guild = this.client.guilds.get(guildID);
-            if (guild) guild["updateMemberLimit"](true);
+        if (!opts.user_ids && !opts.query) {
+            opts.query = "";
         }
-        if (opts.presences && (!(this.client.shards.options.intents & Intents.GUILD_PRESENCES))) throw new Error("Cannot request presences without the GUILD_PRESENCES intent.");
-        if (opts.user_ids && opts.user_ids.length > 100) throw new Error("Cannot request more than 100 users at once.");
+        if (!opts.query && !opts.user_ids) {
+            if (!(this.client.shards.options.intents & Intents.GUILD_MEMBERS)) {
+                throw new Error("Cannot request all members without the GUILD_MEMBERS intent.");
+            }
+            const guild = this.client.guilds.get(guildID);
+            if (guild) {
+                guild["updateMemberLimit"](true);
+            }
+        }
+        if (opts.presences && (!(this.client.shards.options.intents & Intents.GUILD_PRESENCES))) {
+            throw new Error("Cannot request presences without the GUILD_PRESENCES intent.");
+        }
+        if (opts.user_ids && opts.user_ids.length > 100) {
+            throw new Error("Cannot request more than 100 users at once.");
+        }
         this.send(GatewayOPCodes.REQUEST_GUILD_MEMBERS, opts);
         return new Promise<Array<Member>>((resolve, reject) => this.#requestMembersPromise[opts.nonce] = {
             members:  [],
@@ -1430,14 +1567,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.connecting = false;
         this.ready = false;
         this.preReady = false;
-        if (this.#requestMembersPromise !== undefined)
+        if (this.#requestMembersPromise !== undefined) {
             for (const guildID in this.#requestMembersPromise) {
-                if (!this.#requestMembersPromise[guildID])
+                if (!this.#requestMembersPromise[guildID]) {
                     continue;
+                }
 
                 clearTimeout(this.#requestMembersPromise[guildID].timeout);
                 this.#requestMembersPromise[guildID].resolve(this.#requestMembersPromise[guildID].received);
             }
+        }
 
         this.#requestMembersPromise = {};
         this.#getAllUsersCount = {};
@@ -1447,7 +1586,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.lastHeartbeatReceived = 0;
         this.lastHeartbeatSent = 0;
         this.status = "disconnected";
-        if (this.#connectTimeout) clearTimeout(this.#connectTimeout);
+        if (this.#connectTimeout) {
+            clearTimeout(this.#connectTimeout);
+        }
         this.#connectTimeout = null;
     }
 
@@ -1468,7 +1609,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
                     const d = Erlpack ? Erlpack.pack({ op, d: data }) : JSON.stringify({ op, d: data });
                     this.ws.send(d);
-                    if (typeof data === "object" && data && "token" in data) (data as { token: string; }).token = "[REMOVED]";
+                    if (typeof data === "object" && data && "token" in data) {
+                        (data as { token: string; }).token = "[REMOVED]";
+                    }
                     this.client.emit("debug", JSON.stringify({ op, d: data }), this.id);
                 }
             };
@@ -1480,7 +1623,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    toString(): str {
+    toString(): string {
         return Base.prototype.toString.call(this);
     }
 

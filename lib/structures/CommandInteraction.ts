@@ -70,34 +70,54 @@ export default class CommandInteraction extends Interaction {
         this.user = client.users.update((data.user || data.member!.user)!);
 
         if (data.data.resolved) {
-            if (data.data.resolved.attachments) Object.values(data.data.resolved.attachments).forEach(attachment => this.data.resolved.attachments.update(attachment));
+            if (data.data.resolved.attachments) {
+                Object.values(data.data.resolved.attachments).forEach(attachment => this.data.resolved.attachments.update(attachment));
+            }
 
-            if (data.data.resolved.channels) Object.values(data.data.resolved.channels).forEach(channel => {
-                const ch = client.getChannel(channel.id);
-                if (ch && "update" in ch) (ch as Channel)["update"](channel);
-                this.data.resolved.channels.add(ch || Channel.from(channel, client));
-            });
+            if (data.data.resolved.channels) {
+                Object.values(data.data.resolved.channels).forEach(channel => {
+                    const ch = client.getChannel(channel.id);
+                    if (ch && "update" in ch) {
+                        (ch as Channel)["update"](channel);
+                    }
+                    this.data.resolved.channels.add(ch || Channel.from(channel, client));
+                });
+            }
 
-            if (data.data.resolved.members) Object.entries(data.data.resolved.members).forEach(([id, member]) => {
-                const m = member as unknown as RawMember & { id: string; user: RawUser; };
-                m.id = id;
-                m.user = data.data.resolved!.users![id]!;
-                this.data.resolved.members.add(this.guild instanceof Guild ? this.guild.members.update(m, this.guildID!) : new Member(m, client, this.guildID!));
-            });
+            if (data.data.resolved.members) {
+                Object.entries(data.data.resolved.members).forEach(([id, member]) => {
+                    const m = member as unknown as RawMember & { id: string; user: RawUser; };
+                    m.id = id;
+                    m.user = data.data.resolved!.users![id]!;
+                    this.data.resolved.members.add(this.guild instanceof Guild ? this.guild.members.update(m, this.guildID!) : new Member(m, client, this.guildID!));
+                });
+            }
 
-            if (data.data.resolved.messages) Object.values(data.data.resolved.messages).forEach(message => this.data.resolved.messages.update(message));
+            if (data.data.resolved.messages) {
+                Object.values(data.data.resolved.messages).forEach(message => this.data.resolved.messages.update(message));
+            }
 
-            if (data.data.resolved.roles) Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guildID!)));
+            if (data.data.resolved.roles) {
+                Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guildID!)));
+            }
 
-            if (data.data.resolved.users) Object.values(data.data.resolved.users).forEach(user => this.data.resolved.users.update(user));
+            if (data.data.resolved.users) {
+                Object.values(data.data.resolved.users).forEach(user => this.data.resolved.users.update(user));
+            }
         }
 
-        if (this.data.targetID)
-            if (this.data.type === ApplicationCommandTypes.USER) this.data.target = this.data.resolved.users.get(this.data.targetID);
-            else if (this.data.type === ApplicationCommandTypes.MESSAGE) this.data.target = this.data.resolved.messages.get(this.data.targetID);
+        if (this.data.targetID) {
+            if (this.data.type === ApplicationCommandTypes.USER) {
+                this.data.target = this.data.resolved.users.get(this.data.targetID);
+            } else if (this.data.type === ApplicationCommandTypes.MESSAGE) {
+                this.data.target = this.data.resolved.messages.get(this.data.targetID);
+            }
+        }
 
 
-        if (data.data.options) this.data.options = new InteractionOptionsWrapper(data.data.options, this.data.resolved);
+        if (data.data.options) {
+            this.data.options = new InteractionOptionsWrapper(data.data.options, this.data.resolved);
+        }
     }
 
     /**
@@ -113,7 +133,9 @@ export default class CommandInteraction extends Interaction {
      * @param options The options for the message.
      */
     async createMessage(options: InteractionContent): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
     }
@@ -123,7 +145,9 @@ export default class CommandInteraction extends Interaction {
      * @param options The options for the modal.
      */
     async createModal(options: ModalData): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
     }
@@ -133,7 +157,9 @@ export default class CommandInteraction extends Interaction {
      * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags?: number): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
     }

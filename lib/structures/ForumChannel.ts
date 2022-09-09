@@ -75,30 +75,56 @@ export default class ForumChannel extends GuildChannel {
 
     protected update(data: Partial<RawForumChannel>): void {
         super.update(data);
-        if (data.available_tags !== undefined) this.availableTags = data.available_tags.map(tag => ({
-            emoji:     tag.emoji_id === null && tag.emoji_name === null ? null : { id: tag.emoji_id, name: tag.emoji_name },
-            id:        tag.id,
-            moderated: tag.moderated,
-            name:      tag.name
-        }));
-        if (data.default_auto_archive_duration !== undefined) this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        if (data.default_reaction_emoji !== undefined) this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
-        if (data.default_thread_rate_limit_per_user !== undefined) this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
-        if (data.flags !== undefined) this.flags = data.flags;
-        if (data.last_message_id !== undefined)
-            this.lastThread = this.threads.get(data.last_message_id!) || { id: data.last_message_id! };
-
-        if (data.nsfw !== undefined) this.nsfw = data.nsfw;
-        if (data.permission_overwrites !== undefined) {
-            for (const id of this.permissionOverwrites.keys())
-                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) this.permissionOverwrites.delete(id);
-
-            for (const overwrite of data.permission_overwrites) this.permissionOverwrites.update(overwrite);
+        if (data.available_tags !== undefined) {
+            this.availableTags = data.available_tags.map(tag => ({
+                emoji:     tag.emoji_id === null && tag.emoji_name === null ? null : { id: tag.emoji_id, name: tag.emoji_name },
+                id:        tag.id,
+                moderated: tag.moderated,
+                name:      tag.name
+            }));
         }
-        if (data.position !== undefined) this.position = data.position;
-        if (data.rate_limit_per_user !== undefined) this.rateLimitPerUser = data.rate_limit_per_user;
-        if (data.template !== undefined) this.template = data.template;
-        if (data.topic !== undefined && data.topic !== null) this.topic = data.topic;
+        if (data.default_auto_archive_duration !== undefined) {
+            this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+        }
+        if (data.default_reaction_emoji !== undefined) {
+            this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
+        }
+        if (data.default_thread_rate_limit_per_user !== undefined) {
+            this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.last_message_id !== undefined) {
+            this.lastThread = this.threads.get(data.last_message_id!) || { id: data.last_message_id! };
+        }
+
+        if (data.nsfw !== undefined) {
+            this.nsfw = data.nsfw;
+        }
+        if (data.permission_overwrites !== undefined) {
+            for (const id of this.permissionOverwrites.keys()) {
+                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) {
+                    this.permissionOverwrites.delete(id);
+                }
+            }
+
+            for (const overwrite of data.permission_overwrites) {
+                this.permissionOverwrites.update(overwrite);
+            }
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.rate_limit_per_user !== undefined) {
+            this.rateLimitPerUser = data.rate_limit_per_user;
+        }
+        if (data.template !== undefined) {
+            this.template = data.template;
+        }
+        if (data.topic !== undefined && data.topic !== null) {
+            this.topic = data.topic;
+        }
     }
 
     /**
@@ -155,23 +181,34 @@ export default class ForumChannel extends GuildChannel {
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (typeof member === "string") member = this.guild.members.get(member)!;
-        if (!member) throw new Error("Member not found");
+        if (typeof member === "string") {
+            member = this.guild.members.get(member)!;
+        }
+        if (!member) {
+            throw new Error("Member not found");
+        }
         let permission = this.guild.permissionsOf(member).allow;
-        if (permission & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+        if (permission & Permissions.ADMINISTRATOR) {
+            return new Permission(AllPermissions);
+        }
         let overwrite = this.permissionOverwrites.get(this.guildID);
-        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        if (overwrite) {
+            permission = (permission & ~overwrite.deny) | overwrite.allow;
+        }
         let deny = 0n;
         let allow = 0n;
-        for (const id of member.roles)
+        for (const id of member.roles) {
             if ((overwrite = this.permissionOverwrites.get(id))) {
                 deny |= overwrite.deny;
                 allow |= overwrite.allow;
             }
+        }
 
         permission = (permission & ~deny) | allow;
         overwrite = this.permissionOverwrites.get(member.id);
-        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        if (overwrite) {
+            permission = (permission & ~overwrite.deny) | overwrite.allow;
+        }
         return new Permission(permission);
     }
 

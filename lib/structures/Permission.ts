@@ -19,12 +19,18 @@ export default class Permission {
     get json(): Record<keyof typeof Permissions, boolean> {
         if (!this._json) {
             const json = {} as Record<keyof typeof Permissions, boolean>;
-            for (const perm of Object.keys(Permissions) as Array<keyof typeof Permissions>)
-                if (this.allow & Permissions[perm]) json[perm] = true;
-                else if (this.deny & Permissions[perm]) json[perm] = false;
+            for (const perm of Object.keys(Permissions) as Array<keyof typeof Permissions>) {
+                if (this.allow & Permissions[perm]) {
+                    json[perm] = true;
+                } else if (this.deny & Permissions[perm]) {
+                    json[perm] = false;
+                }
+            }
 
             return (this._json = json);
-        } else return this._json;
+        } else {
+            return this._json;
+        }
     }
 
     /**
@@ -32,8 +38,11 @@ export default class Permission {
      * @param permissions The permissions to check for.
      */
     has(...permissions: Array<PermissionNames>): boolean {
-        for (const perm of permissions)
-            if (!(this.allow & Permissions[perm])) return false;
+        for (const perm of permissions) {
+            if (!(this.allow & Permissions[perm])) {
+                return false;
+            }
+        }
 
         return true;
     }

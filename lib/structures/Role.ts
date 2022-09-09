@@ -49,15 +49,33 @@ export default class Role extends Base {
     }
 
     protected update(data: Partial<RawRole>): void {
-        if (data.color !== undefined) this.color = data.color;
-        if (data.hoist !== undefined) this.hoist = data.hoist;
-        if (data.icon !== undefined) this.icon = data.icon || null;
-        if (data.mentionable !== undefined) this.mentionable = data.mentionable;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.permissions !== undefined) this.permissions = new Permission(data.permissions);
-        if (data.position !== undefined) this.position = data.position;
-        if (data.tags !== undefined) this.tags = data.tags || {};
-        if (data.unicode_emoji !== undefined) this.unicodeEmoji = data.unicode_emoji || null;
+        if (data.color !== undefined) {
+            this.color = data.color;
+        }
+        if (data.hoist !== undefined) {
+            this.hoist = data.hoist;
+        }
+        if (data.icon !== undefined) {
+            this.icon = data.icon || null;
+        }
+        if (data.mentionable !== undefined) {
+            this.mentionable = data.mentionable;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.permissions !== undefined) {
+            this.permissions = new Permission(data.permissions);
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.tags !== undefined) {
+            this.tags = data.tags || {};
+        }
+        if (data.unicode_emoji !== undefined) {
+            this.unicodeEmoji = data.unicode_emoji || null;
+        }
     }
 
     /** A string that will mention this role. */

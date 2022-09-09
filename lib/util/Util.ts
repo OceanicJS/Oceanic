@@ -48,25 +48,30 @@ export default class Util {
         return components.map(row => ({
             type:       row.type,
             components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON)
-                    if (component.style === ButtonStyles.LINK) return component;
-                    else return {
-                        customID: component.custom_id,
-                        disabled: component.disabled,
-                        emoji:    component.emoji,
-                        label:    component.label,
-                        style:    component.style,
-                        type:     component.type
+                if (component.type === ComponentTypes.BUTTON) {
+                    if (component.style === ButtonStyles.LINK) {
+                        return component;
+                    } else {
+                        return {
+                            customID: component.custom_id,
+                            disabled: component.disabled,
+                            emoji:    component.emoji,
+                            label:    component.label,
+                            style:    component.style,
+                            type:     component.type
+                        };
+                    }
+                } else if (component.type === ComponentTypes.SELECT_MENU) {
+                    return {
+                        customID:    component.custom_id,
+                        disabled:    component.disabled,
+                        maxValues:   component.max_values,
+                        minValues:   component.min_values,
+                        options:     component.options,
+                        placeholder: component.placeholder,
+                        type:        component.type
                     };
-                else if (component.type === ComponentTypes.SELECT_MENU) return {
-                    customID:    component.custom_id,
-                    disabled:    component.disabled,
-                    maxValues:   component.max_values,
-                    minValues:   component.min_values,
-                    options:     component.options,
-                    placeholder: component.placeholder,
-                    type:        component.type
-                }; else if (component.type === ComponentTypes.TEXT_INPUT)
+                } else if (component.type === ComponentTypes.TEXT_INPUT) {
                     return {
                         customID:    component.custom_id,
                         label:       component.label,
@@ -78,7 +83,9 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                else return component;
+                } else {
+                    return component;
+                }
             })
         })) as never;
     }
@@ -87,17 +94,20 @@ export default class Util {
         return components.map(row => ({
             type:       row.type,
             components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON)
-                    if (component.style === ButtonStyles.LINK) return component;
-                    else return {
-                        custom_id: component.customID,
-                        disabled:  component.disabled,
-                        emoji:     component.emoji,
-                        label:     component.label,
-                        style:     component.style,
-                        type:      component.type
-                    };
-                else if (component.type === ComponentTypes.SELECT_MENU)
+                if (component.type === ComponentTypes.BUTTON) {
+                    if (component.style === ButtonStyles.LINK) {
+                        return component;
+                    } else {
+                        return {
+                            custom_id: component.customID,
+                            disabled:  component.disabled,
+                            emoji:     component.emoji,
+                            label:     component.label,
+                            style:     component.style,
+                            type:      component.type
+                        };
+                    }
+                } else if (component.type === ComponentTypes.SELECT_MENU) {
                     return {
                         custom_id:   component.customID,
                         disabled:    component.disabled,
@@ -107,7 +117,7 @@ export default class Util {
                         placeholder: component.placeholder,
                         type:        component.type
                     };
-                else if (component.type === ComponentTypes.TEXT_INPUT)
+                } else if (component.type === ComponentTypes.TEXT_INPUT) {
                     return {
                         custom_id:   component.customID,
                         label:       component.label,
@@ -119,7 +129,9 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                else return component;
+                } else {
+                    return component;
+                }
             })
         })) as never;
     }
@@ -134,10 +146,14 @@ export default class Util {
                 case "89504E47": mime = "image/png"; break;
                 case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": mime = "image/jpeg"; break;
             }
-            if (!mime) throw new Error(`Failed to determine image format. (magic: ${magic})`);
+            if (!mime) {
+                throw new Error(`Failed to determine image format. (magic: ${magic})`);
+            }
             img = `data:${mime};base64,${b64}`;
         }
-        if (!Util.BASE64URL_REGEX.test(img)) throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
+        if (!Util.BASE64URL_REGEX.test(img)) {
+            throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
+        }
         return img;
     }
 
@@ -145,59 +161,80 @@ export default class Util {
         return embeds.map(embed => {
             const parsedEmbed: Embed = {};
 
-            if (embed.author)
+            if (embed.author !== undefined) {
                 parsedEmbed.author = {
                     name:         embed.author.name,
                     iconURL:      embed.author.icon_url,
                     proxyIconURL: embed.author.proxy_icon_url,
                     url:          embed.author.url
                 };
+            }
 
-            if (embed.color) parsedEmbed.color = embed.color;
-            if (embed.description) parsedEmbed.description = embed.description;
-            if (embed.fields)
+            if (embed.color !== undefined) {
+                parsedEmbed.color = embed.color;
+            }
+            if (embed.description !== undefined) {
+                parsedEmbed.description = embed.description;
+            }
+            if (embed.fields !== undefined) {
                 parsedEmbed.fields = embed.fields.map(field => ({
                     inline: field.inline,
                     name:   field.name,
                     value:  field.value
                 }));
+            }
 
-            if (embed.footer)
+            if (embed.footer !== undefined) {
                 parsedEmbed.footer = {
                     text:         embed.footer.text,
                     iconURL:      embed.footer.icon_url,
                     proxyIconURL: embed.footer.proxy_icon_url
                 };
+            }
 
-            if (embed.timestamp) parsedEmbed.timestamp = embed.timestamp;
-            if (embed.title) parsedEmbed.title = embed.title;
-            if (embed.image)
+            if (embed.timestamp !== undefined) {
+                parsedEmbed.timestamp = embed.timestamp;
+            }
+            if (embed.title !== undefined) {
+                parsedEmbed.title = embed.title;
+            }
+            if (embed.image !== undefined) {
                 parsedEmbed.image = {
                     url:      embed.image.url,
                     height:   embed.image.height,
                     proxyURL: embed.image.proxy_url,
                     width:    embed.image.width
                 };
+            }
 
-            if (embed.provider) parsedEmbed.provider = {
-                name: embed.provider.name,
-                url:  embed.provider.url
-            };
-            if (embed.thumbnail) parsedEmbed.thumbnail = {
-                url:      embed.thumbnail.url,
-                height:   embed.thumbnail.height,
-                proxyURL: embed.thumbnail.proxy_url,
-                width:    embed.thumbnail.width
-            };
-            if (embed.url) parsedEmbed.url = embed.url;
-            if (embed.type) parsedEmbed.type =  embed.type;
-            if (embed.video)
+            if (embed.provider !== undefined) {
+                parsedEmbed.provider = {
+                    name: embed.provider.name,
+                    url:  embed.provider.url
+                };
+            }
+            if (embed.thumbnail !== undefined) {
+                parsedEmbed.thumbnail = {
+                    url:      embed.thumbnail.url,
+                    height:   embed.thumbnail.height,
+                    proxyURL: embed.thumbnail.proxy_url,
+                    width:    embed.thumbnail.width
+                };
+            }
+            if (embed.url !== undefined) {
+                parsedEmbed.url = embed.url;
+            }
+            if (embed.type !== undefined) {
+                parsedEmbed.type =  embed.type;
+            }
+            if (embed.video !== undefined) {
                 parsedEmbed.video = {
                     height:   embed.video.height,
                     proxyURL: embed.video.proxy_url,
                     url:      embed.video.url,
                     width:    embed.video.width
                 };
+            }
 
 
             return parsedEmbed;
@@ -208,69 +245,94 @@ export default class Util {
         return embeds.map(embed => {
             const rawEmbed: RawEmbedOptions = {};
 
-            if (embed.author)
+            if (embed.author !== undefined) {
                 rawEmbed.author = {
                     name:     embed.author.name,
                     icon_url: embed.author.iconURL,
                     url:      embed.author.url
                 };
+            }
 
-            if (embed.color) rawEmbed.color = embed.color;
-            if (embed.description) rawEmbed.description = embed.description;
-            if (embed.fields)
+            if (embed.color !== undefined) {
+                rawEmbed.color = embed.color;
+            }
+            if (embed.description !== undefined) {
+                rawEmbed.description = embed.description;
+            }
+            if (embed.fields !== undefined) {
                 rawEmbed.fields = embed.fields.map(field => ({
                     inline: field.inline,
                     name:   field.name,
                     value:  field.value
                 }));
+            }
 
-            if (embed.footer)
+            if (embed.footer !== undefined) {
                 rawEmbed.footer = {
                     text:     embed.footer.text,
                     icon_url: embed.footer.iconURL
                 };
+            }
 
-            if (embed.timestamp) rawEmbed.timestamp = embed.timestamp;
-            if (embed.title) rawEmbed.title = embed.title;
-            if (embed.image)
-                rawEmbed.image = {
-                    url: embed.image.url
-                };
+            if (embed.timestamp !== undefined) {
+                rawEmbed.timestamp = embed.timestamp;
+            }
+            if (embed.title !== undefined) {
+                rawEmbed.title = embed.title;
+            }
+            if (embed.image !== undefined) {
+                rawEmbed.image = { url: embed.image.url };
+            }
 
-            if (embed.thumbnail)
-                rawEmbed.thumbnail = {
-                    url: embed.thumbnail.url
-                };
+            if (embed.thumbnail !== undefined) {
+                rawEmbed.thumbnail = { url: embed.thumbnail.url };
+            }
 
-            if (embed.url) rawEmbed.url = embed.url;
+            if (embed.url !== undefined) {
+                rawEmbed.url = embed.url;
+            }
 
             return rawEmbed;
         });
     }
 
     formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {
-        const result: RawAllowedMentions = {
-            parse: []
-        };
+        const result: RawAllowedMentions = { parse: [] };
 
-        if (!allowed) return this.formatAllowedMentions(this.#client.options.allowedMentions);
+        if (!allowed) {
+            return this.formatAllowedMentions(this.#client.options.allowedMentions);
+        }
 
-        if (allowed.everyone === true) result.parse.push("everyone");
+        if (allowed.everyone === true) {
+            result.parse.push("everyone");
+        }
 
-        if (allowed.roles === true) result.parse.push("roles");
-        else if (Array.isArray(allowed.roles)) result.roles = allowed.roles;
+        if (allowed.roles === true) {
+            result.parse.push("roles");
+        } else if (Array.isArray(allowed.roles)) {
+            result.roles = allowed.roles;
+        }
 
-        if (allowed.users === true) result.parse.push("users");
-        else if (Array.isArray(allowed.users)) result.users = allowed.users;
+        if (allowed.users === true) {
+            result.parse.push("users");
+        } else if (Array.isArray(allowed.users)) {
+            result.users = allowed.users;
+        }
 
-        if (allowed.repliedUser === true) result.replied_user = true;
+        if (allowed.repliedUser === true) {
+            result.replied_user = true;
+        }
 
         return result;
     }
 
     formatImage(url: string, format?: ImageFormat, size?: number): string {
-        if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) format = url.includes("/a_") ? "gif" : this.#client.options.defaultImageFormat;
-        if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) size = this.#client.options.defaultImageSize;
+        if (!format || !ImageFormats.includes(format.toLowerCase() as ImageFormat)) {
+            format = url.includes("/a_") ? "gif" : this.#client.options.defaultImageFormat;
+        }
+        if (!size || size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) {
+            size = this.#client.options.defaultImageSize;
+        }
         return `${CDN_URL}${url}.${format}?size=${size}`;
     }
 

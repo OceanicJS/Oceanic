@@ -86,7 +86,9 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for the message.
      */
     async createMessage(options: InteractionContent): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
     }
@@ -96,7 +98,9 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for the modal.
      */
     async createModal(options: ModalData): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
     }
@@ -106,7 +110,9 @@ export default class ComponentInteraction extends Interaction {
      * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async defer(flags?: number): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
     }
@@ -116,7 +122,9 @@ export default class ComponentInteraction extends Interaction {
      * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async deferUpdate(flags?: number): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: { flags } });
     }
@@ -158,7 +166,9 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for editing the message.
      */
     async editParent(options: InteractionContent): Promise<void> {
-        if (this.acknowledged) throw new Error("Interactions cannot have more than one initial response.");
+        if (this.acknowledged) {
+            throw new Error("Interactions cannot have more than one initial response.");
+        }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UPDATE_MESSAGE, data: options });
     }

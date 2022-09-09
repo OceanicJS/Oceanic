@@ -17,7 +17,9 @@ export default class Users {
      * @param options The options to edit with.
      */
     async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
-        if (options.avatar) options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
+        if (options.avatar) {
+            options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
+        }
         return this.#manager.authRequest<RawOAuthUser>({
             method: "PATCH",
             path:   Routes.USER("@me"),

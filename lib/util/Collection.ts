@@ -45,7 +45,9 @@ export default class Collection<K, V> extends Map<K, V> {
             return iterable.next().value as V;
         }
 
-        if (amount < 0) return this.last(amount! * -1);
+        if (amount < 0) {
+            return this.last(amount! * -1);
+        }
         amount = Math.min(amount, this.size);
 
         const iterable = this.values();
@@ -60,9 +62,15 @@ export default class Collection<K, V> extends Map<K, V> {
     last(amount: number): Array<V>;
     last(amount?: number): V | Array<V> | undefined {
         const iterator = Array.from(this.values());
-        if (typeof amount === "undefined") return iterator[iterator.length - 1];
-        if (amount < 0) return this.first(amount! * -1);
-        if (!amount) return [];
+        if (typeof amount === "undefined") {
+            return iterator[iterator.length - 1];
+        }
+        if (amount < 0) {
+            return this.first(amount! * -1);
+        }
+        if (!amount) {
+            return [];
+        }
 
         return iterator.slice(-amount);
     }
@@ -76,7 +84,9 @@ export default class Collection<K, V> extends Map<K, V> {
      * Pick a random element from the collection, or undefined if the collection is empty.
      */
     random(): V | undefined {
-        if (this.empty) return undefined;
+        if (this.empty) {
+            return undefined;
+        }
         const iterable = Array.from(this.values());
 
         return iterable[Math.floor(Math.random() * iterable.length)];

@@ -49,11 +49,21 @@ export default class StageChannel extends GuildChannel {
 
     protected update(data: Partial<RawStageChannel>): void {
         super.update(data);
-        if (data.bitrate !== undefined) this.bitrate = data.bitrate;
-        if (data.position !== undefined) this.position = data.position;
-        if (data.rtc_region !== undefined) this.rtcRegion = data.rtc_region;
-        if (data.topic !== undefined) this.topic = data.topic;
-        if (data.permission_overwrites !== undefined) data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+        if (data.bitrate !== undefined) {
+            this.bitrate = data.bitrate;
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.rtc_region !== undefined) {
+            this.rtcRegion = data.rtc_region;
+        }
+        if (data.topic !== undefined) {
+            this.topic = data.topic;
+        }
+        if (data.permission_overwrites !== undefined) {
+            data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
+        }
     }
 
     /**
@@ -103,23 +113,34 @@ export default class StageChannel extends GuildChannel {
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (typeof member === "string") member = this.guild.members.get(member)!;
-        if (!member) throw new Error("Member not found");
+        if (typeof member === "string") {
+            member = this.guild.members.get(member)!;
+        }
+        if (!member) {
+            throw new Error("Member not found");
+        }
         let permission = this.guild.permissionsOf(member).allow;
-        if (permission & Permissions.ADMINISTRATOR) return new Permission(AllPermissions);
+        if (permission & Permissions.ADMINISTRATOR) {
+            return new Permission(AllPermissions);
+        }
         let overwrite = this.permissionOverwrites.get(this.guildID);
-        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        if (overwrite) {
+            permission = (permission & ~overwrite.deny) | overwrite.allow;
+        }
         let deny = 0n;
         let allow = 0n;
-        for (const id of member.roles)
+        for (const id of member.roles) {
             if ((overwrite = this.permissionOverwrites.get(id))) {
                 deny |= overwrite.deny;
                 allow |= overwrite.allow;
             }
+        }
 
         permission = (permission & ~deny) | allow;
         overwrite = this.permissionOverwrites.get(member.id);
-        if (overwrite) permission = (permission & ~overwrite.deny) | overwrite.allow;
+        if (overwrite) {
+            permission = (permission & ~overwrite.deny) | overwrite.allow;
+        }
         return new Permission(permission);
     }
 

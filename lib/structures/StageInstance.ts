@@ -34,11 +34,21 @@ export default class StageInstance extends Base {
     }
 
     protected update(data: Partial<RawStageInstance>): void {
-        if (data.channel_id !== undefined) this.channel = this.client.getChannel(data.channel_id)!;
-        if (data.discoverable_disabled !== undefined) this.discoverableDisabled = data.discoverable_disabled;
-        if (data.guild_scheduled_event_id !== undefined) this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined) || { id: data.guild_scheduled_event_id };
-        if (data.privacy_level !== undefined) this.privacyLevel = data.privacy_level;
-        if (data.topic !== undefined) this.topic = data.topic;
+        if (data.channel_id !== undefined) {
+            this.channel = this.client.getChannel(data.channel_id)!;
+        }
+        if (data.discoverable_disabled !== undefined) {
+            this.discoverableDisabled = data.discoverable_disabled;
+        }
+        if (data.guild_scheduled_event_id !== undefined) {
+            this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined) || { id: data.guild_scheduled_event_id };
+        }
+        if (data.privacy_level !== undefined) {
+            this.privacyLevel = data.privacy_level;
+        }
+        if (data.topic !== undefined) {
+            this.topic = data.topic;
+        }
     }
 
     override toJSON(): JSONStageInstance {

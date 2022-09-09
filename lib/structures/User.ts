@@ -36,12 +36,24 @@ export default class User extends Base {
     }
 
     protected update(data: Partial<RawUser>): void {
-        if (data.accent_color !== undefined) this.accentColor = data.accent_color;
-        if (data.avatar !== undefined) this.avatar = data.avatar;
-        if (data.banner !== undefined) this.banner = data.banner;
-        if (data.discriminator !== undefined) this.discriminator = data.discriminator;
-        if (data.public_flags !== undefined) this.publicFlags = data.public_flags;
-        if (data.username !== undefined) this.username = data.username;
+        if (data.accent_color !== undefined) {
+            this.accentColor = data.accent_color;
+        }
+        if (data.avatar !== undefined) {
+            this.avatar = data.avatar;
+        }
+        if (data.banner !== undefined) {
+            this.banner = data.banner;
+        }
+        if (data.discriminator !== undefined) {
+            this.discriminator = data.discriminator;
+        }
+        if (data.public_flags !== undefined) {
+            this.publicFlags = data.public_flags;
+        }
+        if (data.username !== undefined) {
+            this.username = data.username;
+        }
     }
 
     /** The default avatar value of this user (discriminator modulo 5). */

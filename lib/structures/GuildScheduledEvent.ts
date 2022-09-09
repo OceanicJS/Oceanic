@@ -54,23 +54,49 @@ export default class GuildScheduledEvent extends Base {
         this.scheduledStartTime = new Date(data.scheduled_start_time);
         this.status = data.status;
         this.userCount = 0;
-        if (data.creator) this.creator = client.users.update(data.creator);
+        if (data.creator) {
+            this.creator = client.users.update(data.creator);
+        }
         this.update(data);
     }
 
     protected update(data: Partial<RawScheduledEvent>): void {
-        if (data.channel_id !== undefined) this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id)!;
-        if (data.description !== undefined) this.description = data.description;
-        if (data.entity_id !== undefined) this.entityID = data.entity_id;
-        if (data.entity_metadata !== undefined) this.entityMetadata = data.entity_metadata;
-        if (data.entity_type !== undefined) this.entityType = data.entity_type;
-        if (data.image !== undefined) this.image = data.image;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.privacy_level !== undefined) this.privacyLevel = data.privacy_level;
-        if (data.scheduled_end_time !== undefined) this.scheduledEndTime = data.scheduled_end_time ? new Date(data.scheduled_end_time) : null;
-        if (data.scheduled_start_time !== undefined) this.scheduledStartTime = new Date(data.scheduled_start_time);
-        if (data.status !== undefined) this.status = data.status;
-        if (data.user_count !== undefined) this.userCount = data.user_count;
+        if (data.channel_id !== undefined) {
+            this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id)!;
+        }
+        if (data.description !== undefined) {
+            this.description = data.description;
+        }
+        if (data.entity_id !== undefined) {
+            this.entityID = data.entity_id;
+        }
+        if (data.entity_metadata !== undefined) {
+            this.entityMetadata = data.entity_metadata;
+        }
+        if (data.entity_type !== undefined) {
+            this.entityType = data.entity_type;
+        }
+        if (data.image !== undefined) {
+            this.image = data.image;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.privacy_level !== undefined) {
+            this.privacyLevel = data.privacy_level;
+        }
+        if (data.scheduled_end_time !== undefined) {
+            this.scheduledEndTime = data.scheduled_end_time ? new Date(data.scheduled_end_time) : null;
+        }
+        if (data.scheduled_start_time !== undefined) {
+            this.scheduledStartTime = new Date(data.scheduled_start_time);
+        }
+        if (data.status !== undefined) {
+            this.status = data.status;
+        }
+        if (data.user_count !== undefined) {
+            this.userCount = data.user_count;
+        }
     }
 
     /**

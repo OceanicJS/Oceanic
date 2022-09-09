@@ -112,9 +112,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     constructor(data: RawMessage, client: Client) {
         super(data.id, client);
         this.attachments = new TypedCollection(Attachment, client);
-        this.channel = (client.getChannel<AnyGuildTextChannel>(data.channel_id) || {
-            id: data.channel_id
-        }) as T;
+        this.channel = (client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id }) as T;
         this.components = [];
         this.content = data.content;
         this.editedTimestamp = null;
@@ -135,48 +133,82 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.type = data.type;
         this.webhook = data.webhook_id === undefined ? undefined : { id: data.webhook_id };
         this.update(data);
-        if (data.author.discriminator !== "0000") this.author = client.users.update(data.author);
-        else this.author = new User(data.author, client);
-        if (data.application !== undefined) this.application = new PartialApplication(data.application, client);
-        else if (data.application_id !== undefined) this.application = { id: data.application_id };
-        if (data.attachments)
-            for (const attachment of data.attachments) this.attachments.update(attachment);
+        if (data.author.discriminator !== "0000") {
+            this.author = client.users.update(data.author);
+        } else {
+            this.author = new User(data.author, client);
+        }
+        if (data.application !== undefined) {
+            this.application = new PartialApplication(data.application, client);
+        } else if (data.application_id !== undefined) {
+            this.application = { id: data.application_id };
+        }
+        if (data.attachments) {
+            for (const attachment of data.attachments) {
+                this.attachments.update(attachment);
+            }
+        }
 
-        if (data.member) this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, user: data.author, id: data.author.id }, this.channel.guildID) : undefined;
+        if (data.member) {
+            this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, user: data.author, id: data.author.id }, this.channel.guildID) : undefined;
+        }
     }
 
     protected update(data: Partial<RawMessage>): void {
-        if (data.mention_everyone !== undefined) this.mentions.everyone = data.mention_everyone;
-        if (data.mention_roles !== undefined) this.mentions.roles = data.mention_roles;
+        if (data.mention_everyone !== undefined) {
+            this.mentions.everyone = data.mention_everyone;
+        }
+        if (data.mention_roles !== undefined) {
+            this.mentions.roles = data.mention_roles;
+        }
         if (data.mentions !== undefined) {
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
-                if (user.member && "guild" in this.channel && this.channel.guild instanceof Guild) members.push(this.channel.guild.members.update({ ...user.member, user, id: user.id }, this.channel.guildID));
+                if (user.member && "guild" in this.channel && this.channel.guild instanceof Guild) {
+                    members.push(this.channel.guild.members.update({ ...user.member, user, id: user.id }, this.channel.guildID));
+                }
                 return this.client.users.update(user);
             });
             this.mentions.members = members;
         }
-        if (data.activity !== undefined) this.activity = data.activity;
-        if (data.attachments !== undefined) {
-            for (const id of this.attachments.keys())
-                if (!data.attachments.some(attachment => attachment.id === id)) this.attachments.delete(id);
-
-            for (const attachment of data.attachments) this.attachments.update(attachment);
+        if (data.activity !== undefined) {
+            this.activity = data.activity;
         }
-        if (data.components !== undefined) this.components = this.client.util.componentsToParsed(data.components);
+        if (data.attachments !== undefined) {
+            for (const id of this.attachments.keys()) {
+                if (!data.attachments.some(attachment => attachment.id === id)) {
+                    this.attachments.delete(id);
+                }
+            }
+
+            for (const attachment of data.attachments) {
+                this.attachments.update(attachment);
+            }
+        }
+        if (data.components !== undefined) {
+            this.components = this.client.util.componentsToParsed(data.components);
+        }
         if (data.content !== undefined) {
             this.content = data.content;
             this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1));
         }
-        if (data.edited_timestamp !== undefined) this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
-        if (data.embeds !== undefined) this.embeds = this.client.util.embedsToParsed(data.embeds);
-        if (data.flags !== undefined) this.flags = data.flags;
+        if (data.edited_timestamp !== undefined) {
+            this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
+        }
+        if (data.embeds !== undefined) {
+            this.embeds = this.client.util.embedsToParsed(data.embeds);
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
         if (data.interaction !== undefined) {
             let member: RawMember & { id: string; } | undefined;
-            if (data.interaction.member) member = {
-                ...data.interaction.member,
-                id: data.interaction.user.id
-            };
+            if (data.interaction.member) {
+                member = {
+                    ...data.interaction.member,
+                    id: data.interaction.user.id
+                };
+            }
             this.interaction = {
                 id:     data.interaction.id,
                 member: this.channel instanceof GuildChannel && this.channel.guild instanceof Guild && member ? this.channel.guild.members.update({ ...member, user: data.interaction.user, id: data.interaction.user.id }, this.channel.guildID) : undefined,
@@ -185,18 +217,25 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
                 user:   this.client.users.update(data.interaction.user)
             };
         }
-        if (data.message_reference)
+        if (data.message_reference) {
             this.messageReference = {
                 channelID:       data.message_reference.channel_id,
                 failIfNotExists: data.message_reference.fail_if_not_exists,
                 guildID:         data.message_reference.guild_id,
                 messageID:       data.message_reference.message_id
             };
+        }
 
-        if (data.nonce !== undefined) this.nonce = data.nonce;
-        if (data.pinned !== undefined) this.pinned = data.pinned;
-        if (data.position !== undefined) this.position = data.position;
-        if (data.reactions)
+        if (data.nonce !== undefined) {
+            this.nonce = data.nonce;
+        }
+        if (data.pinned !== undefined) {
+            this.pinned = data.pinned;
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.reactions) {
             data.reactions.forEach(reaction => {
                 const name = reaction.emoji.id ? `${reaction.emoji.name}:${reaction.emoji.id}` : reaction.emoji.name;
                 this.reactions[name] = {
@@ -204,23 +243,36 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
                     me:    reaction.me
                 };
             });
+        }
 
-        if (data.referenced_message !== undefined)
-            if (data.referenced_message === null) this.referencedMessage = null;
-            else
-            if ("messages" in this.channel) this.referencedMessage = this.channel.messages.update(data.referenced_message);
-            else this.referencedMessage = new Message(data.referenced_message, this.client);
+        if (data.referenced_message !== undefined) {
+            if (data.referenced_message === null) {
+                this.referencedMessage = null;
+            } else
+            if ("messages" in this.channel) {
+                this.referencedMessage = this.channel.messages.update(data.referenced_message);
+            } else {
+                this.referencedMessage = new Message(data.referenced_message, this.client);
+            }
+        }
 
 
-        if (data.sticker_items !== undefined) this.stickerItems = data.sticker_items;
+        if (data.sticker_items !== undefined) {
+            this.stickerItems = data.sticker_items;
+        }
         if (data.thread !== undefined) {
             const guild = this.client.guilds.get(this.guildID!);
             if (guild) {
                 this.thread = guild.threads.update(data.thread);
-                if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) (this.channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
+                if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) {
+                    (this.channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
+                }
             } else
-            if (this.channel && "threads" in this.channel) this.thread = (this.channel.threads as TypedCollection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
-            else this.thread = Channel.from(data.thread, this.client);
+            if (this.channel && "threads" in this.channel) {
+                this.thread = (this.channel.threads as TypedCollection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
+            } else {
+                this.thread = Channel.from(data.thread, this.client);
+            }
 
         }
     }
@@ -271,7 +323,9 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options Options for deleting the message.
      */
     async deleteWebhook(token: string, options: DeleteWebhookMessageOptions): Promise<void> {
-        if (!this.webhook?.id) throw new Error("This message is not a webhook message.");
+        if (!this.webhook?.id) {
+            throw new Error("This message is not a webhook message.");
+        }
         return this.client.rest.webhooks.deleteMessage(this.webhook.id, token, this.id, options);
     }
 
@@ -289,7 +343,9 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options The options for editing the message.
      */
     async editWebhook(token: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
-        if (!this.webhook?.id) throw new Error("This message is not a webhook message.");
+        if (!this.webhook?.id) {
+            throw new Error("This message is not a webhook message.");
+        }
         return this.client.rest.webhooks.editMessage<never>(this.webhook.id, token, this.id, options);
     }
 

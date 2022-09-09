@@ -37,7 +37,9 @@ export default class GuildChannel extends Channel {
             this.guild = this.client.guilds.get(data.guild_id)!;
             this.guildID = data.guild_id;
         }
-        if (data.name !== undefined) this.name = data.name;
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
         if (data.parent_id !== undefined) {
             this.parent = data.parent_id === null ? null : this.client.getChannel<CategoryChannel>(data.parent_id)!;
             this.parentID = data.parent_id;

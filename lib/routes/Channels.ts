@@ -90,13 +90,14 @@ export default class Channels {
      */
     async createDM(recipient: string): Promise<PrivateChannel> {
         let cache: PrivateChannel | undefined;
-        if ((cache = this.#manager.client.privateChannels.find(ch => ch.recipient.id === recipient))) return cache;
+        if ((cache = this.#manager.client.privateChannels.find(ch => ch.recipient.id === recipient))) {
+            return cache;
+        }
         return this.#manager.authRequest<RawPrivateChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
-            json:   {
-                recipient_id: recipient
-            } }
+            json:   { recipient_id: recipient }
+        }
         ).then(data => this.#manager.client.privateChannels.update(data));
     }
 
@@ -111,7 +112,8 @@ export default class Channels {
             json:   {
                 access_tokens: options.accessTokens,
                 nicks:         options.nicks
-            } }).then(data => this.#manager.client.groupChannels.update(data));
+            }
+        }).then(data => this.#manager.client.groupChannels.update(data));
     }
 
     /**
@@ -121,7 +123,9 @@ export default class Channels {
      */
     async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawInvite>({
             method: "POST",
             path:   Routes.CHANNEL_INVITES(id),
@@ -145,7 +149,9 @@ export default class Channels {
      */
     async createMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, options: CreateMessageOptions): Promise<Message<T>> {
         const files = options.files;
-        if (options.files) delete options.files;
+        if (options.files) {
+            delete options.files;
+        }
         return this.#manager.authRequest<RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(id),
@@ -176,7 +182,9 @@ export default class Channels {
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(id: string, messageID: string, emoji: string): Promise<void> {
-        if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
+        if (emoji === decodeURIComponent(emoji)) {
+            emoji = encodeURIComponent(emoji);
+        }
         await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_REACTION_USER(id, messageID, emoji, "@me")
@@ -245,9 +253,7 @@ export default class Channels {
         await this.#manager.authRequest<null>({
             method: "POST",
             path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(id),
-            json:   {
-                messages: messageIDs
-            },
+            json:   { messages: messageIDs },
             reason
         });
     }
@@ -274,7 +280,9 @@ export default class Channels {
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(id: string, messageID: string, emoji: string, user = "@me"): Promise<void> {
-        if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
+        if (emoji === decodeURIComponent(emoji)) {
+            emoji = encodeURIComponent(emoji);
+        }
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_REACTION_USER(id, messageID, emoji, user)
@@ -288,7 +296,9 @@ export default class Channels {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(id: string, messageID: string, emoji?: string): Promise<void> {
-        if (emoji && emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
+        if (emoji && emoji === decodeURIComponent(emoji)) {
+            emoji = encodeURIComponent(emoji);
+        }
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   !emoji ? Routes.CHANNEL_REACTIONS(id, messageID) : Routes.CHANNEL_REACTION(id, messageID, emoji)
@@ -302,13 +312,16 @@ export default class Channels {
      */
     async edit<T extends AnyEditableChannel = AnyEditableChannel>(id: string, options: EditChannelOptions): Promise<T> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
-        if (options.icon)
+        if (options.reason) {
+            delete options.reason;
+        }
+        if (options.icon) {
             try {
                 options.icon = this.#manager.client.util.convertImage(options.icon);
             } catch (err) {
                 throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
             }
+        }
 
 
         return this.#manager.authRequest<RawChannel>({
@@ -347,7 +360,9 @@ export default class Channels {
      */
     async editMessage<T extends AnyTextChannel = AnyTextChannel>(id: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
         const files = options.files;
-        if (options.files) delete options.files;
+        if (options.files) {
+            delete options.files;
+        }
         return this.#manager.authRequest<RawMessage>({
             method: "PATCH",
             path:   Routes.CHANNEL_MESSAGE(id, messageID),
@@ -371,7 +386,9 @@ export default class Channels {
      */
     async editPermission(id: string, overwriteID: string, options: EditPermissionOptions): Promise<void> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         await this.#manager.authRequest<null>({
             method: "PUT",
             path:   Routes.CHANNEL_PERMISSION(id, overwriteID),
@@ -393,9 +410,7 @@ export default class Channels {
         return this.#manager.authRequest<RawFollowedChannel>({
             method: "POST",
             path:   Routes.CHANNEL_FOLLOWERS(id),
-            json:   {
-                webhook_channel_id: webhookChannelID
-            }
+            json:   { webhook_channel_id: webhookChannelID }
         }).then(data => ({
             channelID: data.channel_id,
             webhookID: data.webhook_id
@@ -424,9 +439,15 @@ export default class Channels {
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
     async getInvite<T extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
         const query = new URLSearchParams();
-        if (options?.guildScheduledEventID) query.set("guild_scheduled_event_id", options.guildScheduledEventID);
-        if (options?.withCounts) query.set("with_counts", "true");
-        if (options?.withExpiration) query.set("with_expiration", "true");
+        if (options?.guildScheduledEventID) {
+            query.set("guild_scheduled_event_id", options.guildScheduledEventID);
+        }
+        if (options?.withCounts) {
+            query.set("with_counts", "true");
+        }
+        if (options?.withExpiration) {
+            query.set("with_expiration", "true");
+        }
         return this.#manager.authRequest<RawInvite>({
             method: "GET",
             path:   Routes.INVITE(code),
@@ -569,7 +590,9 @@ export default class Channels {
      * @param options The options for getting the reactions.
      */
     async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
-        if (emoji === decodeURIComponent(emoji)) emoji = encodeURIComponent(emoji);
+        if (emoji === decodeURIComponent(emoji)) {
+            emoji = encodeURIComponent(emoji);
+        }
         return this.#manager.authRequest<Array<RawUser>>({
             method: "GET",
             path:   Routes.CHANNEL_REACTION(id, messageID, emoji),
@@ -702,7 +725,9 @@ export default class Channels {
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawChannel>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGE_THREADS(id, messageID),
@@ -722,9 +747,13 @@ export default class Channels {
      */
     async startThreadInForum(id: string, options: StartThreadInForumOptions): Promise<PublicThreadChannel> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         const files = options.message.files;
-        if (options.message.files) delete options.message.files;
+        if (options.message.files) {
+            delete options.message.files;
+        }
         return this.#manager.authRequest<RawChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(id),
@@ -754,7 +783,9 @@ export default class Channels {
      */
     async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(id: string, options: StartThreadWithoutMessageOptions): Promise<T> {
         const reason = options.reason;
-        if (options.reason) delete options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<RawChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(id),

@@ -65,12 +65,24 @@ export default class OAuth {
             `response_type=${options.responseType || "code"}`,
             `scope=${options.scopes.join("%20")}`
         ];
-        if (options.redirectURI) params.push(`redirect_uri=${options.redirectURI}`);
-        if (typeof options.disableGuildSelect !== "undefined") params.push(`disable_guild_select=${String(options.disableGuildSelect)}`);
-        if (options.prompt) params.push(`prompt=${options.prompt}`);
-        if (options.permissions) params.push(`permissions=${options.permissions}`);
-        if (options.guildID) params.push(`guild_id=${options.guildID}`);
-        if (options.state) params.push(`state=${options.state}`);
+        if (options.redirectURI) {
+            params.push(`redirect_uri=${options.redirectURI}`);
+        }
+        if (typeof options.disableGuildSelect !== "undefined") {
+            params.push(`disable_guild_select=${String(options.disableGuildSelect)}`);
+        }
+        if (options.prompt) {
+            params.push(`prompt=${options.prompt}`);
+        }
+        if (options.permissions) {
+            params.push(`permissions=${options.permissions}`);
+        }
+        if (options.guildID) {
+            params.push(`guild_id=${options.guildID}`);
+        }
+        if (options.state) {
+            params.push(`state=${options.state}`);
+        }
         return `${BASE_URL}${Routes.OAUTH_AUTHORIZE}?${params.join("&")}`;
     }
 

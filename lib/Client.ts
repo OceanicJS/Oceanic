@@ -90,8 +90,11 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
     /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
     get application(): ClientApplication {
-        if (!this._application) throw new Error("Cannot access `client.application` without having at least one shard marked as READY.");
-        else return this._application;
+        if (!this._application) {
+            throw new Error("Cannot access `client.application` without having at least one shard marked as READY.");
+        } else {
+            return this._application;
+        }
     }
 
     get uptime(): number {
@@ -100,48 +103,74 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
     /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. */
     get user(): ExtendedUser {
-        if (!this._user) throw new Error("Cannot access `client.user` without having at least one shard marked as READY.");
-        else return this._user;
+        if (!this._user) {
+            throw new Error("Cannot access `client.user` without having at least one shard marked as READY.");
+        } else {
+            return this._user;
+        }
     }
 
     /** Connect the client to Discord. */
     async connect(): Promise<void> {
-        if (!this.options.auth || !this.options.auth.startsWith("Bot ")) throw new Error("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
+        if (!this.options.auth || !this.options.auth.startsWith("Bot ")) {
+            throw new Error("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
+        }
         let url: string, data: GetBotGatewayResponse | undefined;
         try {
             if (this.shards.options.maxShards === -1 || this.shards.options.concurrency === -1) {
                 data = await this.rest.getBotGateway();
                 url = data.url;
-            } else url = (await this.rest.getGateway()).url;
+            } else {
+                url = (await this.rest.getGateway()).url;
+            }
         } catch (err) {
             throw new Error("Failed to get gateway information.", { cause: err as Error });
         }
-        if (url.includes("?")) url = url.slice(0, url.indexOf("?"));
-        if (!url.endsWith("/")) url += "/";
+        if (url.includes("?")) {
+            url = url.slice(0, url.indexOf("?"));
+        }
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
         this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
-        if (this.shards.options.compress) this.gatewayURL += "&compress=zlib-stream";
+        if (this.shards.options.compress) {
+            this.gatewayURL += "&compress=zlib-stream";
+        }
 
         if (this.shards.options.maxShards === -1) {
-            if (!data || !data.shards) throw new Error("AutoSharding failed, missing required information from Discord.");
+            if (!data || !data.shards) {
+                throw new Error("AutoSharding failed, missing required information from Discord.");
+            }
             this.shards.options.maxShards = data.shards;
-            if (this.shards.options.lastShardID === -1) this.shards.options.lastShardID = data.shards - 1;
+            if (this.shards.options.lastShardID === -1) {
+                this.shards.options.lastShardID = data.shards - 1;
+            }
         }
 
         if (this.shards.options.concurrency === -1) {
-            if (!data) throw new Error("AutoConcurrency failed, missing required information from Discord.");
+            if (!data) {
+                throw new Error("AutoConcurrency failed, missing required information from Discord.");
+            }
             this.shards.options.concurrency = data.maxConcurrency ?? 1;
         }
 
 
-        if (!Array.isArray(this.shards.options.shardIDs)) this.shards.options.shardIDs = [];
+        if (!Array.isArray(this.shards.options.shardIDs)) {
+            this.shards.options.shardIDs = [];
+        }
 
-        if (this.shards.options.shardIDs.length === 0)
-            if (this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined)
-                for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++)
+        if (this.shards.options.shardIDs.length === 0) {
+            if (this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined) {
+                for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++) {
                     this.shards.options.shardIDs.push(i);
+                }
+            }
+        }
 
 
-        for (const id of this.shards.options.shardIDs) this.shards.spawn(id);
+        for (const id of this.shards.options.shardIDs) {
+            this.shards.spawn(id);
+        }
     }
 
     /**
@@ -154,7 +183,9 @@ export default class Client extends TypedEmitter<ClientEvents> {
     }
 
     getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined {
-        if (this.channelGuildMap[id]) return this.guilds.get(this.channelGuildMap[id]!)?.channels.get(id) as T;
+        if (this.channelGuildMap[id]) {
+            return this.guilds.get(this.channelGuildMap[id]!)?.channels.get(id) as T;
+        }
         return (this.privateChannels.get(id) || this.groupChannels.get(id)) as T;
     }
 
@@ -165,8 +196,12 @@ export default class Client extends TypedEmitter<ClientEvents> {
      */
     async joinVoiceChannel(channelID: string, options?: UpdateVoiceStateOptions): Promise<void> {
         const channel = this.getChannel<VoiceChannel | StageChannel>(channelID);
-        if (!channel) throw new Error("Invalid channel. Make sure the id is correct, and the channel is cached.");
-        if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) throw new Error("Only voice & stage channels can be joined.");
+        if (!channel) {
+            throw new Error("Invalid channel. Make sure the id is correct, and the channel is cached.");
+        }
+        if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) {
+            throw new Error("Only voice & stage channels can be joined.");
+        }
         this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, channelID, options);
         // @TODO proper voice connection handling
     }
@@ -177,7 +212,9 @@ export default class Client extends TypedEmitter<ClientEvents> {
      */
     async leaveVoiceChannel(channelID: string): Promise<void> {
         const channel = this.getChannel<VoiceChannel | StageChannel>(channelID);
-        if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) return;
+        if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) {
+            return;
+        }
         this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, null, { selfDeaf: false, selfMute: false });
     }
 }

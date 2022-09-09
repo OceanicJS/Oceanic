@@ -76,7 +76,9 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
-        if (!this.guildID) throw new Error("editGuildCommandPermissions cannot be used on global commands.");
+        if (!this.guildID) {
+            throw new Error("editGuildCommandPermissions cannot be used on global commands.");
+        }
         return this.client.rest.applicationCommands.editGuildCommandPermissions(this.application.id, this.guildID, this.id, options);
     }
 
@@ -84,7 +86,9 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Get this command's permissions (guild commands only).
      */
     async getGuildPermission(): Promise<RESTGuildApplicationCommandPermissions> {
-        if (!this.guildID) throw new Error("getGuildPermission cannot be used on global commands.");
+        if (!this.guildID) {
+            throw new Error("getGuildPermission cannot be used on global commands.");
+        }
         return this.client.rest.applicationCommands.getGuildPermission(this.application.id, this.guildID, this.id);
     }
 
@@ -94,7 +98,9 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      */
     mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]): string {
         let text = `${this.name}`;
-        if (sub?.length) text += ` ${sub.slice(0, 2).join(" ")}`;
+        if (sub?.length) {
+            text += ` ${sub.slice(0, 2).join(" ")}`;
+        }
         return `<${text}:${this.id}>`;
     }
 

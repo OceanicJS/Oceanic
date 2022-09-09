@@ -62,21 +62,43 @@ export default class GroupChannel extends Channel {
 
     protected update(data: Partial<RawGroupChannel>): void {
         super.update(data);
-        if (data.application_id !== undefined) this.application = this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id } ;
-        if (data.icon !== undefined) this.icon = data.icon;
-        if (data.last_message_id !== undefined) this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
-        if (data.managed !== undefined) this.managed = data.managed;
-        if (data.name !== undefined) this.name = data.name;
-        if (data.nicks !== undefined) this.nicks = data.nicks;
-        if (data.owner_id !== undefined) this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
-        if (data.type !== undefined) this.type = data.type;
+        if (data.application_id !== undefined) {
+            this.application = this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id } ;
+        }
+        if (data.icon !== undefined) {
+            this.icon = data.icon;
+        }
+        if (data.last_message_id !== undefined) {
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+        }
+        if (data.managed !== undefined) {
+            this.managed = data.managed;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.nicks !== undefined) {
+            this.nicks = data.nicks;
+        }
+        if (data.owner_id !== undefined) {
+            this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
+        }
+        if (data.type !== undefined) {
+            this.type = data.type;
+        }
         if (data.recipients !== undefined) {
-            for (const id of this.recipients.keys())
-                if (!data.recipients.find(r => r.id === id)) this.recipients.delete(id);
+            for (const id of this.recipients.keys()) {
+                if (!data.recipients.find(r => r.id === id)) {
+                    this.recipients.delete(id);
+                }
+            }
 
 
-            for (const r of data.recipients)
-                if (!this.recipients.has(r.id)) this.recipients.add(this.client.users.update(r));
+            for (const r of data.recipients) {
+                if (!this.recipients.has(r.id)) {
+                    this.recipients.add(this.client.users.update(r));
+                }
+            }
 
         }
     }
