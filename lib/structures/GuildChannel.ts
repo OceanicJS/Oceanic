@@ -12,7 +12,7 @@ import type { JSONGuildChannel } from "../types/json";
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
     /** The guild associated with this channel. */
-    guild!: Guild;
+    guild: Guild;
     /** The id of the guild this channel is in. */
     guildID: string;
     /** The name of this channel. */

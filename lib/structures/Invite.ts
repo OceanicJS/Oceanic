@@ -59,7 +59,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The number of times this invite has been used. */
     uses!: T extends "withMetadata" ? number : never;
     constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
-        Properties.looseDefine(this, "_client", client);
+        Properties.define(this, "client", client);
         this.code = data.code;
         this.expiresAt = (!data.expires_at ? undefined : new Date(data.expires_at)) as never;
         this.targetType = data.target_type;

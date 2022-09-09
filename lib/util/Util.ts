@@ -29,7 +29,7 @@ import Member from "../structures/Member";
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
     static BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
-    #client!: Client;
+    #client: Client;
 
     constructor(client: Client) {
         this.#client = client;

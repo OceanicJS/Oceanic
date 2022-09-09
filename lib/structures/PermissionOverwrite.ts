@@ -2,7 +2,6 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants";
 import type Client from "../Client";
-import Properties from "../util/Properties";
 import type { RawOverwrite } from "../types/channels";
 import type { JSONPermissionOverwrite } from "../types/json";
 
@@ -13,7 +12,6 @@ export default class PermissionOverwrite extends Base {
     type: OverwriteTypes;
     constructor(data: RawOverwrite, client: Client) {
         super(data.id, client);
-        Properties.looseDefine(this, "_client", client);
         this.permission = new Permission(data.allow, data.deny);
         this.type = data.type;
     }

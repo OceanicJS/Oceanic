@@ -1,4 +1,3 @@
-/* eslint-disable import/order */
 import Base from "./Base";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";

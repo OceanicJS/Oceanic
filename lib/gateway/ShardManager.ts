@@ -5,10 +5,10 @@ import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gatew
 import Collection from "../util/Collection";
 
 export default class ShardManager extends Collection<number, Shard> {
-    #buckets!: Record<number, number>;
-    #client!: Client;
-    #connectQueue!: Array<Shard>;
-    #connectTimeout!: NodeJS.Timeout | null;
+    #buckets: Record<number, number>;
+    #client: Client;
+    #connectQueue: Array<Shard>;
+    #connectTimeout: NodeJS.Timeout | null;
     options: ShardManagerInstanceOptions;
     constructor(client: Client, options: GatewayOptions = {}) {
         super();
