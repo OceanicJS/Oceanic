@@ -268,8 +268,6 @@ export default class Guild extends Base {
             for (const member of data.members) {
                 this.members.update({ ...member, id: member.user!.id }, this.id).guild = this;
             }
-
-            this._clientMember = this.members.get(client.user.id);
         }
 
         if (data.stage_instances) {

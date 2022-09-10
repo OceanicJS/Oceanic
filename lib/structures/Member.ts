@@ -105,6 +105,14 @@ export default class Member extends Base {
         if (data.user !== undefined) {
             this.user = this.client.users.update(data.user);
         }
+
+        if (this.id === this.client.user.id) {
+            if (this.guild["_clientMember"]) {
+                this.guild["_clientMember"].update(data);
+            } else {
+                this.guild["_clientMember"] = this;
+            }
+        }
     }
 
     /** If the member associated with the user is a bot. */
