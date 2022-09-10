@@ -12,14 +12,14 @@ NodeJS **16.16.0** or higher is required.
 npm i oceanic.js
 ```
 
-This module is in its early alpha stages. See the `examples` folder on github for some examples, and visit [this site](https://oceanic.owo-whats-this.dev) for documentation.
+This module is in its early alpha stages. See the `examples` folder on GitHub for some examples, and visit [this site](https://oceanic.owo-whats-this.dev) for documentation.
 
 ### Development Builds
 ```sh
 npm i oceanic.js@dev
 ```
 
-The documentation under `dev` is always for the latest commit. If something isn't working that's in the documentaion, you're likely looking at the wrong documentation.
+The documentation under `dev` is always for the latest commit. If something isn't working that's in the documentation, you're likely looking at the wrong documentation.
 
 <hr>
 
