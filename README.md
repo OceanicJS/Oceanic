@@ -29,8 +29,8 @@ The documentation under `dev` is always for the latest commit. If something isn'
 * `erlpack` - Encoding (gateway, alternative to JSON)
 
 ## Links
-* [Examples](https://github.com/DonovanDMC/Oceanic/tree/dev/examples)
+* [Examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples)
 * [Release Documentation](https://oceanic.owo-whats-this.dev/latest)
 * [Development Documentation](https://oceanic.owo-whats-this.dev/dev)
 * [Discord Server](https://discord.gg/xZ4AhdYrf9)
-* [Source](https://github.com/DonovanDMC/Oceanic)
+* [Source](https://github.com/OceanicJS/Oceanic)
