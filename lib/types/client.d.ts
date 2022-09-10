@@ -68,7 +68,7 @@ export interface RESTOptions {
     requestTimeout?: number;
     /**
      * The `User-Agent` header to use for requests.
-     * @defaultValue Oceanic/\{VERSION\} (https://github.com/DonovanDMC/Oceanic)
+     * @defaultValue Oceanic/\{VERSION\} (https://github.com/OceanicJS/Oceanic)
      */
     userAgent?: string;
 }
