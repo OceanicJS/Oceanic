@@ -107,11 +107,7 @@ export default class Member extends Base {
         }
 
         if (this.guild && this.id === this.client.user.id) {
-            if (this.guild["_clientMember"]) {
-                this.guild["_clientMember"].update(data);
-            } else {
-                this.guild["_clientMember"] = this;
-            }
+            this.guild["_clientMember"] = this:
         }
     }
 
