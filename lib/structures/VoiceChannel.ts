@@ -25,14 +25,15 @@ import type {
 import type { RawMember } from "../types/guilds";
 import type { JSONVoiceChannel } from "../types/json";
 import type { UpdateVoiceStateOptions } from "../types/gateway";
-import type { Uncached } from "../types/shared";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends GuildChannel {
     /** The bitrate of the voice channel. */
     bitrate: number;
-    /** The last message sent in this channel. This can be a partial object with only an `id` property. This will only be present if a message has been sent within the current session. */
-    lastMessage: Message | Uncached | null;
+    /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
+    lastMessage?: Message | null;
+    /** The ID of last message sent in this channel. */
+    lastMessageID: string | null;
     /** The cached messages in this channel. */
     messages: TypedCollection<string, RawMessage, Message>;
     /** If this channel is age gated. */
@@ -53,7 +54,7 @@ export default class VoiceChannel extends GuildChannel {
     constructor(data: RawVoiceChannel, client: Client) {
         super(data, client);
         this.bitrate = data.bitrate;
-        this.lastMessage = data.last_message_id === null ? null : { id: data.last_message_id };
+        this.lastMessageID = data.last_message_id;
         this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.nsfw = false;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
@@ -71,7 +72,8 @@ export default class VoiceChannel extends GuildChannel {
             this.bitrate = data.bitrate;
         }
         if (data.last_message_id !== undefined) {
-            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
+            this.lastMessageID = data.last_message_id;
         }
         if (data.nsfw !== undefined) {
             this.nsfw = data.nsfw;

@@ -1,6 +1,5 @@
 import type { RawUser } from "./users";
 import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
-import type { Uncached } from "./shared";
 import type { ActivityTypes, AutoModerationTriggerTypes, IntentNames } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type { ClientOptions as WSClientOptions } from "ws";
@@ -264,7 +263,8 @@ export interface AutoModerationActionExecution {
     matchedContent: string;
     matchedKeyword: string | null;
     messageID?: string;
-    rule: AutoModerationRule | Uncached;
+    rule?: AutoModerationRule;
+    ruleID: string;
     ruleTriggerType: AutoModerationTriggerTypes;
 }
 

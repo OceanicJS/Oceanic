@@ -30,8 +30,10 @@ export default class GroupChannel extends Channel {
     application: ClientApplication | Uncached;
     /** The icon hash of this group, if any. */
     icon: string | null;
-    /** The last message sent in this channel. This can be a partial object with only an `id` property. */
-    lastMessage: Message | Uncached | null;
+    /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
+    lastMessage?: Message | null;
+    /** The ID of last message sent in this channel. */
+    lastMessageID: string | null;
     /** If this group channel is managed by an application. */
     managed: boolean;
     /** The cached messages in this channel. */
@@ -51,7 +53,7 @@ export default class GroupChannel extends Channel {
         super(data, client);
         this.application = { id: data.application_id };
         this.icon = null;
-        this.lastMessage = null;
+        this.lastMessageID = data.last_message_id;
         this.managed = false;
         this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.name = data.name;
@@ -72,7 +74,8 @@ export default class GroupChannel extends Channel {
             this.icon = data.icon;
         }
         if (data.last_message_id !== undefined) {
-            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
+            this.lastMessageID = data.last_message_id;
         }
         if (data.managed !== undefined) {
             this.managed = data.managed;

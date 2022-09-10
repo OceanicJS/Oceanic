@@ -31,15 +31,16 @@ import type {
     StartThreadWithoutMessageOptions,
     ArchivedThreads
 } from "../types/channels";
-import type { Uncached } from "../types/shared";
 import type { JSONTextableChannel } from "../types/json";
 
 /** Represents a guild text channel. */
 export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {
     /** The default auto archive duration for threads created in this channel. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
-    /** The last message sent in this channel. This can be a partial object with only an `id` property. */
-    lastMessage: Message | Uncached | null;
+    /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
+    lastMessage?: Message | null;
+    /** The ID of last message sent in this channel. */
+    lastMessageID: string | null;
     /** The cached messages in this channel. */
     messages: TypedCollection<string, RawMessage, Message>;
     /** If this channel is age gated. */
@@ -57,7 +58,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.lastMessage = data.last_message_id === null ? null : { id: data.last_message_id };
+        this.lastMessageID = data.last_message_id;
         this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
@@ -73,7 +74,8 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         }
         if (data.last_message_id !== undefined) {
-            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
+            this.lastMessageID = data.last_message_id;
         }
         if (data.nsfw !== undefined) {
             this.nsfw = data.nsfw;

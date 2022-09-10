@@ -55,6 +55,7 @@ import { is } from "../util/Util";
 import TypedCollection from "../util/TypedCollection";
 import Guild from "../structures/Guild";
 import { ShardEvents } from "../types/events";
+import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type { Data } from "ws";
 import { WebSocket } from "ws";
 import type Pako from "pako";
@@ -254,7 +255,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     matchedContent:       packet.d.matched_content,
                     matchedKeyword:       packet.d.matched_keyword,
                     messageID:            packet.d.message_id,
-                    rule:                 guild && guild.autoModerationRules.get(packet.d.rule_id) || { id: packet.d.rule_id },
+                    rule:                 guild.autoModerationRules.get(packet.d.rule_id),
+                    ruleID:               packet.d.rule_id,
                     ruleTriggerType:      packet.d.rule_trigger_type
                 });
                 break;
@@ -913,7 +915,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
                     }
                     if (channel.type === ChannelTypes.GUILD_FORUM) {
-                        channel.lastThread = thread;
+                        channel.lastThread = thread as PublicThreadChannel;
+                        channel.lastThreadID = thread.id;
                     }
                 }
                 this.client.emit("threadCreate", thread);

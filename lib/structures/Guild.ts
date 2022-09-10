@@ -100,8 +100,10 @@ import Shard from "../gateway/Shard";
 /** Represents a Discord server. */
 export default class Guild extends Base {
     private _clientMember?: Member;
-    /** This guild's afk voice channel. This can be a partial object with just an `id` property. */
-    afkChannel: VoiceChannel | Uncached | null;
+    /** This guild's afk voice channel. */
+    afkChannel?: VoiceChannel | null;
+    /** The ID of this guild's afk voice channel. */
+    afkChannelID: string | null;
     /** The seconds after which voice users will be moved to the afk channel. */
     afkTimeout: number;
     /** The application that created this guild, if applicable. This can be a partial object with just an `id` property. */
@@ -168,14 +170,18 @@ export default class Guild extends Base {
     premiumSubscriptionCount?: number;
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
+    /** The channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
+    publicUpdatesChannel?: AnyGuildTextChannel | null;
     /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
-    publicUpdatesChannel: AnyGuildTextChannel | Uncached | null;
+    publicUpdatesChannelID: string | null;
     /** @deprecated The region of this guild.*/
     region?: string | null;
     /** The roles in this guild. */
     roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
+    /** The channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
+    rulesChannel?: TextChannel | null;
     /** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
-    rulesChannel: TextChannel | Uncached | null;
+    rulesChannelID: string | null;
     /** The scheduled events in this guild. */
     scheduledEvents: TypedCollection<string, RawScheduledEvent, GuildScheduledEvent>;
     /** The invite splash hash of this guild. */
@@ -184,10 +190,12 @@ export default class Guild extends Base {
     stageInstances: TypedCollection<string, RawStageInstance, StageInstance>;
     /** The custom stickers of this guild. */
     stickers: Array<Sticker>;
-    /** The id of the channel where welcome messages and boosts notices are posted. */
-    systemChannel: TextChannel | Uncached | null;
+    /** The channel where welcome messages and boosts notices are posted. */
+    systemChannel?: TextChannel | null;
     /** The [flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags) for the system channel. */
     systemChannelFlags: number;
+    /** The id of the channel where welcome messages and boosts notices are posted. */
+    systemChannelID: string | null;
     /** The threads in this guild. */
     threads: TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
     /** If this guild is unavailable. */
@@ -200,13 +208,15 @@ export default class Guild extends Base {
     voiceStates: TypedCollection<string, RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
     welcomeScreen?: WelcomeScreen;
+    /** The the channel the widget will generate an invite to, or `null` if set to no invite. */
+    widgetChannel?: Exclude<AnyGuildChannel, CategoryChannel> | null;
     /** The id of the channel the widget will generate an invite to, or `null` if set to no invite. */
-    widgetChannel?: Exclude<AnyGuildChannel, CategoryChannel> | Uncached | null;
+    widgetChannelID: string | null;
     /** If the widget is enabled. */
     widgetEnabled?: boolean;
     constructor(data: RawGuild, client: Client) {
         super(data.id, client);
-        this.afkChannel = null;
+        this.afkChannelID = null;
         this.afkTimeout = 0;
         this.application = null;
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client);
@@ -232,20 +242,21 @@ export default class Guild extends Base {
         this.preferredLocale = data.preferred_locale;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
         this.premiumTier = data.premium_tier;
-        this.publicUpdatesChannel = null;
+        this.publicUpdatesChannelID = null;
         this.roles = new TypedCollection(Role, client);
-        this.rulesChannel = null;
+        this.rulesChannelID = null;
         this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client);
         this.splash = null;
         this.stageInstances = new TypedCollection(StageInstance, client);
         this.stickers = [];
-        this.systemChannel = null;
+        this.systemChannelID = null;
         this.systemChannelFlags = data.system_channel_flags;
         this.threads = new TypedCollection(ThreadChannel, client) as TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
         this.voiceStates = new TypedCollection(VoiceState, client);
+        this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
         data.roles.forEach(role => this.roles.update(role, data.id));
         this.update(data);
 
@@ -348,7 +359,8 @@ export default class Guild extends Base {
 
     protected update(data: Partial<RawGuild>): void {
         if (data.afk_channel_id !== undefined) {
-            this.afkChannel = data.afk_channel_id === null ? null : this.client.getChannel(data.afk_channel_id) || { id: data.afk_channel_id };
+            this.afkChannel = data.afk_channel_id === null ? null : this.client.getChannel<VoiceChannel>(data.afk_channel_id);
+            this.afkChannelID = data.afk_channel_id;
         }
         if (data.afk_timeout !== undefined) {
             this.afkTimeout = data.afk_timeout;
@@ -436,13 +448,15 @@ export default class Guild extends Base {
             this.premiumTier = data.premium_tier;
         }
         if (data.public_updates_channel_id !== undefined) {
-            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel(data.public_updates_channel_id) || { id: data.public_updates_channel_id };
+            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyGuildTextChannel>(data.public_updates_channel_id);
+            this.publicUpdatesChannelID = data.public_updates_channel_id;
         }
         if (data.region !== undefined) {
             this.region = data.region;
         }
         if (data.rules_channel_id !== undefined) {
-            this.rulesChannel = data.rules_channel_id === null ? null : this.client.getChannel(data.rules_channel_id) || { id: data.rules_channel_id };
+            this.rulesChannel = data.rules_channel_id === null ? null : this.client.getChannel<TextChannel>(data.rules_channel_id);
+            this.rulesChannelID = data.rules_channel_id;
         }
         if (data.splash !== undefined) {
             this.splash = data.splash;
@@ -454,7 +468,8 @@ export default class Guild extends Base {
             this.systemChannelFlags = data.system_channel_flags;
         }
         if (data.system_channel_id !== undefined) {
-            this.systemChannel = data.system_channel_id === null ? null : this.client.getChannel(data.system_channel_id) || { id: data.system_channel_id };
+            this.systemChannel = data.system_channel_id === null ? null : this.client.getChannel<TextChannel>(data.system_channel_id);
+            this.systemChannelID = data.system_channel_id;
         }
         if (data.vanity_url_code !== undefined) {
             this.vanityURLCode = data.vanity_url_code;
@@ -474,7 +489,8 @@ export default class Guild extends Base {
             };
         }
         if (data.widget_channel_id !== undefined) {
-            this.widgetChannel = data.widget_channel_id === null ? null : this.client.getChannel(data.widget_channel_id) || { id: data.widget_channel_id };
+            this.widgetChannel = data.widget_channel_id === null ? null : this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel>>(data.widget_channel_id);
+            this.widgetChannelID = data.widget_channel_id;
         }
         if (data.widget_enabled !== undefined) {
             this.widgetEnabled = data.widget_enabled;

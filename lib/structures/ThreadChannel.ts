@@ -22,15 +22,16 @@ import type {
     ThreadMember,
     ThreadMetadata
 } from "../types/channels";
-import type { Uncached } from "../types/shared";
 import type { JSONThreadChannel } from "../types/json";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel> extends GuildChannel {
     /** The [flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) for this thread channel. */
     flags: number;
-    /** The last message sent in this channel. This can be a partial object with only an `id` property. */
-    lastMessage: Message | Uncached | null;
+    /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
+    lastMessage?: Message | null;
+    /** The ID of last message sent in this channel. */
+    lastMessageID: string | null;
     /** The approximate number of members in this thread. Stops counting after 50. */
     memberCount: number;
     /** The members of this thread. */
@@ -39,8 +40,10 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     messageCount: number;
     /** The cached messages in this channel. */
     messages: TypedCollection<string, RawMessage, Message>;
-    /** The creator of this thread. */
-    owner: User | Uncached;
+    /** The owner of this thread. */
+    owner?: User;
+    /** The ID of the owner of this thread. */
+    ownerID: string;
     declare parent: TextChannel | AnnouncementChannel;
     declare parentID: string;
     /** The amount of seconds between non-moderators sending messages. */
@@ -53,12 +56,12 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     constructor(data: RawThreadChannel, client: Client) {
         super(data, client);
         this.flags = data.flags;
-        this.lastMessage = null;
+        this.lastMessageID = data.last_message_id;
         this.memberCount = 0;
         this.members = [];
         this.messageCount = 0;
         this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
-        this.owner = { id: data.owner_id };
+        this.ownerID = data.owner_id;
         this.rateLimitPerUser = data.rate_limit_per_user;
         this.threadMetadata = {
             archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
@@ -79,7 +82,8 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             this.flags = data.flags;
         }
         if (data.last_message_id !== undefined) {
-            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
+            this.lastMessageID = data.last_message_id;
         }
         if (data.member) {
             const index = this.members.findIndex(m => m.userID === this.client.user!.id);
@@ -101,7 +105,8 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             this.messageCount = data.message_count;
         }
         if (data.owner_id !== undefined) {
-            this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
+            this.owner = this.client.users.get(data.owner_id);
+            this.ownerID = data.owner_id;
         }
         if (data.rate_limit_per_user !== undefined) {
             this.rateLimitPerUser = data.rate_limit_per_user;
@@ -305,7 +310,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             memberCount:      this.memberCount,
             messageCount:     this.messageCount,
             messages:         this.messages.map(m => m.id),
-            owner:            this.owner instanceof User ? this.owner.toJSON() : this.owner?.id,
+            owner:            this.owner?.toJSON() || this.ownerID,
             rateLimitPerUser: this.rateLimitPerUser,
             threadMetadata:   this.threadMetadata,
             totalMessageSent: this.totalMessageSent,

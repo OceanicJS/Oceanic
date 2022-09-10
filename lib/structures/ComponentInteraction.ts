@@ -16,13 +16,14 @@ import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes, ComponentTypes } from "../Constants";
 import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
-import { Uncached } from "../types";
 
 export default class ComponentInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
-    /** The channel this interaction was sent from. This can be a partial object with just an `id` property. */
-    channel: AnyTextChannel | Uncached;
+    /** The channel this interaction was sent from. */
+    channel?: AnyTextChannel;
+    /** The ID of the channel this interaction was sent from.*/
+    channelID: string;
     /** The data associated with the interaction. */
     data: MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
     /** The guild this interaction was sent from, if applicable. */
@@ -45,14 +46,15 @@ export default class ComponentInteraction extends Interaction {
     constructor(data: RawMessageComponentInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) || { id: data.channel_id! };
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!);
+        this.channelID = data.channel_id!;
         this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.message = "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, client);
+        this.message = this.channel && "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, client);
         this.user = client.users.update((data.user || data.member!.user)!);
 
         switch (data.data.component_type) {
@@ -193,7 +195,7 @@ export default class ComponentInteraction extends Interaction {
         return {
             ...super.toJSON(),
             appPermissions: this.appPermissions?.toJSON(),
-            channel:        this.channel.id,
+            channel:        this.channelID,
             data:           this.data,
             guild:          this.guildID,
             guildLocale:    this.guildLocale,
