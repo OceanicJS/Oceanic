@@ -77,17 +77,20 @@ export default class CategoryChannel extends GuildChannel {
     }
 
     /**
-     * Get the permissions of a member.  If providing an id, the member must be cached.
+     * Get the permissions of a member. If providing an id, the member must be cached.
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
+        if (!this["_guild"]) {
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent or fetching the guild.`);
+        }
         if (typeof member === "string") {
-            member = this.guild.members.get(member)!;
+            member = this["_guild"].members.get(member)!;
         }
         if (!member) {
-            throw new Error("Member not found");
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
         }
-        let permission = this.guild.permissionsOf(member).allow;
+        let permission = this["_guild"].permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
             return new Permission(AllPermissions);
         }
