@@ -1,4 +1,4 @@
-import type { Uncached, ExclusifyUnion } from "./shared";
+import type { ExclusifyUnion } from "./shared";
 import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, GuildChannelTypes } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
@@ -194,7 +194,8 @@ export interface RESTGuildApplicationCommandPermissions {
     permissions: Array<ApplicationCommandPermission>;
 }
 export interface GuildApplicationCommandPermissions {
-    application: ClientApplication | Uncached;
+    application?: ClientApplication;
+    applicationID: string;
     id: string;
     permissions: Array<ApplicationCommandPermission>;
 }

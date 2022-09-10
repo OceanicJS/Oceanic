@@ -11,14 +11,15 @@ import type {
     RawModalSubmitInteraction
 } from "../types/interactions";
 import { InteractionTypes } from "../Constants";
-import type { Uncached } from "../types/shared";
 import type { JSONInteraction } from "../types/json";
 
 export default class Interaction extends Base {
     /** If this interaction has been acknowledged. */
     acknowledged: boolean;
-    /** The application this interaction is for. This can be a partial object with only an `id` property. */
-    application: ClientApplication | Uncached;
+    /** The application this interaction is for. */
+    application?: ClientApplication;
+    /** The ID of the application this interaction is for. */
+    applicationID: string;
     /** The token of this interaction. */
     token: string;
     /** The [type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type) of this interaction. */
@@ -28,7 +29,8 @@ export default class Interaction extends Base {
     constructor(data: AnyRawInteraction, client: Client) {
         super(data.id, client);
         this.acknowledged = false;
-        this.application = client.application?.id === data.application_id ? client.application : { id: data.application_id };
+        this.application = client.application.id === data.application_id ? client.application : undefined;
+        this.applicationID = data.application_id;
         this.token = data.token;
         this.type = data.type;
         this.version = data.version;
@@ -49,7 +51,7 @@ export default class Interaction extends Base {
     override toJSON(): JSONInteraction {
         return {
             ...super.toJSON(),
-            applicationID: this.application.id,
+            applicationID: this.applicationID,
             token:         this.token,
             type:          this.type,
             version:       this.version

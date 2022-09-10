@@ -227,9 +227,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "APPLICATION_COMMAND_PERMISSIONS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 this.client.emit("applicationCommandPermissionsUpdate", guild || { id: packet.d.guild_id }, {
-                    application: packet.d.application_id === this.client.application!.id ? this.client.application! : { id: packet.d.application_id },
-                    id:          packet.d.id,
-                    permissions: packet.d.permissions
+                    application:   packet.d.application_id === this.client.application.id ? this.client.application : undefined,
+                    applicationID: packet.d.application_id,
+                    id:            packet.d.id,
+                    permissions:   packet.d.permissions
                 });
                 break;
             }

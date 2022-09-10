@@ -81,7 +81,7 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for creating the followup message.
      */
     async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>> {
-        return this.client.rest.interactions.createFollowupMessage<T>(this.application.id, this.token, options);
+        return this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
     }
 
     /**
@@ -137,14 +137,14 @@ export default class ComponentInteraction extends Interaction {
      * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID: string): Promise<void> {
-        return this.client.rest.interactions.deleteFollowupMessage(this.application.id, this.token, messageID);
+        return this.client.rest.interactions.deleteFollowupMessage(this.applicationID, this.token, messageID);
     }
 
     /**
      * Delete the original interaction response. Does not work with ephemeral messages.
      */
     async deleteOriginal(): Promise<void> {
-        return this.client.rest.interactions.deleteOriginalMessage(this.application.id, this.token);
+        return this.client.rest.interactions.deleteOriginalMessage(this.applicationID, this.token);
     }
 
     /**
@@ -153,7 +153,7 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for editing the followup message.
      */
     async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent): Promise<Message<T>> {
-        return this.client.rest.interactions.editFollowupMessage<T>(this.application.id, this.token, messageID, options);
+        return this.client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
     }
 
     /**
@@ -161,7 +161,7 @@ export default class ComponentInteraction extends Interaction {
      * @param options The options for editing the original message.
      */
     async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>> {
-        return this.client.rest.interactions.editOriginalMessage<T>(this.application.id, this.token, options);
+        return this.client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
     }
 
     /**
@@ -181,14 +181,14 @@ export default class ComponentInteraction extends Interaction {
      * @param messageID The ID of the message.
      */
     async getFollowup<T extends AnyGuildTextChannel>(messageID: string): Promise<Message<T>> {
-        return this.client.rest.interactions.getFollowupMessage<T>(this.application.id, this.token, messageID);
+        return this.client.rest.interactions.getFollowupMessage<T>(this.applicationID, this.token, messageID);
     }
 
     /**
      * Get the original interaction response.
      */
     async getOriginal<T extends AnyGuildTextChannel>(): Promise<Message<T>> {
-        return this.client.rest.interactions.getOriginalMessage<T>(this.application.id, this.token);
+        return this.client.rest.interactions.getOriginalMessage<T>(this.applicationID, this.token);
     }
 
     override toJSON(): JSONComponentInteraction {

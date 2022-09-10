@@ -12,12 +12,13 @@ import type {
     RESTGuildApplicationCommandPermissions,
     TypeToEdit
 } from "../types/application-commands";
-import type { Uncached } from "../types/shared";
 import type { JSONApplicationCommand } from "../types/json";
 
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
-    /** The the application this command is for. This can be a partial object with only an `id` property. */
-    application: ClientApplication | Uncached;
+    /** The the application this command is for. */
+    application?: ClientApplication;
+    /** The ID of application this command is for. */
+    applicationID: string;
     /** The default permissions for this command. */
     defaultMemberPermissions: Permission | null;
     /** The description of this command. Empty string for non `CHAT_INPUT` commands. */
@@ -46,7 +47,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     version: string;
     constructor(data: RawApplicationCommand, client: Client) {
         super(data.id, client);
-        this.application = client.application?.id === data.application_id ? client.application : { id: data.application_id };
+        this.application = client.application.id === data.application_id ? client.application : undefined;
+        this.applicationID = data.application_id;
         this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
         this.description = data.description as never;
         this.descriptionLocalizations = data.description_localizations;
@@ -66,7 +68,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Delete this command.
      */
     async delete(): Promise<void> {
-        return this.guildID ? this.client.rest.applicationCommands.deleteGuildCommand(this.application.id, this.guildID, this.id) : this.client.rest.applicationCommands.deleteGlobalCommand(this.application.id, this.id);
+        return this.guildID ? this.client.rest.applicationCommands.deleteGuildCommand(this.applicationID, this.guildID, this.id) : this.client.rest.applicationCommands.deleteGlobalCommand(this.applicationID, this.id);
     }
 
     /**
@@ -74,7 +76,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * @param options The options for editing the command.
      */
     async edit(options: TypeToEdit<T>): Promise<ApplicationCommandOptionConversion<TypeToEdit<T>>> {
-        return this.guildID ? this.client.rest.applicationCommands.editGuildCommand(this.application.id, this.guildID, this.id, options) : this.client.rest.applicationCommands.editGlobalCommand(this.application.id, this.id, options);
+        return this.guildID ? this.client.rest.applicationCommands.editGuildCommand(this.applicationID, this.guildID, this.id, options) : this.client.rest.applicationCommands.editGlobalCommand(this.applicationID, this.id, options);
     }
 
     /**
@@ -85,7 +87,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         if (!this.guildID) {
             throw new Error("editGuildCommandPermissions cannot be used on global commands.");
         }
-        return this.client.rest.applicationCommands.editGuildCommandPermissions(this.application.id, this.guildID, this.id, options);
+        return this.client.rest.applicationCommands.editGuildCommandPermissions(this.applicationID, this.guildID, this.id, options);
     }
 
     /**
@@ -95,7 +97,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         if (!this.guildID) {
             throw new Error("getGuildPermission cannot be used on global commands.");
         }
-        return this.client.rest.applicationCommands.getGuildPermission(this.application.id, this.guildID, this.id);
+        return this.client.rest.applicationCommands.getGuildPermission(this.applicationID, this.guildID, this.id);
     }
 
     /**
@@ -113,7 +115,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     override toJSON(): JSONApplicationCommand {
         return {
             ...super.toJSON(),
-            applicationID:            this.application.id,
+            applicationID:            this.applicationID,
             defaultMemberPermissions: this.defaultMemberPermissions?.toJSON(),
             description:              this.description,
             descriptionLocalizations: this.descriptionLocalizations,

@@ -21,13 +21,14 @@ import type {
 } from "../types/channels";
 import type { RawUser } from "../types/users";
 import TypedCollection from "../util/TypedCollection";
-import type { Uncached } from "../types/shared";
 import type { JSONGroupChannel } from "../types/json";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
-    /** The application that made this group channel. This can be a partial object with just an `id` property. */
-    application: ClientApplication | Uncached;
+    /** The application that made this group channel. */
+    application?: ClientApplication;
+    /** The ID of the application that made this group channel. */
+    applicationID: string;
     /** The icon hash of this group, if any. */
     icon: string | null;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
@@ -51,7 +52,7 @@ export default class GroupChannel extends Channel {
     declare type: ChannelTypes.GROUP_DM;
     constructor(data: RawGroupChannel, client: Client) {
         super(data, client);
-        this.application = { id: data.application_id };
+        this.applicationID = data.application_id;
         this.icon = null;
         this.lastMessageID = data.last_message_id;
         this.managed = false;
@@ -68,7 +69,8 @@ export default class GroupChannel extends Channel {
     protected update(data: Partial<RawGroupChannel>): void {
         super.update(data);
         if (data.application_id !== undefined) {
-            this.application = this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id } ;
+            this.application = this.client.application.id === data.application_id ? this.client.application : undefined;
+            this.applicationID = data.application_id;
         }
         if (data.icon !== undefined) {
             this.icon = data.icon;
@@ -217,7 +219,7 @@ export default class GroupChannel extends Channel {
      * @param size The dimensions of the image.
      */
     iconURL(format?: ImageFormat, size?: number): string | null {
-        return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.application.id, this.icon), format, size);
+        return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.applicationID, this.icon), format, size);
     }
 
     /**
@@ -247,7 +249,7 @@ export default class GroupChannel extends Channel {
     override toJSON(): JSONGroupChannel {
         return {
             ...super.toJSON(),
-            applicationID: this.application.id,
+            applicationID: this.applicationID,
             icon:          this.icon,
             managed:       this.managed,
             name:          this.name,

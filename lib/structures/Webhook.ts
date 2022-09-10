@@ -17,12 +17,13 @@ import type {
     ExecuteWebhookWaitOptions,
     RawWebhook
 } from "../types/webhooks";
-import type { Uncached } from "../types/shared";
 import type { JSONWebhook } from "../types/json";
 
 export default class Webhook extends Base {
     /** The application associatd with this webhook. */
-    application: ClientApplication | Uncached | null;
+    application?: ClientApplication | null;
+    /** The ID of the application associatd with this webhook. */
+    applicationID: string | null;
     /** The hash of this webhook's avatar. */
     avatar: string | null;
     /** The channel this webhook is for, if applicable. */
@@ -47,7 +48,8 @@ export default class Webhook extends Base {
     user: User | null;
     constructor(data: RawWebhook, client: Client) {
         super(data.id, client);
-        this.application = data.application_id === null ? null : client.application?.id === data.application_id ? client.application : { id: data.application_id };
+        this.application = data.application_id === null ? null : client.application.id === data.application_id ? client.application : undefined;
+        this.applicationID = data.application_id;
         this.avatar = data.avatar ?? null;
         this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id);
         this.channelID = data.channel_id;

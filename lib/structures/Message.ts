@@ -43,11 +43,17 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**
-     * This can be present in two scenarios:
-     * * If the message was from an interaction or application owned webhook (`ClientApplication` if client, only `id` otherwise).
+     * The application associated with this message. This can be present in two scenarios:
+     * * If the message was from an interaction or application owned webhook (`ClientApplication`).
      * * If the message has a rich presence embed (`PartialApplication`)
      */
-    application?: PartialApplication | ClientApplication | Uncached;
+    application?: PartialApplication | ClientApplication | null;
+    /**
+     * The ID of the application associated with this message. This can be present in two scenarios:
+     * * If the message was from an interaction or application owned webhook (`ClientApplication`).
+     * * If the message has a rich presence embed (`PartialApplication`)
+     */
+    applicationID: string | null;
     /** The attachments on this message. */
     attachments: TypedCollection<string, RawAttachment, Attachment>;
     /** The author of this message. */
@@ -147,8 +153,12 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         }
         if (data.application !== undefined) {
             this.application = new PartialApplication(data.application, client);
+            this.applicationID = data.application.id;
         } else if (data.application_id !== undefined) {
-            this.application = { id: data.application_id };
+            this.application = client.application.id === data.application_id ? client.application : undefined;
+            this.applicationID = data.application_id;
+        } else {
+            this.applicationID = null;
         }
         if (data.attachments) {
             for (const attachment of data.attachments) {

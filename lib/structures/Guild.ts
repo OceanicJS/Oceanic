@@ -90,7 +90,6 @@ import type {
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
 import type { AuditLog, GetAuditLogOptions } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
-import type { Uncached } from "../types/shared";
 import type { RawVoiceState, VoiceRegion } from "../types/voice";
 import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
@@ -106,8 +105,10 @@ export default class Guild extends Base {
     afkChannelID: string | null;
     /** The seconds after which voice users will be moved to the afk channel. */
     afkTimeout: number;
-    /** The application that created this guild, if applicable. This can be a partial object with just an `id` property. */
-    application: ClientApplication | Uncached | null;
+    /** The application that created this guild, if applicable. */
+    application?: ClientApplication | null;
+    /** The ID of the application that created this guild, if applicable. */
+    applicationID: string | null;
     /** The approximate number of members in this guild (if retreived with counts). */
     approximateMemberCount?: number;
     /** The approximate number of non-offline members in this guild (if retreived with counts). */
@@ -218,7 +219,7 @@ export default class Guild extends Base {
         super(data.id, client);
         this.afkChannelID = null;
         this.afkTimeout = 0;
-        this.application = null;
+        this.applicationID = data.application_id;
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client);
         this.banner = null;
         this.channels = new TypedCollection(GuildChannel, client) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
@@ -366,7 +367,8 @@ export default class Guild extends Base {
             this.afkTimeout = data.afk_timeout;
         }
         if (data.application_id !== undefined) {
-            this.application = data.application_id === null ? null : this.client.application?.id === data.application_id ? this.client.application : { id: data.application_id };
+            this.application = data.application_id === null ? null : this.client.application.id === data.application_id ? this.client.application : undefined;
+            this.applicationID = data.application_id;
         }
         if (data.approximate_member_count !== undefined) {
             this.approximateMemberCount = data.approximate_member_count;
