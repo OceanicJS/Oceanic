@@ -4,6 +4,7 @@ import PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
+import type CategoryChannel from "./CategoryChannel";
 import type Client from "../Client";
 import type {
     ArchivedThreads,
@@ -40,7 +41,7 @@ export default class ForumChannel extends GuildChannel {
     lastThread: PublicThreadChannel | Uncached | null;
     /** If this channel is age gated. */
     nsfw: boolean;
-    declare parent: ForumChannel;
+    declare parent: CategoryChannel;
     declare parentID: string;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
