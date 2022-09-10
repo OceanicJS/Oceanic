@@ -271,11 +271,17 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     }
 
     /**
-     * Get the permissions of a member.  If providing an id, the member must be cached. This will go to the parent channel of this thread, as threads themselves do not have permissions.
+     * Get the permissions of a member. If providing an id, the member must be cached. The parent channel must be cached as threads themselves do not have permissions.
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        return this.guild.channels.get(this.parentID)!.permissionsOf(member);
+        if (!this["_guild"]) {
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent or fetching the guild.`);
+        }
+        if (!this.parent) {
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the parent channel cached.`);
+        }
+        return this.parent.permissionsOf(member);
     }
 
     /**
