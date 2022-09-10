@@ -1,4 +1,4 @@
-Visit our[Discord](https://discord.gg/xZ4AhdYrf9) when adding features that are not immediately related to Discord's API, and [look at](https://github.com/OceanicJS/Oceanic/pulls) the existing pull requests before opening a new pull request.
+Visit our [Discord](https://discord.gg/xZ4AhdYrf9) when adding features that are not immediately related to Discord's API, and [look at](https://github.com/OceanicJS/Oceanic/pulls) the existing pull requests before opening a new pull request.
 
 Guidelines:
 * If a pull requestis already opened, regardless if abandoned or otherwise, do not duplicate it.
