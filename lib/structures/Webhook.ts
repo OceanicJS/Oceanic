@@ -217,7 +217,7 @@ export default class Webhook extends Base {
     override toJSON(): JSONWebhook {
         return {
             ...super.toJSON(),
-            applicationID: this.application?.id ?? null,
+            applicationID: this.applicationID,
             avatar:        this.avatar,
             channelID:     this.channelID ?? null,
             guildID:       this.guildID,

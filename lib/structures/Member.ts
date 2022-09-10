@@ -43,11 +43,10 @@ export default class Member extends Base {
     constructor(data: RawMember, client: Client, guildID: string) {
         let user: User | undefined, id: string | undefined;
         if ("id" in data && !data.user) {
-            user = client.users.get(id = (data as unknown as { id: string; }).id);
+            user = client.users.get(id = (data as RawMember & { id: string; }).id);
         } else if (data.user) {
             id = (user = client.users.update(data.user)).id;
         }
-
         if (!user) {
             throw new Error(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
         }

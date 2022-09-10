@@ -45,7 +45,7 @@ export default class OAuth {
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
             form,
-            auth:   (options.clientID ?? this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this.#manager.client.application?.id}:${options.clientSecret}`).toString("base64")}` : true
+            auth:   (options.clientID ?? this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this.#manager.client.application.id}:${options.clientSecret}`).toString("base64")}` : true
         }).then(data => ({
             accessToken: data.access_token,
             expiresIn:   data.expires_in,

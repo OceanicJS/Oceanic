@@ -181,7 +181,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         if (data.mentions !== undefined) {
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
-                if (this.channel && "guild" in this.channel && user.member) {
+                if (this.channel && "guildID" in this.channel && user.member) {
                     members.push(this.client.util.updateMember((this.channel as AnyGuildTextChannel).guildID, user.id, { ...user.member, user }));
                 }
                 return this.client.users.update(user);
@@ -219,16 +219,16 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             this.flags = data.flags;
         }
         if (data.interaction !== undefined) {
-            let member: RawMember & { id: string; } | undefined;
+            let member: RawMember | undefined;
             if (data.interaction.member) {
                 member = {
                     ...data.interaction.member,
-                    id: data.interaction.user.id
+                    user: data.interaction.user
                 };
             }
             this.interaction = {
                 id:     data.interaction.id,
-                member: member ? this.client.util.updateMember(data.guild_id!, data.interaction.user.id, member) : undefined,
+                member: member ? this.client.util.updateMember(data.guild_id!, member.user!.id, member) : undefined,
                 name:   data.interaction.name,
                 type:   data.interaction.type,
                 user:   this.client.users.update(data.interaction.user)
@@ -402,7 +402,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         return {
             ...super.toJSON(),
             activity:        this.activity,
-            applicationID:   this.application?.id,
+            applicationID:   this.applicationID ?? undefined,
             attachments:     this.attachments.map(attachment => attachment.toJSON()),
             author:          this.author.toJSON(),
             channelID:       this.channelID,

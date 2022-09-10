@@ -1101,7 +1101,7 @@ export default class Guild extends Base {
             ...super.toJSON(),
             afkChannelID:                this.afkChannelID,
             afkTimeout:                  this.afkTimeout,
-            application:                 this.application?.id,
+            application:                 this.applicationID ?? undefined,
             approximateMemberCount:      this.approximateMemberCount,
             approximatePresenceCount:    this.approximatePresenceCount,
             autoModerationRules:         this.autoModerationRules.map(rule => rule.toJSON()),
