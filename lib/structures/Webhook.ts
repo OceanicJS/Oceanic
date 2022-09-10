@@ -53,7 +53,7 @@ export default class Webhook extends Base {
         this.avatar = data.avatar ?? null;
         this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id);
         this.channelID = data.channel_id;
-        this.guild = data.guild_id === undefined ?? data.guild_id === null ? null : client.guilds.get(data.guild_id);
+        this.guild = data.guild_id === undefined || data.guild_id === null ? null : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.sourceChannel = data.source_channel;

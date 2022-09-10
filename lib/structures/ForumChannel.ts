@@ -89,7 +89,7 @@ export default class ForumChannel extends GuildChannel {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         }
         if (data.default_reaction_emoji !== undefined) {
-            this.defaultReactionEmoji = data.default_reaction_emoji === null ?? (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
+            this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
         }
         if (data.default_thread_rate_limit_per_user !== undefined) {
             this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
