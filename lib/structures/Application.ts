@@ -56,7 +56,7 @@ export default class Application extends ClientApplication {
         this.botRequireCodeGrant = !!data.bot_require_code_grant;
         this.coverImage = null;
         this.description = data.description;
-        this.guildID = data.guild_id || null;
+        this.guildID = data.guild_id ?? null;
         this.icon = null;
         this.name = data.name;
         this.owner = client.users.update(data.owner);
@@ -146,7 +146,7 @@ export default class Application extends ClientApplication {
             coverImage:          this.coverImage,
             customInstallURL:    this.customInstallURL,
             description:         this.description,
-            guildID:             this.guildID || undefined,
+            guildID:             this.guildID ?? undefined,
             icon:                this.icon,
             installParams:       this.installParams,
             name:                this.name,
@@ -156,7 +156,7 @@ export default class Application extends ClientApplication {
             rpcOrigins:          this.rpcOrigins,
             slug:                this.slug,
             tags:                this.tags,
-            team:                this.team?.toJSON() || null,
+            team:                this.team?.toJSON() ?? null,
             termsOfServiceURL:   this.termsOfServiceURL,
             verifyKey:           this.verifyKey
         };

@@ -64,9 +64,9 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     uses!: T extends "withMetadata" ? number : never;
     constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
         Properties.define(this, "client", client);
-        this.channelID = data.channel?.id || null;
+        this.channelID = data.channel?.id ?? null;
         this.code = data.code;
-        this.guildID = data.guild?.id || null;
+        this.guildID = data.guild?.id ?? null;
         this.expiresAt = (!data.expires_at ? undefined : new Date(data.expires_at)) as never;
         this.targetType = data.target_type;
         this.update(data);
@@ -158,11 +158,11 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         return {
             approximateMemberCount:   this.approximateMemberCount,
             approximatePresenceCount: this.approximatePresenceCount,
-            channelID:                this.channelID || undefined,
+            channelID:                this.channelID ?? undefined,
             code:                     this.code,
             createdAt:                this.createdAt?.getTime(),
             expiresAt:                this.expiresAt?.getTime(),
-            guildID:                  this.guildID || undefined,
+            guildID:                  this.guildID ?? undefined,
             guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
             inviter:                  this.inviter?.id,
             maxAge:                   this.maxAge,

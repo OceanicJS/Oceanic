@@ -55,7 +55,7 @@ export default class Role extends Base {
             this.hoist = data.hoist;
         }
         if (data.icon !== undefined) {
-            this.icon = data.icon || null;
+            this.icon = data.icon ?? null;
         }
         if (data.mentionable !== undefined) {
             this.mentionable = data.mentionable;
@@ -70,10 +70,10 @@ export default class Role extends Base {
             this.position = data.position;
         }
         if (data.tags !== undefined) {
-            this.tags = data.tags || {};
+            this.tags = data.tags ?? {};
         }
         if (data.unicode_emoji !== undefined) {
-            this.unicodeEmoji = data.unicode_emoji || null;
+            this.unicodeEmoji = data.unicode_emoji ?? null;
         }
     }
 

@@ -44,7 +44,7 @@ export default class SequentialBucket {
             this.processing = setTimeout(() => {
                 this.processing = false;
                 this.check(true);
-            }, Math.max(0, (this.reset || 0) - now + offset) + 1);
+            }, Math.max(0, (this.reset ?? 0) - now + offset) + 1);
             return;
         }
         --this.remaining;

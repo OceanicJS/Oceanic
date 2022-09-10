@@ -55,12 +55,12 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.descriptionLocalized = data.description_localized;
         this.dmPermission = data.dm_permission;
         this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
-        this.guildID = data.guild_id || null;
+        this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
         this.nameLocalized = data.name_localized;
         this.options = data.options?.map(o => client.util.optionToParsed(o));
-        this.type = (data.type || ApplicationCommandTypes.CHAT_INPUT) as T;
+        this.type = (data.type ?? ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;
     }
 
@@ -120,7 +120,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
             description:              this.description,
             descriptionLocalizations: this.descriptionLocalizations,
             dmPermission:             this.dmPermission,
-            guildID:                  this.guildID || undefined,
+            guildID:                  this.guildID ?? undefined,
             name:                     this.name,
             nameLocalizations:        this.nameLocalizations,
             options:                  this.options,

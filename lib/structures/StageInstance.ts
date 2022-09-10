@@ -71,7 +71,7 @@ export default class StageInstance extends Base {
             channelID:            this.channelID,
             discoverableDisabled: this.discoverableDisabled,
             guildID:              this.guildID,
-            scheduledEvent:       this.scheduledEvent?.toJSON() || this.scheduledEventID || undefined,
+            scheduledEvent:       this.scheduledEvent?.toJSON() ?? this.scheduledEventID ?? undefined,
             topic:                this.topic
         };
     }

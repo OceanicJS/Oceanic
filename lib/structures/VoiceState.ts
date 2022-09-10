@@ -108,7 +108,7 @@ export default class VoiceState extends Base {
             ...super.toJSON(),
             channelID:               this.channelID,
             deaf:                    this.deaf,
-            guildID:                 this.guildID || undefined,
+            guildID:                 this.guildID ?? undefined,
             member:                  this.member?.toJSON(),
             mute:                    this.mute,
             requestToSpeakTimestamp: this.requestToSpeakTimestamp ? this.requestToSpeakTimestamp.getTime() : null,

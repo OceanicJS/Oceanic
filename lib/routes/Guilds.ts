@@ -586,7 +586,7 @@ export default class Guilds {
             json:   options.map(o => ({
                 id:               o.id,
                 lock_permissions: o.lockPermissions ?? null,
-                parent_id:        o.parentID || null,
+                parent_id:        o.parentID ?? null,
                 position:         o.position ?? null
             }))
         });

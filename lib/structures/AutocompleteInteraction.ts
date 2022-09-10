@@ -44,16 +44,16 @@ export default class AutocompleteInteraction extends Interaction {
             guildID: data.data.guild_id,
             id:      data.data.id,
             name:    data.data.name,
-            options: new InteractionOptionsWrapper(data.data.options || [], null),
+            options: new InteractionOptionsWrapper(data.data.options ?? [], null),
             type:    data.data.type
         };
         this.guild = data.guild_id === undefined ? null : client.guilds.get(data.guild_id);
-        this.guildID = data.guild_id || null;
+        this.guildID = data.guild_id ?? null;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.user = client.users.update(data.user || data.member!.user);
+        this.user = client.users.update(data.user ?? data.member!.user);
     }
 
     /**
@@ -74,7 +74,7 @@ export default class AutocompleteInteraction extends Interaction {
             appPermissions: this.appPermissions?.toJSON(),
             channel:        this.channelID,
             data:           this.data,
-            guildID:        this.guildID || undefined,
+            guildID:        this.guildID ?? undefined,
             guildLocale:    this.guildLocale,
             locale:         this.locale,
             member:         this.member?.toJSON(),

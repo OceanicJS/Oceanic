@@ -40,7 +40,7 @@ export default class InteractionOptionsWrapper {
         } else if (sub?.length === 2) {
             baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
         }
-        const opt = (baseOptions || this.raw).find(o => o.name === name && o.type === type) as T | undefined;
+        const opt = (baseOptions ?? this.raw).find(o => o.name === name && o.type === type) as T | undefined;
         if (!opt && required) {
             throw new Error(`Missing required option: ${name}`);
         } else {

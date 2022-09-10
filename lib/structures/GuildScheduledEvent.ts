@@ -140,7 +140,7 @@ export default class GuildScheduledEvent extends Base {
             image:              this.image,
             name:               this.name,
             privacyLevel:       this.privacyLevel,
-            scheduledEndTime:   this.scheduledEndTime?.getTime() || null,
+            scheduledEndTime:   this.scheduledEndTime?.getTime() ?? null,
             scheduledStartTime: this.scheduledStartTime.getTime(),
             status:             this.status,
             userCount:          this.userCount

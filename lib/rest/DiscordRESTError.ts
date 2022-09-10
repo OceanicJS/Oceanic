@@ -71,7 +71,7 @@ export default class DiscordRESTError extends Error {
             method:  this.method,
             name:    this.name,
             resBody: this.resBody,
-            stack:   this.stack || ""
+            stack:   this.stack ?? ""
         };
     }
 }

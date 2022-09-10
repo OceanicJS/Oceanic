@@ -56,13 +56,13 @@ export default class Client extends TypedEmitter<ClientEvents> {
     constructor(options?: ClientOptions) {
         super();
         this.options = {
-            allowedMentions: options?.allowedMentions || {
+            allowedMentions: options?.allowedMentions ?? {
                 everyone:    false,
                 repliedUser: false,
                 users:       true,
                 roles:       true
             },
-            auth:             options?.auth || null,
+            auth:             options?.auth ?? null,
             collectionLimits: {
                 members: options?.collectionLimits?.members === undefined ?  Infinity : typeof options.collectionLimits.members === "object" ? {
                     unknown: Infinity,
@@ -71,8 +71,8 @@ export default class Client extends TypedEmitter<ClientEvents> {
                 messages: options?.collectionLimits?.messages ?? 100,
                 users:    options?.collectionLimits?.users ?? Infinity
             },
-            defaultImageFormat: options?.defaultImageFormat || "png",
-            defaultImageSize:   options?.defaultImageSize || 4096
+            defaultImageFormat: options?.defaultImageFormat ?? "png",
+            defaultImageSize:   options?.defaultImageSize ?? 4096
         };
         this.channelGuildMap = {};
         this.groupChannels = new TypedCollection(GroupChannel, this, 10);
@@ -187,7 +187,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (this.channelGuildMap[id]) {
             return this.guilds.get(this.channelGuildMap[id]!)?.channels.get(id) as T;
         }
-        return (this.privateChannels.get(id) || this.groupChannels.get(id)) as T;
+        return (this.privateChannels.get(id) ?? this.groupChannels.get(id)) as T;
     }
 
     /**
@@ -203,7 +203,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) {
             throw new Error("Only voice & stage channels can be joined.");
         }
-        this.shards.get(this.guildShardMap[channel.guildID] || 0)!.updateVoiceState(channel.guildID, channelID, options);
+        this.shards.get(this.guildShardMap[channel.guildID] ?? 0)!.updateVoiceState(channel.guildID, channelID, options);
         // @TODO proper voice connection handling
     }
 
@@ -216,6 +216,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) {
             return;
         }
-        this.shards.get(this.guildShardMap[channel.guildID] || 0)!.updateVoiceState(channel.guildID, null, { selfDeaf: false, selfMute: false });
+        this.shards.get(this.guildShardMap[channel.guildID] ?? 0)!.updateVoiceState(channel.guildID, null, { selfDeaf: false, selfMute: false });
     }
 }

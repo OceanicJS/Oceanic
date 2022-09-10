@@ -782,7 +782,7 @@ export enum ActivityTypes {
 
 export enum ActivityFlags {
     INSTANCE                    = 1,
-    JOIn                        = 2,
+    JOIN                        = 2,
     SPECTATE                    = 4,
     JOIN_REQUEST                = 8,
     SYNC                        = 16,

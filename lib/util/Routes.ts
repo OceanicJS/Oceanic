@@ -25,25 +25,25 @@ export const GUILD_TEMPLATE_CODE         = (code: string) => `/guilds/templates/
 export const GUILD_TEMPLATE              = (guildID: string, templateID: string) => `/guilds/${guildID}/templates/${templateID}` as const;
 export const GUILD_TEMPLATES             = (guildID: string) => `/guilds/${guildID}/templates` as const;
 export const GUILD_PREVIEW               = (guildID: string) => `/guilds/${guildID}/preview` as const;
-export const GUILD_CHANNELS               = (guildID: string) => `/guilds/${guildID}/channels` as const;
-export const GUILD_ACTIVE_THREADS         = (guildID: string) => `/guilds/${guildID}/threads/active` as const;
-export const GUILD_MEMBERS                  = (guildID: string) => `/guilds/${guildID}/members` as const;
-export const GUILD_MEMBER                  = (guildID: string, userID: string) => `/guilds/${guildID}/members/${userID}` as const;
-export const GUILD_SEARCH_MEMBERS            = (guildID: string) => `/guilds/${guildID}/members/search` as const;
-export const GUILD_MEMBER_ROLE             = (guildID: string, userID: string, roleID: string) => `/guilds/${guildID}/members/${userID}/roles/${roleID}` as const;
-export const GUILD_ROLES                  = (guildID: string) => `/guilds/${guildID}/roles` as const;
+export const GUILD_CHANNELS              = (guildID: string) => `/guilds/${guildID}/channels` as const;
+export const GUILD_ACTIVE_THREADS        = (guildID: string) => `/guilds/${guildID}/threads/active` as const;
+export const GUILD_MEMBERS               = (guildID: string) => `/guilds/${guildID}/members` as const;
+export const GUILD_MEMBER                = (guildID: string, userID: string) => `/guilds/${guildID}/members/${userID}` as const;
+export const GUILD_SEARCH_MEMBERS        = (guildID: string) => `/guilds/${guildID}/members/search` as const;
+export const GUILD_MEMBER_ROLE           = (guildID: string, userID: string, roleID: string) => `/guilds/${guildID}/members/${userID}/roles/${roleID}` as const;
+export const GUILD_ROLES                 = (guildID: string) => `/guilds/${guildID}/roles` as const;
 export const GUILD_ROLE                  = (guildID: string, roleID: string) => `/guilds/${guildID}/roles/${roleID}` as const;
-export const GUILD_MFA                       = (guildID: string) => `/guilds/${guildID}/mfa` as const;
-export const GUILD_PRUNE                  = (guildID: string) => `/guilds/${guildID}/prune` as const;
-export const GUILD_INVITES                  = (guildID: string) => `/guilds/${guildID}/invites` as const;
-export const GUILD_INTEGRATION              = (guildID: string, integrationID: string) => `/guilds/${guildID}/integrations/${integrationID}` as const;
+export const GUILD_MFA                   = (guildID: string) => `/guilds/${guildID}/mfa` as const;
+export const GUILD_PRUNE                 = (guildID: string) => `/guilds/${guildID}/prune` as const;
+export const GUILD_INVITES               = (guildID: string) => `/guilds/${guildID}/invites` as const;
+export const GUILD_INTEGRATION           = (guildID: string, integrationID: string) => `/guilds/${guildID}/integrations/${integrationID}` as const;
 export const GUILD_INTEGRATIONS          = (guildID: string) => `/guilds/${guildID}/integrations` as const;
-export const GUILD_WIDGET                  = (guildID: string) => `/guilds/${guildID}/widget` as const;
-export const GUILD_VANITY_URL              = (guildID: string) => `/guilds/${guildID}/vanity-url` as const;
+export const GUILD_WIDGET                = (guildID: string) => `/guilds/${guildID}/widget` as const;
+export const GUILD_VANITY_URL            = (guildID: string) => `/guilds/${guildID}/vanity-url` as const;
 export const GUILD_WIDGET_IMAGE          = (guildID: string) => `/guilds/${guildID}/widget.png` as const;
 export const GUILD_WIDGET_JSON           = (guildID: string) => `/guilds/${guildID}/widget.json` as const;
-export const GUILD_WELCOME_SCREEN          = (guildID: string) => `/guilds/${guildID}/welcome-screen` as const;
-export const GUILD_VOICE_STATE              = (guildID: string, userID: string) => `/guilds/${guildID}/voice-states/${userID}` as const;
+export const GUILD_WELCOME_SCREEN        = (guildID: string) => `/guilds/${guildID}/welcome-screen` as const;
+export const GUILD_VOICE_STATE           = (guildID: string, userID: string) => `/guilds/${guildID}/voice-states/${userID}` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;
@@ -87,7 +87,7 @@ export const OAUTH_TOKEN        = "/oauth2/token" as const;
 export const OAUTH_TOKEN_REVOKE = "/oauth2/token/revoke" as const;
 
 // Images
-export const ACHIEVEMENT_ICON             = (applicationID: string, achievementID: string, hash: string) => `/app-assets/${applicationID}/achievements/${achievementID}/icons/${hash}` as const;
+export const ACHIEVEMENT_ICON            = (applicationID: string, achievementID: string, hash: string) => `/app-assets/${applicationID}/achievements/${achievementID}/icons/${hash}` as const;
 export const APPLICATION_ASSET           = (applicationID: string, assetID: string) => `/applications/${applicationID}/assets/${assetID}` as const;
 export const APPLICATION_COVER           = (applicationID: string, hash: string) => `/app-icons/${applicationID}/${hash}` as const;
 export const APPLICATION_ICON            = APPLICATION_COVER;

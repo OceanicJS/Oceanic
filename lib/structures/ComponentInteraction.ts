@@ -49,13 +49,13 @@ export default class ComponentInteraction extends Interaction {
         this.channel = client.getChannel<AnyTextChannel>(data.channel_id!);
         this.channelID = data.channel_id!;
         this.guild = data.guild_id === undefined ? null : client.guilds.get(data.guild_id);
-        this.guildID = data.guild_id || null;
+        this.guildID = data.guild_id ?? null;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
         this.message = this.channel && "messages" in this.channel ? this.channel.messages.update(data.message) : new Message(data.message, client);
-        this.user = client.users.update((data.user || data.member!.user)!);
+        this.user = client.users.update((data.user ?? data.member!.user)!);
 
         switch (data.data.component_type) {
             case ComponentTypes.BUTTON: {
@@ -197,7 +197,7 @@ export default class ComponentInteraction extends Interaction {
             appPermissions: this.appPermissions?.toJSON(),
             channelID:      this.channelID,
             data:           this.data,
-            guildID:        this.guildID || undefined,
+            guildID:        this.guildID ?? undefined,
             guildLocale:    this.guildLocale,
             locale:         this.locale,
             member:         this.member?.toJSON(),

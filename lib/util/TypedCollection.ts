@@ -13,7 +13,7 @@ export default class TypedCollection<K extends string | number, M extends Record
     constructor(baseObject: AnyClass<M, C, E>, client: Client, limit = Infinity) {
         super();
         if (!(baseObject.prototype instanceof Base)) {
-            throw new Error("baseObject must be a class that extends Base");
+            throw new Error("baseObject must be a class that extends Base.");
         }
         this.#baseObject = baseObject;
         this.#client = client;
@@ -38,7 +38,7 @@ export default class TypedCollection<K extends string | number, M extends Record
 
             return value;
         } else {
-            const err = new Error("Collection.add: value must have an id property");
+            const err = new Error(`${this.constructor.name}#add: value must have an id property`);
             Object.defineProperty(err, "_object", { value });
             throw err;
         }

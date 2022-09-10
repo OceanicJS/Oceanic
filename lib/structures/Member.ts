@@ -148,7 +148,7 @@ export default class Member extends Base {
     }
     /** The voice state of this member. */
     get voiceState(): VoiceState | null {
-        return this.guild instanceof Guild ? this.guild.voiceStates.get(this.id) || null : null;
+        return this.guild instanceof Guild ? this.guild.voiceStates.get(this.id) ?? null : null;
     }
 
     /**
@@ -213,16 +213,16 @@ export default class Member extends Base {
         return {
             ...super.toJSON(),
             avatar:                     this.avatar,
-            communicationDisabledUntil: this.communicationDisabledUntil?.getTime() || null,
+            communicationDisabledUntil: this.communicationDisabledUntil?.getTime() ?? null,
             deaf:                       this.deaf,
             flags:                      this.flags,
             guildID:                    this.guildID,
             isPending:                  this.isPending,
-            joinedAt:                   this.joinedAt?.getTime() || null,
+            joinedAt:                   this.joinedAt?.getTime() ?? null,
             mute:                       this.mute,
             nick:                       this.nick,
             pending:                    this.pending,
-            premiumSince:               this.premiumSince?.getTime() || null,
+            premiumSince:               this.premiumSince?.getTime() ?? null,
             presence:                   this.presence,
             roles:                      this.roles,
             user:                       this.user.toJSON()

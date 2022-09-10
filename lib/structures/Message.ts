@@ -207,7 +207,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         }
         if (data.content !== undefined) {
             this.content = data.content;
-            this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) || []).map(mention => mention.slice(2, -1));
+            this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) ?? []).map(mention => mention.slice(2, -1));
         }
         if (data.edited_timestamp !== undefined) {
             this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
@@ -298,7 +298,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /** A link to this message. */
     get jumpLink(): string {
-        return `${BASE_URL}${Routes.MESSAGE_LINK(this.guildID || "@me", this.channelID, this.id)}`;
+        return `${BASE_URL}${Routes.MESSAGE_LINK(this.guildID ?? "@me", this.channelID, this.id)}`;
     }
 
     /**
@@ -408,10 +408,10 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             channelID:       this.channelID,
             components:      this.components,
             content:         this.content,
-            editedTimestamp: this.editedTimestamp?.getTime() || null,
+            editedTimestamp: this.editedTimestamp?.getTime() ?? null,
             embeds:          this.embeds,
             flags:           this.flags,
-            guildID:         this.guildID || undefined,
+            guildID:         this.guildID ?? undefined,
             interaction:     !this.interaction ? undefined : {
                 id:     this.interaction.id,
                 member: this.interaction.member?.toJSON(),

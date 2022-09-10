@@ -200,7 +200,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.emit("warn", "Resume url is not currently present. Discord may disconnect you quicker.", this.id);
             }
 
-            this.ws = new WebSocket(this.resumeURL || this.client.gatewayURL, this.client.shards.options.ws);
+            this.ws = new WebSocket(this.resumeURL ?? this.client.gatewayURL, this.client.shards.options.ws);
         } else {
             this.ws = new WebSocket(this.client.gatewayURL, this.client.shards.options.ws);
         }
@@ -226,7 +226,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         switch (packet.t) {
             case "APPLICATION_COMMAND_PERMISSIONS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                this.client.emit("applicationCommandPermissionsUpdate", guild || { id: packet.d.guild_id }, {
+                this.client.emit("applicationCommandPermissionsUpdate", guild ?? { id: packet.d.guild_id }, {
                     application:   packet.d.application_id === this.client.application.id ? this.client.application : undefined,
                     applicationID: packet.d.application_id,
                     id:            packet.d.id,
@@ -237,8 +237,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "AUTO_MODERATION_ACTION_EXECUTION": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const channel = !packet.d.channel_id ? null : this.client.getChannel(packet.d.channel_id) || { id: packet.d.channel_id };
-                this.client.emit("autoModerationActionExecution", guild || { id: packet.d.guild_id }, channel, this.client.users.get(packet.d.user_id) || { id: packet.d.user_id },{
+                const channel = !packet.d.channel_id ? null : this.client.getChannel(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                this.client.emit("autoModerationActionExecution", guild ?? { id: packet.d.guild_id }, channel, this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id },{
                     action: {
                         metadata: {
                             channelID:       packet.d.action.metadata.channel_id,
@@ -285,7 +285,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "AUTO_MODERATION_RULE_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldRule = guild?.autoModerationRules.get(packet.d.id)?.toJSON() || null;
+                const oldRule = guild?.autoModerationRules.get(packet.d.id)?.toJSON() ?? null;
                 let rule: AutoModerationRule;
                 if (guild) {
                     rule = guild.autoModerationRules.update(packet.d);
@@ -303,7 +303,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild?.channels.has(packet.d.id)) {
                     channel = guild.channels.update(packet.d);
                 } else {
-                    channel = guild?.channels.add(Channel.from(packet.d, this.client)) || Channel.from(packet.d, this.client);
+                    channel = guild?.channels.add(Channel.from(packet.d, this.client)) ?? Channel.from(packet.d, this.client);
                     this.client.channelGuildMap[packet.d.id] = packet.d.guild_id;
                 }
                 this.client.emit("channelCreate", channel);
@@ -332,7 +332,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "CHANNEL_PINS_UPDATE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                this.client.emit("channelPinsUpdate", channel || { id: packet.d.channel_id }, !packet.d.last_pin_timestamp ? null : new Date(packet.d.last_pin_timestamp));
+                this.client.emit("channelPinsUpdate", channel ?? { id: packet.d.channel_id }, !packet.d.last_pin_timestamp ? null : new Date(packet.d.last_pin_timestamp));
                 break;
             }
 
@@ -344,7 +344,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     oldChannel = guild.channels.get(packet.d.id)!.toJSON();
                     channel = guild.channels.update(packet.d);
                 } else {
-                    channel = guild?.channels.add(Channel.from(packet.d, this.client)) || Channel.from(packet.d, this.client);
+                    channel = guild?.channels.add(Channel.from(packet.d, this.client)) ?? Channel.from(packet.d, this.client);
                     this.client.channelGuildMap[packet.d.id] = packet.d.guild_id;
                 }
                 this.client.emit("channelUpdate", channel as TextChannel, oldChannel as JSONTextChannel);
@@ -353,13 +353,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_BAN_ADD": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                this.client.emit("guildBanAdd", guild || { id: packet.d.guild_id }, this.client.users.update(packet.d.user));
+                this.client.emit("guildBanAdd", guild ?? { id: packet.d.guild_id }, this.client.users.update(packet.d.user));
                 break;
             }
 
             case "GUILD_BAN_REMOVE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                this.client.emit("guildBanRemove", guild || { id: packet.d.guild_id }, this.client.users.update(packet.d.user));
+                this.client.emit("guildBanRemove", guild ?? { id: packet.d.guild_id }, this.client.users.update(packet.d.user));
                 break;
             }
 
@@ -396,7 +396,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (packet.d.unavailable) {
                     this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
                 } else {
-                    this.client.emit("guildDelete", guild || { id: packet.d.id });
+                    this.client.emit("guildDelete", guild ?? { id: packet.d.id });
                 }
                 break;
             }
@@ -407,7 +407,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild) {
                     guild["update"]({ emojis: packet.d.emojis });
                 }
-                this.client.emit("guildEmojisUpdate", guild || { id: packet.d.guild_id }, guild?.emojis || packet.d.emojis.map(emoji => ({
+                this.client.emit("guildEmojisUpdate", guild ?? { id: packet.d.guild_id }, guild?.emojis ?? packet.d.emojis.map(emoji => ({
                     ...emoji,
                     user: emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
                 })), oldEmojis);
@@ -416,7 +416,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_INTEGRATIONS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                this.client.emit("guildIntegrationsUpdate", guild || { id: packet.d.guild_id });
+                this.client.emit("guildIntegrationsUpdate", guild ?? { id: packet.d.guild_id });
                 break;
             }
 
@@ -488,13 +488,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 } else {
                     member = this.client.users.update(packet.d.user);
                 }
-                this.client.emit("guildMemberRemove", member, guild || { id: packet.d.guild_id });
+                this.client.emit("guildMemberRemove", member, guild ?? { id: packet.d.guild_id });
                 break;
             }
 
             case "GUILD_MEMBER_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldMember = guild?.members.get(packet.d.user!.id)?.toJSON() || null;
+                const oldMember = guild?.members.get(packet.d.user!.id)?.toJSON() ?? null;
                 const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user.id, {  deaf: false, mute: false, ...packet.d });
                 this.client.emit("guildMemberUpdate", member, oldMember);
                 break;
@@ -527,7 +527,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_ROLE_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldRole = guild?.roles.get(packet.d.role.id)?.toJSON() || null;
+                const oldRole = guild?.roles.get(packet.d.role.id)?.toJSON() ?? null;
                 let role: Role;
                 if (guild) {
                     role = guild.roles.update(packet.d.role, packet.d.guild_id);
@@ -564,7 +564,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_SCHEDULED_EVENT_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
-                const oldEvent = guild?.scheduledEvents.get(packet.d.id)?.toJSON() || null;
+                const oldEvent = guild?.scheduledEvents.get(packet.d.id)?.toJSON() ?? null;
                 let event: GuildScheduledEvent;
                 if (guild) {
                     event = guild.scheduledEvents.update(packet.d);
@@ -581,7 +581,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if ("userCount" in event) {
                     event.userCount++;
                 }
-                const user = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                const user = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
                 this.client.emit("guildScheduledEventUserAdd", event, user);
                 break;
             }
@@ -592,7 +592,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if ("userCount" in event) {
                     event.userCount--;
                 }
-                const user = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                const user = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
                 this.client.emit("guildScheduledEventUserRemove", event, user);
                 break;
             }
@@ -603,13 +603,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild) {
                     guild["update"]({ stickers: packet.d.stickers });
                 }
-                this.client.emit("guildStickersUpdate", guild || { id: packet.d.guild_id }, guild?.stickers || packet.d.stickers, oldStickers);
+                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers ?? packet.d.stickers, oldStickers);
                 break;
             }
 
             case "GUILD_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.id);
-                const oldGuild = guild?.toJSON() || null;
+                const oldGuild = guild?.toJSON() ?? null;
                 this.client.emit("guildUpdate", this.client.guilds.update(packet.d), oldGuild);
                 break;
             }
@@ -622,26 +622,26 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 } else {
                     integration = new Integration(packet.d, this.client);
                 }
-                this.client.emit("integrationCreate", guild || { id: packet.d.guild_id }, integration);
+                this.client.emit("integrationCreate", guild ?? { id: packet.d.guild_id }, integration);
                 break;
             }
 
             case "INTEGRATION_DELETE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                this.client.emit("integrationDelete", guild || { id: packet.d.guild_id }, guild?.integrations.get(packet.d.id) || { applicationID: packet.d.application_id, id: packet.d.id });
+                this.client.emit("integrationDelete", guild ?? { id: packet.d.guild_id }, guild?.integrations.get(packet.d.id) ?? { applicationID: packet.d.application_id, id: packet.d.id });
                 break;
             }
 
             case "INTEGRATION_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldIntegration = guild?.integrations.get(packet.d.id)?.toJSON() || null;
+                const oldIntegration = guild?.integrations.get(packet.d.id)?.toJSON() ?? null;
                 let integration: Integration;
                 if (guild) {
                     integration = guild.integrations.update(packet.d);
                 } else {
                     integration = new Integration(packet.d, this.client);
                 }
-                this.client.emit("integrationUpdate", guild || { id: packet.d.guild_id }, integration, oldIntegration);
+                this.client.emit("integrationUpdate", guild ?? { id: packet.d.guild_id }, integration, oldIntegration);
                 break;
             }
 
@@ -651,15 +651,15 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INVITE_CREATE": {
-                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) || { id: packet.d.guild_id } : null;
-                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id) || { id: packet.d.channel_id };
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) ?? { id: packet.d.guild_id } : null;
+                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
                 this.client.emit("inviteCreate", guild, channel, new Invite(packet.d, this.client));
                 break;
             }
 
             case "INVITE_DELETE": {
-                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) || { id: packet.d.guild_id } : null;
-                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id) || { id: packet.d.channel_id };
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) ?? { id: packet.d.guild_id } : null;
+                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
                 this.client.emit("inviteDelete", guild, channel, packet.d.code);
                 break;
             }
@@ -676,7 +676,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_DELETE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.id };
+                const message = channel?.messages.get(packet.d.id) ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.id };
                 if (channel) {
                     channel.messages.delete(packet.d.id);
                 }
@@ -693,7 +693,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         return message;
                     } else {
                         return {
-                            channel: channel || { id: packet.d.channel_id },
+                            channel: channel ?? { id: packet.d.channel_id },
                             id
                         };
                     }
@@ -704,16 +704,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_ADD": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
+                const message = channel?.messages.get(packet.d.message_id) ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id };
                 let reactor: Member | User | Uncached;
                 if (packet.d.member) {
                     if (packet.d.guild_id) {
                         reactor = this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member);
                     } else {
-                        reactor = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                        reactor = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
                     }
                 } else {
-                    reactor = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                    reactor = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
                 }
 
                 if (message instanceof Message) {
@@ -737,8 +737,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_REMOVE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
-                const reactor = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
+                const message = channel?.messages.get(packet.d.message_id) ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id };
+                const reactor = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
 
                 if (message instanceof Message) {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
@@ -758,7 +758,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_REMOVE_ALL": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
+                const message = channel?.messages.get(packet.d.message_id) ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id };
 
                 if (message instanceof Message) {
                     message.reactions = {};
@@ -769,7 +769,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_REMOVE_EMOJI": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
+                const message = channel?.messages.get(packet.d.message_id) ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id };
 
                 if (message instanceof Message) {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
@@ -783,7 +783,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_UPDATE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const oldMessage = channel && "messages" in channel ? channel.messages.get(packet.d.id)?.toJSON() || null : null;
+                const oldMessage = channel && "messages" in channel ? channel.messages.get(packet.d.id)?.toJSON() ?? null : null;
                 if (!oldMessage && !packet.d.author) {
                     this.client.emit("debug", `Got partial MESSAGE_UPDATE for uncached message ${packet.d.id} for channel ${packet.d.channel_id}, discarding..`);
                     break;
@@ -811,7 +811,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     delete (packet.d as { user?: PresenceUpdate["user"]; }).user;
                     member.presence = packet.d;
                 }
-                this.client.emit("presenceUpdate", guild || { id: packet.d.guild_id }, member || { id: packet.d.user.id },packet.d, oldPresence);
+                this.client.emit("presenceUpdate", guild ?? { id: packet.d.guild_id }, member ?? { id: packet.d.user.id },packet.d, oldPresence);
                 break;
             }
 
@@ -895,7 +895,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "STAGE_INSTANCE_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldStageInstance = guild?.stageInstances.get(packet.d.id)?.toJSON() || null;
+                const oldStageInstance = guild?.stageInstances.get(packet.d.id)?.toJSON() ?? null;
                 let stateInstance: StageInstance;
                 if (guild) {
                     stateInstance = guild.stageInstances.update(packet.d);
@@ -912,7 +912,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild?.threads.has(packet.d.id)) {
                     thread = guild.threads.update(packet.d);
                 } else {
-                    thread = guild?.threads.add(Channel.from(packet.d, this.client)) || Channel.from(packet.d, this.client);
+                    thread = guild?.threads.add(Channel.from(packet.d, this.client)) ?? Channel.from(packet.d, this.client);
                     this.client.threadGuildMap[packet.d.id] = packet.d.guild_id;
                 }
                 const channel = this.client.getChannel(packet.d.parent_id!);
@@ -992,7 +992,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     }
                 }
 
-                this.client.emit("threadMemberUpdate", thread || { id: packet.d.id }, threadMember, oldMember);
+                this.client.emit("threadMemberUpdate", thread ?? { id: packet.d.id }, threadMember, oldMember);
                 break;
             }
 
@@ -1025,7 +1025,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         }
                     });
                 }
-                this.client.emit("threadMembersUpdate", thread || { id: packet.d.id }, addedMembers, removedMembers);
+                this.client.emit("threadMembersUpdate", thread ?? { id: packet.d.id }, addedMembers, removedMembers);
                 break;
             }
 
@@ -1038,7 +1038,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     oldThread = guild.threads.get(packet.d.id)!.toJSON();
                     thread = guild.threads.update(packet.d);
                 } else {
-                    thread = guild?.threads.add(Channel.from(packet.d, this.client)) || Channel.from(packet.d, this.client);
+                    thread = guild?.threads.add(Channel.from(packet.d, this.client)) ?? Channel.from(packet.d, this.client);
                     this.client.threadGuildMap[packet.d.id] = packet.d.guild_id;
                 }
                 if (channel && "threads" in channel) {
@@ -1054,19 +1054,19 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "TYPING_START": {
-                const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id) || { id: packet.d.channel_id };
+                const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
                 const startTimestamp = new Date(packet.d.timestamp);
                 if (packet.d.member) {
                     const member = this.client.util.updateMember(packet.d.guild_id!, packet.d.user_id, packet.d.member);
                     this.client.emit("typingStart", channel, member, startTimestamp);
                 }
                 const user = this.client.users.get(packet.d.user_id);
-                this.client.emit("typingStart", channel, user || { id: packet.d.user_id }, startTimestamp);
+                this.client.emit("typingStart", channel, user ?? { id: packet.d.user_id }, startTimestamp);
                 break;
             }
 
             case "USER_UPDATE": {
-                const oldUser = this.client.users.get(packet.d.id)?.toJSON() || null;
+                const oldUser = this.client.users.get(packet.d.id)?.toJSON() ?? null;
                 this.client.emit("userUpdate", this.client.users.update(packet.d), oldUser);
                 break;
             }
@@ -1080,15 +1080,15 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 packet.d.self_stream = !!packet.d.self_stream;
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member!);
-                const oldState = member.voiceState?.toJSON() || null;
-                const state = guild?.voiceStates.update({ ...packet.d, id: member.id }) || new VoiceState(packet.d, this.client);
+                const oldState = member.voiceState?.toJSON() ?? null;
+                const state = guild?.voiceStates.update({ ...packet.d, id: member.id }) ?? new VoiceState(packet.d, this.client);
                 member["update"]({ deaf: state.deaf, mute: state.mute });
                 if (oldState?.channelID !== state.channelID) {
                     let oldChannel: VoiceChannel | StageChannel | Uncached | null = null, newChannel: VoiceChannel | StageChannel | Uncached;
                     if (oldState?.channelID) {
-                        oldChannel = this.client.getChannel<VoiceChannel | StageChannel>(oldState.channelID) || { id: oldState.channelID };
+                        oldChannel = this.client.getChannel<VoiceChannel | StageChannel>(oldState.channelID) ?? { id: oldState.channelID };
                     }
-                    if (packet.d.channel_id && (newChannel = this.client.getChannel<VoiceChannel | StageChannel>(packet.d.channel_id) || { id: packet.d.channel_id })) {
+                    if (packet.d.channel_id && (newChannel = this.client.getChannel<VoiceChannel | StageChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id })) {
                         if (newChannel instanceof Channel) {
                             newChannel.voiceMembers.add(member);
                         }
@@ -1122,8 +1122,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "WEBHOOKS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const channel = this.client.getChannel<AnyGuildChannelWithoutThreads>(packet.d.channel_id) || { id: packet.d.channel_id };
-                this.client.emit("webhooksUpdate", guild || { id: packet.d.guild_id }, channel);
+                const channel = this.client.getChannel<AnyGuildChannelWithoutThreads>(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                this.client.emit("webhooksUpdate", guild ?? { id: packet.d.guild_id }, channel);
                 break;
             }
         }
@@ -1323,12 +1323,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (this.#sharedZLib.err) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-                        this.client.emit("error", new Error(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg || ""}`));
+                        this.client.emit("error", new Error(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg ?? ""}`));
                         return;
                     }
 
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-                    data = Buffer.from(this.#sharedZLib.result || "");
+                    data = Buffer.from(this.#sharedZLib.result ?? "");
                     if (Erlpack) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                         return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);

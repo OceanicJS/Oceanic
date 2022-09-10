@@ -81,7 +81,7 @@ export default class ShardManager extends Collection<number, Shard> {
     }
 
     private _ready(id: number): void {
-        const rateLimitKey = (id % this.options.concurrency) || 0;
+        const rateLimitKey = (id % this.options.concurrency) ?? 0;
         this.#buckets[rateLimitKey] = Date.now();
 
         this.tryConnect();
@@ -153,8 +153,8 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         for (const shard of this.#connectQueue) {
-            const rateLimitKey = (shard.id % this.options.concurrency) || 0;
-            const lastConnect = this.#buckets[rateLimitKey] || 0;
+            const rateLimitKey = (shard.id % this.options.concurrency) ?? 0;
+            const lastConnect = this.#buckets[rateLimitKey] ?? 0;
             if (!shard.sessionID && Date.now() - lastConnect < 5000) {
                 continue;
             }

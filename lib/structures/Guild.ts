@@ -232,8 +232,8 @@ export default class Guild extends Base {
         this.icon = null;
         this.integrations = new TypedCollection(Integration, client);
         this.joinedAt = null;
-        this.large = (data.member_count || data.approximate_member_count || 0) >= client.shards.options.largeThreshold;
-        this.memberCount = data.member_count || data.approximate_member_count || 0;
+        this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
+        this.memberCount = data.member_count ?? data.approximate_member_count ?? 0;
         this.members = new TypedCollection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? client.options.collectionLimits.members.unknown ?? Infinity);
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
@@ -1114,7 +1114,7 @@ export default class Guild extends Base {
             explicitContentFilter:       this.explicitContentFilter,
             features:                    this.features,
             icon:                        this.icon,
-            joinedAt:                    this.joinedAt?.getTime() || null,
+            joinedAt:                    this.joinedAt?.getTime() ?? null,
             large:                       this.large,
             maxMembers:                  this.maxMembers,
             maxPresences:                this.maxPresences,
@@ -1130,7 +1130,7 @@ export default class Guild extends Base {
             premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
             premiumSubscriptionCount:    this.premiumSubscriptionCount,
             premiumTier:                 this.premiumTier,
-            publicUpdatesChannel:        this.publicUpdatesChannel?.id || null,
+            publicUpdatesChannel:        this.publicUpdatesChannel?.id ?? null,
             region:                      this.region,
             roles:                       this.roles.map(role => role.toJSON()),
             rulesChannelID:              this.rulesChannelID,

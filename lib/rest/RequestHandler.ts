@@ -29,17 +29,17 @@ export default class RequestHandler {
         this.#manager = manager;
         this.options = {
             agent:                      options.agent,
-            baseURL:                    options.baseURL || API_URL,
+            baseURL:                    options.baseURL ?? API_URL,
             disableLatencyCompensation: !!options.disableLatencyCompensation,
             host:                       options.host ? options.host : options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host,
             latencyThreshold:           options.latencyThreshold ?? 30000,
             ratelimiterOffset:          options.ratelimiterOffset ?? 0,
             requestTimeout:             options.requestTimeout ?? 15000,
-            userAgent:                  options.userAgent || USER_AGENT
+            userAgent:                  options.userAgent ?? USER_AGENT
         };
         this.latencyRef = {
             lastTimeOffsetCheck: 0,
-            latency:             options.ratelimiterOffset || 0,
+            latency:             options.ratelimiterOffset ?? 0,
             raw:                 new Array(10).fill(options.ratelimiterOffset) as Array<number>,
             timeOffsets:         new Array(10).fill(0) as Array<number>,
             timeoffset:          0
@@ -102,7 +102,7 @@ export default class RequestHandler {
         if (!options.path.startsWith("/")) {
             options.path = `/${options.path}`;
         }
-        const route = options.route || this.getRoute(options.path, options.method);
+        const route = options.route ?? this.getRoute(options.path, options.method);
         if (!this.ratelimits[route]) {
             this.ratelimits[route] = new SequentialBucket(1, this.latencyRef);
         }
@@ -223,14 +223,14 @@ export default class RequestHandler {
                             `x-ratelimit-global = " + ${res.headers.get("x-ratelimit-global")!}`].join("\n"));
                     }
 
-                    this.ratelimits[route].remaining = !res.headers.has("x-ratelimit-remaining") ? 1 : Number(res.headers.get("x-ratelimit-remaining")) || 0;
-                    const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") || res.headers.get("retry-after") || 0) * 1000;
+                    this.ratelimits[route].remaining = !res.headers.has("x-ratelimit-remaining") ? 1 : Number(res.headers.get("x-ratelimit-remaining")) ?? 0;
+                    const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") ?? res.headers.get("retry-after") ?? 0) * 1000;
                     if (retryAfter >= 0) {
                         if (res.headers.has("x-ratelimit-global")) {
                             this.globalBlock = true;
-                            setTimeout(this.globalUnblock.bind(this), retryAfter || 1);
+                            setTimeout(this.globalUnblock.bind(this), retryAfter ?? 1);
                         } else {
-                            this.ratelimits[route].reset = (retryAfter || 1) + now;
+                            this.ratelimits[route].reset = (retryAfter ?? 1) + now;
                         }
                     } else if (res.headers.has("x-ratelimit-reset")) {
                         let resetTime = Number(res.headers.get("x-ratelimit-reset")) * 1000;

@@ -45,7 +45,7 @@ export default class OAuth {
             method: "POST",
             path:   Routes.OAUTH_TOKEN,
             form,
-            auth:   (options.clientID || this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID || this.#manager.client.application?.id}:${options.clientSecret}`).toString("base64")}` : true
+            auth:   (options.clientID ?? this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this.#manager.client.application?.id}:${options.clientSecret}`).toString("base64")}` : true
         }).then(data => ({
             accessToken: data.access_token,
             expiresIn:   data.expires_in,
@@ -62,7 +62,7 @@ export default class OAuth {
     constructURL(options: OAuthURLOptions): string {
         const params: Array<string> = [
             `client_id=${options.clientID}`,
-            `response_type=${options.responseType || "code"}`,
+            `response_type=${options.responseType ?? "code"}`,
             `scope=${options.scopes.join("%20")}`
         ];
         if (options.redirectURI) {

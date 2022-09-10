@@ -53,7 +53,7 @@ export default class Webhook extends Base {
         this.avatar = data.avatar ?? null;
         this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id);
         this.channelID = data.channel_id;
-        this.guild = data.guild_id === undefined || data.guild_id === null ? null : client.guilds.get(data.guild_id);
+        this.guild = data.guild_id === undefined ?? data.guild_id === null ? null : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.sourceChannel = data.source_channel;
@@ -91,7 +91,7 @@ export default class Webhook extends Base {
      * @param token The token for the webhook, if not already present.
      */
     async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string): Promise<void> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -103,7 +103,7 @@ export default class Webhook extends Base {
      * @param token The token for the webhook, if not already present.
      */
     async deleteToken(token?: string): Promise<void> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -126,7 +126,7 @@ export default class Webhook extends Base {
      * @param options The options for editing the message.
      */
     async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -139,7 +139,7 @@ export default class Webhook extends Base {
      * @param token The token for the webhook, if not already present.
      */
     async editToken(options: EditWebhookOptions, token?: string): Promise<Webhook> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -154,7 +154,7 @@ export default class Webhook extends Base {
     async execute<T extends AnyGuildTextChannel>(options: ExecuteWebhookWaitOptions, token?: string): Promise<Message<T>>;
     async execute(options: ExecuteWebhookOptions, token?: string): Promise<void>;
     async execute<T extends AnyGuildTextChannel>(options: ExecuteWebhookOptions, token?: string): Promise<Message<T> | void> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -169,7 +169,7 @@ export default class Webhook extends Base {
     async executeGithub(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
     async executeGithub<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
     async executeGithub<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -184,7 +184,7 @@ export default class Webhook extends Base {
     async executeSlack(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
     async executeSlack<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
     async executeSlack<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -198,7 +198,7 @@ export default class Webhook extends Base {
      * @param token The token for the webhook, if not already present.
      */
     async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string): Promise<Message<T>> {
-        const t = this.token || token;
+        const t = this.token ?? token;
         if (!t) {
             throw new Error("Token is not present on webhook, and was not provided in options.");
         }
@@ -217,9 +217,9 @@ export default class Webhook extends Base {
     override toJSON(): JSONWebhook {
         return {
             ...super.toJSON(),
-            applicationID: this.application?.id || null,
+            applicationID: this.application?.id ?? null,
             avatar:        this.avatar,
-            channelID:     this.channelID || null,
+            channelID:     this.channelID ?? null,
             guildID:       this.guildID,
             name:          this.name,
             sourceChannel: this.sourceChannel,

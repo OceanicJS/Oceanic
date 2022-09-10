@@ -17,9 +17,9 @@ export default class Bucket {
     constructor(tokenLimit: number, interval: number, options?: { latencyRef?: { latency: number; }; reservedTokens?: number; }) {
         this.tokenLimit = tokenLimit;
         this.interval = interval;
-        this.latencyRef = options?.latencyRef || { latency: 0 };
+        this.latencyRef = options?.latencyRef ?? { latency: 0 };
         this.lastReset = this.tokens = this.lastSend = 0;
-        this.reservedTokens = options?.reservedTokens || 0;
+        this.reservedTokens = options?.reservedTokens ?? 0;
         this.timeout = null;
     }
 

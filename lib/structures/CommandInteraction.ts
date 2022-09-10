@@ -65,12 +65,12 @@ export default class CommandInteraction extends Interaction {
             type:     data.data.type
         };
         this.guild = data.guild_id === undefined ? null : client.guilds.get(data.guild_id);
-        this.guildID = data.guild_id || null;
+        this.guildID = data.guild_id ?? null;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.user = client.users.update((data.user || data.member!.user)!);
+        this.user = client.users.update((data.user ?? data.member!.user)!);
 
         if (data.data.resolved) {
             if (data.data.resolved.attachments) {
@@ -83,7 +83,7 @@ export default class CommandInteraction extends Interaction {
                     if (ch && "update" in ch) {
                         (ch as Channel)["update"](channel);
                     }
-                    this.data.resolved.channels.add(ch || Channel.from(channel, client));
+                    this.data.resolved.channels.add(ch ?? Channel.from(channel, client));
                 });
             }
 
@@ -219,7 +219,7 @@ export default class CommandInteraction extends Interaction {
             appPermissions: this.appPermissions?.toJSON(),
             channelID:      this.channelID,
             data:           this.data,
-            guildID:        this.guildID || undefined,
+            guildID:        this.guildID ?? undefined,
             guildLocale:    this.guildLocale,
             locale:         this.locale,
             member:         this.member?.toJSON(),
