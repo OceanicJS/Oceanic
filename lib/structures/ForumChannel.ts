@@ -42,7 +42,7 @@ export default class ForumChannel extends GuildChannel {
     lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
-    declare parent: CategoryChannel | null;
+    declare parent?: CategoryChannel | null;
     declare parentID: string;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
@@ -232,7 +232,7 @@ export default class ForumChannel extends GuildChannel {
             defaultReactionEmoji:          this.defaultReactionEmoji,
             defaultThreadRateLimitPerUser: this.defaultThreadRateLimitPerUser,
             flags:                         this.flags,
-            lastThread:                    this.lastThreadID,
+            lastThreadID:                  this.lastThreadID,
             permissionOverwrites:          this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
             position:                      this.position,
             rateLimitPerUser:              this.rateLimitPerUser,

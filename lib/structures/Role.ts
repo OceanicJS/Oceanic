@@ -7,10 +7,9 @@ import type { JSONRole } from "../types/json";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
+    private _guild?: Guild;
     /** The color of this role. */
     color: number;
-    /** The guild this role is in. */
-    guild: Guild;
     /** The id of the guild this role is in. */
     guildID: string;
     /** If this role is hoisted. */
@@ -34,7 +33,7 @@ export default class Role extends Base {
     constructor(data: RawRole, client: Client, guildID: string) {
         super(data.id, client);
         this.color = data.color;
-        this.guild = client.guilds.get(guildID)!;
+        this._guild = client.guilds.get(guildID);
         this.guildID = guildID;
         this.hoist = !!data.hoist;
         this.icon = null;
@@ -78,6 +77,15 @@ export default class Role extends Base {
         }
     }
 
+    /** The guild this role is in. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        if (!this._guild) {
+            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._guild;
+        }
+    }
+
     /** A string that will mention this role. */
     get mention(): string {
         return `<@&${this.id}>`;
@@ -95,7 +103,7 @@ export default class Role extends Base {
         return {
             ...super.toJSON(),
             color:        this.color,
-            guild:        this.guildID,
+            guildID:      this.guildID,
             hoist:        this.hoist,
             icon:         this.icon,
             managed:      this.managed,

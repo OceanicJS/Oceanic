@@ -9,8 +9,11 @@ import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/s
 import type { JSONScheduledEvent } from "../types/json";
 
 export default class GuildScheduledEvent extends Base {
+    private _guild?: Guild;
+    /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
+    channel?: StageChannel | null;
     /** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
-    channel: StageChannel | null;
+    channelID: string | null;
     /** The creator of the event. Not present on events created before October 25th, 2021. */
     creator?: User;
     /** The description of the event. */
@@ -21,8 +24,6 @@ export default class GuildScheduledEvent extends Base {
     entityMetadata: ScheduledEventEntityMetadata | null;
     /** The [entity type](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types) of the event */
     entityType: GuildScheduledEventEntityTypes;
-    /** The guild this scheduled event belongs to. */
-    guild: Guild;
     /** The id of the guild this scheduled event belongs to. */
     guildID: string;
     /** The cover image of this event. */
@@ -41,11 +42,11 @@ export default class GuildScheduledEvent extends Base {
     userCount: number;
     constructor(data: RawScheduledEvent, client: Client) {
         super(data.id, client);
-        this.channel = null;
+        this.channelID = data.channel_id;
         this.entityID = null;
         this.entityMetadata = null;
         this.entityType = data.entity_type;
-        this.guild = client.guilds.get(data.guild_id)!;
+        this._guild = client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.image = null;
         this.name = data.name;
@@ -62,7 +63,8 @@ export default class GuildScheduledEvent extends Base {
 
     protected update(data: Partial<RawScheduledEvent>): void {
         if (data.channel_id !== undefined) {
-            this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id)!;
+            this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id);
+            this.channelID = data.channel_id;
         }
         if (data.description !== undefined) {
             this.description = data.description;
@@ -99,6 +101,15 @@ export default class GuildScheduledEvent extends Base {
         }
     }
 
+    /** The guild this scheduled event belongs to. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        if (!this._guild) {
+            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._guild;
+        }
+    }
+
     /**
      * Delete this scheduled event.
      * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
@@ -119,13 +130,13 @@ export default class GuildScheduledEvent extends Base {
     override toJSON(): JSONScheduledEvent {
         return {
             ...super.toJSON(),
-            channel:            this.channel?.id || null,
+            channelID:          this.channelID,
             creator:            this.creator?.toJSON(),
             description:        this.description,
             entityID:           this.entityID,
             entityMetadata:     this.entityMetadata,
             entityType:         this.entityType,
-            guild:              this.guildID,
+            guildID:            this.guildID,
             image:              this.image,
             name:               this.name,
             privacyLevel:       this.privacyLevel,

@@ -90,7 +90,7 @@ export default class Integration extends Base {
             this.type = data.type;
         }
         if (data.user !== undefined) {
-            this.user = new User(data.user, this.client);
+            this.user = this.client.users.update(data.user);
         }
     }
 

@@ -49,10 +49,10 @@ export default class Interaction extends Base {
     override toJSON(): JSONInteraction {
         return {
             ...super.toJSON(),
-            application: this.application.id,
-            token:       this.token,
-            type:        this.type,
-            version:     this.version
+            applicationID: this.application.id,
+            token:         this.token,
+            type:          this.type,
+            version:       this.version
         };
     }
 }

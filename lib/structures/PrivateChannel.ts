@@ -136,10 +136,10 @@ export default class PrivateChannel extends Channel {
     override toJSON(): JSONPrivateChannel {
         return {
             ...super.toJSON(),
-            lastMessage: this.lastMessage?.id,
-            messages:    this.messages.map(message => message.id),
-            recipient:   this.recipient?.toJSON(),
-            type:        this.type
+            lastMessageID: this.lastMessageID,
+            messages:      this.messages.map(message => message.id),
+            recipient:     this.recipient?.toJSON(),
+            type:          this.type
         };
     }
 

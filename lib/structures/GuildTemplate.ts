@@ -4,9 +4,11 @@ import type Client from "../Client";
 import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
 import type { JSONGuildTemplate } from "../types/json";
+import Properties from "../util/Properties";
 
 export default class GuildTemplate {
-    client: Client;
+    private _sourceGuild?: Guild;
+    client!: Client;
     /** The code of the template. */
     code: string;
     /** When this template was created. */
@@ -21,8 +23,6 @@ export default class GuildTemplate {
     name: string;
     /** A snapshot of the guild. */
     serializedSourceGuild: Partial<RawGuild>;
-    /** The source guild of this template. */
-    sourceGuild: Guild;
     /** The ID of the source guild of this template. */
     sourceGuildID: string;
     /** When this template was last updated. */
@@ -30,6 +30,7 @@ export default class GuildTemplate {
     /** The amount of times this template has been used. */
     usageCount: number;
     constructor(data: RawGuildTemplate, client: Client) {
+        Properties.define(this, "client", client);
         this.client = client;
         this.code = data.code;
         this.createdAt = new Date(data.created_at);
@@ -38,7 +39,7 @@ export default class GuildTemplate {
         this.isDirty = null;
         this.name = data.name;
         this.serializedSourceGuild = data.serialized_source_guild;
-        this.sourceGuild = this.client.guilds.get(data.source_guild_id)!;
+        this._sourceGuild = this.client.guilds.get(data.source_guild_id);
         this.sourceGuildID = data.source_guild_id;
         this.updatedAt = new Date(data.updated_at);
         this.usageCount = data.usage_count;
@@ -59,7 +60,7 @@ export default class GuildTemplate {
             this.serializedSourceGuild = data.serialized_source_guild;
         }
         if (data.source_guild_id !== undefined) {
-            this.sourceGuild = this.client.guilds.get(data.source_guild_id)!;
+            this._sourceGuild = this.client.guilds.get(data.source_guild_id);
             this.sourceGuildID = data.source_guild_id;
         }
         if (data.updated_at !== undefined) {
@@ -67,6 +68,15 @@ export default class GuildTemplate {
         }
         if (data.usage_count !== undefined) {
             this.usageCount = data.usage_count;
+        }
+    }
+
+    /** The source guild of this template. This will throw an error if the guild is not cached. */
+    get sourceGuild(): Guild {
+        if (!this._sourceGuild) {
+            throw new Error(`${this.constructor.name}#sourceGuild is not present if this client is not a member of the source guild or without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._sourceGuild;
         }
     }
 
@@ -109,7 +119,7 @@ export default class GuildTemplate {
             isDirty:               this.isDirty,
             name:                  this.name,
             serializedSourceGuild: this.serializedSourceGuild,
-            sourceGuild:           this.sourceGuild.id,
+            sourceGuildID:         this.sourceGuildID,
             updatedAt:             this.updatedAt.getTime(),
             usageCount:            this.usageCount
         };

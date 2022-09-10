@@ -11,6 +11,7 @@ import type { Presence } from "../types/gateway";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
+    private _guild?: Guild;
     /** The member's avatar hash, if they have set a guild avatar. */
     avatar: string | null;
     /** When the member's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire, if active. */
@@ -19,8 +20,6 @@ export default class Member extends Base {
     deaf: boolean;
     /** Undocumented. */
     flags?: number;
-    /** The guild this member is for. */
-    guild: Guild;
     /** The id of the guild this member is for. */
     guildID: string;
     /** Undocumented. */
@@ -50,13 +49,13 @@ export default class Member extends Base {
         }
 
         if (!user) {
-            throw new Error(`Member received without a user${!id ? "or id." : `: ${id}`}`);
+            throw new Error(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
         }
         super(user.id, client);
         this.avatar = null;
         this.communicationDisabledUntil = null;
         this.deaf = !!data.deaf;
-        this.guild = client.guilds.get(guildID)!;
+        this._guild = client.guilds.get(guildID);
         this.guildID = guildID;
         this.joinedAt = null;
         this.mute = !!data.mute;
@@ -114,6 +113,14 @@ export default class Member extends Base {
     /** The 4 digits after the username of the user associated with this member. */
     get discriminator(): string {
         return this.user.discriminator;
+    }
+    /** The guild this member is for. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        if (!this._guild) {
+            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._guild;
+        }
     }
     /** A string that will mention this member. */
     get mention(): string {
@@ -209,7 +216,7 @@ export default class Member extends Base {
             communicationDisabledUntil: this.communicationDisabledUntil?.getTime() || null,
             deaf:                       this.deaf,
             flags:                      this.flags,
-            guild:                      this.guildID,
+            guildID:                    this.guildID,
             isPending:                  this.isPending,
             joinedAt:                   this.joinedAt?.getTime() || null,
             mute:                       this.mute,

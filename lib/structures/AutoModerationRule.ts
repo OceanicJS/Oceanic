@@ -8,10 +8,11 @@ import type { JSONAutoModerationRule } from "../types/json";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
+    private _guild?: Guild;
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
-    /** The creator of this rule. This can be a partial object with just an `id` property. */
-    creator: User;
+    /** The creator of this rule. */
+    creator?: User;
     /** The ID of the creator of this rule. */
     creatorID: string;
     /** If this rule is enabled. */
@@ -22,8 +23,6 @@ export default class AutoModerationRule extends Base {
     exemptChannels: Array<string>;
     /** The roles that are exempt from this rule. */
     exemptRoles: Array<string>;
-    /** The guild this rule is in. */
-    guild: Guild;
     /** The id of the guild this rule is in. */
     guildID: string;
     /** The name of this rule */
@@ -41,13 +40,13 @@ export default class AutoModerationRule extends Base {
             },
             type: a.type
         }));
-        this.creator = client.users.get(data.creator_id)!;
+        this.creator = client.users.get(data.creator_id);
         this.creatorID = data.creator_id;
         this.enabled = data.enabled;
         this.eventType = data.event_type;
         this.exemptChannels = data.exempt_channels;
         this.exemptRoles = data.exempt_roles;
-        this.guild = client.guilds.get(data.guild_id)!;
+        this._guild = client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.name = data.name;
         this.triggerMetadata = {
@@ -98,6 +97,15 @@ export default class AutoModerationRule extends Base {
         }
     }
 
+    /** The guild this rule is in. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        if (!this._guild) {
+            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._guild;
+        }
+    }
+
     /**
      * Delete this auto moderation rule.
      * @param reason The reason for deleting this rule.
@@ -118,12 +126,12 @@ export default class AutoModerationRule extends Base {
         return {
             ...super.toJSON(),
             actions:         this.actions,
-            creator:         this.creatorID,
+            creatorID:       this.creatorID,
             enabled:         this.enabled,
             eventType:       this.eventType,
             exemptChannels:  this.exemptChannels,
             exemptRoles:     this.exemptRoles,
-            guild:           this.guildID,
+            guildID:         this.guildID,
             name:            this.name,
             triggerMetadata: this.triggerMetadata,
             triggerType:     this.triggerType
