@@ -45,7 +45,7 @@ export default class StageInstance extends Base {
             this.discoverableDisabled = data.discoverable_disabled;
         }
         if (data.guild_scheduled_event_id !== undefined) {
-            this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined);
+            this.scheduledEvent = (this._guild instanceof Guild ? this._guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined);
             this.scheduledEventID = data.guild_scheduled_event_id;
         }
         if (data.privacy_level !== undefined) {

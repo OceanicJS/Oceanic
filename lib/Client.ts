@@ -203,7 +203,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) {
             throw new Error("Only voice & stage channels can be joined.");
         }
-        this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, channelID, options);
+        this.shards.get(this.guildShardMap[channel.guildID] || 0)!.updateVoiceState(channel.guildID, channelID, options);
         // @TODO proper voice connection handling
     }
 
@@ -216,6 +216,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) {
             return;
         }
-        this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, null, { selfDeaf: false, selfMute: false });
+        this.shards.get(this.guildShardMap[channel.guildID] || 0)!.updateVoiceState(channel.guildID, null, { selfDeaf: false, selfMute: false });
     }
 }
