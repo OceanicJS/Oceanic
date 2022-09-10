@@ -12,14 +12,15 @@ import type {
     RawMessage,
     RawPrivateChannel
 } from "../types/channels";
-import type { Uncached } from "../types/shared";
 import TypedCollection from "../util/TypedCollection";
 import type { JSONPrivateChannel } from "../types/json";
 
 /** Represents a direct message with a user. */
 export default class PrivateChannel extends Channel {
-    /** The last message sent in this channel, if any. This can be a partial object with only an `id` property. */
-    lastMessage: Message | Uncached | null;
+    /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
+    lastMessage?: Message | null;
+    /** The ID of last message sent in this channel. */
+    lastMessageID: string | null;
     /** The cached messages in this channel. */
     messages: TypedCollection<string, RawMessage, Message>;
     /** The other user in this direct message. */
@@ -28,13 +29,14 @@ export default class PrivateChannel extends Channel {
     constructor(data: RawPrivateChannel, client: Client) {
         super(data, client);
         this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
-        this.lastMessage = null;
+        this.lastMessageID = data.last_message_id;
         this.recipient = client.users.update(data.recipients[0]);
     }
 
     protected update(data: Partial<RawPrivateChannel>): void {
         if (data.last_message_id !== undefined) {
-            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id) || { id: data.last_message_id };
+            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
+            this.lastMessageID = data.last_message_id;
         }
     }
 

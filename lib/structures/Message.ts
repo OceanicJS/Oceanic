@@ -52,8 +52,10 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     attachments: TypedCollection<string, RawAttachment, Attachment>;
     /** The author of this message. */
     author: User;
-    /** The channel this message was created in. This can be a partial object with only an `id` property. */
-    channel: T;
+    /** The channel this message was created in.*/
+    channel: T extends AnyTextChannel ? T : undefined;
+    /** The ID of the channel this message was created in.*/
+    channelID: string;
     /** The components on this message. */
     components: Array<MessageActionRow>;
     /** The content of this message. */
@@ -111,11 +113,12 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The [type](https://discord.com/developers/docs/resources/channel#message-object-message-types) of this message. */
     type: MessageTypes;
     /** The webhook associated with this message, if sent via a webhook. This only has an `id` property. */
-    webhook?: Uncached;
+    webhookID?: string;
     constructor(data: RawMessage, client: Client) {
         super(data.id, client);
         this.attachments = new TypedCollection(Attachment, client);
-        this.channel = (client.getChannel<AnyGuildTextChannel>(data.channel_id) || { id: data.channel_id }) as T;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id) as T extends AnyTextChannel ? T : undefined;
+        this.channelID = data.channel_id;
         this.components = [];
         this.content = data.content;
         this.editedTimestamp = null;
@@ -135,7 +138,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.timestamp = new Date(data.timestamp);
         this.tts = data.tts;
         this.type = data.type;
-        this.webhook = data.webhook_id === undefined ? undefined : { id: data.webhook_id };
+        this.webhookID = data.webhook_id;
         this.update(data);
         if (data.author.discriminator !== "0000") {
             this.author = client.users.update(data.author);
@@ -168,8 +171,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         if (data.mentions !== undefined) {
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
-                if (user.member && "guild" in this.channel) {
-                    members.push(this.client.util.updateMember(this.channel.guildID, user.id, { ...user.member, user }));
+                if (this.channel && "guild" in this.channel && user.member) {
+                    members.push(this.client.util.updateMember((this.channel as AnyGuildTextChannel).guildID, user.id, { ...user.member, user }));
                 }
                 return this.client.users.update(user);
             });
@@ -253,7 +256,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             if (data.referenced_message === null) {
                 this.referencedMessage = null;
             } else {
-                if ("messages" in this.channel) {
+                if (this.channel && "messages" in this.channel) {
                     this.referencedMessage = this.channel.messages.update(data.referenced_message);
                 } else {
                     this.referencedMessage = new Message(data.referenced_message, this.client);
@@ -285,7 +288,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
 
     /** A link to this message. */
     get jumpLink(): string {
-        return `${BASE_URL}${Routes.MESSAGE_LINK(this.guildID || "@me", this.channel.id, this.id)}`;
+        return `${BASE_URL}${Routes.MESSAGE_LINK(this.guildID || "@me", this.channelID, this.id)}`;
     }
 
     /**
@@ -293,14 +296,14 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      */
     async createReaction(emoji: string): Promise<void> {
-        return this.client.rest.channels.createReaction(this.channel.id, this.id, emoji);
+        return this.client.rest.channels.createReaction(this.channelID, this.id, emoji);
     }
 
     /**
      * Crosspost this message in a announcement channel.
      */
     async crosspost(): Promise<Message<AnnouncementChannel>> {
-        return this.client.rest.channels.crosspostMessage(this.channel.id, this.id);
+        return this.client.rest.channels.crosspostMessage(this.channelID, this.id);
     }
 
     /**
@@ -308,7 +311,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param reason The reason for deleting the message.
      */
     async delete(reason?: string): Promise<void> {
-        return this.client.rest.channels.deleteMessage(this.channel.id, this.id, reason);
+        return this.client.rest.channels.deleteMessage(this.channelID, this.id, reason);
     }
 
     /**
@@ -317,7 +320,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      */
     async deleteReaction(emoji: string, user = "@me"): Promise<void> {
-        return this.client.rest.channels.deleteReaction(this.channel.id, this.id, emoji, user);
+        return this.client.rest.channels.deleteReaction(this.channelID, this.id, emoji, user);
     }
 
     /**
@@ -325,7 +328,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      */
     async deleteReactions(emoji?: string): Promise<void> {
-        return this.client.rest.channels.deleteReactions(this.channel.id, this.id, emoji);
+        return this.client.rest.channels.deleteReactions(this.channelID, this.id, emoji);
     }
 
     /**
@@ -334,10 +337,10 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options Options for deleting the message.
      */
     async deleteWebhook(token: string, options: DeleteWebhookMessageOptions): Promise<void> {
-        if (!this.webhook?.id) {
+        if (!this.webhookID) {
             throw new Error("This message is not a webhook message.");
         }
-        return this.client.rest.webhooks.deleteMessage(this.webhook.id, token, this.id, options);
+        return this.client.rest.webhooks.deleteMessage(this.webhookID, token, this.id, options);
     }
 
     /**
@@ -345,7 +348,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options The options for editing the message.
      */
     async edit(options: EditMessageOptions):  Promise<Message<T>> {
-        return this.client.rest.channels.editMessage(this.channel.id, this.id, options) as Promise<Message<T>>;
+        return this.client.rest.channels.editMessage(this.channelID, this.id, options) as Promise<Message<T>>;
     }
 
     /**
@@ -354,10 +357,10 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options The options for editing the message.
      */
     async editWebhook(token: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
-        if (!this.webhook?.id) {
+        if (!this.webhookID) {
             throw new Error("This message is not a webhook message.");
         }
-        return this.client.rest.webhooks.editMessage<never>(this.webhook.id, token, this.id, options);
+        return this.client.rest.webhooks.editMessage<never>(this.webhookID, token, this.id, options);
     }
 
     /**
@@ -366,7 +369,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options The options for getting the reactions.
      */
     async getReactions(emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
-        return this.client.rest.channels.getReactions(this.channel.id, this.id, emoji, options);
+        return this.client.rest.channels.getReactions(this.channelID, this.id, emoji, options);
     }
 
     /**
@@ -374,7 +377,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param reason The reason for pinning the message.
      */
     async pin(reason?: string): Promise<void> {
-        return this.client.rest.channels.pinMessage(this.channel.id, this.id, reason);
+        return this.client.rest.channels.pinMessage(this.channelID, this.id, reason);
     }
 
     /**
@@ -382,7 +385,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options The options for creating the thread.
      */
     async startThread(options: StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never> {
-        return this.client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channel.id, this.id, options);
+        return this.client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channelID, this.id, options);
     }
 
     override toJSON(): JSONMessage {
@@ -392,7 +395,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             application:     this.application instanceof PartialApplication ? this.application.toJSON() : this.application?.id,
             attachments:     this.attachments.map(attachment => attachment.toJSON()),
             author:          this.author.toJSON(),
-            channel:         this.channel.id,
+            channel:         this.channelID,
             components:      this.components,
             content:         this.content,
             editedTimestamp: this.editedTimestamp?.getTime() || null,
@@ -425,7 +428,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             timestamp:         this.timestamp.getTime(),
             tts:               this.tts,
             type:              this.type,
-            webhook:           this.webhook?.id
+            webhook:           this.webhookID
         };
     }
 
@@ -434,6 +437,6 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param reason The reason for unpinning the message.
      */
     async unpin(reason?: string): Promise<void> {
-        return this.client.rest.channels.unpinMessage(this.channel.id, this.id, reason);
+        return this.client.rest.channels.unpinMessage(this.channelID, this.id, reason);
     }
 }

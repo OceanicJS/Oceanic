@@ -18,8 +18,7 @@ import type {
     RawForumChannel,
     RawOverwrite,
     RawPublicThreadChannel,
-    StartThreadInForumOptions,
-    Uncached
+    StartThreadInForumOptions
 } from "../types";
 import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
@@ -38,7 +37,9 @@ export default class ForumChannel extends GuildChannel {
     /** The flags for this channel, see {@link Constants.ChannelFlags}. */
     flags: number;
     /** The most recently created thread. */
-    lastThread: PublicThreadChannel | Uncached | null;
+    lastThread?: PublicThreadChannel | null;
+    /** The ID of most recently created thread. */
+    lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
     declare parent: CategoryChannel | null;
@@ -63,7 +64,7 @@ export default class ForumChannel extends GuildChannel {
         this.defaultReactionEmoji = null;
         this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
         this.flags = data.flags;
-        this.lastThread = data.last_message_id === null ? null : { id: data.last_message_id };
+        this.lastThreadID = data.last_message_id;
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
@@ -97,7 +98,8 @@ export default class ForumChannel extends GuildChannel {
             this.flags = data.flags;
         }
         if (data.last_message_id !== undefined) {
-            this.lastThread = this.threads.get(data.last_message_id!) || { id: data.last_message_id! };
+            this.lastThread = data.last_message_id === null ? null : this.threads.get(data.last_message_id);
+            this.lastThreadID = data.last_message_id;
         }
 
         if (data.nsfw !== undefined) {
@@ -230,7 +232,7 @@ export default class ForumChannel extends GuildChannel {
             defaultReactionEmoji:          this.defaultReactionEmoji,
             defaultThreadRateLimitPerUser: this.defaultThreadRateLimitPerUser,
             flags:                         this.flags,
-            lastThread:                    this.lastThread === null ? null : this.lastThread.id,
+            lastThread:                    this.lastThreadID,
             permissionOverwrites:          this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
             position:                      this.position,
             rateLimitPerUser:              this.rateLimitPerUser,

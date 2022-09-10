@@ -5,7 +5,6 @@ import GuildScheduledEvent from "./GuildScheduledEvent";
 import type { RawStageInstance } from "../types/stage-instances";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
-import type { Uncached } from "../types/shared";
 import type { JSONStageInstance } from "../types/json";
 
 export default class StageInstance extends Base {
@@ -20,7 +19,8 @@ export default class StageInstance extends Base {
     /** The [privacy level](https://discord.com/developers/docs/resources/stage-instance#stage-instance-object-privacy-level) of this stage instance. */
     privacyLevel: StageInstancePrivacyLevels;
     /** The scheduled event for this stage instance. */
-    scheduledEvent?: GuildScheduledEvent | Uncached;
+    scheduledEvent?: GuildScheduledEvent;
+    scheduledEventID: string | null;
     /** The topic of this stage instance. */
     topic: string;
     constructor(data: RawStageInstance, client: Client) {
@@ -29,6 +29,7 @@ export default class StageInstance extends Base {
         this.guild = client.guilds.get(data.guild_id)!;
         this.guildID = data.guild_id;
         this.privacyLevel = data.privacy_level;
+        this.scheduledEventID = data.guild_scheduled_event_id !== undefined ? data.guild_scheduled_event_id : null;
         this.topic = data.topic;
         this.update(data);
     }
@@ -41,7 +42,8 @@ export default class StageInstance extends Base {
             this.discoverableDisabled = data.discoverable_disabled;
         }
         if (data.guild_scheduled_event_id !== undefined) {
-            this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined) || { id: data.guild_scheduled_event_id };
+            this.scheduledEvent = (this.guild instanceof Guild ? this.guild.scheduledEvents.get(data.guild_scheduled_event_id) : undefined);
+            this.scheduledEventID = data.guild_scheduled_event_id;
         }
         if (data.privacy_level !== undefined) {
             this.privacyLevel = data.privacy_level;
@@ -57,7 +59,7 @@ export default class StageInstance extends Base {
             channel:              this.channel.id,
             discoverableDisabled: this.discoverableDisabled,
             guild:                this.guildID,
-            scheduledEvent:       this.scheduledEvent instanceof GuildScheduledEvent ? this.scheduledEvent.toJSON() : this.scheduledEvent?.id,
+            scheduledEvent:       this.scheduledEvent?.toJSON() || this.scheduledEventID || undefined,
             topic:                this.topic
         };
     }

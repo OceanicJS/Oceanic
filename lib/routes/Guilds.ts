@@ -1187,9 +1187,10 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT_USERS(id, eventID)
         }).then(data => data.map(d => ({
-            guildScheduledEvent: guild?.scheduledEvents.get(d.guild_scheduled_event_id) || { id: d.guild_scheduled_event_id },
-            user:                this.#manager.client.users.update(d.user),
-            member:              d.member ? this.#manager.client.util.updateMember(id, d.member.user!.id, d.member) : undefined
+            guildScheduledEvent:   guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEventID: d.guild_scheduled_event_id,
+            user:                  this.#manager.client.users.update(d.user),
+            member:                d.member ? this.#manager.client.util.updateMember(id, d.member.user!.id, d.member) : undefined
         })));
     }
 

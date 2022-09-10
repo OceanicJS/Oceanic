@@ -858,5 +858,5 @@ export interface ForumEmoji {
     name: string | null;
 }
 
-export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; id: string; };
+export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; } & Uncached;
 export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string; };

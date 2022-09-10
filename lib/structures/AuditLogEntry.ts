@@ -17,7 +17,7 @@ export default class AuditLogEntry extends Base {
     /** The ID of what was targeted (webhook, user, role, etc). */
     targetID: string | null;
     /** The user or application that made the changes. */
-    user: User | null;
+    user?: User | null;
     /** The ID of the user or application that made the changes. */
     userID: string | null;
     constructor(data: RawAuditLogEntry, client: Client) {
@@ -37,7 +37,7 @@ export default class AuditLogEntry extends Base {
         };
         this.reason = data.reason;
         this.targetID = data.target_id;
-        this.user = data.user_id !== null ? client.users.get(data.user_id) || null : null;
+        this.user = data.user_id === null ? null : client.users.get(data.user_id);
         this.userID = data.user_id;
     }
 }

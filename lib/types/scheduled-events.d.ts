@@ -1,6 +1,5 @@
 import type { RawUser } from "./users";
 import type { RawMember } from "./guilds";
-import type { Uncached } from "./shared";
 import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
 import type Member from "../structures/Member";
 import type User from "../structures/User";
@@ -81,7 +80,8 @@ export interface RawScheduledEventUser {
 }
 
 export interface ScheduledEventUser {
-    guildScheduledEvent: GuildScheduledEvent | Uncached;
+    guildScheduledEvent?: GuildScheduledEvent;
+    guildScheduledEventID: string;
     member?: Member;
     user: User;
 }
