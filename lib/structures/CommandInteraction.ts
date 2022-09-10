@@ -17,12 +17,13 @@ import type { AnyChannel, AnyGuildTextChannel, AnyTextChannel, RawChannel } from
 import type { RawUser } from "../types/users";
 import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
+import { Uncached } from "../types";
 
 export default class CommandInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
-    /** The channel this interaction was sent from. */
-    channel: AnyTextChannel;
+    /** The channel this interaction was sent from. This can be a partial object with just an `id` property. */
+    channel: AnyTextChannel | Uncached;
     /** The data associated with the interaction. */
     data: ApplicationCommandInteractionData;
     /** The guild this interaction was sent from, if applicable. */
@@ -43,7 +44,7 @@ export default class CommandInteraction extends Interaction {
     constructor(data: RawApplicationCommandInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!)!;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) || { id: data.channel_id! };
         this.data = {
             guildID:  data.data.guild_id,
             id:       data.data.id,

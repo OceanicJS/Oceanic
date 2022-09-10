@@ -2,7 +2,6 @@ import Base from "./Base";
 import User from "./User";
 import type Client from "../Client";
 import type { RawTeam, TeamMember } from "../types/oauth";
-import type { Uncached } from "../types/shared";
 import type { JSONTeam } from "../types/json";
 
 export default class Team extends Base {
@@ -12,14 +11,17 @@ export default class Team extends Base {
     members: Array<TeamMember>;
     /** The name of this team. */
     name: string;
-    /** The owner of this team. This can be a partial object with just an `id` property. */
-    owner: User | Uncached;
+    /** The owner of this team. */
+    owner: User;
+    /** The ID of the owner of this team. */
+    ownerID: string;
     constructor(data: RawTeam, client: Client) {
         super(data.id, client);
         this.icon = null;
         this.members = [];
         this.name = data.name;
-        this.owner = { id: data.owner_user_id };
+        this.owner = this.client.users.get(data.owner_user_id)!;
+        this.ownerID = data.owner_user_id;
         this.update(data);
     }
 
@@ -31,7 +33,8 @@ export default class Team extends Base {
             this.name = data.name;
         }
         if (data.owner_user_id !== undefined) {
-            this.owner = this.client.users.get(data.owner_user_id) || { id: data.owner_user_id };
+            this.ownerID = data.owner_user_id;
+            this.owner = this.client.users.get(data.owner_user_id)!;
         }
         if (data.members !== undefined) {
             for (const member of this.members) {
@@ -61,7 +64,7 @@ export default class Team extends Base {
             icon:    this.icon,
             members: this.members,
             name:    this.name,
-            owner:   this.owner instanceof User ? this.owner.toJSON() : this.owner.id
+            owner:   this.owner instanceof User ? this.owner.toJSON() : this.ownerID
         };
     }
 }

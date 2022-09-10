@@ -10,12 +10,13 @@ import type { InteractionContent, ModalSubmitInteractionData, RawModalSubmitInte
 import type Client from "../Client";
 import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
+import { Uncached } from "../types";
 
 export default class ModalSubmitInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
-    /** The channel this interaction was sent from. */
-    channel: AnyTextChannel;
+    /** The channel this interaction was sent from. This can be a partial object with just an `id` property. */
+    channel: AnyTextChannel | Uncached;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
     /** The guild this interaction was sent from, if applicable. */
@@ -36,7 +37,7 @@ export default class ModalSubmitInteraction extends Interaction {
     constructor(data: RawModalSubmitInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!)!;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) || { id: data.channel_id! };
         this.data = {
             components: client.util.componentsToParsed(data.data.components),
             customID:   data.data.custom_id

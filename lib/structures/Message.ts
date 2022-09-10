@@ -65,10 +65,13 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     embeds: Array<Embed>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
     flags: number;
+    /** The guild this message is in. */
+    guild?: Guild;
     /** The ID of the guild this message is in. */
     guildID?: string;
     /** The interaction info, if this message was the result of an interaction. */
     interaction?: MessageInteraction;
+    /** The member that created this message, if in a */
     member?: Member;
     /** Channels mentioned in a `CROSSPOSTED` channel follower message. See [Discord's docs](https://discord.com/developers/docs/resources/channel#channel-mention-object) for more information. */
     mentionChannels?: Array<ChannelMention>;
@@ -119,6 +122,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
+        this.guild = data.guild_id !== undefined ? client.guilds.get(data.guild_id) : undefined;
         this.guildID = data.guild_id;
         this.mentions = {
             channels: [],

@@ -16,12 +16,13 @@ import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes, ComponentTypes } from "../Constants";
 import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
+import { Uncached } from "../types";
 
 export default class ComponentInteraction extends Interaction {
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
-    /** The channel this interaction was sent from. */
-    channel: AnyTextChannel;
+    /** The channel this interaction was sent from. This can be a partial object with just an `id` property. */
+    channel: AnyTextChannel | Uncached;
     /** The data associated with the interaction. */
     data: MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
     /** The guild this interaction was sent from, if applicable. */
@@ -44,7 +45,7 @@ export default class ComponentInteraction extends Interaction {
     constructor(data: RawMessageComponentInteraction, client: Client) {
         super(data, client);
         this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!)!;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) || { id: data.channel_id! };
         this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;

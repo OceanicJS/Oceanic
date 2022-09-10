@@ -4,7 +4,7 @@ import GuildChannel from "./GuildChannel";
 import Member from "./Member";
 import GuildScheduledEvent from "./GuildScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
-import type User from "./User";
+import User from "./User";
 import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
 import type TextChannel from "./TextChannel";
@@ -154,8 +154,10 @@ export default class Guild extends Base {
     nsfwLevel: GuildNSFWLevels;
     /** If the current user is the owner of this guild (only present when getting the current user's guilds). */
     oauthOwner?: boolean;
-    /** The id of the owner of this guild. */
-    owner: User | Uncached;
+    /** The owner of this guild. */
+    owner?: User;
+    /** The ID of the owner of this guild. */
+    ownerID: string;
     /** The permissions of the current user in this guild (only present when getting the current user's guilds). */
     permissions?: Permission;
     /** The [preferred locale](https://discord.com/developers/docs/reference#locales) of this guild. */
@@ -225,7 +227,8 @@ export default class Guild extends Base {
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
         this.nsfwLevel = data.nsfw_level;
-        this.owner = { id: data.owner_id };
+        this.owner = client.users.get(data.owner_id)!;
+        this.ownerID = data.owner_id;
         this.preferredLocale = data.preferred_locale;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
         this.premiumTier = data.premium_tier;
@@ -407,7 +410,8 @@ export default class Guild extends Base {
             this.oauthOwner = data.owner;
         }
         if (data.owner_id !== undefined) {
-            this.owner = this.client.users.get(data.owner_id) || { id: data.owner_id };
+            this.ownerID = data.owner_id;
+            this.owner = this.client.users.get(data.owner_id)!;
         }
         if (data.permissions !== undefined) {
             this.permissions = new Permission(data.permissions);
@@ -1000,7 +1004,7 @@ export default class Guild extends Base {
         if (!member) {
             throw new Error("Member not found");
         }
-        if (member.id === this.owner.id) {
+        if (member.id === this.ownerID) {
             return new Permission(AllPermissions);
         } else {
             let permissions = this.roles.get(this.id)!.permissions.allow;
@@ -1095,7 +1099,7 @@ export default class Guild extends Base {
             mfaLevel:                    this.mfaLevel,
             name:                        this.name,
             nsfwLevel:                   this.nsfwLevel,
-            owner:                       this.owner?.id,
+            owner:                       this.owner instanceof User ? this.owner.toJSON() : this.ownerID,
             permissions:                 this.permissions?.toJSON(),
             preferredLocale:             this.preferredLocale,
             premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
