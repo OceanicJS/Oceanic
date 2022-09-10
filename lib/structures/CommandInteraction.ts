@@ -66,7 +66,7 @@ export default class CommandInteraction extends Interaction {
         this.guildID = data.guild_id;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
-        this.member = data.member ? this.guild instanceof Guild ? this.guild.members.update({ ...data.member, id: data.member.user.id }, this.guildID!) : new Member(data.member, client, this.guildID!) : undefined;
+        this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
         this.user = client.users.update((data.user || data.member!.user)!);
 
@@ -87,10 +87,9 @@ export default class CommandInteraction extends Interaction {
 
             if (data.data.resolved.members) {
                 Object.entries(data.data.resolved.members).forEach(([id, member]) => {
-                    const m = member as unknown as RawMember & { id: string; user: RawUser; };
-                    m.id = id;
+                    const m = member as unknown as RawMember & { user: RawUser; };
                     m.user = data.data.resolved!.users![id]!;
-                    this.data.resolved.members.add(this.guild instanceof Guild ? this.guild.members.update(m, this.guildID!) : new Member(m, client, this.guildID!));
+                    this.data.resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                 });
             }
 

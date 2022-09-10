@@ -268,8 +268,12 @@ export default class Guild extends Base {
 
 
         if (data.members) {
-            for (const member of data.members) {
-                this.members.update({ ...member, id: member.user!.id }, this.id).guild = this;
+            for (const rawMember of data.members) {
+                const member = this.members.update({ ...rawMember, id: rawMember.user!.id }, this.id);
+                member.guild = this;
+                if (member.id === client.user.id) {
+                    this._clientMember = member;
+                }
             }
         }
 
@@ -306,6 +310,9 @@ export default class Guild extends Base {
                 const channel = this.channels.get(voiceState.channel_id) as VoiceChannel | StageChannel;
                 state.channel = channel;
                 const member = this.members.update({ id: voiceState.user_id, deaf: voiceState.deaf, mute: voiceState.mute }, this.id);
+                if (this._clientMember) {
+                    this._clientMember["update"]({ deaf: voiceState.deaf, mute: voiceState.mute });
+                }
                 if (channel && "voiceMembers" in channel) {
                     channel.voiceMembers.add(member);
                 }

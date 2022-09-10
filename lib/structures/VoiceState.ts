@@ -74,7 +74,7 @@ export default class VoiceState extends Base {
             this.guild = this.client.guilds.get(data.guild_id)!;
         }
         if (data.member !== undefined) {
-            this.member = this.guild ? this.guild.members.update({ ...data.member, id: this.id }, this.guildID!) : new Member(data.member, this.client, this.guildID!);
+            this.member = this.client.util.updateMember(data.guild_id!, this.id, data.member);
         }
         if (data.mute !== undefined) {
             this.mute = data.mute;

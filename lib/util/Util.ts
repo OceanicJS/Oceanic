@@ -314,7 +314,16 @@ export default class Util {
     }
 
     updateMember(guildID: string, memberID: string, member: RawMember): Member {
-        return this.#client.guilds.has(guildID) ? this.#client.guilds.get(guildID)!.members.update({ ...member, id: memberID }, guildID) : new Member(member, this.#client, guildID);
+        const guild = this.#client.guilds.get(guildID);
+        if (guild && this.#client.user.id === memberID) {
+            if (guild["_clientMember"]) {
+                guild["_clientMember"]["update"](member);
+            } else {
+                guild["_clientMember"] = guild.members.update({ ...member, id: memberID }, guildID);
+            }
+            return guild["_clientMember"];
+        }
+        return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member(member, this.#client, guildID);
     }
 }
 

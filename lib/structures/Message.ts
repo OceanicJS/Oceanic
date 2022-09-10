@@ -1,7 +1,6 @@
 import Base from "./Base";
 import Attachment from "./Attachment";
 import User from "./User";
-import GuildChannel from "./GuildChannel";
 import Guild from "./Guild";
 import type Member from "./Member";
 import PartialApplication from "./PartialApplication";
@@ -155,7 +154,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         }
 
         if (data.member) {
-            this.member = "guild" in this.channel && this.channel.guild instanceof Guild ? this.channel.guild.members.update({ ...data.member, user: data.author, id: data.author.id }, this.channel.guildID) : undefined;
+            this.member = this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author });
         }
     }
 
@@ -169,8 +168,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         if (data.mentions !== undefined) {
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
-                if (user.member && "guild" in this.channel && this.channel.guild instanceof Guild) {
-                    members.push(this.channel.guild.members.update({ ...user.member, user, id: user.id }, this.channel.guildID));
+                if (user.member && "guild" in this.channel) {
+                    members.push(this.client.util.updateMember(this.channel.guildID, user.id, { ...user.member, user }));
                 }
                 return this.client.users.update(user);
             });
@@ -216,7 +215,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             }
             this.interaction = {
                 id:     data.interaction.id,
-                member: this.channel instanceof GuildChannel && this.channel.guild instanceof Guild && member ? this.channel.guild.members.update({ ...member, user: data.interaction.user, id: data.interaction.user.id }, this.channel.guildID) : undefined,
+                member: member ? this.client.util.updateMember(data.guild_id!, data.interaction.user.id, member) : undefined,
                 name:   data.interaction.name,
                 type:   data.interaction.type,
                 user:   this.client.users.update(data.interaction.user)

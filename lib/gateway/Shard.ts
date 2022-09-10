@@ -441,7 +441,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     break;
                 }
                 guild.memberCount++;
-                this.client.emit("guildMemberAdd", guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id));
+
+                this.client.emit("guildMemberAdd",  this.client.util.updateMember(guild.id, packet.d.user!.id, packet.d));
                 break;
             }
 
@@ -449,7 +450,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
 
                 guild["updateMemberLimit"](packet.d.members.length);
-                const members = packet.d.members.map(member => guild.members.update({ ...member, id: member.user!.id }, guild.id));
+                const members = packet.d.members.map(member => this.client.util.updateMember(guild.id, member.user!.id, member));
                 if (packet.d.presences) {
                     packet.d.presences.forEach(presence => {
                         const member = guild.members.get(presence.user.id);
@@ -513,7 +514,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     break;
                 }
                 const oldMember = guild.members.get(packet.d.user!.id)?.toJSON() || null;
-                this.client.emit("guildMemberUpdate", guild.members.update({ ...packet.d, id: packet.d.user!.id }, guild.id), oldMember);
+                this.client.emit("guildMemberUpdate", this.client.util.updateMember(guild.id, packet.d.user.id, {  deaf: false, mute: false, ...packet.d }), oldMember);
                 break;
             }
 
@@ -717,7 +718,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const message = channel?.messages.get(packet.d.message_id) || { channel: channel || { id: packet.d.channel_id }, id: packet.d.message_id };
                 let reactor: Member | User | Uncached;
                 if (guild && packet.d.member) {
-                    reactor = guild.members.update({ ...packet.d.member, id: packet.d.user_id }, guild.id);
+                    reactor = this.client.util.updateMember(guild.id, packet.d.user_id, packet.d.member);
                 } else {
                     reactor = this.client.users.get(packet.d.user_id) || { id: packet.d.user_id };
                 }
@@ -1051,7 +1052,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id) || { id: packet.d.channel_id };
                 const startTimestamp = new Date(packet.d.timestamp);
                 if (guild) {
-                    const member = guild.members.update({ ...packet.d.member!, id: packet.d.user_id }, guild.id);
+                    const member = this.client.util.updateMember(guild.id, packet.d.user_id, packet.d.member!);
                     this.client.emit("typingStart", channel, member, startTimestamp);
                 } else {
                     const user = this.client.users.get(packet.d.user_id);
@@ -1073,7 +1074,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 // @TODO voice
                 packet.d.self_stream = !!packet.d.self_stream;
                 const guild = this.client.guilds.get(packet.d.guild_id)!;
-                const member = guild.members.update({ ...packet.d.member!, id: packet.d.user_id }, guild.id);
+                const member = this.client.util.updateMember(guild.id, packet.d.user_id, packet.d.member!);
                 const oldState = member.voiceState?.toJSON() || null;
                 const state = guild.voiceStates.update({ ...packet.d, id: member.id });
                 member["update"]({ deaf: state.deaf, mute: state.mute });

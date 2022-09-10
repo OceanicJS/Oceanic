@@ -101,7 +101,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         }
         if (data.stage_instance) {
             this.stageInstance = {
-                members:          data.stage_instance.members.map(member => guild!.members.update(member, guild!.id)),
+                members:          data.stage_instance.members.map(member => this.client.util.updateMember(guild!.id, member.user!.id, member)),
                 participantCount: data.stage_instance.participant_count,
                 speakerCount:     data.stage_instance.speaker_count,
                 topic:            data.stage_instance.topic
