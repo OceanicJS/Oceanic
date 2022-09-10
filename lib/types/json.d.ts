@@ -79,11 +79,11 @@ export interface JSONApplication extends JSONClientApplication {
     coverImage: string | null;
     customInstallURL?: string;
     description: string;
-    guild?: string;
+    guildID?: string;
     icon: string | null;
     installParams?: InstallParams;
     name: string;
-    owner: string;
+    ownerID: string;
     primarySKUID?: string;
     privacyPolicyURL?: string;
     rpcOrigins: Array<string>;
@@ -94,12 +94,12 @@ export interface JSONApplication extends JSONClientApplication {
     verifyKey: string;
 }
 export interface JSONApplicationCommand extends JSONBase {
-    application: string;
+    applicationID: string;
     defaultMemberPermissions?: JSONPermission;
     description: string;
     descriptionLocalizations?: Record<string, string> | null;
     dmPermission?: boolean;
-    guild?: string;
+    guildID?: string;
     name: string;
     nameLocalizations?: Record<string, string> | null;
     options?: Array<ApplicationCommandOptions>;
@@ -121,7 +121,7 @@ export interface JSONAutocompleteInteraction extends JSONInteraction {
     appPermissions?: JSONPermission;
     channel: string;
     data: AutocompleteInteractionData;
-    guild?: string;
+    guildID?: string;
     guildLocale?: string;
     locale: string;
     member?: JSONMember;
@@ -130,12 +130,12 @@ export interface JSONAutocompleteInteraction extends JSONInteraction {
 }
 export interface JSONAutoModerationRule extends JSONBase {
     actions: Array<AutoModerationAction>;
-    creator: string;
+    creatorID: string;
     enabled: boolean;
     eventType: AutoModerationEventTypes;
     exemptChannels: Array<string>;
     exemptRoles: Array<string>;
-    guild: string;
+    guildID: string;
     name: string;
     triggerMetadata: TriggerMetadata;
     triggerType: AutoModerationTriggerTypes;
@@ -165,9 +165,9 @@ export interface JSONClientUser extends JSONUser {
 }
 export interface JSONCommandInteraction extends JSONInteraction {
     appPermissions?: JSONPermission;
-    channel: string;
+    channelID: string;
     data: ApplicationCommandInteractionData;
-    guild?: string;
+    guildID?: string;
     guildLocale?: string;
     locale: string;
     member?: JSONMember;
@@ -176,9 +176,9 @@ export interface JSONCommandInteraction extends JSONInteraction {
 }
 export interface JSONComponentInteraction extends JSONInteraction {
     appPermissions?: JSONPermission;
-    channel: string;
+    channelID: string;
     data: MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
-    guild?: string;
+    guildID?: string;
     guildLocale?: string;
     locale: string;
     member?: JSONMember;
@@ -212,7 +212,7 @@ export interface JSONForumChannel extends JSONGuildChannel {
     defaultReactionEmoji: ForumEmoji | null;
     defaultThreadRateLimitPerUser: number;
     flags: number;
-    lastThread: string | null;
+    lastThreadID: string | null;
     permissionOverwrites: Array<JSONPermissionOverwrite>;
     position: number;
     rateLimitPerUser: number;
@@ -221,17 +221,17 @@ export interface JSONForumChannel extends JSONGuildChannel {
     topic: string | null;
 }
 export interface JSONGroupChannel extends JSONChannel {
-    application: string;
+    applicationID: string;
     icon: string | null;
     managed: boolean;
     name: string | null;
     nicks: Array<Record<"id" | "nick", string>>;
-    owner: string | JSONUser;
+    ownerID: string;
     recipients: Array<JSONUser>;
     type: ChannelTypes.GROUP_DM;
 }
 export interface JSONGuild extends JSONBase {
-    afkChannel: string | null;
+    afkChannelID: string | null;
     afkTimeout: number;
     application?: string;
     approximateMemberCount?: number;
@@ -256,7 +256,7 @@ export interface JSONGuild extends JSONBase {
     mfaLevel: MFALevels;
     name: string;
     nsfwLevel: GuildNSFWLevels;
-    owner: JSONUser | string;
+    ownerID: string;
     permissions?: JSONPermission;
     preferredLocale: string;
     premiumProgressBarEnabled: boolean;
@@ -265,13 +265,13 @@ export interface JSONGuild extends JSONBase {
     publicUpdatesChannel: string | null;
     region?: string | null;
     roles: Array<JSONRole>;
-    rulesChannel: string | null;
+    rulesChannelID: string | null;
     scheduledEvents: Array<JSONScheduledEvent>;
     splash: string | null;
     stageInstances: Array<JSONStageInstance>;
     stickers?: Array<Sticker>;
-    systemChannel: string | null;
     systemChannelFlags: number;
+    systemChannelID: string | null;
     threads: Array<string>;
     unavailable: boolean;
     vanityURLCode: string | null;
@@ -282,9 +282,9 @@ export interface JSONGuild extends JSONBase {
     widgetEnabled?: boolean;
 }
 export interface JSONGuildChannel extends JSONChannel {
-    guild: string;
+    guildID: string;
     name: string;
-    parent: string | null;
+    parentID: string | null;
     type: GuildChannelTypes;
 }
 export interface JSONGuildPreview extends JSONBase {
@@ -307,7 +307,7 @@ export interface JSONGuildTemplate {
     isDirty: boolean | null;
     name: string;
     serializedSourceGuild: Partial<RawGuild>;
-    sourceGuild: string;
+    sourceGuildID: string;
     updatedAt: number;
     usageCount: number;
 }
@@ -328,7 +328,7 @@ export interface JSONIntegration extends JSONBase {
     user?: JSONUser;
 }
 export interface JSONInteraction extends JSONBase {
-    application: string;
+    applicationID: string;
     token: string;
     type: InteractionTypes;
     version: 1;
@@ -336,11 +336,11 @@ export interface JSONInteraction extends JSONBase {
 export interface JSONInvite {
     approximateMemberCount?: number;
     approximatePresenceCount?: number;
-    channel?: string;
+    channelID?: string;
     code: string;
     createdAt?: number;
     expiresAt?: number;
-    guild?: string;
+    guildID?: string;
     guildScheduledEvent?: JSONScheduledEvent;
     inviter?: string;
     maxAge?: number;
@@ -362,7 +362,7 @@ export interface JSONMember extends JSONBase {
     communicationDisabledUntil: number | null;
     deaf: boolean;
     flags?: number;
-    guild: string;
+    guildID: string;
     isPending?: boolean;
     joinedAt: number | null;
     mute: boolean;
@@ -375,16 +375,16 @@ export interface JSONMember extends JSONBase {
 }
 export interface JSONMessage extends JSONBase {
     activity?: MessageActivity;
-    application?: JSONPartialApplication | string;
+    applicationID?: string;
     attachments: Array<JSONAttachment>;
     author: JSONUser;
-    channel: string;
+    channelID: string;
     components?: Array<MessageActionRow>;
     content: string;
     editedTimestamp: number | null;
     embeds: Array<Embed>;
     flags?: number;
-    guild?: string;
+    guildID?: string;
     interaction?: {
         id: string;
         member?: JSONMember;
@@ -415,9 +415,9 @@ export interface JSONMessage extends JSONBase {
 }
 export interface JSONModalSubmitInteraction extends JSONInteraction {
     appPermissions?: JSONPermission;
-    channel: string;
+    channelID: string;
     data: ModalSubmitInteractionData;
-    guild?: string;
+    guildID?: string;
     guildLocale?: string;
     locale: string;
     member?: JSONMember;
@@ -444,7 +444,7 @@ export interface JSONPingInteraction extends JSONInteraction {
     type: InteractionTypes.PING;
 }
 export interface JSONPrivateChannel extends JSONChannel {
-    lastMessage?: string;
+    lastMessageID: string | null;
     messages: Array<string>;
     recipient: JSONUser;
     type: ChannelTypes.DM;
@@ -459,7 +459,7 @@ export interface JSONPublicThreadChannel extends JSONThreadChannel {
 }
 export interface JSONRole extends JSONBase {
     color: number;
-    guild: string;
+    guildID: string;
     hoist: boolean;
     icon: string | null;
     managed: boolean;
@@ -471,13 +471,13 @@ export interface JSONRole extends JSONBase {
     unicodeEmoji: string | null;
 }
 export interface JSONScheduledEvent extends JSONBase {
-    channel: string | null;
+    channelID: string | null;
     creator?: JSONUser;
     description?: string | null;
     entityID: string | null;
     entityMetadata: ScheduledEventEntityMetadata | null;
     entityType: GuildScheduledEventEntityTypes;
-    guild: string;
+    guildID: string;
     image?: string | null;
     name: string;
     privacyLevel: GuildScheduledEventPrivacyLevels;
@@ -495,9 +495,9 @@ export interface JSONStageChannel extends JSONGuildChannel {
     type: ChannelTypes.GUILD_STAGE_VOICE;
 }
 export interface JSONStageInstance extends JSONBase {
-    channel: string;
+    channelID: string;
     discoverableDisabled: boolean;
-    guild: string;
+    guildID: string;
     scheduledEvent?: string | JSONScheduledEvent;
     topic: string;
 }
@@ -505,11 +505,11 @@ export interface JSONTeam extends JSONBase {
     icon: string | null;
     members: Array<TeamMember>;
     name: string;
-    owner: string | JSONUser;
+    ownerID: string;
 }
 export interface JSONTextableChannel extends JSONGuildChannel {
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
-    lastMessage: string | null;
+    lastMessageID: string | null;
     messages: Array<string>;
     nsfw: boolean;
     permissionOverwrites: Array<JSONPermissionOverwrite>;
@@ -524,11 +524,11 @@ export interface JSONTextChannel extends JSONTextableChannel {
 }
 export interface JSONThreadChannel extends JSONGuildChannel {
     flags: number;
-    lastMessage: string | null;
+    lastMessageID: string | null;
     memberCount: number;
     messageCount: number;
     messages: Array<string>;
-    owner: string | JSONUser;
+    ownerID: string;
     rateLimitPerUser: number;
     threadMetadata: ThreadMetadata | PrivateThreadmetadata;
     totalMessageSent: number;
@@ -560,9 +560,9 @@ export interface JSONVoiceChannel extends JSONGuildChannel {
     voiceMembers: Array<string>;
 }
 export interface JSONVoiceState extends JSONBase {
-    channel: string | null;
+    channelID: string | null;
     deaf: boolean;
-    guild?: string;
+    guildID?: string;
     member?: JSONMember;
     mute: boolean;
     requestToSpeakTimestamp: number | null;
@@ -572,13 +572,13 @@ export interface JSONVoiceState extends JSONBase {
     selfVideo: boolean;
     sessionID: string;
     suppress: boolean;
-    user: JSONUser;
+    user?: JSONUser;
 }
 export interface JSONWebhook extends JSONBase {
-    application: string | null;
+    applicationID: string | null;
     avatar: string | null;
-    channel: string | null;
-    guild: string | null;
+    channelID: string | null;
+    guildID: string | null;
     name: string | null;
     sourceChannel?: Pick<RawChannel, "id" | "name">;
     sourceGuild?: Pick<RawGuild, "id" | "name" | "icon">;

@@ -25,7 +25,7 @@ import type { UpdateVoiceStateOptions } from "../types/gateway";
 export default class StageChannel extends GuildChannel {
     /** The bitrate of the stage channel. */
     bitrate: number;
-    declare parent: CategoryChannel | null;
+    declare parent?: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */

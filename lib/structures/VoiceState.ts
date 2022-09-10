@@ -11,7 +11,7 @@ import type { JSONVoiceState } from "../types/json";
 /** Represents a guild member's voice state. */
 export default class VoiceState extends Base {
     /** The channel the user is connected to. */
-    channel: VoiceChannel | StageChannel | null;
+    channel?: VoiceChannel | StageChannel | null;
     /** The ID of the channel the user is connected to. */
     channelID: string | null;
     /** If the associated member is deafened. */
@@ -19,7 +19,7 @@ export default class VoiceState extends Base {
     /** The guild this voice state is a part of. */
     guild?: Guild;
     /** The ID of the guild this voice state is a part of. */
-    guildID?: string;
+    guildID: string;
     /** The member associated with this voice state. */
     member?: Member;
     /** If the associated member is muted. */
@@ -39,12 +39,16 @@ export default class VoiceState extends Base {
     /** If the associated member is suppressed. */
     suppress: boolean;
     /** The user associated with this voice state. */
-    user: User;
+    user?: User;
+    /** The ID of the user associated with this voice state. */
+    userID: string;
     constructor(data: RawVoiceState, client: Client) {
         super(data.user_id, client);
         this.channel = null;
         this.channelID = data.channel_id;
         this.deaf = false;
+        this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
+        this.guildID = data.guild_id!;
         this.mute = false;
         this.requestToSpeakTimestamp = null;
         this.selfDeaf = false;
@@ -52,26 +56,22 @@ export default class VoiceState extends Base {
         this.selfStream = false;
         this.selfVideo = false;
         this.suppress = false;
-        this.user = client.users.get(this.id)!;
+        this.user = client.users.get(this.id);
+        this.userID = this.id;
         this.update(data);
     }
 
     protected update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
-            if (data.channel_id === null) {
-                this.channel = null;
-            } else {
-                this.channel = this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id)!;
-            }
-
+            this.channel = data.channel_id === null ? null : this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
         }
         if (data.deaf !== undefined) {
             this.deaf = data.deaf;
         }
         if (data.guild_id !== undefined) {
+            this.guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
-            this.guild = this.client.guilds.get(data.guild_id)!;
         }
         if (data.member !== undefined) {
             this.member = this.client.util.updateMember(data.guild_id!, this.id, data.member);
@@ -98,16 +98,17 @@ export default class VoiceState extends Base {
             this.suppress = data.suppress;
         }
         if (data.user_id !== undefined) {
-            this.user = this.client.users.get(data.user_id)!;
+            this.user = this.client.users.get(data.user_id);
+            this.userID = data.user_id;
         }
     }
 
     toJSON(): JSONVoiceState {
         return {
             ...super.toJSON(),
-            channel:                 this.channel?.id || null,
+            channelID:               this.channelID,
             deaf:                    this.deaf,
-            guild:                   this.guildID,
+            guildID:                 this.guildID || undefined,
             member:                  this.member?.toJSON(),
             mute:                    this.mute,
             requestToSpeakTimestamp: this.requestToSpeakTimestamp ? this.requestToSpeakTimestamp.getTime() : null,
@@ -117,7 +118,7 @@ export default class VoiceState extends Base {
             selfVideo:               this.selfVideo,
             sessionID:               this.sessionID,
             suppress:                this.suppress,
-            user:                    this.user.toJSON()
+            user:                    this.user?.toJSON()
         };
     }
 }

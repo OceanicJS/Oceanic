@@ -26,11 +26,11 @@ export default class Webhook extends Base {
     /** The hash of this webhook's avatar. */
     avatar: string | null;
     /** The channel this webhook is for, if applicable. */
-    channel: AnyGuildTextChannel | null;
+    channel?: AnyGuildTextChannel | null;
     /** The ID of the channel this webhook is for, if applicable. */
     channelID: string | null;
     /** The guild this webhook is for, if applicable. */
-    guild: Guild | null;
+    guild?: Guild | null;
     /** The id of the guild this webhook is in, if applicable. */
     guildID: string | null;
     /** The username of this webhook, if any. */
@@ -49,16 +49,16 @@ export default class Webhook extends Base {
         super(data.id, client);
         this.application = data.application_id === null ? null : client.application?.id === data.application_id ? client.application : { id: data.application_id };
         this.avatar = data.avatar ?? null;
-        this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id)!;
+        this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id);
         this.channelID = data.channel_id;
-        this.guild = !data.guild_id ? null : client.guilds.get(data.guild_id)!;
+        this.guild = data.guild_id === undefined || data.guild_id === null ? null : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.sourceChannel = data.source_channel;
         this.sourceGuild = data.source_guild;
         this.token = data.token;
         this.type = data.type;
-        this.user = !data.user ? null : client.users.update(data.user);
+        this.user = data.user === undefined ? null : client.users.update(data.user);
     }
 
     get url(): string {
@@ -215,10 +215,10 @@ export default class Webhook extends Base {
     override toJSON(): JSONWebhook {
         return {
             ...super.toJSON(),
-            application:   this.application?.id || null,
+            applicationID: this.application?.id || null,
             avatar:        this.avatar,
-            channel:       this.channel?.id || null,
-            guild:         this.guildID,
+            channelID:     this.channelID || null,
+            guildID:       this.guildID,
             name:          this.name,
             sourceChannel: this.sourceChannel,
             sourceGuild:   this.sourceGuild,

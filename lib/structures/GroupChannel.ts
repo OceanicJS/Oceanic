@@ -43,7 +43,7 @@ export default class GroupChannel extends Channel {
     /** The nicknames used when creating this group channel. */
     nicks: Array<Record<"id" | "nick", string>>;
     /** The owner of this group channel. */
-    owner: User;
+    owner?: User;
     /** The ID of the owner of this group channel. */
     ownerID: string;
     /** The other recipients in this group channel. */
@@ -58,7 +58,7 @@ export default class GroupChannel extends Channel {
         this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
         this.name = data.name;
         this.nicks = [];
-        this.owner = this.client.users.get(data.owner_id)!;
+        this.owner = this.client.users.get(data.owner_id);
         this.ownerID = data.owner_id;
         this.recipients = new TypedCollection(User, client);
         data.recipients.forEach(r => this.recipients.add(client.users.update(r)));
@@ -87,8 +87,8 @@ export default class GroupChannel extends Channel {
             this.nicks = data.nicks;
         }
         if (data.owner_id !== undefined) {
+            this.owner = this.client.users.get(data.owner_id);
             this.ownerID = data.owner_id;
-            this.owner = this.client.users.get(data.owner_id)!;
         }
         if (data.type !== undefined) {
             this.type = data.type;
@@ -247,14 +247,14 @@ export default class GroupChannel extends Channel {
     override toJSON(): JSONGroupChannel {
         return {
             ...super.toJSON(),
-            application: this.application.id,
-            icon:        this.icon,
-            managed:     this.managed,
-            name:        this.name,
-            nicks:       this.nicks,
-            owner:       this.owner instanceof User ? this.owner.toJSON() : this.ownerID,
-            recipients:  this.recipients.map(user => user.toJSON()),
-            type:        this.type
+            applicationID: this.application.id,
+            icon:          this.icon,
+            managed:       this.managed,
+            name:          this.name,
+            nicks:         this.nicks,
+            ownerID:       this.ownerID,
+            recipients:    this.recipients.map(user => user.toJSON()),
+            type:          this.type
         };
     }
 

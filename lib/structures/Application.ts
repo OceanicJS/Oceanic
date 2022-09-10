@@ -21,9 +21,9 @@ export default class Application extends ClientApplication {
     /** The description of the application. */
     description: string;
     /** If this application is a game sold on Discord, the guild to which it has been linked.*/
-    guild?: Guild;
-    /** The ID of the guild associated with this application, if any. */
-    guildID?: string;
+    guild?: Guild | null;
+    /** If this application is a game sold on Discord, the ID of the guild to which it has been linked.*/
+    guildID: string | null;
     /** The icon hash of the application. */
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */
@@ -32,6 +32,8 @@ export default class Application extends ClientApplication {
     name: string;
     /** The owner of this application. */
     owner: User;
+    /** The ID of the owner of this application. */
+    ownerID: string;
     /** If this application is a game sold on Discord, the id of the Game's SKU. */
     primarySKUID?: string;
     /** A url to this application's privacy policy. */
@@ -54,9 +56,11 @@ export default class Application extends ClientApplication {
         this.botRequireCodeGrant = !!data.bot_require_code_grant;
         this.coverImage = null;
         this.description = data.description;
+        this.guildID = data.guild_id || null;
         this.icon = null;
         this.name = data.name;
         this.owner = client.users.update(data.owner);
+        this.ownerID = data.owner.id;
         this.rpcOrigins = [];
         this.team = null;
         this.verifyKey = data.verify_key;
@@ -80,7 +84,9 @@ export default class Application extends ClientApplication {
         if (data.description !== undefined) {
             this.description = data.description;
         }
-        if (data.guild_id !== undefined) {
+        if (data.guild_id === undefined) {
+            this.guildID = null;
+        } else {
             this.guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
         }
@@ -95,6 +101,7 @@ export default class Application extends ClientApplication {
         }
         if (data.owner !== undefined) {
             this.owner = this.client.users.update(data.owner);
+            this.ownerID = data.owner.id;
         }
         if (data.primary_sku_id !== undefined) {
             this.primarySKUID = data.primary_sku_id;
@@ -139,11 +146,11 @@ export default class Application extends ClientApplication {
             coverImage:          this.coverImage,
             customInstallURL:    this.customInstallURL,
             description:         this.description,
-            guild:               this.guild?.id,
+            guildID:             this.guildID || undefined,
             icon:                this.icon,
             installParams:       this.installParams,
             name:                this.name,
-            owner:               this.owner.id,
+            ownerID:             this.ownerID,
             primarySKUID:        this.primarySKUID,
             privacyPolicyURL:    this.privacyPolicyURL,
             rpcOrigins:          this.rpcOrigins,

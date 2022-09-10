@@ -4,20 +4,20 @@ import Properties from "../util/Properties";
 import type { JSONPermission } from "../types/json";
 
 export default class Permission {
-    private _json: Record<keyof typeof Permissions, boolean> | undefined;
     /** The allowed permissions for this permission instance. */
     allow: bigint;
     /** The denied permissions for this permission instance. */
     deny: bigint;
+    #json: Record<keyof typeof Permissions, boolean> | undefined;
     constructor(allow: bigint | string, deny: bigint | string = 0n) {
         this.allow = BigInt(allow);
         this.deny = BigInt(deny);
-        Properties.looseDefine(this, "_json", undefined, true);
+        Properties.looseDefine(this, "#json", undefined, true);
     }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
     get json(): Record<keyof typeof Permissions, boolean> {
-        if (!this._json) {
+        if (!this.#json) {
             const json = {} as Record<keyof typeof Permissions, boolean>;
             for (const perm of Object.keys(Permissions) as Array<keyof typeof Permissions>) {
                 if (this.allow & Permissions[perm]) {
@@ -27,9 +27,9 @@ export default class Permission {
                 }
             }
 
-            return (this._json = json);
+            return (this.#json = json);
         } else {
-            return this._json;
+            return this.#json;
         }
     }
 

@@ -31,7 +31,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** The guild this command is in (guild commands only). */
     guild?: Guild;
     /** The id of the guild this command is in (guild commands only). */
-    guildID?: string;
+    guildID: string | null;
     /** The name of this command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
@@ -52,8 +52,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.descriptionLocalizations = data.description_localizations;
         this.descriptionLocalized = data.description_localized;
         this.dmPermission = data.dm_permission;
-        this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
-        this.guildID = !data.guild_id ? undefined : data.guild_id;
+        this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
+        this.guildID = data.guild_id || null;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
         this.nameLocalized = data.name_localized;
@@ -113,12 +113,12 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     override toJSON(): JSONApplicationCommand {
         return {
             ...super.toJSON(),
-            application:              this.application.id,
+            applicationID:            this.application.id,
             defaultMemberPermissions: this.defaultMemberPermissions?.toJSON(),
             description:              this.description,
             descriptionLocalizations: this.descriptionLocalizations,
             dmPermission:             this.dmPermission,
-            guild:                    this.guildID,
+            guildID:                  this.guildID || undefined,
             name:                     this.name,
             nameLocalizations:        this.nameLocalizations,
             options:                  this.options,

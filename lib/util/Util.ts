@@ -313,7 +313,7 @@ export default class Util {
         } as RawApplicationCommandOption;
     }
 
-    updateMember(guildID: string, memberID: string, member: RawMember): Member {
+    updateMember(guildID: string, memberID: string | undefined, member: RawMember): Member {
         const guild = this.#client.guilds.get(guildID);
         if (guild && this.#client.user.id === memberID) {
             if (guild["_clientMember"]) {

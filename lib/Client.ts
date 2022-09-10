@@ -92,7 +92,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
     get application(): ClientApplication {
         if (!this._application) {
-            throw new Error("Cannot access `client.application` without having at least one shard marked as READY.");
+            throw new Error(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
         } else {
             return this._application;
         }
@@ -105,7 +105,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. */
     get user(): ExtendedUser {
         if (!this._user) {
-            throw new Error("Cannot access `client.user` without having at least one shard marked as READY.");
+            throw new Error(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
         } else {
             return this._user;
         }
@@ -203,7 +203,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) {
             throw new Error("Only voice & stage channels can be joined.");
         }
-        this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, channelID, options);
+        this.shards.get(this.guildShardMap[channel.guildID] || 0)!.updateVoiceState(channel.guildID, channelID, options);
         // @TODO proper voice connection handling
     }
 
@@ -216,6 +216,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
         if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) {
             return;
         }
-        this.shards.get(this.guildShardMap[channel.guild.id] || 0)!.updateVoiceState(channel.guild.id, null, { selfDeaf: false, selfMute: false });
+        this.shards.get(this.guildShardMap[channel.guildID] || 0)!.updateVoiceState(channel.guildID, null, { selfDeaf: false, selfMute: false });
     }
 }

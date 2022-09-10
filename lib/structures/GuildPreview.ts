@@ -57,7 +57,7 @@ export default class GuildPreview extends Base {
         if (data.emojis !== undefined) {
             this.emojis = data.emojis.map(emoji => ({
                 ...emoji,
-                user: !emoji.user ? undefined : this.client.users.update(emoji.user)
+                user: emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
             }));
         }
         if (data.features !== undefined) {

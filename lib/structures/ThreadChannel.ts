@@ -44,7 +44,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     owner?: User;
     /** The ID of the owner of this thread. */
     ownerID: string;
-    declare parent: TextChannel | AnnouncementChannel;
+    declare parent?: TextChannel | AnnouncementChannel;
     declare parentID: string;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
@@ -306,11 +306,11 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         return {
             ...super.toJSON(),
             flags:            this.flags,
-            lastMessage:      this.lastMessage?.id || null,
+            lastMessageID:    this.lastMessageID,
             memberCount:      this.memberCount,
             messageCount:     this.messageCount,
             messages:         this.messages.map(m => m.id),
-            owner:            this.owner?.toJSON() || this.ownerID,
+            ownerID:          this.ownerID,
             rateLimitPerUser: this.rateLimitPerUser,
             threadMetadata:   this.threadMetadata,
             totalMessageSent: this.totalMessageSent,

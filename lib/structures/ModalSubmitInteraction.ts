@@ -16,14 +16,14 @@ export default class ModalSubmitInteraction extends Interaction {
     appPermissions?: Permission;
     /** The channel this interaction was sent from. */
     channel?: AnyTextChannel;
-    /** The ID of the channel this interaction was sent from.*/
+    /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
     /** The guild this interaction was sent from, if applicable. */
-    guild?: Guild;
+    guild?: Guild | null;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID?: string;
+    guildID: string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale?: string;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
@@ -37,20 +37,20 @@ export default class ModalSubmitInteraction extends Interaction {
     user: User;
     constructor(data: RawModalSubmitInteraction, client: Client) {
         super(data, client);
-        this.appPermissions = !data.app_permissions ? undefined : new Permission(data.app_permissions);
+        this.appPermissions = data.app_permissions === undefined ? undefined : new Permission(data.app_permissions);
         this.channel = client.getChannel<AnyTextChannel>(data.channel_id!);
         this.channelID = data.channel_id!;
         this.data = {
             components: client.util.componentsToParsed(data.data.components),
             customID:   data.data.custom_id
         };
-        this.guild = !data.guild_id ? undefined : client.guilds.get(data.guild_id);
-        this.guildID = data.guild_id;
+        this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
+        this.guildID = data.guild_id || null;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
-        this.user = client.users.update((data.user || data.member!.user)!);
+        this.user = client.users.update(data.user || data.member!.user);
     }
 
     /**
@@ -160,9 +160,9 @@ export default class ModalSubmitInteraction extends Interaction {
         return {
             ...super.toJSON(),
             appPermissions: this.appPermissions?.toJSON(),
-            channel:        this.channelID,
+            channelID:      this.channelID,
             data:           this.data,
-            guild:          this.guildID,
+            guildID:        this.guildID || undefined,
             guildLocale:    this.guildLocale,
             locale:         this.locale,
             member:         this.member?.toJSON(),

@@ -60,6 +60,8 @@ import GuildPreview from "../structures/GuildPreview";
 import type {
     AnyGuildChannelWithoutThreads,
     AnyThreadChannel,
+    InviteChannel,
+    PartialInviteChannel,
     RawGuildChannel,
     RawInvite,
     RawThreadChannel,
@@ -1062,11 +1064,11 @@ export default class Guilds {
      * Get the invites of a guild.
      * @param id The ID of the guild to get the invites of.
      */
-    async getInvites(id: string): Promise<Array<Invite<"withMetadata">>> {
+    async getInvites<CH extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(id: string): Promise<Array<Invite<"withMetadata", CH>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.GUILD_INVITES(id)
-        }).then(data => data.map(invite => new Invite<"withMetadata">(invite, this.#manager.client)));
+        }).then(data => data.map(invite => new Invite<"withMetadata", CH>(invite, this.#manager.client)));
     }
 
     /**

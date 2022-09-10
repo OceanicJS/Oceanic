@@ -264,7 +264,7 @@ export default class Guild extends Base {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client)).guild = this;
+                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client))["_guild"] = this;
             }
         }
 
@@ -272,16 +272,16 @@ export default class Guild extends Base {
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
-                this.threads.add(Channel.from<AnyThreadChannel>(threadData, client)).guild = this;
                 client.threadGuildMap[threadData.id] = this.id;
+                this.threads.add(Channel.from<AnyThreadChannel>(threadData, client))["_guild"] = this;
             }
         }
 
 
         if (data.members) {
             for (const rawMember of data.members) {
-                const member = this.members.update({ ...rawMember, id: rawMember.user!.id }, this.id);
-                member.guild = this;
+                const member = this.members.update({ ...rawMember, id: rawMember.user?.id }, this.id);
+                member["_guild"] = this;
                 if (member.id === client.user.id) {
                     this._clientMember = member;
                 }
@@ -291,7 +291,7 @@ export default class Guild extends Base {
         if (data.stage_instances) {
             for (const stageInstance of data.stage_instances) {
                 stageInstance.guild_id = this.id;
-                this.stageInstances.update(stageInstance).guild = this;
+                this.stageInstances.update(stageInstance)["_guild"] = this;
             }
         }
 
@@ -328,7 +328,7 @@ export default class Guild extends Base {
                     channel.voiceMembers.add(member);
                 }
                 // @TODO voice
-            /* if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user!.id && !client.voiceConnections.has(this.id)) {
+                /* if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user!.id && !client.voiceConnections.has(this.id)) {
                     process.nextTick(() => client.joinVoiceChannel(voiceState.channel_id!));
                 } */
             }
@@ -389,7 +389,7 @@ export default class Guild extends Base {
         if (data.emojis !== undefined) {
             this.emojis = data.emojis.map(emoji => ({
                 ...emoji,
-                user: !emoji.user ? undefined : this.client.users.update(emoji.user)
+                user: emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
             }));
         }
         if (data.explicit_content_filter !== undefined) {
@@ -500,7 +500,7 @@ export default class Guild extends Base {
     /** The client's member for this guild. This will throw an error if the guild was obtained via rest and the member is not cached.*/
     get clientMember(): Member {
         if (!this._clientMember) {
-            throw new Error("Cannot access guild.clientMember on guilds obtained via rest without fetching the member.");
+            throw new Error(`${this.constructor.name}#clientMember is not present if the guild was obtained via rest and the member is not cached.`);
         } else {
             return this._clientMember;
         }
@@ -1097,7 +1097,7 @@ export default class Guild extends Base {
     override toJSON(): JSONGuild {
         return {
             ...super.toJSON(),
-            afkChannel:                  this.afkChannel?.id || null,
+            afkChannelID:                this.afkChannelID,
             afkTimeout:                  this.afkTimeout,
             application:                 this.application?.id,
             approximateMemberCount:      this.approximateMemberCount,
@@ -1122,7 +1122,7 @@ export default class Guild extends Base {
             mfaLevel:                    this.mfaLevel,
             name:                        this.name,
             nsfwLevel:                   this.nsfwLevel,
-            owner:                       this.owner instanceof User ? this.owner.toJSON() : this.ownerID,
+            ownerID:                     this.ownerID,
             permissions:                 this.permissions?.toJSON(),
             preferredLocale:             this.preferredLocale,
             premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
@@ -1131,12 +1131,12 @@ export default class Guild extends Base {
             publicUpdatesChannel:        this.publicUpdatesChannel?.id || null,
             region:                      this.region,
             roles:                       this.roles.map(role => role.toJSON()),
-            rulesChannel:                this.rulesChannel?.id || null,
+            rulesChannelID:              this.rulesChannelID,
             scheduledEvents:             this.scheduledEvents.map(event => event.toJSON()),
             splash:                      this.splash,
             stageInstances:              this.stageInstances.map(instance => instance.toJSON()),
             stickers:                    this.stickers,
-            systemChannel:               this.systemChannel?.id || null,
+            systemChannelID:             this.systemChannelID,
             systemChannelFlags:          this.systemChannelFlags,
             threads:                     this.threads.map(thread => thread.id),
             unavailable:                 this.unavailable,

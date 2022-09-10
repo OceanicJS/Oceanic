@@ -22,13 +22,15 @@ import Properties from "../util/Properties";
 import type { JSONInvite } from "../types/json";
 
 /** Represents an invite. */
-export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel = InviteChannel> {
+export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel> {
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. */
-    channel?: CH | PartialInviteChannel;
+    channel?: CH | null;
+    /** The ID of the channel this invite leads to. */
+    channelID: string | null;
     client!: Client;
     /** The code of this invite. */
     code: string;
@@ -36,8 +38,10 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     createdAt!: T extends "withMetadata" ? Date : undefined;
     /** The date at which this invite expires. */
     expiresAt?: T extends "withMetadata" | "withoutExpiration" ? never : Date;
-    /** The guild this invite leads to. */
-    guild?: Guild;
+    /** The guild this invite leads to or `null` if this invite leads to a Group DM. */
+    guild!: Guild | null;
+    /** The ID of the guild this invite leads to or `null` if this invite leads to a Group DM. */
+    guildID: string | null;
     /** The scheduled event associated with this invite. */
     guildScheduledEvent?: GuildScheduledEvent;
     /** The user that created this invite. */
@@ -60,7 +64,9 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     uses!: T extends "withMetadata" ? number : never;
     constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
         Properties.define(this, "client", client);
+        this.channelID = data.channel?.id || null;
         this.code = data.code;
+        this.guildID = data.guild?.id || null;
         this.expiresAt = (!data.expires_at ? undefined : new Date(data.expires_at)) as never;
         this.targetType = data.target_type;
         this.update(data);
@@ -84,8 +90,11 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             this.guild = guild;
         }
 
-        let channel: Channel | PartialInviteChannel | undefined;
-        if (data.channel) {
+        if (data.channel === undefined) {
+            this.channel = null;
+            this.channelID = null;
+        } else {
+            let channel: Channel | PartialInviteChannel | undefined;
             channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
             if (channel && channel instanceof Channel) {
                 channel["update"](data.channel);
@@ -95,7 +104,9 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                 channel = Channel.from(data.channel, this.client);
             }
             this.channel = channel as CH;
+            this.channelID = data.channel.id;
         }
+
         if (data.inviter) {
             this.inviter = this.client.users.update(data.inviter);
         }
@@ -147,11 +158,11 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         return {
             approximateMemberCount:   this.approximateMemberCount,
             approximatePresenceCount: this.approximatePresenceCount,
-            channel:                  this.channel?.id,
+            channelID:                this.channelID || undefined,
             code:                     this.code,
             createdAt:                this.createdAt?.getTime(),
             expiresAt:                this.expiresAt?.getTime(),
-            guild:                    this.guild?.id,
+            guildID:                  this.guildID || undefined,
             guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
             inviter:                  this.inviter?.id,
             maxAge:                   this.maxAge,

@@ -10,7 +10,7 @@ import type CategoryChannel from "./CategoryChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
 import User from "./User";
-import type { PrivateChannelTypes, TextChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
+import type { ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions, ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
@@ -45,7 +45,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     messages: TypedCollection<string, RawMessage, Message>;
     /** If this channel is age gated. */
     nsfw: boolean;
-    declare parent: CategoryChannel | null;
+    declare parent?: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -54,7 +54,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     rateLimitPerUser: number;
     /** The topic of the channel. */
     topic: string | null;
-    declare type: Exclude<TextChannelTypes, PrivateChannelTypes>;
+    declare type: T["type"];
     constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
@@ -321,7 +321,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
         return {
             ...super.toJSON(),
             defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
-            lastMessage:                this.lastMessage?.id || null,
+            lastMessageID:              this.lastMessageID,
             messages:                   this.messages.map(message => message.id),
             nsfw:                       this.nsfw,
             permissionOverwrites:       this.permissionOverwrites.map(overwrite => overwrite.toJSON()),

@@ -34,7 +34,8 @@ import type {
     InviteInfoTypes,
     RawPrivateChannel,
     RawGroupChannel,
-    AnyEditableChannel
+    AnyEditableChannel,
+    PartialInviteChannel
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -221,7 +222,7 @@ export default class Channels {
      * @param code The code of the invite to delete.
      * @param reason The reason for deleting the invite.
      */
-    async deleteInvite<T extends InviteChannel = InviteChannel>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
+    async deleteInvite<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
         return this.#manager.authRequest<RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),

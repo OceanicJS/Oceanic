@@ -69,7 +69,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The guild this message is in. */
     guild?: Guild;
     /** The ID of the guild this message is in. */
-    guildID?: string;
+    guildID: string | null;
     /** The interaction info, if this message was the result of an interaction. */
     interaction?: MessageInteraction;
     /** The member that created this message, if in a */
@@ -125,7 +125,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.embeds = [];
         this.flags = 0;
         this.guild = data.guild_id !== undefined ? client.guilds.get(data.guild_id) : undefined;
-        this.guildID = data.guild_id;
+        this.guildID = data.guild_id === undefined ? null : data.guild_id;
         this.mentions = {
             channels: [],
             everyone: false,
@@ -392,16 +392,16 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         return {
             ...super.toJSON(),
             activity:        this.activity,
-            application:     this.application instanceof PartialApplication ? this.application.toJSON() : this.application?.id,
+            applicationID:   this.application?.id,
             attachments:     this.attachments.map(attachment => attachment.toJSON()),
             author:          this.author.toJSON(),
-            channel:         this.channelID,
+            channelID:       this.channelID,
             components:      this.components,
             content:         this.content,
             editedTimestamp: this.editedTimestamp?.getTime() || null,
             embeds:          this.embeds,
             flags:           this.flags,
-            guild:           this.guildID,
+            guildID:         this.guildID || undefined,
             interaction:     !this.interaction ? undefined : {
                 id:     this.interaction.id,
                 member: this.interaction.member?.toJSON(),
