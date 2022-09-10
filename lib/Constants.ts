@@ -49,7 +49,7 @@ export enum UserFlags {
     HYPESQUAD_BRILLIANCE = 1 << 7,
     HYPESQUAD_BALANCE    = 1 << 8,
     EARLY_SUPPORTER      = 1 << 9,
-    PSUEDO_TEAM_USER     = 1 << 10,
+    PSEUDO_TEAM_USER     = 1 << 10,
 
     SYSTEM = 1 << 12,
 
