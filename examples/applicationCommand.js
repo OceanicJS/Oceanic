@@ -11,7 +11,7 @@ const client = new Client({
 });
 
 client.on("ready", async() => {
-    console.log("Ready as ", client.user.tag);
+    console.log("Ready as", client.user.tag);
 
     // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#createGlobalCommand
     // Create a single command
@@ -100,7 +100,7 @@ client.on("ready", async() => {
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something went wrong: ", error);
+    console.error("Something went wrong:", error);
 });
 
 // connect to Discord

@@ -547,9 +547,9 @@ export enum AutoModerationTriggerTypes {
 }
 
 export enum AutoModerationKeywordPresetTypes {
-    PROFANITY = 1,
+    PROFANITY      = 1,
     SEXUAL_CONTENT = 2,
-    SLURS = 3
+    SLURS          = 3
 }
 
 export enum AutoModerationActionTypes {
@@ -623,7 +623,9 @@ export enum AuditLogActionTypes {
     AUTO_MODERATION_RULE_CREATE   = 140,
     AUTO_MODERATION_RULE_UPDATE   = 141,
     AUTO_MODERATION_RULE_DELETE   = 142,
-    AUTO_MODERATION_BLOCK_MESSAGE = 143
+    AUTO_MODERATION_BLOCK_MESSAGE = 143,
+    AUTO_MODERATION_ALERT         = 144,
+    AUTO_MODERATION_TIMEOUT       = 145,
 }
 
 export enum ApplicationCommandTypes {
@@ -636,14 +638,14 @@ export enum ApplicationCommandOptionTypes {
     SUB_COMMAND       = 1,
     SUB_COMMAND_GROUP = 2,
     STRING            = 3,
-    INTEGER              = 4,
+    INTEGER           = 4,
     BOOLEAN           = 5,
     USER              = 6,
-    CHANNEL              = 7,
+    CHANNEL           = 7,
     ROLE              = 8,
-    MENTIONABLE          = 9,
-    NUMBER              = 10,
-    ATTACHMENT          = 11
+    MENTIONABLE       = 9,
+    NUMBER            = 10,
+    ATTACHMENT        = 11
 }
 
 export enum ApplicationCommandPermissionTypes {
@@ -794,5 +796,5 @@ export enum ThreadMemberFlags {
     HAS_INTERACTED = 1,
     ALL_MESSAGES   = 2,
     ONLY_MENTIONS  = 4,
-    NO_MESSAGES   = 8
+    NO_MESSAGES    = 8
 }

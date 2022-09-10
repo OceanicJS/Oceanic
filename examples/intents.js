@@ -12,17 +12,17 @@ const client = new Client({
     }
 });
 
-client.on("ready", () => console.log("Ready as ", client.user.tag));
+client.on("ready", () => console.log("Ready as", client.user.tag));
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something went wrong: ", error);
+    console.error("Something went wrong:", error);
 });
 
 // New Guild Joined
 // https://oceanic.owo-whats-this.dev/dev/interfaces/types_events.ClientEvents.html#guildCreate
 bot.on("guildCreate", (guild) => {
-    console.log("Guild Joined: ", guild.name);
+    console.log("Guild Joined:", guild.name);
 });
 
 // Message Sent

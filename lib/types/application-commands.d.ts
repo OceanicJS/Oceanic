@@ -76,7 +76,7 @@ export type ApplicationCommandOptionConversion<T extends EditApplicationCommandO
             T extends EditMessageApplicationCommandOptions | CreateMessageApplicationCommandOptions ? MessageApplicationCommand :
                 never;
 
-// @TODO remove descriptionLocalized and nameLocalized from when creating
+
 export interface ApplicationCommandOptionBase<T extends ApplicationCommandOptionTypes = ApplicationCommandOptionTypes> {
     description: string;
     descriptionLocalizations?: Record<string, string>;

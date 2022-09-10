@@ -620,7 +620,6 @@ export interface StickerItem {
 }
 
 
-// @TODO directory & forum
 export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel | ForumChannel;
 export type AnyPrivateChannel = PrivateChannel | GroupChannel;
 export type AnyEditableChannel = Exclude<AnyChannel, PrivateChannel>;

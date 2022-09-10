@@ -8,7 +8,7 @@ const client = new Client({
     }
 });
 
-client.on("ready", () => console.log("Ready as ", client.user.tag));
+client.on("ready", () => console.log("Ready as", client.user.tag));
 
 client.on("messageCreate", async(msg) => {
     if(msg.content.includes("!embed")) {
@@ -84,7 +84,7 @@ client.on("messageCreate", async(msg) => {
 
 // an error handler
 client.on("error", (error) => {
-    console.error("Something went wrong: ", error);
+    console.error("Something went wrong:", error);
 });
 
 // connect to Discord
