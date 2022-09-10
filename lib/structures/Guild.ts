@@ -99,6 +99,7 @@ import Shard from "../gateway/Shard";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
+    private _clientMember?: Member;
     /** This guild's afk voice channel. This can be a partial object with just an `id` property. */
     afkChannel: VoiceChannel | Uncached | null;
     /** The seconds after which voice users will be moved to the afk channel. */
@@ -267,8 +268,9 @@ export default class Guild extends Base {
             for (const member of data.members) {
                 this.members.update({ ...member, id: member.user!.id }, this.id).guild = this;
             }
-        }
 
+            this._clientMember = this.members.get(client.user.id);
+        }
 
         if (data.stage_instances) {
             for (const stageInstance of data.stage_instances) {
@@ -467,6 +469,15 @@ export default class Guild extends Base {
         }
         if (data.widget_enabled !== undefined) {
             this.widgetEnabled = data.widget_enabled;
+        }
+    }
+
+    /** The client's member for this guild. This will throw an error if the guild was obtained via rest and the member is not cached.*/
+    get clientMember(): Member {
+        if (!this._clientMember) {
+            throw new Error("Cannot access guild.clientMember on guilds obtained via rest without fetching the member.");
+        } else {
+            return this._clientMember;
         }
     }
 
