@@ -109,7 +109,7 @@ export interface ClientEvents {
     /** @event Emitted when a role is created. Requires the `GUILDS` intent. */
     guildRoleCreate: [role: Role];
     /** @event Emitted when a role is deleted. Requires the `GUILDS` intent. */
-    guildRoleDelete: [role: Role];
+    guildRoleDelete: [role: Role | Uncached];
     /** @event Emitted when a role is updated. Requires the `GUILDS` intent. */
     guildRoleUpdate: [role: Role, oldRole: JSONRole | null];
     /** @event Emitted when a scheduled event is created. Requires the `GUILD_SCHEDULED_EVENTS` intent. */
