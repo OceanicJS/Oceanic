@@ -23,14 +23,14 @@ export default class GuildChannel extends Channel {
     declare type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client) {
         super(data, client);
+        this._guild = client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.name = data.name;
+        this.parent = data.parent_id === null ? null : client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(data.parent_id);
         this.parentID = data.parent_id;
-        this.update(data);
     }
 
     protected update(data: Partial<RawGuildChannel>): void {
-        super.update(data);
         if (data.guild_id !== undefined) {
             this._guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
