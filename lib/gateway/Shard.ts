@@ -173,7 +173,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     private createGuild(data: RawGuild): Guild {
         this.client.guildShardMap[data.id] = this.id;
         const guild = this.client.guilds.update(data);
-        if (this.client.shards.options.getAllUsers && guild.members.size > guild.memberCount) {
+        if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
             void this.requestGuildMembers(guild.id, { presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES });
         }
 

@@ -10,20 +10,20 @@ import type { InteractionContent, ModalSubmitInteractionData, RawModalSubmitInte
 import type Client from "../Client";
 import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
+import type { Uncached } from "../types/shared";
 
-export default class ModalSubmitInteraction extends Interaction {
+export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
+    private _guild?: CH extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from. */
     appPermissions?: Permission;
     /** The channel this interaction was sent from. */
-    channel?: AnyTextChannel;
+    channel: CH extends AnyTextChannel ? CH : undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
-    /** The guild this interaction was sent from, if applicable. */
-    guild?: Guild | null;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID: string | null;
+    guildID: CH extends AnyGuildTextChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale?: string;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
@@ -38,19 +38,28 @@ export default class ModalSubmitInteraction extends Interaction {
     constructor(data: RawModalSubmitInteraction, client: Client) {
         super(data, client);
         this.appPermissions = data.app_permissions === undefined ? undefined : new Permission(data.app_permissions);
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!);
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) as CH extends AnyTextChannel ? CH : undefined;
         this.channelID = data.channel_id!;
         this.data = {
             components: client.util.componentsToParsed(data.data.components),
             customID:   data.data.custom_id
         };
-        this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
-        this.guildID = data.guild_id ?? null;
+        this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as CH extends AnyGuildTextChannel ? Guild : Guild | null;
+        this.guildID = (data.guild_id ?? null) as CH extends AnyGuildTextChannel ? string : string | null;
         this.guildLocale = data.guild_locale;
         this.locale = data.locale!;
         this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
         this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
         this.user = client.users.update(data.user ?? data.member!.user);
+    }
+
+    /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
+    get guild(): CH extends AnyGuildTextChannel ? Guild : Guild | null {
+        if (this._guild === undefined) {
+            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._guild;
+        }
     }
 
     /**
