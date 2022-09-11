@@ -40,6 +40,7 @@ import type { JSONMessage } from "../types/json";
 import * as Routes from "../util/Routes";
 
 export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
+    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**
@@ -72,10 +73,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     embeds: Array<Embed>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
     flags: number;
-    /** The guild this message is in. */
-    guild?: Guild;
     /** The ID of the guild this message is in. */
-    guildID: string | null;
+    guildID: T extends AnyGuildTextChannel ? string : string | null;
     /** The interaction info, if this message was the result of an interaction. */
     interaction?: MessageInteraction;
     /** The member that created this message, if in a */
@@ -130,8 +129,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
-        this.guild = data.guild_id !== undefined ? client.guilds.get(data.guild_id) : undefined;
-        this.guildID = data.guild_id === undefined ? null : data.guild_id;
+        this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;
+        this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends AnyGuildTextChannel ? string : string | null;
         this.mentions = {
             channels: [],
             everyone: false,
@@ -279,9 +278,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             this.stickerItems = data.sticker_items;
         }
         if (data.thread !== undefined) {
-            const guild = this.client.guilds.get(this.guildID!);
-            if (guild) {
-                this.thread = guild.threads.update(data.thread);
+            if (this._guild) {
+                this.thread = this._guild.threads.update(data.thread);
                 if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) {
                     (this.channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
                 }
@@ -293,6 +291,15 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
                 }
             }
 
+        }
+    }
+
+    /** The guild this message is in. This will throw an error if the guild is not cached. */
+    get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
+        if (this._guild === undefined) {
+            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+        } else {
+            return this._guild;
         }
     }
 
