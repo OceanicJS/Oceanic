@@ -31,6 +31,7 @@ export default class GuildChannel extends Channel {
     }
 
     protected update(data: Partial<RawGuildChannel>): void {
+        super.update(data);
         if (data.guild_id !== undefined) {
             this._guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
