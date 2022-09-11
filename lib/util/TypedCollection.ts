@@ -31,7 +31,7 @@ export default class TypedCollection<K extends string | number, M extends Record
             if (this.limit && this.size > this.limit) {
                 const iter = this.keys();
                 while (this.size > this.limit) {
-                    this.delete((iter.next().value as C).id as K);
+                    this.delete(iter.next().value as K);
                 }
 
             }
