@@ -77,8 +77,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     guildID: T extends AnyGuildTextChannel ? string : string | null;
     /** The interaction info, if this message was the result of an interaction. */
     interaction?: MessageInteraction;
-    /** The member that created this message, if in a */
-    member?: Member;
+    /** The member that created this message, if this message is in a guild. */
+    member: T extends AnyGuildTextChannel ? Member : Member | undefined;
     /** Channels mentioned in a `CROSSPOSTED` channel follower message. See [Discord's docs](https://discord.com/developers/docs/resources/channel#channel-mention-object) for more information. */
     mentionChannels?: Array<ChannelMention>;
     /** The mentions in this message. */
@@ -131,6 +131,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         this.flags = 0;
         this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;
         this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends AnyGuildTextChannel ? string : string | null;
+        this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author }) : undefined) as T extends AnyGuildTextChannel ? Member : Member | undefined;
         this.mentions = {
             channels: [],
             everyone: false,
@@ -163,10 +164,6 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             for (const attachment of data.attachments) {
                 this.attachments.update(attachment);
             }
-        }
-
-        if (data.member) {
-            this.member = this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author });
         }
     }
 

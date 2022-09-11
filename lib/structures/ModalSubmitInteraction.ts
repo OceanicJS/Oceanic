@@ -14,8 +14,8 @@ import type { Uncached } from "../types/shared";
 
 export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
     private _guild?: CH extends AnyGuildTextChannel ? Guild : Guild | null;
-    /** The permissions the bot has in the channel this interaction was sent from. */
-    appPermissions?: Permission;
+    /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
+    appPermissions: CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The channel this interaction was sent from. */
     channel: CH extends AnyTextChannel ? CH : undefined;
     /** The ID of the channel this interaction was sent from. */
@@ -25,19 +25,19 @@ export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached
     /** The id of the guild this interaction was sent from, if applicable. */
     guildID: CH extends AnyGuildTextChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
-    guildLocale?: string;
+    guildLocale: CH extends AnyGuildTextChannel ? string : string | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
-    /** The member associated with the invoking user. */
-    member?: Member;
-    /** The permissions of the member associated with the invoking user */
-    memberPermissions?: Permission;
+    /** The member associated with the invoking user, if this interaction is sent from a guild. */
+    member: CH extends AnyGuildTextChannel ? Member : Member | undefined;
+    /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
+    memberPermissions: CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
     declare type: InteractionTypes.MODAL_SUBMIT;
     /** The user that invoked this interaction. */
     user: User;
     constructor(data: RawModalSubmitInteraction, client: Client) {
         super(data, client);
-        this.appPermissions = data.app_permissions === undefined ? undefined : new Permission(data.app_permissions);
+        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) as CH extends AnyTextChannel ? CH : undefined;
         this.channelID = data.channel_id!;
         this.data = {
@@ -46,10 +46,10 @@ export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached
         };
         this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as CH extends AnyGuildTextChannel ? Guild : Guild | null;
         this.guildID = (data.guild_id ?? null) as CH extends AnyGuildTextChannel ? string : string | null;
-        this.guildLocale = data.guild_locale;
+        this.guildLocale = data.guild_locale as CH extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = data.member ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined;
-        this.memberPermissions = data.member ? new Permission(data.member.permissions) : undefined;
+        this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined) as CH extends AnyGuildTextChannel ? Member : Member | undefined;
+        this.memberPermissions = (data.member !== undefined ? new Permission(data.member.permissions) : undefined) as CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.user = client.users.update(data.user ?? data.member!.user);
     }
 
