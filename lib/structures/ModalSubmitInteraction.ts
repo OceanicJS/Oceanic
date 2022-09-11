@@ -12,49 +12,49 @@ import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 
-export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
-    private _guild?: CH extends AnyGuildTextChannel ? Guild : Guild | null;
+export default class ModalSubmitInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
+    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
-    appPermissions: CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The channel this interaction was sent from. */
-    channel: CH extends AnyTextChannel ? CH : undefined;
+    channel: T extends AnyTextChannel ? T : undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID: CH extends AnyGuildTextChannel ? string : string | null;
+    guildID: T extends AnyGuildTextChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
-    guildLocale: CH extends AnyGuildTextChannel ? string : string | undefined;
+    guildLocale: T extends AnyGuildTextChannel ? string : string | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
-    member: CH extends AnyGuildTextChannel ? Member : Member | undefined;
+    member: T extends AnyGuildTextChannel ? Member : Member | undefined;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
-    memberPermissions: CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     declare type: InteractionTypes.MODAL_SUBMIT;
     /** The user that invoked this interaction. */
     user: User;
     constructor(data: RawModalSubmitInteraction, client: Client) {
         super(data, client);
-        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) as CH extends AnyTextChannel ? CH : undefined;
+        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) as T extends AnyTextChannel ? T : undefined;
         this.channelID = data.channel_id!;
         this.data = {
             components: client.util.componentsToParsed(data.data.components),
             customID:   data.data.custom_id
         };
-        this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as CH extends AnyGuildTextChannel ? Guild : Guild | null;
-        this.guildID = (data.guild_id ?? null) as CH extends AnyGuildTextChannel ? string : string | null;
-        this.guildLocale = data.guild_locale as CH extends AnyGuildTextChannel ? string : string | undefined;
+        this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;
+        this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
+        this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined) as CH extends AnyGuildTextChannel ? Member : Member | undefined;
-        this.memberPermissions = (data.member !== undefined ? new Permission(data.member.permissions) : undefined) as CH extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined) as T extends AnyGuildTextChannel ? Member : Member | undefined;
+        this.memberPermissions = (data.member !== undefined ? new Permission(data.member.permissions) : undefined) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.user = client.users.update(data.user ?? data.member!.user);
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
-    get guild(): CH extends AnyGuildTextChannel ? Guild : Guild | null {
+    get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
         if (this._guild === undefined) {
             throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
         } else {
@@ -66,7 +66,7 @@ export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached
      * Create a followup message.
      * @param options The options for creating the followup message.
      */
-    async createFollowup<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>> {
+    async createFollowup(options: InteractionContent): Promise<Message<T>> {
         return this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
     }
 
@@ -126,7 +126,7 @@ export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
      */
-    async editFollowup<T extends AnyGuildTextChannel>(messageID: string, options: InteractionContent): Promise<Message<T>> {
+    async editFollowup(messageID: string, options: InteractionContent): Promise<Message<T>> {
         return this.client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
     }
 
@@ -134,7 +134,7 @@ export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached
      * Edit the original interaction response.
      * @param options The options for editing the original message.
      */
-    async editOriginal<T extends AnyGuildTextChannel>(options: InteractionContent): Promise<Message<T>> {
+    async editOriginal(options: InteractionContent): Promise<Message<T>> {
         return this.client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
     }
 
@@ -154,14 +154,14 @@ export default class ModalSubmitInteraction<CH extends AnyTextChannel | Uncached
      * Get a followup message.
      * @param messageID The ID of the message.
      */
-    async getFollowup<T extends AnyGuildTextChannel>(messageID: string): Promise<Message<T>> {
+    async getFollowup(messageID: string): Promise<Message<T>> {
         return this.client.rest.interactions.getFollowupMessage<T>(this.applicationID, this.token, messageID);
     }
 
     /**
      * Get the original interaction response.
      */
-    async getOriginal<T extends AnyGuildTextChannel>(): Promise<Message<T>> {
+    async getOriginal(): Promise<Message<T>> {
         return this.client.rest.interactions.getOriginalMessage<T>(this.applicationID, this.token);
     }
 

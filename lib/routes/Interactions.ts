@@ -2,9 +2,10 @@ import type { InteractionContent, InteractionResponse } from "../types/interacti
 import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
-import type { AnyGuildTextChannel } from "../types/channels";
 import type RESTManager from "../rest/RESTManager";
 import Message from "../structures/Message";
+import type { AnyTextChannel } from "../types/channels";
+import type { Uncached } from "../types/shared";
 
 export default class Interactions {
     #manager: RESTManager;
@@ -18,7 +19,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param options The options for creating the followup message.
      */
-    async createFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
+    async createFollowupMessage<T extends AnyTextChannel | Uncached>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
         return this.#manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
     }
 
@@ -107,7 +108,7 @@ export default class Interactions {
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
      */
-    async editFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent): Promise<Message<T>> {
+    async editFollowupMessage<T extends AnyTextChannel | Uncached>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent): Promise<Message<T>> {
         return this.#manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
     }
 
@@ -117,7 +118,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param options The options for editing the original message.
      */
-    async editOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
+    async editOriginalMessage<T extends AnyTextChannel | Uncached>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
         return this.editFollowupMessage<T>(applicationID, interactionToken, "@original", options);
     }
 
@@ -127,7 +128,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.
      */
-    async getFollowupMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>> {
+    async getFollowupMessage<T extends AnyTextChannel | Uncached>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>> {
         return this.#manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
     }
 
@@ -136,7 +137,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      */
-    async getOriginalMessage<T extends AnyGuildTextChannel>(applicationID: string, interactionToken: string): Promise<Message<T>> {
+    async getOriginalMessage<T extends AnyTextChannel | Uncached>(applicationID: string, interactionToken: string): Promise<Message<T>> {
         return this.getFollowupMessage(applicationID, interactionToken, "@original");
     }
 }
