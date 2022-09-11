@@ -228,7 +228,7 @@ export default class Guilds {
             options.deleteMessageSeconds = options.deleteMessageDays * 86400;
         }
         await this.#manager.authRequest<null>({
-            method: "POST",
+            method: "PUT",
             path:   Routes.GUILD_BAN(guildID, userID),
             json:   { delete_message_seconds: options?.deleteMessageSeconds },
             reason
