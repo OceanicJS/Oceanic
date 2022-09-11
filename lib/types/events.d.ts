@@ -33,7 +33,7 @@ import type {
     JSONVoiceState
 } from "./json";
 import type { GuildApplicationCommandPermissions } from "./application-commands";
-import type { GuildEmoji, PartialEmoji, Sticker } from "./guilds";
+import type { GuildEmoji, PartialEmoji, Sticker, PossiblyUncachedIntegration } from "./guilds";
 import type { AnyInteractionGateway } from "./interactions";
 import type Guild from "../structures/Guild";
 import type UnavailableGuild from "../structures/UnavailableGuild";
@@ -133,7 +133,7 @@ export interface ClientEvents {
     /** @event Emitted when an integration is created. Requires the `GUILD_INTEGRATIONS` intent. */
     integrationCreate: [guild: Guild | Uncached, integration: Integration];
     /** @event Emitted when an integration is deleted. Requires the `GUILD_INTEGRATIONS` intent. */
-    integrationDelete: [guild: Guild | Uncached, integration: Integration | { applicationID?: string; id: string; }];
+    integrationDelete: [guild: Guild | Uncached, integration: Integration | PossiblyUncachedIntegration];
     /** @event Emitted when an integration is updated. Requires the `GUILD_INTEGRATIONS` intent. */
     integrationUpdate: [guild: Guild | Uncached, integration: Integration, oldIntegration: JSONIntegration | null];
     /** @event Emitted when an interaction is created. */

@@ -31,6 +31,7 @@ import type {
     VideoQualityModes
 } from "../Constants";
 import type User from "../structures/User";
+import type Integration from "../structures/Integration";
 import type TextChannel from "../structures/TextChannel";
 import type VoiceChannel from "../structures/VoiceChannel";
 import type CategoryChannel from "../structures/CategoryChannel";
@@ -600,3 +601,5 @@ export interface RawGuild {
     afkTimeout: number;
     applicationID: string | null;
 }
+
+export type PossiblyUncachedIntegration = Integration | { applicationID?: string; id: string; };
