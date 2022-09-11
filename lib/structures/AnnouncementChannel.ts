@@ -33,8 +33,8 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
      * Crosspost a message in this channel.
      * @param messageID The ID of the message to crosspost.
      */
-    async crosspostMessage(messageID: string): Promise<Message<AnnouncementChannel>> {
-        return this.client.rest.channels.crosspostMessage(this.id, messageID);
+    async crosspostMessage(messageID: string): Promise<Message<this>> {
+        return this.client.rest.channels.crosspostMessage<this>(this.id, messageID);
     }
 
     /**

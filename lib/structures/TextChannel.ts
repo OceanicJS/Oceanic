@@ -31,7 +31,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
      * Convert this text channel to a announcement channel.
      */
     async convert(): Promise<AnnouncementChannel> {
-        return this.edit({ type: ChannelTypes.GUILD_ANNOUNCEMENT })  as unknown as AnnouncementChannel;
+        return this.edit({ type: ChannelTypes.GUILD_ANNOUNCEMENT }) as unknown as AnnouncementChannel;
     }
 
     /**

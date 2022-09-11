@@ -316,8 +316,8 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /**
      * Crosspost this message in a announcement channel.
      */
-    async crosspost(): Promise<Message<AnnouncementChannel>> {
-        return this.client.rest.channels.crosspostMessage(this.channelID, this.id);
+    async crosspost(): Promise<Message<T>> {
+        return this.client.rest.channels.crosspostMessage<T>(this.channelID, this.id);
     }
 
     /**
