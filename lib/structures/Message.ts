@@ -262,7 +262,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             if (data.referenced_message === null) {
                 this.referencedMessage = null;
             } else {
-                if (this.channel && "messages" in this.channel) {
+                if (this.channel) {
                     this.referencedMessage = this.channel.messages.update(data.referenced_message);
                 } else {
                     this.referencedMessage = new Message(data.referenced_message, this.client);
