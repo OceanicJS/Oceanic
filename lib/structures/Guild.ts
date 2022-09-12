@@ -96,9 +96,17 @@ import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 import Shard from "../gateway/Shard";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods } from "@discordjs/voice";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment, import-newlines/enforce
+import type {
+    DiscordGatewayAdapterCreator,
+    DiscordGatewayAdapterLibraryMethods,
+    DiscordGatewayAdapterImplementerMethods,
+    CreateVoiceConnectionOptions,
+    JoinVoiceChannelOptions,
+    VoiceConnection
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore-line
+} from "@discordjs/voice";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
@@ -352,10 +360,16 @@ export default class Guild extends Base {
                 if (channel && "voiceMembers" in channel) {
                     channel.voiceMembers.add(member);
                 }
-                // @TODO voice
-                /* if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user!.id && !client.voiceConnections.has(this.id)) {
-                    process.nextTick(() => client.joinVoiceChannel(voiceState.channel_id!));
-                } */
+                if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user.id && !this.client.getVoiceConnection(this.id)) {
+                    this.client.joinVoiceChannel({
+                        guildId:        this.id,
+                        channelId:      voiceState.channel_id,
+                        selfDeaf:       voiceState.self_deaf,
+                        selfMute:       voiceState.self_mute,
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        adapterCreator: this.voiceAdapterCreator
+                    });
+                }
             }
         }
 
@@ -1036,10 +1050,29 @@ export default class Guild extends Base {
     }
 
     /**
+     * Join a voice or stage channel.
+     * @param options The options to join the channel with.
+     */
+    joinChannel(options: Omit<JoinVoiceChannelOptions & CreateVoiceConnectionOptions, "guildID" | "adapterCreator">): VoiceConnection {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+        return this.client.joinVoiceChannel({
+            ...options,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            adapterCreator: this.voiceAdapterCreator,
+            guildId:        this.id
+        });
+    }
+
+    /**
      * Leave this guild.
      */
     async leave(): Promise<void> {
         return this.client.rest.guilds.delete(this.id);
+    }
+
+    /** Leave the connected voice or stage channel on this guild. */
+    leaveChannel(): void {
+        return this.client.leaveVoiceChannel(this.id);
     }
 
     /**

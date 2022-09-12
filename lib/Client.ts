@@ -1,4 +1,4 @@
-import { ChannelTypes, GATEWAY_VERSION } from "./Constants";
+import { GATEWAY_VERSION } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import TypedCollection from "./util/TypedCollection";
 import PrivateChannel from "./structures/PrivateChannel";
@@ -12,16 +12,17 @@ import type {  ClientInstanceOptions, ClientOptions } from "./types/client";
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
-import type { BotActivity, GetBotGatewayResponse, SendStatuses, UpdateVoiceStateOptions } from "./types/gateway";
+import type { BotActivity, GetBotGatewayResponse, SendStatuses } from "./types/gateway";
 import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
-import type VoiceChannel from "./structures/VoiceChannel";
-import type StageChannel from "./structures/StageChannel";
 import Util from "./util/Util";
 import { ClientEvents } from "./types/events";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import type { DiscordGatewayAdapterLibraryMethods } from "@discordjs/voice";
+import type { CreateVoiceConnectionOptions, DiscordGatewayAdapterLibraryMethods, JoinVoiceChannelOptions, VoiceConnection } from "@discordjs/voice";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { joinVoiceChannel, getVoiceConnection, getVoiceConnections } from "@discordjs/voice";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -98,6 +99,15 @@ export default class Client extends TypedEmitter<ClientEvents> {
         } else {
             return this._application;
         }
+    }
+
+    /** All the active voice connections of this client. */
+    get getVoiceConnections(): Map<string, VoiceConnection> {
+        if (!getVoiceConnections) {
+            throw new Error("Voice is only supported with @discordjs/voice installed.");
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+        return getVoiceConnections();
     }
 
     get uptime(): number {
@@ -193,31 +203,35 @@ export default class Client extends TypedEmitter<ClientEvents> {
     }
 
     /**
-     * Join a voice channel.
-     * @param channelID The ID of the voice channel to join. Null to disconnect.
-     * @param options The options for joining the voice channel.
+     * Get a voice connection.
+     * @param guildID The ID of the guild the voice channel belongs to.
      */
-    async joinVoiceChannel(channelID: string, options?: UpdateVoiceStateOptions): Promise<void> {
-        const channel = this.getChannel<VoiceChannel | StageChannel>(channelID);
-        if (!channel) {
-            throw new Error("Invalid channel. Make sure the id is correct, and the channel is cached.");
+    getVoiceConnection(guildID: string): VoiceConnection | undefined {
+        if (!getVoiceConnection) {
+            throw new Error("Voice is only supported with @discordjs/voice installed.");
         }
-        if (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE) {
-            throw new Error("Only voice & stage channels can be joined.");
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        return getVoiceConnection(guildID);
+    }
+
+    /**
+     * Join a voice channel.
+     * @param options The options to join the channel with.
+     * */
+    joinVoiceChannel(options: Omit<JoinVoiceChannelOptions & CreateVoiceConnectionOptions, "group">): VoiceConnection {
+        if (!joinVoiceChannel) {
+            throw new Error("Voice is only supported with @discordjs/voice installed.");
         }
-        this.shards.get(this.guildShardMap[channel.guildID] ?? 0)!.updateVoiceState(channel.guildID, channelID, options);
-        // @TODO proper voice connection handling
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+        return joinVoiceChannel(Object.assign(options, { group: "default" }));
     }
 
     /**
      * Leave a voice channel.
-     * @param channelID The ID of the voice channel to leave.
+     * @param guildID The ID of the guild the voice channel belongs to.
      */
-    async leaveVoiceChannel(channelID: string): Promise<void> {
-        const channel = this.getChannel<VoiceChannel | StageChannel>(channelID);
-        if (!channel || (channel.type !== ChannelTypes.GUILD_VOICE && channel.type !== ChannelTypes.GUILD_STAGE_VOICE)) {
-            return;
-        }
-        this.shards.get(this.guildShardMap[channel.guildID] ?? 0)!.updateVoiceState(channel.guildID, null, { selfDeaf: false, selfMute: false });
+    leaveVoiceChannel(guildID: string): void {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+        return this.getVoiceConnection(guildID)?.destroy();
     }
 }

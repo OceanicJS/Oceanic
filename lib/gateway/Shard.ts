@@ -346,7 +346,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_DELETE": {
-                // @TODO disconnect voice
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                this.client["voiceAdapters"].get(packet.d.id)?.destroy();
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
                 guild?.channels.forEach(channel => delete this.client.channelGuildMap[channel.id]);
@@ -1328,6 +1329,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     hardReset(): void {
         this.reset();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        this.client["voiceAdapters"].forEach(voiceAdapter => voiceAdapter.destroy());
         this.sequence = 0;
         this.sessionID = null;
         this.reconnectInterval = 1000;

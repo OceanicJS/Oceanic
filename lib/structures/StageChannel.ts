@@ -19,7 +19,9 @@ import type {
 } from "../types/channels";
 import type { JSONStageChannel } from "../types/json";
 import type { RawMember } from "../types/guilds";
-import type { UpdateVoiceStateOptions } from "../types/gateway";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { CreateVoiceConnectionOptions, JoinVoiceChannelOptions, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a guild stage channel. */
 export default class StageChannel extends GuildChannel {
@@ -104,8 +106,24 @@ export default class StageChannel extends GuildChannel {
      * Join this stage channel.
      * @param options The options to join the channel with.
      */
-    async join(options?: UpdateVoiceStateOptions): Promise<void> {
-        return this.client.joinVoiceChannel(this.id, options);
+    join(options: Omit<JoinVoiceChannelOptions & CreateVoiceConnectionOptions, "guildID" | "channelID" | "adapterCreator">): VoiceConnection {
+        if (!this["_guild"]) {
+            throw new Error("Voice is only supported if you have the GUILDS intent.");
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+        return this.client.joinVoiceChannel({
+            ...options,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            adapterCreator: this["_guild"].voiceAdapterCreator,
+            guildId:        this.guildID,
+            channelId:      this.id
+        });
+    }
+
+    /** Leave this stage channel. */
+    leave(): void {
+        return this.client.leaveVoiceChannel(this.guildID);
     }
 
     /**
