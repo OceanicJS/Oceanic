@@ -22,9 +22,16 @@ import type {
     EmbedOptions,
     RawEmbedOptions,
     Embed,
-    RawEmbed
+    RawEmbed,
+    RawThreadChannel,
+    AnyThreadChannel,
+    RawGuildChannel,
+    AnyGuildChannelWithoutThreads,
+    RawChannel,
+    AnyChannel
 } from "../types";
 import Member from "../structures/Member";
+import Channel from "../structures/Channel";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -313,9 +320,21 @@ export default class Util {
         } as RawApplicationCommandOption;
     }
 
+    updateChannel<T extends AnyChannel>(channelData: RawChannel): T {
+        if (channelData.guild_id) {
+            const guild = this.#client.guilds.get(channelData.guild_id);
+            if (guild) {
+                this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
+                const channel = guild.channels.has(channelData.id) ? guild.channels.update(channelData as RawGuildChannel) as AnyGuildChannelWithoutThreads : guild.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, this.#client));
+                return channel as T;
+            }
+        }
+        return Channel.from<T>(channelData, this.#client);
+    }
+
     updateMember(guildID: string, memberID: string | undefined, member: RawMember): Member {
         const guild = this.#client.guilds.get(guildID);
-        if (guild && this.#client.user.id === memberID) {
+        if (guild && this.#client.user.id === member.user?.id) {
             if (guild["_clientMember"]) {
                 guild["_clientMember"]["update"](member);
             } else {
@@ -323,7 +342,21 @@ export default class Util {
             }
             return guild["_clientMember"];
         }
-        return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member(member, this.#client, guildID);
+        return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member({ ...member, id: memberID } as RawMember, this.#client, guildID);
+    }
+
+    updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {
+        const guild = this.#client.guilds.get(threadData.guild_id);
+        if (guild) {
+            this.#client.threadGuildMap[threadData.id] = threadData.guild_id;
+            const thread = guild.threads.has(threadData.id) ? guild.threads.update(threadData) as T : guild.threads.add(Channel.from<T>(threadData, this.#client));
+            const channel = guild.channels.get(threadData.parent_id!);
+            if (channel && "threads" in channel) {
+                channel.threads.update(thread as never);
+            }
+            return thread;
+        }
+        return Channel.from<T>(threadData, this.#client);
     }
 }
 

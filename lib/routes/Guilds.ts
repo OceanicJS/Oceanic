@@ -59,7 +59,6 @@ import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTe
 import GuildPreview from "../structures/GuildPreview";
 import type {
     AnyGuildChannelWithoutThreads,
-    AnyThreadChannel,
     InviteChannel,
     PartialInviteChannel,
     RawGuildChannel,
@@ -72,7 +71,6 @@ import type { VoiceRegion } from "../types/voice";
 import Invite from "../structures/Invite";
 import Integration from "../structures/Integration";
 import AutoModerationRule from "../structures/AutoModerationRule";
-import Channel from "../structures/Channel";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type RESTManager from "../rest/RESTManager";
 import Guild from "../structures/Guild";
@@ -210,7 +208,7 @@ export default class Guilds {
                 trigger_type: options.triggerType
             },
             reason
-        }).then(data => this.#manager.client.guilds.has(id) ? this.#manager.client.guilds.get(id)!.autoModerationRules.update(data) : new AutoModerationRule(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.get(id)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this.#manager.client));
     }
 
     /**
@@ -263,7 +261,7 @@ export default class Guilds {
                 video_quality_mode:            options.videoQualityMode
             },
             reason
-        }).then(data => Channel.from(data, this.#manager.client)) as never;
+        }).then(data => this.#manager.client.util.updateChannel(data)) as never;
     }
 
     /**
@@ -341,7 +339,7 @@ export default class Guilds {
                 unicode_emoji: options?.unicodeEmoji
             },
             reason
-        }).then(data => this.#manager.client.guilds.has(id) ? this.#manager.client.guilds.get(id)!.roles.update(data, id) : new Role(data, this.#manager.client, id));
+        }).then(data => this.#manager.client.guilds.get(id)?.roles.update(data, id) ?? new Role(data, this.#manager.client, id));
     }
 
     /**
@@ -372,7 +370,7 @@ export default class Guilds {
                 scheduled_start_time: options.scheduledStartTime
             },
             reason
-        }).then(data => new GuildScheduledEvent(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.get(id)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this.#manager.client));
     }
 
     /**
@@ -571,7 +569,7 @@ export default class Guilds {
                 }
             },
             reason
-        }).then(data => this.#manager.client.guilds.has(id) ? this.#manager.client.guilds.get(id)!.autoModerationRules.update(data) : new AutoModerationRule(data, this.#manager.client));
+        }).then(data =>  this.#manager.client.guilds.get(id)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this.#manager.client));
     }
 
     /**
@@ -716,7 +714,7 @@ export default class Guilds {
                 unicode_emoji: options.unicodeEmoji
             },
             reason
-        }).then(data => this.#manager.client.guilds.has(id) ? this.#manager.client.guilds.get(id)!.roles.update(data, id) : new Role(data, this.#manager.client, id));
+        }).then(data => this.#manager.client.guilds.get(id)?.roles.update(data, id) ?? new Role(data, this.#manager.client, id));
     }
 
     /**
@@ -734,7 +732,7 @@ export default class Guilds {
                 position: o.position
             })),
             reason
-        }).then(data => data.map(role => guild ? guild.roles.update(role, id) : new Role(role, this.#manager.client, id)));
+        }).then(data => data.map(role => guild?.roles.update(role, id) ?? new Role(role, this.#manager.client, id)));
     }
 
     /**
@@ -766,7 +764,7 @@ export default class Guilds {
                 scheduled_start_time: options.scheduledStartTime
             },
             reason
-        }).then(data => new GuildScheduledEvent(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.get(id)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this.#manager.client));
     }
 
     /**
@@ -905,7 +903,7 @@ export default class Guilds {
                 joinTimestamp: new Date(member.join_timestamp),
                 userID:        member.user_id
             })),
-            threads: data.threads.map(thread => Channel.from<AnyThreadChannel>(thread, this.#manager.client))
+            threads: data.threads.map(rawThread => this.#manager.client.util.updateThread(rawThread))
         }));
     }
 
@@ -938,7 +936,7 @@ export default class Guilds {
             entries:              data.audit_log_entries.map(entry => new AuditLogEntry(entry, this.#manager.client)),
             guildScheduledEvents: data.guild_scheduled_events.map(event => guild ? guild.scheduledEvents.update(event) : new GuildScheduledEvent(event, this.#manager.client)),
             integrations:         data.integrations.map(integration => new Integration(integration, this.#manager.client)),
-            threads:              data.threads.map(thread => guild ? guild.threads.update(thread) : Channel.from(thread, this.#manager.client)),
+            threads:              data.threads.map(rawThread => this.#manager.client.util.updateThread(rawThread)),
             users:                data.users.map(user => this.#manager.client.users.update(user)),
             webhooks:             data.webhooks.map(webhook => new Webhook(webhook, this.#manager.client))
         }));
@@ -953,7 +951,7 @@ export default class Guilds {
         return this.#manager.authRequest<RawAutoModerationRule>({
             method: "GET",
             path:   Routes.GUILD_AUTOMOD_RULE(id, ruleID)
-        }).then(data => this.#manager.client.guilds.has(id) ? this.#manager.client.guilds.get(id)!.autoModerationRules.update(data) : new AutoModerationRule(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.get(id)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this.#manager.client));
     }
 
     /**
@@ -961,11 +959,10 @@ export default class Guilds {
      * @param id The ID of the guild.
      */
     async getAutoModerationRules(id: string): Promise<Array<AutoModerationRule>> {
-        const guild = this.#manager.client.guilds.get(id);
         return this.#manager.authRequest<Array<RawAutoModerationRule>>({
             method: "GET",
             path:   Routes.GUILD_AUTOMOD_RULES(id)
-        }).then(data => data.map(rule => guild ? guild.autoModerationRules.update(rule) : new AutoModerationRule(rule, this.#manager.client)));
+        }).then(data => data.map(rule => this.#manager.client.guilds.get(id)?.autoModerationRules.update(rule) ?? new AutoModerationRule(rule, this.#manager.client)));
     }
 
     /**
@@ -1017,7 +1014,7 @@ export default class Guilds {
         return this.#manager.authRequest<Array<RawGuildChannel>>({
             method: "GET",
             path:   Routes.GUILD_CHANNELS(id)
-        }).then(data => data.map(d => Channel.from<AnyGuildChannelWithoutThreads>(d, this.#manager.client)));
+        }).then(data => data.map(d => this.#manager.client.util.updateChannel(d)));
     }
 
     /**
@@ -1057,7 +1054,7 @@ export default class Guilds {
         return this.#manager.authRequest<Array<RawIntegration>>({
             method: "GET",
             path:   Routes.GUILD_INTEGRATIONS(id)
-        }).then(data => data.map(integration => new Integration(integration, this.#manager.client)));
+        }).then(data => data.map(integration => this.#manager.client.guilds.get(id)?.integrations.update(integration) ?? new Integration(integration, this.#manager.client)));
     }
 
     /**
@@ -1161,7 +1158,7 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT(id, eventID),
             query
-        }).then(data => new GuildScheduledEvent(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.get(id)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this.#manager.client));
     }
 
     /**
@@ -1211,7 +1208,7 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
             query
-        }).then(data => data.map(d => guild ? guild.scheduledEvents.update(d) : new GuildScheduledEvent(d, this.#manager.client)));
+        }).then(data => data.map(d => guild?.scheduledEvents.update(d) ?? new GuildScheduledEvent(d, this.#manager.client)));
     }
 
     /**

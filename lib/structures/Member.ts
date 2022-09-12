@@ -41,7 +41,8 @@ export default class Member extends Base {
     /** The user associated with this member. */
     user: User;
     constructor(data: RawMember, client: Client, guildID: string) {
-        let user: User | undefined, id: string | undefined;
+        let user: User | undefined;
+        let id: string | undefined;
         if ("id" in data && !data.user) {
             user = client.users.get(id = (data as RawMember & { id: string; }).id);
         } else if (data.user) {

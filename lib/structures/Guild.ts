@@ -279,7 +279,7 @@ export default class Guild extends Base {
                 this.threads.add(thread);
                 const channel = this.channels.get(thread.parentID);
                 if (channel && "threads" in channel) {
-                    (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).update(thread);
+                    channel.threads.update(thread as never);
                 }
             }
         }

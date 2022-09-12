@@ -9,7 +9,6 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
-import Channel from "./Channel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, MessageTypes } from "../Constants";
@@ -30,8 +29,7 @@ import type {
     StickerItem,
     MessageReaction,
     MessageActionRow,
-    AnyThreadChannel,
-    RawThreadChannel
+    AnyThreadChannel
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -274,10 +272,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             this.stickerItems = data.sticker_items;
         }
         if (data.thread !== undefined) {
-            this.thread = this._guild?.threads.has(data.thread.id) ? this._guild?.threads.update(data.thread) : this._guild?.threads.add(Channel.from(data.thread, this.client) as AnyThreadChannel) ?? Channel.from(data.thread, this.client) as AnyThreadChannel;
-            if (this.channel && "threads" in this.channel) {
-                (this.channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).update(this.thread);
-            }
+            this.thread = this.client.util.updateThread(data.thread);
 
         }
     }

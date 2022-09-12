@@ -628,6 +628,7 @@ export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadCh
 export type AnyTextChannelWithoutThreads = Exclude<AnyTextChannel, AnyThreadChannel>;
 export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
+export type AnyGuildTextChannelWithoutThreads = Exclude<AnyGuildTextChannel, AnyThreadChannel>;
 export type AnyThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyVoiceChannel = VoiceChannel | StageChannel;
 export type InviteChannel = Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>;

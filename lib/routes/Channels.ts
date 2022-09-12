@@ -35,7 +35,8 @@ import type {
     RawPrivateChannel,
     RawGroupChannel,
     AnyEditableChannel,
-    PartialInviteChannel
+    PartialInviteChannel,
+    RawThreadChannel
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -427,7 +428,7 @@ export default class Channels {
         return this.#manager.authRequest<RawChannel>({
             method: "GET",
             path:   Routes.CHANNEL(id)
-        }).then(data => Channel.from<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateChannel<T>(data));
     }
 
     /**
@@ -489,7 +490,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as ThreadMember),
-            threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this.#manager.client))
+            threads: data.threads.map(d => this.#manager.client.util.updateThread(d))
         }));
     }
 
@@ -555,7 +556,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as ThreadMember),
-            threads: data.threads.map(d => Channel.from<PrivateThreadChannel>(d, this.#manager.client))
+            threads: data.threads.map(d => this.#manager.client.util.updateThread(d))
         }));
     }
 
@@ -580,7 +581,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as ThreadMember),
-            threads: data.threads.map(d => Channel.from<T>(d, this.#manager.client))
+            threads: data.threads.map(d => this.#manager.client.util.updateThread(d))
         }));
     }
 
@@ -730,7 +731,7 @@ export default class Channels {
         if (options.reason) {
             delete options.reason;
         }
-        return this.#manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawThreadChannel>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGE_THREADS(id, messageID),
             json:   {
@@ -739,7 +740,7 @@ export default class Channels {
                 rate_limit_per_user:   options.rateLimitPerUser
             },
             reason
-        }).then(data => Channel.from<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateThread<T>(data));
     }
 
     /**
@@ -756,7 +757,7 @@ export default class Channels {
         if (options.message.files) {
             delete options.message.files;
         }
-        return this.#manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawThreadChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(id),
             json:   {
@@ -775,7 +776,7 @@ export default class Channels {
             },
             reason,
             files
-        }).then(data => Channel.from<PublicThreadChannel>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateThread<PublicThreadChannel>(data));
     }
 
     /**
@@ -788,7 +789,7 @@ export default class Channels {
         if (options.reason) {
             delete options.reason;
         }
-        return this.#manager.authRequest<RawChannel>({
+        return this.#manager.authRequest<RawThreadChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(id),
             json:   {
@@ -799,7 +800,7 @@ export default class Channels {
                 type:                  options.type
             },
             reason
-        }).then(data => Channel.from<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateThread<T>(data));
     }
 
     /**
