@@ -28,7 +28,8 @@ import type {
     MFALevels,
     PremiumTiers,
     VerificationLevels,
-    GuildChannelTypesWithoutThreads
+    GuildChannelTypesWithoutThreads,
+    GatewayOPCodes
 } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import * as Routes from "../util/Routes";
@@ -95,6 +96,9 @@ import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 import Shard from "../gateway/Shard";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods } from "@discordjs/voice";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
@@ -205,6 +209,8 @@ export default class Guild extends Base {
     vanityURLCode: string | null;
     /** The [verfication level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
+    /** The voice state adapter for this guild that can be used with @discordjs/voice to play audio in voice and stage channels. */
+    voiceAdapterCreator: DiscordGatewayAdapterCreator;
     /** The voice states of members in voice channels. */
     voiceStates: TypedCollection<string, RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
@@ -256,6 +262,18 @@ export default class Guild extends Base {
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
+        this.voiceAdapterCreator = (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
+            this.client["voiceAdapters"].set(this.id, methods);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return {
+                sendPayload: (payload: { d: unknown; op: GatewayOPCodes; }): true => {
+                    this.shard.send(payload.op, payload.d);
+
+                    return true;
+                },
+                destroy: () => this.client["voiceAdapters"].delete(this.id)
+            };
+        };
         this.voiceStates = new TypedCollection(VoiceState, client);
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
         data.roles.forEach(role => this.roles.update(role, data.id));

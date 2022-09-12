@@ -332,9 +332,9 @@ export default class Util {
         return Channel.from<T>(channelData, this.#client);
     }
 
-    updateMember(guildID: string, memberID: string | undefined, member: RawMember): Member {
+    updateMember(guildID: string, memberID: string, member: RawMember): Member {
         const guild = this.#client.guilds.get(guildID);
-        if (guild && this.#client.user.id === member.user?.id) {
+        if (guild && this.#client.user.id === memberID) {
             if (guild["_clientMember"]) {
                 guild["_clientMember"]["update"](member);
             } else {

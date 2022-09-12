@@ -386,7 +386,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (guild) {
                     guild.memberCount++;
                 }
-                const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user?.id, packet.d);
+                const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user!.id, packet.d);
                 this.client.emit("guildMemberAdd", member);
                 break;
             }
@@ -395,7 +395,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["updateMemberLimit"](packet.d.members.length);
-                const members = packet.d.members.map(member => this.client.util.updateMember(packet.d.guild_id, member.user?.id, member));
+                const members = packet.d.members.map(member => this.client.util.updateMember(packet.d.guild_id, member.user!.id, member));
                 packet.d.presences?.forEach(presence => {
                     const member = members.find(m => m.id === presence.user.id)!;
                     member.presence = presence;
@@ -929,11 +929,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "VOICE_STATE_UPDATE": {
+                if (packet.d.guild_id && packet.d.session_id && packet.d.user_id === this.client.user.id) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                    this.client["voiceAdapters"].get(packet.d.guild_id)?.onVoiceStateUpdate(packet.d as never);
+                }
                 // @TODO voice states without guilds?
                 if (!packet.d.guild_id || !packet.d.member) {
                     break;
                 }
-                // @TODO voice
                 packet.d.self_stream = !!packet.d.self_stream;
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member);
@@ -969,7 +972,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "VOICE_SERVER_UPDATE": {
-                // @TODO voice
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                this.client["voiceAdapters"].get(packet.d.guild_id)?.onVoiceServerUpdate(packet.d);
                 break;
             }
 

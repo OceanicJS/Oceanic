@@ -14,12 +14,14 @@ import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
 import type { BotActivity, GetBotGatewayResponse, SendStatuses, UpdateVoiceStateOptions } from "./types/gateway";
 import UnavailableGuild from "./structures/UnavailableGuild";
-import VoiceConnectionManager from "./voice/VoiceConnectionManager";
 import type ExtendedUser from "./structures/ExtendedUser";
 import type VoiceChannel from "./structures/VoiceChannel";
 import type StageChannel from "./structures/StageChannel";
 import Util from "./util/Util";
 import { ClientEvents } from "./types/events";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { DiscordGatewayAdapterLibraryMethods } from "@discordjs/voice";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -33,6 +35,7 @@ try {
 export default class Client extends TypedEmitter<ClientEvents> {
     private _application?: ClientApplication;
     private _user?: ExtendedUser;
+    private voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
     groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
@@ -48,7 +51,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
     unavailableGuilds: TypedCollection<string, RawUnavailableGuild, UnavailableGuild>;
     users: TypedCollection<string, RawUser, User>;
     util: Util;
-    voiceConnections: VoiceConnectionManager;
     /**
      * @constructor
      * @param options The options to create the client with.
@@ -74,6 +76,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
             defaultImageFormat: options?.defaultImageFormat ?? "png",
             defaultImageSize:   options?.defaultImageSize ?? 4096
         };
+        this.voiceAdapters = new Map();
         this.channelGuildMap = {};
         this.groupChannels = new TypedCollection(GroupChannel, this, 10);
         this.guilds = new TypedCollection(Guild, this);
@@ -86,7 +89,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
         this.unavailableGuilds = new TypedCollection(UnavailableGuild, this);
         this.users = new TypedCollection(User, this, this.options.collectionLimits.users);
         this.util = new Util(this);
-        this.voiceConnections = new VoiceConnectionManager(this);
     }
 
     /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
