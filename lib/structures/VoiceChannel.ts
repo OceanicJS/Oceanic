@@ -24,9 +24,10 @@ import type {
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { JSONVoiceChannel } from "../types/json";
+import type { JoinVoiceChannelOptions } from "../types/discordjs-voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import type { CreateVoiceConnectionOptions, JoinVoiceChannelOptions, VoiceConnection } from "@discordjs/voice";
+import type { VoiceConnection } from "@discordjs/voice";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends GuildChannel {
@@ -238,7 +239,7 @@ export default class VoiceChannel extends GuildChannel {
      * Join this voice channel.
      * @param options The options to join the channel with.
      */
-    join(options: Omit<JoinVoiceChannelOptions & CreateVoiceConnectionOptions, "guildID" | "channelID" | "adapterCreator">): VoiceConnection {
+    join(options: Omit<JoinVoiceChannelOptions, "guildID" | "channelID" | "voiceAdapterCreator">): VoiceConnection {
         if (!this["_guild"]) {
             throw new Error("Voice is only supported if you have the GUILDS intent.");
         }
@@ -247,9 +248,9 @@ export default class VoiceChannel extends GuildChannel {
         return this.client.joinVoiceChannel({
             ...options,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            adapterCreator: this["_guild"].voiceAdapterCreator,
-            guildId:        this.guildID,
-            channelId:      this.id
+            voiceAdapterCreator: this["_guild"].voiceAdapterCreator,
+            guildID:             this.guildID,
+            channelID:           this.id
         });
     }
 

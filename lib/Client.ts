@@ -17,12 +17,18 @@ import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import { ClientEvents } from "./types/events";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type { CreateVoiceConnectionOptions, DiscordGatewayAdapterLibraryMethods, JoinVoiceChannelOptions, VoiceConnection } from "@discordjs/voice";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { joinVoiceChannel, getVoiceConnection, getVoiceConnections } from "@discordjs/voice";
+import type { JoinVoiceChannelOptions } from "./types/discordjs-voice";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment, import-newlines/enforce
+import {
+    joinVoiceChannel,
+    getVoiceConnection,
+    getVoiceConnections,
+    type DiscordGatewayAdapterLibraryMethods,
+    type VoiceConnection
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+} from "@discordjs/voice";
+
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -218,12 +224,20 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * Join a voice channel.
      * @param options The options to join the channel with.
      * */
-    joinVoiceChannel(options: Omit<JoinVoiceChannelOptions & CreateVoiceConnectionOptions, "group">): VoiceConnection {
+    joinVoiceChannel(options: JoinVoiceChannelOptions): VoiceConnection {
         if (!joinVoiceChannel) {
             throw new Error("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-        return joinVoiceChannel(Object.assign(options, { group: "default" }));
+        return joinVoiceChannel({
+            channelId:      options.channelID,
+            guildId:        options.guildID,
+            debug:          options.debug,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            adapterCreator: options.voiceAdapterCreator,
+            selfDeaf:       options.selfDeaf,
+            selfMute:       options.selfMute
+        });
     }
 
     /**
