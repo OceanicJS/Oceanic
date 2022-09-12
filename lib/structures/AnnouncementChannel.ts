@@ -26,7 +26,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
      * Convert this news channel to a text channel.
      */
     async convert(): Promise<TextChannel> {
-        return super.convert() as never;
+        return super.convert() as Promise<TextChannel>;
     }
 
     /**
