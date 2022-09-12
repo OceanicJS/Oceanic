@@ -107,15 +107,6 @@ export default class Client extends TypedEmitter<ClientEvents> {
         }
     }
 
-    /** All the active voice connections of this client. */
-    get getVoiceConnections(): Map<string, VoiceConnection> {
-        if (!getVoiceConnections) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-        return getVoiceConnections();
-    }
-
     get uptime(): number {
         return this.startTime ? Date.now() - this.startTime : 0;
     }
@@ -127,6 +118,15 @@ export default class Client extends TypedEmitter<ClientEvents> {
         } else {
             return this._user;
         }
+    }
+
+    /** The active voice connections of this client. */
+    get voiceConnections(): Map<string, VoiceConnection> {
+        if (!getVoiceConnections) {
+            throw new Error("Voice is only supported with @discordjs/voice installed.");
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+        return getVoiceConnections();
     }
 
     /** Connect the client to Discord. */
