@@ -10,6 +10,7 @@ import type {
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
+import type { Uncached } from "./shared";
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
@@ -31,7 +32,6 @@ import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type PrivateChannel from "../structures/PrivateChannel";
 import TypedCollection from "../util/TypedCollection";
-import { Uncached } from "types/shared";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
 
