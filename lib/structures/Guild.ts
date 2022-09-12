@@ -274,7 +274,13 @@ export default class Guild extends Base {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
                 client.threadGuildMap[threadData.id] = this.id;
-                this.threads.add(Channel.from<AnyThreadChannel>(threadData, client))["_guild"] = this;
+                const thread = Channel.from<AnyThreadChannel>(threadData, client);
+                thread["_guild"] = this;
+                this.threads.add(thread);
+                const channel = this.channels.get(thread.parentID);
+                if (channel && "threads" in channel) {
+                    (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).update(thread);
+                }
             }
         }
 

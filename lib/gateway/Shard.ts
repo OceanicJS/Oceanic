@@ -287,7 +287,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "CHANNEL_CREATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const channel = guild?.channels.has(packet.d.id) ? guild.channels.update(packet.d) : Channel.from(packet.d, this.client) as AnyGuildChannelWithoutThreads;
+                const channel = guild?.channels.has(packet.d.id) ? guild.channels.update(packet.d) : guild?.channels.add(Channel.from(packet.d, this.client) as AnyGuildChannelWithoutThreads) ?? Channel.from(packet.d, this.client) as AnyGuildChannelWithoutThreads;
                 this.client.channelGuildMap[packet.d.id] = packet.d.guild_id;
                 this.client.emit("channelCreate", channel);
                 break;
@@ -295,7 +295,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "CHANNEL_DELETE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const channel = guild?.channels.has(packet.d.id) ? guild.channels.update(packet.d) : Channel.from(packet.d, this.client) as AnyGuildChannelWithoutThreads;
+                const channel = guild?.channels.has(packet.d.id) ? guild.channels.update(packet.d) : guild?.channels.add(Channel.from(packet.d, this.client) as AnyGuildChannelWithoutThreads) ?? Channel.from(packet.d, this.client) as AnyGuildChannelWithoutThreads;
                 if (channel instanceof VoiceChannel || channel instanceof StageChannel) {
                     channel.voiceMembers.forEach(member => {
                         channel.voiceMembers.delete(member.id);
@@ -316,7 +316,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "CHANNEL_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const oldChannel = this.client.getChannel<TextChannel>(packet.d.id)?.toJSON() ?? null;
-                const channel = guild?.channels.has(packet.d.id) ? guild.channels.update(packet.d) as TextChannel : Channel.from(packet.d, this.client) as TextChannel;
+                const channel = guild?.channels.has(packet.d.id) ? guild.channels.update(packet.d) as TextChannel : guild?.channels.add(Channel.from(packet.d, this.client) as TextChannel) ?? Channel.from(packet.d, this.client) as TextChannel;
                 this.client.channelGuildMap[packet.d.id] = packet.d.guild_id;
                 this.client.emit("channelUpdate", channel, oldChannel);
                 break;
@@ -577,7 +577,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_CREATE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.update(packet.d) ?? new Message(packet.d, this.client);
+                const message = channel?.messages?.update(packet.d) ?? new Message(packet.d, this.client);
                 if (channel) {
                     channel.lastMessage = message;
                 }
@@ -587,9 +587,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_DELETE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.id);
+                const message = channel?.messages?.get(packet.d.id);
                 if (channel) {
-                    channel.messages.delete(packet.d.id);
+                    channel.messages?.delete(packet.d.id);
                 }
                 this.client.emit("messageDelete", message ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.id });
                 break;
@@ -598,8 +598,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "MESSAGE_DELETE_BULK": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
                 this.client.emit("messageDeleteBulk", packet.d.ids.map(id => {
-                    const message = channel?.messages.get(id) ?? { channel: channel ?? { id: packet.d.channel_id }, id };
-                    channel?.messages.delete(id);
+                    const message = channel?.messages?.get(id) ?? { channel: channel ?? { id: packet.d.channel_id }, id };
+                    channel?.messages?.delete(id);
                     return message;
                 }));
                 break;
@@ -607,7 +607,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_ADD": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id);
+                const message = channel?.messages?.get(packet.d.message_id);
                 const reactor = packet.d.member
                     ? (packet.d.guild_id ? this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member) : this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id })
                     : this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
@@ -634,7 +634,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_REMOVE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id);
+                const message = channel?.messages?.get(packet.d.message_id);
                 const reactor = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
 
                 if (message) {
@@ -656,7 +656,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_REMOVE_ALL": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id);
+                const message = channel?.messages?.get(packet.d.message_id);
 
                 if (message) {
                     message.reactions = {};
@@ -668,7 +668,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_REMOVE_EMOJI": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const message = channel?.messages.get(packet.d.message_id);
+                const message = channel?.messages?.get(packet.d.message_id);
 
                 if (message) {
                     const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
@@ -683,12 +683,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_UPDATE": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
-                const oldMessage = channel?.messages.get(packet.d.id)?.toJSON() ?? null;
+                const oldMessage = channel?.messages?.get(packet.d.id)?.toJSON() ?? null;
                 if (!oldMessage && !packet.d.author) {
                     this.client.emit("debug", `Got partial MESSAGE_UPDATE for uncached message ${packet.d.id} for channel ${packet.d.channel_id}, discarding..`);
                     break;
                 }
-                const message = channel?.messages.update(packet.d) ?? new Message(packet.d as RawMessage, this.client);
+                const message = channel?.messages?.update(packet.d) ?? new Message(packet.d as RawMessage, this.client);
                 this.client.emit("messageUpdate", message, oldMessage);
                 break;
             }
@@ -796,11 +796,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "THREAD_CREATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const thread = guild?.threads.has(packet.d.id) ? guild.threads.update(packet.d) : Channel.from(packet.d, this.client) as AnyThreadChannel;
+                const thread = guild?.threads.has(packet.d.id) ? guild.threads.update(packet.d) : guild?.threads.add(Channel.from(packet.d, this.client) as AnyThreadChannel) ?? Channel.from(packet.d, this.client) as AnyThreadChannel;
                 this.client.threadGuildMap[packet.d.id] = packet.d.guild_id;
                 const channel = this.client.getChannel<TextChannel | AnnouncementChannel | ForumChannel>(packet.d.parent_id!);
                 if (channel) {
-                    (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).add(thread);
+                    (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>)?.add(thread);
                     if (channel.type === ChannelTypes.GUILD_FORUM) {
                         channel.lastThread = thread as PublicThreadChannel;
                         channel.lastThreadID = thread.id;
@@ -819,7 +819,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     parentID: packet.d.parent_id!
                 };
                 if (channel) {
-                    channel.threads.delete(packet.d.id);
+                    channel.threads?.delete(packet.d.id);
                     if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
                         channel.lastThread = null;
                     }
@@ -834,8 +834,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.client.emit("debug", `Missing guild in THREAD_LIST_SYNC: ${packet.d.guild_id}`);
                     break;
                 }
-                for (const thread of packet.d.threads) {
-                    guild.threads.update(thread);
+                for (const threadData of packet.d.threads) {
+                    const thread = guild.threads.update(guild.threads.has(threadData.id) ? threadData : Channel.from(threadData, this.client) as AnyThreadChannel);
+                    this.client.threadGuildMap[thread.id] = packet.d.guild_id;
+                    const channel = this.client.getChannel<TextChannel | AnnouncementChannel | ForumChannel>(threadData.parent_id!);
+                    if (channel) {
+                        (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>)?.add(thread);
+                    }
                 }
                 for (const member of packet.d.members) {
                     const threadMember: ThreadMember = {
@@ -915,10 +920,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const channel = this.client.getChannel<TextChannel | AnnouncementChannel | ForumChannel>(packet.d.parent_id!);
                 const oldThread = guild?.threads.get(packet.d.id)?.toJSON() ?? null;
-                const thread = guild?.threads.has(packet.d.id) ? guild.threads.update(packet.d) : Channel.from(packet.d, this.client) as AnyThreadChannel;
+                const thread = guild?.threads.has(packet.d.id) ? guild.threads.update(packet.d) : guild?.threads.add(Channel.from(packet.d, this.client) as AnyThreadChannel) ?? Channel.from(packet.d, this.client) as AnyThreadChannel;
                 this.client.threadGuildMap[packet.d.id] = packet.d.guild_id;
                 if (channel) {
-                    (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).update(thread);
+                    (channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>)?.update(thread);
                 }
                 this.client.emit("threadUpdate", thread as AnnouncementThreadChannel, oldThread as JSONAnnouncementThreadChannel);
                 break;

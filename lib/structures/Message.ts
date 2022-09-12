@@ -9,7 +9,6 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
-import type ThreadChannel from "./ThreadChannel";
 import Channel from "./Channel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
@@ -263,7 +262,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
                 this.referencedMessage = null;
             } else {
                 if (this.channel) {
-                    this.referencedMessage = this.channel.messages.update(data.referenced_message);
+                    this.referencedMessage = this.channel.messages?.update(data.referenced_message);
                 } else {
                     this.referencedMessage = new Message(data.referenced_message, this.client);
                 }
@@ -275,17 +274,9 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
             this.stickerItems = data.sticker_items;
         }
         if (data.thread !== undefined) {
-            if (this._guild) {
-                this.thread = this._guild.threads.update(data.thread);
-                if (this.channel && "threads" in this.channel && !this.channel.threads.has(this.thread.id)) {
-                    (this.channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(this.thread);
-                }
-            } else {
-                if (this.channel && "threads" in this.channel) {
-                    this.thread = (this.channel.threads as TypedCollection<string, RawThreadChannel, PublicThreadChannel>).update(data.thread);
-                } else {
-                    this.thread = Channel.from(data.thread, this.client);
-                }
+            this.thread = this._guild?.threads.has(data.thread.id) ? this._guild?.threads.update(data.thread) : this._guild?.threads.add(Channel.from(data.thread, this.client) as AnyThreadChannel) ?? Channel.from(data.thread, this.client) as AnyThreadChannel;
+            if (this.channel && "threads" in this.channel) {
+                (this.channel.threads as TypedCollection<string, RawThreadChannel, AnyThreadChannel>).update(this.thread);
             }
 
         }
