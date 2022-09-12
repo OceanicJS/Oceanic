@@ -181,7 +181,7 @@ export default class Member extends Base {
      * @param options The options for editing the member.
      */
     async edit(options: EditMemberOptions): Promise<Member> {
-        return this.client.rest.guilds.editMember(this.guildID, this.id, options);
+        return this.id === this.client.user.id ? this.client.rest.guilds.editCurrentMember(this.guildID, options) :  this.client.rest.guilds.editMember(this.guildID, this.id, options);
     }
 
     /**
@@ -189,7 +189,7 @@ export default class Member extends Base {
      * @param options The options for editing the voice state.
      */
     async editVoiceState(options: EditUserVoiceStateOptions): Promise<void> {
-        return this.client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
+        return  this.id === this.client.user.id ? this.client.rest.guilds.editCurrentUserVoiceState(this.guildID, options) : this.client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
     }
 
     /**
