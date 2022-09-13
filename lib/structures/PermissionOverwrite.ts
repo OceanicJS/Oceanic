@@ -32,7 +32,7 @@ export default class PermissionOverwrite extends Base {
      *Check if this permissions instance has the given permissions allowed
      * @param permissions The permissions to check for.
      */
-    has(...permissions: Array<PermissionNames>): boolean {
+    has(...permissions: Array<PermissionNames | bigint>): boolean {
         return this.permission.has(...permissions);
     }
 
