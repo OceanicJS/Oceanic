@@ -1,3 +1,4 @@
+/** @module Application */
 import type User from "./User";
 import Team from "./Team";
 import ClientApplication from "./ClientApplication";

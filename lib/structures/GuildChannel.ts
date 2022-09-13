@@ -1,3 +1,4 @@
+/** @module GuildChannel */
 import Channel from "./Channel";
 import type Guild from "./Guild";
 import type CategoryChannel from "./CategoryChannel";

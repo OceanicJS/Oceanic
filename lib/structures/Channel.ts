@@ -1,3 +1,4 @@
+/** @module Channel */
 import Base from "./Base";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";

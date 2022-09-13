@@ -1,3 +1,4 @@
+/** @module Attachment */
 import Base from "./Base";
 import type Client from "../Client";
 import type { RawAttachment } from "../types/channels";

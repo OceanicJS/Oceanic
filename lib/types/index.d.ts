@@ -1,3 +1,4 @@
+/** @module types/index */
 export * from "./application-commands";
 export * from "./audit-log";
 export * from "./auto-moderation";

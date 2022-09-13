@@ -1,3 +1,4 @@
+/** @module PermissionOverwrite */
 import Base from "./Base";
 import Permission from "./Permission";
 import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants";

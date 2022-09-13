@@ -1,3 +1,4 @@
+/** @module TextableChannel */
 import GuildChannel from "./GuildChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";

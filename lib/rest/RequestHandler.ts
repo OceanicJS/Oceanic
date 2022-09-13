@@ -1,3 +1,4 @@
+/** @module RequestHandler */
 import SequentialBucket from "./SequentialBucket";
 import DiscordRESTError from "./DiscordRESTError";
 import DiscordHTTPError from "./DiscordHTTPError";

@@ -1,3 +1,4 @@
+/** @module GuildTemplate */
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";

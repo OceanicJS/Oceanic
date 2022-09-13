@@ -1,3 +1,4 @@
+/** @module ClientApplication */
 import Base from "./Base";
 import ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";

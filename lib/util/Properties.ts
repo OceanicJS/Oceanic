@@ -1,3 +1,4 @@
+/** @module Properties */
 export default class Properties<C = unknown> {
     #object: unknown;
     constructor(obj: unknown) {

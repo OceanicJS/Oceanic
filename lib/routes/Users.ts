@@ -1,3 +1,4 @@
+/** @module routes/Users */
 import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
 import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";

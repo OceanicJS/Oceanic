@@ -1,3 +1,4 @@
+/** @module routes/Interactions */
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
 import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";

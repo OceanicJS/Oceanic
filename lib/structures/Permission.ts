@@ -1,3 +1,4 @@
+/** @module Permission */
 import type { PermissionName as PermissionNames } from "../Constants";
 import { Permissions } from "../Constants";
 import Properties from "../util/Properties";

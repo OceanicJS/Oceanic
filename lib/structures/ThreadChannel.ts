@@ -1,3 +1,4 @@
+/** @module ThreadChannel */
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
 import User from "./User";

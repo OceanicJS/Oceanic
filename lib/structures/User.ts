@@ -1,3 +1,4 @@
+/** @module User */
 import Base from "./Base";
 import PrivateChannel from "./PrivateChannel";
 import type { ImageFormat } from "../Constants";

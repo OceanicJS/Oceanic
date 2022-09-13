@@ -1,3 +1,4 @@
+/** @module Constants */
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;

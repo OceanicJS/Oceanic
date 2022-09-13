@@ -1,3 +1,4 @@
+/** @module UnavailableGuild */
 import Base from "./Base";
 import type Client from "../Client";
 import type { RawUnavailableGuild } from "../types/guilds";

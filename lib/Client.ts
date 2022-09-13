@@ -1,3 +1,4 @@
+/** @module Client */
 import { GATEWAY_VERSION } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import TypedCollection from "./util/TypedCollection";
@@ -17,7 +18,7 @@ import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import { ClientEvents } from "./types/events";
-import type { JoinVoiceChannelOptions } from "./types/discordjs-voice";
+import type { JoinVoiceChannelOptions } from "./types/voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";

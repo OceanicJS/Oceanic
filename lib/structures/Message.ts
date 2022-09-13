@@ -1,3 +1,4 @@
+/** @module Message */
 import Base from "./Base";
 import Attachment from "./Attachment";
 import User from "./User";

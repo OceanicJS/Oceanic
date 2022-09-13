@@ -1,3 +1,4 @@
+/** @module AuditLogEntry */
 import Base from "./Base";
 import User from "./User";
 import type { AuditLogActionTypes } from "../Constants";

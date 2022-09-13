@@ -1,3 +1,4 @@
+/** @module types/request-handler */
 import type { RESTOptions } from "./client";
 import type { RESTMethod } from "../Constants";
 import type { FormData } from "undici";

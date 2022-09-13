@@ -1,3 +1,4 @@
+/** @module types/guilds */
 import type { RawUser } from "./users";
 import type {
     AnyThreadChannel,

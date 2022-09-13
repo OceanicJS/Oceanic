@@ -1,3 +1,4 @@
+/** @module AutocompleteInteraction */
 import Interaction from "./Interaction";
 import Member from "./Member";
 import type User from "./User";

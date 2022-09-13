@@ -1,3 +1,4 @@
+/** @module AnnouncementChannel */
 import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";

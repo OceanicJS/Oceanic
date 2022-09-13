@@ -1,3 +1,4 @@
+/** @module AnnouncementThreadChannel */
 import ThreadChannel from "./ThreadChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";

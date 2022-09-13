@@ -1,3 +1,4 @@
+/** @module VoiceState */
 import Base from "./Base";
 import type VoiceChannel from "./VoiceChannel";
 import type StageChannel from "./StageChannel";

@@ -1,3 +1,4 @@
+/** @module CommandInteraction */
 import Interaction from "./Interaction";
 import Attachment from "./Attachment";
 import Channel from "./Channel";

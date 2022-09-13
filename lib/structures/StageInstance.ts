@@ -1,3 +1,4 @@
+/** @module StageInstance */
 import Base from "./Base";
 import type StageChannel from "./StageChannel";
 import Guild from "./Guild";

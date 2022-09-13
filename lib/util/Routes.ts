@@ -1,3 +1,4 @@
+/** @module Routes */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const CDN_URL = "https://cdn.discordapp.com";
 

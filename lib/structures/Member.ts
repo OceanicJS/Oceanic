@@ -1,3 +1,4 @@
+/** @module Member */
 import Base from "./Base";
 import type User from "./User";
 import Guild from "./Guild";

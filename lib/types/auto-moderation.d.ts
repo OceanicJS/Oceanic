@@ -1,3 +1,4 @@
+/** @module types/auto-moderation */
 import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
 
 export interface RawAutoModerationRule {

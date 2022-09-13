@@ -1,3 +1,4 @@
+/** @module types/channels */
 import type { PartialEmoji, PartialGuild, RawMember } from "./guilds";
 import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";

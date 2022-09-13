@@ -1,3 +1,4 @@
+/** @module Team */
 import Base from "./Base";
 import User from "./User";
 import type Client from "../Client";

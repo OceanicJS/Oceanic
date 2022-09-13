@@ -1,3 +1,4 @@
+/** @module types/stage-instances */
 import type { StageInstancePrivacyLevels } from "../Constants";
 
 export interface RawStageInstance {

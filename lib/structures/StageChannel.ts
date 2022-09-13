@@ -1,3 +1,4 @@
+/** @module StageChannel */
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Member from "./Member";
@@ -19,7 +20,7 @@ import type {
 } from "../types/channels";
 import type { JSONStageChannel } from "../types/json";
 import type { RawMember } from "../types/guilds";
-import type { JoinVoiceChannelOptions } from "../types/discordjs-voice";
+import type { JoinVoiceChannelOptions } from "../types/voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";

@@ -1,3 +1,4 @@
+/** @module routes/Channels */
 import type {
     AddGroupRecipientOptions,
     AnyChannel,

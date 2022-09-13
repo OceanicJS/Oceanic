@@ -1,3 +1,4 @@
+/** @module RESTManager */
 import RequestHandler from "./RequestHandler";
 import type Client from "../Client";
 import Channels from "../routes/Channels";

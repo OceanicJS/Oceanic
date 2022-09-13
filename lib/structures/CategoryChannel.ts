@@ -1,3 +1,4 @@
+/** @module CategoryChannel */
 import PermissionOverwrite from "./PermissionOverwrite";
 import GuildChannel from "./GuildChannel";
 import type Member from "./Member";

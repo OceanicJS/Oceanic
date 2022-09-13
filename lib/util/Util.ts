@@ -1,3 +1,4 @@
+/** @module Util */
 import { CDN_URL } from "./Routes";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";

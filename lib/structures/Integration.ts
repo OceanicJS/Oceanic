@@ -1,3 +1,4 @@
+/** @module Integration */
 import Base from "./Base";
 import PartialApplication from "./PartialApplication";
 import User from "./User";

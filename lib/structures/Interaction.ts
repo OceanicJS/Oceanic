@@ -1,3 +1,4 @@
+/** @module Interaction */
 import Base from "./Base";
 import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";

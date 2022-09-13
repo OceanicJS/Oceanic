@@ -2,3 +2,6 @@ node_modules/
 test/
 dist/
 docs/
+typedoc.json
+dark.js
+favicon.ico

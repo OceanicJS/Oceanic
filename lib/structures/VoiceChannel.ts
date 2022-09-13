@@ -1,3 +1,4 @@
+/** @module VoiceChannel */
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
@@ -6,6 +7,7 @@ import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
 import Invite from "./Invite";
 import User from "./User";
+import type { JoinVoiceChannelOptions } from "../types/voice";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
@@ -24,7 +26,6 @@ import type {
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { JSONVoiceChannel } from "../types/json";
-import type { JoinVoiceChannelOptions } from "../types/discordjs-voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";

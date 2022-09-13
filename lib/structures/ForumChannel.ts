@@ -1,3 +1,4 @@
+/** @module ForumChannel */
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import PublicThreadChannel from "./PublicThreadChannel";

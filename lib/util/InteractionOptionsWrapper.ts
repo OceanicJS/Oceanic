@@ -1,3 +1,4 @@
+/** @module InteractionOptionsWrapper */
 import { ApplicationCommandOptionTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";

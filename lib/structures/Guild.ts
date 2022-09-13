@@ -1,3 +1,4 @@
+/** @module Guild */
 import Role from "./Role";
 import Base from "./Base";
 import GuildChannel from "./GuildChannel";
@@ -91,11 +92,10 @@ import type {
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
 import type { AuditLog, GetAuditLogOptions } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
-import type { RawVoiceState, VoiceRegion } from "../types/voice";
+import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
 import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
-import type { JoinVoiceChannelOptions } from "../types/discordjs-voice";
 import Shard from "../gateway/Shard";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line

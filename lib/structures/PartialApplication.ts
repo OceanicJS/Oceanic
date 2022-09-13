@@ -1,3 +1,4 @@
+/** @module PartialApplication */
 import Base from "./Base";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";

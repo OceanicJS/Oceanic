@@ -1,3 +1,4 @@
+/** @module Invite */
 import Channel from "./Channel";
 import Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";

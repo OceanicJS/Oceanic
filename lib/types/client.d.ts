@@ -1,3 +1,4 @@
+/** @module types/client */
 import type { AllowedMentions } from "./channels";
 import type { GatewayOptions } from "./gateway";
 import type { ImageFormat } from "../Constants";
@@ -91,11 +92,4 @@ export interface CollectionLimitsOptions {
      * @defaultValue Infinity
      */
     users?: number;
-}
-
-export interface JoinVoiceChannelOptions {
-    opusOnly?: boolean;
-    selfDeaf?: boolean;
-    selfMute?: boolean;
-    shared?: boolean;
 }

@@ -1,3 +1,4 @@
+/** @module types/webhooks */
 import type { CreateMessageOptions, RawChannel } from "./channels";
 import type { RawGuild } from "./guilds";
 import type { RawUser } from "./users";

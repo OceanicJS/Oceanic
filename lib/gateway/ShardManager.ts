@@ -1,3 +1,4 @@
+/** @module ShardManager */
 import Shard from "./Shard";
 import type Client from "../Client";
 import { AllIntents, AllNonPrivilegedIntents, Intents } from "../Constants";

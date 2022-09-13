@@ -1,3 +1,4 @@
+/** @module routes/Webhooks */
 import type {
     CreateWebhookOptions,
     DeleteWebhookMessageOptions,

@@ -1,3 +1,4 @@
+/** @module ApplicationCommand */
 import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";

@@ -1,3 +1,4 @@
+/** @module TypedEmitter */
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
 import EventEmitter from "events";
 

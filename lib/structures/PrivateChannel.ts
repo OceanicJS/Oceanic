@@ -1,4 +1,4 @@
-
+/** @module PrivateChannel */
 import Channel from "./Channel";
 import type User from "./User";
 import Message from "./Message";

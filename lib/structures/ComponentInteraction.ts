@@ -1,3 +1,4 @@
+/** @module ComponentInteraction */
 import Interaction from "./Interaction";
 import Message from "./Message";
 import Guild from "./Guild";

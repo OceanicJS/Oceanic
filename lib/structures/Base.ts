@@ -1,3 +1,4 @@
+/** @module Base */
 import type Client from "../Client";
 import Properties from "../util/Properties";
 import type { JSONBase } from "../types/json";

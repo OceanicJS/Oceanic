@@ -1,3 +1,4 @@
+/** @module types/oauth */
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
 import type { RawIntegration } from "./guilds";

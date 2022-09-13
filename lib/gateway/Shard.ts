@@ -1,3 +1,4 @@
+/** @module Shard */
 import GatewayError from "./GatewayError";
 import type Client from "../Client";
 import Properties from "../util/Properties";

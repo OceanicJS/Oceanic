@@ -1,3 +1,4 @@
+/** @module types/gateway-raw */
 import type {
     PartialEmoji,
     RawGuild,

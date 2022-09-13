@@ -1,3 +1,4 @@
+/** @module AutoModerationRule */
 import Base from "./Base";
 import type User from "./User";
 import type Guild from "./Guild";

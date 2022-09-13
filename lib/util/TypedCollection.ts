@@ -1,3 +1,4 @@
+/** @module TypedCollection */
 import Collection from "./Collection";
 import type Client from "../Client";
 import Base from "../structures/Base";

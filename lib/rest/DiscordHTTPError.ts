@@ -1,3 +1,4 @@
+/** @module DiscordHTTPError */
 import type { RESTMethod } from "../Constants";
 import type { JSONDiscordHTTPError } from "../types/json";
 import type { Headers, Response } from "undici";

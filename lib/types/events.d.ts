@@ -1,3 +1,4 @@
+/** @module Events */
 import type {
     AnyGuildChannelWithoutThreads,
     AnyGuildTextChannel,

@@ -1,3 +1,4 @@
+/** @module types/scheduled-events */
 import type { RawUser } from "./users";
 import type { RawMember } from "./guilds";
 import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";

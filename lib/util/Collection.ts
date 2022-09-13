@@ -1,3 +1,4 @@
+/** @module Collection */
 /** A {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map | Map} with some Array-like additions. */
 export default class Collection<K, V> extends Map<K, V> {
     /** If this collection is empty. */

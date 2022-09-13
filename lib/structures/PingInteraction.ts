@@ -1,3 +1,4 @@
+/** @module PingInteraction */
 import Interaction from "./Interaction";
 import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes } from "../Constants";

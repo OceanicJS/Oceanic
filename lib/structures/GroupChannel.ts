@@ -1,3 +1,4 @@
+/** @module GroupChannel */
 import Channel from "./Channel";
 import User from "./User";
 import Message from "./Message";

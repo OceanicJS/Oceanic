@@ -1,3 +1,4 @@
+/** @module typesapplication-commands */
 import type { ExclusifyUnion } from "./shared";
 import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, GuildChannelTypes } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";

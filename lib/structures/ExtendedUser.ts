@@ -1,3 +1,4 @@
+/** @module ExtendedUser */
 import User from "./User";
 import type Client from "../Client";
 import type { EditSelfUserOptions, RawOAuthUser } from "../types/users";
