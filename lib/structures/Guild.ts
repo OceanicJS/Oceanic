@@ -541,7 +541,11 @@ export default class Guild extends Base {
 
     /** The shard this guild is on. Gateway only. */
     get shard(): Shard {
-        return this.client.shards.get(this.client.guildShardMap[this.id])!;
+        const shard = this.client.guildShardMap[this.id] ? this.client.shards.get(this.client.guildShardMap[this.id]) : undefined;
+        if (!shard) {
+            throw new Error(`${this.constructor.name}#shard is not present if the guild was received via REST, or you do not have the GUILDS intent.`);
+        }
+        return shard;
     }
 
     /**
