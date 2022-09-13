@@ -1,7 +1,6 @@
 /** @module Shard */
 import GatewayError from "./GatewayError";
 import type Client from "../Client";
-import Properties from "../util/Properties";
 import TypedEmitter from "../util/TypedEmitter";
 import Bucket from "../rest/Bucket";
 import {
@@ -121,9 +120,20 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     ws!: WebSocket | null;
     constructor(id: number, client: Client) {
         super();
-        Properties.new(this)
-            .define("client", client)
-            .define("ws", null, true);
+        Object.defineProperties(this, {
+            client: {
+                value:        client,
+                enumerable:   false,
+                writable:     false,
+                configurable: false
+            },
+            ws: {
+                value:        null,
+                enumerable:   false,
+                writable:     true,
+                configurable: false
+            }
+        });
 
         this.onDispatch = this.onDispatch.bind(this);
         this.onPacket = this.onPacket.bind(this);

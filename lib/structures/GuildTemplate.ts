@@ -5,7 +5,6 @@ import type Client from "../Client";
 import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
 import type { JSONGuildTemplate } from "../types/json";
-import Properties from "../util/Properties";
 
 /** Represents a guild template. */
 export default class GuildTemplate {
@@ -32,7 +31,12 @@ export default class GuildTemplate {
     /** The amount of times this template has been used. */
     usageCount: number;
     constructor(data: RawGuildTemplate, client: Client) {
-        Properties.define(this, "client", client);
+        Object.defineProperty(this, "client", {
+            value:        client,
+            enumerable:   false,
+            writable:     false,
+            configurable: false
+        });
         this.client = client;
         this.code = data.code;
         this.createdAt = new Date(data.created_at);

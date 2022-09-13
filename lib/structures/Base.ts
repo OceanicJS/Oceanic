@@ -1,6 +1,5 @@
 /** @module Base */
 import type Client from "../Client";
-import Properties from "../util/Properties";
 import type { JSONBase } from "../types/json";
 import { inspect } from "util";
 
@@ -10,7 +9,12 @@ export default abstract class Base {
     id: string;
     constructor(id: string, client: Client) {
         this.id = id;
-        Properties.define(this, "client", client);
+        Object.defineProperty(this, "client", {
+            value:        client,
+            enumerable:   false,
+            writable:     false,
+            configurable: false
+        });
     }
 
     static getCreatedAt(id: string): Date {

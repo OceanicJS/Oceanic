@@ -1,7 +1,6 @@
 /** @module Permission */
 import type { PermissionName as PermissionNames } from "../Constants";
 import { Permissions } from "../Constants";
-import Properties from "../util/Properties";
 import type { JSONPermission } from "../types/json";
 
 /** Represents a permission. */
@@ -14,7 +13,12 @@ export default class Permission {
     constructor(allow: bigint | string, deny: bigint | string = 0n) {
         this.allow = BigInt(allow);
         this.deny = BigInt(deny);
-        Properties.looseDefine(this, "#json", undefined, true);
+        Object.defineProperty(this, "#json", {
+            value:        undefined,
+            enumerable:   false,
+            writable:     true,
+            configurable: false
+        });
     }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */

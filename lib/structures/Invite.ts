@@ -19,7 +19,6 @@ import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type { RawGuild } from "../types/guilds";
-import Properties from "../util/Properties";
 import type { JSONInvite } from "../types/json";
 
 /** Represents an invite. */
@@ -64,7 +63,12 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The number of times this invite has been used. */
     uses!: T extends "withMetadata" ? number : never;
     constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
-        Properties.define(this, "client", client);
+        Object.defineProperty(this, "client", {
+            value:        client,
+            enumerable:   false,
+            writable:     false,
+            configurable: false
+        });
         this.channelID = data.channel?.id ?? null;
         this.code = data.code;
         this.guildID = data.guild?.id ?? null;
