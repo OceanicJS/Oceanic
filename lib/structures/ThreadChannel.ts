@@ -87,9 +87,9 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             this.lastMessageID = data.last_message_id;
         }
         if (data.member) {
-            const index = this.members.findIndex(m => m.userID === this.client.user!.id);
+            const index = this.members.findIndex(m => m.userID === this.client.user.id);
             if (index === -1) {
-                this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this.client.user!.id });
+                this.members.push({ flags: data.member.flags, id: this.id, joinTimestamp: new Date(data.member.join_timestamp), userID: this.client.user.id });
             } else {
                 this.members[index] = {
                     ...this.members[index],

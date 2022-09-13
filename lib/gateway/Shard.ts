@@ -554,7 +554,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "INTEGRATION_DELETE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                this.client.emit("integrationDelete", guild ?? { id: packet.d.guild_id }, guild?.integrations.get(packet.d.id) ?? { applicationID: packet.d.application_id, id: packet.d.id });
+                const integration = guild?.integrations.get(packet.d.id);
+                guild?.integrations.delete(packet.d.id);
+                this.client.emit("integrationDelete", guild ?? { id: packet.d.guild_id }, integration ?? { applicationID: packet.d.application_id, id: packet.d.id });
                 break;
             }
 

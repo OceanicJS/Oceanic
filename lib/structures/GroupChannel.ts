@@ -168,8 +168,8 @@ export default class GroupChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGroupDMOptions): Promise<GroupChannel> {
-        return this.client.rest.channels.edit<GroupChannel>(this.id, options);
+    async edit(options: EditGroupDMOptions): Promise<this> {
+        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**

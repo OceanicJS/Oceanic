@@ -108,7 +108,7 @@ export default class ForumChannel extends GuildChannel {
         }
         if (data.permission_overwrites !== undefined) {
             for (const id of this.permissionOverwrites.keys()) {
-                if (!data.permission_overwrites!.some(overwrite => overwrite.id === id)) {
+                if (!data.permission_overwrites.some(overwrite => overwrite.id === id)) {
                     this.permissionOverwrites.delete(id);
                 }
             }
