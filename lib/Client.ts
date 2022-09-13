@@ -39,7 +39,7 @@ try {
     Erlpack = require("erlpack");
 } catch {}
 
-/** The primary class for interfacing with Discord. See {@link types/events~ClientEvents | Client Events} for a list of events. */
+/** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
 export default class Client extends TypedEmitter<ClientEvents> {
     private _application?: ClientApplication;
     private _user?: ExtendedUser;

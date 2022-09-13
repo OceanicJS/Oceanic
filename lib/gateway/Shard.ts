@@ -91,7 +91,7 @@ try {
     } catch {}
 }
 
-/** Represents a gateway connection to Discord. See {@link types/events~ShardEvents | Shard Events} for a list of events. */
+/** Represents a gateway connection to Discord. See {@link Events~ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<ShardEvents> {
     client!: Client;
     connectAttempts: number;

@@ -229,6 +229,3 @@ export interface ShardEvents {
     /** @event Emitted with various warning information. */
     warn: [info: string];
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface VoiceEvents {}
