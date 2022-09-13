@@ -1,6 +1,6 @@
 // The application command management functions are on ClientApplication (client.application) & client.rest.applicationCommands
-// https://oceanic.owo-whats-this.dev/latest/classes/structures_ClientApplication.ClientApplication.html
-// https://oceanic.owo-whats-this.dev/latest/classes/routes_ApplicationCommands.ApplicationCommands.html
+// https://oceanic.owo-whats-this.dev/latest/classes/ClientApplication.ClientApplication.html
+// https://oceanic.owo-whats-this.dev/latest/classes/Routes_ApplicationCommands.ApplicationCommands.html
 const { ApplicationCommandOptionTypes, ApplicationCommandTypes, Client } = require("oceanic.js");
 
 const client = new Client({
