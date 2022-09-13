@@ -29,6 +29,7 @@ import Integration from "../structures/Integration";
 import type RESTManager from "../rest/RESTManager";
 import { FormData } from "undici";
 
+/** Various methods for interacting with oauth. */
 export default class OAuth {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

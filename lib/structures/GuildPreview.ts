@@ -5,7 +5,7 @@ import type { GuildFeature } from "../Constants";
 import type { GuildEmoji, RawGuildPreview, Sticker } from "../types/guilds";
 import type { JSONGuildPreview } from "../types/json";
 
-/** A preview of a guild. */
+/** Represents a preview of a guild. */
 export default class GuildPreview extends Base {
     /** The approximate number of members in this guild. */
     approximateMemberCount: number;

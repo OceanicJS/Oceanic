@@ -5,7 +5,7 @@ import type Client from "../Client";
 import type { EditPrivateThreadChannelOptions, PrivateThreadmetadata, RawPrivateThreadChannel } from "../types/channels";
 import type { JSONPrivateThreadChannel } from "../types/json";
 
-/** Represents a guild thread channel. */
+/** Represents a private thread channel.. */
 export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadChannel> {
     declare threadMetadata: PrivateThreadmetadata;
     declare type: ChannelTypes.PRIVATE_THREAD;

@@ -22,6 +22,7 @@ import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
 
+/** Represents a command interaction. */
 export default class CommandInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
     private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */

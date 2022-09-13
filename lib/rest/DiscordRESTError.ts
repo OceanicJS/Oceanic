@@ -3,6 +3,7 @@ import type { RESTMethod } from "../Constants";
 import type { JSONDiscordRESTError } from "../types/json";
 import type { Headers, Response } from "undici";
 
+/** A REST error recieved from Discord. */
 export default class DiscordRESTError extends Error {
     code: number;
     method: RESTMethod;

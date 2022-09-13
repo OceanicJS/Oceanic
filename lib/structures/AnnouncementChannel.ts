@@ -10,10 +10,10 @@ import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementTh
 import type { JSONAnnouncementChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 
-/** Represents a guild news channel. */
+/** Represents a guild announcement channel. */
 export default class AnnouncementChannel extends TextableChannel<AnnouncementChannel> {
     declare parent?: CategoryChannel | null;
-    /** The amount of seconds between non-moderators sending messages. Always zero in news channels. */
+    /** The amount of seconds between non-moderators sending messages. Always zero in announcement channels. */
     declare rateLimitPerUser: 0;
     /** The threads in this channel. */
     threads: TypedCollection<string, RawAnnouncementThreadChannel, AnnouncementThreadChannel>;
@@ -24,7 +24,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     }
 
     /**
-     * Convert this news channel to a text channel.
+     * Convert this announcement channel to a text channel.
      */
     async convert(): Promise<TextChannel> {
         return super.convert() as Promise<TextChannel>;

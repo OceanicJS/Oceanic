@@ -16,6 +16,7 @@ import Message from "../structures/Message";
 import type RESTManager from "../rest/RESTManager";
 import type { Uncached } from "../types/shared";
 
+/** Various methods for interacting with webhooks. */
 export default class Webhooks {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

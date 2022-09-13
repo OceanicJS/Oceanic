@@ -9,6 +9,7 @@ import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
 import type { JSONScheduledEvent } from "../types/json";
 
+/** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
     private _guild?: Guild;
     /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */

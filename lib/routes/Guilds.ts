@@ -77,6 +77,7 @@ import type RESTManager from "../rest/RESTManager";
 import Guild from "../structures/Guild";
 import Member from "../structures/Member";
 
+/** Various methods for interacting with guilds. */
 export default class Guilds {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

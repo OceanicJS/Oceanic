@@ -20,6 +20,7 @@ import type {
 } from "../types/webhooks";
 import type { JSONWebhook } from "../types/json";
 
+/** Represents a webhook. */
 export default class Webhook extends Base {
     /** The application associatd with this webhook. */
     application?: ClientApplication | null;

@@ -55,6 +55,7 @@ import GroupChannel from "../structures/GroupChannel";
 import User from "../structures/User";
 import type { Uncached } from "../types/shared";
 
+/** Various methods for interacting with channels. */
 export default class Channels {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

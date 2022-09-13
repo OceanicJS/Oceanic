@@ -34,7 +34,7 @@ import type {
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
 
-/** Represents a guild text channel. */
+/** Represents a guild textable channel. */
 export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {
     /** The default auto archive duration for threads created in this channel. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;

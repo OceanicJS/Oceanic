@@ -5,6 +5,7 @@ import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";
 import User from "../structures/User";
 
+/** Various methods for interacting with users. */
 export default class Users {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

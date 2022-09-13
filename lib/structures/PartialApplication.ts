@@ -6,6 +6,7 @@ import * as Routes from "../util/Routes";
 import type { RawPartialApplication } from "../types/oauth";
 import type { JSONPartialApplication } from "../types/json";
 
+/** Represents a partial application. */
 export default class PartialApplication extends Base {
     /** When false, only the application's owners can invite the bot to guilds. */
     botPublic?: boolean;

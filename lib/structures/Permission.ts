@@ -4,6 +4,7 @@ import { Permissions } from "../Constants";
 import Properties from "../util/Properties";
 import type { JSONPermission } from "../types/json";
 
+/** Represents a permission. */
 export default class Permission {
     /** The allowed permissions for this permission instance. */
     allow: bigint;

@@ -5,6 +5,7 @@ import type Client from "../Client";
 import type { RawTeam, TeamMember } from "../types/oauth";
 import type { JSONTeam } from "../types/json";
 
+/** Represents an OAuth team. */
 export default class Team extends Base {
     /** The icon hash of this team. */
     icon: string | null;

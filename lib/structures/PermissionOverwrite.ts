@@ -6,6 +6,7 @@ import type Client from "../Client";
 import type { RawOverwrite } from "../types/channels";
 import type { JSONPermissionOverwrite } from "../types/json";
 
+/** Represents a permission overwrite. */
 export default class PermissionOverwrite extends Base {
     /** The permissions of this overwrite. */
     permission: Permission;

@@ -13,6 +13,7 @@ import Interactions from "../routes/Interactions";
 import * as Routes from "../util/Routes";
 import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
 
+/** A manager for all rest actions. */
 export default class RESTManager {
     applicationCommands: ApplicationCommands;
     channels: Channels;

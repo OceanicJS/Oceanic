@@ -8,6 +8,7 @@ import type { StageInstancePrivacyLevels } from "../Constants";
 import type { JSONStageInstance } from "../types/json";
 import { RawStageInstance } from "../types/guilds";
 
+/** Represents a stage instance. */
 export default class StageInstance extends Base {
     private _guild?: Guild;
     /** The associated stage channel. */

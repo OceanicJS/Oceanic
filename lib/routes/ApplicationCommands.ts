@@ -19,6 +19,7 @@ import ApplicationCommand from "../structures/ApplicationCommand";
 import type { RequestOptions } from "../types/request-handler";
 import type RESTManager from "../rest/RESTManager";
 
+/** Various methods for interacting with application commands. */
 export default class ApplicationCommands {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

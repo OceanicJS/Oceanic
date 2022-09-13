@@ -15,6 +15,7 @@ import type {
 } from "../types/application-commands";
 import type { JSONApplicationCommand } from "../types/json";
 
+/** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
     /** The the application this command is for. */
     application?: ClientApplication;

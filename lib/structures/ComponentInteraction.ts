@@ -21,6 +21,7 @@ import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 
+/** Represents a component interaction. */
 export default class ComponentInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
     private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */

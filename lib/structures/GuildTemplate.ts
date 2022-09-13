@@ -7,6 +7,7 @@ import type { RawGuild } from "../types/guilds";
 import type { JSONGuildTemplate } from "../types/json";
 import Properties from "../util/Properties";
 
+/** Represents a guild template. */
 export default class GuildTemplate {
     private _sourceGuild?: Guild;
     client!: Client;

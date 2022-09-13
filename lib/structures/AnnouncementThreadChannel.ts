@@ -5,7 +5,7 @@ import type Client from "../Client";
 import type { EditPublicThreadChannelOptions, RawAnnouncementThreadChannel, ThreadMetadata } from "../types/channels";
 import type { JSONAnnouncementThreadChannel } from "../types/json";
 
-/** Represents a guild thread channel. */
+/** Represents a public thread channel in an announcement channel. */
 export default class AnnouncementThreadChannel extends ThreadChannel<AnnouncementThreadChannel> {
     declare threadMetadata: ThreadMetadata;
     declare type: ChannelTypes.ANNOUNCEMENT_THREAD;
