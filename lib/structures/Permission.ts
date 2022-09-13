@@ -40,7 +40,7 @@ export default class Permission {
     has(...permissions: Array<PermissionNames | bigint>): boolean {
         for (const perm of permissions) {
             if (typeof perm === "bigint") {
-                if (!(this.allow & perm)) {
+                if ((this.allow & perm) !== perm) {
                     return false;
                 }
             } else if (!(this.allow & Permissions[perm])) {
