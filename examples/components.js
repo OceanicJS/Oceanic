@@ -9,13 +9,13 @@ const client = new Client({
 
 client.on("ready", () => console.log("Ready as", client.user.tag));
 
-client.on("messageCreate", async(msg) => {
+client.on("messageCreate", async (msg) => {
     if(msg.content.includes("!component")) {
         await client.rest.channels.createMessage(msg.channel.id, {
             content: `Here's some buttons for you, ${msg.author.mention}.`,
             components: [
                 {
-                    // the top level component must always be an action row.
+                    // The top level component must always be an action row.
                     // Full list of types: https://oceanic.owo-whats-this.dev/enums/Constants.ComponentTypes.html
                     // https://oceanic.owo-whats-this.dev/interfaces/types_channels.MessageActionRow.html
                     type: ComponentTypes.ACTION_ROW,
@@ -23,11 +23,11 @@ client.on("messageCreate", async(msg) => {
                         {
                             // https://oceanic.owo-whats-this.dev/interfaces/types_channels.TextButton.html
                             type: ComponentTypes.BUTTON,
-                            style: ButtonStyles.PRIMARY, // the style of button - full list: https://oceanic.owo-whats-this.dev/enums/Constants.ButtonStyles.html
+                            style: ButtonStyles.PRIMARY, // The style of button - full list: https://oceanic.owo-whats-this.dev/enums/Constants.ButtonStyles.html
                             customID: "some-string-you-will-see-later",
                             label: "Click!",
                             disabled: false, // If the button is disabled, false by default.
-                            emoji: { // an optional emoji
+                            emoji: { // An optional emoji
                                 id: "1013346070606123009",
                                 name: "oceanic"
                             }
@@ -51,14 +51,14 @@ client.on("messageCreate", async(msg) => {
                             type: ComponentTypes.SELECT_MENU,
                             customID: "select-menu",
                             disabled: false,
-                            maxValues: 1, // the maximum number of values that can be selected (default 1)
-                            minValues: 1, // the minimum number of values that can be selected (default 1)
+                            maxValues: 1, // The maximum number of values that can be selected (default 1)
+                            minValues: 1, // The minimum number of values that can be selected (default 1)
                             options: [
                                 // https://oceanic.owo-whats-this.dev/interfaces/types_channels.SelectOption.html
                                 {
-                                    default: true, // if this option is selected by default
-                                    description: "The description of the option", // optional description
-                                    emoji: { // an optional emoji
+                                    default: true, // If this option is selected by default
+                                    description: "The description of the option", // Optional description
+                                    emoji: { // An optional emoji
                                         id: "1013346070606123009",
                                         name: "oceanic"
                                     },
@@ -79,10 +79,10 @@ client.on("messageCreate", async(msg) => {
     }
 });
 
-// an error handler
+// An error handler
 client.on("error", (error) => {
     console.error("Something went wrong:", error);
 });
 
-// connect to Discord
+// Connect to Discord
 client.connect();

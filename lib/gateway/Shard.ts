@@ -31,6 +31,7 @@ import Channel from "../structures/Channel";
 import type {
     AnyGuildChannelWithoutThreads,
     AnyTextChannel,
+    AnyThreadChannel,
     InviteChannel,
     RawMessage,
     ThreadMember
@@ -800,8 +801,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "THREAD_DELETE": {
-                const guild = this.client.guilds.get(packet.d.guild_id);
-                const thread = guild?.threads.get(packet.d.id) ?? {
+                const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id) ?? {
                     id:       packet.d.id,
                     type:     packet.d.type,
                     parentID: packet.d.parent_id!
@@ -827,7 +827,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     this.client.util.updateThread(threadData);
                 }
                 for (const member of packet.d.members) {
-                    const thread = guild.threads.get(member.id);
+                    const thread = this.client.getChannel<AnyThreadChannel>(member.id);
                     if (thread) {
                         const threadMember: ThreadMember = {
                             id:            member.id,
@@ -847,8 +847,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "THREAD_MEMBER_UPDATE": {
-                const guild = this.client.guilds.get(packet.d.guild_id);
-                const thread = guild?.threads.get(packet.d.id);
+                const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id);
                 const threadMember: ThreadMember = {
                     id:            packet.d.id,
                     flags:         packet.d.flags,
@@ -871,8 +870,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "THREAD_MEMBERS_UPDATE": {
-                const guild = this.client.guilds.get(packet.d.guild_id);
-                const thread = guild?.threads.get(packet.d.id);
+                const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id);
                 const addedMembers: Array<ThreadMember> = packet.d.added_members.map(rawMember => ({
                     flags:         rawMember.flags,
                     id:            rawMember.id,
@@ -903,8 +901,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "THREAD_UPDATE": {
-                const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldThread = guild?.threads.get(packet.d.id)?.toJSON() ?? null;
+                const oldThread = this.client.getChannel<AnyThreadChannel>(packet.d.id)?.toJSON() ?? null;
                 const thread = this.client.util.updateThread(packet.d);
                 this.client.emit("threadUpdate", thread as AnnouncementThreadChannel, oldThread as JSONAnnouncementThreadChannel);
                 break;

@@ -9,6 +9,9 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
+import GuildChannel from "./GuildChannel";
+import PrivateChannel from "./PrivateChannel";
+import GroupChannel from "./GroupChannel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, MessageTypes } from "../Constants";
@@ -372,6 +375,16 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         return this.client.rest.channels.getReactions(this.channelID, this.id, emoji, options);
     }
 
+    /** Whether this message belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
+    inCachedGuildChannel(): this is Message<AnyGuildTextChannel> {
+        return this.channel instanceof GuildChannel;
+    }
+
+    /** Whether this message belongs to a direct message channel (PrivateChannel, GroupChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
+    inDirectMessageChannel(): this is Message<PrivateChannel | GroupChannel | Uncached> {
+        return this.guildID === null;
+    }
+
     /**
      * Pin this message.
      * @param reason The reason for pinning the message.
@@ -380,6 +393,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         return this.client.rest.channels.pinMessage(this.channelID, this.id, reason);
     }
 
+
     /**
      * Create a thread from this message.
      * @param options The options for creating the thread.
@@ -387,7 +401,6 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     async startThread(options: StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never> {
         return this.client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channelID, this.id, options);
     }
-
     override toJSON(): JSONMessage {
         return {
             ...super.toJSON(),

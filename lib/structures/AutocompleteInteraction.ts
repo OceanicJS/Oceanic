@@ -3,6 +3,8 @@ import Member from "./Member";
 import type User from "./User";
 import Guild from "./Guild";
 import Permission from "./Permission";
+import GuildChannel from "./GuildChannel";
+import type PrivateChannel from "./PrivateChannel";
 import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes } from "../Constants";
 import type { AutocompleteChoice, AutocompleteInteractionData, RawAutocompleteInteraction } from "../types/interactions";
@@ -63,6 +65,16 @@ export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached
         } else {
             return this._guild;
         }
+    }
+
+    /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
+    inCachedGuildChannel(): this is AutocompleteInteraction<AnyGuildTextChannel> {
+        return this.channel instanceof GuildChannel;
+    }
+
+    /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
+    inPrivateChannel(): this is AutocompleteInteraction<PrivateChannel | Uncached> {
+        return this.guildID === null;
     }
 
     /**

@@ -201,9 +201,15 @@ export default class Client extends TypedEmitter<ClientEvents> {
         return this.shards.forEach(shard => shard.editStatus(status, activities));
     }
 
+    /**
+     * Get a channel from an ID. This will return undefined if the channel is not cached.
+     * @param id The id of the channel.
+     */
     getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined {
         if (this.channelGuildMap[id]) {
-            return this.guilds.get(this.channelGuildMap[id]!)?.channels.get(id) as T;
+            return this.guilds.get(this.channelGuildMap[id])?.channels.get(id) as T;
+        } else if (this.threadGuildMap[id]) {
+            return this.guilds.get(this.threadGuildMap[id])?.threads.get(id) as T;
         }
         return (this.privateChannels.get(id) ?? this.groupChannels.get(id)) as T;
     }

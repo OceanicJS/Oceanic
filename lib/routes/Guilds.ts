@@ -663,7 +663,7 @@ export default class Guilds {
     }
 
     /**
-     * Edit a guild member.
+     * Edit a guild member. Use editCurrentMember if you wish to update the nick of this client using the CHANGE_NICKNAME permission.
      * @param id The ID of the guild.
      * @param memberID The ID of the member.
      * @param options The options for editing the member.

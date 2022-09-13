@@ -82,7 +82,7 @@ export default class CategoryChannel extends GuildChannel {
      */
     permissionsOf(member: string | Member): Permission {
         if (!this["_guild"]) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent or fetching the guild.`);
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
         }
         if (typeof member === "string") {
             member = this["_guild"].members.get(member)!;

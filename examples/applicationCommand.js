@@ -1,4 +1,4 @@
-// the application command management functions are on ClientApplication (client.application) & client.rest.applicationCommands
+// The application command management functions are on ClientApplication (client.application) & client.rest.applicationCommands
 // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html
 // https://oceanic.owo-whats-this.dev/classes/routes_ApplicationCommands.ApplicationCommands.html
 const { ApplicationCommandOptionTypes, ApplicationCommandTypes, Client } = require("oceanic.js");
@@ -27,10 +27,10 @@ client.on("ready", async() => {
                     "es-ES": "sospechoso"
                 },
                 description: "Are you sus?",
-                descriptionLocalizations: { // same as above
+                descriptionLocalizations: { // Same as above
                     "es-ES": "¿Eres sus?"
                 },
-                choices: [ // a BOOLEAN can also be used instead
+                choices: [ // A BOOLEAN can also be used instead
                     {
                         name: "Yes",
                         nameLocalizations: {
@@ -49,7 +49,7 @@ client.on("ready", async() => {
             }
         ],
         dmPermission: false, // false = usable in guilds only, true = both guild & direct message
-        defaultMemberPermissions: "8" // The default permissions required to use this command (8 = Administrator)
+        defaultMemberPermissions: "8" // The bitfield of the default permissions required to use this command (8 = Administrator)
     });
 
     // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#bulkEditGlobalCommands
@@ -65,7 +65,7 @@ client.on("ready", async() => {
         },
         {
             type: ApplicationCommandTypes.MESSAGE, // This will display in the `Apps` context menu, when clicking on a message.
-            // same as above
+            // Same as above
             name: "Raw Json",
             nameLocalizations: {
                 "es-ES": "json crudo"
@@ -76,15 +76,15 @@ client.on("ready", async() => {
     // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#getGlobalCommands
     // if you need to fetch your commands
     const commands = await client.application.getGlobalCommands();
-    console.log(commands); // an array of ApplicationCommand classes
+    console.log(commands); // An array of ApplicationCommand classes
 
-    for(const command of commands) {
+    for (const command of commands) {
         // https://oceanic.owo-whats-this.dev/classes/structures_ApplicationCommand.ApplicationCommand.html#delete
-        await command.delete(); // DON'T DO THIS! This is just an example. Use `bulkedit` with an empty array if you want to delete all commands.
+        await command.delete(); // DON'T DO THIS! This is just an example. Use `bulkEdit` with an empty array if you want to delete all commands
     }
 
     // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#createGuildCommand
-    // guilds commands are exactly the same thing, but with a guild id included.
+    // Guilds commands are exactly the same thing, but with a guild ID included
     await client.application.createGuildCommand("1005489770278953112", {
         type: ApplicationCommandTypes.CHAT_INPUT,
         name: "guild-command",
@@ -98,10 +98,10 @@ client.on("ready", async() => {
     });
 });
 
-// an error handler
+// An error handler
 client.on("error", (error) => {
     console.error("Something went wrong:", error);
 });
 
-// connect to Discord
+// Connect to Discord
 client.connect();

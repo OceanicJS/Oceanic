@@ -7,6 +7,8 @@ import Role from "./Role";
 import User from "./User";
 import Guild from "./Guild";
 import Permission from "./Permission";
+import GuildChannel from "./GuildChannel";
+import type PrivateChannel from "./PrivateChannel";
 import TypedCollection from "../util/TypedCollection";
 import type { InteractionTypes } from "../Constants";
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
@@ -220,6 +222,16 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
      */
     async getOriginal(): Promise<Message<T>> {
         return this.client.rest.interactions.getOriginalMessage<T>(this.applicationID, this.token);
+    }
+
+    /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
+    inCachedGuildChannel(): this is CommandInteraction<AnyGuildTextChannel> {
+        return this.channel instanceof GuildChannel;
+    }
+
+    /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
+    inPrivateChannel(): this is CommandInteraction<PrivateChannel | Uncached> {
+        return this.guildID === null;
     }
 
     override toJSON(): JSONCommandInteraction {

@@ -10,26 +10,27 @@ const client = new Client({
 
 client.on("ready", () => console.log("Ready as", client.user.tag));
 
-client.on("messageCreate", async(msg) => {
+client.on("messageCreate", async (msg) => {
     if(msg.content.includes("!embed")) {
 		await client.rest.channels.createMessage(msg.channel.id, {
 			// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedOptions.html
-			// up to 10 in one message
+			// Up to 10 in one message
 			embeds: [
 				{
 					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedAuthorOptions.html
 					author: {
 						name: "Author Name",
-						// an image url, or attachment://filename.ext
-						icon_url: "https://i.furry.cool/DonPride.png", // optional
-						url: "https://oceanic.owo-whats-this.dev" // optional
+						// An image url, or attachment://filename.ext
+						iconURL: "https://i.furry.cool/DonPride.png", // Optional
+						url: "https://oceanic.owo-whats-this.dev" // Optional
 					},
-					// array of https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedField.html
+					// Array of https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedField.html
+					// Up to 25 in one message
 					fields: [
 						{
 							name: "Field One",
 							value: "Field One Value",
-							inline: true // if this field should be displayed inline (default: true)
+							inline: true // If this field should be displayed inline (default: to false)
 						},
 						{
 							name: "Field Two",
@@ -40,23 +41,23 @@ client.on("messageCreate", async(msg) => {
 					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedFooterOptions.html
 					footer: {
 						text: "Footer Text",
-						// an image url, or attachment://filename.ext
-						icon_url: "https://i.furry.cool/DonPride.png" // optional
+						// An image url, or attachment://filename.ext
+						iconURL: "https://i.furry.cool/DonPride.png" // Optional
 					},
 					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedImageOptions.html
 					image: {
-						// an image url, or attachment://filename.ext
+						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
 					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedThumbnailOptions.html
 					thumbnail: {
-						// an image url, or attachment://filename.ext
+						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
 					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedOptions.html
-					color: 0xFFA500, // base-10 color (0x prefix can be used for hex codes)
+					color: 0xFFA500, // Base-10 color (0x prefix can be used for hex codes)
 					description: "My Cool Embed",
-					timestamp: new Date().toISOString(), // the current time - ISO 8601 format
+					timestamp: new Date().toISOString(), // The current time - ISO 8601 format
 					title: "My Amazing Embed",
 					url: "https://oceanic.owo-whats-this.dev"
 				}
@@ -67,7 +68,7 @@ client.on("messageCreate", async(msg) => {
 			embeds: [
 				{
 					image: {
-						// this can also be used for author & footer images
+						// This can also be used for author & footer images
 						url: "attachment://image.png"
 					}
 				}
@@ -82,10 +83,10 @@ client.on("messageCreate", async(msg) => {
 	}
 });
 
-// an error handler
+// An error handler
 client.on("error", (error) => {
     console.error("Something went wrong:", error);
 });
 
-// connect to Discord
+// Connect to Discord
 client.connect();

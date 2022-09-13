@@ -4,6 +4,8 @@ import type User from "./User";
 import Guild from "./Guild";
 import Permission from "./Permission";
 import Message from "./Message";
+import GuildChannel from "./GuildChannel";
+import type PrivateChannel from "./PrivateChannel";
 import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes } from "../Constants";
 import type { InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
@@ -163,6 +165,16 @@ export default class ModalSubmitInteraction<T extends AnyTextChannel | Uncached 
      */
     async getOriginal(): Promise<Message<T>> {
         return this.client.rest.interactions.getOriginalMessage<T>(this.applicationID, this.token);
+    }
+
+    /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
+    inCachedGuildChannel(): this is ModalSubmitInteraction<AnyGuildTextChannel> {
+        return this.channel instanceof GuildChannel;
+    }
+
+    /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
+    inPrivateChannel(): this is ModalSubmitInteraction<PrivateChannel | Uncached> {
+        return this.guildID === null;
     }
 
     override toJSON(): JSONModalSubmitInteraction {

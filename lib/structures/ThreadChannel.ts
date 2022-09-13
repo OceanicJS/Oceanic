@@ -276,7 +276,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      */
     permissionsOf(member: string | Member): Permission {
         if (!this["_guild"]) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent or fetching the guild.`);
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
         }
         if (!this.parent) {
             throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the parent channel cached.`);

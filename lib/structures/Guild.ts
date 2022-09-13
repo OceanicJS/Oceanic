@@ -104,6 +104,7 @@ import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods,
 /** Represents a Discord server. */
 export default class Guild extends Base {
     private _clientMember?: Member;
+    private _shard?: Shard;
     /** This guild's afk voice channel. */
     afkChannel?: VoiceChannel | null;
     /** The ID of this guild's afk voice channel. */
@@ -210,8 +211,6 @@ export default class Guild extends Base {
     vanityURLCode: string | null;
     /** The [verfication level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
-    /** The voice state adapter for this guild that can be used with @discordjs/voice to play audio in voice and stage channels. */
-    voiceAdapterCreator: DiscordGatewayAdapterCreator;
     /** The voice states of members in voice channels. */
     voiceStates: TypedCollection<string, RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
@@ -224,6 +223,7 @@ export default class Guild extends Base {
     widgetEnabled?: boolean;
     constructor(data: RawGuild, client: Client) {
         super(data.id, client);
+        this._shard = this.client.guildShardMap[this.id] ? this.client.shards.get(this.client.guildShardMap[this.id]) : undefined;
         this.afkChannelID = null;
         this.afkTimeout = 0;
         this.applicationID = data.application_id;
@@ -263,18 +263,6 @@ export default class Guild extends Base {
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
-        this.voiceAdapterCreator = (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
-            this.client["voiceAdapters"].set(this.id, methods);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-            return {
-                sendPayload: (payload: { d: unknown; op: GatewayOPCodes; }): true => {
-                    this.shard.send(payload.op, payload.d);
-
-                    return true;
-                },
-                destroy: () => this.client["voiceAdapters"].delete(this.id)
-            };
-        };
         this.voiceStates = new TypedCollection(VoiceState, client);
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
         data.roles.forEach(role => this.roles.update(role, data.id));
@@ -541,11 +529,30 @@ export default class Guild extends Base {
 
     /** The shard this guild is on. Gateway only. */
     get shard(): Shard {
-        const shard = this.client.guildShardMap[this.id] ? this.client.shards.get(this.client.guildShardMap[this.id]) : undefined;
-        if (!shard) {
+        if (!this._shard) {
             throw new Error(`${this.constructor.name}#shard is not present if the guild was received via REST, or you do not have the GUILDS intent.`);
         }
-        return shard;
+        return this._shard;
+    }
+
+    /** The voice adapter creator for this guild that can be used with [@discordjs/voice](https://discord.js.org/#/docs/voice/main/general/welcome) to play audio in voice and stage channels. */
+    get voiceAdapterCreator(): DiscordGatewayAdapterCreator {
+        if (!this._shard) {
+            throw new Error(`Cannot use ${this.constructor.name}.voiceAdapterCreator if the guild was received via REST, or you do not have the GUILDS intent as this guild does not belong to any Shard.`);
+        }
+
+        return (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
+            this.client["voiceAdapters"].set(this.id, methods);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return {
+                sendPayload: (payload: { d: unknown; op: GatewayOPCodes; }): true => {
+                    this.shard.send(payload.op, payload.d);
+
+                    return true;
+                },
+                destroy: () => this.client["voiceAdapters"].delete(this.id)
+            };
+        };
     }
 
     /**
@@ -760,7 +767,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Edit a member of this guild.
+     * Edit a member of this guild. Use \<Guild\>.editCurrentMember if you wish to update the nick of this client using the CHANGE_NICKNAME permission.
      * @param memberID The ID of the member.
      * @param options The options for editing the member.
      */
