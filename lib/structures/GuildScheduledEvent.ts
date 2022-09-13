@@ -104,7 +104,7 @@ export default class GuildScheduledEvent extends Base {
     /** The guild this scheduled event belongs to. This will throw an error if the guild is not cached. */
     get guild(): Guild {
         if (!this._guild) {
-            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
         } else {
             return this._guild;
         }
