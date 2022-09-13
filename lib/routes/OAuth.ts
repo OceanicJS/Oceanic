@@ -1,4 +1,4 @@
-/** @module routes/OAuth */
+/** @module Routes/OAuth */
 import type {
     AuthorizationInformation,
     ClientCredentialsTokenOptions,

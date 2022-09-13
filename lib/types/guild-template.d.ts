@@ -1,4 +1,4 @@
-/** @module types/guild-template */
+/** @module Types/GuildTemplate */
 import type { RawGuild } from "./guilds";
 import type { RawUser } from "./users";
 

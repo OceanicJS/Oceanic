@@ -1,4 +1,4 @@
-/** @module routes/ApplicationCommand */
+/** @module Routes/ApplicationCommands */
 import * as Routes from "../util/Routes";
 import type {
     AnyApplicationCommand,

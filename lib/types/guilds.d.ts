@@ -1,4 +1,4 @@
-/** @module types/guilds */
+/** @module Types/Guilds */
 import type { RawUser } from "./users";
 import type {
     AnyThreadChannel,
@@ -12,7 +12,6 @@ import type {
 } from "./channels";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { PresenceUpdate } from "./gateway";
-import type { RawStageInstance } from "./stage-instances";
 import type { RawVoiceState } from "./voice";
 import type {
     ChannelTypes,
@@ -25,6 +24,7 @@ import type {
     IntegrationType,
     MFALevels,
     PremiumTiers,
+    StageInstancePrivacyLevels,
     StickerFormatTypes,
     StickerTypes,
     ThreadAutoArchiveDuration,
@@ -604,3 +604,14 @@ export interface RawGuild {
 }
 
 export type PossiblyUncachedIntegration = Integration | { applicationID?: string; id: string; };
+
+export interface RawStageInstance {
+    channel_id: string;
+    /** @deprecated */
+    discoverable_disabled: boolean;
+    guild_id: string;
+    guild_scheduled_event_id?: string;
+    id: string;
+    privacy_level: StageInstancePrivacyLevels;
+    topic: string;
+}

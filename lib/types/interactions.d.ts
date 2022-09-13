@@ -1,4 +1,4 @@
-/** @module types/interactions */
+/** @module Types/Interactions */
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
     AnyChannel,

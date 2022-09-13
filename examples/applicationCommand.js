@@ -1,6 +1,6 @@
 // The application command management functions are on ClientApplication (client.application) & client.rest.applicationCommands
-// https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html
-// https://oceanic.owo-whats-this.dev/classes/routes_ApplicationCommands.ApplicationCommands.html
+// https://oceanic.owo-whats-this.dev/latest/classes/structures_ClientApplication.ClientApplication.html
+// https://oceanic.owo-whats-this.dev/latest/classes/routes_ApplicationCommands.ApplicationCommands.html
 const { ApplicationCommandOptionTypes, ApplicationCommandTypes, Client } = require("oceanic.js");
 
 const client = new Client({
@@ -13,15 +13,15 @@ const client = new Client({
 client.on("ready", async() => {
     console.log("Ready as", client.user.tag);
 
-    // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#createGlobalCommand
+    // https://oceanic.owo-whats-this.dev/classes/ClientApplication.ClientApplication.html#createGlobalCommand
     // Create a single command
     await client.application.createGlobalCommand({
-        type: ApplicationCommandTypes.CHAT_INPUT, // CHAT_INPUT = slash commands - full list: https://oceanic.owo-whats-this.dev/enums/Constants.ApplicationCommandTypes.html
+        type: ApplicationCommandTypes.CHAT_INPUT, // CHAT_INPUT = slash commands - full list: https://oceanic.owo-whats-this.dev/latest/enums/Constants.ApplicationCommandTypes.html
         name: "global-command",
         description: "A global command.",
         options: [
             {
-                type: ApplicationCommandOptionTypes.STRING, // A string input - full list: https://oceanic.owo-whats-this.dev/enums/Constants.ApplicationCommandOptionTypes.html
+                type: ApplicationCommandOptionTypes.STRING, // A string input - full list: https://oceanic.owo-whats-this.dev/latest/enums/Constants.ApplicationCommandOptionTypes.html
                 name: "suspicious",
                 nameLocalizations: { // (optional) a dictionary of locales to localized names (see: https://discord.com/developers/docs/reference#locales)
                     "es-ES": "sospechoso"
@@ -52,7 +52,7 @@ client.on("ready", async() => {
         defaultMemberPermissions: "8" // The bitfield of the default permissions required to use this command (8 = Administrator)
     });
 
-    // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#bulkEditGlobalCommands
+    // https://oceanic.owo-whats-this.dev/latest/classes/ClientApplication.ClientApplication.html#bulkEditGlobalCommands
     // Instead of deleting individual commands or creating commands one at a time, you can create them in bulk.
     await client.application.bulkEditGlobalCommands([
         {
@@ -73,17 +73,17 @@ client.on("ready", async() => {
         }
     ]);
 
-    // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#getGlobalCommands
+    // https://oceanic.owo-whats-this.dev/latest/classes/ClientApplication.ClientApplication.html#getGlobalCommands
     // if you need to fetch your commands
     const commands = await client.application.getGlobalCommands();
     console.log(commands); // An array of ApplicationCommand classes
 
     for (const command of commands) {
-        // https://oceanic.owo-whats-this.dev/classes/structures_ApplicationCommand.ApplicationCommand.html#delete
+        // https://oceanic.owo-whats-this.dev/latest/classes/ApplicationCommand.ApplicationCommand.html#delete
         await command.delete(); // DON'T DO THIS! This is just an example. Use `bulkEdit` with an empty array if you want to delete all commands
     }
 
-    // https://oceanic.owo-whats-this.dev/classes/structures_ClientApplication.ClientApplication.html#createGuildCommand
+    // https://oceanic.owo-whats-this.dev/latest/classes/ClientApplication.ClientApplication.html#createGuildCommand
     // Guilds commands are exactly the same thing, but with a guild ID included
     await client.application.createGuildCommand("1005489770278953112", {
         type: ApplicationCommandTypes.CHAT_INPUT,

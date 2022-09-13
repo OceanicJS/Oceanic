@@ -177,7 +177,7 @@ export default class ComponentInteraction<T extends AnyTextChannel | Uncached = 
     }
 
     /**
-     * Edit the message this interaction is from. If this interaction has already been acknowledged, use `createFollowup`.
+     * Edit the message this interaction is from. If this interaction has already been acknowledged, use `editOriginal`.
      * @param options The options for editing the message.
      */
     async editParent(options: InteractionContent): Promise<void> {

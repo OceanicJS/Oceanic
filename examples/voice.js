@@ -1,6 +1,5 @@
 const { Client } = require("oceanic.js");
 const { VoiceConnectionStatus, AudioPlayerStatus, createAudioPlayer, createAudioResource } = require("@discordjs/voice");
-const path = require("path");
 
 const client = new Client({
     auth: "Bot [TOKEN]",
@@ -35,7 +34,7 @@ client.on("ready", () => {
         console.log("The player is not playing any audio");
     })
 
-    const audio = createAudioResource(path.join(__dirname, "audio.mp3")); // Create the audio resource from the mp3 we have to play through the player
+    const audio = createAudioResource(`${__dirname}/audio.mp3`); // Create the audio resource from the mp3 we have to play through the player
     player.play(audio); // Play the audio
 });
 

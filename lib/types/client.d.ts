@@ -1,4 +1,4 @@
-/** @module types/client */
+/** @module Types/Client */
 import type { AllowedMentions } from "./channels";
 import type { GatewayOptions } from "./gateway";
 import type { ImageFormat } from "../Constants";

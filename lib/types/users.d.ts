@@ -1,4 +1,4 @@
-/** @module types/users */
+/** @module Types/Users */
 import type { RawMember } from "./guilds";
 import type { PremiumTypes } from "../Constants";
 

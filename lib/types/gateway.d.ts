@@ -1,4 +1,4 @@
-/** @module types/gateway */
+/** @module Types/Gateway */
 import type { RawUser } from "./users";
 import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
 import type { ActivityTypes, AutoModerationTriggerTypes, IntentNames } from "../Constants";

@@ -3,10 +3,10 @@ import Base from "./Base";
 import type StageChannel from "./StageChannel";
 import Guild from "./Guild";
 import GuildScheduledEvent from "./GuildScheduledEvent";
-import type { RawStageInstance } from "../types/stage-instances";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
 import type { JSONStageInstance } from "../types/json";
+import { RawStageInstance } from "../types/guilds";
 
 export default class StageInstance extends Base {
     private _guild?: Guild;

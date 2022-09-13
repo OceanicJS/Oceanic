@@ -1,5 +1,5 @@
 const { Client } = require("oceanic.js");
-const fs = require("fs");
+const { readFileSync } = require("fs");
 
 const client = new Client({
     auth: "Bot [TOKEN]",
@@ -13,24 +13,24 @@ client.on("ready", () => console.log("Ready as", client.user.tag));
 client.on("messageCreate", async (msg) => {
     if(msg.content.includes("!embed")) {
 		await client.rest.channels.createMessage(msg.channel.id, {
-			// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedOptions.html
+			// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedOptions.html
 			// Up to 10 in one message
 			embeds: [
 				{
-					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedAuthorOptions.html
+					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedAuthorOptions.html
 					author: {
 						name: "Author Name",
 						// An image url, or attachment://filename.ext
 						iconURL: "https://i.furry.cool/DonPride.png", // Optional
 						url: "https://oceanic.owo-whats-this.dev" // Optional
 					},
-					// Array of https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedField.html
+					// Array of https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedField.html
 					// Up to 25 in one message
 					fields: [
 						{
 							name: "Field One",
 							value: "Field One Value",
-							inline: true // If this field should be displayed inline (default: to false)
+							inline: true // If this field should be displayed inline (default: false)
 						},
 						{
 							name: "Field Two",
@@ -38,23 +38,23 @@ client.on("messageCreate", async (msg) => {
 							inline: false
 						}
 					],
-					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedFooterOptions.html
+					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedFooterOptions.html
 					footer: {
 						text: "Footer Text",
 						// An image url, or attachment://filename.ext
 						iconURL: "https://i.furry.cool/DonPride.png" // Optional
 					},
-					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedImageOptions.html
+					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedImageOptions.html
 					image: {
 						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
-					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedThumbnailOptions.html
+					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedThumbnailOptions.html
 					thumbnail: {
 						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
-					// https://oceanic.owo-whats-this.dev/interfaces/types_channels.EmbedOptions.html
+					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedOptions.html
 					color: 0xFFA500, // Base-10 color (0x prefix can be used for hex codes)
 					description: "My Cool Embed",
 					timestamp: new Date().toISOString(), // The current time - ISO 8601 format
@@ -76,7 +76,7 @@ client.on("messageCreate", async (msg) => {
 			files: [
 				{
 					name: "image.png",
-					contents: fs.readFileSync(`${__dirname}/image.png`)
+					contents: readFileSync(`${__dirname}/image.png`)
 				}
 			]
 		});

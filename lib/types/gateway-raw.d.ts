@@ -1,4 +1,4 @@
-/** @module types/gateway-raw */
+/** @module Types/Gateway/Raw */
 import type {
     PartialEmoji,
     RawGuild,
@@ -6,6 +6,7 @@ import type {
     RawIntegration,
     RawMember,
     RawRole,
+    RawStageInstance,
     RawUnavailableGuild,
     Sticker
 } from "./guilds";
@@ -18,7 +19,6 @@ import type { RawGuildChannel, RawMessage, RawThreadChannel, RawThreadMember } f
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
-import type { RawStageInstance } from "./stage-instances";
 import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;

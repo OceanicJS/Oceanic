@@ -80,7 +80,8 @@ import type {
     GetActiveThreadsResponse,
     Ban,
     GetVanityURLResponse,
-    RawWidget
+    RawWidget,
+    RawStageInstance
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -93,7 +94,6 @@ import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, Ra
 import type { AuditLog, GetAuditLogOptions } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
 import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
-import type { RawStageInstance } from "../types/stage-instances";
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 import Shard from "../gateway/Shard";

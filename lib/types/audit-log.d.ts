@@ -1,4 +1,4 @@
-/** @module types/audit-log */
+/** @module Types/AuditLog */
 import type { RawAutoModerationRule } from "./auto-moderation";
 import type { RawAnnouncementThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels";
 import type { RawIntegration } from "./guilds";

@@ -1,4 +1,4 @@
-/** @module types/json */
+/** @module Types/JSON */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { InstallParams, TeamMember } from "./oauth";
 import type { ApplicationCommandOptions } from "./application-commands";

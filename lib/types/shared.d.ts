@@ -1,4 +1,4 @@
-/** @module types/shared */
+/** @module Types/Shared */
 export interface Uncached {
     id: string;
 }

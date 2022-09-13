@@ -33,6 +33,22 @@ export default class InteractionOptionsWrapper {
         this.resolved = resolved;
     }
 
+    private _getFocusedOption<T extends InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger>(required = false): T | undefined {
+        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
+        const sub = this.getSubCommand(false);
+        if (sub?.length === 1) {
+            baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        } else if (sub?.length === 2) {
+            baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+        }
+        const opt = (baseOptions ?? this.raw).find(o => o.focused === true) as T | undefined;
+        if (!opt && required) {
+            throw new Error("Missing required focused option");
+        } else {
+            return opt;
+        }
+    }
+
     private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes): T | undefined {
         let baseOptions: Array<InteractionOptionsWithValue> | undefined;
         const sub = this.getSubCommand(false);
@@ -48,7 +64,6 @@ export default class InteractionOptionsWrapper {
             return opt;
         }
     }
-
 
     /**
      * Get an attachment option value.
@@ -137,6 +152,16 @@ export default class InteractionOptionsWrapper {
     getChannelOption(name: string, required: true): InteractionOptionsChannel;
     getChannelOption(name: string, required?: boolean): InteractionOptionsChannel | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.CHANNEL);
+    }
+
+    /**
+     * Get the focused option (in an autocomplete interaction).
+     * @param required If true, an error will be thrown if no focused option is present.
+     */
+    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required?: false): T | undefined;
+    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required: true): T;
+    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required?: boolean): T | undefined {
+        return this._getFocusedOption<T>(required);
     }
 
     /**

@@ -1,4 +1,4 @@
-/** @module routes/Guilds */
+/** @module Routes/Guilds */
 import type {
     CreateEmojiOptions,
     CreateGuildOptions,

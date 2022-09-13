@@ -1,4 +1,4 @@
-/** @module types/voice */
+/** @module Types/Voice */
 import type { RawMember } from "./guilds";
 
 export interface RawVoiceState {
