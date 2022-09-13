@@ -18,17 +18,17 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import { ClientEvents } from "./types/events";
 import type { JoinVoiceChannelOptions } from "./types/discordjs-voice";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment, import-newlines/enforce
-import {
-    joinVoiceChannel,
-    getVoiceConnection,
-    getVoiceConnections,
-    type DiscordGatewayAdapterLibraryMethods,
-    type VoiceConnection
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-} from "@discordjs/voice";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
+try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    DiscordJSVoice = require("@discordjs/voice");
+} catch {}
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -122,11 +122,11 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
     /** The active voice connections of this client. */
     get voiceConnections(): Map<string, VoiceConnection> {
-        if (!getVoiceConnections) {
+        if (!DiscordJSVoice) {
             throw new Error("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-        return getVoiceConnections();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+        return DiscordJSVoice.getVoiceConnections();
     }
 
     /** Connect the client to Discord. */
@@ -213,11 +213,11 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param guildID The ID of the guild the voice channel belongs to.
      */
     getVoiceConnection(guildID: string): VoiceConnection | undefined {
-        if (!getVoiceConnection) {
+        if (!DiscordJSVoice) {
             throw new Error("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        return getVoiceConnection(guildID);
+        return DiscordJSVoice.getVoiceConnection(guildID);
     }
 
     /**
@@ -225,11 +225,11 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param options The options to join the channel with.
      * */
     joinVoiceChannel(options: JoinVoiceChannelOptions): VoiceConnection {
-        if (!joinVoiceChannel) {
+        if (!DiscordJSVoice) {
             throw new Error("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
-        return joinVoiceChannel({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+        return DiscordJSVoice.joinVoiceChannel({
             channelId:      options.channelID,
             guildId:        options.guildID,
             debug:          options.debug,
