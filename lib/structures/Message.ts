@@ -280,7 +280,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The guild this message is in. This will throw an error if the guild is not cached. */
     get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
         if (this._guild === undefined) {
-            throw new Error(`${this.constructor.name}#guild is not present without having the GUILDS intent or fetching the guild.`);
+            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
         } else {
             return this._guild;
         }
