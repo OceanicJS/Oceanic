@@ -6,9 +6,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Install Dependencies
-      run: npm i --ignore-scripts typedoc typedoc-plugin-extras typedoc-plugin-rename-defaults
-    - name: Add Needed Files
-      run: node doc-test.js
-    - name: Build Docs
-      run: npx --yes typedoc
+    - name: Test Docs
+      run: npm run test:docs
