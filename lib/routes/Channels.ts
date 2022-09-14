@@ -259,10 +259,10 @@ export default class Channels {
     async deleteMessages(id: string, messageIDs: Array<string>, reason?: string): Promise<number> {
         const chunks: Array<Array<string>> = [];
         messageIDs = [...messageIDs];
+        const amountOfMessages = messageIDs.length;
         while (messageIDs.length) {
             chunks.push(messageIDs.splice(0, 100));
         }
-        const amountOfMessages = chunks.reduce((_amountOfMessages, chunk) => _amountOfMessages + chunk.length, 0);
 
         let done = 0;
         const deleteMessagesPromises: Array<Promise<unknown>> = [];
