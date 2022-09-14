@@ -27,7 +27,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
-    channel?: CH | null;
+    channel: CH | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
     client!: Client;
@@ -106,7 +106,11 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                     channel = data.channel as PartialInviteChannel;
                 }
             }
-            this.channel = channel as CH | undefined;
+            if (channel) {
+                this.channel = channel as CH;
+            } else {
+                this.channel = null;
+            }
         } else {
             this.channel = null;
         }
