@@ -535,16 +535,26 @@ export default class Channels {
      * @param options The options for getting messages. All are mutually exclusive.
      */
     async getMessages<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => this.#manager.authRequest<Array<RawMessage>>({
-            method: "GET",
-            path:   Routes.CHANNEL_MESSAGES(id),
-            json:   {
-                after:  _options?.after,
-                around: _options?.around,
-                before: _options?.before,
-                limit:  _options?.limit
+        const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => {
+            const query = new URLSearchParams();
+            if (_options?.after) {
+                query.set("after", _options.after);
             }
-        }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+            if (_options?.around) {
+                query.set("around", _options.around);
+            }
+            if (_options?.before) {
+                query.set("before", _options.before);
+            }
+            if (_options?.limit) {
+                query.set("limit", _options.limit.toString());
+            }
+            return this.#manager.authRequest<Array<RawMessage>>({
+                method: "GET",
+                path:   Routes.CHANNEL_MESSAGES(id),
+                query
+            }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+        };
 
         const limit = options?.limit ?? 100;
         let after = options?.after;
