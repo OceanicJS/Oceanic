@@ -8,11 +8,19 @@ import type { JSONPublicThreadChannel } from "../types/json";
 /** Represents a public thread channel. */
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {
     /** the IDs of the set of tags that have been applied to this thread. Forum channel threads only.  */
-    appliedTags?: Array<string>;
+    appliedTags: Array<string>;
     declare threadMetadata: ThreadMetadata;
     declare type: ChannelTypes.PUBLIC_THREAD;
     constructor(data: RawPublicThreadChannel, client: Client) {
         super(data, client);
+        this.appliedTags = [];
+    }
+
+    protected update(data: Partial<RawPublicThreadChannel>): void {
+        super.update(data);
+        if (data.applied_tags !== undefined) {
+            this.appliedTags = data.applied_tags;
+        }
     }
 
     /**
@@ -26,6 +34,7 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
     toJSON(): JSONPublicThreadChannel {
         return {
             ...super.toJSON(),
+            appliedTags:    this.appliedTags,
             threadMetadata: this.threadMetadata,
             type:           this.type
         };
