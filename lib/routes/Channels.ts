@@ -531,7 +531,7 @@ export default class Channels {
         let messages: Array<Message<T>> = [];
         while (messages.length < limit) {
             const limitLeft = limit - messages.length;
-            const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
+            const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more messages for ${id}. ${limitLeft} left to get.`);
             const messagesChunk = await _getMessages(id, {
                 after,
@@ -547,7 +547,7 @@ export default class Channels {
             messages = messages.concat(messagesChunk);
             after = messagesChunk.at(-1)!.id;
 
-            if (messagesChunk.length < 1000) {
+            if (messagesChunk.length < 100) {
                 break;
             }
         }
