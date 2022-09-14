@@ -19,7 +19,7 @@ export default class RESTManager {
     channels: Channels;
     #client: Client;
     guilds: Guilds;
-    #handler: RequestHandler;
+    handler: RequestHandler;
     interactions: Interactions;
     oauth: OAuth;
     users: Users;
@@ -29,7 +29,7 @@ export default class RESTManager {
         this.channels = new Channels(this);
         this.#client = client;
         this.guilds = new Guilds(this);
-        this.#handler = new RequestHandler(this, options);
+        this.handler = new RequestHandler(this, options);
         this.interactions = new Interactions(this);
         this.oauth = new OAuth(this);
         this.users = new Users(this);
@@ -40,12 +40,12 @@ export default class RESTManager {
         return this.#client;
     }
     get options(): RESTOptions {
-        return this.#handler.options;
+        return this.handler.options;
     }
 
     /** Alias for {@link RequestHandler~RequestHandler#authRequest | RequestHandler#authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T> {
-        return this.#handler.authRequest<T>(options);
+        return this.handler.authRequest<T>(options);
     }
 
     /**
@@ -80,6 +80,6 @@ export default class RESTManager {
 
     /** Alias for {@link RequestHandler~RequestHandler#request | RequestHandler#request} */
     async request<T = unknown>(options: RequestOptions): Promise<T> {
-        return this.#handler.request<T>(options);
+        return this.handler.request<T>(options);
     }
 }

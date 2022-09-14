@@ -25,3 +25,5 @@ jobs:
     needs: [should-publish]
     if: needs.should-publish.outputs.check == 'true'
     uses: ./.github/workflows/dev-publish.yml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
