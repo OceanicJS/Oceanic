@@ -827,24 +827,45 @@ export default class Channels {
             }
 
             const filterPromises: Array<Promise<unknown>> = [];
-            for (const message of messages) {
+            const resolvers: Array<(() => void) | null> = [];
+            for (const [index, message] of messages.entries()) {
                 if (message.timestamp.getTime() < Date.now() - 1209600000) {
                     finishedFetchingMessages = true;
                     break;
                 }
 
-                filterPromises.push((async (): Promise<void> => {
-                    if (await filter(message as Message<T>)) {
-                        if (finishedFetchingMessages) {
-                            return;
+                filterPromises.push(new Promise<void>(resolve => {
+                    resolvers.push(resolve);
+
+                    void (async (): Promise<void> => {
+                        if (await filter(message as Message<T>)) {
+                            if (finishedFetchingMessages) {
+                                for (const resolver of resolvers) {
+                                    if (resolver) {
+                                        resolver();
+                                    }
+                                }
+                                return;
+                            }
+
+                            resolvers[index] = null;
+                            messageIDsToPurge.push(message.id);
+                            if (messageIDsToPurge.length === options.limit) {
+                                finishedFetchingMessages = true;
+                                for (const resolver of resolvers) {
+                                    if (resolver) {
+                                        resolver();
+                                    }
+                                }
+                            }
                         }
 
-                        messageIDsToPurge.push(message.id);
-                        if (messageIDsToPurge.length === options.limit) {
-                            finishedFetchingMessages = true;
+                        const resolver = resolvers[index];
+                        if (resolver) {
+                            resolver();
                         }
-                    }
-                })());
+                    })();
+                }));
             }
 
             await Promise.all(filterPromises);
