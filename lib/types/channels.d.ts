@@ -38,6 +38,7 @@ import type Message from "../structures/Message";
 
 export interface RawChannel {
     application_id?: string;
+    applied_tags?: Array<string>;
     available_tags?: Array<RawForumTag>;
     bitrate?: number;
     default_auto_archive_duration?: ThreadAutoArchiveDuration;
