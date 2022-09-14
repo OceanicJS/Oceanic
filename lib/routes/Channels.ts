@@ -831,6 +831,11 @@ export default class Channels {
             for (const [index, message] of messages.entries()) {
                 if (message.timestamp.getTime() < Date.now() - 1209600000) {
                     finishedFetchingMessages = true;
+                    for (const resolver of resolvers) {
+                        if (resolver) {
+                            resolver();
+                        }
+                    }
                     break;
                 }
 
