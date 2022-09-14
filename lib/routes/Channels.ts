@@ -794,12 +794,8 @@ export default class Channels {
         const messageIDsToPurge: Array<string> = [];
         let finishedFetchingMessages = false;
         const addMessageIDsToPurgeBatch = async (): Promise<void> => {
-            let limit = options.limit - messageIDsToPurge.length;
-            if (limit > 100) {
-                limit = 100;
-            }
             const messages = await this.getMessages(id, {
-                limit,
+                limit:  100,
                 after:  options.after,
                 around: options.around,
                 before: options.before
