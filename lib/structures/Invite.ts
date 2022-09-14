@@ -17,7 +17,6 @@ import type {
 } from "../types/channels";
 import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
-import { ChannelTypes } from "../Constants";
 import type { RawGuild } from "../types/guilds";
 import type { JSONInvite } from "../types/json";
 
@@ -27,7 +26,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
-    /** The channel this invite leads to. */
+    /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
     channel!: CH | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
@@ -104,10 +103,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                 channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
                 if (channel && channel instanceof Channel) {
                     channel["update"](data.channel);
-                } else if (data.channel.type === ChannelTypes.GROUP_DM) {
-                    channel = data.channel as PartialInviteChannel;
                 } else {
-                    channel = Channel.from(data.channel, this.client);
+                    channel = data.channel as PartialInviteChannel;
                 }
                 this.channel = channel as CH;
                 this.channelID = data.channel.id;
