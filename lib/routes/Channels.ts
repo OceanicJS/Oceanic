@@ -659,14 +659,20 @@ export default class Channels {
             emoji = encodeURIComponent(emoji);
         }
 
-        const _getReactions = async (_options?: GetReactionsOptions): Promise<Array<User>> => this.#manager.authRequest<Array<RawUser>>({
-            method: "GET",
-            path:   Routes.CHANNEL_REACTION(id, messageID, emoji),
-            json:   {
-                after: _options?.after,
-                limit: _options?.limit
+        const _getReactions = async (_options?: GetReactionsOptions): Promise<Array<User>> => {
+            const query = new URLSearchParams();
+            if (_options?.after) {
+                query.set("after", _options.after);
             }
-        }).then(data => data.map(d => this.#manager.client.users.update(d)));
+            if (_options?.limit) {
+                query.set("limit", _options.limit.toString());
+            }
+            return this.#manager.authRequest<Array<RawUser>>({
+                method: "GET",
+                path:   Routes.CHANNEL_REACTION(id, messageID, emoji),
+                query
+            }).then(data => data.map(d => this.#manager.client.users.update(d)));
+        };
 
         const limit = options?.limit ?? 100;
         let after = options?.after;
