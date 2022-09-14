@@ -260,7 +260,6 @@ export default class Channels {
         const chunks: Array<Array<string>> = [];
         messageIDs = [...messageIDs];
         while (messageIDs.length) {
-            console.log(messageIDs.length);
             chunks.push(messageIDs.splice(0, 100));
         }
 
@@ -794,12 +793,13 @@ export default class Channels {
 
         const messageIDsToPurge: Array<string> = [];
         let finishedFetchingMessages = false;
+        let before = options.before;
         const addMessageIDsToPurgeBatch = async (): Promise<void> => {
             const messages = await this.getMessages(id, {
                 limit:  100,
                 after:  options.after,
                 around: options.around,
-                before: options.before
+                before
             });
 
             if (messages.length === 0) {
@@ -831,6 +831,7 @@ export default class Channels {
             await Promise.all(filterPromises);
 
             if (!finishedFetchingMessages) {
+                before = messageIDsToPurge.at(-1);
                 await addMessageIDsToPurgeBatch();
             }
         };
