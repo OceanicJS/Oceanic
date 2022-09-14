@@ -866,6 +866,16 @@ export default class Channels {
                                 }
                             }
                         } else {
+                            if (finishedFetchingMessages) {
+                                for (const [resolverIndex, resolver] of resolvers.entries()) {
+                                    if (resolver) {
+                                        resolver();
+                                        resolvers[resolverIndex] = null;
+                                    }
+                                }
+                                return;
+                            }
+
                             removedResolver = resolvers[index];
                             resolvers[index] = null;
                         }
