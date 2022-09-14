@@ -865,6 +865,9 @@ export default class Channels {
                                     }
                                 }
                             }
+                        } else {
+                            removedResolver = resolvers[index];
+                            resolvers[index] = null;
                         }
 
                         if (removedResolver) {
