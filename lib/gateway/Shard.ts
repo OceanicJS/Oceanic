@@ -884,13 +884,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "THREAD_MEMBERS_UPDATE": {
                 const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id);
-                const addedMembers: Array<ThreadMember> = packet.d.added_members.map(rawMember => ({
+                const addedMembers: Array<ThreadMember> = (packet.d.added_members ?? []).map(rawMember => ({
                     flags:         rawMember.flags,
                     id:            rawMember.id,
                     joinTimestamp: new Date(rawMember.join_timestamp),
                     userID:        rawMember.user_id
                 }));
-                const removedMembers: Array<ThreadMember | Uncached> = packet.d.removed_member_ids.map(id => ({ id }));
+                const removedMembers: Array<ThreadMember | Uncached> = (packet.d.removed_member_ids ?? []).map(id => ({ id }));
                 if (thread) {
                     thread.memberCount = packet.d.member_count;
                     for (const rawMember of addedMembers) {
