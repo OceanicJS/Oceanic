@@ -76,6 +76,7 @@ import AuditLogEntry from "../structures/AuditLogEntry";
 import type RESTManager from "../rest/RESTManager";
 import Guild from "../structures/Guild";
 import Member from "../structures/Member";
+import type { Uncached } from "../types/shared";
 
 /** Various methods for interacting with guilds. */
 export default class Guilds {
@@ -1063,7 +1064,7 @@ export default class Guilds {
      * Get the invites of a guild.
      * @param id The ID of the guild to get the invites of.
      */
-    async getInvites<CH extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(id: string): Promise<Array<Invite<"withMetadata", CH>>> {
+    async getInvites<CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(id: string): Promise<Array<Invite<"withMetadata", CH>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.GUILD_INVITES(id)

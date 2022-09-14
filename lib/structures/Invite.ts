@@ -19,15 +19,16 @@ import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
 import type { RawGuild } from "../types/guilds";
 import type { JSONInvite } from "../types/json";
+import type { Uncached } from "../types/shared";
 
 /** Represents an invite. */
-export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel> {
+export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached> {
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
-    /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
-    channel: CH | null;
+    /** The channel this invite leads to. If the channel is not cached, this may be a partial with only `id`, `name, and `type` or undefined. */
+    channel: (CH extends InviteChannel | PartialInviteChannel ? CH : undefined) | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
     client!: Client;
@@ -106,11 +107,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                     channel = data.channel as PartialInviteChannel;
                 }
             }
-            if (channel) {
-                this.channel = channel as CH;
-            } else {
-                this.channel = null;
-            }
+            this.channel = channel as (CH extends InviteChannel | PartialInviteChannel ? CH : undefined) | null;
         } else {
             this.channel = null;
         }
