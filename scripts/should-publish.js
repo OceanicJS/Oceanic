@@ -9,7 +9,7 @@ if(latestDev === latestLocal) {
 	console.log("Latest published matches local, a publish should not happen.")
 	process.exit(1);
 }
-if((d - date.getTime()) > 1000) {
+if((d - date.getTime()) > 3600000) {
 	// more than an hour, publish
 	console.log("A publish has not happened within the last hour, a publish can happen.");
 	process.exit(0);
