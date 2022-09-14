@@ -826,48 +826,48 @@ export default class Channels {
                 return;
             }
 
+            before = messages.at(-1)!.id;
+
             const filterPromises: Array<Promise<unknown>> = [];
             const resolvers: Array<(() => void) | null> = [];
             for (const [index, message] of messages.entries()) {
                 if (message.timestamp.getTime() < Date.now() - 1209600000) {
                     finishedFetchingMessages = true;
-                    for (const resolver of resolvers) {
-                        if (resolver) {
-                            resolver();
-                        }
-                    }
                     break;
                 }
 
                 filterPromises.push(new Promise<void>(resolve => {
                     resolvers.push(resolve);
 
+                    let removedResolver: (() => void) | null = null;
                     void (async (): Promise<void> => {
                         if (await filter(message as Message<T>)) {
                             if (finishedFetchingMessages) {
-                                for (const resolver of resolvers) {
+                                for (const [resolverIndex, resolver] of resolvers.entries()) {
                                     if (resolver) {
                                         resolver();
+                                        resolvers[resolverIndex] = null;
                                     }
                                 }
                                 return;
                             }
 
+                            removedResolver = resolvers[index];
                             resolvers[index] = null;
                             messageIDsToPurge.push(message.id);
                             if (messageIDsToPurge.length === options.limit) {
                                 finishedFetchingMessages = true;
-                                for (const resolver of resolvers) {
+                                for (const [resolverIndex, resolver] of resolvers.entries()) {
                                     if (resolver) {
                                         resolver();
+                                        resolvers[resolverIndex] = null;
                                     }
                                 }
                             }
                         }
 
-                        const resolver = resolvers[index];
-                        if (resolver) {
-                            resolver();
+                        if (removedResolver) {
+                            removedResolver();
                         }
                     })();
                 }));
@@ -876,7 +876,6 @@ export default class Channels {
             await Promise.all(filterPromises);
 
             if (!finishedFetchingMessages) {
-                before = messageIDsToPurge.at(-1);
                 await addMessageIDsToPurgeBatch();
             }
         };
