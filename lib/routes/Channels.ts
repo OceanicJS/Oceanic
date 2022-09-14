@@ -560,15 +560,20 @@ export default class Channels {
 
         const limit = options?.limit ?? 100;
         let before = options?.before;
+        let firstCallDone = false;
 
         let messages: Array<Message<T>> = [];
         while (messages.length < limit) {
+            if (!firstCallDone) {
+                firstCallDone = true;
+            }
+
             const limitLeft = limit - messages.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more messages for ${id}. ${limitLeft} left to get.`);
             const messagesChunk = await _getMessages({
-                after:  options?.after,
-                around: options?.around,
+                after:  firstCallDone ? undefined : options?.after,
+                around: firstCallDone ? undefined : options?.around,
                 before,
                 limit:  limitToFetch
             });
@@ -786,7 +791,7 @@ export default class Channels {
     /**
      * Purge an amount of messages from a channel.
      * @param id The ID of the channel to purge.
-     * @param options The options to purge.
+     * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
     async purgeMessages<T extends AnyGuildTextChannel | Uncached = AnyGuildTextChannel | Uncached>(id: string, options: PurgeOptions<T>): Promise<number> {
         const filter = options.filter?.bind(this) ?? ((): true => true);
@@ -794,11 +799,16 @@ export default class Channels {
         const messageIDsToPurge: Array<string> = [];
         let finishedFetchingMessages = false;
         let before = options.before;
+        let firstCallDone = false;
         const addMessageIDsToPurgeBatch = async (): Promise<void> => {
+            if (!firstCallDone) {
+                firstCallDone = true;
+            }
+
             const messages = await this.getMessages(id, {
                 limit:  100,
-                after:  options.after,
-                around: options.around,
+                after:  firstCallDone ? undefined : options.after,
+                around: firstCallDone ? undefined : options.around,
                 before
             });
 

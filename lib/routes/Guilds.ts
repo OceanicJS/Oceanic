@@ -1012,15 +1012,20 @@ export default class Guilds {
 
         const limit = options?.limit ?? 1000;
         let after = options?.after;
+        let firstCallDone = false;
 
         let bans: Array<Ban> = [];
         while (bans.length < limit) {
+            if (!firstCallDone) {
+                firstCallDone = true;
+            }
+
             const limitLeft = limit - bans.length;
             const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more bans for ${id}. ${limitLeft} left to get.`);
             const bansChunk = await _getBans({
                 after,
-                before: options?.before,
+                before: firstCallDone ? undefined : options?.before,
                 limit:  limitToFetch
             });
 
