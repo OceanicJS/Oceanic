@@ -514,16 +514,45 @@ export default class Channels {
      * @param options The options for getting messages. All are mutually exclusive.
      */
     async getMessages<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        return this.#manager.authRequest<Array<RawMessage>>({
+        const _getMessages = async (_id: string, _options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
-            path:   Routes.CHANNEL_MESSAGES(id),
+            path:   Routes.CHANNEL_MESSAGES(_id),
             json:   {
-                after:  options?.after,
-                around: options?.around,
-                before: options?.before,
-                limit:  options?.limit
+                after:  _options?.after,
+                around: _options?.around,
+                before: _options?.before,
+                limit:  _options?.limit
             }
         }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+
+        const limit = options?.limit ?? 100;
+        let after = options?.after;
+
+        let messages: Array<Message<T>> = [];
+        while (messages.length < limit) {
+            const limitLeft = limit - messages.length;
+            const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
+            this.#manager.client.emit("debug", `Getting ${limitToFetch} more messages for ${id}. ${limitLeft} left to get.`);
+            const messagesChunk = await _getMessages(id, {
+                after,
+                around: options?.around,
+                before: options?.before,
+                limit:  limitToFetch
+            });
+
+            if (messagesChunk.length === 0) {
+                break;
+            }
+
+            messages = messages.concat(messagesChunk);
+            after = messagesChunk.at(-1)!.id;
+
+            if (messagesChunk.length < 1000) {
+                break;
+            }
+        }
+
+        return messages;
     }
 
     /**
