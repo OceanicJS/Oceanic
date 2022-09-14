@@ -13,7 +13,6 @@ import type {
     CreateInviteOptions,
     EditPermissionOptions,
     EditStageChannelOptions,
-    InviteChannel,
     InviteInfoTypes,
     RawOverwrite,
     RawStageChannel
@@ -74,7 +73,7 @@ export default class StageChannel extends GuildChannel {
      * Create an invite for this channel.
      * @param options The options to create an invite with.
      */
-    async createInvite(options: CreateInviteOptions): Promise<Invite<InviteInfoTypes, InviteChannel>> {
+    async createInvite(options: CreateInviteOptions): Promise<Invite<InviteInfoTypes, this>> {
         return this.client.rest.channels.createInvite(this.id, options);
     }
 

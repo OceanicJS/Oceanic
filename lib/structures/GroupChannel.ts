@@ -15,7 +15,6 @@ import type {
     EditMessageOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
-    InviteChannel,
     InviteInfoTypes,
     RawGroupChannel,
     RawMessage
@@ -125,7 +124,7 @@ export default class GroupChannel extends Channel {
      * Create an invite for this channel.
      * @param options The options for creating the invite.
      */
-    async createInvite(options: CreateInviteOptions): Promise<Invite<InviteInfoTypes, InviteChannel>> {
+    async createInvite(options: CreateInviteOptions): Promise<Invite<InviteInfoTypes, this>> {
         return this.client.rest.channels.createInvite(this.id, options);
     }
 
