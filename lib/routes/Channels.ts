@@ -251,7 +251,7 @@ export default class Channels {
     /**
      * Bulk delete messages.
      * @param id The ID of the channel to delete the messages in.
-     * @param messageIDs The IDs of the messages to delete. Minimum of 2 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param messageIDs The IDs of the messages to delete. Any dupliates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(id: string, messageIDs: Array<string>, reason?: string): Promise<void> {
@@ -261,9 +261,16 @@ export default class Channels {
             chunks = chunks.concat(messageIDs.slice(0, 100));
         }
 
-        const deleteMessagesPromises: Array<Promise<null>> = [];
+        const deleteMessagesPromises: Array<Promise<unknown>> = [];
         for (const [index, chunk] of chunks.entries()) {
             this.#manager.client.emit("debug", `Deleting ${chunk.length} messages on ${id}. ${chunks.length - index} chunks left.`);
+
+            if (chunk.length === 1) {
+                this.#manager.client.emit("debug", "deleteMessages created a chunk with only 1 element, using deleteMessage instead.");
+                deleteMessagesPromises.push(this.deleteMessage(id, chunk[0], reason));
+                continue;
+            }
+
             deleteMessagesPromises.push(this.#manager.authRequest<null>({
                 method: "POST",
                 path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(id),
