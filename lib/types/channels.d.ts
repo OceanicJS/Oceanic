@@ -648,7 +648,7 @@ export interface GetChannelMessagesOptions {
     around?: string;
     /** Get messages before this message id. */
     before?: string;
-    /** The maximum amount of messages to get. */
+    /** The maximum amount of messages to get. Defaults to 100. Use Infinity if you wish to get as many messages as possible. */
     limit?: number;
 }
 
