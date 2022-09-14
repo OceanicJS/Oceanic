@@ -94,7 +94,7 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Get messages in this channel.
-     * @param options The options for getting the messages. All options are mutually exclusive.
+     * @param options The options for getting the messages. `before`, `after`, and `around `All are mutually exclusive.
      */
     async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getMessages<this>(this.id, options);

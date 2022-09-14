@@ -532,7 +532,7 @@ export default class Channels {
     /**
      * Get messages in a channel.
      * @param id The ID of the channel to get messages from.
-     * @param options The options for getting messages. All are mutually exclusive.
+     * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      */
     async getMessages<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
         const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => {
@@ -557,7 +557,7 @@ export default class Channels {
         };
 
         const limit = options?.limit ?? 100;
-        let after = options?.after;
+        let before = options?.before;
 
         let messages: Array<Message<T>> = [];
         while (messages.length < limit) {
@@ -565,9 +565,9 @@ export default class Channels {
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more messages for ${id}. ${limitLeft} left to get.`);
             const messagesChunk = await _getMessages({
-                after,
+                after:  options?.after,
                 around: options?.around,
-                before: options?.before,
+                before,
                 limit:  limitToFetch
             });
 
@@ -576,7 +576,7 @@ export default class Channels {
             }
 
             messages = messages.concat(messagesChunk);
-            after = messagesChunk.at(-1)!.id;
+            before = messagesChunk.at(-1)!.id;
 
             if (messagesChunk.length < 100) {
                 break;

@@ -219,7 +219,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 
     /**
      * Get messages in this channel.
-     * @param options The options for getting the messages. All options are mutually exclusive.
+     * @param options The options for getting the messages. `before`, `after`, and `around `All are mutually exclusive.
      */
     async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
         return this.client.rest.channels.getMessages<T>(this.id, options);
@@ -300,7 +300,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 
     /**
      * Purge an amount of messages from this channel.
-     * @param options The options to purge.
+     * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
     async purge(options: PurgeOptions<T>): Promise<number> {
         const filter = options.filter.bind(this) ?? ((): true => true);
