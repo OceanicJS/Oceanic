@@ -96,25 +96,27 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             this.guild = guild;
         }
 
-        if (data.channel === null) {
-            this.channel = null;
-            this.channelID = null;
-        } else {
-            let channel: Channel | PartialInviteChannel | undefined;
-            channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
-            if (channel && channel instanceof Channel) {
-                channel["update"](data.channel);
+        if (data.channel !== undefined) {
+            if (data.channel === null) {
+                this.channel = null;
+                this.channelID = null;
             } else {
-                channel = data.channel as PartialInviteChannel;
+                let channel: Channel | PartialInviteChannel | undefined;
+                channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
+                if (channel && channel instanceof Channel) {
+                    channel["update"](data.channel);
+                } else {
+                    channel = data.channel as PartialInviteChannel;
+                }
+                this.channel = channel as CH;
+                this.channelID = data.channel.id;
             }
-            this.channel = channel as CH;
-            this.channelID = data.channel.id;
         }
 
-        if (data.inviter) {
+        if (data.inviter !== undefined) {
             this.inviter = this.client.users.update(data.inviter);
         }
-        if (data.stage_instance) {
+        if (data.stage_instance !== undefined) {
             this.stageInstance = {
                 members:          data.stage_instance.members.map(member => this.client.util.updateMember(guild!.id, member.user!.id, member)),
                 participantCount: data.stage_instance.participant_count,
