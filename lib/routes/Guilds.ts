@@ -1011,7 +1011,7 @@ export default class Guilds {
         };
 
         const limit = options?.limit ?? 1000;
-        let before = options?.after;
+        let after = options?.after;
 
         let bans: Array<Ban> = [];
         while (bans.length < limit) {
@@ -1019,9 +1019,9 @@ export default class Guilds {
             const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more bans for ${id}. ${limitLeft} left to get.`);
             const bansChunk = await _getBans({
-                after: options?.after,
-                before,
-                limit: limitToFetch
+                after,
+                before: options?.before,
+                limit:  limitToFetch
             });
 
             if (bansChunk.length === 0) {
@@ -1029,7 +1029,7 @@ export default class Guilds {
             }
 
             bans = bans.concat(bansChunk);
-            before = bansChunk.at(-1)!.user.id;
+            after = bansChunk.at(-1)!.user.id;
 
             if (bansChunk.length < 1000) {
                 break;
