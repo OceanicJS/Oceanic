@@ -140,7 +140,7 @@ export default class Guild extends Base {
     /** The icon hash of this guild. */
     icon: string | null;
     /** The integrations in this guild. */
-    integrations: TypedCollection<string, RawIntegration, Integration, [string?]>;
+    integrations: TypedCollection<string, RawIntegration, Integration, [guildID?: string]>;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
