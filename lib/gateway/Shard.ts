@@ -547,7 +547,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "INTEGRATION_CREATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const integration = guild?.integrations.update(packet.d) ?? new Integration(packet.d, this.client);
+                const integration = guild?.integrations.update(packet.d) ?? new Integration(packet.d, this.client, packet.d.guild_id);
                 this.client.emit("integrationCreate", guild ?? { id: packet.d.guild_id }, integration);
                 break;
             }
@@ -563,7 +563,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "INTEGRATION_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const oldIntegration = guild?.integrations.get(packet.d.id)?.toJSON() ?? null;
-                const integration = guild?.integrations.update(packet.d) ?? new Integration(packet.d, this.client);
+                const integration = guild?.integrations.update(packet.d) ?? new Integration(packet.d, this.client, packet.d.guild_id);
                 this.client.emit("integrationUpdate", guild ?? { id: packet.d.guild_id }, integration, oldIntegration);
                 break;
             }

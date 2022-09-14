@@ -37,7 +37,6 @@ export default class GuildTemplate {
             writable:     false,
             configurable: false
         });
-        this.client = client;
         this.code = data.code;
         this.createdAt = new Date(data.created_at);
         this.creator = this.client.users.update(data.creator);

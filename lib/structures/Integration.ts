@@ -2,6 +2,8 @@
 import Base from "./Base";
 import PartialApplication from "./PartialApplication";
 import User from "./User";
+import type Guild from "./Guild";
+import type Role from "./Role";
 import type { IntegrationAccount, RawIntegration } from "../types/guilds";
 import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
 import type Client from "../Client";
@@ -21,12 +23,18 @@ export default class Integration extends Base {
     expireBehavior?: IntegrationExpireBehaviors;
     /** The grace period (in days) before expiring subscribers. */
     expireGracePeriod?: number;
+    /** The guild this integration belongs to, if applicable. */
+    guild?: Guild | null;
+    /** The ID of the guild this integration belongs to, if applicable. */
+    guildID: string | null;
     /** The name of the integration. */
     name: string;
     /** If this integration has been revoked. */
     revoked: boolean;
-    /** The id of the role this integration uses for subscribers. */
-    roleID?: string;
+    /** The role this integration uses for subscribers, if any. */
+    role?: Role | null;
+    /** The id of the role this integration uses for subscribers, if any. */
+    roleID: string | null;
     /** The number of subscribers this integration has. */
     subscriberCount?: number;
     /** The last date at which this integration was synced at. */
@@ -37,14 +45,17 @@ export default class Integration extends Base {
     type: IntegrationType;
     /** The user associated with this integration. */
     user?: User;
-    constructor(data: RawIntegration, client: Client) {
+    constructor(data: RawIntegration, client: Client, guildID?: string) {
         super(data.id, client);
         this.account = data.account;
         this.application = null;
         this.enableEmoticons = !!data.enable_emoticons;
         this.enabled = !!data.enabled;
+        this.guild = guildID === undefined ? null : client.guilds.get(guildID);
+        this.guildID = guildID === undefined ? null : guildID;
         this.name = data.name;
         this.revoked = !!data.revoked;
+        this.roleID = data.role_id === undefined ? null : data.role_id;
         this.syncing = !!data.syncing;
         this.type = data.type;
         this.update(data);
@@ -76,6 +87,7 @@ export default class Integration extends Base {
             this.revoked = data.revoked;
         }
         if (data.role_id !== undefined) {
+            this.role = this.guild !== undefined && this.guild !== null ? this.guild.roles.get(data.role_id) : null;
             this.roleID = data.role_id;
         }
         if (data.subscriber_count !== undefined) {
@@ -106,7 +118,7 @@ export default class Integration extends Base {
             expireGracePeriod: this.expireGracePeriod,
             name:              this.name,
             revoked:           this.revoked,
-            roleID:            this.roleID,
+            roleID:            this.roleID ?? undefined,
             subscriberCount:   this.subscriberCount,
             syncedAt:          this.syncedAt?.getTime(),
             syncing:           this.syncing,

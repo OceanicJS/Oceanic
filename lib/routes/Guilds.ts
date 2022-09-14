@@ -938,7 +938,7 @@ export default class Guilds {
             autoModerationRules:  data.auto_moderation_rules.map(rule => guild ? guild.autoModerationRules.update(rule) : new AutoModerationRule(rule, this.#manager.client)),
             entries:              data.audit_log_entries.map(entry => new AuditLogEntry(entry, this.#manager.client)),
             guildScheduledEvents: data.guild_scheduled_events.map(event => guild ? guild.scheduledEvents.update(event) : new GuildScheduledEvent(event, this.#manager.client)),
-            integrations:         data.integrations.map(integration => new Integration(integration, this.#manager.client)),
+            integrations:         data.integrations.map(integration => new Integration(integration, this.#manager.client, id)),
             threads:              data.threads.map(rawThread => this.#manager.client.util.updateThread(rawThread)),
             users:                data.users.map(user => this.#manager.client.users.update(user)),
             webhooks:             data.webhooks.map(webhook => new Webhook(webhook, this.#manager.client))
@@ -1057,7 +1057,7 @@ export default class Guilds {
         return this.#manager.authRequest<Array<RawIntegration>>({
             method: "GET",
             path:   Routes.GUILD_INTEGRATIONS(id)
-        }).then(data => data.map(integration => this.#manager.client.guilds.get(id)?.integrations.update(integration) ?? new Integration(integration, this.#manager.client)));
+        }).then(data => data.map(integration => this.#manager.client.guilds.get(id)?.integrations.update(integration) ?? new Integration(integration, this.#manager.client, id)));
     }
 
     /**
