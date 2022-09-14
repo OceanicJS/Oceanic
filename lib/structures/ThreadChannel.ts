@@ -312,6 +312,11 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
                 before: options.before
             });
 
+            if (messages.length === 0) {
+                finishedFetchingMessages = true;
+                return;
+            }
+
             const filterPromises: Array<Promise<unknown>> = [];
             for (const message of messages) {
                 if (message.timestamp.getTime() < Date.now() - 1209600000) {
@@ -327,7 +332,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
                         }
 
                         messageIDsToPurge.push(message.id);
-
                         if (messageIDsToPurge.length === options.limit) {
                             finishedFetchingMessages = true;
                         }

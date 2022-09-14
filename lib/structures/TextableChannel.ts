@@ -315,11 +315,15 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
                 before: options.before
             });
 
+            if (messages.length === 0) {
+                finishedFetchingMessages = true;
+                return;
+            }
+
             const filterPromises: Array<Promise<unknown>> = [];
             for (const message of messages) {
                 if (message.timestamp.getTime() < Date.now() - 1209600000) {
                     finishedFetchingMessages = true;
-
                     break;
                 }
 
@@ -330,7 +334,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
                         }
 
                         messageIDsToPurge.push(message.id);
-
                         if (messageIDsToPurge.length === options.limit) {
                             finishedFetchingMessages = true;
                         }
