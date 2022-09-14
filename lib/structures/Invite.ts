@@ -69,7 +69,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             configurable: false
         });
         this.channel = null;
-        this.channelID = data.channel?.id ?? null;
+        this.channelID = (data.channel_id || data.channel?.id) ?? null;
         this.code = data.code;
         this.guild = null;
         this.guildID = data.guild?.id ?? null;
@@ -110,6 +110,12 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                 }
                 this.channel = channel as CH;
                 this.channelID = data.channel.id;
+            }
+        } else if (data.channel_id !== undefined) {
+            this.channelID = data.channel_id;
+            const channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel_id);
+            if (channel && channel instanceof Channel) {
+                this.channel = channel as CH;
             }
         }
 

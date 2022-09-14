@@ -675,6 +675,8 @@ export interface RawInvite {
     approximate_presence_count?: number;
     // this is partial because the gateway only gets an id
     channel?: PartialChannel;
+    // gateway
+    channel_id?: string;
     code: string;
     expires_at?: string;
     guild?: PartialGuild;
