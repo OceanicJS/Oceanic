@@ -465,7 +465,7 @@ export interface GetBansOptions {
     after?: string;
     /** The ID of the ban to get bans before. */
     before?: string;
-    /** The maximum number of bans to get. */
+    /** The maximum number of bans to get. Defaults to 1000. Use Infinity if you wish to get as many bans as possible. */
     limit?: number;
 }
 

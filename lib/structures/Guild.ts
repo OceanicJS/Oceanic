@@ -884,7 +884,27 @@ export default class Guild extends Base {
      * @param options The options for getting the bans.
      */
     async getBans(options?: GetBansOptions): Promise<Array<Ban>> {
-        return this.client.rest.guilds.getBans(this.id, options);
+        const limit = options?.limit ?? 1000;
+        let after = options?.after;
+
+        let bans: Array<Ban> = [];
+
+        while (bans.length < limit) {
+            const bansChunk = await this.client.rest.guilds.getBans(this.id, {
+                after,
+                before: options?.before,
+                limit:  limit <= 100 ? limit : 100
+            });
+
+            if (bansChunk.length === 0) {
+                break;
+            }
+
+            after = bansChunk.at(-1)!.user.id;
+            bans = bans.concat(bansChunk);
+        }
+
+        return bans;
     }
 
     /**
