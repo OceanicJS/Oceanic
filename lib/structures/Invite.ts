@@ -28,7 +28,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. */
-    channel?: CH | null;
+    channel!: CH | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
     client!: Client;
