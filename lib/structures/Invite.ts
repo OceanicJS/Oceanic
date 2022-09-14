@@ -95,21 +95,23 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             this.guild = guild;
         }
 
-        if (data.channel === undefined) {
-            this.channel = null;
-            this.channelID = null;
-        } else {
-            let channel: Channel | PartialInviteChannel | undefined;
-            channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
-            if (channel && channel instanceof Channel) {
-                channel["update"](data.channel);
-            } else if (data.channel.type === ChannelTypes.GROUP_DM) {
-                channel = data.channel as PartialInviteChannel;
+        if (Object.hasOwn(data, "channel")) {
+            if (!data.channel) {
+                this.channel = null;
+                this.channelID = null;
             } else {
-                channel = Channel.from(data.channel, this.client);
+                let channel: Channel | PartialInviteChannel | undefined;
+                channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
+                if (channel && channel instanceof Channel) {
+                    channel["update"](data.channel);
+                } else if (data.channel.type === ChannelTypes.GROUP_DM) {
+                    channel = data.channel as PartialInviteChannel;
+                } else {
+                    channel = Channel.from(data.channel, this.client);
+                }
+                this.channel = channel as CH;
+                this.channelID = data.channel.id;
             }
-            this.channel = channel as CH;
-            this.channelID = data.channel.id;
         }
 
         if (data.inviter) {
