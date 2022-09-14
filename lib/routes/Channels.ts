@@ -514,9 +514,9 @@ export default class Channels {
      * @param options The options for getting messages. All are mutually exclusive.
      */
     async getMessages<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        const _getMessages = async (_id: string, _options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => this.#manager.authRequest<Array<RawMessage>>({
+        const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
-            path:   Routes.CHANNEL_MESSAGES(_id),
+            path:   Routes.CHANNEL_MESSAGES(id),
             json:   {
                 after:  _options?.after,
                 around: _options?.around,
@@ -533,7 +533,7 @@ export default class Channels {
             const limitLeft = limit - messages.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more messages for ${id}. ${limitLeft} left to get.`);
-            const messagesChunk = await _getMessages(id, {
+            const messagesChunk = await _getMessages({
                 after,
                 around: options?.around,
                 before: options?.before,
@@ -624,19 +624,18 @@ export default class Channels {
      * @param options The options for getting the reactions.
      */
     async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
-        const _getReactions = async (_id: string, _messageID: string, _emoji: string, _options?: GetReactionsOptions): Promise<Array<User>> => {
-            if (_emoji === decodeURIComponent(_emoji)) {
-                _emoji = encodeURIComponent(_emoji);
+        if (emoji === decodeURIComponent(emoji)) {
+            emoji = encodeURIComponent(emoji);
+        }
+
+        const _getReactions = async (_options?: GetReactionsOptions): Promise<Array<User>> => this.#manager.authRequest<Array<RawUser>>({
+            method: "GET",
+            path:   Routes.CHANNEL_REACTION(id, messageID, emoji),
+            json:   {
+                after: _options?.after,
+                limit: _options?.limit
             }
-            return this.#manager.authRequest<Array<RawUser>>({
-                method: "GET",
-                path:   Routes.CHANNEL_REACTION(_id, _messageID, _emoji),
-                json:   {
-                    after: _options?.after,
-                    limit: _options?.limit
-                }
-            }).then(data => data.map(d => this.#manager.client.users.update(d)));
-        };
+        }).then(data => data.map(d => this.#manager.client.users.update(d)));
 
         const limit = options?.limit ?? 100;
         let after = options?.after;
@@ -646,7 +645,7 @@ export default class Channels {
             const limitLeft = limit - reactions.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more ${emoji} reactions for message ${messageID} on ${id}. ${limitLeft} left to get.`);
-            const reactionsChunk = await _getReactions(id, messageID, emoji, {
+            const reactionsChunk = await _getReactions({
                 after,
                 limit: limitToFetch
             });

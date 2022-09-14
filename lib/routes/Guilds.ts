@@ -989,7 +989,7 @@ export default class Guilds {
      * @param options The options for getting the bans.
      */
     async getBans(id: string, options?: GetBansOptions): Promise<Array<Ban>> {
-        const _getBans = async (_id: string, _options?: GetBansOptions): Promise<Array<Ban>> => {
+        const _getBans = async (_options?: GetBansOptions): Promise<Array<Ban>> => {
             const query = new URLSearchParams();
             if (_options?.after) {
                 query.set("after", _options.after);
@@ -1002,7 +1002,7 @@ export default class Guilds {
             }
             return this.#manager.authRequest<Array<RawBan>>({
                 method: "GET",
-                path:   Routes.GUILD_BANS(_id),
+                path:   Routes.GUILD_BANS(id),
                 query
             }).then(data => data.map(ban => ({
                 reason: ban.reason,
@@ -1018,7 +1018,7 @@ export default class Guilds {
             const limitLeft = limit - bans.length;
             const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
             this.#manager.client.emit("debug", `Getting ${limitToFetch} more bans for ${id}. ${limitLeft} left to get.`);
-            const bansChunk = await _getBans(id, {
+            const bansChunk = await _getBans({
                 after,
                 before: options?.before,
                 limit:  limitToFetch
