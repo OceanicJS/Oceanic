@@ -653,7 +653,9 @@ export interface GetChannelMessagesOptions {
 }
 
 export interface GetReactionsOptions {
+    /** The ID of the user to get reactions after. */
     after?: string;
+    /** The maximum amount of reactions to get. Defaults to 100. Use Infinity if you wish to get as many reactions as possible. */
     limit?: number;
 }
 

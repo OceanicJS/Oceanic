@@ -624,17 +624,46 @@ export default class Channels {
      * @param options The options for getting the reactions.
      */
     async getReactions(id: string, messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
-        if (emoji === decodeURIComponent(emoji)) {
-            emoji = encodeURIComponent(emoji);
-        }
-        return this.#manager.authRequest<Array<RawUser>>({
-            method: "GET",
-            path:   Routes.CHANNEL_REACTION(id, messageID, emoji),
-            json:   {
-                after: options?.after,
-                limit: options?.limit
+        const _getReactions = async (_id: string, _messageID: string, _emoji: string, _options?: GetReactionsOptions): Promise<Array<User>> => {
+            if (_emoji === decodeURIComponent(_emoji)) {
+                _emoji = encodeURIComponent(_emoji);
             }
-        }).then(data => data.map(d => this.#manager.client.users.update(d)));
+            return this.#manager.authRequest<Array<RawUser>>({
+                method: "GET",
+                path:   Routes.CHANNEL_REACTION(_id, _messageID, _emoji),
+                json:   {
+                    after: _options?.after,
+                    limit: _options?.limit
+                }
+            }).then(data => data.map(d => this.#manager.client.users.update(d)));
+        };
+
+        const limit = options?.limit ?? 100;
+        let after = options?.after;
+
+        let reactions: Array<User> = [];
+        while (reactions.length < limit) {
+            const limitLeft = limit - reactions.length;
+            const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
+            this.#manager.client.emit("debug", `Getting ${limitToFetch} more ${emoji} reactions for message ${messageID} on ${id}. ${limitLeft} left to get.`);
+            const reactionsChunk = await _getReactions(id, messageID, emoji, {
+                after,
+                limit: limitToFetch
+            });
+
+            if (reactionsChunk.length === 0) {
+                break;
+            }
+
+            reactions = reactions.concat(reactionsChunk);
+            after = reactionsChunk.at(-1)!.id;
+
+            if (reactionsChunk.length < 100) {
+                break;
+            }
+        }
+
+        return reactions;
     }
 
     /**
