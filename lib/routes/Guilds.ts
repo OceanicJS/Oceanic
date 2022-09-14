@@ -989,24 +989,54 @@ export default class Guilds {
      * @param options The options for getting the bans.
      */
     async getBans(id: string, options?: GetBansOptions): Promise<Array<Ban>> {
-        const query = new URLSearchParams();
-        if (options?.after) {
-            query.set("after", options.after);
+        const _getBans = async (_id: string, _options?: GetBansOptions): Promise<Array<Ban>> => {
+            const query = new URLSearchParams();
+            if (_options?.after) {
+                query.set("after", _options.after);
+            }
+            if (_options?.before) {
+                query.set("before", _options.before);
+            }
+            if (_options?.limit) {
+                query.set("limit", _options.limit.toString());
+            }
+            return this.#manager.authRequest<Array<RawBan>>({
+                method: "GET",
+                path:   Routes.GUILD_BANS(_id),
+                query
+            }).then(data => data.map(ban => ({
+                reason: ban.reason,
+                user:   this.#manager.client.users.update(ban.user)
+            })));
+        };
+
+        const limit = options?.limit ?? 1000;
+        let after = options?.after;
+
+        let bans: Array<Ban> = [];
+        while (bans.length < limit) {
+            const limitLeft = limit - bans.length;
+            const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
+            this.#manager.client.emit("debug", `Getting ${limitToFetch} more bans for ${id}. ${limitLeft} left to get.`);
+            const bansChunk = await _getBans(id, {
+                after,
+                before: options?.before,
+                limit:  limitToFetch
+            });
+
+            if (bansChunk.length === 0) {
+                break;
+            }
+
+            bans = bans.concat(bansChunk);
+            after = bansChunk.at(-1)!.user.id;
+
+            if (bansChunk.length < 1000) {
+                break;
+            }
         }
-        if (options?.before) {
-            query.set("before", options.before);
-        }
-        if (options?.limit) {
-            query.set("limit", options.limit.toString());
-        }
-        return this.#manager.authRequest<Array<RawBan>>({
-            method: "GET",
-            path:   Routes.GUILD_BANS(id),
-            query
-        }).then(data => data.map(ban => ({
-            reason: ban.reason,
-            user:   this.#manager.client.users.update(ban.user)
-        })));
+
+        return bans;
     }
 
     /**
