@@ -1,0 +1,27 @@
+name: Should Publish Dev
+on:
+  push:
+    branches:
+      - dev
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  should-publish:
+    runs-on: ubuntu-latest
+    outputs:
+      check: ${{ steps.check.outputs.should-publish }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: check
+        name: Check If Publish Is Needed
+        run: |
+          if ! node scripts/should-publish; then
+            echo "::set-output name=should-publish::false"
+          else 
+            echo "::set-output name=should-publish::true"
+          fi
+  publish:
+    needs: [should-publish]
+    if: needs.should-publish.outputs.check == 'true'
+    uses: ./.github/workflows/dev-publish.yml

@@ -7,3 +7,7 @@ docs-plugin/
 .ncurc.json
 .prettierrc.json
 tsconfig.json
+scripts/
+dark.js
+favicon.ico
+typedoc.json

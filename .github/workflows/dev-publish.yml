@@ -1,8 +1,5 @@
 name: Publish Dev Version
-on:
-  push:
-    branches:
-      - dev
+on: [workflow_call, workflow_dispatch]
 
 jobs:
   lint:

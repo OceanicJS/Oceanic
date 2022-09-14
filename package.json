@@ -15,8 +15,8 @@
   "scripts": {
     "lint": "eslint lib --ext .ts",
     "lint:fix": "eslint lib --ext .ts --fix",
-    "prepublishOnly": "node build",
-    "test:docs": "npm i --no-save --ignore-scripts typedoc typedoc-plugin-extras typedoc-plugin-rename-defaults && node doc-test.js && npx --yes typedoc"
+    "prepublishOnly": "node scripts/build",
+    "test:docs": "npm i --no-save --ignore-scripts typedoc typedoc-plugin-extras typedoc-plugin-rename-defaults && node scripts/doc-test.js && npx --yes typedoc"
   },
   "repository": {
     "type": "git",
