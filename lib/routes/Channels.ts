@@ -263,9 +263,13 @@ export default class Channels {
             chunks.push(messageIDs.splice(0, 100));
         }
 
+        let done = 0;
         const deleteMessagesPromises: Array<Promise<unknown>> = [];
-        for (const [index, chunk] of chunks.entries()) {
-            this.#manager.client.emit("debug", `Deleting ${chunk.length} messages on ${id}. ${chunks.length - index} chunks left.`);
+        for (const chunk of chunks.values()) {
+            if (chunks.length > 1) {
+                const left = messageIDs.length - done;
+                this.#manager.client.emit("debug", `Deleting ${left} messages in ${id}`);
+            }
 
             if (chunk.length === 1) {
                 this.#manager.client.emit("debug", "deleteMessages created a chunk with only 1 element, using deleteMessage instead.");
@@ -279,6 +283,7 @@ export default class Channels {
                 json:   { messages: chunk },
                 reason
             }));
+            done += chunk.length;
         }
 
         await Promise.all(deleteMessagesPromises);
@@ -570,12 +575,16 @@ export default class Channels {
 
             const limitLeft = limit - messages.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
-            this.#manager.client.emit("debug", `Getting ${limitToFetch} more messages for ${id}. ${limitLeft} left to get.`);
+            const after = firstCallDone ? undefined : options?.after;
+            const around = firstCallDone ? undefined : options?.around;
+            if (options?.limit && options?.limit > 100) {
+                this.#manager.client.emit("debug", `Getting ${limitLeft} more message${limitLeft === 1 ? "" : "s"} for ${id}: ${after || ""} ${around || ""} ${before || ""}`);
+            }
             const messagesChunk = await _getMessages({
-                after:  firstCallDone ? undefined : options?.after,
-                around: firstCallDone ? undefined : options?.around,
+                after,
+                around,
                 before,
-                limit:  limitToFetch
+                limit: limitToFetch
             });
 
             if (messagesChunk.length === 0) {
@@ -688,7 +697,7 @@ export default class Channels {
         while (reactions.length < limit) {
             const limitLeft = limit - reactions.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
-            this.#manager.client.emit("debug", `Getting ${limitToFetch} more ${emoji} reactions for message ${messageID} on ${id}. ${limitLeft} left to get.`);
+            this.#manager.client.emit("debug", `Getting ${limitLeft} more ${emoji} reactions for message ${messageID} on ${id}: ${after || ""}`);
             const reactionsChunk = await _getReactions({
                 after,
                 limit: limitToFetch
