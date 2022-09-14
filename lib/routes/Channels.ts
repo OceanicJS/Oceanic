@@ -260,7 +260,7 @@ export default class Channels {
         let chunks: Array<string> = [];
         messageIDs = [...messageIDs];
         while (messageIDs.length) {
-            chunks = chunks.concat(messageIDs.slice(0, 100));
+            chunks = chunks.concat(messageIDs.splice(0, 100));
         }
 
         const deleteMessagesPromises: Array<Promise<unknown>> = [];
@@ -794,8 +794,12 @@ export default class Channels {
         const messageIDsToPurge: Array<string> = [];
         let finishedFetchingMessages = false;
         const addMessageIDsToPurgeBatch = async (): Promise<void> => {
+            let limit = options.limit - messageIDsToPurge.length;
+            if (limit > 100) {
+                limit = 100;
+            }
             const messages = await this.getMessages(id, {
-                limit:  100,
+                limit,
                 after:  options.after,
                 around: options.around,
                 before: options.before
