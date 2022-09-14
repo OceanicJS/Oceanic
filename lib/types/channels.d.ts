@@ -868,7 +868,7 @@ export interface ForumEmoji {
 export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; } & Uncached;
 export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string; };
 
-export interface PurgeOptions<T extends AnyTextChannel | Uncached> {
+export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
     /** The ID of the message to purge after. */
     after?: string;
     /** The ID of the message to purge around. */
@@ -883,5 +883,5 @@ export interface PurgeOptions<T extends AnyTextChannel | Uncached> {
      * The filter to apply to messages to decide if they should be purged.
      * @param message The message to filter.
      */
-    filter(message: Message<T>): boolean | Promise<boolean>;
+    filter?(message: Message<T>): boolean | PromiseLike<boolean>;
 }

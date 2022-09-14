@@ -300,54 +300,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
     async purge(options: PurgeOptions<T>): Promise<number> {
-        const filter = options.filter.bind(this) ?? ((): true => true);
-
-        const messageIDsToPurge: Array<string> = [];
-        let finishedFetchingMessages = false;
-        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
-            const messages = await this.getMessages({
-                limit:  100,
-                after:  options.after,
-                around: options.around,
-                before: options.before
-            });
-
-            if (messages.length === 0) {
-                finishedFetchingMessages = true;
-                return;
-            }
-
-            const filterPromises: Array<Promise<unknown>> = [];
-            for (const message of messages) {
-                if (message.timestamp.getTime() < Date.now() - 1209600000) {
-                    finishedFetchingMessages = true;
-
-                    break;
-                }
-
-                filterPromises.push((async (): Promise<void> => {
-                    if (await filter(message as Message<T>)) {
-                        if (finishedFetchingMessages) {
-                            return;
-                        }
-
-                        messageIDsToPurge.push(message.id);
-                        if (messageIDsToPurge.length === options.limit) {
-                            finishedFetchingMessages = true;
-                        }
-                    }
-                })());
-            }
-
-            await Promise.all(filterPromises);
-
-            if (!finishedFetchingMessages) {
-                await addMessageIDsToPurgeBatch();
-            }
-        };
-        await addMessageIDsToPurgeBatch();
-
-        return this.deleteMessages(messageIDsToPurge, options.reason);
+        return this.client.rest.channels.purgeMessages(this.id, options);
     }
 
     /**

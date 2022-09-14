@@ -37,7 +37,9 @@ import type {
     RawGroupChannel,
     AnyEditableChannel,
     PartialInviteChannel,
-    RawThreadChannel
+    RawThreadChannel,
+    PurgeOptions,
+    AnyGuildTextChannel
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -779,6 +781,61 @@ export default class Channels {
             path:   Routes.CHANNEL_PINNED_MESSAGE(id, messageID),
             reason
         });
+    }
+
+    /**
+     * Purge an amount of messages from a channel.
+     * @param id The ID of the channel to purge.
+     * @param options The options to purge.
+     */
+    async purgeMessages<T extends AnyGuildTextChannel | Uncached = AnyGuildTextChannel | Uncached>(id: string, options: PurgeOptions<T>): Promise<number> {
+        const filter = options.filter?.bind(this) ?? ((): true => true);
+
+        const messageIDsToPurge: Array<string> = [];
+        let finishedFetchingMessages = false;
+        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
+            const messages = await this.getMessages(id, {
+                limit:  100,
+                after:  options.after,
+                around: options.around,
+                before: options.before
+            });
+
+            if (messages.length === 0) {
+                finishedFetchingMessages = true;
+                return;
+            }
+
+            const filterPromises: Array<Promise<unknown>> = [];
+            for (const message of messages) {
+                if (message.timestamp.getTime() < Date.now() - 1209600000) {
+                    finishedFetchingMessages = true;
+                    break;
+                }
+
+                filterPromises.push((async (): Promise<void> => {
+                    if (await filter(message as Message<T>)) {
+                        if (finishedFetchingMessages) {
+                            return;
+                        }
+
+                        messageIDsToPurge.push(message.id);
+                        if (messageIDsToPurge.length === options.limit) {
+                            finishedFetchingMessages = true;
+                        }
+                    }
+                })());
+            }
+
+            await Promise.all(filterPromises);
+
+            if (!finishedFetchingMessages) {
+                await addMessageIDsToPurgeBatch();
+            }
+        };
+        await addMessageIDsToPurgeBatch();
+
+        return this.deleteMessages(id, messageIDsToPurge, options.reason);
     }
 
     /**
