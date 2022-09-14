@@ -30,7 +30,8 @@ import type {
     RawTextChannel,
     StartThreadFromMessageOptions,
     StartThreadWithoutMessageOptions,
-    ArchivedThreads
+    ArchivedThreads,
+    PurgeOptions
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
 
@@ -140,10 +141,10 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 
     /**
      * Bulk delete messages in this channel.
-     * @param messageIDs The ids of the messages to delete. Between 2 and 100 messages, any dupliates or messages older than two weeks will cause an error.
+     * @param messageIDs The IDs of the messages to delete. Any dupliates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
-    async deleteMessages(messageIDs: Array<string>, reason?: string): Promise<void> {
+    async deleteMessages(messageIDs: Array<string>, reason?: string): Promise<number> {
         return this.client.rest.channels.deleteMessages(this.id, messageIDs, reason);
     }
 
@@ -295,6 +296,57 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      */
     async pinMessage(messageID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.pinMessage(this.id, messageID, reason);
+    }
+
+    /**
+     * Purge an amount of messages from this channel.
+     * @param options The options to purge.
+     */
+    async purge(options: PurgeOptions<T>): Promise<number> {
+        const filter = options.filter.bind(this) ?? ((): true => true);
+
+        const messageIDsToPurge: Array<string> = [];
+        let finishedFetchingMessages = false;
+        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
+            const messages = await this.getMessages({
+                limit:  100,
+                after:  options.after,
+                around: options.around,
+                before: options.before
+            });
+
+            const filterPromises: Array<Promise<unknown>> = [];
+            for (const message of messages) {
+                if (message.timestamp.getTime() < Date.now() - 1209600000) {
+                    finishedFetchingMessages = true;
+
+                    break;
+                }
+
+                filterPromises.push((async (): Promise<void> => {
+                    if (await filter(message as Message<T>)) {
+                        if (finishedFetchingMessages) {
+                            return;
+                        }
+
+                        messageIDsToPurge.push(message.id);
+
+                        if (messageIDsToPurge.length === options.limit) {
+                            finishedFetchingMessages = true;
+                        }
+                    }
+                })());
+            }
+
+            await Promise.all(filterPromises);
+
+            if (!finishedFetchingMessages) {
+                await addMessageIDsToPurgeBatch();
+            }
+        };
+        await addMessageIDsToPurgeBatch();
+
+        return this.deleteMessages(messageIDsToPurge, options.reason);
     }
 
     /**

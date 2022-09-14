@@ -4,7 +4,7 @@ import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
-import { Uncached } from "./shared";
+import { type  Uncached } from "./shared";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -34,7 +34,7 @@ import type TextChannel from "../structures/TextChannel";
 import type User from "../structures/User";
 import type VoiceChannel from "../structures/VoiceChannel";
 import type ForumChannel from "../structures/ForumChannel";
-import Message from "../structures/Message";
+import type Message from "../structures/Message";
 
 export interface RawChannel {
     application_id?: string;
@@ -867,3 +867,21 @@ export interface ForumEmoji {
 
 export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; } & Uncached;
 export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string; };
+
+export interface PurgeOptions<T extends AnyTextChannel | Uncached> {
+    /** The ID of the message to purge after. */
+    after?: string;
+    /** The ID of the message to purge around. */
+    around?: string;
+    /** The ID of the message to purge before. */
+    before?: string;
+    /** The limit of messages to purge. */
+    limit: number;
+    /** The reason for purging the messages. */
+    reason?: string;
+    /**
+     * The filter to apply to messages to decide if they should be purged.
+     * @param message The message to filter.
+     */
+    filter(message: Message<T>): boolean | Promise<boolean>;
+}

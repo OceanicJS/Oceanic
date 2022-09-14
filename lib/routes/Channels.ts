@@ -254,7 +254,7 @@ export default class Channels {
      * @param messageIDs The IDs of the messages to delete. Any dupliates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
-    async deleteMessages(id: string, messageIDs: Array<string>, reason?: string): Promise<void> {
+    async deleteMessages(id: string, messageIDs: Array<string>, reason?: string): Promise<number> {
         let chunks: Array<string> = [];
         messageIDs = [...messageIDs];
         while (messageIDs.length) {
@@ -280,6 +280,8 @@ export default class Channels {
         }
 
         await Promise.all(deleteMessagesPromises);
+
+        return chunks.reduce((amountOfMessages, chunk) => amountOfMessages + chunk.length, 0);
     }
 
     /**
