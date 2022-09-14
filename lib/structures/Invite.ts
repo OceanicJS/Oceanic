@@ -27,7 +27,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
-    channel: CH | null;
+    channel?: CH | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
     client!: Client;
@@ -96,27 +96,19 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             this.guild = guild;
         }
 
-        if (data.channel !== undefined) {
-            if (data.channel === null) {
-                this.channel = null;
-                this.channelID = null;
-            } else {
-                let channel: Channel | PartialInviteChannel | undefined;
-                channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
+        if (this.channelID !== null) {
+            let channel: Channel | PartialInviteChannel | undefined;
+            channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(this.channelID);
+            if (data.channel !== undefined) {
                 if (channel && channel instanceof Channel) {
                     channel["update"](data.channel);
                 } else {
                     channel = data.channel as PartialInviteChannel;
                 }
-                this.channel = channel as CH;
-                this.channelID = data.channel.id;
             }
-        } else if (data.channel_id !== undefined) {
-            this.channelID = data.channel_id;
-            const channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel_id);
-            if (channel && channel instanceof Channel) {
-                this.channel = channel as CH;
-            }
+            this.channel = channel as CH | undefined;
+        } else {
+            this.channel = null;
         }
 
         if (data.inviter !== undefined) {
