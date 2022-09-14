@@ -262,12 +262,13 @@ export default class Channels {
         while (messageIDs.length) {
             chunks.push(messageIDs.splice(0, 100));
         }
+        const amountOfMessages = chunks.reduce((_amountOfMessages, chunk) => _amountOfMessages + chunk.length, 0);
 
         let done = 0;
         const deleteMessagesPromises: Array<Promise<unknown>> = [];
         for (const chunk of chunks.values()) {
             if (chunks.length > 1) {
-                const left = messageIDs.length - done;
+                const left = amountOfMessages - done;
                 this.#manager.client.emit("debug", `Deleting ${left} messages in ${id}`);
             }
 
@@ -288,7 +289,7 @@ export default class Channels {
 
         await Promise.all(deleteMessagesPromises);
 
-        return chunks.reduce((amountOfMessages, chunk) => amountOfMessages + chunk.length, 0);
+        return amountOfMessages;
     }
 
     /**
