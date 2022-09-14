@@ -126,7 +126,7 @@ export default class Channels {
      * @param id The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
      */
-    async createInvite<T extends InviteInfoTypes, CH extends InviteChannel = InviteChannel>(id: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
+    async createInvite<T extends InviteInfoTypes, CH extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(id: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -438,11 +438,11 @@ export default class Channels {
      * @param code The code of the invite to get.
      * @param options The options for getting the invite.
      */
-    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
-    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
-    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
+    async getInvite<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
+    async getInvite<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
+    async getInvite<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
+    async getInvite<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
+    async getInvite<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
         const query = new URLSearchParams();
         if (options?.guildScheduledEventID) {
             query.set("guild_scheduled_event_id", options.guildScheduledEventID);
@@ -464,7 +464,7 @@ export default class Channels {
      * Get the invites of a channel.
      * @param id The ID of the channel to get the invites of.
      */
-    async getInvites<T extends InviteChannel = InviteChannel>(id: string): Promise<Array<Invite<"withMetadata", T>>> {
+    async getInvites<T extends InviteChannel | PartialInviteChannel = InviteChannel | PartialInviteChannel>(id: string): Promise<Array<Invite<"withMetadata", T>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(id)
