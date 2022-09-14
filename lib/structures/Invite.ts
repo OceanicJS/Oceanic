@@ -27,7 +27,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
     /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
-    channel!: CH | null;
+    channel: CH | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
     client!: Client;
@@ -38,7 +38,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The date at which this invite expires. */
     expiresAt?: T extends "withMetadata" | "withoutExpiration" ? never : Date;
     /** The guild this invite leads to or `null` if this invite leads to a Group DM. */
-    guild!: Guild | null;
+    guild: Guild | null;
     /** The ID of the guild this invite leads to or `null` if this invite leads to a Group DM. */
     guildID: string | null;
     /** The scheduled event associated with this invite. */
@@ -68,8 +68,10 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             writable:     false,
             configurable: false
         });
+        this.channel = null;
         this.channelID = data.channel?.id ?? null;
         this.code = data.code;
+        this.guild = null;
         this.guildID = data.guild?.id ?? null;
         this.expiresAt = (!data.expires_at ? undefined : new Date(data.expires_at)) as never;
         this.targetType = data.target_type;
@@ -94,21 +96,19 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             this.guild = guild;
         }
 
-        if (Object.hasOwn(data, "channel")) {
-            if (!data.channel) {
-                this.channel = null;
-                this.channelID = null;
+        if (data.channel === null) {
+            this.channel = null;
+            this.channelID = null;
+        } else {
+            let channel: Channel | PartialInviteChannel | undefined;
+            channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
+            if (channel && channel instanceof Channel) {
+                channel["update"](data.channel);
             } else {
-                let channel: Channel | PartialInviteChannel | undefined;
-                channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(data.channel.id);
-                if (channel && channel instanceof Channel) {
-                    channel["update"](data.channel);
-                } else {
-                    channel = data.channel as PartialInviteChannel;
-                }
-                this.channel = channel as CH;
-                this.channelID = data.channel.id;
+                channel = data.channel as PartialInviteChannel;
             }
+            this.channel = channel as CH;
+            this.channelID = data.channel.id;
         }
 
         if (data.inviter) {

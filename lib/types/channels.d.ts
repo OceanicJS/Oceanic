@@ -673,7 +673,7 @@ export interface EditPermissionOptions {
 export interface RawInvite {
     approximate_member_count?: number;
     approximate_presence_count?: number;
-    channel?: PartialChannel;
+    channel: PartialChannel;
     code: string;
     expires_at?: string;
     guild?: PartialGuild;
