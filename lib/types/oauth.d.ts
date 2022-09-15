@@ -76,6 +76,7 @@ export interface RawConnection {
     name: string;
     revoked?: boolean;
     show_activity: boolean;
+    two_way_link: boolean;
     type: ConnectionService;
     verified: boolean;
     visibility: VisibilityTypes;
@@ -88,6 +89,7 @@ export interface Connection {
     name: string;
     revoked?: boolean;
     showActivity: boolean;
+    twoWayLink: boolean;
     type: ConnectionService;
     verified: boolean;
     visibility: VisibilityTypes;

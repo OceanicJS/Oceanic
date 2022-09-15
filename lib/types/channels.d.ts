@@ -44,7 +44,7 @@ export interface RawChannel {
     default_auto_archive_duration?: ThreadAutoArchiveDuration;
     default_reaction_emoji?: {
         emoji_id: string | null;
-        emoji_name: string;
+        emoji_name: string | null;
     } | null;
     default_thread_rate_limit_per_user?: number;
     flags?: number;

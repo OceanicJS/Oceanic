@@ -156,6 +156,7 @@ export default class OAuth {
             name:         connection.name,
             revoked:      connection.revoked,
             showActivity: connection.show_activity,
+            twoWayLink:   connection.two_way_link,
             type:         connection.type,
             verified:     connection.verified,
             visibility:   connection.visibility
