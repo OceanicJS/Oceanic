@@ -455,6 +455,7 @@ export interface JSONPrivateThreadChannel extends JSONThreadChannel {
     type: ChannelTypes.PRIVATE_THREAD;
 }
 export interface JSONPublicThreadChannel extends JSONThreadChannel {
+    appliedTags: Array<string>;
     threadMetadata: ThreadMetadata;
     type: ChannelTypes.PUBLIC_THREAD;
 }

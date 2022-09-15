@@ -38,6 +38,7 @@ import type Message from "../structures/Message";
 
 export interface RawChannel {
     application_id?: string;
+    applied_tags?: Array<string>;
     available_tags?: Array<RawForumTag>;
     bitrate?: number;
     default_auto_archive_duration?: ThreadAutoArchiveDuration;
@@ -85,7 +86,7 @@ export type RawVoiceChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawC
 export type RawStageChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "rtc_region" | "topic" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_STAGE_VOICE; };
 export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
 export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> & { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
-export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; };
+export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; } & Required<Pick<RawChannel, "applied_tags">>;
 export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; };
 export type RawForumChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration">> & { type: ChannelTypes.GUILD_FORUM; };
 
