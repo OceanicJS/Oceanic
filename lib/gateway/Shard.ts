@@ -942,7 +942,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "VOICE_STATE_UPDATE": {
                 if (packet.d.guild_id && packet.d.session_id && packet.d.user_id === this.client.user.id) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                    this.client["voiceAdapters"].get(packet.d.guild_id)?.onVoiceStateUpdate(packet.d as never);
+                    this.client["voiceAdapters"].get(packet.d.guild_id)?.onVoiceStateUpdate(packet.d);
                 }
                 // @TODO voice states without guilds?
                 if (!packet.d.guild_id || !packet.d.member) {
