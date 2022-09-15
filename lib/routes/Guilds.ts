@@ -252,6 +252,7 @@ export default class Guilds {
             method: "POST",
             path:   Routes.GUILD_CHANNELS(id),
             json:   {
+                bitrate:                       options.bitrate,
                 default_auto_archive_duration: options.defaultAutoArchiveDuration,
                 name:                          options.name,
                 nsfw:                          options.nsfw,

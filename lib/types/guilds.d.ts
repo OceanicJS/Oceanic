@@ -2,8 +2,6 @@
 import type { RawUser } from "./users";
 import type {
     AnyThreadChannel,
-    ForumEmoji,
-    ForumTag,
     OverwriteOptions,
     RawChannel,
     RawGuildChannel,
@@ -330,16 +328,10 @@ export interface EditGuildOptions {
 }
 
 export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
-    /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
-    availableTags?: Array<ForumTag>;
     /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for the channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
-    /** [Forum] The default auto archive duration for threads. */
-    defaultReactionEmoji?: ForumEmoji | null;
-    /** [Forum] The default reaction emoji for threads. */
-    defaultThreadRateLimitPerUser?: number;
     /** The name of the channel. */
     name: string;
     /** [Announcement, Text, Voice] If the channel is age restricted. */
