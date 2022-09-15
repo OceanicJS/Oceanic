@@ -543,7 +543,6 @@ export enum AutoModerationEventTypes {
 
 export enum AutoModerationTriggerTypes {
     KEYWORD        = 1,
-    HARMFUL_LINK   = 2,
     SPAM           = 3,
     KEYWORD_PRESET = 4,
     MENTION_SPAM   = 5
