@@ -618,3 +618,10 @@ export interface RawStageInstance {
     privacy_level: StageInstancePrivacyLevels;
     topic: string;
 }
+
+export interface EditMFALevelOptions {
+    /** The new MFA level. */
+    level: MFALevels;
+    /** The reason for editing the MFA level. */
+    reason?: string;
+}

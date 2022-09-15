@@ -39,7 +39,8 @@ import type {
     EditUserVoiceStateOptions,
     EditCurrentUserVoiceStateOptions,
     CreateChannelReturn,
-    CreateChannelOptions
+    CreateChannelOptions,
+    EditMFALevelOptions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -656,13 +657,18 @@ export default class Guilds {
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of a guild. This can only be used by the guild owner.
      * @param id The ID of the guild.
-     * @param level The new MFA level.
+     * @param options The options for editing the MFA level.
      */
-    async editMFALevel(id: string, level: MFALevels): Promise<MFALevels> {
+    async editMFALevel(id: string, options: EditMFALevelOptions): Promise<MFALevels> {
+        const reason = options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
         return this.#manager.authRequest<MFALevels>({
-            method: "PATCH",
+            method: "POST",
             path:   Routes.GUILD_MFA(id),
-            json:   { level }
+            json:   { level: options.level },
+            reason
         });
     }
 

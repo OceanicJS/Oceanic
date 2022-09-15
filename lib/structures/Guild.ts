@@ -81,7 +81,8 @@ import type {
     Ban,
     GetVanityURLResponse,
     RawWidget,
-    RawStageInstance
+    RawStageInstance,
+    EditMFALevelOptions
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -762,10 +763,10 @@ export default class Guild extends Base {
 
     /**
      * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of this guild. This can only be used by the guild owner.
-     * @param level The new MFA level.
+     * @param options The options for editing the MFA level.
      */
-    async editMFALevel(level: MFALevels): Promise<MFALevels> {
-        return this.client.rest.guilds.editMFALevel(this.id, level);
+    async editMFALevel(options: EditMFALevelOptions): Promise<MFALevels> {
+        return this.client.rest.guilds.editMFALevel(this.id, options);
     }
 
     /**
