@@ -231,6 +231,7 @@ export enum VisibilityTypes {
 
 export const ConnectionServices = [
     "battlenet",
+    "ebay",
     "epicgames",
     "facebook",
     "github",
