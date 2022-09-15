@@ -622,12 +622,16 @@ export enum AuditLogActionTypes {
 
     APPLICATION_COMMAND_PERMISSION_UPDATE = 121,
 
-    AUTO_MODERATION_RULE_CREATE   = 140,
-    AUTO_MODERATION_RULE_UPDATE   = 141,
-    AUTO_MODERATION_RULE_DELETE   = 142,
-    AUTO_MODERATION_BLOCK_MESSAGE = 143,
-    AUTO_MODERATION_ALERT         = 144,
-    AUTO_MODERATION_TIMEOUT       = 145,
+    AUTO_MODERATION_RULE_CREATE                 = 140,
+    AUTO_MODERATION_RULE_UPDATE                 = 141,
+    AUTO_MODERATION_RULE_DELETE                 = 142,
+    AUTO_MODERATION_BLOCK_MESSAGE               = 143,
+    /** @deprecated unofficial name */
+    AUTO_MODERATION_ALERT                       = 144,
+    AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
+    /** @deprecated unofficial name */
+    AUTO_MODERATION_TIMEOUT                     = 145,
+    AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145
 }
 
 export enum ApplicationCommandTypes {
