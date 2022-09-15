@@ -80,11 +80,10 @@ export enum ApplicationFlags {
 }
 
 export const GuildFeatures = [
-    "AUTO_MODERATION",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
+    "AUTO_MODERATION",
     "BANNER",
-    "COMMERCE",
     "COMMUNITY",
     "CREATOR_MONETIZABLE",
     "CREATOR_MONETIZABLE_DISABLED",
@@ -95,6 +94,7 @@ export const GuildFeatures = [
     "GUILD_HOME_TEST",
     "HAS_DIRECTORY_ENTRY",
     "HUB",
+    "INVITES_DISABLED",
     "INVITE_SPLASH",
     "LINKED_TO_HUB",
     "MEMBER_VERIFICATION_GATE_ENABLED",
