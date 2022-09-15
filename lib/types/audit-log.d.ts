@@ -52,6 +52,8 @@ export interface RawAuditLogEntry {
 }
 export interface RawAuditLogEntryOptions {
     application_id?: string;
+    auto_moderation_rule_name?: string;
+    auto_moderation_rule_trigger_type?: string;
     channel_id?: string;
     count?: number;
     delete_member_days?: number;
@@ -64,6 +66,10 @@ export interface RawAuditLogEntryOptions {
 export interface AuditLogEntryOptions {
     /** ID of the app whose permissions were targeted - valid for: `APPLICATION_COMMAND_PERMISSION_UPDATE` */
     applicationID?: string;
+    /** Name of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED` */
+    autoModerationRuleName?: string;
+    /** Trigger type of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED` */
+    autoModerationRuleTriggerType?: string;
     /** Channel in which the entities were targeted - valid for: `MEMBER_MOVE`,  `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE` */
     channelID?: string;
     /** Number of entities that were targeted - valid for: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE` */

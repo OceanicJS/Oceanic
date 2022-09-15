@@ -26,15 +26,17 @@ export default class AuditLogEntry extends Base {
         this.actionType = data.action_type;
         this.changes = data.changes;
         this.options = {
-            applicationID:    data.options?.application_id,
-            channelID:        data.options?.channel_id,
-            count:            data.options?.count,
-            deleteMemberDays: data.options?.delete_member_days,
-            id:               data.options?.id,
-            membersRemoved:   data.options?.members_removed,
-            messageID:        data.options?.message_id,
-            roleName:         data.options?.role_name,
-            type:             data.options?.type
+            applicationID:                 data.options?.application_id,
+            autoModerationRuleName:        data.options?.auto_moderation_rule_name,
+            autoModerationRuleTriggerType: data.options?.auto_moderation_rule_trigger_type,
+            channelID:                     data.options?.channel_id,
+            count:                         data.options?.count,
+            deleteMemberDays:              data.options?.delete_member_days,
+            id:                            data.options?.id,
+            membersRemoved:                data.options?.members_removed,
+            messageID:                     data.options?.message_id,
+            roleName:                      data.options?.role_name,
+            type:                          data.options?.type
         };
         this.reason = data.reason;
         this.targetID = data.target_id;
