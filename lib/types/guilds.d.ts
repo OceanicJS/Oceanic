@@ -587,7 +587,9 @@ export interface EditUserVoiceStateOptions {
     suppress?: boolean;
 }
 
-export interface EditCurrentUserVoiceStateOptions extends EditUserVoiceStateOptions {
+export interface EditCurrentUserVoiceStateOptions extends Omit<EditUserVoiceStateOptions, "channelID"> {
+    /** The ID of the stage channel the member is in. */
+    channelID?: string;
     /** The timestamp of when the member should be able to speak. */
     requestToSpeakTimestamp?: string | null;
 }

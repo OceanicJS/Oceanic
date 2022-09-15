@@ -77,6 +77,7 @@ import type RESTManager from "../rest/RESTManager";
 import Guild from "../structures/Guild";
 import Member from "../structures/Member";
 import type { Uncached } from "../types/shared";
+import ApplicationCommand from "../structures/ApplicationCommand";
 
 /** Various methods for interacting with guilds. */
 export default class Guilds {
@@ -935,6 +936,7 @@ export default class Guilds {
             path:   Routes.GUILD_AUDIT_LOG(id),
             query
         }).then(data => ({
+            applicationCommands:  data.application_commands.map(command => new ApplicationCommand(command, this.#manager.client)),
             autoModerationRules:  data.auto_moderation_rules.map(rule => guild ? guild.autoModerationRules.update(rule) : new AutoModerationRule(rule, this.#manager.client)),
             entries:              data.audit_log_entries.map(entry => new AuditLogEntry(entry, this.#manager.client)),
             guildScheduledEvents: data.guild_scheduled_events.map(event => guild ? guild.scheduledEvents.update(event) : new GuildScheduledEvent(event, this.#manager.client)),
