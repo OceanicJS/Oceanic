@@ -87,7 +87,7 @@ export interface RawGuild {
     system_channel_flags: number;
     system_channel_id: string | null;
     threads: Array<RawThreadChannel>;
-    unavailable: false;
+    unavailable?: false;
     vanity_url_code: string | null;
     verification_level: VerificationLevels;
     voice_states: Array<RawVoiceState>;

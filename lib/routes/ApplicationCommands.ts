@@ -61,6 +61,7 @@ export default class ApplicationCommands {
             method: "PUT",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   opts.map(opt => ({
+                id:                         opt.id,
                 default_member_permissions: opt.defaultMemberPermissions,
                 description:                opt.description,
                 description_localizations:  opt.descriptionLocalizations,

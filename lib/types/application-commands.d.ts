@@ -149,6 +149,8 @@ export interface CreateApplicationCommandOptionsBase<T extends ApplicationComman
     defaultMemberPermissions?: string | null;
     /** If the command can be used in a DM. */
     dmPermission?: boolean | null;
+    /** The ID of the command, if known. (Only usable when bulkEditing guild commands.) */
+    id?: string;
     /** The name of the command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
