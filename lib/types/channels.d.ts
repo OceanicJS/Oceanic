@@ -152,6 +152,8 @@ export interface EditGroupDMOptions {
 }
 
 export interface EditGuildChannelOptions {
+    /** [Forum Thread] The ID of the forum available tags applied on the channel. */
+    appliedTags?: Array<string>;
     /** [Thread] If the thread is archived. */
     archived?: boolean;
     /** [Thread] The duration after which the thread will be archived. */
@@ -164,9 +166,9 @@ export interface EditGuildChannelOptions {
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
     /** [Forum] The default auto archive duration for threads. */
     defaultReactionEmoji?: ForumEmoji | null;
-    /** [Forum] The default reaction emoji for threads. */
+    /** [Text, Forum] The default reaction emoji for threads. */
     defaultThreadRateLimitPerUser?: number;
-    /** [Forum, Thread] The {@link Constants.ChannelFlags | Channel Flags} to set on the channel. */
+    /** [Forum, Forum Thread] The {@link Constants.ChannelFlags | Channel Flags} to set on the channel. */
     flags?: number;
     /** [Private Thread] If non-moderators can add other non-moderators to the thread. */
     invitable?: boolean;
@@ -188,8 +190,6 @@ export interface EditGuildChannelOptions {
     reason?: string;
     /** [Stage, Voice] The voice region id of the channel, null for automatic. */
     rtcRegion?: string | null;
-    /** [Forum] Undocumented property. */
-    template?: string;
     /** [Announcement, Forum, Text, Voice] The topic of the channel. In forum channels, this is the `Guidelines` section. */
     topic?: string | null;
     /** [Announcement, Text] Provide the opposite type to convert the channel. */
@@ -207,9 +207,9 @@ export type EditAnnouncementChannelOptions = Omit<EditTextChannelOptions, "rateL
 export type EditVoiceChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "nsfw" | "bitrate" | "userLimit" | "parentID" | "rtcRegion" | "videoQualityMode">;
 export type EditStageChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "bitrate" | "rtcRegion">;
 export type EditThreadChannelOptions = EditPublicThreadChannelOptions | EditPrivateThreadChannelOptions;
-export type EditPublicThreadChannelOptions = Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags">;
+export type EditPublicThreadChannelOptions = Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags" | "appliedTags">;
 export type EditPrivateThreadChannelOptions = EditPublicThreadChannelOptions & Pick<EditGuildChannelOptions, "invitable">;
-export type EditForumChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "template" | "topic">;
+export type EditForumChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic">;
 
 export interface AddGroupRecipientOptions {
     /** The access token of the user to add. */
