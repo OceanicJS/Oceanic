@@ -265,7 +265,9 @@ export default class Guild extends Base {
         this.verificationLevel = data.verification_level;
         this.voiceStates = new TypedCollection(VoiceState, client);
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
-        data.roles.forEach(role => this.roles.update(role, data.id));
+        data.roles.forEach(role => {
+            this.roles.update(role, data.id)["_guild"] = this;
+        });
         this.update(data);
 
         if (data.channels) {
