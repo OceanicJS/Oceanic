@@ -202,7 +202,7 @@ export default class Webhooks {
             },
             files
         }).then(res => {
-            if (options.wait && res !== null) {
+            if (res !== null) {
                 return new Message(res, this.#manager.client);
             }
         });
@@ -227,7 +227,7 @@ export default class Webhooks {
             query,
             json:   options
         }).then(res => {
-            if (options.wait && res !== null) {
+            if (res !== null) {
                 return new Message(res, this.#manager.client);
             }
         });
@@ -252,7 +252,7 @@ export default class Webhooks {
             query,
             json:   options
         }).then(res => {
-            if (options.wait && res !== null) {
+            if (res !== null) {
                 return new Message(res, this.#manager.client);
             }
         });
