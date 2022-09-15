@@ -35,6 +35,8 @@ export default class Integration extends Base {
     role?: Role | null;
     /** The id of the role this integration uses for subscribers, if any. */
     roleID: string | null;
+    /** The scopes the application associated with this integration has been authorized for. */
+    scopes?: Array<string>;
     /** The number of subscribers this integration has. */
     subscriberCount?: number;
     /** The last date at which this integration was synced at. */
@@ -89,6 +91,9 @@ export default class Integration extends Base {
         if (data.role_id !== undefined) {
             this.role = this.guild !== undefined && this.guild !== null ? this.guild.roles.get(data.role_id) : null;
             this.roleID = data.role_id;
+        }
+        if (data.scopes !== undefined) {
+            this.scopes = data.scopes;
         }
         if (data.subscriber_count !== undefined) {
             this.subscriberCount = data.subscriber_count;

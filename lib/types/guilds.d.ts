@@ -200,6 +200,7 @@ export interface RawIntegration {
     name: string;
     revoked?: boolean;
     role_id?: string;
+    scopes?: Array<string>;
     subscriber_count?: number;
     synced_at?: string;
     syncing?: boolean;
