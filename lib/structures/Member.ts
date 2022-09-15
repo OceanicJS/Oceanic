@@ -6,7 +6,13 @@ import Permission from "./Permission";
 import VoiceState from "./VoiceState";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
-import type { CreateBanOptions, EditMemberOptions, EditUserVoiceStateOptions, RawMember } from "../types/guilds";
+import type {
+    CreateBanOptions,
+    EditMemberOptions,
+    EditUserVoiceStateOptions,
+    RawMember,
+    RESTMember
+} from "../types/guilds";
 import type { JSONMember } from "../types/json";
 import type { Presence } from "../types/gateway";
 
@@ -41,13 +47,13 @@ export default class Member extends Base {
     roles: Array<string>;
     /** The user associated with this member. */
     user: User;
-    constructor(data: RawMember, client: Client, guildID: string) {
+    constructor(data: (RawMember | RESTMember) & { id?: string; }, client: Client, guildID: string) {
         let user: User | undefined;
         let id: string | undefined;
-        if ("id" in data && !data.user) {
-            user = client.users.get(id = (data as RawMember & { id: string; }).id);
+        if (!data.user && data.id) {
+            user = client.users.get(id = data.id);
         } else if (data.user) {
-            id = (user = client.users.update(data.user)).id;
+            id = (user  = client.users.update(data.user)).id;
         }
         if (!user) {
             throw new Error(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
@@ -68,7 +74,7 @@ export default class Member extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawMember>): void {
+    protected update(data: Partial<RawMember | RESTMember>): void {
         if (data.avatar !== undefined) {
             this.avatar = data.avatar;
         }

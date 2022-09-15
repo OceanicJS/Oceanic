@@ -94,7 +94,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
             if (data.data.resolved.members) {
                 Object.entries(data.data.resolved.members).forEach(([id, member]) => {
                     const m = member as unknown as RawMember & { user: RawUser; };
-                    m.user = data.data.resolved!.users![id]!;
+                    m.user = data.data.resolved!.users![id];
                     this.data.resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                 });
             }

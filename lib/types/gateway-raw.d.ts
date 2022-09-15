@@ -244,7 +244,7 @@ export interface GuildMemberUpdatePacket extends BaseDispatchPacket {
         communication_disabled_until?: string | null;
         deaf?: boolean;
         guild_id: string;
-        joined_at: string | null;
+        joined_at: string;
         mute?: boolean;
         nick?: string | null;
         pending?: boolean;

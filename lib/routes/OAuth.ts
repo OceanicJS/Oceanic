@@ -17,7 +17,7 @@ import type {
     RESTApplication,
     RevokeTokenOptions
 } from "../types/oauth";
-import type { RawGuild, RawMember } from "../types/guilds";
+import type { RawGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import { BASE_URL } from "../Constants";
 import Application from "../structures/Application";
@@ -170,7 +170,7 @@ export default class OAuth {
      * @param guild the ID of the guild
      */
     async getCurrentGuildMember(guild: string): Promise<Member> {
-        return this.#manager.authRequest<RawMember>({
+        return this.#manager.authRequest<RESTMember>({
             method: "GET",
             path:   Routes.OAUTH_GUILD_MEMBER(guild)
         }).then(data => new Member(data, this.#manager.client, guild));

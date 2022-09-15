@@ -82,7 +82,8 @@ import type {
     GetVanityURLResponse,
     RawWidget,
     RawStageInstance,
-    EditMFALevelOptions
+    EditMFALevelOptions,
+    RESTMember
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -155,7 +156,7 @@ export default class Guild extends Base {
     /** The number of members in this guild. */
     memberCount: number;
     /** The cached members in this guild. */
-    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
+    members: TypedCollection<string, RawMember | RESTMember, Member, [guildID: string]>;
     /** The required [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) for moderators of this guild. */
     mfaLevel: MFALevels;
     /** The name of this guild. */

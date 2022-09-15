@@ -29,7 +29,8 @@ import type {
     RawGuildChannel,
     AnyGuildChannelWithoutThreads,
     RawChannel,
-    AnyChannel
+    AnyChannel,
+    RESTMember
 } from "../types";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
@@ -333,7 +334,7 @@ export default class Util {
         return Channel.from<T>(channelData, this.#client);
     }
 
-    updateMember(guildID: string, memberID: string, member: RawMember): Member {
+    updateMember(guildID: string, memberID: string, member: RawMember | RESTMember): Member {
         const guild = this.#client.guilds.get(guildID);
         if (guild && this.#client.user.id === memberID) {
             if (guild["_clientMember"]) {
@@ -343,7 +344,7 @@ export default class Util {
             }
             return guild["_clientMember"];
         }
-        return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member({ ...member, id: memberID } as RawMember, this.#client, guildID);
+        return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member({ ...member, id: memberID }, this.#client, guildID);
     }
 
     updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {

@@ -9,7 +9,6 @@ import type {
     RawGuild,
     RawGuildEmoji,
     RawGuildPreview,
-    RawMember,
     GetActiveThreadsResponse,
     GetMembersOptions,
     SearchMembersOptions,
@@ -40,7 +39,8 @@ import type {
     EditCurrentUserVoiceStateOptions,
     CreateChannelReturn,
     CreateChannelOptions,
-    EditMFALevelOptions
+    EditMFALevelOptions,
+    RESTMember
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -96,7 +96,7 @@ export default class Guilds {
      * @param options The options for adding the member.
      */
     async addMember(id: string, userID: string, options: AddMemberOptions): Promise<void | Member> {
-        const res = await this.#manager.authRequest<RawMember | null>({
+        const res = await this.#manager.authRequest<RESTMember | null>({
             method: "PUT",
             path:   Routes.GUILD_MEMBER(id, userID),
             json:   {
@@ -605,7 +605,7 @@ export default class Guilds {
         if (options.reason) {
             delete options.reason;
         }
-        return this.#manager.authRequest<RawMember>({
+        return this.#manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(id, "@me"),
             json:   { nick: options.nick },
@@ -683,7 +683,7 @@ export default class Guilds {
         if (options.reason) {
             delete options.reason;
         }
-        return this.#manager.authRequest<RawMember>({
+        return this.#manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(id, memberID),
             json:   {
@@ -1120,7 +1120,7 @@ export default class Guilds {
      * @param memberID The ID of the member.
      */
     async getMember(id: string, memberID: string): Promise<Member> {
-        return this.#manager.authRequest<RawMember>({
+        return this.#manager.authRequest<RESTMember>({
             method: "GET",
             path:   Routes.GUILD_MEMBER(id, memberID)
         }).then(data => this.#manager.client.util.updateMember(id, memberID, data));
@@ -1139,7 +1139,7 @@ export default class Guilds {
         if (options?.limit) {
             query.set("limit", options.limit.toString());
         }
-        return this.#manager.authRequest<Array<RawMember>>({
+        return this.#manager.authRequest<Array<RESTMember>>({
             method: "GET",
             path:   Routes.GUILD_MEMBERS(id),
             query
@@ -1443,7 +1443,7 @@ export default class Guilds {
         if (options.limit) {
             query.set("limit", options.limit.toString());
         }
-        return this.#manager.authRequest<Array<RawMember>>({
+        return this.#manager.authRequest<Array<RESTMember>>({
             method: "GET",
             path:   Routes.GUILD_SEARCH_MEMBERS(id),
             query

@@ -177,7 +177,7 @@ export interface RawMember {
     flags?: number;
     /** undocumented */
     is_pending?: boolean;
-    joined_at: string | null;
+    joined_at: string;
     mute: boolean;
     nick?: string | null;
     pending?: boolean;
@@ -186,7 +186,7 @@ export interface RawMember {
     roles: Array<string>;
     user?: RawUser;
 }
-export type RESTMember = Required<Omit<RawMember, "permissions">>;
+export type RESTMember = Required<Omit<RawMember, "permissions" | "joined_at">> & { joined_at: string | null; };
 export type InteractionMember = Required<RawMember>;
 
 export interface RawIntegration {
