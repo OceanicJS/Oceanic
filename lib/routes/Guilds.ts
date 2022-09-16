@@ -1020,22 +1020,24 @@ export default class Guilds {
         };
 
         const limit = options?.limit ?? 1000;
-        let after = options?.after;
-        let firstCallDone = false;
+        let choosenOption: "after" | "before";
+        if (options?.after) {
+            choosenOption = "after";
+        } else if (options?.before) {
+            choosenOption = "before";
+        } else {
+            choosenOption = "after";
+        }
+        let optionValue = options?.[choosenOption] ?? undefined;
 
         let bans: Array<Ban> = [];
         while (bans.length < limit) {
-            if (!firstCallDone) {
-                firstCallDone = true;
-            }
-
             const limitLeft = limit - bans.length;
             const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
-            this.#manager.client.emit("debug", `Getting ${limitToFetch} more bans for ${id}. ${limitLeft} left to get.`);
+            this.#manager.client.emit("debug", `Getting ${limitLeft} more ban${limitLeft === 1 ? "" : "s"} for ${id}: ${optionValue ?? ""}`);
             const bansChunk = await _getBans({
-                after,
-                before: firstCallDone ? undefined : options?.before,
-                limit:  limitToFetch
+                limit:           limitToFetch,
+                [choosenOption]: optionValue
             });
 
             if (bansChunk.length === 0) {
@@ -1043,7 +1045,7 @@ export default class Guilds {
             }
 
             bans = bans.concat(bansChunk);
-            after = bansChunk.at(-1)!.user.id;
+            optionValue = bansChunk.at(-1)!.user.id;
 
             if (bansChunk.length < 1000) {
                 break;

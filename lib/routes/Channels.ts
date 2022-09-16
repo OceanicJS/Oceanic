@@ -575,27 +575,28 @@ export default class Channels {
         };
 
         const limit = options?.limit ?? 100;
-        let before = options?.before;
-        let firstCallDone = false;
+        let choosenOption: "after" | "around" | "before";
+        if (options?.after) {
+            choosenOption = "after";
+        } else if (options?.around) {
+            choosenOption = "around";
+        } else if (options?.before) {
+            choosenOption = "before";
+        } else {
+            choosenOption = "before";
+        }
+        let optionValue = options?.[choosenOption] ?? undefined;
 
         let messages: Array<Message<T>> = [];
         while (messages.length < limit) {
-            if (!firstCallDone) {
-                firstCallDone = true;
-            }
-
             const limitLeft = limit - messages.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
-            const after = firstCallDone ? undefined : options?.after;
-            const around = firstCallDone ? undefined : options?.around;
             if (options?.limit && options?.limit > 100) {
-                this.#manager.client.emit("debug", `Getting ${limitLeft} more message${limitLeft === 1 ? "" : "s"} for ${id}: ${after || ""} ${around || ""} ${before || ""}`);
+                this.#manager.client.emit("debug", `Getting ${limitLeft} more message${limitLeft === 1 ? "" : "s"} for ${id}: ${optionValue ?? ""}`);
             }
             const messagesChunk = await _getMessages({
-                after,
-                around,
-                before,
-                limit: limitToFetch
+                limit:           limitToFetch,
+                [choosenOption]: optionValue
             });
 
             if (messagesChunk.length === 0) {
@@ -603,7 +604,12 @@ export default class Channels {
             }
 
             messages = messages.concat(messagesChunk);
-            before = messagesChunk.at(-1)!.id;
+
+            if (choosenOption === "around") {
+                break;
+            } else {
+                optionValue = messages.at(-1)!.id;
+            }
 
             if (messagesChunk.length < 100) {
                 break;
@@ -708,7 +714,7 @@ export default class Channels {
         while (reactions.length < limit) {
             const limitLeft = limit - reactions.length;
             const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
-            this.#manager.client.emit("debug", `Getting ${limitLeft} more ${emoji} reactions for message ${messageID} on ${id}: ${after || ""}`);
+            this.#manager.client.emit("debug", `Getting ${limitLeft} more ${emoji} reactions for message ${messageID} on ${id}: ${after ?? ""}`);
             const reactionsChunk = await _getReactions({
                 after,
                 limit: limitToFetch
@@ -817,19 +823,24 @@ export default class Channels {
         const filter = options.filter?.bind(this) ?? ((): true => true);
 
         const messageIDsToPurge: Array<string> = [];
-        let finishedFetchingMessages = false;
-        let before = options.before;
-        let firstCallDone = false;
-        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
-            if (!firstCallDone) {
-                firstCallDone = true;
-            }
+        let choosenOption: "after" | "around" | "before";
+        if (options.after) {
+            choosenOption = "after";
+        } else if (options.around) {
+            choosenOption = "around";
+        } else if (options.before) {
+            choosenOption = "before";
+        } else {
+            choosenOption = "before";
+        }
+        let optionValue = options[choosenOption] ?? undefined;
 
+        let finishedFetchingMessages = false;
+        let limitWasReach = false;
+        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
             const messages = await this.getMessages(id, {
-                limit:  100,
-                after:  firstCallDone ? undefined : options.after,
-                around: firstCallDone ? undefined : options.around,
-                before
+                limit:           100,
+                [choosenOption]: optionValue
             });
 
             if (messages.length === 0) {
@@ -837,7 +848,11 @@ export default class Channels {
                 return;
             }
 
-            before = messages.at(-1)!.id;
+            if (choosenOption === "around") {
+                finishedFetchingMessages = true;
+            } else {
+                optionValue = messages.at(-1)!.id;
+            }
 
             const filterPromises: Array<Promise<unknown>> = [];
             const resolvers: Array<(() => void) | null> = [];
@@ -850,48 +865,32 @@ export default class Channels {
                 filterPromises.push(new Promise<void>(resolve => {
                     resolvers.push(resolve);
 
-                    let removedResolver: (() => void) | null = null;
                     void (async (): Promise<void> => {
+                        let removedResolver: (() => void) | null = null;
+
                         if (await filter(message as Message<T>)) {
-                            if (finishedFetchingMessages) {
-                                for (const [resolverIndex, resolver] of resolvers.entries()) {
-                                    if (resolver) {
-                                        resolver();
-                                        resolvers[resolverIndex] = null;
-                                    }
-                                }
-                                return;
-                            }
-
-                            removedResolver = resolvers[index];
-                            resolvers[index] = null;
-                            messageIDsToPurge.push(message.id);
-                            if (messageIDsToPurge.length === options.limit) {
-                                finishedFetchingMessages = true;
-                                for (const [resolverIndex, resolver] of resolvers.entries()) {
-                                    if (resolver) {
-                                        resolver();
-                                        resolvers[resolverIndex] = null;
-                                    }
+                            if (!limitWasReach) {
+                                messageIDsToPurge.push(message.id);
+                                if (messageIDsToPurge.length === options.limit) {
+                                    limitWasReach = true;
                                 }
                             }
-                        } else {
-                            if (finishedFetchingMessages) {
-                                for (const [resolverIndex, resolver] of resolvers.entries()) {
-                                    if (resolver) {
-                                        resolver();
-                                        resolvers[resolverIndex] = null;
-                                    }
-                                }
-                                return;
-                            }
-
-                            removedResolver = resolvers[index];
-                            resolvers[index] = null;
                         }
+
+                        removedResolver = resolvers[index];
+                        resolvers[index] = null;
 
                         if (removedResolver) {
                             removedResolver();
+                        }
+
+                        if (limitWasReach) {
+                            for (const [resolverIndex, resolver] of resolvers.entries()) {
+                                if (resolver) {
+                                    resolver();
+                                    resolvers[resolverIndex] = null;
+                                }
+                            }
                         }
                     })();
                 }));
@@ -899,7 +898,7 @@ export default class Channels {
 
             await Promise.all(filterPromises);
 
-            if (!finishedFetchingMessages) {
+            if (!finishedFetchingMessages && !limitWasReach) {
                 await addMessageIDsToPurgeBatch();
             }
         };
