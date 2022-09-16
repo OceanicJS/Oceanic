@@ -57,7 +57,7 @@ import VoiceState from "../structures/VoiceState";
 import type ForumChannel from "../structures/ForumChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { Data } from "ws";
-import { WebSocket } from "ws";
+import WebSocket from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
