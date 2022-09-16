@@ -32,7 +32,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** If this command can be used in direct messages (global commands only). */
     dmPermission?: boolean;
     /** The guild this command is in (guild commands only). */
-    guild?: Guild;
+    guild?: Guild | null;
     /** The id of the guild this command is in (guild commands only). */
     guildID: string | null;
     /** The name of this command. */
@@ -56,7 +56,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.descriptionLocalizations = data.description_localizations;
         this.descriptionLocalized = data.description_localized;
         this.dmPermission = data.dm_permission;
-        this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
+        this.guild = data.guild_id === undefined ? null : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
