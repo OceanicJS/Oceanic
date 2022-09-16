@@ -124,6 +124,7 @@ export default class Integration extends Base {
             name:              this.name,
             revoked:           this.revoked,
             roleID:            this.roleID ?? undefined,
+            scopes:            this.scopes,
             subscriberCount:   this.subscriberCount,
             syncedAt:          this.syncedAt?.getTime(),
             syncing:           this.syncing,

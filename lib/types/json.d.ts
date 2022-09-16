@@ -323,6 +323,7 @@ export interface JSONIntegration extends JSONBase {
     name: string;
     revoked?: boolean;
     roleID?: string;
+    scopes?: Array<string>;
     subscriberCount?: number;
     syncedAt?: number;
     syncing?: boolean;
