@@ -884,5 +884,5 @@ export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
      * The filter to apply to messages to decide if they should be purged.
      * @param message The message to filter.
      */
-    filter?(message: Message<T>): boolean | PromiseLike<boolean>;
+    filter?(message: Message<T>): boolean | Promise<boolean>;
 }
