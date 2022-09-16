@@ -36,11 +36,11 @@ export default class VoiceChannel extends GuildChannel {
     /** The bitrate of the voice channel. */
     bitrate: number;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
-    lastMessage?: Message | null;
+    lastMessage?: Message<this> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message<this>>;
     /** If this channel is age gated. */
     nsfw: boolean;
     declare parent: CategoryChannel | null;
@@ -60,7 +60,7 @@ export default class VoiceChannel extends GuildChannel {
         super(data, client);
         this.bitrate = data.bitrate;
         this.lastMessageID = data.last_message_id;
-        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<this>, client, client.options.collectionLimits.messages);
         this.nsfw = false;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;

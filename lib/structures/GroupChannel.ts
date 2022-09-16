@@ -32,13 +32,13 @@ export default class GroupChannel extends Channel {
     /** The icon hash of this group, if any. */
     icon: string | null;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
-    lastMessage?: Message | null;
+    lastMessage?: Message<this> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** If this group channel is managed by an application. */
     managed: boolean;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message<this>>;
     /** The name of this group channel. */
     name: string | null;
     /** The nicknames used when creating this group channel. */
@@ -56,7 +56,7 @@ export default class GroupChannel extends Channel {
         this.icon = null;
         this.lastMessageID = data.last_message_id;
         this.managed = false;
-        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<this>, client, client.options.collectionLimits.messages);
         this.name = data.name;
         this.nicks = [];
         this.owner = this.client.users.get(data.owner_id);

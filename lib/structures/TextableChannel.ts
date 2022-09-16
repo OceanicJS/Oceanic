@@ -40,11 +40,11 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     /** The default auto archive duration for threads created in this channel. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
-    lastMessage?: Message | null;
+    lastMessage?: Message<T> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message<T>>;
     /** If this channel is age gated. */
     nsfw: boolean;
     declare parent?: CategoryChannel | null;
@@ -61,7 +61,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         this.lastMessageID = data.last_message_id;
-        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<T>, client, client.options.collectionLimits.messages);
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;

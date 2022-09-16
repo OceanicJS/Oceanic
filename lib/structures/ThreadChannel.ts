@@ -31,7 +31,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     /** The [flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) for this thread channel. */
     flags: number;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
-    lastMessage?: Message | null;
+    lastMessage?: Message<T> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The approximate number of members in this thread. Stops counting after 50. */
@@ -41,7 +41,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     /** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
     messageCount: number;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message>;
+    messages: TypedCollection<string, RawMessage, Message<T>>;
     /** The owner of this thread. */
     owner?: User;
     /** The ID of the owner of this thread. */
@@ -62,7 +62,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         this.memberCount = 0;
         this.members = [];
         this.messageCount = 0;
-        this.messages = new TypedCollection(Message, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<T>, client, client.options.collectionLimits.messages);
         this.ownerID = data.owner_id;
         this.rateLimitPerUser = data.rate_limit_per_user;
         this.threadMetadata = {
