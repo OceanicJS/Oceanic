@@ -159,7 +159,10 @@ export interface EditGuildChannelOptions {
     /** [Thread] The duration after which the thread will be archived. */
     autoArchiveDuration?: ThreadAutoArchiveDuration;
     /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
-    availableTags?: Array<ForumTag>;
+    availableTags?: Array<Omit<ForumTag, "id"> & {
+        /** The ID of this tag. Omit if you want to create a new tag. */
+        id?: string;
+    }>;
     /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for threads made in this channel. */
