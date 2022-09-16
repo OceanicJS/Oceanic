@@ -16,14 +16,14 @@ client.on("messageCreate", async (msg) => {
             components: [
                 {
                     // The top level component must always be an action row.
-                    // Full list of types: https://oceanic.owo-whats-this.dev/latest/enums/Constants.ComponentTypes.html
-                    // https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.MessageActionRow.html
+                    // Full list of types: https://docs.oceanic.ws/latest/enums/Constants.ComponentTypes.html
+                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.MessageActionRow.html
                     type: ComponentTypes.ACTION_ROW,
                     components: [
                         {
-                            // https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.TextButton.html
+                            // https://docs.oceanic.ws/latest/interfaces/Types_Channels.TextButton.html
                             type: ComponentTypes.BUTTON,
-                            style: ButtonStyles.PRIMARY, // The style of button - full list: https://oceanic.owo-whats-this.dev/latest/enums/Constants.ButtonStyles.html
+                            style: ButtonStyles.PRIMARY, // The style of button - full list: https://docs.oceanic.ws/latest/enums/Constants.ButtonStyles.html
                             customID: "some-string-you-will-see-later",
                             label: "Click!",
                             disabled: false, // If the button is disabled, false by default.
@@ -40,21 +40,21 @@ client.on("messageCreate", async (msg) => {
                             disabled: true
                         },
                         {
-                            // https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.URLButton.html
+                            // https://docs.oceanic.ws/latest/interfaces/Types_Channels.URLButton.html
                             type: ComponentTypes.BUTTON,
                             style: ButtonStyles.LINK,
                             label: "Open Link",
-                            url: "https://oceanic.owo-whats-this.dev"
+                            url: "https://docs.oceanic.ws"
                         },
                         {
-                            // https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.SelectMenu.html
+                            // https://docs.oceanic.ws/latest/interfaces/Types_Channels.SelectMenu.html
                             type: ComponentTypes.SELECT_MENU,
                             customID: "select-menu",
                             disabled: false,
                             maxValues: 1, // The maximum number of values that can be selected (default 1)
                             minValues: 1, // The minimum number of values that can be selected (default 1)
                             options: [
-                                // https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.SelectOption.html
+                                // https://docs.oceanic.ws/latest/interfaces/Types_Channels.SelectOption.html
                                 {
                                     default: true, // If this option is selected by default
                                     description: "The description of the option", // Optional description
