@@ -14,7 +14,7 @@ npm i oceanic.js --no-optional
 
 If you need voice support, remove `--no-optional`. Voice support is currently provided by [@discordjs/voice](https://discord.js.org/#/docs/voice/main/general/welcome).
 
-See the [examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples) folder on GitHub for some examples, and visit [this site](https://oceanic.owo-whats-this.dev) for documentation.
+See the [examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples) folder on GitHub for some examples, and visit [this site](https://docs.oceanic.ws) for documentation.
 
 ### Development Builds
 ```sh
@@ -32,7 +32,7 @@ The documentation under `dev` is always for the latest commit. If something isn'
 
 ## Links
 * [Examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples)
-* [Release Documentation](https://oceanic.owo-whats-this.dev/latest)
-* [Development Documentation](https://oceanic.owo-whats-this.dev/dev)
+* [Release Documentation](https://docs.oceanic.ws/latest)
+* [Development Documentation](https://docs.oceanic.ws/dev)
 * [Discord Server](https://discord.gg/xZ4AhdYrf9)
 * [Source](https://github.com/OceanicJS/Oceanic)
