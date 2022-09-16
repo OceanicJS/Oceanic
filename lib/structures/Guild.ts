@@ -151,6 +151,8 @@ export default class Guild extends Base {
     maxMembers?: number;
     /** The maximum amount of people that can be present at a time in this guild. Only present for very large guilds. */
     maxPresences?: number;
+    /** The maximum amount of users that can be present in a stage video channel. */
+    maxStageVideoChannelUsers?: number;
     /** The maximum amount of users that can be present in a video channel. */
     maxVideoChannelUsers?: number;
     /** The number of members in this guild. */
@@ -434,6 +436,9 @@ export default class Guild extends Base {
         }
         if (data.max_presences !== undefined) {
             this.maxPresences = data.max_presences;
+        }
+        if (data.max_stage_video_channel_users !== undefined) {
+            this.maxStageVideoChannelUsers = data.max_stage_video_channel_users;
         }
         if (data.max_video_channel_users !== undefined) {
             this.maxVideoChannelUsers = data.max_video_channel_users;
@@ -1183,6 +1188,7 @@ export default class Guild extends Base {
             large:                       this.large,
             maxMembers:                  this.maxMembers,
             maxPresences:                this.maxPresences,
+            maxStageVideoChannelUsers:   this.maxStageVideoChannelUsers,
             maxVideoChannelUsers:        this.maxVideoChannelUsers,
             memberCount:                 this.memberCount,
             members:                     this.members.map(member => member.id),

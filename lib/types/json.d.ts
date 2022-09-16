@@ -251,6 +251,7 @@ export interface JSONGuild extends JSONBase {
     large: boolean;
     maxMembers?: number;
     maxPresences?: number;
+    maxStageVideoChannelUsers?: number;
     maxVideoChannelUsers?: number;
     memberCount: number;
     members: Array<string>;
