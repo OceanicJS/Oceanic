@@ -588,6 +588,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const message = channel?.messages?.update(packet.d) ?? new Message(packet.d, this.client);
                 if (channel) {
                     channel.lastMessage = message as never;
+                    channel.lastMessageID = message.id;
                 }
                 this.client.emit("messageCreate", message);
                 break;
