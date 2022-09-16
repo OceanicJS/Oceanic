@@ -14,7 +14,7 @@ client.on("ready", async() => {
 
 client.on("interactionCreate", async(interaction) => {
     switch(interaction.type) {
-        // https://oceanic.owo-whats-this.dev/latest/classes/CommandInteraction.CommandInteraction.html
+        // https://docs.oceanic.ws/latest/classes/CommandInteraction.CommandInteraction.html
         case InteractionTypes.APPLICATION_COMMAND: {
             // defer interactions as soon as possible, you have three seconds to send any initial response
             // if you wait too long, the interaction may be invalidated
@@ -22,14 +22,14 @@ client.on("interactionCreate", async(interaction) => {
             // If you want the response to be ephemeral, you can provide the flag to the defer function, like so:
             // await interaction.defer(MessageFlags.EPHEMERAL);
 
-            // data = https://oceanic.owo-whats-this.dev/latest/interfaces/Types_Interactions.ApplicationCommandInteractionData.html
+            // data = https://docs.oceanic.ws/latest/interfaces/Types_Interactions.ApplicationCommandInteractionData.html
             switch(interaction.data.type) {
                 // Chat Input commands are what you use in the chat, i.e. slash commands
                 case ApplicationCommandTypes.CHAT_INPUT: {
                     if(interaction.data.name === "greet") {
                         // assume we have two options, user (called user) then string (called greeting) - first is required, second is not
 
-                        // Get an option named `user` with the type USER - https://oceanic.owo-whats-this.dev/dev/classes/InteractionOptionsWrapper.InteractionOptionsWrapper.html#getUser
+                        // Get an option named `user` with the type USER - https://docs.oceanic.ws/dev/classes/InteractionOptionsWrapper.InteractionOptionsWrapper.html#getUser
                         // Setting the second parameter to true will throw an error if the option is not present
                         const user = interaction.data.options.getUser("user", true);
                         const greeting = interaction.data.options.getString("greeting", false) || "Hello, ";
@@ -45,7 +45,7 @@ client.on("interactionCreate", async(interaction) => {
                     }
 
                 // Chat Input application command interactions also have a set of resolved data, which is structured as so:
-                // https://oceanic.owo-whats-this.dev/latest/interfaces/Types_Interactions.ApplicationCommandInteractionResolvedData.html
+                // https://docs.oceanic.ws/latest/interfaces/Types_Interactions.ApplicationCommandInteractionResolvedData.html
                 // the options wrapper pulls values out of resolved automatically, if you use the right method
                     break;
                 }
@@ -83,7 +83,7 @@ client.on("interactionCreate", async(interaction) => {
             break;
         }
 
-        // https://oceanic.owo-whats-this.dev/latest/classes/ComponentInteraction.ComponentInteraction.html
+        // https://docs.oceanic.ws/latest/classes/ComponentInteraction.ComponentInteraction.html
         case InteractionTypes.MESSAGE_COMPONENT: {
             // same spiel as above
             await interaction.defer();
@@ -111,7 +111,7 @@ client.on("interactionCreate", async(interaction) => {
             break;
         }
 
-        // https://oceanic.owo-whats-this.dev/latest/classes/AutocompleteInteraction.AutocompleteInteraction.html
+        // https://docs.oceanic.ws/latest/classes/AutocompleteInteraction.AutocompleteInteraction.html
         case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
             // Autocomplete Interactions cannot be deferred
             switch(interaction.data.name) {
@@ -146,13 +146,13 @@ client.on("interactionCreate", async(interaction) => {
             break;
         }
 
-        // https://oceanic.owo-whats-this.dev/latest/classes/ModalSubmitInteraction.ModalSubmitInteraction.html
+        // https://docs.oceanic.ws/latest/classes/ModalSubmitInteraction.ModalSubmitInteraction.html
         case InteractionTypes.MODAL_SUBMIT: {
             // this will correspond with the customID you provided when creating the modal
             switch(interaction.data.customID) {
                 case "test-modal": {
                     // the `components` property under data contains all of the components that were submitted
-                    // https://oceanic.owo-whats-this.dev/latest/interfaces/Types_Channels.ModalActionRow.html
+                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.ModalActionRow.html
                     console.log(interaction.data.components);
                     break;
                 }

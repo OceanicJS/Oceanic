@@ -13,18 +13,18 @@ client.on("ready", () => console.log("Ready as", client.user.tag));
 client.on("messageCreate", async (msg) => {
     if(msg.content.includes("!embed")) {
 		await client.rest.channels.createMessage(msg.channel.id, {
-			// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedOptions.html
+			// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedOptions.html
 			// Up to 10 in one message
 			embeds: [
 				{
-					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedAuthorOptions.html
+					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedAuthorOptions.html
 					author: {
 						name: "Author Name",
 						// An image url, or attachment://filename.ext
 						iconURL: "https://i.furry.cool/DonPride.png", // Optional
-						url: "https://oceanic.owo-whats-this.dev" // Optional
+						url: "https://docs.oceanic.ws" // Optional
 					},
-					// Array of https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedField.html
+					// Array of https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedField.html
 					// Up to 25 in one message
 					fields: [
 						{
@@ -38,28 +38,28 @@ client.on("messageCreate", async (msg) => {
 							inline: false
 						}
 					],
-					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedFooterOptions.html
+					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedFooterOptions.html
 					footer: {
 						text: "Footer Text",
 						// An image url, or attachment://filename.ext
 						iconURL: "https://i.furry.cool/DonPride.png" // Optional
 					},
-					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedImageOptions.html
+					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedImageOptions.html
 					image: {
 						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
-					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedThumbnailOptions.html
+					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedThumbnailOptions.html
 					thumbnail: {
 						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
-					// https://oceanic.owo-whats-this.dev/latest/interfaces/types_channels.EmbedOptions.html
+					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedOptions.html
 					color: 0xFFA500, // Base-10 color (0x prefix can be used for hex codes)
 					description: "My Cool Embed",
 					timestamp: new Date().toISOString(), // The current time - ISO 8601 format
 					title: "My Amazing Embed",
-					url: "https://oceanic.owo-whats-this.dev"
+					url: "https://docs.oceanic.ws"
 				}
 			]
 		});
