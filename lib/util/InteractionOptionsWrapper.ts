@@ -18,7 +18,8 @@ import type {
     InteractionOptionsSubCommand,
     InteractionOptionsSubCommandGroup,
     InteractionOptionsUser,
-    InteractionOptionsWithValue
+    InteractionOptionsWithValue,
+    SubCommandArray
 } from "../types";
 import type Attachment from "../structures/Attachment";
 
@@ -325,9 +326,9 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getSubCommand(required?: false): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined;
-    getSubCommand(required: true): [subcommand: string] | [subcommandGroup: string, subcommand: string];
-    getSubCommand(required?: boolean): [subcommand: string] | [subcommandGroup: string, subcommand: string] | undefined {
+    getSubCommand<T extends SubCommandArray = SubCommandArray>(required?: false): T | undefined;
+    getSubCommand<T extends SubCommandArray = SubCommandArray>(required: true): T;
+    getSubCommand(required?: boolean): SubCommandArray | undefined {
         const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
         if (!opt?.options) {
             if (required) {

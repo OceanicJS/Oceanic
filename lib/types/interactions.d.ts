@@ -250,3 +250,5 @@ export type AnyComponentInteraction = GuildComponentInteraction | PrivateCompone
 export type GuildModalSubmitInteraction = ModalSubmitInteraction<AnyGuildTextChannel>;
 export type PrivateModalSubmitInteraction = Omit<ModalSubmitInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions">;
 export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
+
+export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];
