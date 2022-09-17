@@ -239,6 +239,7 @@ export default class ForumChannel extends GuildChannel {
             availableTags:                 this.availableTags,
             defaultAutoArchiveDuration:    this.defaultAutoArchiveDuration,
             defaultReactionEmoji:          this.defaultReactionEmoji,
+            defaultSortOrder:              this.defaultSortOrder,
             defaultThreadRateLimitPerUser: this.defaultThreadRateLimitPerUser,
             flags:                         this.flags,
             lastThreadID:                  this.lastThreadID,

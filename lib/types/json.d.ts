@@ -62,7 +62,8 @@ import type {
     ThreadChannelTypes,
     VerificationLevels,
     VideoQualityModes,
-    WebhookTypes
+    WebhookTypes,
+    SortOrderModes
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
@@ -211,6 +212,7 @@ export interface JSONForumChannel extends JSONGuildChannel {
     availableTags: Array<ForumTag>;
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     defaultReactionEmoji: ForumEmoji | null;
+    defaultSortOrder?: SortOrderModes;
     defaultThreadRateLimitPerUser: number;
     flags: number;
     lastThreadID: string | null;
