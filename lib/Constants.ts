@@ -370,9 +370,9 @@ export enum ChannelFlags {
 }
 
 export enum SortOrderModes {
-    /** Sort forum posts by activity. */
+    /** Sort forum threads by activity. */
     RECENT_ACTIVITY = 0,
-    /** Sort forum posts by creation time (from most recent to oldest). */
+    /** Sort forum threads by creation time (from most recent to oldest). */
     CREATION_TIME = 1
 }
 
