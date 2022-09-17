@@ -167,7 +167,7 @@ export interface EditGuildChannelOptions {
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for threads made in this channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
-    /** [Forum] The default auto archive duration for threads. */
+    /** [Forum] The default reaction emoji for threads. */
     defaultReactionEmoji?: ForumEmoji | null;
     /** [Text, Forum] The default reaction emoji for threads. */
     defaultThreadRateLimitPerUser?: number;

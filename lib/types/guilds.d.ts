@@ -6,7 +6,9 @@ import type {
     RawChannel,
     RawGuildChannel,
     RawThreadChannel,
-    ThreadMember
+    ThreadMember,
+    ForumEmoji,
+    ForumTag
 } from "./channels";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { PresenceUpdate } from "./gateway";
@@ -329,34 +331,38 @@ export interface EditGuildOptions {
 }
 
 export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
+    /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
+    availableTags?: Array<Omit<ForumTag, "id">> | null;
     /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for the channel. */
-    defaultAutoArchiveDuration?: ThreadAutoArchiveDuration;
+    defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
+    /** [Forum] The default reaction emoji for threads. */
+    defaultReactionEmoji?: ForumEmoji | null;
     /** The name of the channel. */
     name: string;
     /** [Announcement, Text, Voice] If the channel is age restricted. */
-    nsfw?: boolean;
+    nsfw?: boolean | null;
     /** The ID of the category to put this channel in. */
-    parentID?: string;
+    parentID?: string | null;
     /** The permission overwrites to apply to the channel. */
-    permissionOverwrites?: Array<OverwriteOptions>;
+    permissionOverwrites?: Array<OverwriteOptions> | null;
     /** The position of the channel. */
-    position?: number;
+    position?: number | null;
     /** [Forum, Text] The seconds between sending messages for users. Between 0 and 21600. */
-    rateLimitPerUser?: number;
+    rateLimitPerUser?: number | null;
     /** The reason for creating the channel. */
     reason?: string;
     /** [Stage, Voice] The voice region for the channel. */
-    rtcRegion?: string;
+    rtcRegion?: string | null;
     /** [Announcement, Forum, Text, Voice] The topic of the channel. In forum channels, this is the `Guidelines` section. */
-    topic?: string;
+    topic?: string | null;
     /** The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of channel to create. */
     type: T;
     /** [Voice] The maximum number of users that can be in the channel. Between 0 and 99. */
-    userLimit?: number;
+    userLimit?: number | null;
     /** [Voice] The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) for the channel. */
-    videoQualityMode?: VideoQualityModes;
+    videoQualityMode?: VideoQualityModes | null;
 }
 
 export type CreateTextChannelOptions = Omit<CreateChannelOptions<ChannelTypes.GUILD_TEXT>, "rtcRegion" | "userLimit" | "videoQualityMode">;
