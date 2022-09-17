@@ -1,9 +1,10 @@
 /** @module GuildPreview */
 import Base from "./Base";
 import type Client from "../Client";
-import type { GuildFeature } from "../Constants";
+import type { GuildFeature, ImageFormat } from "../Constants";
 import type { GuildEmoji, RawGuildPreview, Sticker } from "../types/guilds";
 import type { JSONGuildPreview } from "../types/json";
+import * as Routes from "../util/Routes";
 
 /** Represents a preview of a guild. */
 export default class GuildPreview extends Base {
@@ -76,6 +77,33 @@ export default class GuildPreview extends Base {
         if (data.stickers !== undefined) {
             this.stickers = data.stickers;
         }
+    }
+
+    /**
+     * The url of this guild's discovery splash.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    discoverySplashURL(format?: ImageFormat, size?: number): string | null {
+        return this.discoverySplash === null ? null : this.client.util.formatImage(Routes.GUILD_DISCOVERY_SPLASH(this.id, this.discoverySplash), format, size);
+    }
+
+    /**
+     * The url of this guild's icon.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    iconURL(format?: ImageFormat, size?: number): string | null {
+        return this.icon === null ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
+    }
+
+    /**
+     * The url of this guild's invite splash.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    splashURL(format?: ImageFormat, size?: number): string | null {
+        return this.splash === null ? null : this.client.util.formatImage(Routes.GUILD_SPLASH(this.id, this.splash), format, size);
     }
 
     override toJSON(): JSONGuildPreview {

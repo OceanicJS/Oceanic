@@ -720,6 +720,15 @@ export default class Guild extends Base {
     }
 
     /**
+     * The url of this guild's discovery splash.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    discoverySplashURL(format?: ImageFormat, size?: number): string | null {
+        return this.discoverySplash === null ? null : this.client.util.formatImage(Routes.GUILD_DISCOVERY_SPLASH(this.id, this.discoverySplash), format, size);
+    }
+
+    /**
      * Edit this guild.
      * @param options The options for editing the guild.
      */
@@ -1156,6 +1165,15 @@ export default class Guild extends Base {
      */
     async searchMembers(options: SearchMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.searchMembers(this.id, options);
+    }
+
+    /**
+     * The url of this guild's invite splash.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    splashURL(format?: ImageFormat, size?: number): string | null {
+        return this.splash === null ? null : this.client.util.formatImage(Routes.GUILD_SPLASH(this.id, this.splash), format, size);
     }
 
     /**
