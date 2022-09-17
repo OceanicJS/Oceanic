@@ -261,6 +261,7 @@ export default class Guilds {
                 bitrate:                       options.bitrate,
                 default_auto_archive_duration: options.defaultAutoArchiveDuration,
                 default_reaction_emoji:        options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
+                default_sort_order:            options.defaultSortOrder,
                 name:                          options.name,
                 nsfw:                          options.nsfw,
                 parent_id:                     options.parentID,

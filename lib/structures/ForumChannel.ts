@@ -23,7 +23,7 @@ import type {
 } from "../types";
 import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
-import { AllPermissions, Permissions } from "../Constants";
+import { AllPermissions, Permissions, SortOrderModes } from "../Constants";
 
 /** Represents a forum channel. Documentation for these is currently scarce, so they may not work entirely correctly. */
 export default class ForumChannel extends GuildChannel {
@@ -33,6 +33,8 @@ export default class ForumChannel extends GuildChannel {
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     /** The default reaction emoji for threads. */
     defaultReactionEmoji: ForumEmoji | null;
+    /** The default sort order mode used to sort threads. */
+    defaultSortOrder?: SortOrderModes;
     /** The default amount of seconds between non-moderators sending messages in threads. */
     defaultThreadRateLimitPerUser: number;
     /** The flags for this channel, see {@link Constants.ChannelFlags}. */
@@ -91,6 +93,9 @@ export default class ForumChannel extends GuildChannel {
         }
         if (data.default_reaction_emoji !== undefined) {
             this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
+        }
+        if (data.default_sort_order !== undefined) {
+            this.defaultSortOrder = data.default_sort_order;
         }
         if (data.default_thread_rate_limit_per_user !== undefined) {
             this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;

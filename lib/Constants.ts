@@ -363,8 +363,17 @@ export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoic
 export enum ChannelFlags {
     /** For threads, if this thread is pinned in a forum channel. */
     PINNED             = 1 << 1,
+    /** @deprecated This was an unofficial name from us. */
+    FORUM_TAG_REQUIRED = 1 << 4,
     /** For forums, if tags are required when creating threads. */
-    FORUM_TAG_REQUIRED = 1 << 4 // undocumented
+    REQUIRE_TAG = 1 << 4
+}
+
+export enum SortOrderModes {
+    /** Sort forum posts by activity. */
+    RECENT_ACTIVITY = 0,
+    /** Sort forum posts by creation time (from most recent to oldest). */
+    CREATION_TIME = 1
 }
 
 export enum TeamMembershipState {
