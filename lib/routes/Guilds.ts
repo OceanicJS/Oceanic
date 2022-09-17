@@ -252,15 +252,15 @@ export default class Guilds {
             method: "POST",
             path:   Routes.GUILD_CHANNELS(id),
             json:   {
-                available_tags: options.availableTags?.map(tag => ({
+                available_tags: options.availableTags ? options.availableTags.map(tag => ({
                     emoji_id:   tag.emoji?.id,
                     emoji_name: tag.emoji?.name,
                     moderated:  tag.moderated,
                     name:       tag.name
-                })),
+                })) : options.availableTags,
                 bitrate:                       options.bitrate,
                 default_auto_archive_duration: options.defaultAutoArchiveDuration,
-                default_reaction_emoji:        options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : undefined,
+                default_reaction_emoji:        options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
                 name:                          options.name,
                 nsfw:                          options.nsfw,
                 parent_id:                     options.parentID,
