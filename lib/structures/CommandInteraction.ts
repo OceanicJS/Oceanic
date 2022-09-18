@@ -97,7 +97,14 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
             }
 
             if (data.data.resolved.messages) {
-                Object.values(data.data.resolved.messages).forEach(message => resolved.messages.update(message));
+                Object.values(data.data.resolved.messages).forEach(message => {
+                    const channel = client.getChannel(message.channel_id);
+                    if (channel && "messages" in channel) {
+                        resolved.messages.add(channel.messages.update(message));
+                    } else {
+                        resolved.messages.update(message);
+                    }
+                });
             }
 
             if (data.data.resolved.roles) {
