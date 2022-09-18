@@ -1,4 +1,4 @@
-/** @module TextableChannel */
+/** @module InteractionOptionChannel */
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
 import Permission from "./Permission";
