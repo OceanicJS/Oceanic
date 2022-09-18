@@ -3,7 +3,7 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
 import type Client from "../Client";
-import type { RawRole, RoleTags } from "../types/guilds";
+import type { RawRole, RoleTags, EditRoleOptions } from "../types/guilds";
 import type { JSONRole } from "../types/json";
 
 /** Represents a role in a guild. */
@@ -98,6 +98,14 @@ export default class Role extends Base {
      */
     async delete(reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteRole(this.guildID, this.id, reason);
+    }
+
+    /**
+     * Edit this role.
+     * @param options The options for editing the role.
+     */
+    async edit(options: EditRoleOptions): Promise<Role> {
+        return this.client.rest.guilds.editRole(this.guildID, this.id, options);
     }
 
     override toJSON(): JSONRole {
