@@ -80,11 +80,11 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
 
             if (data.data.resolved.channels) {
                 Object.values(data.data.resolved.channels).forEach(channel => {
-                    const T = client.getChannel(channel.id);
-                    if (T && "update" in T) {
-                        (T as Channel)["update"](channel);
+                    const ch = client.getChannel(channel.id);
+                    if (ch && "update" in ch) {
+                        (ch as Channel)["update"](channel);
                     }
-                    resolved.channels.add(T ?? Channel.from(channel, client));
+                    resolved.channels.add(ch ?? Channel.from(channel, client));
                 });
             }
 
