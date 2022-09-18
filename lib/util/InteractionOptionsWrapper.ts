@@ -75,7 +75,7 @@ export default class InteractionOptionsWrapper {
     getAttachment(name: string, required: true): Attachment;
     getAttachment(name: string, required?: boolean): Attachment | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getAttachmentValue with null resolved.");
+            throw new Error("Attempt to use getAttachment with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getAttachmentOption(name, required as false)?.value)) {
@@ -131,7 +131,7 @@ export default class InteractionOptionsWrapper {
     getChannel<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
     getChannel(name: string, required?: boolean): AnyChannel | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getChannelValue with null resolved.");
+            throw new Error("Attempt to use getChannel with null resolved. If this is on an autocomplete interaction, use getChannelOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getChannelOption(name, required as false)?.value)) {
@@ -196,7 +196,7 @@ export default class InteractionOptionsWrapper {
     getMember(name: string, required: true): Member;
     getMember(name: string, required?: boolean): Member | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getMemberValue with null resolved.");
+            throw new Error("Attempt to use getMember with null resolved. If this is on an autocomplete interaction, use getUserOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) {
@@ -218,7 +218,7 @@ export default class InteractionOptionsWrapper {
     getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
     getMentionable(name: string, required?: boolean): AnyChannel | User | Role | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getMentionableValue with null resolved.");
+            throw new Error("Attempt to use getMentionable with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
         let val: string | undefined;
         if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) {
@@ -275,7 +275,7 @@ export default class InteractionOptionsWrapper {
     getRole(name: string, required: true): Role;
     getRole(name: string, required?: boolean): Role | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getRoleValue with null resolved.");
+            throw new Error("Attempt to use getRole with null resolved. If this is on an autocomplete interaction, use getRoleOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getRoleOption(name, required as false)?.value)) {
@@ -360,7 +360,7 @@ export default class InteractionOptionsWrapper {
     getUser(name: string, required: true): User;
     getUser(name: string, required?: boolean): User | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getUserValue with null resolved.");
+            throw new Error("Attempt to use getUser with null resolved. If this is on an autocomplete interaction, use getUseOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) {

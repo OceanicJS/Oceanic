@@ -13,7 +13,13 @@ import type PrivateChannel from "./PrivateChannel";
 import TypedCollection from "../util/TypedCollection";
 import type { InteractionTypes } from "../Constants";
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
-import type { ApplicationCommandInteractionData, InteractionContent, ModalData, RawApplicationCommandInteraction } from "../types/interactions";
+import type {
+    ApplicationCommandInteractionData,
+    InteractionContent,
+    ModalData,
+    RawApplicationCommandInteraction,
+    ApplicationCommandInteractionResolvedData
+} from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
 import type { AnyChannel, AnyGuildTextChannel, AnyTextChannel, RawChannel } from "../types/channels";
@@ -51,22 +57,13 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) as T extends AnyTextChannel ? T : undefined;
         this.channelID = data.channel_id!;
-        this.data = {
-            guildID:  data.data.guild_id,
-            id:       data.data.id,
-            name:     data.data.name,
-            options:  new InteractionOptionsWrapper([], null),
-            resolved: {
-                attachments: new TypedCollection(Attachment, client),
-                channels:    new TypedCollection(Channel, client) as TypedCollection<string, RawChannel, AnyChannel>,
-                members:     new TypedCollection(Member, client),
-                messages:    new TypedCollection(Message, client),
-                roles:       new TypedCollection(Role, client),
-                users:       new TypedCollection(User, client)
-            },
-            target:   undefined,
-            targetID: data.data.target_id,
-            type:     data.data.type
+        const resolved: ApplicationCommandInteractionResolvedData = {
+            attachments: new TypedCollection(Attachment, client),
+            channels:    new TypedCollection(Channel, client) as TypedCollection<string, RawChannel, AnyChannel>,
+            members:     new TypedCollection(Member, client),
+            messages:    new TypedCollection(Message, client),
+            roles:       new TypedCollection(Role, client),
+            users:       new TypedCollection(User, client)
         };
         this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
@@ -78,7 +75,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
 
         if (data.data.resolved) {
             if (data.data.resolved.attachments) {
-                Object.values(data.data.resolved.attachments).forEach(attachment => this.data.resolved.attachments.update(attachment));
+                Object.values(data.data.resolved.attachments).forEach(attachment => resolved.attachments.update(attachment));
             }
 
             if (data.data.resolved.channels) {
@@ -87,7 +84,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
                     if (T && "update" in T) {
                         (T as Channel)["update"](channel);
                     }
-                    this.data.resolved.channels.add(T ?? Channel.from(channel, client));
+                    resolved.channels.add(T ?? Channel.from(channel, client));
                 });
             }
 
@@ -95,34 +92,40 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
                 Object.entries(data.data.resolved.members).forEach(([id, member]) => {
                     const m = member as unknown as RawMember & { user: RawUser; };
                     m.user = data.data.resolved!.users![id];
-                    this.data.resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
+                    resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                 });
             }
 
             if (data.data.resolved.messages) {
-                Object.values(data.data.resolved.messages).forEach(message => this.data.resolved.messages.update(message));
+                Object.values(data.data.resolved.messages).forEach(message => resolved.messages.update(message));
             }
 
             if (data.data.resolved.roles) {
-                Object.values(data.data.resolved.roles).forEach(role => this.data.resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guildID!)));
+                Object.values(data.data.resolved.roles).forEach(role => resolved.roles.add(this.guild instanceof Guild ? this.guild.roles.update(role, this.guildID!) : new Role(role, client, this.guildID!)));
             }
 
             if (data.data.resolved.users) {
-                Object.values(data.data.resolved.users).forEach(user => this.data.resolved.users.update(user));
+                Object.values(data.data.resolved.users).forEach(user => resolved.users.add(client.users.update(user)));
             }
         }
+
+        this.data = {
+            guildID:  data.data.guild_id,
+            id:       data.data.id,
+            name:     data.data.name,
+            options:  new InteractionOptionsWrapper(data.data.options ?? [], resolved ?? null),
+            resolved,
+            target:   undefined,
+            targetID: data.data.target_id,
+            type:     data.data.type
+        };
 
         if (this.data.targetID) {
             if (this.data.type === ApplicationCommandTypes.USER) {
-                this.data.target = this.data.resolved.users.get(this.data.targetID);
+                this.data.target = resolved.users.get(this.data.targetID);
             } else if (this.data.type === ApplicationCommandTypes.MESSAGE) {
-                this.data.target = this.data.resolved.messages.get(this.data.targetID);
+                this.data.target = resolved.messages.get(this.data.targetID);
             }
-        }
-
-
-        if (data.data.options) {
-            this.data.options = new InteractionOptionsWrapper(data.data.options, this.data.resolved);
         }
     }
 
