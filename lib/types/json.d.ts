@@ -26,7 +26,7 @@ import type {
     StickerItem,
     MessageReaction,
     ThreadMetadata,
-    PrivateThreadmetadata,
+    PrivateThreadMetadata,
     ForumTag,
     ForumEmoji,
     MessageActionRow,
@@ -455,7 +455,7 @@ export interface JSONPrivateChannel extends JSONChannel {
     type: ChannelTypes.DM;
 }
 export interface JSONPrivateThreadChannel extends JSONThreadChannel {
-    threadMetadata: PrivateThreadmetadata;
+    threadMetadata: PrivateThreadMetadata;
     type: ChannelTypes.PRIVATE_THREAD;
 }
 export interface JSONPublicThreadChannel extends JSONThreadChannel {
@@ -536,7 +536,7 @@ export interface JSONThreadChannel extends JSONGuildChannel {
     messages: Array<string>;
     ownerID: string;
     rateLimitPerUser: number;
-    threadMetadata: ThreadMetadata | PrivateThreadmetadata;
+    threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     totalMessageSent: number;
     type: ThreadChannelTypes;
 }

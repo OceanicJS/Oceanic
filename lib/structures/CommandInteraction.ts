@@ -1,7 +1,6 @@
 /** @module CommandInteraction */
 import Interaction from "./Interaction";
 import Attachment from "./Attachment";
-import Channel from "./Channel";
 import Member from "./Member";
 import Message from "./Message";
 import Role from "./Role";
@@ -10,6 +9,7 @@ import Guild from "./Guild";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
+import InteractionOptionChannel from "./InteractionOptionChannel";
 import TypedCollection from "../util/TypedCollection";
 import type { InteractionTypes } from "../Constants";
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
@@ -22,7 +22,7 @@ import type {
 } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
-import type { AnyChannel, AnyGuildTextChannel, AnyTextChannel, RawChannel } from "../types/channels";
+import type { AnyGuildTextChannel, AnyTextChannel, PartialInteractionOptionsChannel } from "../types/channels";
 import type { RawUser } from "../types/users";
 import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
@@ -59,7 +59,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
         this.channelID = data.channel_id!;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(Channel, client) as TypedCollection<string, RawChannel, AnyChannel>,
+            channels:    new TypedCollection(InteractionOptionChannel, client) as TypedCollection<string, PartialInteractionOptionsChannel, InteractionOptionChannel>,
             members:     new TypedCollection(Member, client),
             messages:    new TypedCollection(Message, client),
             roles:       new TypedCollection(Role, client),
@@ -79,13 +79,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
             }
 
             if (data.data.resolved.channels) {
-                Object.values(data.data.resolved.channels).forEach(channel => {
-                    const ch = client.getChannel(channel.id);
-                    if (ch && "update" in ch) {
-                        (ch as Channel)["update"](channel);
-                    }
-                    resolved.channels.add(ch ?? Channel.from(channel, client));
-                });
+                Object.values(data.data.resolved.channels).forEach(channel => resolved.channels.update(channel));
             }
 
             if (data.data.resolved.members) {

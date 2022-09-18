@@ -6,6 +6,7 @@ import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
+import type ForumChannel from "./ForumChannel";
 import type { ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -17,7 +18,7 @@ import type {
     EditThreadChannelOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
-    PrivateThreadmetadata,
+    PrivateThreadMetadata,
     RawMessage,
     RawThreadChannel,
     ThreadMember,
@@ -46,12 +47,12 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     owner?: User;
     /** The ID of the owner of this thread. */
     ownerID: string;
-    declare parent?: TextChannel | AnnouncementChannel;
+    declare parent?: TextChannel | AnnouncementChannel | ForumChannel;
     declare parentID: string;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this thread. */
-    threadMetadata: ThreadMetadata | PrivateThreadmetadata;
+    threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     /** The total number of messages ever sent in the thread. Includes deleted messages. */
     totalMessageSent: number;
     declare type: ThreadChannelTypes;
@@ -70,11 +71,12 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             archived:            !!data.thread_metadata.archived,
             autoArchiveDuration: data.thread_metadata.auto_archive_duration,
             createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
-            locked:              !!data.thread_metadata.locked
+            locked:              !!data.thread_metadata.locked,
+            invitable:           data.thread_metadata.invitable
         };
         this.totalMessageSent = 0;
         if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) {
-            (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+            (this.threadMetadata as PrivateThreadMetadata).invitable = !!data.thread_metadata.invitable;
         }
         this.update(data);
     }
@@ -119,10 +121,11 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
                 archived:            !!data.thread_metadata.archived,
                 autoArchiveDuration: data.thread_metadata.auto_archive_duration,
                 createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
-                locked:              !!data.thread_metadata.locked
+                locked:              !!data.thread_metadata.locked,
+                invitable:           data.thread_metadata.invitable
             };
             if (data.type === ChannelTypes.PRIVATE_THREAD && data.thread_metadata.invitable !== undefined) {
-                (this.threadMetadata as PrivateThreadmetadata).invitable = !!data.thread_metadata.invitable;
+                (this.threadMetadata as PrivateThreadMetadata).invitable = !!data.thread_metadata.invitable;
             }
 
         }
