@@ -95,6 +95,7 @@ export const GuildFeatures = [
     "HAD_EARLY_ACTIVITIES_ACCESS",
     "HAS_DIRECTORY_ENTRY",
     "HUB",
+    "INCREASED_THREAD_LIMIT",
     "INVITES_DISABLED",
     "INVITE_SPLASH",
     "LINKED_TO_HUB",
