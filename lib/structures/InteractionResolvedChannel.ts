@@ -6,10 +6,10 @@ import Channel from "./Channel";
 import type ForumChannel from "./ForumChannel";
 import { GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { PartialInteractionOptionsChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildTextChannel } from "../types/channels";
+import type { PartialInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildTextChannel } from "../types/channels";
 
 /** Represents a channel from an interaction option. */
-export default class InteractionOptionChannel extends Channel {
+export default class InteractionResolvedChannel extends Channel {
     /** The permissions the bot has in the channel. */
     appPermissions: Permission;
     /** The complete channel this channel option represents, if it's cached. */
@@ -23,7 +23,7 @@ export default class InteractionOptionChannel extends Channel {
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this channel, if this represents a thread. */
     threadMetadata: ThreadMetadata | PrivateThreadMetadata | null;
     declare type: GuildChannelTypes;
-    constructor(data: PartialInteractionOptionsChannel, client: Client) {
+    constructor(data: PartialInteractionResolvedChannel, client: Client) {
         super(data, client);
         this.appPermissions = new Permission(data.permissions);
         this.name = data.name;

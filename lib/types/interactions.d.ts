@@ -6,7 +6,7 @@ import type {
     RawMessage,
     ModalActionRow,
     AnyGuildTextChannel,
-    PartialInteractionOptionsChannel
+    PartialInteractionResolvedChannel
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -32,7 +32,7 @@ import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type PrivateChannel from "../structures/PrivateChannel";
 import TypedCollection from "../util/TypedCollection";
-import type InteractionOptionChannel from "../structures/InteractionOptionChannel";
+import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
 
@@ -153,7 +153,7 @@ export interface ModalSubmitInteractionData {
 
 export interface RawApplicationCommandInteractionResolvedData {
     attachments?: Record<string, RawAttachment>;
-    channels?: Record<string, PartialInteractionOptionsChannel>;
+    channels?: Record<string, PartialInteractionResolvedChannel>;
     members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
     messages?: Record<string, RawMessage>;
     roles?: Record<string, RawRole>;
@@ -162,7 +162,7 @@ export interface RawApplicationCommandInteractionResolvedData {
 
 export interface ApplicationCommandInteractionResolvedData {
     attachments: TypedCollection<string, RawAttachment, Attachment>;
-    channels: TypedCollection<string, PartialInteractionOptionsChannel, InteractionOptionChannel>;
+    channels: TypedCollection<string, PartialInteractionResolvedChannel, InteractionResolvedChannel>;
     members: TypedCollection<string, RawMember, Member, [guildID: string]>;
     messages: TypedCollection<string, RawMessage, Message>;
     roles: TypedCollection<string, RawRole, Role, [guildID: string]>;

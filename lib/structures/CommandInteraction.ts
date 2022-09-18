@@ -9,7 +9,7 @@ import Guild from "./Guild";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
-import InteractionOptionChannel from "./InteractionOptionChannel";
+import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import TypedCollection from "../util/TypedCollection";
 import type { InteractionTypes } from "../Constants";
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
@@ -22,7 +22,7 @@ import type {
 } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
-import type { AnyGuildTextChannel, AnyTextChannel, PartialInteractionOptionsChannel } from "../types/channels";
+import type { AnyGuildTextChannel, AnyTextChannel, PartialInteractionResolvedChannel } from "../types/channels";
 import type { RawUser } from "../types/users";
 import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
@@ -59,7 +59,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
         this.channelID = data.channel_id!;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionOptionChannel, client) as TypedCollection<string, PartialInteractionOptionsChannel, InteractionOptionChannel>,
+            channels:    new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, PartialInteractionResolvedChannel, InteractionResolvedChannel>,
             members:     new TypedCollection(Member, client),
             messages:    new TypedCollection(Message, client),
             roles:       new TypedCollection(Role, client),

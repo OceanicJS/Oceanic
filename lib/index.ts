@@ -32,6 +32,7 @@ export { default as GuildPreview } from "./structures/GuildPreview";
 export { default as GuildScheduledEvent } from "./structures/GuildScheduledEvent";
 export { default as GuildTemplate } from "./structures/GuildTemplate";
 export { default as Integration } from "./structures/Integration";
+export { default as InteractionResolvedChannel } from "./structures/InteractionResolvedChannel";
 export { default as InteractionOptionsWrapper } from "./util/InteractionOptionsWrapper";
 export { default as Invite } from "./structures/Invite";
 export { default as Member } from "./structures/Member";

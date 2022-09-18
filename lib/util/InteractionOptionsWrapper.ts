@@ -4,7 +4,6 @@ import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
 import type {
-    AnyChannel,
     ApplicationCommandInteractionResolvedData,
     InteractionOptions,
     InteractionOptionsAttachment,
@@ -22,6 +21,7 @@ import type {
     SubCommandArray
 } from "../types";
 import type Attachment from "../structures/Attachment";
+import InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
@@ -127,9 +127,9 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
-    getChannel<T extends AnyChannel = AnyChannel>(name: string, required?: false): T | undefined;
-    getChannel<T extends AnyChannel = AnyChannel>(name: string, required: true): T;
-    getChannel(name: string, required?: boolean): AnyChannel | undefined {
+    getChannel<T extends InteractionResolvedChannel = InteractionResolvedChannel>(name: string, required?: false): T | undefined;
+    getChannel<T extends InteractionResolvedChannel = InteractionResolvedChannel>(name: string, required: true): T;
+    getChannel(name: string, required?: boolean): InteractionResolvedChannel | undefined {
         if (this.resolved === null) {
             throw new Error("Attempt to use getChannel with null resolved. If this is on an autocomplete interaction, use getChannelOption instead.");
         }
@@ -214,9 +214,9 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present, or if the value cannot be found.
      */
-    getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required?: false): T | undefined;
-    getMentionable<T extends AnyChannel | User | Role = AnyChannel | User | Role>(name: string, required: true): T;
-    getMentionable(name: string, required?: boolean): AnyChannel | User | Role | undefined {
+    getMentionable<T extends InteractionResolvedChannel | User | Role = InteractionResolvedChannel | User | Role>(name: string, required?: false): T | undefined;
+    getMentionable<T extends InteractionResolvedChannel | User | Role = InteractionResolvedChannel | User | Role>(name: string, required: true): T;
+    getMentionable(name: string, required?: boolean): InteractionResolvedChannel | User | Role | undefined {
         if (this.resolved === null) {
             throw new Error("Attempt to use getMentionable with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
