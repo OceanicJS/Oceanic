@@ -436,7 +436,7 @@ export enum OAuthScopes {
     RPC_VOICE_WRITE = "rpc.voice.write",
     /** allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval */
     VOICE = "voice",
-    /** this generates a webhook that is returned to the oauth token response for authorization code grants */
+    /** This generates a webhook that is returned in the oauth token response for authorization code grants. */
     WEBHOOK_INCOMING = "webhook.incoming"
 }
 
