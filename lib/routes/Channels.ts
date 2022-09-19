@@ -947,7 +947,7 @@ export default class Channels {
      * Create a thread from an existing message.
      * @param id The ID of the channel to create the thread in.
      * @param messageID The ID of the message to create the thread from.
-     * @param {options The options for starting the thread.
+     * @param options The options for starting the thread.
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
         const reason = options.reason;
