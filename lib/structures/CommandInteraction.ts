@@ -20,8 +20,8 @@ import type {
     ApplicationCommandInteractionResolvedData,
     InteractionContent,
     JSONCommandInteraction,
+    RawInteractionResolvedChannel,
     ModalData,
-    PartialInteractionResolvedChannel,
     RawApplicationCommandInteraction,
     RawMember,
     RawUser,
@@ -61,7 +61,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
         this.channelID = data.channel_id!;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, PartialInteractionResolvedChannel, InteractionResolvedChannel>,
+            channels:    new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>,
             members:     new TypedCollection(Member, client),
             messages:    new TypedCollection(Message, client),
             roles:       new TypedCollection(Role, client),

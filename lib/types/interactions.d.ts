@@ -6,7 +6,7 @@ import type {
     RawMessage,
     ModalActionRow,
     AnyGuildTextChannel,
-    PartialInteractionResolvedChannel
+    RawInteractionResolvedChannel
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -153,7 +153,7 @@ export interface ModalSubmitInteractionData {
 
 export interface RawApplicationCommandInteractionResolvedData {
     attachments?: Record<string, RawAttachment>;
-    channels?: Record<string, PartialInteractionResolvedChannel>;
+    channels?: Record<string, RawInteractionResolvedChannel>;
     members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
     messages?: Record<string, RawMessage>;
     roles?: Record<string, RawRole>;
@@ -162,7 +162,7 @@ export interface RawApplicationCommandInteractionResolvedData {
 
 export interface ApplicationCommandInteractionResolvedData {
     attachments: TypedCollection<string, RawAttachment, Attachment>;
-    channels: TypedCollection<string, PartialInteractionResolvedChannel, InteractionResolvedChannel>;
+    channels: TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>;
     members: TypedCollection<string, RawMember, Member, [guildID: string]>;
     messages: TypedCollection<string, RawMessage, Message>;
     roles: TypedCollection<string, RawRole, Role, [guildID: string]>;

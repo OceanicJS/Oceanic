@@ -84,6 +84,8 @@ export const GuildFeatures = [
     "ANIMATED_ICON",
     "AUTO_MODERATION",
     "BANNER",
+    "BOT_DEVELOPER_EARLY_ACCESS",
+    "COMMUNITY",
     "CREATOR_MONETIZABLE",
     "CREATOR_MONETIZABLE_DISABLED",
     "DISCOVERABLE",
@@ -96,6 +98,7 @@ export const GuildFeatures = [
     "HAS_DIRECTORY_ENTRY",
     "HUB",
     "INCREASED_THREAD_LIMIT",
+    "INTERNAL_EMPLOYEE_ONLY",
     "INVITES_DISABLED",
     "INVITE_SPLASH",
     "LINKED_TO_HUB",
@@ -364,8 +367,6 @@ export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoic
 export enum ChannelFlags {
     /** For threads, if this thread is pinned in a forum channel. */
     PINNED             = 1 << 1,
-    /** @deprecated This was an unofficial name from us. */
-    FORUM_TAG_REQUIRED = 1 << 4,
     /** For forums, if tags are required when creating threads. */
     REQUIRE_TAG = 1 << 4
 }
@@ -436,7 +437,7 @@ export enum OAuthScopes {
     RPC_VOICE_WRITE = "rpc.voice.write",
     /** allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval */
     VOICE = "voice",
-    /** this generates a webhook that is returned to the oauth token response for authorization code grants */
+    /** This generates a webhook that is returned to the oauth token response for authorization code grants. */
     WEBHOOK_INCOMING = "webhook.incoming"
 }
 
@@ -524,8 +525,6 @@ export enum InviteTargetTypes {
 }
 
 export enum GuildScheduledEventPrivacyLevels {
-    /** @deprecated */
-    PUBLIC     = 1,
     GUILD_ONLY = 2
 }
 
@@ -637,11 +636,7 @@ export enum AuditLogActionTypes {
     AUTO_MODERATION_RULE_UPDATE                 = 141,
     AUTO_MODERATION_RULE_DELETE                 = 142,
     AUTO_MODERATION_BLOCK_MESSAGE               = 143,
-    /** @deprecated This was an unofficial name from us. */
-    AUTO_MODERATION_ALERT                       = 144,
     AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
-    /** @deprecated This was an unofficial name from us. */
-    AUTO_MODERATION_TIMEOUT                     = 145,
     AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145
 }
 
@@ -675,8 +670,6 @@ export enum InteractionResponseTypes {
     PONG                                    = 1,
     CHANNEL_MESSAGE_WITH_SOURCE             = 4,
     DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE    = 5,
-    /** @deprecated This was someone falling asleep on their keyboard, apparently. It's here to stay now as a badge of shame that you can all use! */
-    DEFERRED_UPDATE_MESAGE                  = 6,
     DEFERRED_UPDATE_MESSAGE                 = 6,
     UPDATE_MESSAGE                          = 7,
     APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,

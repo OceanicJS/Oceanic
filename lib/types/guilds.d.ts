@@ -179,7 +179,8 @@ export interface RawMember {
     flags?: number;
     /** undocumented */
     is_pending?: boolean;
-    joined_at: string;
+    // this is nullable over gateway
+    joined_at: string | null;
     mute: boolean;
     nick?: string | null;
     pending?: boolean;
@@ -188,7 +189,7 @@ export interface RawMember {
     roles: Array<string>;
     user?: RawUser;
 }
-export type RESTMember = Required<Omit<RawMember, "permissions" | "joined_at">> & { joined_at: string | null; };
+export type RESTMember = Required<Omit<RawMember, "permissions" | "joined_at">> & { joined_at: string; };
 export type InteractionMember = Required<RawMember>;
 
 export interface RawIntegration {
