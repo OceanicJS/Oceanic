@@ -43,7 +43,7 @@ export interface RESTOptions {
      */
     baseURL?: string;
     /**
-     * If the built in latency compensator should be disabled.
+     * If the built-in latency compensator should be disabled.
      * @defaultValue false
      */
     disableLatencyCompensation?: boolean;
@@ -78,7 +78,7 @@ export interface CollectionLimitsOptions {
     /**
      * The maximum number of members to cache. A number to apply to all guilds individually, or a dictionary of guild IDs to member limits. The key `unknown` can be used to set the limit for all guilds not specified.
      *
-     * Note: If you request members from the gateway, this will be increased (on the specific guild) as meeded to accomidate those members.
+     * Note: If you request members from the gateway, this will be increased (on the specific guild) as needed to accommodate those members.
      * @defaultValue Infinity
      */
     members?: number | Record<string, number>;

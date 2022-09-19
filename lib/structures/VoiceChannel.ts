@@ -136,7 +136,7 @@ export default class VoiceChannel extends GuildChannel {
 
     /**
      * Bulk delete messages in this channel.
-     * @param messageIDs The IDs of the messages to delete. Any dupliates or messages older than two weeks will cause an error.
+     * @param messageIDs The IDs of the messages to delete. Any duplicates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(messageIDs: Array<string>, reason?: string): Promise<number> {

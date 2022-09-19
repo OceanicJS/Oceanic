@@ -85,7 +85,7 @@ export default class Interactions {
     }
 
     /**
-     * Delete a follow up message.
+     * Delete a follow-up message.
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.

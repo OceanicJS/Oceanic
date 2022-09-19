@@ -97,7 +97,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     }
 
     /**
-     * [Text] Convert this text channel to a announcement channel.
+     * [Text] Convert this text channel to an announcement channel.
      *
      * [Announcement] Convert this announcement channel to a text channel.
      */
@@ -141,7 +141,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 
     /**
      * Bulk delete messages in this channel.
-     * @param messageIDs The IDs of the messages to delete. Any dupliates or messages older than two weeks will cause an error.
+     * @param messageIDs The IDs of the messages to delete. Any duplicates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(messageIDs: Array<string>, reason?: string): Promise<number> {

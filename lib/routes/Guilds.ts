@@ -128,7 +128,7 @@ export default class Guilds {
     }
 
     /**
-     * Begine a prune.
+     * Begin a prune.
      * @param id The ID of the guild.
      * @param options The options for the prune.
      */
@@ -589,7 +589,7 @@ export default class Guilds {
     /**
      * Edit the positions of channels in a guild.
      * @param id The ID of the guild.
-     * @param options The channels to move. Unedited channels do not need to be specifed.
+     * @param options The channels to move. Unedited channels do not need to be specified.
      */
     async editChannelPositions(id: string, options: Array<ModifyChannelPositionsEntry>): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -1028,15 +1028,15 @@ export default class Guilds {
         };
 
         const limit = options?.limit ?? 1000;
-        let choosenOption: "after" | "before";
+        let chosenOption: "after" | "before";
         if (options?.after) {
-            choosenOption = "after";
+            chosenOption = "after";
         } else if (options?.before) {
-            choosenOption = "before";
+            chosenOption = "before";
         } else {
-            choosenOption = "after";
+            chosenOption = "after";
         }
-        let optionValue = options?.[choosenOption] ?? undefined;
+        let optionValue = options?.[chosenOption] ?? undefined;
 
         let bans: Array<Ban> = [];
         while (bans.length < limit) {
@@ -1044,8 +1044,8 @@ export default class Guilds {
             const limitToFetch = limitLeft <= 1000 ? limitLeft : 1000;
             this.#manager.client.emit("debug", `Getting ${limitLeft} more ban${limitLeft === 1 ? "" : "s"} for ${id}: ${optionValue ?? ""}`);
             const bansChunk = await _getBans({
-                limit:           limitToFetch,
-                [choosenOption]: optionValue
+                limit:          limitToFetch,
+                [chosenOption]: optionValue
             });
 
             if (bansChunk.length === 0) {

@@ -56,7 +56,7 @@ export default class Collection<K, V> extends Map<K, V> {
     }
 
     /**
-     * Get the last element, or kast X elements if a number is provided.
+     * Get the last element, or last X elements if a number is provided.
      * @param amount The amount of elements to get.
      */
     last(): V | undefined;

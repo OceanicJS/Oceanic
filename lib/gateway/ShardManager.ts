@@ -5,7 +5,7 @@ import { AllIntents, AllNonPrivilegedIntents, Intents } from "../Constants";
 import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gateway";
 import Collection from "../util/Collection";
 
-/** A manager for all of the client's shards. */
+/** A manager for all the client's shards. */
 export default class ShardManager extends Collection<number, Shard> {
     #buckets: Record<number, number>;
     #client: Client;

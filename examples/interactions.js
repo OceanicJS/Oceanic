@@ -50,7 +50,7 @@ client.on("interactionCreate", async(interaction) => {
                     break;
                 }
 
-                // User application commands are shown in the context menu when right clicking on users
+                // User application commands are shown in the context menu when right-clicking on users
                 // `data` will have a target (and targetID) property with the user that the command was executed on
                 // These don't have options
                 case ApplicationCommandTypes.USER: {
@@ -65,7 +65,7 @@ client.on("interactionCreate", async(interaction) => {
                     break;
                 }
 
-                // Message application commands are shown in the context menu when right clicking on  essages
+                // Message application commands are shown in the context menu when right-clicking on messages
                 // `data` will have a target (and targetID) property with the message that the command was executed on
                 // Same as user commands, these don't have options
                 case ApplicationCommandTypes.MESSAGE: {
@@ -103,7 +103,7 @@ client.on("interactionCreate", async(interaction) => {
                     });
                 }
             } else if(interaction.data.componentType === ComponentTypes.SELECT_MENU) {
-                // The `values` property under data contains all of the selected values
+                // The `values` property under data contains all the selected values
                 await interaction.createFollowup({
                     content: `You selected: **${interaction.data.values.join("**, **")}**`
                 });
@@ -151,7 +151,7 @@ client.on("interactionCreate", async(interaction) => {
             // this will correspond with the customID you provided when creating the modal
             switch(interaction.data.customID) {
                 case "test-modal": {
-                    // the `components` property under data contains all of the components that were submitted
+                    // the `components` property under data contains all the components that were submitted
                     // https://docs.oceanic.ws/latest/interfaces/Types_Channels.ModalActionRow.html
                     console.log(interaction.data.components);
                     break;

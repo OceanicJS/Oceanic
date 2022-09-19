@@ -204,7 +204,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
         }
         if (data.content !== undefined) {
             this.content = data.content;
-            this.mentions.channels = (data.content.match(/<#[\d]{17,21}>/g) ?? []).map(mention => mention.slice(2, -1));
+            this.mentions.channels = (data.content.match(/<#\d{17,21}>/g) ?? []).map(mention => mention.slice(2, -1));
         }
         if (data.edited_timestamp !== undefined) {
             this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
@@ -304,7 +304,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     }
 
     /**
-     * Crosspost this message in a announcement channel.
+     * Crosspost this message in an announcement channel.
      */
     async crosspost(): Promise<Message<T>> {
         return this.client.rest.channels.crosspostMessage<T>(this.channelID, this.id);
@@ -352,7 +352,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
      * @param options The options for editing the message.
      */
     async edit(options: EditMessageOptions):  Promise<Message<T>> {
-        return this.client.rest.channels.editMessage(this.channelID, this.id, options) as Promise<Message<T>>;
+        return this.client.rest.channels.editMessage<T>(this.channelID, this.id, options);
     }
 
     /**

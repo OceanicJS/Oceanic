@@ -134,7 +134,7 @@ export default class ComponentInteraction<T extends AnyTextChannel | Uncached = 
     }
 
     /**
-     * Defer this interaction with a `DEFERRED_UPDATE_MESAGE` response.. This is an initial response, and more than one initial response cannot be used.
+     * Defer this interaction with a `DEFERRED_UPDATE_MESSAGE` response. This is an initial response, and more than one initial response cannot be used.
      * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
     async deferUpdate(flags?: number): Promise<void> {
@@ -142,11 +142,11 @@ export default class ComponentInteraction<T extends AnyTextChannel | Uncached = 
             throw new Error("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
-        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESAGE, data: { flags } });
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESSAGE, data: { flags } });
     }
 
     /**
-     * Delete a follow up message.
+     * Delete a follow-up message.
      * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID: string): Promise<void> {

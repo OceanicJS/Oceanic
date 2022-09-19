@@ -18,7 +18,7 @@ interface GatewayOptions {
      */
     compress?: boolean;
     /**
-     * he concurrency for shard connections. If you don't know what this is, don't mess with it. Only bots in >150,000 servers can use any non-default value.
+     * The concurrency for shard connections. If you don't know what this is, don't mess with it. Only bots in >150,000 servers can use any non-default value.
      * @defaultValue 1
      */
     concurrency?: number | "auto";
@@ -92,7 +92,7 @@ interface GatewayOptions {
      * @defaultValue 1
      */
     maxShards?: number | "auto";
-    /** The intiial presence to use when connecting. */
+    /** The initial presence to use when connecting. */
     presence?: UpdatePresenceOptions;
     /**
      * A function to calculate the delay between reconnect attempts.
@@ -100,7 +100,7 @@ interface GatewayOptions {
      */
     reconnectDelay?: ReconnectDelayFunction;
     /**
-     * If exisitng voice connections should be populated. This will disconnect connections from other sessions.
+     * If existing voice connections should be populated. This will disconnect connections from other sessions.
      * @defaultValue false
      */
     seedVoiceConnections?: boolean;
@@ -173,7 +173,7 @@ export interface RequestGuildMembersOptions {
 
 export type MutualStatuses = "online" | "dnd" | "idle";
 export type SendStatuses = MutualStatuses | "invisible";
-export type RecieveStatuses = MutualStatuses | "offline";
+export type ReceiveStatuses = MutualStatuses | "offline";
 
 export interface UpdatePresenceOptions {
     /** An array of activities. */
@@ -225,7 +225,7 @@ export interface PresenceUpdate {
     activities?: Array<Activity>;
     client_status: ClientStatus;
     guild_id: string;
-    status: RecieveStatuses;
+    status: ReceiveStatuses;
     user: { id: string; } & Partial<Omit<RawUser, "id">>;
 }
 export type Presence = Omit<PresenceUpdate, "user">;

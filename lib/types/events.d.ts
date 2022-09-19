@@ -67,7 +67,7 @@ export interface ClientEvents {
     autoModerationRuleCreate: [rule: AutoModerationRule];
     /** @event Emitted when an auto moderation rule is deleted. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleDelete: [rule: AutoModerationRule];
-    /** @event Emitted when an auto moderaiton rule is updated. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
+    /** @event Emitted when an auto moderation rule is updated. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleUpdate: [rule: AutoModerationRule, oldRule: JSONAutoModerationRule | null];
     /** @event Emitted when a channel is created. Requires the `GUILDS` intent. */
     channelCreate: [channel: AnyGuildChannelWithoutThreads];
@@ -85,7 +85,7 @@ export interface ClientEvents {
     disconnect: [];
     /** @event Emitted when an error happens. */
     error: [info: Error | string, shard?: number];
-    /** @event Emitted when a guild becoms available. Requires the `GUILDS` intent. */
+    /** @event Emitted when a guild becomes available. Requires the `GUILDS` intent. */
     guildAvailable: [guild: Guild];
     /** @event Emitted when a guild ban is created. Requires the `GUILD_BANS` intent. */
     guildBanAdd: [guild: Guild | Uncached, user: User];
@@ -97,7 +97,7 @@ export interface ClientEvents {
     guildDelete: [guild: Guild | Uncached];
     /** @event Emitted when a guild's emojis are updated. Requires the `GUILD_EMOJIS_AND_STICKERS` intent. */
     guildEmojisUpdate: [guild: Guild | Uncached, emojis: Array<GuildEmoji>, oldEmojis: Array<GuildEmoji> | null];
-    /** @event Emitted when a guild's integrations are updated. Requires the `GUILD_INTEGRATOPMS` intent. */
+    /** @event Emitted when a guild's integrations are updated. Requires the `GUILD_INTEGRATIONS` intent. */
     guildIntegrationsUpdate: [guild: Guild | Uncached];
     /** @event Emitted when a member joins a guild. Requires the `GUILD_MEMBERS` intent. */
     guildMemberAdd: [member: Member];

@@ -117,9 +117,9 @@ export default class Guild extends Base {
     application?: ClientApplication | null;
     /** The ID of the application that created this guild, if applicable. */
     applicationID: string | null;
-    /** The approximate number of members in this guild (if retreived with counts). */
+    /** The approximate number of members in this guild (if retrieved with counts). */
     approximateMemberCount?: number;
-    /** The approximate number of non-offline members in this guild (if retreived with counts). */
+    /** The approximate number of non-offline members in this guild (if retrieved with counts). */
     approximatePresenceCount?: number;
     /** The auto moderation rules in this guild. */
     autoModerationRules: TypedCollection<string, RawAutoModerationRule, AutoModerationRule>;
@@ -213,13 +213,13 @@ export default class Guild extends Base {
     unavailable: boolean;
     /** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
     vanityURLCode: string | null;
-    /** The [verfication level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
+    /** The [verification level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
     /** The voice states of members in voice channels. */
     voiceStates: TypedCollection<string, RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
     welcomeScreen?: WelcomeScreen;
-    /** The the channel the widget will generate an invite to, or `null` if set to no invite. */
+    /** The channel the widget will generate an invite to, or `null` if set to no invite. */
     widgetChannel?: Exclude<AnyGuildChannel, CategoryChannel> | null;
     /** The id of the channel the widget will generate an invite to, or `null` if set to no invite. */
     widgetChannelID: string | null;
@@ -380,7 +380,7 @@ export default class Guild extends Base {
             }
             this.members.limit = limit;
         }
-        this.client.emit("debug", `The limit of the members collection of guild ${this.id} has been updated from ${original} to ${this.members.limit} to accomidate at least ${toAdd === true ? this.memberCount : this.members.size + toAdd} members.`);
+        this.client.emit("debug", `The limit of the members collection of guild ${this.id} has been updated from ${original} to ${this.members.limit} to accommodate at least ${toAdd === true ? this.memberCount : this.members.size + toAdd} members.`);
     }
 
     protected update(data: Partial<RawGuild>): void {
@@ -595,7 +595,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Begine a prune.
+     * Begin a prune.
      * @param options The options for the prune.
      */
     async beginPrune(options?: BeginPruneOptions): Promise<number | null> {
@@ -747,7 +747,7 @@ export default class Guild extends Base {
 
     /**
      * Edit the positions of channels in this guild.
-     * @param options The channels to move. Unedited channels do not need to be specifed.
+     * @param options The channels to move. Unedited channels do not need to be specified.
      */
     async editChannelPositions(options: Array<ModifyChannelPositionsEntry>): Promise<void> {
         return this.client.rest.guilds.editChannelPositions(this.id, options);

@@ -253,7 +253,7 @@ export default class Channels {
     /**
      * Bulk delete messages.
      * @param id The ID of the channel to delete the messages in.
-     * @param messageIDs The IDs of the messages to delete. Any dupliates or messages older than two weeks will cause an error.
+     * @param messageIDs The IDs of the messages to delete. Any duplicates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      */
     async deleteMessages(id: string, messageIDs: Array<string>, reason?: string): Promise<number> {
@@ -576,17 +576,17 @@ export default class Channels {
         };
 
         const limit = options?.limit ?? 100;
-        let choosenOption: "after" | "around" | "before";
+        let chosenOption: "after" | "around" | "before";
         if (options?.after) {
-            choosenOption = "after";
+            chosenOption = "after";
         } else if (options?.around) {
-            choosenOption = "around";
+            chosenOption = "around";
         } else if (options?.before) {
-            choosenOption = "before";
+            chosenOption = "before";
         } else {
-            choosenOption = "before";
+            chosenOption = "before";
         }
-        let optionValue = options?.[choosenOption] ?? undefined;
+        let optionValue = options?.[chosenOption] ?? undefined;
 
         let messages: Array<Message<T>> = [];
         while (messages.length < limit) {
@@ -596,8 +596,8 @@ export default class Channels {
                 this.#manager.client.emit("debug", `Getting ${limitLeft} more message${limitLeft === 1 ? "" : "s"} for ${id}: ${optionValue ?? ""}`);
             }
             const messagesChunk = await _getMessages({
-                limit:           limitToFetch,
-                [choosenOption]: optionValue
+                limit:          limitToFetch,
+                [chosenOption]: optionValue
             });
 
             if (messagesChunk.length === 0) {
@@ -606,7 +606,7 @@ export default class Channels {
 
             messages = messages.concat(messagesChunk);
 
-            if (choosenOption === "around") {
+            if (chosenOption === "around") {
                 break;
             } else {
                 optionValue = messages.at(-1)!.id;
@@ -824,24 +824,24 @@ export default class Channels {
         const filter = options.filter?.bind(this) ?? ((): true => true);
 
         const messageIDsToPurge: Array<string> = [];
-        let choosenOption: "after" | "around" | "before";
+        let chosenOption: "after" | "around" | "before";
         if (options.after) {
-            choosenOption = "after";
+            chosenOption = "after";
         } else if (options.around) {
-            choosenOption = "around";
+            chosenOption = "around";
         } else if (options.before) {
-            choosenOption = "before";
+            chosenOption = "before";
         } else {
-            choosenOption = "before";
+            chosenOption = "before";
         }
-        let optionValue = options[choosenOption] ?? undefined;
+        let optionValue = options[chosenOption] ?? undefined;
 
         let finishedFetchingMessages = false;
         let limitWasReach = false;
         const addMessageIDsToPurgeBatch = async (): Promise<void> => {
             const messages = await this.getMessages(id, {
-                limit:           100,
-                [choosenOption]: optionValue
+                limit:          100,
+                [chosenOption]: optionValue
             });
 
             if (messages.length === 0) {
@@ -849,7 +849,7 @@ export default class Channels {
                 return;
             }
 
-            if (choosenOption === "around") {
+            if (chosenOption === "around") {
                 finishedFetchingMessages = true;
             } else {
                 optionValue = messages.at(-1)!.id;
@@ -947,7 +947,7 @@ export default class Channels {
      * Create a thread from an existing message.
      * @param id The ID of the channel to create the thread in.
      * @param messageID The ID of the message to create the thread from.
-     * @param {options The options for starting the thread.
+     * @param options The options for starting the thread.
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
         const reason = options.reason;

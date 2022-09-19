@@ -184,7 +184,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
     }
 
     /**
-     * Delete a follow up message.
+     * Delete a follow-up message.
      * @param messageID The ID of the message.
      */
     async deleteFollowup(messageID: string): Promise<void> {

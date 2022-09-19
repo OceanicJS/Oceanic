@@ -37,7 +37,7 @@ export default class Application extends ClientApplication {
     ownerID: string;
     /** If this application is a game sold on Discord, the id of the Game's SKU. */
     primarySKUID?: string;
-    /** A url to this application's privacy policy. */
+    /** A URL to this application's privacy policy. */
     privacyPolicyURL?: string;
     /** A list of rpc origin urls, if rpc is enabled. */
     rpcOrigins: Array<string>;
@@ -47,7 +47,7 @@ export default class Application extends ClientApplication {
     tags?: Array<string>;
     /** The team that owns this application, if any. */
     team: Team | null;
-    /** A url to this application's terms of service. */
+    /** A URL to this application's terms of service. */
     termsOfServiceURL?: string;
     /** The bot's hex encoded public key. */
     verifyKey: string;

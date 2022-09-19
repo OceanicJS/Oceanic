@@ -436,7 +436,7 @@ export enum OAuthScopes {
     RPC_VOICE_WRITE = "rpc.voice.write",
     /** allows your app to connect to voice on user's behalf and see all the voice members - requires Discord approval */
     VOICE = "voice",
-    /** this generates a webhook that is returned in the oauth token response for authorization code grants */
+    /** This generates a webhook that is returned in the oauth token response for authorization code grants. */
     WEBHOOK_INCOMING = "webhook.incoming"
 }
 
@@ -675,7 +675,9 @@ export enum InteractionResponseTypes {
     PONG                                    = 1,
     CHANNEL_MESSAGE_WITH_SOURCE             = 4,
     DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE    = 5,
+    /** @deprecated This was someone falling asleep on their keyboard, apparently. It's here to stay now as a badge of shame that you can all use! */
     DEFERRED_UPDATE_MESAGE                  = 6,
+    DEFERRED_UPDATE_MESSAGE                 = 6,
     UPDATE_MESSAGE                          = 7,
     APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
     MODAL                                   = 9
