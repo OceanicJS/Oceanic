@@ -45,7 +45,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     options?: Array<ApplicationCommandOptions>;
     /** The [type](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types) of this command. */
     type: T;
-    /** AutoIncrementing version identifier updated during substantial record changes. */
+    /** Auto-incrementing version identifier updated during substantial record changes. */
     version: string;
     constructor(data: RawApplicationCommand, client: Client) {
         super(data.id, client);
