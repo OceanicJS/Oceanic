@@ -209,7 +209,7 @@ export default class Webhooks {
     }
 
     /**
-     * Execute a gitHub compatible webhook.
+     * Execute a GitHub compatible webhook.
      * @param id The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options to send. See GitHub's documentation for more information.
