@@ -227,7 +227,7 @@ T extends ApplicationCommandTypes.CHAT_INPUT ? EditChatInputApplicationCommandOp
 
 
 export interface GetApplicationCommandOptions {
-    /** The [locale](https://discord.com/developers/docs/reference#locales) to recieve localized responses for (`descriptionLocalized`, `nameLocalized`). If no localization for the locale is present, the properties will not be present. */
+    /** The [locale](https://discord.com/developers/docs/reference#locales) to receive localized responses for (`descriptionLocalized`, `nameLocalized`). If no localization for the locale is present, the properties will not be present. */
     locale?: string;
     /** If localizations should be included. */
     withLocalizations?: boolean;

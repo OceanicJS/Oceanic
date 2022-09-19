@@ -16,7 +16,7 @@ client.on("ready", () => {
     const voiceConnection = client.joinVoiceChannel({
         channelID: "1005489770849382443", // The ID of the channel to connect to
         guildID: "1005489770278953112", // The ID of the guild the channel belongs to
-        selfDeaf: true, // Whether our client joins defeaned
+        selfDeaf: true, // Whether our client joins deafened
         selfMute: false, // Whether our client joins muted
         voiceAdapterCreator: guild.voiceAdapterCreator // The voiceAdapterCreator the guild provides
     })

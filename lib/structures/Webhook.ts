@@ -22,9 +22,9 @@ import type { JSONWebhook } from "../types/json";
 
 /** Represents a webhook. */
 export default class Webhook extends Base {
-    /** The application associatd with this webhook. */
+    /** The application associated with this webhook. */
     application?: ClientApplication | null;
-    /** The ID of the application associatd with this webhook. */
+    /** The ID of the application associated with this webhook. */
     applicationID: string | null;
     /** The hash of this webhook's avatar. */
     avatar: string | null;
@@ -164,8 +164,8 @@ export default class Webhook extends Base {
     }
 
     /**
-     * Execute this webhook as github compatible.
-     * @param options The options to send. See Github's documentation for more information.
+     * Execute this webhook as GitHub compatible.
+     * @param options The options to send. See GitHub's documentation for more information.
      * @param token The token for the webhook, if not already present.
      */
     async executeGithub(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;

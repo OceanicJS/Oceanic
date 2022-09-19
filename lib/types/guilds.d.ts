@@ -483,7 +483,7 @@ export interface Ban {
 }
 
 export interface CreateBanOptions {
-    /** The number of days to delete messages from. Technically DEPRECTED. This is internally converted in to `deleteMessageSeconds`. */
+    /** The number of days to delete messages from. Technically DEPRECATED. This is internally converted in to `deleteMessageSeconds`. */
     deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /** The number of seconds to delete messages from. Takes precedence over `deleteMessageDays`. */
     deleteMessageSeconds?: number;

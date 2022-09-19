@@ -49,7 +49,7 @@ export default class RequestHandler {
     }
 
     private getRoute(path: string, method: string): string {
-        let route = path.replace(/\/([a-z-]+)\/(?:[\d]{15,21})/g, function(match, p) {
+        let route = path.replace(/\/([a-z-]+)\/\d{15,21}/g, function(match, p) {
             return p === "channels" || p === "guilds" || p === "webhooks" ? match : `/${p as string}/:id`;
         }).replace(/\/reactions\/[^/]+/g, "/reactions/:id").replace(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/, "/webhooks/$1/:token");
         if (method === "DELETE" && route.endsWith("/messages/:id")) {

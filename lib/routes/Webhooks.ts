@@ -92,7 +92,7 @@ export default class Webhooks {
     /**
      * Edit a webhook.
      * @param id The ID of the webhook.
-     * @param options The options tofor editing the webhook.
+     * @param options The options for editing the webhook.
      */
     async edit(id: string, options: EditWebhookOptions): Promise<Webhook> {
         const reason = options.reason;
@@ -209,10 +209,10 @@ export default class Webhooks {
     }
 
     /**
-     * Execute a github compabible webhook.
+     * Execute a gitHub compatible webhook.
      * @param id The ID of the webhook.
      * @param token The token of the webhook.
-     * @param options The options to send. See Github's documentation for more information.
+     * @param options The options to send. See GitHub's documentation for more information.
      */
     async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
     async executeGithub<T extends AnyTextChannel | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
@@ -234,7 +234,7 @@ export default class Webhooks {
     }
 
     /**
-     * Execute a slack compabible webhook.
+     * Execute a slack compatible webhook.
      * @param id The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.

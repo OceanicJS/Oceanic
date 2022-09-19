@@ -124,7 +124,7 @@ export default class ApplicationCommands {
     /**
      * Delete a global application command.
      * @param applicationID The ID of the application.
-     * @param commandID The ID ID the command to delete.
+     * @param commandID The ID the command to delete.
      */
     async deleteGlobalCommand(applicationID: string, commandID: string): Promise<void> {
         await this.#manager.authRequest<null>({

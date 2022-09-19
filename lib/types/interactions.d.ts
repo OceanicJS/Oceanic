@@ -50,7 +50,7 @@ export interface MessageInteractionResponse {
 export interface DeferredInteractionResponse {
     /** The response data. Only [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) can be sent. */
     data?: { flags?: number; };
-    type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESAGE;
+    type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESSAGE;
 }
 
 export interface AutocompleteInteractionResponse {
