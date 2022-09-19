@@ -25,7 +25,7 @@ import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions, SortOrderModes } from "../Constants";
 
-/** Represents a forum channel. Documentation for these are currently scarce, so they may not work entirely correctly. */
+/** Represents a forum channel. Documentation for these is currently scarce, so they may not work entirely correctly. */
 export default class ForumChannel extends GuildChannel {
     /** The usable tags for threads. */
     availableTags: Array<ForumTag>;
