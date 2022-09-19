@@ -42,7 +42,7 @@ import * as Routes from "../util/Routes";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
-    private readonly _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**

@@ -21,7 +21,7 @@ import * as Routes from "../util/Routes";
 export default class RESTManager {
     applicationCommands: ApplicationCommands;
     channels: Channels;
-    readonly #client: Client;
+    #client: Client;
     guilds: Guilds;
     handler: RequestHandler;
     interactions: Interactions;

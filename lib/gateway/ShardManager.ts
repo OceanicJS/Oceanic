@@ -7,11 +7,12 @@ import Collection from "../util/Collection";
 
 /** A manager for all the client's shards. */
 export default class ShardManager extends Collection<number, Shard> {
-    readonly #buckets: Record<number, number>;
-    readonly #client: Client;
-    readonly #connectQueue: Array<Shard>;
+    #buckets: Record<number, number>;
+    #client: Client;
+    #connectQueue: Array<Shard>;
     #connectTimeout: NodeJS.Timeout | null;
     options: ShardManagerInstanceOptions;
+
     constructor(client: Client, options: GatewayOptions = {}) {
         super();
         this.#buckets = {};

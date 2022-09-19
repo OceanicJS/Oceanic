@@ -10,7 +10,7 @@ import type { JSONScheduledEvent, RawScheduledEvent, ScheduledEventEntityMetadat
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
-    private readonly _guild?: Guild;
+    private _guild?: Guild;
     /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     channel?: StageChannel | null;
     /** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */

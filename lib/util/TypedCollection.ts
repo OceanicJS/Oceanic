@@ -8,9 +8,10 @@ export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Clie
 /** This is an internal class, you should not use it in your projects. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class TypedCollection<K extends string | number, M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends Collection<K, C> {
-    readonly #baseObject: AnyClass<M, C, E>;
-    readonly #client: Client;
+    #baseObject: AnyClass<M, C, E>;
+    #client: Client;
     limit: number;
+
     constructor(baseObject: AnyClass<M, C, E>, client: Client, limit = Infinity) {
         super();
         if (!(baseObject.prototype instanceof Base)) {

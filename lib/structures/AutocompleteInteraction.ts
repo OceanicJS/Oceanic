@@ -22,7 +22,7 @@ import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 
 /** Represents an autocomplete interaction. */
 export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
-    private readonly _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The channel this interaction was sent from. */

@@ -14,7 +14,7 @@ import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Co
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
-    private readonly _guild?: Guild;
+    private _guild?: Guild;
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
     /** The creator of this rule. */
