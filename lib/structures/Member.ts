@@ -53,7 +53,7 @@ export default class Member extends Base {
         if (!data.user && data.id) {
             user = client.users.get(id = data.id);
         } else if (data.user) {
-            id = (user  = client.users.update(data.user)).id;
+            id = (user = client.users.update(data.user)).id;
         }
         if (!user) {
             throw new Error(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
