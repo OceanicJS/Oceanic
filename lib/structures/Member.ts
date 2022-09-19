@@ -121,6 +121,10 @@ export default class Member extends Base {
     get discriminator(): string {
         return this.user.discriminator;
     }
+    /** The nick of this member if set, or the username of this member's user. */
+    get displayName(): string {
+        return this.nick ?? this.username;
+    }
     /** The guild this member is for. This will throw an error if the guild is not cached. */
     get guild(): Guild {
         if (!this._guild) {
@@ -135,7 +139,10 @@ export default class Member extends Base {
     }
     /** The permissions of this member. */
     get permissions(): Permission {
-        return this.guild.permissionsOf(this);
+        if (!this._guild) {
+            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
+        }
+        return this._guild.permissionsOf(this);
     }
     /** The user associated with this member's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     get publicFlags(): number {
@@ -145,17 +152,17 @@ export default class Member extends Base {
     get system(): boolean {
         return this.user.system;
     }
-    /** a combination of the user associated with this member's username and discriminator. */
+    /** A combination of the user associated with this member's username and discriminator. */
     get tag(): string {
         return this.user.tag;
     }
-    /** The user associated ith this member's username. */
+    /** The username associated with this member's user. */
     get username(): string {
         return this.user.username;
     }
     /** The voice state of this member. */
     get voiceState(): VoiceState | null {
-        return this.guild instanceof Guild ? this.guild.voiceStates.get(this.id) ?? null : null;
+        return this._guild ? this._guild.voiceStates.get(this.id) ?? null : null;
     }
 
     /**
