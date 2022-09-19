@@ -4,30 +4,31 @@ import type TextChannel from "./TextChannel";
 import Permission from "./Permission";
 import Channel from "./Channel";
 import type ForumChannel from "./ForumChannel";
-import { GuildChannelTypes } from "../Constants";
+import PrivateChannel from "./PrivateChannel";
+import { ChannelTypes, GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { PartialInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildTextChannel } from "../types/channels";
+import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildChannel } from "../types/channels";
 
-/** Represents a channel from an interaction option. */
+/** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
     /** The permissions the bot has in the channel. */
-    appPermissions: Permission;
+    appPermissions?: Permission;
     /** The complete channel this channel option represents, if it's cached. */
-    completeChannel?: AnyGuildTextChannel;
+    completeChannel?: AnyGuildChannel | PrivateChannel;
     /** The name of this channel. */
-    name: string;
+    name: string | null;
     /** The parent of this channel, if this represents a thread. */
     parent?: TextChannel | AnnouncementChannel | ForumChannel | null;
     /** The ID of the parent of this channel, if this represents a thread. */
     parentID: string | null;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this channel, if this represents a thread. */
     threadMetadata: ThreadMetadata | PrivateThreadMetadata | null;
-    declare type: GuildChannelTypes;
-    constructor(data: PartialInteractionResolvedChannel, client: Client) {
+    declare type: GuildChannelTypes | ChannelTypes.DM;
+    constructor(data: RawInteractionResolvedChannel, client: Client) {
         super(data, client);
-        this.appPermissions = new Permission(data.permissions);
+        this.appPermissions = data.permissions ? new Permission(data.permissions) : undefined;
         this.name = data.name;
-        this.completeChannel = client.getChannel<AnyGuildTextChannel>(data.id);
+        this.completeChannel = client.getChannel<AnyGuildChannel | PrivateChannel>(data.id);
         this.parent = data.parent_id ? client.getChannel<TextChannel | AnnouncementChannel>(data.parent_id) : null;
         this.parentID = data.parent_id ?? null;
         this.threadMetadata = data.thread_metadata ? {
