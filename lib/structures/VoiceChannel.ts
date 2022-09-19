@@ -7,11 +7,6 @@ import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
 import Invite from "./Invite";
 import User from "./User";
-import type { JoinVoiceChannelOptions } from "../types/voice";
-import type { ChannelTypes, VideoQualityModes } from "../Constants";
-import { AllPermissions, Permissions } from "../Constants";
-import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
 import type {
     CreateInviteOptions,
     CreateMessageOptions,
@@ -20,13 +15,18 @@ import type {
     EditVoiceChannelOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
+    JoinVoiceChannelOptions,
+    JSONVoiceChannel,
+    PurgeOptions,
+    RawMember,
     RawMessage,
     RawOverwrite,
-    RawVoiceChannel,
-    PurgeOptions
-} from "../types/channels";
-import type { RawMember } from "../types/guilds";
-import type { JSONVoiceChannel } from "../types/json";
+    RawVoiceChannel
+} from "../types";
+import type { ChannelTypes, VideoQualityModes } from "../Constants";
+import { AllPermissions, Permissions } from "../Constants";
+import type Client from "../Client";
+import TypedCollection from "../util/TypedCollection";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";

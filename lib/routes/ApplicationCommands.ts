@@ -5,18 +5,18 @@ import type {
     ApplicationCommandOptionConversion,
     CreateApplicationCommandOptions,
     CreateChatInputApplicationCommandOptions,
+    CreateGuildApplicationCommandOptions,
     EditApplicationCommandOptions,
     EditApplicationCommandPermissionsOptions,
     EditChatInputApplicationCommandOptions,
-    RESTGuildApplicationCommandPermissions,
+    EditGuildApplicationCommandOptions,
+    GetApplicationCommandOptions,
     RawApplicationCommand,
     RawGuildApplicationCommandPermissions,
-    CreateGuildApplicationCommandOptions,
-    EditGuildApplicationCommandOptions,
-    GetApplicationCommandOptions
-} from "../types/application-commands";
+    RequestOptions,
+    RESTGuildApplicationCommandPermissions
+} from "../types";
 import ApplicationCommand from "../structures/ApplicationCommand";
-import type { RequestOptions } from "../types/request-handler";
 import type RESTManager from "../rest/RESTManager";
 
 /** Various methods for interacting with application commands. */

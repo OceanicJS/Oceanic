@@ -9,11 +9,11 @@ import type {
     ApplicationCommandOptionConversion,
     ApplicationCommandOptions,
     EditApplicationCommandPermissionsOptions,
+    JSONApplicationCommand,
     RawApplicationCommand,
     RESTGuildApplicationCommandPermissions,
     TypeToEdit
-} from "../types/application-commands";
-import type { JSONApplicationCommand } from "../types/json";
+} from "../types";
 
 /** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {

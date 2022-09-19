@@ -11,25 +11,25 @@ import {
 } from "../Constants";
 import type {
     AllowedMentions,
+    AnyChannel,
+    AnyGuildChannelWithoutThreads,
+    AnyThreadChannel,
     ApplicationCommandOptions,
     CombinedApplicationCommandOption,
+    Embed,
+    EmbedOptions,
     MessageActionRow,
     ModalActionRow,
     RawAllowedMentions,
     RawApplicationCommandOption,
+    RawChannel,
+    RawEmbed,
+    RawEmbedOptions,
+    RawGuildChannel,
     RawMember,
     RawMessageActionRow,
     RawModalActionRow,
-    EmbedOptions,
-    RawEmbedOptions,
-    Embed,
-    RawEmbed,
     RawThreadChannel,
-    AnyThreadChannel,
-    RawGuildChannel,
-    AnyGuildChannelWithoutThreads,
-    RawChannel,
-    AnyChannel,
     RESTMember
 } from "../types";
 import Member from "../structures/Member";
@@ -38,7 +38,7 @@ import Channel from "../structures/Channel";
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
     static BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
-    #client: Client;
+    readonly #client: Client;
 
     constructor(client: Client) {
         this.#client = client;

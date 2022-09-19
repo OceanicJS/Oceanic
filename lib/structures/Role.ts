@@ -3,12 +3,11 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
 import type Client from "../Client";
-import type { RawRole, RoleTags, EditRoleOptions } from "../types/guilds";
-import type { JSONRole } from "../types/json";
+import type { EditRoleOptions, JSONRole, RawRole, RoleTags } from "../types";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
-    private _guild?: Guild;
+    protected _guild?: Guild;
     /** The color of this role. */
     color: number;
     /** The id of the guild this role is in. */

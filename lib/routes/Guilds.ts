@@ -1,75 +1,79 @@
 /** @module Routes/Guilds */
 import type {
+    AddMemberOptions,
+    AnyGuildChannelWithoutThreads,
+    AuditLog,
+    Ban,
+    BeginPruneOptions,
+    CreateAutoModerationRuleOptions,
+    CreateBanOptions,
+    CreateChannelOptions,
+    CreateChannelReturn,
     CreateEmojiOptions,
+    CreateGuildFromTemplateOptions,
     CreateGuildOptions,
+    CreateRoleOptions,
+    CreateScheduledEventOptions,
+    CreateTemplateOptions,
+    EditAutoModerationRuleOptions,
+    EditCurrentMemberOptions,
+    EditCurrentUserVoiceStateOptions,
     EditEmojiOptions,
     EditGuildOptions,
+    EditGuildTemplateOptions,
+    EditMemberOptions,
+    EditMFALevelOptions,
+    EditRoleOptions,
+    EditRolePositionsEntry,
+    EditScheduledEventOptions,
+    EditUserVoiceStateOptions,
+    EditWelcomeScreenOptions,
+    GetActiveThreadsResponse,
+    GetAuditLogOptions,
+    GetBansOptions,
+    GetMembersOptions,
+    GetPruneCountOptions,
+    GetScheduledEventUsersOptions,
+    GetVanityURLResponse,
     GuildEmoji,
+    InviteChannel,
     ModifyChannelPositionsEntry,
+    PartialInviteChannel,
+    RawAuditLog,
+    RawAutoModerationRule,
+    RawBan,
     RawGuild,
+    RawGuildChannel,
     RawGuildEmoji,
     RawGuildPreview,
-    GetActiveThreadsResponse,
-    GetMembersOptions,
-    SearchMembersOptions,
-    AddMemberOptions,
-    EditMemberOptions,
-    EditCurrentMemberOptions,
-    GetBansOptions,
-    RawBan,
-    Ban,
-    CreateBanOptions,
-    RawRole,
-    CreateRoleOptions,
-    EditRolePositionsEntry,
-    EditRoleOptions,
-    GetPruneCountOptions,
-    BeginPruneOptions,
+    RawGuildTemplate,
     RawIntegration,
-    RawWidgetSettings,
-    WidgetSettings,
-    RawWidget,
-    Widget,
-    WidgetImageStyle,
-    RawWelcomeScreen,
-    WelcomeScreen,
-    EditWelcomeScreenOptions,
-    GetVanityURLResponse,
-    EditUserVoiceStateOptions,
-    EditCurrentUserVoiceStateOptions,
-    CreateChannelReturn,
-    CreateChannelOptions,
-    EditMFALevelOptions,
-    RESTMember
-} from "../types/guilds";
-import * as Routes from "../util/Routes";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { GuildChannelTypesWithoutThreads, MFALevels } from "../Constants";
-import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
-import GuildScheduledEvent from "../structures/GuildScheduledEvent";
-import Webhook from "../structures/Webhook";
-import type {
-    CreateScheduledEventOptions,
-    EditScheduledEventOptions,
-    GetScheduledEventUsersOptions,
+    RawInvite,
+    RawRole,
     RawScheduledEvent,
     RawScheduledEventUser,
-    ScheduledEventUser
-} from "../types/scheduled-events";
-import GuildTemplate from "../structures/GuildTemplate";
-import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
-import GuildPreview from "../structures/GuildPreview";
-import type {
-    AnyGuildChannelWithoutThreads,
-    InviteChannel,
-    PartialInviteChannel,
-    RawGuildChannel,
-    RawInvite,
     RawThreadChannel,
-    RawThreadMember
-} from "../types/channels";
+    RawThreadMember,
+    RawWelcomeScreen,
+    RawWidget,
+    RawWidgetSettings,
+    RESTMember,
+    ScheduledEventUser,
+    SearchMembersOptions,
+    Uncached,
+    VoiceRegion,
+    WelcomeScreen,
+    Widget,
+    WidgetImageStyle,
+    WidgetSettings
+} from "../types";
+import * as Routes from "../util/Routes";
+import type { GuildChannelTypesWithoutThreads, MFALevels } from "../Constants";
+import GuildScheduledEvent from "../structures/GuildScheduledEvent";
+import Webhook from "../structures/Webhook";
+import GuildTemplate from "../structures/GuildTemplate";
+import GuildPreview from "../structures/GuildPreview";
 import Role from "../structures/Role";
-import type { VoiceRegion } from "../types/voice";
 import Invite from "../structures/Invite";
 import Integration from "../structures/Integration";
 import AutoModerationRule from "../structures/AutoModerationRule";
@@ -77,7 +81,6 @@ import AuditLogEntry from "../structures/AuditLogEntry";
 import type RESTManager from "../rest/RESTManager";
 import Guild from "../structures/Guild";
 import Member from "../structures/Member";
-import type { Uncached } from "../types/shared";
 import ApplicationCommand from "../structures/ApplicationCommand";
 
 /** Various methods for interacting with guilds. */
@@ -241,6 +244,7 @@ export default class Guilds {
     /**
      * Create a channel in a guild.
      * @param id The ID of the guild.
+     * @param type The type of channel to create.
      * @param options The options for creating the channel.
      */
     async createChannel<T extends GuildChannelTypesWithoutThreads>(id: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
@@ -642,6 +646,7 @@ export default class Guilds {
     /**
      * Edit an existing emoji.
      * @param id The ID of the guild the emoji is in.
+     * @param emojiID The ID of the emoji to edit.
      * @param options The options for editing the emoji.
      */
     async editEmoji(id: string, emojiID: string, options: EditEmojiOptions): Promise<GuildEmoji> {
@@ -710,6 +715,7 @@ export default class Guilds {
     /**
      * Edit an existing role.
      * @param id The ID of the guild.
+     * @param roleID The ID of the role to edit.
      * @param options The options for editing the role.
      */
     async editRole(id: string, roleID: string, options: EditRoleOptions): Promise<Role> {
@@ -740,6 +746,7 @@ export default class Guilds {
      * Edit the position of roles in a guild.
      * @param id The ID of the guild.
      * @param options The roles to move.
+     * @param reason The reason for editing the roles position.
      */
     async editRolePositions(id: string, options: Array<EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
         const guild = this.#manager.client.guilds.get(id);

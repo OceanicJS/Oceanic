@@ -1,4 +1,4 @@
-const { Client, InteractionTypes, MessageFlags, ComponentTypes, ApplicationCommandTypes } = require("oceanic.js");
+const { Client, InteractionTypes, ComponentTypes, ApplicationCommandTypes } = require("oceanic.js");
 
 const client = new Client({
     auth: "Bot [TOKEN]",

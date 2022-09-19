@@ -3,8 +3,7 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants";
 import type Client from "../Client";
-import type { RawOverwrite } from "../types/channels";
-import type { JSONPermissionOverwrite } from "../types/json";
+import type { JSONPermissionOverwrite, RawOverwrite } from "../types";
 
 /** Represents a permission overwrite. */
 export default class PermissionOverwrite extends Base {

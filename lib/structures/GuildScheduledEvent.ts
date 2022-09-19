@@ -4,14 +4,13 @@ import type User from "./User";
 import type Guild from "./Guild";
 import type StageChannel from "./StageChannel";
 import type Client from "../Client";
-import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
+import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses, ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
-import type { JSONScheduledEvent } from "../types/json";
+import type { JSONScheduledEvent, RawScheduledEvent, ScheduledEventEntityMetadata } from "../types";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
-    private _guild?: Guild;
+    private readonly _guild?: Guild;
     /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     channel?: StageChannel | null;
     /** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */

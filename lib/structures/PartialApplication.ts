@@ -3,8 +3,7 @@ import Base from "./Base";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { RawPartialApplication } from "../types/oauth";
-import type { JSONPartialApplication } from "../types/json";
+import type { JSONPartialApplication, RawPartialApplication } from "../types";
 
 /** Represents a partial application. */
 export default class PartialApplication extends Base {

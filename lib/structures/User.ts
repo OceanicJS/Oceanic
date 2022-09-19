@@ -4,8 +4,7 @@ import PrivateChannel from "./PrivateChannel";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import type { RawUser } from "../types/users";
-import type { JSONUser } from "../types/json";
+import type { JSONUser, RawUser } from "../types";
 
 /** Represents a user. */
 export default class User extends Base {

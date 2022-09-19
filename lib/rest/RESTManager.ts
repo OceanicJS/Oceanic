@@ -6,18 +6,22 @@ import Guilds from "../routes/Guilds";
 import Users from "../routes/Users";
 import OAuth from "../routes/OAuth";
 import Webhooks from "../routes/Webhooks";
-import type { RESTOptions } from "../types/client";
-import type { RequestOptions } from "../types/request-handler";
+import type {
+    GetBotGatewayResponse,
+    GetGatewayResponse,
+    RawGetBotGatewayResponse,
+    RequestOptions,
+    RESTOptions
+} from "../types";
 import ApplicationCommands from "../routes/ApplicationCommands";
 import Interactions from "../routes/Interactions";
 import * as Routes from "../util/Routes";
-import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
 
 /** A manager for all rest actions. */
 export default class RESTManager {
     applicationCommands: ApplicationCommands;
     channels: Channels;
-    #client: Client;
+    readonly #client: Client;
     guilds: Guilds;
     handler: RequestHandler;
     interactions: Interactions;

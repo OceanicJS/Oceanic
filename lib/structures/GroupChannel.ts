@@ -16,12 +16,12 @@ import type {
     GetChannelMessagesOptions,
     GetReactionsOptions,
     InviteInfoTypes,
+    JSONGroupChannel,
     RawGroupChannel,
-    RawMessage
-} from "../types/channels";
-import type { RawUser } from "../types/users";
+    RawMessage,
+    RawUser
+} from "../types";
 import TypedCollection from "../util/TypedCollection";
-import type { JSONGroupChannel } from "../types/json";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {

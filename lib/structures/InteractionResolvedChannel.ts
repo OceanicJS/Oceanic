@@ -6,7 +6,7 @@ import Channel from "./Channel";
 import type ForumChannel from "./ForumChannel";
 import { GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { PartialInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildTextChannel } from "../types/channels";
+import type { AnyGuildTextChannel, PartialInteractionResolvedChannel, PrivateThreadMetadata, ThreadMetadata } from "../types";
 
 /** Represents a channel from an interaction option. */
 export default class InteractionResolvedChannel extends Channel {

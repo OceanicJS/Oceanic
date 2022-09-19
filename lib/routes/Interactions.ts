@@ -1,12 +1,15 @@
 /** @module Routes/Interactions */
-import type { InteractionContent, InteractionResponse } from "../types/interactions";
-import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
+import type {
+    AnyTextChannel,
+    ExecuteWebhookWaitOptions,
+    InteractionContent,
+    InteractionResponse,
+    Uncached
+} from "../types";
 import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
 import type RESTManager from "../rest/RESTManager";
 import Message from "../structures/Message";
-import type { AnyTextChannel } from "../types/channels";
-import type { Uncached } from "../types/shared";
 
 /** Various methods for interacting with interactions. */
 export default class Interactions {

@@ -9,21 +9,22 @@ import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import type Client from "../Client";
 import type {
+    AnyGuildTextChannel,
+    AnyTextChannel,
     InteractionContent,
+    JSONComponentInteraction,
     MessageComponentButtonInteractionData,
     MessageComponentSelectMenuInteractionData,
     ModalData,
-    RawMessageComponentInteraction
-} from "../types/interactions";
+    RawMessageComponentInteraction,
+    Uncached
+} from "../types";
 import type { InteractionTypes } from "../Constants";
-import { InteractionResponseTypes, ComponentTypes } from "../Constants";
-import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
-import type { JSONComponentInteraction } from "../types/json";
-import type { Uncached } from "../types/shared";
+import { ComponentTypes, InteractionResponseTypes } from "../Constants";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
-    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private readonly _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The channel this interaction was sent from. */

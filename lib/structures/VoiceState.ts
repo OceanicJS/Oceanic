@@ -6,8 +6,7 @@ import Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
-import type { RawVoiceState } from "../types/voice";
-import type { JSONVoiceState } from "../types/json";
+import type { JSONVoiceState, RawVoiceState } from "../types";
 
 /** Represents a guild member's voice state. */
 export default class VoiceState extends Base {

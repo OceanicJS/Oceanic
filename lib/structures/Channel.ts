@@ -4,6 +4,7 @@ import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type {
     AnyChannel,
+    JSONChannel,
     RawAnnouncementChannel,
     RawAnnouncementThreadChannel,
     RawCategoryChannel,
@@ -16,8 +17,7 @@ import type {
     RawStageChannel,
     RawTextChannel,
     RawVoiceChannel
-} from "../types/channels";
-import type { JSONChannel } from "../types/json";
+} from "../types";
 
 /** Represents a channel. */
 export default class Channel extends Base {

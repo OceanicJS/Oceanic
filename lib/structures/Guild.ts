@@ -23,90 +23,93 @@ import Invite from "./Invite";
 import type {
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
+    GatewayOPCodes,
+    GuildChannelTypesWithoutThreads,
     GuildFeature,
     GuildNSFWLevels,
     ImageFormat,
     MFALevels,
     PremiumTiers,
-    VerificationLevels,
-    GuildChannelTypesWithoutThreads,
-    GatewayOPCodes
+    VerificationLevels
 } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
+    AddMemberOptions,
     AnyGuildChannel,
     AnyGuildChannelWithoutThreads,
     AnyGuildTextChannel,
     AnyThreadChannel,
-    InviteChannel,
-    RawGuildChannel,
-    RawThreadChannel
-} from "../types/channels";
-import type {
-    AddMemberOptions,
+    AuditLog,
+    Ban,
     BeginPruneOptions,
+    CreateAutoModerationRuleOptions,
     CreateBanOptions,
     CreateChannelOptions,
+    CreateChannelReturn,
     CreateEmojiOptions,
     CreateRoleOptions,
+    CreateScheduledEventOptions,
+    CreateTemplateOptions,
+    EditAutoModerationRuleOptions,
     EditCurrentMemberOptions,
     EditCurrentUserVoiceStateOptions,
     EditEmojiOptions,
     EditGuildOptions,
+    EditGuildTemplateOptions,
     EditMemberOptions,
+    EditMFALevelOptions,
     EditRoleOptions,
     EditRolePositionsEntry,
+    EditScheduledEventOptions,
     EditUserVoiceStateOptions,
     EditWelcomeScreenOptions,
+    GetActiveThreadsResponse,
+    GetAuditLogOptions,
     GetBansOptions,
     GetMembersOptions,
     GetPruneCountOptions,
+    GetScheduledEventUsersOptions,
+    GetVanityURLResponse,
     GuildEmoji,
+    InviteChannel,
+    JoinVoiceChannelOptions,
+    JSONGuild,
     ModifyChannelPositionsEntry,
+    PresenceUpdate,
+    RawAutoModerationRule,
     RawGuild,
+    RawGuildChannel,
+    RawIntegration,
     RawMember,
     RawRole,
+    RawScheduledEvent,
+    RawStageInstance,
+    RawThreadChannel,
+    RawVoiceState,
+    RawWidget,
+    RequestGuildMembersOptions,
+    RESTMember,
+    ScheduledEventUser,
     SearchMembersOptions,
     Sticker,
+    VoiceRegion,
     WelcomeScreen,
-    WidgetImageStyle,
-    WidgetSettings,
-    RawIntegration,
-    CreateChannelReturn,
     Widget,
-    GetActiveThreadsResponse,
-    Ban,
-    GetVanityURLResponse,
-    RawWidget,
-    RawStageInstance,
-    EditMFALevelOptions,
-    RESTMember
-} from "../types/guilds";
-import type {
-    CreateScheduledEventOptions,
-    EditScheduledEventOptions,
-    GetScheduledEventUsersOptions,
-    RawScheduledEvent,
-    ScheduledEventUser
-} from "../types/scheduled-events";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { AuditLog, GetAuditLogOptions } from "../types/audit-log";
-import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
-import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
-import type { JSONGuild } from "../types/json";
-import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
+    WidgetImageStyle,
+    WidgetSettings
+} from "../types";
 import Shard from "../gateway/Shard";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
-import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
+import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterImplementerMethods, DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
-    private _clientMember?: Member;
-    private _shard?: Shard;
+    protected _clientMember?: Member;
+    protected _shard?: Shard;
     /** This guild's afk voice channel. */
     afkChannel?: VoiceChannel | null;
     /** The ID of this guild's afk voice channel. */
@@ -621,6 +624,7 @@ export default class Guild extends Base {
 
     /**
      * Create a channel in this guild.
+     * @param type The type of channel to create.
      * @param options The options for creating the channel.
      */
     async createChannel<T extends GuildChannelTypesWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
@@ -770,6 +774,7 @@ export default class Guild extends Base {
     }
     /**
      * Edit an existing emoji in this guild.
+     * @param emojiID The ID of the emoji to edit.
      * @param options The options for editing the emoji.
      */
     async editEmoji(emojiID: string, options: EditEmojiOptions): Promise<GuildEmoji> {
@@ -795,6 +800,7 @@ export default class Guild extends Base {
 
     /**
      * Edit an existing role.
+     * @param roleID The ID of the role to edit.
      * @param options The options for editing the role.
      */
     async editRole(roleID: string, options: EditRoleOptions): Promise<Role> {
@@ -804,6 +810,7 @@ export default class Guild extends Base {
     /**
      * Edit the position of roles in this guild.
      * @param options The roles to move.
+     * @param reason The reason for editing the role positions.
      */
     async editRolePositions(options: Array<EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
         return this.client.rest.guilds.editRolePositions(this.id, options, reason);

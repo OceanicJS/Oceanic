@@ -1,6 +1,6 @@
 /** @module DiscordRESTError */
 import type { RESTMethod } from "../Constants";
-import type { JSONDiscordRESTError } from "../types/json";
+import type { JSONDiscordRESTError } from "../types";
 import type { Headers, Response } from "undici";
 
 /** A REST error received from Discord. */
@@ -44,9 +44,9 @@ export default class DiscordRESTError extends Error {
                 continue;
             }
             if ("_errors" in (errors[fieldName] as object)) {
-                messages = messages.concat((errors[fieldName] as { _errors: Array<{ message: string; }>; })._errors.map((err: { message: string; }) => `${`${keyPrefix}${fieldName}`}: ${err.message}`));
+                messages = messages.concat((errors[fieldName] as { _errors: Array<{ message: string; }>; })._errors.map((err: { message: string; }) => `${keyPrefix}${fieldName}: ${err.message}`));
             } else if (Array.isArray(errors[fieldName])) {
-                messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
+                messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${keyPrefix}${fieldName}: ${str}`));
             } else if (typeof errors[fieldName] === "object") {
                 messages = messages.concat(DiscordRESTError.flattenErrors(errors[fieldName] as Record<string, unknown>, `${keyPrefix}${fieldName}.`));
             }

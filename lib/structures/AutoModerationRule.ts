@@ -3,13 +3,18 @@ import Base from "./Base";
 import type User from "./User";
 import type Guild from "./Guild";
 import type Client from "../Client";
-import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
+import type {
+    AutoModerationAction,
+    EditAutoModerationRuleOptions,
+    JSONAutoModerationRule,
+    RawAutoModerationRule,
+    TriggerMetadata
+} from "../types";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
-import type { JSONAutoModerationRule } from "../types/json";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
-    private _guild?: Guild;
+    private readonly _guild?: Guild;
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
     /** The creator of this rule. */

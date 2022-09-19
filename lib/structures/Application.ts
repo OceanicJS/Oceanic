@@ -4,10 +4,9 @@ import Team from "./Team";
 import ClientApplication from "./ClientApplication";
 import type Guild from "./Guild";
 import type Client from "../Client";
-import type { InstallParams, RESTApplication } from "../types/oauth";
+import type { InstallParams, JSONApplication, RESTApplication } from "../types";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { JSONApplication } from "../types/json";
 
 /** Represents an oauth application. */
 export default class Application extends ClientApplication {

@@ -2,9 +2,8 @@
 import Interaction from "./Interaction";
 import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes } from "../Constants";
-import type { RawPingInteraction } from "../types/interactions";
+import type { JSONPingInteraction, RawPingInteraction } from "../types";
 import type Client from "../Client";
-import type { JSONPingInteraction } from "../types/json";
 
 /** Represents a PING interaction. This will not be received over a gateway connection. */
 export default class PingInteraction extends Interaction {

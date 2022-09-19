@@ -2,60 +2,61 @@
 import type {
     AddGroupRecipientOptions,
     AnyChannel,
+    AnyEditableChannel,
+    AnyGuildTextChannel,
     AnyTextChannel,
     ArchivedThreads,
+    CreateGroupChannelOptions,
     CreateInviteOptions,
     CreateMessageOptions,
     EditChannelOptions,
     EditMessageOptions,
     EditPermissionOptions,
     FollowedChannel,
-    GetChannelMessagesOptions,
     GetArchivedThreadsOptions,
-    GetReactionsOptions,
-    InviteChannel,
-    RawArchivedThreads,
-    RawChannel,
-    RawFollowedChannel,
-    RawInvite,
-    RawMessage,
-    RawAnnouncementThreadChannel,
-    RawPrivateThreadChannel,
-    RawPublicThreadChannel,
-    ThreadMember,
-    StartThreadFromMessageOptions,
-    StartThreadInForumOptions,
-    StartThreadWithoutMessageOptions,
+    GetChannelMessagesOptions,
     GetInviteOptions,
     GetInviteWithCountsAndExpirationOptions,
     GetInviteWithCountsOptions,
     GetInviteWithExpirationOptions,
     GetInviteWithNoneOptions,
-    RawThreadMember,
+    GetReactionsOptions,
+    InviteChannel,
     InviteInfoTypes,
-    RawPrivateChannel,
-    RawGroupChannel,
-    AnyEditableChannel,
     PartialInviteChannel,
-    RawThreadChannel,
     PurgeOptions,
-    AnyGuildTextChannel
-} from "../types/channels";
+    RawAnnouncementThreadChannel,
+    RawArchivedThreads,
+    RawChannel,
+    RawFollowedChannel,
+    RawGroupChannel,
+    RawInvite,
+    RawMessage,
+    RawPrivateChannel,
+    RawPrivateThreadChannel,
+    RawPublicThreadChannel,
+    RawThreadChannel,
+    RawThreadMember,
+    RawUser,
+    StartThreadFromMessageOptions,
+    StartThreadInForumOptions,
+    StartThreadWithoutMessageOptions,
+    ThreadMember,
+    Uncached,
+    VoiceRegion
+} from "../types";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
-import type { CreateGroupChannelOptions, RawUser } from "../types/users";
 import Invite from "../structures/Invite";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
 import type RESTManager from "../rest/RESTManager";
 import type PrivateChannel from "../structures/PrivateChannel";
 import GroupChannel from "../structures/GroupChannel";
 import User from "../structures/User";
-import type { Uncached } from "../types/shared";
 
 /** Various methods for interacting with channels. */
 export default class Channels {
@@ -867,8 +868,6 @@ export default class Channels {
                     resolvers.push(resolve);
 
                     void (async (): Promise<void> => {
-                        let removedResolver: (() => void) | null = null;
-
                         if (await filter(message as Message<T>)) {
                             if (!limitWasReach) {
                                 messageIDsToPurge.push(message.id);
@@ -878,7 +877,7 @@ export default class Channels {
                             }
                         }
 
-                        removedResolver = resolvers[index];
+                        const removedResolver: (() => void) | null = resolvers[index];
                         resolvers[index] = null;
 
                         if (removedResolver) {
@@ -947,7 +946,7 @@ export default class Channels {
      * Create a thread from an existing message.
      * @param id The ID of the channel to create the thread in.
      * @param messageID The ID of the message to create the thread from.
-     * @param {options The options for starting the thread.
+     * @param options The options for starting the thread.
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(id: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
         const reason = options.reason;

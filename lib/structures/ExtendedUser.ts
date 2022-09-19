@@ -1,8 +1,7 @@
 /** @module ExtendedUser */
 import User from "./User";
 import type Client from "../Client";
-import type { EditSelfUserOptions, RawOAuthUser } from "../types/users";
-import type { JSONExtendedUser } from "../types/json";
+import type { EditSelfUserOptions, JSONExtendedUser, RawOAuthUser } from "../types";
 
 /** Represents the currently authenticated user. */
 export default class ExtendedUser extends User {

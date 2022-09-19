@@ -1,5 +1,6 @@
 /** @module Routes/Webhooks */
 import type {
+    AnyTextChannel,
     CreateWebhookOptions,
     DeleteWebhookMessageOptions,
     EditWebhookMessageOptions,
@@ -7,14 +8,14 @@ import type {
     EditWebhookTokenOptions,
     ExecuteWebhookOptions,
     ExecuteWebhookWaitOptions,
-    RawWebhook
-} from "../types/webhooks";
-import type { AnyTextChannel, RawMessage } from "../types/channels";
+    RawMessage,
+    RawWebhook,
+    Uncached
+} from "../types";
 import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
 import type RESTManager from "../rest/RESTManager";
-import type { Uncached } from "../types/shared";
 
 /** Various methods for interacting with webhooks. */
 export default class Webhooks {
@@ -148,6 +149,7 @@ export default class Webhooks {
     /**
      * Edit a webhook via its token.
      * @param id The ID of the webhook.
+     * @param token The token of the webhook.
      * @param options The options for editing the webhook.
      */
     async editToken(id: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {

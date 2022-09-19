@@ -5,14 +5,14 @@ import type Client from "../Client";
 import type {
     AnyInteraction,
     AnyRawInteraction,
+    JSONInteraction,
     RawApplicationCommandInteraction,
     RawAutocompleteInteraction,
     RawInteraction,
     RawMessageComponentInteraction,
     RawModalSubmitInteraction
-} from "../types/interactions";
+} from "../types";
 import { InteractionTypes } from "../Constants";
-import type { JSONInteraction } from "../types/json";
 
 /** Represents an interaction. */
 export default class Interaction extends Base {

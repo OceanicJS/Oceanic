@@ -2,8 +2,7 @@
 import Base from "./Base";
 import type Client from "../Client";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import type { GuildEmoji, RawGuildPreview, Sticker } from "../types/guilds";
-import type { JSONGuildPreview } from "../types/json";
+import type { GuildEmoji, JSONGuildPreview, RawGuildPreview, Sticker } from "../types";
 import * as Routes from "../util/Routes";
 
 /** Represents a preview of a guild. */

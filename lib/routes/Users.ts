@@ -1,5 +1,5 @@
 /** @module Routes/Users */
-import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
+import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types";
 import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";

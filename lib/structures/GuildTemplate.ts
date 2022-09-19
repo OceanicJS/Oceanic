@@ -2,9 +2,14 @@
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
-import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
-import type { RawGuild } from "../types/guilds";
-import type { JSONGuildTemplate } from "../types/json";
+import type {
+    CreateGuildFromTemplateOptions,
+    EditGuildTemplateOptions,
+    JSONGuildTemplate,
+    RawGuild,
+    RawGuildTemplate
+} from "../types";
+
 
 /** Represents a guild template. */
 export default class GuildTemplate {

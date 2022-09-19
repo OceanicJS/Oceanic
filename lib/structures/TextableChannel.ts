@@ -12,10 +12,11 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import User from "./User";
 import type { ThreadAutoArchiveDuration } from "../Constants";
-import { AllPermissions, Permissions, ChannelTypes } from "../Constants";
+import { AllPermissions, ChannelTypes, Permissions } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
+    ArchivedThreads,
     CreateInviteOptions,
     CreateMessageOptions,
     EditGuildChannelOptions,
@@ -24,16 +25,15 @@ import type {
     GetArchivedThreadsOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
-    RawMessage,
+    JSONTextableChannel,
+    PurgeOptions,
     RawAnnouncementChannel,
+    RawMessage,
     RawOverwrite,
     RawTextChannel,
     StartThreadFromMessageOptions,
-    StartThreadWithoutMessageOptions,
-    ArchivedThreads,
-    PurgeOptions
-} from "../types/channels";
-import type { JSONTextableChannel } from "../types/json";
+    StartThreadWithoutMessageOptions
+} from "../types";
 
 /** Represents a guild textable channel. */
 export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {

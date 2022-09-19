@@ -8,17 +8,18 @@ import type Client from "../Client";
 import type { ImageFormat, WebhookTypes } from "../Constants";
 import { BASE_URL } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { AnyGuildTextChannel, RawChannel } from "../types/channels";
-import type { RawGuild } from "../types/guilds";
 import type {
+    AnyGuildTextChannel,
     DeleteWebhookMessageOptions,
     EditWebhookMessageOptions,
     EditWebhookOptions,
     ExecuteWebhookOptions,
     ExecuteWebhookWaitOptions,
+    JSONWebhook,
+    RawChannel,
+    RawGuild,
     RawWebhook
-} from "../types/webhooks";
-import type { JSONWebhook } from "../types/json";
+} from "../types";
 
 /** Represents a webhook. */
 export default class Webhook extends Base {
@@ -122,10 +123,9 @@ export default class Webhook extends Base {
 
     /**
      * Edit a webhook message.
-     * @param id The ID of the webhook.
-     * @param token The token of the webhook.
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
+     * @param token The token of the webhook.
      */
     async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
         const t = this.token ?? token;

@@ -5,51 +5,51 @@ import TypedEmitter from "../util/TypedEmitter";
 import Bucket from "../rest/Bucket";
 import {
     ChannelTypes,
+    GATEWAY_VERSION,
     GatewayCloseCodes,
     GatewayOPCodes,
-    GATEWAY_VERSION,
     Intents
 } from "../Constants";
 import type {
-    UpdatePresenceOptions,
-    RequestGuildMembersOptions,
-    UpdateVoiceStateOptions,
-    PresenceUpdate,
-    SendStatuses,
+    AnyDispatchPacket,
+    AnyGuildChannelWithoutThreads,
+    AnyReceivePacket,
+    AnyTextChannel,
+    AnyThreadChannel,
     BotActivity,
-    ShardStatus
-} from "../types/gateway";
+    InviteChannel,
+    JSONAnnouncementThreadChannel,
+    PresenceUpdate,
+    RawGuild,
+    RawMessage,
+    RawOAuthUser,
+    RawUser,
+    RequestGuildMembersOptions,
+    SendStatuses,
+    ShardStatus,
+    ThreadMember,
+    Uncached,
+    UpdatePresenceOptions,
+    UpdateVoiceStateOptions
+} from "../types";
+import { ShardEvents } from "../types";
 import Member from "../structures/Member";
 import Base from "../structures/Base";
-import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
 import ClientApplication from "../structures/ClientApplication";
-import type { RawOAuthUser, RawUser } from "../types/users";
-import type { RawGuild } from "../types/guilds";
 import ExtendedUser from "../structures/ExtendedUser";
 import AutoModerationRule from "../structures/AutoModerationRule";
 import Channel from "../structures/Channel";
-import type {
-    AnyGuildChannelWithoutThreads,
-    AnyTextChannel,
-    AnyThreadChannel,
-    InviteChannel,
-    RawMessage,
-    ThreadMember
-} from "../types/channels";
 import type TextChannel from "../structures/TextChannel";
-import type { JSONAnnouncementThreadChannel } from "../types/json";
 import VoiceChannel from "../structures/VoiceChannel";
 import StageChannel from "../structures/StageChannel";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Invite from "../structures/Invite";
 import Message from "../structures/Message";
-import type { Uncached } from "../types/shared";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import Interaction from "../structures/Interaction";
 import { is } from "../util/Util";
 import Guild from "../structures/Guild";
-import { ShardEvents } from "../types/events";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
@@ -723,7 +723,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     member.presence = packet.d;
                 }
 
-                this.client.emit("presenceUpdate", guild ?? { id: packet.d.guild_id }, member ?? { id: userID },packet.d, oldPresence);
+                this.client.emit("presenceUpdate", guild ?? { id: packet.d.guild_id }, member ?? { id: userID }, packet.d, oldPresence);
                 break;
             }
 

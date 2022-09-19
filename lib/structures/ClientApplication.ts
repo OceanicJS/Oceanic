@@ -2,7 +2,6 @@
 import Base from "./Base";
 import ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
-import type { RawClientApplication } from "../types/oauth";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
@@ -12,9 +11,10 @@ import type {
     EditApplicationCommandPermissionsOptions,
     EditGuildApplicationCommandOptions,
     GetApplicationCommandOptions,
+    JSONClientApplication,
+    RawClientApplication,
     RESTGuildApplicationCommandPermissions
-} from "../types/application-commands";
-import type { JSONClientApplication } from "../types/json";
+} from "../types";
 import { ApplicationCommandTypes } from "../Constants";
 
 /** A representation of the authorized client's application (typically received via gateway). */

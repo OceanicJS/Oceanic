@@ -6,8 +6,7 @@ import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import Message from "./Message";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
-import type { JSONAnnouncementChannel } from "../types/json";
+import type { EditGuildChannelOptions, JSONAnnouncementChannel, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types";
 import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild announcement channel. */

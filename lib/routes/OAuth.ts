@@ -11,13 +11,14 @@ import type {
     RawClientCredentialsTokenResponse,
     RawConnection,
     RawExchangeCodeResponse,
+    RawGuild,
     RawRefreshTokenResponse,
     RefreshTokenOptions,
     RefreshTokenResponse,
     RESTApplication,
+    RESTMember,
     RevokeTokenOptions
-} from "../types/oauth";
-import type { RawGuild, RESTMember } from "../types/guilds";
+} from "../types";
 import * as Routes from "../util/Routes";
 import { BASE_URL } from "../Constants";
 import Application from "../structures/Application";

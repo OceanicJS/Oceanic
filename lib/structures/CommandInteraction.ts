@@ -14,23 +14,25 @@ import TypedCollection from "../util/TypedCollection";
 import type { InteractionTypes } from "../Constants";
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
 import type {
+    AnyGuildTextChannel,
+    AnyTextChannel,
     ApplicationCommandInteractionData,
+    ApplicationCommandInteractionResolvedData,
     InteractionContent,
+    JSONCommandInteraction,
     ModalData,
+    PartialInteractionResolvedChannel,
     RawApplicationCommandInteraction,
-    ApplicationCommandInteractionResolvedData
-} from "../types/interactions";
+    RawMember,
+    RawUser,
+    Uncached
+} from "../types";
 import type Client from "../Client";
-import type { RawMember } from "../types/guilds";
-import type { AnyGuildTextChannel, AnyTextChannel, PartialInteractionResolvedChannel } from "../types/channels";
-import type { RawUser } from "../types/users";
-import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
-import type { Uncached } from "../types/shared";
 
 /** Represents a command interaction. */
 export default class CommandInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
-    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private readonly _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The channel this interaction was sent from. */

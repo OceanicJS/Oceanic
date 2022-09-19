@@ -9,11 +9,11 @@ import type {
     EditMessageOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
+    JSONPrivateChannel,
     RawMessage,
     RawPrivateChannel
-} from "../types/channels";
+} from "../types";
 import TypedCollection from "../util/TypedCollection";
-import type { JSONPrivateChannel } from "../types/json";
 
 /** Represents a direct message with a user. */
 export default class PrivateChannel extends Channel {

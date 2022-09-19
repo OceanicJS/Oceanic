@@ -1,13 +1,13 @@
 /** @module Base */
 import type Client from "../Client";
-import type { JSONBase } from "../types/json";
+import type { JSONBase } from "../types";
 import { inspect } from "util";
 
 /** A base class which most other classes extend. */
 export default abstract class Base {
     client!: Client;
     id: string;
-    constructor(id: string, client: Client) {
+    protected constructor(id: string, client: Client) {
         this.id = id;
         Object.defineProperty(this, "client", {
             value:        client,

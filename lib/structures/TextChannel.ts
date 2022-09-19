@@ -11,11 +11,11 @@ import type {
     EditTextChannelOptions,
     FollowedChannel,
     GetArchivedThreadsOptions,
+    JSONTextChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,
     RawTextChannel
-} from "../types/channels";
-import type { JSONTextChannel } from "../types/json";
+} from "../types";
 import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild text channel. */

@@ -7,8 +7,7 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type ForumChannel from "./ForumChannel";
 import type { GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel } from "../types/channels";
-import type { JSONGuildChannel } from "../types/json";
+import type { AnyGuildChannel, EditGuildChannelOptions, JSONGuildChannel, RawGuildChannel } from "../types";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {

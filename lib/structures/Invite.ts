@@ -11,15 +11,15 @@ import type {
     InviteChannel,
     InviteInfoTypes,
     InviteStageInstance,
+    JSONInvite,
     PartialInviteChannel,
+    RawGuild,
     RawInvite,
-    RawInviteWithMetadata
-} from "../types/channels";
+    RawInviteWithMetadata,
+    Uncached
+} from "../types";
 import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
-import type { RawGuild } from "../types/guilds";
-import type { JSONInvite } from "../types/json";
-import type { Uncached } from "../types/shared";
 
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached> {

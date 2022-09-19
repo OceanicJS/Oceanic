@@ -2,8 +2,7 @@
 import ThreadChannel from "./ThreadChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditPrivateThreadChannelOptions, PrivateThreadMetadata, RawPrivateThreadChannel } from "../types/channels";
-import type { JSONPrivateThreadChannel } from "../types/json";
+import type { EditPrivateThreadChannelOptions, JSONPrivateThreadChannel, PrivateThreadMetadata, RawPrivateThreadChannel } from "../types";
 
 /** Represents a private thread channel.. */
 export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadChannel> {

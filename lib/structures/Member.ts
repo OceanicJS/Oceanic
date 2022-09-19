@@ -10,15 +10,15 @@ import type {
     CreateBanOptions,
     EditMemberOptions,
     EditUserVoiceStateOptions,
+    JSONMember,
+    Presence,
     RawMember,
     RESTMember
-} from "../types/guilds";
-import type { JSONMember } from "../types/json";
-import type { Presence } from "../types/gateway";
+} from "../types";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
-    private _guild?: Guild;
+    protected _guild?: Guild;
     /** The member's avatar hash, if they have set a guild avatar. */
     avatar: string | null;
     /** When the member's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire, if active. */
@@ -161,6 +161,7 @@ export default class Member extends Base {
     /**
      * Add a role to this member.
      * @param roleID The ID of the role to add.
+     * @param reason The reason for adding this role.
      */
     async addRole(roleID: string, reason?: string): Promise<void> {
         await this.client.rest.guilds.addMemberRole(this.guildID, this.id, roleID, reason);

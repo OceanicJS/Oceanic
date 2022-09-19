@@ -6,22 +6,30 @@ import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import User from "./structures/User";
 import Guild from "./structures/Guild";
-import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
-import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
-import type { RawUser } from "./types/users";
-import type {  ClientInstanceOptions, ClientOptions } from "./types/client";
+import type {
+    AnyChannel,
+    BotActivity,
+    ClientInstanceOptions,
+    ClientOptions,
+    GetBotGatewayResponse,
+    JoinVoiceChannelOptions,
+    RawGroupChannel,
+    RawGuild,
+    RawPrivateChannel,
+    RawUnavailableGuild,
+    RawUser,
+    SendStatuses
+} from "./types";
+import { ClientEvents } from "./types";
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
-import type { BotActivity, GetBotGatewayResponse, SendStatuses } from "./types/gateway";
 import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
-import { ClientEvents } from "./types/events";
-import type { JoinVoiceChannelOptions } from "./types/voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";
+import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

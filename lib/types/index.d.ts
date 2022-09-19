@@ -6,6 +6,8 @@ export * from "./channels";
 export * from "./client";
 export * from "./events";
 export * from "./gateway";
+export * from "./gateway-raw";
+export * from "./guild-template";
 export * from "./guilds";
 export * from "./interactions";
 export * from "./json";

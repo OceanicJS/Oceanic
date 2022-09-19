@@ -10,11 +10,11 @@ import TypedCollection from "../util/TypedCollection";
 import type {
     EditAnyGuildChannelOptions,
     EditPermissionOptions,
+    JSONCategoryChannel,
     RawCategoryChannel,
     RawGuildChannel,
     RawOverwrite
-} from "../types/channels";
-import type { JSONCategoryChannel } from "../types/json";
+} from "../types";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {

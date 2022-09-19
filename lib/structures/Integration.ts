@@ -4,10 +4,9 @@ import PartialApplication from "./PartialApplication";
 import User from "./User";
 import type Guild from "./Guild";
 import type Role from "./Role";
-import type { IntegrationAccount, RawIntegration } from "../types/guilds";
+import type { IntegrationAccount, JSONIntegration, RawIntegration } from "../types";
 import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
 import type Client from "../Client";
-import type { JSONIntegration } from "../types/json";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {

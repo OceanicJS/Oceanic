@@ -2,8 +2,7 @@
 import Base from "./Base";
 import User from "./User";
 import type Client from "../Client";
-import type { RawTeam, TeamMember } from "../types/oauth";
-import type { JSONTeam } from "../types/json";
+import type { JSONTeam, RawTeam, TeamMember } from "../types";
 
 /** Represents an OAuth team. */
 export default class Team extends Base {

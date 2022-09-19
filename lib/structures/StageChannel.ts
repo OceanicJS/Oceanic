@@ -14,12 +14,13 @@ import type {
     EditPermissionOptions,
     EditStageChannelOptions,
     InviteInfoTypes,
+    JoinVoiceChannelOptions,
+    JSONStageChannel,
+    RawMember,
     RawOverwrite,
     RawStageChannel
-} from "../types/channels";
-import type { JSONStageChannel } from "../types/json";
-import type { RawMember } from "../types/guilds";
-import type { JoinVoiceChannelOptions } from "../types/voice";
+} from "../types";
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";

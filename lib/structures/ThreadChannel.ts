@@ -18,14 +18,14 @@ import type {
     EditThreadChannelOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
+    JSONThreadChannel,
     PrivateThreadMetadata,
+    PurgeOptions,
     RawMessage,
     RawThreadChannel,
     ThreadMember,
-    ThreadMetadata,
-    PurgeOptions
-} from "../types/channels";
-import type { JSONThreadChannel } from "../types/json";
+    ThreadMetadata
+} from "../types";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel> extends GuildChannel {

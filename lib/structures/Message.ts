@@ -14,34 +14,35 @@ import GuildChannel from "./GuildChannel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, MessageTypes } from "../Constants";
-import type { Uncached } from "../types/shared";
 import type {
     AnyGuildTextChannel,
+    AnyPrivateChannel,
     AnyTextChannel,
+    AnyThreadChannel,
     ChannelMention,
+    DeleteWebhookMessageOptions,
     EditMessageOptions,
+    EditWebhookMessageOptions,
     Embed,
     GetReactionsOptions,
+    JSONMessage,
+    MessageActionRow,
     MessageActivity,
     MessageInteraction,
+    MessageReaction,
     MessageReference,
     RawAttachment,
+    RawMember,
     RawMessage,
     StartThreadFromMessageOptions,
     StickerItem,
-    MessageReaction,
-    MessageActionRow,
-    AnyThreadChannel,
-    AnyPrivateChannel
-} from "../types/channels";
-import type { RawMember } from "../types/guilds";
-import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
-import type { JSONMessage } from "../types/json";
+    Uncached
+} from "../types";
 import * as Routes from "../util/Routes";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
-    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private readonly _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**

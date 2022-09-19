@@ -6,9 +6,8 @@ import type RESTManager from "./RESTManager";
 import type { RESTMethod } from "../Constants";
 import { API_URL, RESTMethods, USER_AGENT } from "../Constants";
 import Base from "../structures/Base";
-import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
-import type { RESTOptions } from "../types/client";
-import { FormData, fetch, File as UFile } from "undici";
+import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions, RESTOptions } from "../types";
+import { fetch, File as UFile, FormData } from "undici";
 
 /**
  * Latency & ratelimit related things lovingly borrowed from eris
