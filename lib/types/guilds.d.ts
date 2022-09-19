@@ -179,7 +179,8 @@ export interface RawMember {
     flags?: number;
     /** undocumented */
     is_pending?: boolean;
-    joined_at: string;
+    // this is nullable over gateway
+    joined_at: string | null;
     mute: boolean;
     nick?: string | null;
     pending?: boolean;
