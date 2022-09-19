@@ -367,8 +367,6 @@ export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoic
 export enum ChannelFlags {
     /** For threads, if this thread is pinned in a forum channel. */
     PINNED             = 1 << 1,
-    /** @deprecated This was an unofficial name from us. */
-    FORUM_TAG_REQUIRED = 1 << 4,
     /** For forums, if tags are required when creating threads. */
     REQUIRE_TAG = 1 << 4
 }
@@ -527,8 +525,6 @@ export enum InviteTargetTypes {
 }
 
 export enum GuildScheduledEventPrivacyLevels {
-    /** @deprecated */
-    PUBLIC     = 1,
     GUILD_ONLY = 2
 }
 
@@ -640,11 +636,7 @@ export enum AuditLogActionTypes {
     AUTO_MODERATION_RULE_UPDATE                 = 141,
     AUTO_MODERATION_RULE_DELETE                 = 142,
     AUTO_MODERATION_BLOCK_MESSAGE               = 143,
-    /** @deprecated This was an unofficial name from us. */
-    AUTO_MODERATION_ALERT                       = 144,
     AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
-    /** @deprecated This was an unofficial name from us. */
-    AUTO_MODERATION_TIMEOUT                     = 145,
     AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145
 }
 
