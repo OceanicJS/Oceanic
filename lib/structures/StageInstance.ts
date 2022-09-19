@@ -9,7 +9,7 @@ import type { JSONStageInstance, RawStageInstance } from "../types";
 
 /** Represents a stage instance. */
 export default class StageInstance extends Base {
-    protected _guild?: Guild;
+    private _guild?: Guild;
     /** The associated stage channel. */
     channel?: StageChannel;
     /** The ID of the associated stage channel. */

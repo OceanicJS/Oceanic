@@ -18,7 +18,7 @@ import type {
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
-    protected _guild?: Guild;
+    private _guild?: Guild;
     /** The member's avatar hash, if they have set a guild avatar. */
     avatar: string | null;
     /** When the member's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire, if active. */

@@ -7,7 +7,7 @@ import type { EditRoleOptions, JSONRole, RawRole, RoleTags } from "../types";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
-    protected _guild?: Guild;
+    private _guild?: Guild;
     /** The color of this role. */
     color: number;
     /** The id of the guild this role is in. */

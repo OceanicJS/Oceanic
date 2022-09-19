@@ -108,8 +108,8 @@ import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterImplementerMeth
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
-    protected _clientMember?: Member;
-    protected _shard?: Shard;
+    private _clientMember?: Member;
+    private _shard?: Shard;
     /** This guild's afk voice channel. */
     afkChannel?: VoiceChannel | null;
     /** The ID of this guild's afk voice channel. */
