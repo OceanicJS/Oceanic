@@ -93,7 +93,7 @@ export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type">
 export type RawForumChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration">> & { type: ChannelTypes.GUILD_FORUM; };
 
 export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
-export type RawInteractionResolvedChannel = Omit<Required<Pick<RawChannel, "id" | "type">>, "name"> & { name: string | null; } & Pick<RawChannel, "thread_metadata" | "parent_id" | "permissions">;
+export type RawInteractionResolvedChannel = Omit<Required<Pick<RawChannel, "id" | "type" | "permissions">>, "name"> & { name: string | null; } & Pick<RawChannel, "thread_metadata" | "parent_id">;
 
 export interface RawOverwrite {
     allow: string;

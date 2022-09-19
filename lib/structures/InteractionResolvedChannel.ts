@@ -12,7 +12,7 @@ import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetada
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
     /** The permissions the bot has in the channel. */
-    appPermissions?: Permission;
+    appPermissions: Permission;
     /** The complete channel this channel option represents, if it's cached. */
     completeChannel?: AnyGuildChannel | PrivateChannel;
     /** The name of this channel. */
@@ -26,7 +26,7 @@ export default class InteractionResolvedChannel extends Channel {
     declare type: GuildChannelTypes | ChannelTypes.DM;
     constructor(data: RawInteractionResolvedChannel, client: Client) {
         super(data, client);
-        this.appPermissions = data.permissions ? new Permission(data.permissions) : undefined;
+        this.appPermissions = new Permission(data.permissions);
         this.name = data.name;
         this.completeChannel = client.getChannel<AnyGuildChannel | PrivateChannel>(data.id);
         this.parent = data.parent_id ? client.getChannel<TextChannel | AnnouncementChannel>(data.parent_id) : null;
