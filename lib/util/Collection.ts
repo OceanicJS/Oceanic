@@ -59,7 +59,7 @@ export default class Collection<K, V> extends Map<K, V> {
      * Get the last element, or last X elements if a number is provided.
      * @param amount The amount of elements to get.
      */
-    last(amount: undefined): V | undefined;
+    last(): V | undefined;
     last(amount: number): Array<V>;
     last(amount?: number): V | Array<V> | undefined {
         const iterator = Array.from(this.values());

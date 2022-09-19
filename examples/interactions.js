@@ -138,7 +138,6 @@ client.on("interactionCreate", async(interaction) => {
                                     value: "choice-2"
                                 }
                             ]);
-                            break;
                         }
                     }
                 }
