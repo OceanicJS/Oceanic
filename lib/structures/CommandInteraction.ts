@@ -114,7 +114,7 @@ export default class CommandInteraction<T extends AnyTextChannel | Uncached = An
             guildID:  data.data.guild_id,
             id:       data.data.id,
             name:     data.data.name,
-            options:  new InteractionOptionsWrapper(data.data.options ?? [], resolved ?? null),
+            options:  new InteractionOptionsWrapper(client, data.data.options ?? [], resolved ?? null),
             resolved,
             target:   undefined,
             targetID: data.data.target_id,

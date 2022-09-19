@@ -48,7 +48,7 @@ export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached
             guildID: data.data.guild_id,
             id:      data.data.id,
             name:    data.data.name,
-            options: new InteractionOptionsWrapper(data.data.options ?? [], null),
+            options: new InteractionOptionsWrapper(client, data.data.options ?? [], null),
             type:    data.data.type
         };
         this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;

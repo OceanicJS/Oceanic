@@ -1,9 +1,10 @@
 /** @module InteractionOptionsWrapper */
-import { ApplicationCommandOptionTypes } from "../Constants";
+import { ApplicationCommandOptionTypes, ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
 import type {
+    AnyGuildChannel,
     ApplicationCommandInteractionResolvedData,
     InteractionOptions,
     InteractionOptionsAttachment,
@@ -22,14 +23,18 @@ import type {
 } from "../types";
 import type Attachment from "../structures/Attachment";
 import InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
+import PrivateChannel from "../structures/PrivateChannel";
+import Client from "../Client";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
+    #client: Client;
     /** The raw options from Discord.  */
     raw: Array<InteractionOptions>;
     /** Then resolved data for this options instance. */
     resolved: ApplicationCommandInteractionResolvedData | null;
-    constructor(data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
+    constructor(client: Client, data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
+        this.#client = client;
         this.raw = data;
         this.resolved = resolved;
     }
@@ -153,6 +158,25 @@ export default class InteractionOptionsWrapper {
     getChannelOption(name: string, required: true): InteractionOptionsChannel;
     getChannelOption(name: string, required?: boolean): InteractionOptionsChannel | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.CHANNEL);
+    }
+
+    /**
+     * Get a channel option's complete channel. This will only succeed if the channel is cached. If the channel is a private channel and it isn't cached, a `InteractionResolvedChannel` instance will still be returned.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
+     */
+    getCompleteChannel<T extends AnyGuildChannel | PrivateChannel | InteractionResolvedChannel = AnyGuildChannel | PrivateChannel | InteractionResolvedChannel>(name: string, required?: false): T | undefined;
+    getCompleteChannel<T extends AnyGuildChannel | PrivateChannel | InteractionResolvedChannel = AnyGuildChannel | PrivateChannel | InteractionResolvedChannel>(name: string, required: true): T;
+    getCompleteChannel(name: string, required?: boolean): AnyGuildChannel | PrivateChannel | InteractionResolvedChannel | undefined {
+        const resolved = this.getChannel(name, required as false);
+        if (!resolved) {
+            return undefined; // required will be handled in getChannel
+        }
+        const channel = resolved.completeChannel ?? resolved.type === ChannelTypes.DM ? resolved : undefined;
+        if (!channel && required) {
+            throw new Error(`Failed to resolve complete channel for required option: ${name}`);
+        }
+        return channel;
     }
 
     /**
