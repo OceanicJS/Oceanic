@@ -122,22 +122,23 @@ client.on("interactionCreate", async(interaction) => {
                     const option = interaction.data.options.getFocused(true);
                     switch(option.name) {
                         case "test-option": {
-                            return interaction.result([
+                            interaction.result([
                                 {
-                                    name: "Choice 1",
+                                    name:              "Choice 1",
                                     nameLocalizations: {
                                         "es-ES": "Opción 1"
                                     },
-                                    value: "choice-1"
+                                    value:             "choice-1"
                                 },
                                 {
-                                    name: "Choice 2",
+                                    name:              "Choice 2",
                                     nameLocalizations: {
                                         "es-ES": "Opción 2"
                                     },
                                     value: "choice-2"
                                 }
                             ]);
+                            break;
                         }
                     }
                 }
