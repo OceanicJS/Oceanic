@@ -127,8 +127,8 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
-    getChannel<T extends InteractionResolvedChannel = InteractionResolvedChannel>(name: string, required?: false): T | undefined;
-    getChannel<T extends InteractionResolvedChannel = InteractionResolvedChannel>(name: string, required: true): T;
+    getChannel(name: string, required?: false): InteractionResolvedChannel | undefined;
+    getChannel(name: string, required: true): InteractionResolvedChannel;
     getChannel(name: string, required?: boolean): InteractionResolvedChannel | undefined {
         if (this.resolved === null) {
             throw new Error("Attempt to use getChannel with null resolved. If this is on an autocomplete interaction, use getChannelOption instead.");
