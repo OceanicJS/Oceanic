@@ -9,4 +9,4 @@ jobs:
     - name: Install Dependencies
       run: npm i
     - name: Build
-      run: npm run prepublishOnly
+      run: npm run test:build && npm run test:esm
