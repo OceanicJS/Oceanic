@@ -1,4 +1,3 @@
-export * from "./types/index";
 // Channel and Interaction MUST be at the top due to circular imports
 export { default as Channel } from "./structures/Channel";
 export { default as Interaction } from "./structures/Interaction";
