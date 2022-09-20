@@ -2,7 +2,7 @@
 import Base from "./Base";
 import type Client from "../Client";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import type { GuildEmoji, RawGuildPreview, Sticker } from "../types/guilds";
+import type { GuildEmoji, RawGuildPreview, RawSticker } from "../types/guilds";
 import type { JSONGuildPreview } from "../types/json";
 import * as Routes from "../util/Routes";
 
@@ -27,7 +27,7 @@ export default class GuildPreview extends Base {
     /** The invite splash of this guild. */
     splash: string | null;
     /** The stickers in this guild. */
-    stickers: Array<Sticker>;
+    stickers: Array<RawSticker>;
     constructor(data: RawGuildPreview, client: Client) {
         super(data.id, client);
         this.approximateMemberCount = 0;

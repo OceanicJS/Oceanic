@@ -769,9 +769,7 @@ export default class Channels {
         })));
     }
 
-    /**
-     * Get the list of usable voice regions.
-     */
+    /** @deprecated Get the list of usable voice regions. Moved to `misc`. */
     async getVoiceRegions(): Promise<Array<VoiceRegion>> {
         return this.#manager.authRequest<Array<VoiceRegion>>({
             method: "GET",

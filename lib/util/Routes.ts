@@ -45,6 +45,8 @@ export const GUILD_WIDGET_IMAGE          = (guildID: string) => `/guilds/${guild
 export const GUILD_WIDGET_JSON           = (guildID: string) => `/guilds/${guildID}/widget.json` as const;
 export const GUILD_WELCOME_SCREEN        = (guildID: string) => `/guilds/${guildID}/welcome-screen` as const;
 export const GUILD_VOICE_STATE           = (guildID: string, userID: string) => `/guilds/${guildID}/voice-states/${userID}` as const;
+export const GUILD_STICKER			     = (guildID: string, stickerID: string) => `/guilds/${guildID}/stickers/${stickerID}` as const;
+export const GUILD_STICKERS			     = (guildID: string) => `/guilds/${guildID}/stickers` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;
@@ -121,3 +123,4 @@ export const GATEWAY     = "/gateway" as const;
 export const GATEWAY_BOT = "/gateway/bot" as const;
 export const USER        = (userID: string) => `/users/${userID}` as const;
 export const MESSAGE_LINK = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
+export const NITRO_STICKER_PACKS = "/sticker-packs" as const;

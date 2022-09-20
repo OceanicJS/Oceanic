@@ -34,7 +34,7 @@ import type {
     JSONVoiceState
 } from "./json";
 import type { GuildApplicationCommandPermissions } from "./application-commands";
-import type { GuildEmoji, PartialEmoji, Sticker, PossiblyUncachedIntegration } from "./guilds";
+import type { GuildEmoji, PartialEmoji, PossiblyUncachedIntegration, Sticker } from "./guilds";
 import type { AnyInteractionGateway } from "./interactions";
 import type Guild from "../structures/Guild";
 import type UnavailableGuild from "../structures/UnavailableGuild";

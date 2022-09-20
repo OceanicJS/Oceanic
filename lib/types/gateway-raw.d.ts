@@ -8,7 +8,7 @@ import type {
     RawRole,
     RawStageInstance,
     RawUnavailableGuild,
-    Sticker
+    RawSticker
 } from "./guilds";
 import type { RawClientApplication, RawPartialApplication } from "./oauth";
 import type { RawExtendedUser, RawUser } from "./users";
@@ -213,7 +213,7 @@ export interface GuildEmojisUpdatePacket extends BaseDispatchPacket {
 export interface GuildStickersUpdatePacket extends BaseDispatchPacket {
     d: {
         guild_id: string;
-        stickers: Array<Sticker>;
+        stickers: Array<RawSticker>;
     };
     t: "GUILD_STICKERS_UPDATE";
 }

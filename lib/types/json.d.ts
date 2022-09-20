@@ -15,8 +15,9 @@ import type {
     IntegrationAccount,
     RawGuild,
     RoleTags,
-    Sticker,
-    WelcomeScreen
+    RawSticker,
+    WelcomeScreen,
+    Sticker
 } from "./guilds";
 import type {
     ChannelMention,
@@ -301,7 +302,7 @@ export interface JSONGuildPreview extends JSONBase {
     icon: string | null;
     name: string;
     splash: string | null;
-    stickers: Array<Sticker>;
+    stickers: Array<RawSticker>;
 }
 export interface JSONGuildTemplate {
     code: string;

@@ -70,7 +70,6 @@ import type {
     RawMember,
     RawRole,
     SearchMembersOptions,
-    Sticker,
     WelcomeScreen,
     WidgetImageStyle,
     WidgetSettings,
@@ -83,7 +82,10 @@ import type {
     RawWidget,
     RawStageInstance,
     EditMFALevelOptions,
-    RESTMember
+    RESTMember,
+    CreateStickerOptions,
+    Sticker,
+    EditStickerOptions
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -492,7 +494,7 @@ export default class Guild extends Base {
             this.splash = data.splash;
         }
         if (data.stickers !== undefined) {
-            this.stickers = data.stickers;
+            this.stickers = data.stickers.map(sticker => this.client.util.convertSticker(sticker));
         }
         if (data.system_channel_flags !== undefined) {
             this.systemChannelFlags = data.system_channel_flags;
@@ -652,6 +654,14 @@ export default class Guild extends Base {
     }
 
     /**
+     * Create a sticker.
+     * @param options The options for creating the sticker.
+     */
+    async createSticker(options: CreateStickerOptions): Promise<Sticker> {
+        return this.client.rest.guilds.createSticker(this.id, options);
+    }
+
+    /**
      * Create a guild template.
      * @param options The options for creating the template.
      */
@@ -709,6 +719,15 @@ export default class Guild extends Base {
      */
     async deleteScheduledEvent(eventID: string, reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
+    }
+
+    /**
+     * Delete a sticker.
+     * @param stickerID The ID of the sticker to delete.
+     * @param reason The reason for deleting the sticker.
+     */
+    async deleteSticker(stickerID: string, reason?: string): Promise<void> {
+        return this.client.rest.guilds.deleteSticker(this.id, stickerID, reason);
     }
 
     /**
@@ -815,6 +834,14 @@ export default class Guild extends Base {
      */
     async editScheduledEvent(options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         return this.client.rest.guilds.editScheduledEvent(this.id, options);
+    }
+
+    /**
+     * Edit a sticker.
+     * @param options The options for editing the sticker.
+     */
+    async editSticker(stickerID: string, options: EditStickerOptions): Promise<Sticker> {
+        return this.client.rest.guilds.editSticker(this.id, stickerID, options);
     }
 
     /**
@@ -1003,6 +1030,21 @@ export default class Guild extends Base {
      */
     async getScheduledEvents(withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
         return this.client.rest.guilds.getScheduledEvents(this.id, withUserCount);
+    }
+
+    /**
+     * Get a sticker. Response will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * @param stickerID The ID of the sticker to get.
+     */
+    async getSticker(stickerID: string): Promise<Sticker> {
+        return this.client.rest.guilds.getSticker(this.id, stickerID);
+    }
+
+    /**
+     * Get this guild's stickers. Stickers will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     */
+    async getStickers(): Promise<Array<Sticker>> {
+        return this.client.rest.guilds.getStickers(this.id);
     }
 
     /**

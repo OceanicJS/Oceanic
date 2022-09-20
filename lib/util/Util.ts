@@ -30,7 +30,9 @@ import type {
     AnyGuildChannelWithoutThreads,
     RawChannel,
     AnyChannel,
-    RESTMember
+    RESTMember,
+    RawSticker,
+    Sticker
 } from "../types";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
@@ -149,7 +151,7 @@ export default class Util {
         if (Buffer.isBuffer(img)) {
             const b64 = img.toString("base64");
             let mime: string | undefined;
-            const magic = [...new Uint8Array(img.subarray(0, 4))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+            const magic = this.getMagic(img);
             switch (magic) {
                 case "47494638": mime = "image/gif"; break;
                 case "89504E47": mime = "image/png"; break;
@@ -164,6 +166,23 @@ export default class Util {
             throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
         }
         return img;
+    }
+
+    convertSticker(raw: RawSticker): Sticker {
+        return {
+            asset:       raw.asset,
+            available:   raw.available,
+            description: raw.description,
+            formatType:  raw.format_type,
+            guildID:     raw.guild_id,
+            id:          raw.id,
+            name:        raw.name,
+            packID:      raw.pack_id,
+            sortValue:   raw.sort_value,
+            tags:        raw.tags,
+            type:        raw.type,
+            user:        raw.user ? this.#client.users.update(raw.user) : undefined
+        };
     }
 
     embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
@@ -278,6 +297,10 @@ export default class Util {
             size = this.#client.options.defaultImageSize;
         }
         return `${CDN_URL}${url}.${format}?size=${size}`;
+    }
+
+    getMagic(file: Buffer): string {
+        return [...new Uint8Array(file.subarray(0, 4))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
     }
 
     optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions {

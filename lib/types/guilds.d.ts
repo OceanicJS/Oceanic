@@ -13,6 +13,7 @@ import type {
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { PresenceUpdate } from "./gateway";
 import type { RawVoiceState } from "./voice";
+import { File } from "./request-handler";
 import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,
@@ -85,7 +86,7 @@ export interface RawGuild {
     rules_channel_id: string | null;
     splash: string | null;
     stage_instances: Array<RawStageInstance>;
-    stickers?: Array<Sticker>;
+    stickers?: Array<RawSticker>;
     system_channel_flags: number;
     system_channel_id: string | null;
     threads: Array<RawThreadChannel>;
@@ -155,7 +156,7 @@ export interface WelcomeScreenChannel {
     /** The name (or unicode characters) of the emoji to use on the welcome channel. */
     emojiName: string | null;
 }
-export interface Sticker {
+export interface RawSticker {
     /** @deprecated */
     asset?: "";
     available?: boolean;
@@ -169,6 +170,21 @@ export interface Sticker {
     tags: string;
     type: StickerTypes;
     user?: RawUser;
+}
+export interface Sticker {
+    /** @deprecated */
+    asset?: "";
+    available?: boolean;
+    description: string | null;
+    formatType: StickerFormatTypes;
+    guildID?: string;
+    id: string;
+    name: string;
+    packID?: string;
+    sortValue?: number;
+    tags: string;
+    type: StickerTypes;
+    user?: User;
 }
 
 export interface RawMember {
@@ -257,7 +273,7 @@ export interface RawGuildPreview {
     id: string;
     name: string;
     splash: string | null;
-    stickers: Array<Sticker>;
+    stickers: Array<RawSticker>;
 }
 
 export interface CreateGuildOptions {
@@ -627,4 +643,48 @@ export interface EditMFALevelOptions {
     level: MFALevels;
     /** The reason for editing the MFA level. */
     reason?: string;
+}
+
+export interface CreateStickerOptions {
+    /** The description of the sticker. */
+    description: string;
+    /** The file contents of the sticker. PNG, APNG, or LOTTIE (only `VERIFIED` & `PARTNERED` servers can use lottie). */
+    file: File;
+    /** The name of the sticker. */
+    name: string;
+    /** The reason for creating the sticker. */
+    reason?: string;
+    /** The autocomplete/suggestions tags for the sticker. */
+    tags: string;
+}
+
+export interface EditStickerOptions {
+    /** The description of the sticker. */
+    description?: string | null;
+    /** The name of the sticker. */
+    name?: string;
+    /** The reason for editing the sticker. */
+    reason?: string;
+    /** The autocomplete/suggestions tags for the sticker. */
+    tags?: string;
+}
+
+export interface RawStickerPack {
+    banner_asset_id?: string;
+    cover_sticker_id?: string;
+    description: string;
+    id: string;
+    name: string;
+    sku_id: string;
+    stickers: Array<RawSticker>;
+}
+
+export interface StickerPack {
+    bannerAssetID?: string;
+    coverStickerID?: string;
+    description: string;
+    id: string;
+    name: string;
+    skuID: string;
+    stickers: Array<Sticker>;
 }

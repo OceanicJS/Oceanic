@@ -127,12 +127,9 @@ export default class RequestHandler {
                         if (options.json) {
                             stringBody = JSON.stringify(options.json, (k, v: unknown) => typeof v === "bigint" ? v.toString() : v);
                         }
-                        if (options.form) {
-                            reqBody = options.form;
-                        }
-                        if (options.files && options.files.length > 0) {
-                            const data = reqBody && reqBody instanceof FormData ? reqBody : new FormData();
-                            options.files.forEach((file, index) => {
+                        if (options.form || (options.files && options.files.length > 0)) {
+                            const data = options.form ?? new FormData();
+                            options.files?.forEach((file, index) => {
                                 if (!file.contents) {
                                     return;
                                 }
@@ -151,9 +148,7 @@ export default class RequestHandler {
                     if (this.options.host) {
                         headers.Host = this.options.host;
                     }
-                    const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length > 0 ? `?${options.query.toString(
-
-                    )}` : ""}`;
+                    const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length > 0 ? `?${options.query.toString()}` : ""}`;
                     let latency = Date.now();
                     const controller = new AbortController();
                     let timeout: NodeJS.Timeout | undefined;

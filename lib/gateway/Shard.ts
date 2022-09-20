@@ -534,7 +534,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const oldStickers = guild?.stickers ? [...guild.stickers] : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ stickers: packet.d.stickers });
-                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers ?? packet.d.stickers, oldStickers);
+                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
                 break;
             }
 

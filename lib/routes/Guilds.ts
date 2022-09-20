@@ -40,7 +40,11 @@ import type {
     CreateChannelReturn,
     CreateChannelOptions,
     EditMFALevelOptions,
-    RESTMember
+    RESTMember,
+    RawSticker,
+    Sticker,
+    CreateStickerOptions,
+    EditStickerOptions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -79,6 +83,7 @@ import Guild from "../structures/Guild";
 import Member from "../structures/Member";
 import type { Uncached } from "../types/shared";
 import ApplicationCommand from "../structures/ApplicationCommand";
+import { File, FormData } from "undici";
 
 /** Various methods for interacting with guilds. */
 export default class Guilds {
@@ -388,6 +393,35 @@ export default class Guilds {
     }
 
     /**
+     * Create a sticker.
+     * @param id The ID of the guild.
+     * @param options The options for creating the sticker.
+     */
+    async createSticker(id: string, options: CreateStickerOptions): Promise<Sticker> {
+        const magic = this.#manager.client.util.getMagic(options.file.contents);
+        let mime: string | undefined;
+        switch (magic) {
+            // png & apng have the same magic
+            case "89504E47": mime = "image/png"; break;
+            // lottie
+            case "7B227622": mime = "application/json"; break;
+        }
+
+        const form = new FormData();
+        form.append("description", options.description);
+        form.append("name", options.name);
+        form.append("tags", options.tags);
+        form.append("file", new File([options.file.contents], options.file.name, { type: mime }));
+
+        return this.#manager.authRequest<RawSticker>({
+            method: "POST",
+            path:   Routes.GUILD_STICKERS(id),
+            form,
+            reason: options.reason
+        }).then(data => this.#manager.client.util.convertSticker(data));
+    }
+
+    /**
      * Create a guild template.
      * @param id The ID of the guild to create a template from.
      * @param options The options for creating the template.
@@ -480,6 +514,20 @@ export default class Guilds {
         await this.#manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.GUILD_SCHEDULED_EVENT(id, eventID),
+            reason
+        });
+    }
+
+    /**
+     * Delete a sticker.
+     * @param id The ID of the guild.
+     * @param stickerID The ID of the sticker to delete.
+     * @param reason The reason for deleting the sticker.
+     */
+    async deleteSticker(id: string, stickerID: string, reason?: string): Promise<void> {
+        await this.#manager.authRequest<null>({
+            method: "DELETE",
+            path:   Routes.GUILD_STICKER(id, stickerID),
             reason
         });
     }
@@ -784,6 +832,24 @@ export default class Guilds {
             },
             reason
         }).then(data => this.#manager.client.guilds.get(id)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this.#manager.client));
+    }
+
+    /**
+     * Edit a sticker.
+     * @param id The ID of the guild.
+     * @param options The options for editing the sticker.
+     */
+    async editSticker(id: string, stickerID: string, options: EditStickerOptions): Promise<Sticker> {
+        return this.#manager.authRequest<RawSticker>({
+            method: "PATCH",
+            path:   Routes.GUILD_STICKER(id, stickerID),
+            json:   {
+                description: options.description,
+                name:        options.name,
+                tags:        options.tags
+            },
+            reason: options.reason
+        }).then(data => this.#manager.client.util.convertSticker(data));
     }
 
     /**
@@ -1251,7 +1317,7 @@ export default class Guilds {
     }
 
     /**
-     * Get a guild's scheduled events
+     * Get a guild's scheduled events.
      * @param id The ID of the guild.
      * @param withUserCount If the number of users subscribed to the event should be included.
      */
@@ -1266,6 +1332,29 @@ export default class Guilds {
             path:   Routes.GUILD_SCHEDULED_EVENTS(id),
             query
         }).then(data => data.map(d => guild?.scheduledEvents.update(d) ?? new GuildScheduledEvent(d, this.#manager.client)));
+    }
+
+    /**
+     * Get a sticker. Response will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * @param id The ID of the guild.
+     * @param stickerID The ID of the sticker to get.
+     */
+    async getSticker(id: string, stickerID: string): Promise<Sticker> {
+        return this.#manager.authRequest<RawSticker>({
+            method: "GET",
+            path:   Routes.GUILD_STICKER(id, stickerID)
+        }).then(data => this.#manager.client.util.convertSticker(data));
+    }
+
+    /**
+     * Get a guild's stickers. Stickers will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * @param id The ID of the guild.
+     */
+    async getStickers(id: string): Promise<Array<Sticker>> {
+        return this.#manager.authRequest<Array<RawSticker>>({
+            method: "GET",
+            path:   Routes.GUILD_STICKERS(id)
+        }).then(data => data.map(d => this.#manager.client.util.convertSticker(d)));
     }
 
     /**
