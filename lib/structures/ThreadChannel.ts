@@ -2,11 +2,8 @@
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
 import User from "./User";
-import type TextChannel from "./TextChannel";
-import type AnnouncementChannel from "./AnnouncementChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
-import type ForumChannel from "./ForumChannel";
 import type { ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -23,7 +20,8 @@ import type {
     RawThreadChannel,
     ThreadMember,
     ThreadMetadata,
-    PurgeOptions
+    PurgeOptions,
+    ThreadParentChannel
 } from "../types/channels";
 import type { JSONThreadChannel } from "../types/json";
 
@@ -47,7 +45,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     owner?: User;
     /** The ID of the owner of this thread. */
     ownerID: string;
-    declare parent?: TextChannel | AnnouncementChannel | ForumChannel;
+    declare parent?: ThreadParentChannel;
     declare parentID: string;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;

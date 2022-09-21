@@ -36,6 +36,7 @@ import type User from "../structures/User";
 import type VoiceChannel from "../structures/VoiceChannel";
 import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
+import Guild from "../structures/Guild";
 
 export interface RawChannel {
     application_id?: string;
@@ -874,8 +875,8 @@ export interface ForumEmoji {
     name: string | null;
 }
 
-export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; } & Uncached;
-export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { parentID: string; };
+export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; channelID: string; guild?: Guild; guildID?: string; } & Uncached;
+export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { guild?: Guild; guildID: string; parent?: ThreadParentChannel; parentID: string; };
 
 export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
     /** The ID of the message to purge after. */
@@ -894,3 +895,5 @@ export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
      */
     filter?(message: Message<T>): boolean | PromiseLike<boolean>;
 }
+
+export type ThreadParentChannel = TextChannel | AnnouncementChannel | ForumChannel;

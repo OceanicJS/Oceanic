@@ -34,7 +34,8 @@ import type {
     AnyThreadChannel,
     InviteChannel,
     RawMessage,
-    ThreadMember
+    ThreadMember,
+    ThreadParentChannel
 } from "../types/channels";
 import type TextChannel from "../structures/TextChannel";
 import type { JSONAnnouncementThreadChannel } from "../types/json";
@@ -54,8 +55,6 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
-import type ForumChannel from "../structures/ForumChannel";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { Data } from "ws";
 import WebSocket from "ws";
 import type Pako from "pako";
@@ -600,16 +599,28 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 if (channel) {
                     channel.messages?.delete(packet.d.id);
                 }
-                this.client.emit("messageDelete", message ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.id });
+                this.client.emit("messageDelete", message ?? {
+                    channel:   channel ?? { id: packet.d.channel_id },
+                    channelID: packet.d.channel_id,
+                    guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
+                    guildID:   packet.d.guild_id, id:        packet.d.id
+                });
                 break;
             }
 
             case "MESSAGE_DELETE_BULK": {
                 const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id);
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
                 this.client.emit("messageDeleteBulk", packet.d.ids.map(id => {
-                    const message = channel?.messages?.get(id) ?? { channel: channel ?? { id: packet.d.channel_id }, id };
+                    const message = channel?.messages?.get(id);
                     channel?.messages?.delete(id);
-                    return message;
+                    return message ?? {
+                        channel:   channel ?? { id: packet.d.channel_id },
+                        channelID: packet.d.channel_id,
+                        guild,
+                        guildID:   packet.d.guild_id,
+                        id
+                    };
                 }));
                 break;
             }
@@ -637,7 +648,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                 }
 
-                this.client.emit("messageReactionAdd", message ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id }, reactor, packet.d.emoji);
+                this.client.emit("messageReactionAdd", message ?? {
+                    channel:   channel ?? { id: packet.d.channel_id },
+                    channelID: packet.d.channel_id,
+                    guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
+                    guildID:   packet.d.guild_id,
+                    id:        packet.d.message_id
+                }, reactor, packet.d.emoji);
                 break;
             }
 
@@ -659,7 +676,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     }
                 }
 
-                this.client.emit("messageReactionRemove", message ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id }, reactor, packet.d.emoji);
+                this.client.emit("messageReactionRemove", message ?? {
+                    channel:   channel ?? { id: packet.d.channel_id },
+                    channelID: packet.d.channel_id,
+                    guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
+                    guildID:   packet.d.guild_id,
+                    id:        packet.d.message_id
+                }, reactor, packet.d.emoji);
                 break;
             }
 
@@ -671,7 +694,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     message.reactions = {};
                 }
 
-                this.client.emit("messageReactionRemoveAll", message ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id });
+                this.client.emit("messageReactionRemoveAll", message ?? {
+                    channel:   channel ?? { id: packet.d.channel_id },
+                    channelID: packet.d.channel_id,
+                    guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
+                    guildID:   packet.d.guild_id,
+                    id:        packet.d.message_id
+                });
                 break;
             }
 
@@ -686,7 +715,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     }
                 }
 
-                this.client.emit("messageReactionRemoveEmoji", message ?? { channel: channel ?? { id: packet.d.channel_id }, id: packet.d.message_id }, packet.d.emoji);
+                this.client.emit("messageReactionRemoveEmoji", message ?? {
+                    channel:   channel ?? { id: packet.d.channel_id },
+                    channelID: packet.d.channel_id,
+                    guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
+                    guildID:   packet.d.guild_id,
+                    id:        packet.d.message_id
+                }, packet.d.emoji);
                 break;
             }
 
@@ -805,7 +840,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "THREAD_CREATE": {
                 const thread = this.client.util.updateThread(packet.d);
-                const channel = this.client.getChannel<TextChannel | AnnouncementChannel | ForumChannel>(packet.d.parent_id!);
+                const channel = this.client.getChannel<ThreadParentChannel>(packet.d.parent_id!);
                 if (channel?.type === ChannelTypes.GUILD_FORUM) {
                     channel.lastThread = thread as PublicThreadChannel;
                     channel.lastThreadID = thread.id;
@@ -815,16 +850,20 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "THREAD_DELETE": {
+                const channel = this.client.getChannel<ThreadParentChannel>(packet.d.parent_id!);
                 const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id) ?? {
                     id:       packet.d.id,
-                    type:     packet.d.type,
-                    parentID: packet.d.parent_id!
+                    guild:    this.client.guilds.get(packet.d.guild_id),
+                    guildID:  packet.d.guild_id,
+                    parent:   channel,
+                    parentID: packet.d.parent_id!,
+                    type:     packet.d.type
                 };
-                const channel = this.client.getChannel<TextChannel | AnnouncementChannel | ForumChannel>(packet.d.parent_id!);
                 if (channel) {
                     channel.threads?.delete(packet.d.id);
                     if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
                         channel.lastThread = null;
+                        channel.lastThreadID = null;
                     }
                 }
                 this.client.emit("threadDelete", thread);
