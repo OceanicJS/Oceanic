@@ -18,6 +18,7 @@ import type {
     JSONAnnouncementThreadChannel,
     JSONAutoModerationRule,
     JSONCategoryChannel,
+    JSONForumChannel,
     JSONGuild,
     JSONIntegration,
     JSONMember,
@@ -56,6 +57,7 @@ import type Invite from "../structures/Invite";
 import type Message from "../structures/Message";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type StageInstance from "../structures/StageInstance";
+import ForumChannel from "../structures/ForumChannel";
 
 
 export interface ClientEvents {
@@ -76,7 +78,7 @@ export interface ClientEvents {
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
     channelPinsUpdate: [channel: AnyTextChannel | Uncached, timestamp: Date | null];
     /** @event Emitted when a channel is updated. Requires the `GUILDS` intent. */
-    channelUpdate: [channel: TextChannel, oldChannel: JSONTextChannel | null] | [channel: VoiceChannel, oldChannel: JSONVoiceChannel | null] | [channel: CategoryChannel, oldChannel: JSONCategoryChannel | null] | [channel: AnnouncementChannel, oldChannel: JSONAnnouncementChannel | null] | [channel: StageChannel, oldChannel: JSONStageChannel | null];
+    channelUpdate: [channel: TextChannel, oldChannel: JSONTextChannel | null] | [channel: VoiceChannel, oldChannel: JSONVoiceChannel | null] | [channel: CategoryChannel, oldChannel: JSONCategoryChannel | null] | [channel: AnnouncementChannel, oldChannel: JSONAnnouncementChannel | null] | [channel: StageChannel, oldChannel: JSONStageChannel | null] | [channel: ForumChannel, oldChannel: JSONForumChannel | null];
     /** @event Emitted when a shard connects. */
     connect: [id: number];
     /** @event Emitted with various information for debugging. */
