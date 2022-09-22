@@ -53,6 +53,8 @@ export default class VoiceChannel extends GuildChannel {
     /** The topic of the channel. */
     topic: string | null;
     declare type: ChannelTypes.GUILD_VOICE;
+    /** The maximum number of members in this voice channel. `0` is unlimited. */
+    userLimit: number;
     /** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
     videoQualityMode: VideoQualityModes;
     voiceMembers: TypedCollection<string, RawMember, Member, [guildID: string]>;
@@ -68,6 +70,7 @@ export default class VoiceChannel extends GuildChannel {
         this.topic = data.topic;
         this.videoQualityMode = data.video_quality_mode;
         this.voiceMembers = new TypedCollection(Member, client);
+        this.userLimit = data.user_limit;
         this.update(data);
     }
 
@@ -334,6 +337,7 @@ export default class VoiceChannel extends GuildChannel {
             position:             this.position,
             rtcRegion:            this.rtcRegion,
             topic:                this.topic,
+            userLimit:            this.userLimit,
             type:                 this.type,
             videoQualityMode:     this.videoQualityMode,
             voiceMembers:         this.voiceMembers.map(member => member.id)

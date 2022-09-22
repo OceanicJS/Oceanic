@@ -563,6 +563,7 @@ export interface JSONVoiceChannel extends JSONGuildChannel {
     rtcRegion: string | null;
     topic: string | null;
     type: ChannelTypes.GUILD_VOICE;
+    userLimit: number;
     videoQualityMode: VideoQualityModes;
     voiceMembers: Array<string>;
 }
