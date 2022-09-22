@@ -213,7 +213,7 @@ export interface JSONForumChannel extends JSONGuildChannel {
     availableTags: Array<ForumTag>;
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     defaultReactionEmoji: ForumEmoji | null;
-    defaultSortOrder?: SortOrderModes;
+    defaultSortOrder: SortOrderModes | null;
     defaultThreadRateLimitPerUser: number;
     flags: number;
     lastThreadID: string | null;

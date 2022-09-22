@@ -48,7 +48,7 @@ export interface RawChannel {
         emoji_id: string | null;
         emoji_name: string | null;
     } | null;
-    default_sort_order?: SortOrderModes;
+    default_sort_order?: SortOrderModes | null;
     default_thread_rate_limit_per_user?: number;
     flags?: number;
     guild_id?: string;

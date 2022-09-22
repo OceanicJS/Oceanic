@@ -34,7 +34,7 @@ export default class ForumChannel extends GuildChannel {
     /** The default reaction emoji for threads. */
     defaultReactionEmoji: ForumEmoji | null;
     /** The default sort order mode used to sort threads. */
-    defaultSortOrder?: SortOrderModes;
+    defaultSortOrder: SortOrderModes | null;
     /** The default amount of seconds between non-moderators sending messages in threads. */
     defaultThreadRateLimitPerUser: number;
     /** The flags for this channel, see {@link Constants.ChannelFlags}. */
@@ -65,6 +65,7 @@ export default class ForumChannel extends GuildChannel {
         this.availableTags = [];
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         this.defaultReactionEmoji = null;
+        this.defaultSortOrder = null;
         this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
         this.flags = data.flags;
         this.lastThreadID = data.last_message_id;
