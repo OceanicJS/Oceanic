@@ -194,7 +194,7 @@ export interface ClientEvents {
     /** @event Emitted when the members of a thread are updated. Requires the `GUILDS` intent. The received information will be different if `GUILD_MEMBERS` is also used. */
     threadMembersUpdate: [thread: AnyThreadChannel | Uncached, addedMembers: Array<ThreadMember>, removedMembers: Array<ThreadMember | Uncached>];
     /** @event Emitted when a thread is updated. Requires the `GUILDS` intent. */
-    threadUpdate: [thread: AnnouncementThreadChannel, oldThread: JSONAnnouncementThreadChannel] | [thread: PublicThreadChannel, oldThread: JSONPublicThreadChannel | null] | [thread: PrivateThreadChannel | null, oldThread: JSONPrivateThreadChannel | null];
+    threadUpdate: [thread: AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel, oldThread: JSONAnnouncementThreadChannel | JSONPublicThreadChannel | PrivateThreadChannel | null];
     /** @event Emitted when a user starts typing. Requires the `GUILD_MESSAGE_TYPING` for guilds, and `DIRECT_MESSAGE_TYPING` for direct messages. */
     typingStart: [channel: PrivateChannel | Uncached, user: User | Uncached, startTimestamp: Date] | [channel: AnyGuildTextChannel | Uncached, member: Member, startTimestamp: Date];
     /** @event Emitted when a guild is created, but is unavailable. Requires the `GUILDS` intent.*/
