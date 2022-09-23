@@ -961,7 +961,7 @@ export default class Guilds {
      * @param id The ID of the guild.
      * @param withCounts If the approximate number of members and online members should be included.
      */
-    async get(id: string, withCounts?: number): Promise<Guild> {
+    async get(id: string, withCounts?: boolean): Promise<Guild> {
         const query = new URLSearchParams();
         if (withCounts) {
             query.set("with_counts", withCounts.toString());
