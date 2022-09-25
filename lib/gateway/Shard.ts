@@ -471,7 +471,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const role = guild?.roles.get(packet.d.role_id);
                 guild?.roles.delete(packet.d.role_id);
-                this.client.emit("guildRoleDelete", role ?? { id: packet.d.role_id });
+                this.client.emit("guildRoleDelete", role ?? { id: packet.d.role_id }, guild ?? { id: packet.d.guild_id });
                 break;
             }
 
