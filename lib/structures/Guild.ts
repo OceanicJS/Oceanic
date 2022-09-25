@@ -417,8 +417,14 @@ export default class Guild extends Base {
         }
         if (data.emojis !== undefined) {
             this.emojis = data.emojis.map(emoji => ({
-                ...emoji,
-                user: emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
+                animated:      emoji.animated,
+                available:     emoji.available,
+                id:            emoji.id,
+                managed:       emoji.managed,
+                name:          emoji.name,
+                requireColons: emoji.require_colons,
+                roles:         emoji.roles,
+                user:          emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
             }));
         }
         if (data.explicit_content_filter !== undefined) {

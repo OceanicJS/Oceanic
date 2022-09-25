@@ -129,7 +129,7 @@ export interface Emoji {
     user?: RawUser;
 }
 export type RawGuildEmoji = Required<Omit<Emoji, "user" | "id">> & { id: string; user?: RawUser; };
-export type GuildEmoji = Omit<RawGuildEmoji, "user" | "id"> & { id: string; user?: User; };
+export type GuildEmoji = Omit<RawGuildEmoji, "user" | "id" | "require_colons"> & { id: string; requireColons?: boolean; user?: User; };
 export interface RawWelcomeScreen {
     description: string | null;
     welcome_channels: Array<RawWelcomeScreenChannel>;
