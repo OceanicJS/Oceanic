@@ -283,7 +283,7 @@ export interface JSONGuild extends JSONBase {
     verificationLevel: VerificationLevels;
     voiceStates: Array<JSONVoiceState>;
     welcomeScreen?: WelcomeScreen;
-    widgetChannelID?: string | null;
+    widgetChannelID: string | null;
     widgetEnabled?: boolean;
 }
 export interface JSONGuildChannel extends JSONChannel {
