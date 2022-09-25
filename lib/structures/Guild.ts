@@ -1261,7 +1261,7 @@ export default class Guild extends Base {
             premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
             premiumSubscriptionCount:    this.premiumSubscriptionCount,
             premiumTier:                 this.premiumTier,
-            publicUpdatesChannel:        this.publicUpdatesChannel?.id ?? null,
+            publicUpdatesChannelID:      this.publicUpdatesChannelID,
             region:                      this.region,
             roles:                       this.roles.map(role => role.toJSON()),
             rulesChannelID:              this.rulesChannelID,
@@ -1277,7 +1277,7 @@ export default class Guild extends Base {
             verificationLevel:           this.verificationLevel,
             voiceStates:                 this.voiceStates.map(state => state.toJSON()),
             welcomeScreen:               this.welcomeScreen,
-            widgetChannel:               this.widgetChannel === null ? null : this.widgetChannel?.id,
+            widgetChannelID:             this.widgetChannelID,
             widgetEnabled:               this.widgetEnabled
         };
     }

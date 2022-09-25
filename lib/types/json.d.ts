@@ -267,7 +267,7 @@ export interface JSONGuild extends JSONBase {
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
     premiumTier: PremiumTiers;
-    publicUpdatesChannel: string | null;
+    publicUpdatesChannelID: string | null;
     region?: string | null;
     roles: Array<JSONRole>;
     rulesChannelID: string | null;
@@ -283,7 +283,7 @@ export interface JSONGuild extends JSONBase {
     verificationLevel: VerificationLevels;
     voiceStates: Array<JSONVoiceState>;
     welcomeScreen?: WelcomeScreen;
-    widgetChannel?: string | null;
+    widgetChannelID?: string | null;
     widgetEnabled?: boolean;
 }
 export interface JSONGuildChannel extends JSONChannel {
