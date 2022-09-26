@@ -189,7 +189,7 @@ export interface ClientEvents {
     threadDelete: [thread: PossiblyUncachedThread];
     /** @event Emitted when a guild's threads are synced. Requires the `GUILDS` intent. */
     threadListSync: [threads: Array<AnyThreadChannel>, members: Array<ThreadMember>];
-    /** @event Emitted when a thread member is updated. Requires the `GUILDS` intent. */
+    /** @event Emitted when the client's thread member is updated. Requires the `GUILDS` intent. */
     threadMemberUpdate: [thread: AnyThreadChannel | Uncached, member: ThreadMember, oldMember: ThreadMember | null];
     /** @event Emitted when the members of a thread are updated. Requires the `GUILDS` intent. The received information will be different if `GUILD_MEMBERS` is also used. */
     threadMembersUpdate: [thread: AnyThreadChannel | Uncached, addedMembers: Array<ThreadMember>, removedMembers: Array<ThreadMember | Uncached>];
