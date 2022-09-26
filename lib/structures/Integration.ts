@@ -123,7 +123,7 @@ export default class Integration extends Base {
             expireGracePeriod: this.expireGracePeriod,
             name:              this.name,
             revoked:           this.revoked,
-            roleID:            this.roleID ?? undefined,
+            roleID:            this.roleID,
             scopes:            this.scopes,
             subscriberCount:   this.subscriberCount,
             syncedAt:          this.syncedAt?.getTime(),
