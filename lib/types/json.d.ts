@@ -64,7 +64,8 @@ import type {
     VerificationLevels,
     VideoQualityModes,
     WebhookTypes,
-    SortOrderModes
+    SortOrderModes,
+    StageInstancePrivacyLevels
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
@@ -505,6 +506,7 @@ export interface JSONStageInstance extends JSONBase {
     channelID: string;
     discoverableDisabled: boolean;
     guildID: string;
+    privacyLevel: StageInstancePrivacyLevels;
     scheduledEventID: string | null;
     topic: string;
 }
