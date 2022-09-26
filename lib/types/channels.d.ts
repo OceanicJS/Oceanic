@@ -139,12 +139,20 @@ export interface RawThreadMember {
 }
 export type RawChannelThreadMember = Pick<RawThreadMember, "flags" | "join_timestamp">;
 
-export interface ThreadMember {
+export interface ThreadMember extends UncachedThreadMember {
+    /** The flags for this thread member. Used for notifications. */
     flags: number;
-    id: string;
+    /** The time at which this member joined the thread. */
     joinTimestamp: Date;
+}
+
+export interface UncachedThreadMember {
+    /** The ID of the thread this member is for. */
+    id: string;
+    /** The ID of the associated user. */
     userID: string;
 }
+
 export interface GatewayThreadMember {
     flags: number;
     joinTimestamp: Date;

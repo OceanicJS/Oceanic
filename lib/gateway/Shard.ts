@@ -36,7 +36,8 @@ import type {
     PossiblyUncachedInvite,
     RawMessage,
     ThreadMember,
-    ThreadParentChannel
+    ThreadParentChannel,
+    UncachedThreadMember
 } from "../types/channels";
 import type TextChannel from "../structures/TextChannel";
 import type { JSONAnnouncementThreadChannel } from "../types/json";
@@ -45,7 +46,6 @@ import StageChannel from "../structures/StageChannel";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Invite from "../structures/Invite";
 import Message from "../structures/Message";
-import type { Uncached } from "../types/shared";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import Interaction from "../structures/Interaction";
@@ -964,7 +964,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     joinTimestamp: new Date(rawMember.join_timestamp),
                     userID:        rawMember.user_id
                 }));
-                const removedMembers: Array<ThreadMember | Uncached> = (packet.d.removed_member_ids ?? []).map(id => ({ id }));
+                const removedMembers: Array<ThreadMember | UncachedThreadMember> = (packet.d.removed_member_ids ?? []).map(id => ({ userID: id, id: packet.d.id }));
                 if (thread) {
                     thread.memberCount = packet.d.member_count;
                     for (const rawMember of addedMembers) {
@@ -975,8 +975,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                             thread.members[index] = rawMember;
                         }
                     }
-                    for (const [index, { id }] of removedMembers.entries()) {
-                        const memberIndex = thread.members.findIndex(m => m.userID === id);
+                    for (const [index, { userID }] of removedMembers.entries()) {
+                        const memberIndex = thread.members.findIndex(m => m.userID === userID);
                         if (memberIndex >= 0) {
                             removedMembers[index] = thread.members[memberIndex];
                             thread.members.splice(memberIndex, 1);

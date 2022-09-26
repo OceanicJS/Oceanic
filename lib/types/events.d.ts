@@ -8,7 +8,8 @@ import type {
     PossiblyUncachedInvite,
     PossiblyUncachedMessage,
     PossiblyUncachedThread,
-    ThreadMember
+    ThreadMember,
+    UncachedThreadMember
 } from "./channels";
 import type { RawRequest } from "./request-handler";
 import type { AutoModerationActionExecution, Presence } from "./gateway";
@@ -193,7 +194,7 @@ export interface ClientEvents {
     /** @event Emitted when the client's thread member is updated. Requires the `GUILDS` intent. */
     threadMemberUpdate: [thread: MinimalPossiblyUncachedThread, member: ThreadMember, oldMember: ThreadMember | null];
     /** @event Emitted when the members of a thread are updated. Requires the `GUILDS` intent. The received information will be different if `GUILD_MEMBERS` is also used. */
-    threadMembersUpdate: [thread: MinimalPossiblyUncachedThread, addedMembers: Array<ThreadMember>, removedMembers: Array<ThreadMember | Uncached>];
+    threadMembersUpdate: [thread: MinimalPossiblyUncachedThread, addedMembers: Array<ThreadMember>, removedMembers: Array<ThreadMember | UncachedThreadMember>];
     /** @event Emitted when a thread is updated. Requires the `GUILDS` intent. */
     threadUpdate: [thread: AnnouncementThreadChannel, oldThread: JSONAnnouncementThreadChannel | null] | [thread: PublicThreadChannel, oldThread: JSONPublicThreadChannel | null] | [thread: PrivateThreadChannel, oldThread: JSONPrivateThreadChannel | null];
     /** @event Emitted when a user starts typing. Requires the `GUILD_MESSAGE_TYPING` for guilds, and `DIRECT_MESSAGE_TYPING` for direct messages. */
