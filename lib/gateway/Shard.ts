@@ -33,6 +33,7 @@ import type {
     AnyTextChannel,
     AnyThreadChannel,
     InviteChannel,
+    PossiblyUncachedInvite,
     RawMessage,
     ThreadMember,
     ThreadParentChannel
@@ -579,12 +580,30 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INVITE_CREATE": {
-                this.client.emit("inviteCreate", packet.d.guild_id === undefined ? null : this.client.guilds.get(packet.d.guild_id) ?? { id: packet.d.guild_id }, this.client.getChannel<InviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id }, new Invite(packet.d, this.client));
+                const invite = new Invite(packet.d, this.client);
+                if (packet.d.guild_id) {
+                    const guild = this.client.guilds.get(packet.d.guild_id);
+                    guild?.invites.set(invite.code, invite);
+                }
+                this.client.emit("inviteCreate", new Invite(packet.d, this.client));
                 break;
             }
 
             case "INVITE_DELETE": {
-                this.client.emit("inviteDelete", packet.d.guild_id === undefined ? null : this.client.guilds.get(packet.d.guild_id) ?? { id: packet.d.guild_id }, this.client.getChannel<InviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id }, packet.d.code);
+                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id);
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
+                let invite: PossiblyUncachedInvite = {
+                    code:      packet.d.code,
+                    channel,
+                    channelID: packet.d.channel_id,
+                    guild,
+                    guildID:   packet.d.guild_id
+                };
+                if (guild?.invites.has(packet.d.code)) {
+                    invite = guild.invites.get(packet.d.code)!;
+                    guild.invites.delete(packet.d.code);
+                }
+                this.client.emit("inviteDelete", invite);
                 break;
             }
 

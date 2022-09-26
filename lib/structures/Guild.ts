@@ -103,6 +103,7 @@ import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gatewa
 import Shard from "../gateway/Shard";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
+import Collection from "../util/Collection";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
@@ -145,6 +146,8 @@ export default class Guild extends Base {
     icon: string | null;
     /** The integrations in this guild. */
     integrations: TypedCollection<string, RawIntegration, Integration, [guildID?: string]>;
+    /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
+    invites: Collection<string, Invite>;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -244,6 +247,7 @@ export default class Guild extends Base {
         this.features = [];
         this.icon = null;
         this.integrations = new TypedCollection(Integration, client);
+        this.invites = new Collection();
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
         this.memberCount = data.member_count ?? data.approximate_member_count ?? 0;

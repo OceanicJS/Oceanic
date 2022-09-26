@@ -37,6 +37,7 @@ import type VoiceChannel from "../structures/VoiceChannel";
 import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
 import Guild from "../structures/Guild";
+import Invite from "../structures/Invite";
 
 export interface RawChannel {
     application_id?: string;
@@ -642,13 +643,22 @@ export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
 export type AnyGuildTextChannelWithoutThreads = Exclude<AnyGuildTextChannel, AnyThreadChannel>;
 export type AnyThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyVoiceChannel = VoiceChannel | StageChannel;
-export type InviteChannel = Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>;
+export type InviteChannel = Exclude<AnyChannel, PrivateChannel | CategoryChannel | AnyThreadChannel>;
 
 export interface PartialInviteChannel {
     icon?: string | null;
     id: string;
     name: string | null;
-    type: Exclude<ChannelTypes, ChannelTypes.GUILD_CATEGORY>;
+    type: Exclude<ChannelTypes, ChannelTypes.DM | ChannelTypes.GUILD_CATEGORY | ThreadChannelTypes>;
+}
+
+export type PossiblyUncachedInvite = Invite | UncachedInvite;
+export interface UncachedInvite {
+    channel?: InviteChannel;
+    channelID: string;
+    code: string;
+    guild?: Guild;
+    guildID?: string;
 }
 
 export interface GetChannelMessagesOptions {

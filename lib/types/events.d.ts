@@ -4,7 +4,7 @@ import type {
     AnyGuildTextChannel,
     AnyTextChannel,
     AnyThreadChannel,
-    InviteChannel,
+    PossiblyUncachedInvite,
     PossiblyUncachedMessage,
     PossiblyUncachedThread,
     ThreadMember
@@ -142,9 +142,9 @@ export interface ClientEvents {
     /** @event Emitted when an interaction is created. */
     interactionCreate: [interaction: AnyInteractionGateway];
     /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent. */
-    inviteCreate: [guild: Guild | Uncached | null, channel: InviteChannel | Uncached, invite: Invite];
+    inviteCreate: [invite: Invite];
     /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent. */
-    inviteDelete: [guild: Guild | Uncached | null, channel: InviteChannel | Uncached, code: string];
+    inviteDelete: [invite: PossiblyUncachedInvite];
     /** @event Emitted when a message is created. Requires the `GUILD_MESSAGES` intent for guild messages, `DIRECT_MESSAGES` for direct messages. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageCreate: [message: Message];
     /** @event Emitted when a message is created. Requires the `GUILD_MESSAGES` intent for guild messages, `DIRECT_MESSAGES` for direct messages. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
