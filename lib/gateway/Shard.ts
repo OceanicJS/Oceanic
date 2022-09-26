@@ -924,6 +924,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "THREAD_MEMBER_UPDATE": {
                 const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id);
+                const guild = this.client.guilds.get(packet.d.guild_id);
                 const threadMember: ThreadMember = {
                     id:            packet.d.id,
                     flags:         packet.d.flags,
@@ -941,12 +942,22 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     }
                 }
 
-                this.client.emit("threadMemberUpdate", thread ?? { id: packet.d.id }, threadMember, oldThreadMember);
+                this.client.emit(
+                    "threadMemberUpdate",
+                    thread ?? {
+                        id:      packet.d.id,
+                        guild,
+                        guildID: packet.d.guild_id
+                    },
+                    threadMember,
+                    oldThreadMember
+                );
                 break;
             }
 
             case "THREAD_MEMBERS_UPDATE": {
                 const thread = this.client.getChannel<AnyThreadChannel>(packet.d.id);
+                const guild = this.client.guilds.get(packet.d.guild_id);
                 const addedMembers: Array<ThreadMember> = (packet.d.added_members ?? []).map(rawMember => ({
                     flags:         rawMember.flags,
                     id:            rawMember.id,
@@ -972,7 +983,16 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         }
                     }
                 }
-                this.client.emit("threadMembersUpdate", thread ?? { id: packet.d.id }, addedMembers, removedMembers);
+                this.client.emit(
+                    "threadMembersUpdate",
+                    thread ?? {
+                        id:      packet.d.id,
+                        guild,
+                        guildID: packet.d.guild_id
+                    },
+                    addedMembers,
+                    removedMembers
+                );
                 break;
             }
 

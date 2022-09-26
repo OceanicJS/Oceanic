@@ -885,6 +885,7 @@ export interface ForumEmoji {
 
 export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; channelID: string; guild?: Guild; guildID?: string; } & Uncached;
 export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { guild?: Guild; guildID: string; parent?: ThreadParentChannel; parentID: string; };
+export type MinimalPossiblyUncachedThread = AnyThreadChannel | { guild?: Guild; guildID: string; id: string; };
 
 export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
     /** The ID of the message to purge after. */
