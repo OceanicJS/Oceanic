@@ -654,11 +654,9 @@ export interface PartialInviteChannel {
 
 export type PossiblyUncachedInvite = Invite | UncachedInvite;
 export interface UncachedInvite {
-    channel?: InviteChannel;
-    channelID: string;
+    channel?: InviteChannel | Uncached;
     code: string;
-    guild?: Guild;
-    guildID?: string;
+    guild?: Guild | Uncached;
 }
 
 export interface GetChannelMessagesOptions {

@@ -590,16 +590,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INVITE_DELETE": {
-                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id);
-                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
+                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) ?? { id: packet.d.guild_id } : undefined;
                 let invite: PossiblyUncachedInvite = {
-                    code:      packet.d.code,
+                    code: packet.d.code,
                     channel,
-                    channelID: packet.d.channel_id,
-                    guild,
-                    guildID:   packet.d.guild_id
+                    guild
                 };
-                if (guild?.invites.has(packet.d.code)) {
+                if (guild instanceof Guild && guild.invites.has(packet.d.code)) {
                     invite = guild.invites.get(packet.d.code)!;
                     guild.invites.delete(packet.d.code);
                 }
