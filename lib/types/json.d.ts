@@ -505,7 +505,7 @@ export interface JSONStageInstance extends JSONBase {
     channelID: string;
     discoverableDisabled: boolean;
     guildID: string;
-    scheduledEvent?: string | JSONScheduledEvent;
+    scheduledEventID: string | null;
     topic: string;
 }
 export interface JSONTeam extends JSONBase {
