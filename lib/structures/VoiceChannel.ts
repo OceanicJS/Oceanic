@@ -7,6 +7,7 @@ import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
 import Invite from "./Invite";
 import User from "./User";
+import Webhook from "./Webhook";
 import type { JoinVoiceChannelOptions } from "../types/voice";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
@@ -238,6 +239,13 @@ export default class VoiceChannel extends GuildChannel {
      */
     async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>>{
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
+    }
+
+    /**
+     * Get the webhooks in this channel.
+     */
+    async getWebhooks(): Promise<Array<Webhook>> {
+        return this.client.rest.webhooks.getForChannel(this.id);
     }
 
     /**

@@ -11,6 +11,7 @@ import type CategoryChannel from "./CategoryChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
 import User from "./User";
+import Webhook from "./Webhook";
 import type { ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions, ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -248,6 +249,13 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      */
     async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
+    }
+
+    /**
+     * Get the webhooks in this channel.
+     */
+    async getWebhooks(): Promise<Array<Webhook>> {
+        return this.client.rest.webhooks.getForChannel(this.id);
     }
 
     /**

@@ -6,6 +6,7 @@ import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type CategoryChannel from "./CategoryChannel";
+import Webhook from "./Webhook";
 import type Client from "../Client";
 import type {
     ArchivedThreads,
@@ -184,6 +185,13 @@ export default class ForumChannel extends GuildChannel {
      */
     async getPublicArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PublicThreadChannel>> {
         return this.client.rest.channels.getPublicArchivedThreads<PublicThreadChannel>(this.id, options);
+    }
+
+    /**
+     * Get the webhooks in this channel.
+     */
+    async getWebhooks(): Promise<Array<Webhook>> {
+        return this.client.rest.webhooks.getForChannel(this.id);
     }
 
     /**
