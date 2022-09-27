@@ -211,12 +211,12 @@ export default class RequestHandler {
                     }
                     if (options.method !== "GET" && (!res.headers.has("x-ratelimit-remaining") || !res.headers.has("x-ratelimit-limit")) && this.ratelimits[route].limit !== 1) {
                         this.#manager.client.emit("debug", [`Missing ratelimit headers for SequentialBucket(${this.ratelimits[route].remaining}/${this.ratelimits[route].limit}) with non-default limit\n`,
-                            `${res.status} ${res.headers.get("content-type")!}: ${options.method} ${route} | ${res.headers.get("cf-ray")!}\n`,
-                            `content-type = ${res.headers.get("content-type")!}\n`,
-                            `x-ratelimit-remaining = " + ${res.headers.get("x-ratelimit-remaining")!}\n`,
-                            `x-ratelimit-limit = " + ${res.headers.get("x-ratelimit-limit")!}\n`,
-                            `x-ratelimit-reset = " + ${res.headers.get("x-ratelimit-reset")!}\n`,
-                            `x-ratelimit-global = " + ${res.headers.get("x-ratelimit-global")!}`].join("\n"));
+                            `${res.status} ${res.headers.get("content-type") ?? "null"}: ${options.method} ${route} | ${res.headers.get("cf-ray") ?? "null"}\n`,
+                            `content-type = ${res.headers.get("content-type") ?? "null"}\n`,
+                            `x-ratelimit-remaining = ${res.headers.get("x-ratelimit-remaining") ?? "null"}\n`,
+                            `x-ratelimit-limit = ${res.headers.get("x-ratelimit-limit") ?? "null"}\n`,
+                            `x-ratelimit-reset = ${res.headers.get("x-ratelimit-reset") ?? "null"}\n`,
+                            `x-ratelimit-global = ${res.headers.get("x-ratelimit-global") ?? "null"}`].join("\n"));
                     }
 
                     this.ratelimits[route].remaining = !res.headers.has("x-ratelimit-remaining") ? 1 : Number(res.headers.get("x-ratelimit-remaining")) ?? 0;
