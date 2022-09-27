@@ -2,6 +2,8 @@ test/
 lib/
 docs/
 docs-plugin/
+examples/
+.github/
 .eslintignore
 .eslintrc.json
 .ncurc.json
@@ -11,3 +13,5 @@ scripts/
 dark.js
 favicon.ico
 typedoc.json
+CONTRIBUTING.md
+.npm-deprecaterc.json
