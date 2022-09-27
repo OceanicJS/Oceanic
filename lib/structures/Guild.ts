@@ -20,6 +20,7 @@ import StageChannel from "./StageChannel";
 import GuildTemplate from "./GuildTemplate";
 import GuildPreview from "./GuildPreview";
 import Invite from "./Invite";
+import Webhook from "./Webhook";
 import type {
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
@@ -1076,6 +1077,13 @@ export default class Guild extends Base {
      */
     async getVoiceRegions(): Promise<Array<VoiceRegion>> {
         return this.client.rest.guilds.getVoiceRegions(this.id);
+    }
+
+    /**
+     * Get the webhooks in this guild.
+     */
+    async getWebhooks(): Promise<Array<Webhook>> {
+        return this.client.rest.webhooks.getForGuild(this.id);
     }
 
     /**
