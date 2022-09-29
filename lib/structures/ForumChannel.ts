@@ -24,7 +24,7 @@ import type {
 } from "../types";
 import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
-import { AllPermissions, Permissions, SortOrderModes } from "../Constants";
+import { AllPermissions, Permissions, SortOrderTypes } from "../Constants";
 
 /** Represents a forum channel. Documentation for these is currently scarce, so they may not work entirely correctly. */
 export default class ForumChannel extends GuildChannel {
@@ -35,7 +35,7 @@ export default class ForumChannel extends GuildChannel {
     /** The default reaction emoji for threads. */
     defaultReactionEmoji: ForumEmoji | null;
     /** The default sort order mode used to sort threads. */
-    defaultSortOrder: SortOrderModes | null;
+    defaultSortOrder: SortOrderTypes | null;
     /** The default amount of seconds between non-moderators sending messages in threads. */
     defaultThreadRateLimitPerUser: number;
     /** The flags for this channel, see {@link Constants.ChannelFlags}. */

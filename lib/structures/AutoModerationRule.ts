@@ -54,7 +54,8 @@ export default class AutoModerationRule extends Base {
             allowList:         data.trigger_metadata.allow_list,
             keywordFilter:     data.trigger_metadata.keyword_filter,
             mentionTotalLimit: data.trigger_metadata.mention_total_limit,
-            presets:           data.trigger_metadata.presets
+            presets:           data.trigger_metadata.presets,
+            regexPatterns:     data.trigger_metadata.regex_patterns
         };
         this.triggerType = data.trigger_type;
         this.update(data);
@@ -90,7 +91,8 @@ export default class AutoModerationRule extends Base {
                 allowList:         data.trigger_metadata.allow_list,
                 keywordFilter:     data.trigger_metadata.keyword_filter,
                 mentionTotalLimit: data.trigger_metadata.mention_total_limit,
-                presets:           data.trigger_metadata.presets
+                presets:           data.trigger_metadata.presets,
+                regexPatterns:     data.trigger_metadata.regex_patterns
             };
         }
         if (data.trigger_type !== undefined) {

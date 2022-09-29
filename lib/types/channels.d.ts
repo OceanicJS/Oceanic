@@ -20,7 +20,7 @@ import type {
     ThreadAutoArchiveDuration,
     ThreadChannelTypes,
     VideoQualityModes,
-    SortOrderModes
+    SortOrderTypes
 } from "../Constants";
 import type CategoryChannel from "../structures/CategoryChannel";
 import type GroupChannel from "../structures/GroupChannel";
@@ -49,7 +49,7 @@ export interface RawChannel {
         emoji_id: string | null;
         emoji_name: string | null;
     } | null;
-    default_sort_order?: SortOrderModes | null;
+    default_sort_order?: SortOrderTypes | null;
     default_thread_rate_limit_per_user?: number;
     flags?: number;
     guild_id?: string;
@@ -183,7 +183,7 @@ export interface EditGuildChannelOptions {
     /** [Forum] The default reaction emoji for threads. */
     defaultReactionEmoji?: ForumEmoji | null;
     /** [Forum] The default sort order mode used to sort forum threads. */
-    defaultSortOrder?: SortOrderModes;
+    defaultSortOrder?: SortOrderTypes;
     /** [Text, Forum] The default reaction emoji for threads. */
     defaultThreadRateLimitPerUser?: number;
     /** [Forum, Forum Thread] The {@link Constants.ChannelFlags | Channel Flags} to set on the channel. */

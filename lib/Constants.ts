@@ -371,11 +371,19 @@ export enum ChannelFlags {
     REQUIRE_TAG = 1 << 4
 }
 
+/** @deprectated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. */
 export enum SortOrderModes {
     /** Sort forum threads by activity. */
     RECENT_ACTIVITY = 0,
     /** Sort forum threads by creation time (from most recent to oldest). */
     CREATION_TIME = 1
+}
+
+export enum SortOrderTypes {
+    /** Sort forum threads by activity. */
+    LATEST_ACTIVITY = 0,
+    /** Sort forum threads by creation time (from most recent to oldest). */
+    CREATION_DATE = 1
 }
 
 export enum TeamMembershipState {

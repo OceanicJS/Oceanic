@@ -31,7 +31,7 @@ import type {
     ThreadAutoArchiveDuration,
     VerificationLevels,
     VideoQualityModes,
-    SortOrderModes
+    SortOrderTypes
 } from "../Constants";
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
@@ -358,7 +358,7 @@ export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads 
     /** [Forum] The default reaction emoji for threads. */
     defaultReactionEmoji?: ForumEmoji | null;
     /** [Forum] The default sort order mode used to sort forum threads. */
-    defaultSortOrder?: SortOrderModes | null;
+    defaultSortOrder?: SortOrderTypes | null;
     /** The name of the channel. */
     name: string;
     /** [Announcement, Text, Voice] If the channel is age restricted. */

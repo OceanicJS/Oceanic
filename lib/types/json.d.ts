@@ -64,7 +64,7 @@ import type {
     VerificationLevels,
     VideoQualityModes,
     WebhookTypes,
-    SortOrderModes,
+    SortOrderTypes,
     StageInstancePrivacyLevels
 } from "../Constants";
 
@@ -214,7 +214,7 @@ export interface JSONForumChannel extends JSONGuildChannel {
     availableTags: Array<ForumTag>;
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     defaultReactionEmoji: ForumEmoji | null;
-    defaultSortOrder: SortOrderModes | null;
+    defaultSortOrder: SortOrderTypes | null;
     defaultThreadRateLimitPerUser: number;
     flags: number;
     lastThreadID: string | null;

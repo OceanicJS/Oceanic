@@ -213,7 +213,8 @@ export default class Guilds {
                     allow_list:          options.triggerMetadata.allowList,
                     keyword_filter:      options.triggerMetadata.keywordFilter,
                     mention_total_limit: options.triggerMetadata.mentionTotalLimit,
-                    presets:             options.triggerMetadata.presets
+                    presets:             options.triggerMetadata.presets,
+                    regex_patterns:      options.triggerMetadata.regexPatterns
                 },
                 trigger_type: options.triggerType
             },
@@ -627,7 +628,8 @@ export default class Guilds {
                     allow_list:          options.triggerMetadata.allowList,
                     keyword_filter:      options.triggerMetadata.keywordFilter,
                     mention_total_limit: options.triggerMetadata.mentionTotalLimit,
-                    presets:             options.triggerMetadata.presets
+                    presets:             options.triggerMetadata.presets,
+                    regex_patterns:      options.triggerMetadata.regexPatterns
                 }
             },
             reason

@@ -24,6 +24,8 @@ export interface RawTriggerMetadata {
     mention_total_limit?: number;
     /** KEYWORD_PRESET */
     presets?: Array<AutoModerationKeywordPresetTypes>;
+    /** KEYWORD */
+    regex_patterns?: Array<string>;
 }
 
 export interface RawAutoModerationAction {
@@ -47,6 +49,8 @@ export interface TriggerMetadata {
     mentionTotalLimit?: number;
     /** The presets to use. Valid for `KEYWORD_PRESET`. */
     presets?: Array<AutoModerationKeywordPresetTypes>;
+    /** The regular expressions to match the content against and filter. Currently only Rust flavored regex such as `Rustexp` are supported. Valid for `KEYWORD`. */
+    regexPatterns?: Array<string>;
 }
 
 export interface AutoModerationAction {
