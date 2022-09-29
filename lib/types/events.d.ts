@@ -2,7 +2,7 @@
 import type {
     AnyGuildChannelWithoutThreads,
     AnyGuildTextChannel,
-    AnyTextChannel,
+    AnyTextChannelWithoutGroup,
     AnyThreadChannel,
     MinimalPossiblyUncachedThread,
     PossiblyUncachedInvite,
@@ -78,7 +78,7 @@ export interface ClientEvents {
     /** @event Emitted when channel is deleted. Requires the `GUILDS` intent. */
     channelDelete: [channel: AnyGuildChannelWithoutThreads];
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
-    channelPinsUpdate: [channel: AnyTextChannel | Uncached, timestamp: Date | null];
+    channelPinsUpdate: [channel: AnyTextChannelWithoutGroup | Uncached, timestamp: Date | null];
     /** @event Emitted when a channel is updated. Requires the `GUILDS` intent. */
     channelUpdate: [channel: TextChannel, oldChannel: JSONTextChannel | null] | [channel: VoiceChannel, oldChannel: JSONVoiceChannel | null] | [channel: CategoryChannel, oldChannel: JSONCategoryChannel | null] | [channel: AnnouncementChannel, oldChannel: JSONAnnouncementChannel | null] | [channel: StageChannel, oldChannel: JSONStageChannel | null] | [channel: ForumChannel, oldChannel: JSONForumChannel | null];
     /** @event Emitted when a shard connects. */

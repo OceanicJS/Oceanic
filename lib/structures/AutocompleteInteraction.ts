@@ -10,18 +10,18 @@ import type { InteractionTypes } from "../Constants";
 import { InteractionResponseTypes } from "../Constants";
 import type { AutocompleteChoice, AutocompleteInteractionData, RawAutocompleteInteraction } from "../types/interactions";
 import type Client from "../Client";
-import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
+import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONAutocompleteInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
 
 /** Represents an autocomplete interaction. */
-export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
+export default class AutocompleteInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
     private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The channel this interaction was sent from. */
-    channel: T extends AnyTextChannel ? T : undefined;
+    channel: T extends AnyTextChannelWithoutGroup ? T : undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
@@ -42,7 +42,7 @@ export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached
     constructor(data: RawAutocompleteInteraction, client: Client) {
         super(data, client);
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id!) as T extends AnyTextChannel ? T : undefined;
+        this.channel = client.getChannel<AnyTextChannelWithoutGroup>(data.channel_id!) as T extends AnyTextChannelWithoutGroup ? T : undefined;
         this.channelID = data.channel_id!;
         this.data = {
             guildID: data.data.guild_id,

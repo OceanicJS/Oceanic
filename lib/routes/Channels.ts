@@ -2,7 +2,7 @@
 import type {
     AddGroupRecipientOptions,
     AnyChannel,
-    AnyTextChannel,
+    AnyTextChannelWithoutGroup,
     ArchivedThreads,
     CreateInviteOptions,
     CreateMessageOptions,
@@ -154,7 +154,7 @@ export default class Channels {
      * @param id The ID of the channel to create the message in.
      * @param options The options for creating the message.
      */
-    async createMessage<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, options: CreateMessageOptions): Promise<Message<T>> {
+    async createMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(id: string, options: CreateMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -403,7 +403,7 @@ export default class Channels {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(id: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -541,7 +541,7 @@ export default class Channels {
      * @param id The ID of the channel the message is in
      * @param messageID The ID of the message to get.
      */
-    async getMessage<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, messageID: string): Promise<Message<T>> {
+    async getMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(id: string, messageID: string): Promise<Message<T>> {
         return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(id, messageID)
@@ -553,7 +553,7 @@ export default class Channels {
      * @param id The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
+    async getMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
         const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => {
             const query = new URLSearchParams();
             if (_options?.after) {
@@ -624,7 +624,7 @@ export default class Channels {
      * Get the pinned messages in a channel.
      * @param id The ID of the channel to get the pinned messages from.
      */
-    async getPinnedMessages<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached>(id: string): Promise<Array<Message<T>>> {
+    async getPinnedMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(id: string): Promise<Array<Message<T>>> {
         return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(id)

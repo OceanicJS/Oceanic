@@ -647,17 +647,18 @@ export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
 export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
 export type AnyTextChannelWithoutThreads = Exclude<AnyTextChannel, AnyThreadChannel>;
 export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
+export type AnyTextChannelWithoutGroup = Exclude<AnyTextChannel, GroupChannel>;
 export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
 export type AnyGuildTextChannelWithoutThreads = Exclude<AnyGuildTextChannel, AnyThreadChannel>;
 export type AnyThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
 export type AnyVoiceChannel = VoiceChannel | StageChannel;
-export type InviteChannel = Exclude<AnyChannel, PrivateChannel | CategoryChannel | AnyThreadChannel>;
+export type InviteChannel = Exclude<AnyChannel, PrivateChannel | CategoryChannel | GroupChannel | AnyThreadChannel>;
 
 export interface PartialInviteChannel {
     icon?: string | null;
     id: string;
     name: string | null;
-    type: Exclude<ChannelTypes, ChannelTypes.DM | ChannelTypes.GUILD_CATEGORY | ThreadChannelTypes>;
+    type: Exclude<ChannelTypes, ChannelTypes.DM | ChannelTypes.GUILD_CATEGORY | ChannelTypes.GROUP_DM | ThreadChannelTypes>;
 }
 
 export type PossiblyUncachedInvite = Invite | UncachedInvite;
@@ -891,7 +892,7 @@ export interface ForumEmoji {
     name: string | null;
 }
 
-export type PossiblyUncachedMessage = Message | { channel: AnyTextChannel | Uncached; channelID: string; guild?: Guild; guildID?: string; } & Uncached;
+export type PossiblyUncachedMessage = Message | { channel: AnyTextChannelWithoutGroup | Uncached; channelID: string; guild?: Guild; guildID?: string; } & Uncached;
 export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { guild?: Guild; guildID: string; parent?: ThreadParentChannel; parentID: string; };
 export type MinimalPossiblyUncachedThread = AnyThreadChannel | { guild?: Guild; guildID: string; id: string; };
 

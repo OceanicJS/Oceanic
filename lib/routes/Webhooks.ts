@@ -9,7 +9,7 @@ import type {
     ExecuteWebhookWaitOptions,
     RawWebhook
 } from "../types/webhooks";
-import type { AnyTextChannel, RawMessage } from "../types/channels";
+import type { AnyTextChannelWithoutGroup, RawMessage } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
@@ -121,7 +121,7 @@ export default class Webhooks {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyTextChannel | Uncached>(id: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -170,9 +170,9 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param options The options for executing the webhook.
      */
-    async execute<T extends AnyTextChannel | Uncached>(id: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
+    async execute<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
     async execute(id: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
-    async execute<T extends AnyTextChannel | Uncached>(id: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
+    async execute<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -215,8 +215,8 @@ export default class Webhooks {
      * @param options The options to send. See GitHub's documentation for more information.
      */
     async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
-    async executeGithub<T extends AnyTextChannel | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
-    async executeGithub<T extends AnyTextChannel | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
+    async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
+    async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
         if (options.wait) {
             query.set("wait", "true");
@@ -240,8 +240,8 @@ export default class Webhooks {
      * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
      */
     async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
-    async executeSlack<T extends AnyTextChannel | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
-    async executeSlack<T extends AnyTextChannel | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
+    async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
+    async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
         if (options.wait) {
             query.set("wait", "true");
@@ -299,7 +299,7 @@ export default class Webhooks {
      * @param messageID The ID of the message.
      * @param threadID The ID of the thread the message is in.
      */
-    async getMessage<T extends AnyTextChannel | Uncached>(id: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
+    async getMessage<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
         const query = new URLSearchParams();
         if (threadID) {
             query.set("thread_id", threadID);

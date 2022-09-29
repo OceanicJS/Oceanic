@@ -17,7 +17,7 @@ import { BASE_URL, MessageTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
     AnyGuildTextChannel,
-    AnyTextChannel,
+    AnyTextChannelWithoutGroup,
     ChannelMention,
     EditMessageOptions,
     Embed,
@@ -40,7 +40,7 @@ import type { JSONMessage } from "../types/json";
 import * as Routes from "../util/Routes";
 
 /** Represents a message. */
-export default class Message<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Base {
+export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Base {
     private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
@@ -61,7 +61,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     /** The author of this message. */
     author: User;
     /** The channel this message was created in.*/
-    channel: T extends AnyTextChannel ? T : undefined;
+    channel: T extends AnyTextChannelWithoutGroup ? T : undefined;
     /** The ID of the channel this message was created in.*/
     channelID: string;
     /** The components on this message. */
@@ -123,7 +123,7 @@ export default class Message<T extends AnyTextChannel | Uncached = AnyTextChanne
     constructor(data: RawMessage, client: Client) {
         super(data.id, client);
         this.attachments = new TypedCollection(Attachment, client);
-        this.channel = client.getChannel<AnyTextChannel>(data.channel_id) as T extends AnyTextChannel ? T : undefined;
+        this.channel = client.getChannel<AnyTextChannelWithoutGroup>(data.channel_id) as T extends AnyTextChannelWithoutGroup ? T : undefined;
         this.channelID = data.channel_id;
         this.components = [];
         this.content = data.content;
