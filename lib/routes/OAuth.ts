@@ -35,33 +35,12 @@ export default class OAuth {
     constructor(manager: RESTManager) {
         this.#manager = manager;
     }
-    /**
-     * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
-     * @param options The options to for the client credentials grant.
-     */
-    async clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse> {
-        const form = new FormData();
-        form.append("grant_type", "client_credentials");
-        form.append("scope", options.scopes.join(" "));
-        return this.#manager.request<RawClientCredentialsTokenResponse>({
-            method: "POST",
-            path:   Routes.OAUTH_TOKEN,
-            form,
-            auth:   (options.clientID ?? this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this.#manager.client.application.id}:${options.clientSecret}`).toString("base64")}` : true
-        }).then(data => ({
-            accessToken: data.access_token,
-            expiresIn:   data.expires_in,
-            scopes:      data.scope.split(" "),
-            tokenType:   data.token_type,
-            webhook:     !data.webhook ? null : new Webhook(data.webhook, this.#manager.client)
-        }));
-    }
 
     /**
      * Construct an oauth authorization url.
      * @param options The options to construct the url with.
      */
-    constructURL(options: OAuthURLOptions): string {
+    static constructURL(options: OAuthURLOptions): string {
         const params: Array<string> = [
             `client_id=${options.clientID}`,
             `response_type=${options.responseType ?? "code"}`,
@@ -86,6 +65,32 @@ export default class OAuth {
             params.push(`state=${options.state}`);
         }
         return `${BASE_URL}${Routes.OAUTH_AUTHORIZE}?${params.join("&")}`;
+    }
+
+    get constructURL(): typeof OAuth["constructURL"] {
+        return OAuth.constructURL.bind(OAuth);
+    }
+
+    /**
+     * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
+     * @param options The options to for the client credentials grant.
+     */
+    async clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse> {
+        const form = new FormData();
+        form.append("grant_type", "client_credentials");
+        form.append("scope", options.scopes.join(" "));
+        return this.#manager.request<RawClientCredentialsTokenResponse>({
+            method: "POST",
+            path:   Routes.OAUTH_TOKEN,
+            form,
+            auth:   (options.clientID ?? this.#manager.client.application) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this.#manager.client.application.id}:${options.clientSecret}`).toString("base64")}` : true
+        }).then(data => ({
+            accessToken: data.access_token,
+            expiresIn:   data.expires_in,
+            scopes:      data.scope.split(" "),
+            tokenType:   data.token_type,
+            webhook:     !data.webhook ? null : new Webhook(data.webhook, this.#manager.client)
+        }));
     }
 
     /**

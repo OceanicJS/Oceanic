@@ -36,6 +36,7 @@ const Invite = (await import("./dist/lib/structures/Invite.js")).default.default
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
+const OAuth = (await import("./dist/lib/routes/OAuth.js")).default.default;
 const PartialApplication = (await import("./dist/lib/structures/PartialApplication.js")).default.default;
 const Permission = (await import("./dist/lib/structures/Permission.js")).default.default;
 const PermissionOverwrite = (await import("./dist/lib/structures/PermissionOverwrite.js")).default.default;
@@ -104,6 +105,7 @@ export {
     Member,
     Message,
     ModalSubmitInteraction,
+    OAuth,
     PartialApplication,
     Permission,
     PermissionOverwrite,

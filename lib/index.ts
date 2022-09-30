@@ -38,6 +38,7 @@ export { default as Invite } from "./structures/Invite";
 export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";
 export { default as ModalSubmitInteraction } from "./structures/ModalSubmitInteraction";
+export { default as OAuth } from "./routes/OAuth";
 export { default as PartialApplication } from "./structures/PartialApplication";
 export { default as Permission } from "./structures/Permission";
 export { default as PermissionOverwrite } from "./structures/PermissionOverwrite";
