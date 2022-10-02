@@ -349,7 +349,7 @@ export interface EditGuildOptions {
 }
 
 export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
-    /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
+    /** [Forum] The {@link Types/Channels.ForumTag | tags} available in the channel. */
     availableTags?: Array<Omit<ForumTag, "id">> | null;
     /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;

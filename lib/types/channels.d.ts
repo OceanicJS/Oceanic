@@ -171,7 +171,7 @@ export interface EditGuildChannelOptions {
     archived?: boolean;
     /** [Thread] The duration after which the thread will be archived. */
     autoArchiveDuration?: ThreadAutoArchiveDuration;
-    /** [Forum] The {@link types/channels.ForumTag | tags} available in the channel. */
+    /** [Forum] The {@link Types/Channels.ForumTag | tags} available in the channel. */
     availableTags?: Array<Omit<ForumTag, "id"> & {
         /** The ID of this tag. Omit if you want to create a new tag. */
         id?: string;

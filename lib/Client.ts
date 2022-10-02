@@ -195,7 +195,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
     /**
      * Disconnect all shards.
-     * @param reconnect If shards should be reconnected. Defaults to {@link types/Gateway~GatewayOptions#autoReconnect | GatewayOptions#autoReconnect}
+     * @param reconnect If shards should be reconnected. Defaults to {@link Types/Gateway~GatewayOptions#autoReconnect | GatewayOptions#autoReconnect}
      */
     disconnect(reconnect = this.shards.options.autoReconnect): void {
         this.ready = false;
