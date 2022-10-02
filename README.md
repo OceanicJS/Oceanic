@@ -1,6 +1,21 @@
-# Oceanic [![NPM version](https://img.shields.io/npm/v/oceanic.js.svg?style=flat-square&color=informational)](https://npmjs.com/package/oceanic.js)
-A NodeJS Library for Discord.
+<p align="center">
+  <img width=60% src="https://user-images.githubusercontent.com/68125679/193473284-e14ea33d-b086-4c28-870d-4221e766d775.png">
+  <br>
+  <a href="https://npmjs.com/package/oceanic.js"><img src="https://img.shields.io/npm/v/oceanic.js.svg?style=flat-square&color=informational"></a>
+  <img src="https://img.shields.io/github/stars/OceanicJS/Oceanic?color=yellow&style=flat-square">
+  <img src="https://img.shields.io/npm/dw/oceanic.js?color=red&style=flat-square">
+</p>
 
+```js
+const Oceanic = require("oceanic.js");
+const client = new Oceanic.Client({ auth: "Bot [TOKEN]" });
+
+client.on("ready", async() => {
+    console.log("Ready as", client.user.tag);
+});
+
+client.connect();
+```
 <hr>
 
 ## Installation
