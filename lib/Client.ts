@@ -41,8 +41,8 @@ try {
 
 /** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    protected _application?: ClientApplication;
-    protected _user?: ExtendedUser;
+    private _application?: ClientApplication;
+    private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
     groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;

@@ -22,8 +22,8 @@ import type { JSONWebhook } from "../types/json";
 
 /** Represents a webhook. */
 export default class Webhook extends Base {
-    protected _cachedChannel?: AnyGuildTextChannel | null;
-    protected _cachedGuild?: Guild | null;
+    private _cachedChannel?: AnyGuildTextChannel | null;
+    private _cachedGuild?: Guild | null;
     /** The application associated with this webhook. */
     application?: ClientApplication | null;
     /** The ID of the application associated with this webhook. */

@@ -11,10 +11,10 @@ import type { JSONVoiceState } from "../types/json";
 
 /** Represents a guild member's voice state. */
 export default class VoiceState extends Base {
-    protected _cachedChannel?: VoiceChannel | StageChannel | null;
-    protected _cachedGuild?: Guild;
-    protected _cachedMember?: Member;
-    protected _cachedUser?: User;
+    private _cachedChannel?: VoiceChannel | StageChannel | null;
+    private _cachedGuild?: Guild;
+    private _cachedMember?: Member;
+    private _cachedUser?: User;
     /** The ID of the channel the user is connected to. */
     channelID: string | null;
     /** If the associated member is deafened. */

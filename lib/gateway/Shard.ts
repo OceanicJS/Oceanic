@@ -360,7 +360,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_DELETE": {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                this.client["voiceAdapters"].get(packet.d.id)?.destroy();
+                this.client.voiceAdapters.get(packet.d.id)?.destroy();
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
                 guild?.channels.forEach(channel => delete this.client.channelGuildMap[channel.id]);
@@ -1026,7 +1026,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "VOICE_STATE_UPDATE": {
                 if (packet.d.guild_id && packet.d.session_id && packet.d.user_id === this.client.user.id) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                    this.client["voiceAdapters"].get(packet.d.guild_id)?.onVoiceStateUpdate(packet.d as never);
+                    this.client.voiceAdapters.get(packet.d.guild_id)?.onVoiceStateUpdate(packet.d as never);
                 }
                 // @TODO voice states without guilds?
                 if (!packet.d.guild_id || !packet.d.member) {
@@ -1068,7 +1068,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "VOICE_SERVER_UPDATE": {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                this.client["voiceAdapters"].get(packet.d.guild_id)?.onVoiceServerUpdate(packet.d);
+                this.client.voiceAdapters.get(packet.d.guild_id)?.onVoiceServerUpdate(packet.d);
                 break;
             }
 
@@ -1424,7 +1424,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     hardReset(): void {
         this.reset();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        this.client["voiceAdapters"].forEach(voiceAdapter => voiceAdapter.destroy());
+        this.client.voiceAdapters.forEach(voiceAdapter => voiceAdapter.destroy());
         this.sequence = 0;
         this.sessionID = null;
         this.reconnectInterval = 1000;

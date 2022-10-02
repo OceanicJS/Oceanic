@@ -11,8 +11,8 @@ import type { JSONIntegration } from "../types/json";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {
-    protected _cachedGuild?: Guild | null;
-    protected _cachedRole?: Role | null;
+    private _cachedGuild?: Guild | null;
+    private _cachedRole?: Role | null;
     /** The account information associated with this integration. */
     account: IntegrationAccount;
     /** The application associated with this integration. */

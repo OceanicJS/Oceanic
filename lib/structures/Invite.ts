@@ -20,7 +20,7 @@ import type { Uncached } from "../types/shared";
 
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | Uncached = InviteChannel | Uncached> {
-    protected _cachedChannel!: (CH extends InviteChannel ? CH : PartialInviteChannel) | null;
+    private _cachedChannel!: (CH extends InviteChannel ? CH : PartialInviteChannel) | null;
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */

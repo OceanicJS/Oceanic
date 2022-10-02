@@ -7,7 +7,7 @@ import type Client from "../Client";
 
 /** Represents a guild audit log entry. */
 export default class AuditLogEntry extends Base {
-    protected _cachedUser?: User | null;
+    private _cachedUser?: User | null;
     /** The [type](https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events) of this action. */
     actionType: AuditLogActionTypes;
     /** See the [audit log documentation](https://discord.com/developers/docs/resources/audit-log#audit-log-change-object) for more information. */

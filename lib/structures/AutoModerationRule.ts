@@ -9,7 +9,7 @@ import type { JSONAutoModerationRule } from "../types/json";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
-    protected _cachedGuild?: Guild;
+    private _cachedGuild?: Guild;
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
     /** The creator of this rule. */

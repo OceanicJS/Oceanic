@@ -17,7 +17,7 @@ import type { JSONApplicationCommand } from "../types/json";
 
 /** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
-    protected _cachedGuild?: Guild | null;
+    private _cachedGuild?: Guild | null;
     /** The application this command is for. */
     application?: ClientApplication;
     /** The ID of application this command is for. */

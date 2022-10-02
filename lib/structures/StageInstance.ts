@@ -10,9 +10,9 @@ import { RawStageInstance } from "../types/guilds";
 
 /** Represents a stage instance. */
 export default class StageInstance extends Base {
-    protected _cachedChannel?: StageChannel;
-    protected _cachedGuild?: Guild;
-    protected _cachedScheduledEvent?: GuildScheduledEvent | null;
+    private _cachedChannel?: StageChannel;
+    private _cachedGuild?: Guild;
+    private _cachedScheduledEvent?: GuildScheduledEvent | null;
     /** The ID of the associated stage channel. */
     channelID: string;
     /** @deprecated If the stage channel is discoverable */

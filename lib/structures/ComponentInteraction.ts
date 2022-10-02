@@ -23,8 +23,8 @@ import type { Uncached } from "../types/shared";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
-    protected _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
-    protected _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
+    private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
     /** The ID of the channel this interaction was sent from. */

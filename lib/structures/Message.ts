@@ -41,8 +41,8 @@ import * as Routes from "../util/Routes";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Base {
-    protected _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
-    protected _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    private _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
+    private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**

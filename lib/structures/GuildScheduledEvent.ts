@@ -11,8 +11,8 @@ import type { JSONScheduledEvent } from "../types/json";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
-    protected _cachedChannel?: StageChannel | null;
-    protected _cachedGuild?: Guild;
+    private _cachedChannel?: StageChannel | null;
+    private _cachedGuild?: Guild;
     /** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     channelID: string | null;
     /** The creator of the event. Not present on events created before October 25th, 2021. */

@@ -11,8 +11,8 @@ import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetada
 
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
-    protected _cachedCompleteChannel?: AnyGuildChannel | PrivateChannel;
-    protected _cachedParent?: TextChannel | AnnouncementChannel | ForumChannel | null;
+    private _cachedCompleteChannel?: AnyGuildChannel | PrivateChannel;
+    private _cachedParent?: TextChannel | AnnouncementChannel | ForumChannel | null;
     /** The permissions the bot has in the channel. */
     appPermissions: Permission;
     /** The name of this channel. */

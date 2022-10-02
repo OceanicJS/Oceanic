@@ -12,8 +12,8 @@ import type { JSONGuildChannel } from "../types/json";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
-    protected _cachedGuild?: Guild;
-    protected _cachedParent?: TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null;
+    private _cachedGuild?: Guild;
+    private _cachedParent?: TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null;
     /** The id of the guild this channel is in. */
     guildID: string;
     /** The name of this channel. */

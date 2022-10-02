@@ -8,7 +8,7 @@ import type { JSONRole } from "../types/json";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
-    protected _cachedGuild?: Guild;
+    private _cachedGuild?: Guild;
     /** The color of this role. */
     color: number;
     /** The id of the guild this role is in. */

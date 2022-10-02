@@ -11,7 +11,7 @@ import type { JSONApplication } from "../types/json";
 
 /** Represents an oauth application. */
 export default class Application extends ClientApplication {
-    protected _cachedGuild?: Guild | null;
+    private _cachedGuild?: Guild | null;
     /** When false, only the application's owners can invite the bot to guilds. */
     botPublic: boolean;
     /** When true, the applications bot will only join upon the completion of the full oauth2 code grant flow. */

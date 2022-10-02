@@ -560,7 +560,7 @@ export default class Guild extends Base {
         }
 
         return (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
-            this.client["voiceAdapters"].set(this.id, methods);
+            this.client.voiceAdapters.set(this.id, methods);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             return {
                 sendPayload: (payload: { d: unknown; op: GatewayOPCodes; }): true => {
@@ -568,7 +568,7 @@ export default class Guild extends Base {
 
                     return true;
                 },
-                destroy: () => this.client["voiceAdapters"].delete(this.id)
+                destroy: () => this.client.voiceAdapters.delete(this.id)
             };
         };
     }
