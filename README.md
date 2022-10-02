@@ -20,6 +20,7 @@ client.on("error", (err) => {
 
 client.connect();
 ```
+For more examples, see the [examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples) folder on GitHub.
 <hr>
 
 ## Installation
