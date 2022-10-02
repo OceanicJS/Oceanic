@@ -89,6 +89,10 @@ export default class ShardManager extends Collection<number, Shard> {
         this.tryConnect();
     }
 
+    private _resetConnectQueue(): void {
+        this.#connectQueue = [];
+    }
+
     connect(shard: Shard): void {
         this.#connectQueue.push(shard);
         this.tryConnect();
