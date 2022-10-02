@@ -7,11 +7,15 @@
 </p>
 
 ```js
-const Oceanic = require("oceanic.js");
-const client = new Oceanic.Client({ auth: "Bot [TOKEN]" });
+const { Client } = require("oceanic.js");
+const client = new Client({ auth: "Bot [TOKEN]" });
 
 client.on("ready", async() => {
     console.log("Ready as", client.user.tag);
+});
+
+client.on("error", (err) => {
+    console.error("Something Broke!", err);
 });
 
 client.connect();
