@@ -12,47 +12,55 @@ import type { JSONGuildChannel } from "../types/json";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
-    private _guild?: Guild;
+    protected _cachedGuild?: Guild;
+    protected _cachedParent?: TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null;
     /** The id of the guild this channel is in. */
     guildID: string;
     /** The name of this channel. */
     name: string;
-    /** The parent of this channel, if applicable. This will be a text/announcement/forum channel if we're in a thread, category otherwise. */
-    parent?: TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null;
     /** The ID of the parent of this channel, if applicable. */
     parentID: string | null;
     declare type: GuildChannelTypes;
     constructor(data: RawGuildChannel, client: Client) {
         super(data, client);
-        this._guild = client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.name = data.name;
-        this.parent = data.parent_id === null ? null : client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(data.parent_id);
         this.parentID = data.parent_id;
     }
 
     protected update(data: Partial<RawGuildChannel>): void {
         super.update(data);
         if (data.guild_id !== undefined) {
-            this._guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
         }
         if (data.name !== undefined) {
             this.name = data.name;
         }
         if (data.parent_id !== undefined) {
-            this.parent = data.parent_id === null ? null : this.client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(data.parent_id);
             this.parentID = data.parent_id;
         }
     }
 
     /** The guild associated with this channel. This will throw an error if the guild is not cached. */
     get guild(): Guild {
-        if (!this._guild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-        } else {
-            return this._guild;
+        if (!this._cachedGuild) {
+            this._cachedGuild = this.client.guilds.get(this.guildID);
+
+            if (!this._cachedGuild) {
+                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            }
         }
+
+        return this._cachedGuild;
+    }
+
+    /** The parent of this channel, if applicable. This will be a text/announcement/forum channel if we're in a thread, category otherwise. */
+    get parent(): TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null | undefined {
+        if (this.parentID !== null && this._cachedParent !== null) {
+            return this._cachedParent ?? (this._cachedParent = this.client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(this.parentID));
+        }
+
+        return this._cachedParent === null ? this._cachedParent : (this._cachedParent = null);
     }
 
     /**

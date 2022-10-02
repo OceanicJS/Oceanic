@@ -11,18 +11,16 @@ import type { JSONVoiceState } from "../types/json";
 
 /** Represents a guild member's voice state. */
 export default class VoiceState extends Base {
-    /** The channel the user is connected to. */
-    channel?: VoiceChannel | StageChannel | null;
+    protected _cachedChannel?: VoiceChannel | StageChannel | null;
+    protected _cachedGuild?: Guild;
+    protected _cachedMember?: Member;
+    protected _cachedUser?: User;
     /** The ID of the channel the user is connected to. */
     channelID: string | null;
     /** If the associated member is deafened. */
     deaf: boolean;
-    /** The guild this voice state is a part of. */
-    guild?: Guild;
     /** The ID of the guild this voice state is a part of. */
     guildID: string;
-    /** The member associated with this voice state. */
-    member?: Member;
     /** If the associated member is muted. */
     mute: boolean;
     /** The time at which the associated member requested to speak. */
@@ -39,16 +37,12 @@ export default class VoiceState extends Base {
     sessionID!: string;
     /** If the associated member is suppressed. */
     suppress: boolean;
-    /** The user associated with this voice state. */
-    user?: User;
     /** The ID of the user associated with this voice state. */
     userID: string;
     constructor(data: RawVoiceState, client: Client) {
         super(data.user_id, client);
-        this.channel = null;
         this.channelID = data.channel_id;
         this.deaf = false;
-        this.guild = data.guild_id === undefined ? undefined : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id!;
         this.mute = false;
         this.requestToSpeakTimestamp = null;
@@ -57,7 +51,6 @@ export default class VoiceState extends Base {
         this.selfStream = false;
         this.selfVideo = false;
         this.suppress = false;
-        this.user = client.users.get(this.id);
         this.userID = this.id;
         this.update(data);
     }
@@ -65,17 +58,15 @@ export default class VoiceState extends Base {
     protected update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
-            this.channel = data.channel_id === null ? null : this.client.getChannel<VoiceChannel | StageChannel>(data.channel_id);
         }
         if (data.deaf !== undefined) {
             this.deaf = data.deaf;
         }
         if (data.guild_id !== undefined) {
-            this.guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
         }
         if (data.member !== undefined) {
-            this.member = this.client.util.updateMember(data.guild_id!, this.id, data.member);
+            this._cachedMember = this.client.util.updateMember(data.guild_id!, this.id, data.member);
         }
         if (data.mute !== undefined) {
             this.mute = data.mute;
@@ -99,9 +90,40 @@ export default class VoiceState extends Base {
             this.suppress = data.suppress;
         }
         if (data.user_id !== undefined) {
-            this.user = this.client.users.get(data.user_id);
             this.userID = data.user_id;
         }
+    }
+
+    /** The channel the user is connected to. */
+    get channel(): VoiceChannel | StageChannel | null | undefined {
+        if (this.channelID !== null && this._cachedChannel !== null) {
+            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<VoiceChannel | StageChannel>(this.channelID));
+        }
+
+        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+    }
+
+    /** The guild this voice state is a part of. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        if (!this._cachedGuild) {
+            this._cachedGuild = this.client.guilds.get(this.guildID);
+
+            if (!this._cachedGuild) {
+                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            }
+        }
+
+        return this._cachedGuild;
+    }
+
+    /** The member associated with this voice state. */
+    get member(): Member | undefined {
+        return this._cachedMember ?? (this._cachedMember = this._cachedGuild ? this._cachedGuild.members.get(this.userID) : undefined);
+    }
+
+    /** TThe user associated with this voice state. */
+    get user(): User | undefined {
+        return this._cachedUser ?? (this._cachedUser = this.client.users.get(this.userID));
     }
 
     toJSON(): JSONVoiceState {

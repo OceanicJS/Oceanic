@@ -11,6 +11,7 @@ import type { JSONApplication } from "../types/json";
 
 /** Represents an oauth application. */
 export default class Application extends ClientApplication {
+    protected _cachedGuild?: Guild | null;
     /** When false, only the application's owners can invite the bot to guilds. */
     botPublic: boolean;
     /** When true, the applications bot will only join upon the completion of the full oauth2 code grant flow. */
@@ -21,9 +22,7 @@ export default class Application extends ClientApplication {
     customInstallURL?: string;
     /** The description of the application. */
     description: string;
-    /** If this application is a game sold on Discord, the guild to which it has been linked.*/
-    guild?: Guild | null;
-    /** If this application is a game sold on Discord, the ID of the guild to which it has been linked.*/
+    /** If this application is a game sold on Discord, the ID of the guild to which it has been linked. */
     guildID: string | null;
     /** The icon hash of the application. */
     icon: string | null;
@@ -88,7 +87,6 @@ export default class Application extends ClientApplication {
         if (data.guild_id === undefined) {
             this.guildID = null;
         } else {
-            this.guild = this.client.guilds.get(data.guild_id);
             this.guildID = data.guild_id;
         }
         if (data.icon !== undefined) {
@@ -128,6 +126,23 @@ export default class Application extends ClientApplication {
         if (data.verify_key !== undefined) {
             this.verifyKey = data.verify_key;
         }
+    }
+
+    /** If this application is a game sold on Discord, the guild to which it has been linked. This will throw an error if the guild is not cached. */
+    get guild(): Guild | null {
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            if (!this._cachedGuild) {
+                this._cachedGuild = this.client.guilds.get(this.guildID);
+
+                if (!this._cachedGuild) {
+                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                }
+            }
+
+            return this._cachedGuild;
+        }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
     }
 
     /**

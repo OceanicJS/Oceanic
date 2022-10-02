@@ -277,7 +277,7 @@ export default class Guild extends Base {
         this.voiceStates = new TypedCollection(VoiceState, client);
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
         data.roles.forEach(role => {
-            this.roles.update(role, data.id)["_guild"] = this;
+            this.roles.update(role, data.id);
         });
         this.update(data);
 
@@ -285,7 +285,7 @@ export default class Guild extends Base {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client))["_guild"] = this;
+                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
             }
         }
 
@@ -295,7 +295,6 @@ export default class Guild extends Base {
                 threadData.guild_id = this.id;
                 client.threadGuildMap[threadData.id] = this.id;
                 const thread = Channel.from<AnyThreadChannel>(threadData, client);
-                thread["_guild"] = this;
                 this.threads.add(thread);
                 const channel = this.channels.get(thread.parentID);
                 if (channel && "threads" in channel) {
@@ -308,8 +307,7 @@ export default class Guild extends Base {
         if (data.members) {
             for (const rawMember of data.members) {
                 const member = this.members.update({ ...rawMember, id: rawMember.user?.id }, this.id);
-                member["_guild"] = this;
-                if (member.id === client.user.id) {
+                if (member.id === this.client.user.id) {
                     this._clientMember = member;
                 }
             }
@@ -318,7 +316,7 @@ export default class Guild extends Base {
         if (data.stage_instances) {
             for (const stageInstance of data.stage_instances) {
                 stageInstance.guild_id = this.id;
-                this.stageInstances.update(stageInstance)["_guild"] = this;
+                this.stageInstances.update(stageInstance);
             }
         }
 
@@ -343,10 +341,8 @@ export default class Guild extends Base {
                     continue;
                 }
                 voiceState.guild_id = this.id;
-                const state = this.voiceStates.update({ ...voiceState, id: voiceState.user_id });
-                state.guild = this;
+                this.voiceStates.update({ ...voiceState, id: voiceState.user_id });
                 const channel = this.channels.get(voiceState.channel_id) as VoiceChannel | StageChannel;
-                state.channel = channel;
                 const member = this.members.update({ id: voiceState.user_id, deaf: voiceState.deaf, mute: voiceState.mute }, this.id);
                 if (this._clientMember) {
                     this._clientMember["update"]({ deaf: voiceState.deaf, mute: voiceState.mute });
@@ -544,9 +540,9 @@ export default class Guild extends Base {
     get clientMember(): Member {
         if (!this._clientMember) {
             throw new Error(`${this.constructor.name}#clientMember is not present if the guild was obtained via rest and the member is not cached.`);
-        } else {
-            return this._clientMember;
         }
+
+        return this._clientMember;
     }
 
     /** The shard this guild is on. Gateway only. */

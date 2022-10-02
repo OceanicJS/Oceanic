@@ -11,14 +11,12 @@ import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetada
 
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
+    protected _cachedCompleteChannel?: AnyGuildChannel | PrivateChannel;
+    protected _cachedParent?: TextChannel | AnnouncementChannel | ForumChannel | null;
     /** The permissions the bot has in the channel. */
     appPermissions: Permission;
-    /** The complete channel this channel option represents, if it's cached. */
-    completeChannel?: AnyGuildChannel | PrivateChannel;
     /** The name of this channel. */
     name: string | null;
-    /** The parent of this channel, if this represents a thread. */
-    parent?: TextChannel | AnnouncementChannel | ForumChannel | null;
     /** The ID of the parent of this channel, if this represents a thread. */
     parentID: string | null;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this channel, if this represents a thread. */
@@ -28,8 +26,6 @@ export default class InteractionResolvedChannel extends Channel {
         super(data, client);
         this.appPermissions = new Permission(data.permissions);
         this.name = data.name;
-        this.completeChannel = client.getChannel<AnyGuildChannel | PrivateChannel>(data.id);
-        this.parent = data.parent_id ? client.getChannel<TextChannel | AnnouncementChannel>(data.parent_id) : null;
         this.parentID = data.parent_id ?? null;
         this.threadMetadata = data.thread_metadata ? {
             archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
@@ -39,5 +35,23 @@ export default class InteractionResolvedChannel extends Channel {
             locked:              !!data.thread_metadata.locked,
             invitable:           data.thread_metadata.invitable
         } :  null;
+    }
+
+    /** The complete channel this channel option represents, if it's cached. */
+    get completeChannel(): AnyGuildChannel | PrivateChannel | undefined {
+        if (!this._cachedCompleteChannel) {
+            return (this._cachedCompleteChannel = this.client.getChannel(this.id));
+        }
+
+        return this._cachedCompleteChannel;
+    }
+
+    /** The parent of this channel, if this represents a thread. */
+    get parent(): TextChannel | AnnouncementChannel | ForumChannel | null | undefined {
+        if (this.parentID !== null && this._cachedParent !== null) {
+            return this._cachedParent ?? (this._cachedParent = this.client.getChannel<TextChannel | AnnouncementChannel | ForumChannel>(this.parentID));
+        }
+
+        return this._cachedParent === null ? this._cachedParent : (this._cachedParent = null);
     }
 }

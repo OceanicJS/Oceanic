@@ -18,7 +18,7 @@ import type { Presence } from "../types/gateway";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
-    private _guild?: Guild;
+    private _cachedGuild?: Guild;
     /** The member's avatar hash, if they have set a guild avatar. */
     avatar: string | null;
     /** When the member's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire, if active. */
@@ -62,7 +62,6 @@ export default class Member extends Base {
         this.avatar = null;
         this.communicationDisabledUntil = null;
         this.deaf = !!data.deaf;
-        this._guild = client.guilds.get(guildID);
         this.guildID = guildID;
         this.joinedAt = null;
         this.mute = !!data.mute;
@@ -127,11 +126,15 @@ export default class Member extends Base {
     }
     /** The guild this member is for. This will throw an error if the guild is not cached. */
     get guild(): Guild {
-        if (!this._guild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-        } else {
-            return this._guild;
+        if (!this._cachedGuild) {
+            this._cachedGuild = this.client.guilds.get(this.guildID);
+
+            if (!this._cachedGuild) {
+                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            }
         }
+
+        return this._cachedGuild;
     }
     /** A string that will mention this member. */
     get mention(): string {
@@ -139,10 +142,7 @@ export default class Member extends Base {
     }
     /** The permissions of this member. */
     get permissions(): Permission {
-        if (!this._guild) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
-        }
-        return this._guild.permissionsOf(this);
+        return this.guild.permissionsOf(this);
     }
     /** The user associated with this member's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     get publicFlags(): number {
@@ -162,7 +162,7 @@ export default class Member extends Base {
     }
     /** The voice state of this member. */
     get voiceState(): VoiceState | null {
-        return this._guild ? this._guild.voiceStates.get(this.id) ?? null : null;
+        return this.guild.voiceStates.get(this.id) ?? null;
     }
 
     /**

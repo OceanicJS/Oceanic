@@ -4,10 +4,7 @@ import Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
-import type CategoryChannel from "./CategoryChannel";
 import type {
-    AnyGuildChannel,
-    AnyThreadChannel,
     InviteChannel,
     InviteInfoTypes,
     InviteStageInstance,
@@ -22,13 +19,12 @@ import type { JSONInvite } from "../types/json";
 import type { Uncached } from "../types/shared";
 
 /** Represents an invite. */
-export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached> {
+export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | Uncached = InviteChannel | Uncached> {
+    protected _cachedChannel!: (CH extends InviteChannel ? CH : PartialInviteChannel) | null;
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
     approximatePresenceCount?: number;
-    /** The channel this invite leads to. If the channel is not cached, this may be a partial with only `id`, `name, and `type` or undefined. */
-    channel: (CH extends InviteChannel | PartialInviteChannel ? CH : undefined) | null;
     /** The ID of the channel this invite leads to. */
     channelID: string | null;
     client!: Client;
@@ -69,8 +65,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             writable:     false,
             configurable: false
         });
-        this.channel = null;
-        this.channelID = (data.channel_id || data.channel?.id) ?? null;
+        this.channelID = (data.channel_id ?? data.channel?.id) ?? null;
         this.code = data.code;
         this.guild = null;
         this.guildID = data.guild?.id ?? null;
@@ -99,7 +94,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         if (this.channelID !== null) {
             let channel: Channel | PartialInviteChannel | undefined;
-            channel = this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel | AnyThreadChannel>>(this.channelID);
+            channel = this.client.getChannel<InviteChannel>(this.channelID);
             if (data.channel !== undefined) {
                 if (channel && channel instanceof Channel) {
                     channel["update"](data.channel);
@@ -107,9 +102,9 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                     channel = data.channel as PartialInviteChannel;
                 }
             }
-            this.channel = channel as (CH extends InviteChannel | PartialInviteChannel ? CH : undefined) | null;
+            this._cachedChannel = channel as (CH extends InviteChannel ? CH : PartialInviteChannel) | null;
         } else {
-            this.channel = null;
+            this._cachedChannel = null;
         }
 
         if (data.inviter !== undefined) {
@@ -151,12 +146,32 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         }
     }
 
+    /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
+    get channel(): (CH extends InviteChannel ? CH : PartialInviteChannel) | null {
+        if (this.channelID !== null && this._cachedChannel !== null) {
+            if (this._cachedChannel instanceof Channel) {
+                return this._cachedChannel;
+            }
+
+            const cachedChannel = this.client.getChannel<InviteChannel>(this.channelID);
+
+            return (cachedChannel ? (this._cachedChannel = cachedChannel as CH extends InviteChannel ? CH : PartialInviteChannel) : this._cachedChannel);
+        }
+
+        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+    }
+
     /**
      * Delete this invite.
      * @param reason The reason for deleting this invite.
      */
     async deleteInvite(reason?: string): Promise<Invite<"withMetadata", CH>> {
         return this.client.rest.channels.deleteInvite<CH>(this.code, reason);
+    }
+
+    /** Whether this invite belongs to a cached channel. The only difference on using this method over a simple if statement is to easily update all the invite properties typing definitions based on the channel it belongs to. */
+    inCachedChannel(): this is Invite<T, InviteChannel> {
+        return this.channel instanceof Channel;
     }
 
     toJSON(): JSONInvite {

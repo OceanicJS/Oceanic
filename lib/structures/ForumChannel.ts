@@ -26,7 +26,7 @@ import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions, SortOrderTypes } from "../Constants";
 
-/** Represents a forum channel. Documentation for these is currently scarce, so they may not work entirely correctly. */
+/** Represents a forum channel. */
 export default class ForumChannel extends GuildChannel {
     /** The usable tags for threads. */
     availableTags: Array<ForumTag>;
@@ -46,8 +46,6 @@ export default class ForumChannel extends GuildChannel {
     lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
-    declare parent?: CategoryChannel | null;
-    declare parentID: string;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -138,6 +136,10 @@ export default class ForumChannel extends GuildChannel {
         }
     }
 
+    override get parent(): CategoryChannel | null | undefined {
+        return super.parent as CategoryChannel | null | undefined;
+    }
+
     /**
      * Create an invite for this channel.
      * @param options The options for the invite.
@@ -199,16 +201,13 @@ export default class ForumChannel extends GuildChannel {
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (!this["_guild"]) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
-        }
         if (typeof member === "string") {
-            member = this["_guild"].members.get(member)!;
+            member = this.guild.members.get(member)!;
         }
         if (!member) {
             throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
         }
-        let permission = this["_guild"].permissionsOf(member).allow;
+        let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
             return new Permission(AllPermissions);
         }

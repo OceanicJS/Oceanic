@@ -48,7 +48,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     messages: TypedCollection<string, RawMessage, Message<T>>;
     /** If this channel is age gated. */
     nsfw: boolean;
-    declare parent?: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -95,6 +94,10 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
         if (data.permission_overwrites !== undefined) {
             data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
         }
+    }
+
+    override get parent(): CategoryChannel | undefined | null {
+        return super.parent as CategoryChannel | undefined | null;
     }
 
     /**
@@ -263,16 +266,13 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (!this["_guild"]) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
-        }
         if (typeof member === "string") {
-            member = this["_guild"].members.get(member)!;
+            member = this.guild.members.get(member)!;
         }
         if (!member) {
             throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
         }
-        let permission = this["_guild"].permissionsOf(member).allow;
+        let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
             return new Permission(AllPermissions);
         }

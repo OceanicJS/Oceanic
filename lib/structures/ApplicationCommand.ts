@@ -17,6 +17,7 @@ import type { JSONApplicationCommand } from "../types/json";
 
 /** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
+    protected _cachedGuild?: Guild | null;
     /** The application this command is for. */
     application?: ClientApplication;
     /** The ID of application this command is for. */
@@ -31,8 +32,6 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     descriptionLocalized?: string;
     /** If this command can be used in direct messages (global commands only). */
     dmPermission?: boolean;
-    /** The guild this command is in (guild commands only). */
-    guild?: Guild | null;
     /** The id of the guild this command is in (guild commands only). */
     guildID: string | null;
     /** The name of this command. */
@@ -56,7 +55,6 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.descriptionLocalizations = data.description_localizations;
         this.descriptionLocalized = data.description_localized;
         this.dmPermission = data.dm_permission;
-        this.guild = data.guild_id === undefined ? null : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
@@ -64,6 +62,23 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.options = data.options?.map(o => client.util.optionToParsed(o));
         this.type = (data.type ?? ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;
+    }
+
+    /** The guild this command is in (guild commands only). This will throw an error if the guild is not cached. */
+    get guild(): Guild | null {
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            if (!this._cachedGuild) {
+                this._cachedGuild = this.client.guilds.get(this.guildID);
+
+                if (!this._cachedGuild) {
+                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                }
+            }
+
+            return this._cachedGuild;
+        }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
     }
 
     /**

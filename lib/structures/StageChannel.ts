@@ -28,7 +28,6 @@ import type { VoiceConnection } from "@discordjs/voice";
 export default class StageChannel extends GuildChannel {
     /** The bitrate of the stage channel. */
     bitrate: number;
-    declare parent?: CategoryChannel | null;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -67,6 +66,10 @@ export default class StageChannel extends GuildChannel {
         if (data.permission_overwrites !== undefined) {
             data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
         }
+    }
+
+    override get parent(): CategoryChannel | null | undefined {
+        return super.parent as CategoryChannel | null | undefined;
     }
 
     /**
@@ -108,15 +111,11 @@ export default class StageChannel extends GuildChannel {
      * @param options The options to join the channel with.
      */
     join(options: Omit<JoinVoiceChannelOptions, "guildID" | "channelID" | "voiceAdapterCreator">): VoiceConnection {
-        if (!this["_guild"]) {
-            throw new Error("Voice is only supported if you have the GUILDS intent.");
-        }
-
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
         return this.client.joinVoiceChannel({
             ...options,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            voiceAdapterCreator: this["_guild"].voiceAdapterCreator,
+            voiceAdapterCreator: this.guild.voiceAdapterCreator,
             guildID:             this.guildID,
             channelID:           this.id
         });
@@ -132,16 +131,13 @@ export default class StageChannel extends GuildChannel {
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (!this["_guild"]) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
-        }
         if (typeof member === "string") {
-            member = this["_guild"].members.get(member)!;
+            member = this.guild.members.get(member)!;
         }
         if (!member) {
             throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
         }
-        let permission = this["_guild"].permissionsOf(member).allow;
+        let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
             return new Permission(AllPermissions);
         }

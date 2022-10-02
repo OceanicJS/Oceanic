@@ -8,7 +8,7 @@ import type { JSONGuildTemplate } from "../types/json";
 
 /** Represents a guild template. */
 export default class GuildTemplate {
-    private _sourceGuild?: Guild;
+    private _cachedSourceGuild?: Guild;
     client!: Client;
     /** The code of the template. */
     code: string;
@@ -44,7 +44,6 @@ export default class GuildTemplate {
         this.isDirty = null;
         this.name = data.name;
         this.serializedSourceGuild = data.serialized_source_guild;
-        this._sourceGuild = this.client.guilds.get(data.source_guild_id);
         this.sourceGuildID = data.source_guild_id;
         this.updatedAt = new Date(data.updated_at);
         this.usageCount = data.usage_count;
@@ -65,7 +64,6 @@ export default class GuildTemplate {
             this.serializedSourceGuild = data.serialized_source_guild;
         }
         if (data.source_guild_id !== undefined) {
-            this._sourceGuild = this.client.guilds.get(data.source_guild_id);
             this.sourceGuildID = data.source_guild_id;
         }
         if (data.updated_at !== undefined) {
@@ -78,11 +76,15 @@ export default class GuildTemplate {
 
     /** The source guild of this template. This will throw an error if the guild is not cached. */
     get sourceGuild(): Guild {
-        if (!this._sourceGuild) {
-            throw new Error(`${this.constructor.name}#sourceGuild is not present if this client is not a member of the source guild or without having the GUILDS intent.`);
-        } else {
-            return this._sourceGuild;
+        if (!this._cachedSourceGuild) {
+            this._cachedSourceGuild = this.client.guilds.get(this.sourceGuildID);
+
+            if (!this._cachedSourceGuild) {
+                throw new Error(`${this.constructor.name}#sourceGuild is not present if you don't have the GUILDS intent.`);
+            }
         }
+
+        return this._cachedSourceGuild;
     }
 
     /**

@@ -23,11 +23,10 @@ import type { Uncached } from "../types/shared";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
-    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    protected _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
+    protected _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
-    /** The channel this interaction was sent from. */
-    channel: T extends AnyTextChannelWithoutGroup ? T : undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
@@ -50,9 +49,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
     constructor(data: RawMessageComponentInteraction, client: Client) {
         super(data, client);
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
-        this.channel = client.getChannel<AnyTextChannelWithoutGroup>(data.channel_id!) as T extends AnyTextChannelWithoutGroup ? T : undefined;
         this.channelID = data.channel_id!;
-        this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
@@ -80,13 +77,26 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
         }
     }
 
+    /** The channel this interaction was sent from. */
+    get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
+        return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined);
+    }
+
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
     get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
-        if (this._guild === undefined) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-        } else {
-            return this._guild;
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            if (!this._cachedGuild) {
+                this._cachedGuild = this.client.guilds.get(this.guildID);
+
+                if (!this._cachedGuild) {
+                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                }
+            }
+
+            return this._cachedGuild;
         }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyGuildTextChannel ? Guild : Guild | null);
     }
 
     /**

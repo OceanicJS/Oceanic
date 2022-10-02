@@ -22,18 +22,16 @@ import type { JSONWebhook } from "../types/json";
 
 /** Represents a webhook. */
 export default class Webhook extends Base {
+    protected _cachedChannel?: AnyGuildTextChannel | null;
+    protected _cachedGuild?: Guild | null;
     /** The application associated with this webhook. */
     application?: ClientApplication | null;
     /** The ID of the application associated with this webhook. */
     applicationID: string | null;
     /** The hash of this webhook's avatar. */
     avatar: string | null;
-    /** The channel this webhook is for, if applicable. */
-    channel?: AnyGuildTextChannel | null;
     /** The ID of the channel this webhook is for, if applicable. */
     channelID: string | null;
-    /** The guild this webhook is for, if applicable. */
-    guild?: Guild | null;
     /** The id of the guild this webhook is in, if applicable. */
     guildID: string | null;
     /** The username of this webhook, if any. */
@@ -53,9 +51,7 @@ export default class Webhook extends Base {
         this.application = data.application_id === null ? null : client.application.id === data.application_id ? client.application : undefined;
         this.applicationID = data.application_id;
         this.avatar = data.avatar ?? null;
-        this.channel = data.channel_id === null ? null : client.getChannel<AnyGuildTextChannel>(data.channel_id);
         this.channelID = data.channel_id;
-        this.guild = data.guild_id === undefined || data.guild_id === null ? null : client.guilds.get(data.guild_id);
         this.guildID = data.guild_id ?? null;
         this.name = data.name;
         this.sourceChannel = data.source_channel;
@@ -63,6 +59,32 @@ export default class Webhook extends Base {
         this.token = data.token;
         this.type = data.type;
         this.user = data.user === undefined ? null : client.users.update(data.user);
+    }
+
+    /** The channel this webhook is for, if applicable. */
+    get channel(): AnyGuildTextChannel | null | undefined {
+        if (this.channelID !== null && this._cachedChannel !== null) {
+            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<AnyGuildTextChannel>(this.channelID));
+        }
+
+        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+    }
+
+    /** The guild this webhook is for, if applicable. This will throw an error if the guild is not cached. */
+    get guild(): Guild | null {
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            if (!this._cachedGuild) {
+                this._cachedGuild = this.client.guilds.get(this.guildID);
+
+                if (!this._cachedGuild) {
+                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                }
+            }
+
+            return this._cachedGuild;
+        }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
     }
 
     get url(): string {

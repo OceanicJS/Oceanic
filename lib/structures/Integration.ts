@@ -11,6 +11,8 @@ import type { JSONIntegration } from "../types/json";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {
+    protected _cachedGuild?: Guild | null;
+    protected _cachedRole?: Role | null;
     /** The account information associated with this integration. */
     account: IntegrationAccount;
     /** The application associated with this integration. */
@@ -23,16 +25,12 @@ export default class Integration extends Base {
     expireBehavior?: IntegrationExpireBehaviors;
     /** The grace period (in days) before expiring subscribers. */
     expireGracePeriod?: number;
-    /** The guild this integration belongs to, if applicable. */
-    guild?: Guild | null;
     /** The ID of the guild this integration belongs to, if applicable. */
     guildID: string | null;
     /** The name of the integration. */
     name: string;
     /** If this integration has been revoked. */
     revoked: boolean;
-    /** The role this integration uses for subscribers, if any. */
-    role?: Role | null;
     /** The id of the role this integration uses for subscribers, if any. */
     roleID: string | null;
     /** The scopes the application associated with this integration has been authorized for. */
@@ -45,7 +43,7 @@ export default class Integration extends Base {
     syncing: boolean;
     /** The type of integration. */
     type: IntegrationType;
-    /** The user associated with this integration. */
+    /** The user associated with this integration, if applicable. */
     user?: User;
     constructor(data: RawIntegration, client: Client, guildID?: string) {
         super(data.id, client);
@@ -53,7 +51,6 @@ export default class Integration extends Base {
         this.application = null;
         this.enableEmoticons = !!data.enable_emoticons;
         this.enabled = !!data.enabled;
-        this.guild = guildID === undefined ? null : client.guilds.get(guildID);
         this.guildID = guildID === undefined ? null : guildID;
         this.name = data.name;
         this.revoked = !!data.revoked;
@@ -89,7 +86,6 @@ export default class Integration extends Base {
             this.revoked = data.revoked;
         }
         if (data.role_id !== undefined) {
-            this.role = this.guild !== undefined && this.guild !== null ? this.guild.roles.get(data.role_id) : null;
             this.roleID = data.role_id;
         }
         if (data.scopes !== undefined) {
@@ -110,6 +106,32 @@ export default class Integration extends Base {
         if (data.user !== undefined) {
             this.user = this.client.users.update(data.user);
         }
+    }
+
+    /** The guild this integration belongs to, if applicable. This will throw an error if the guild is not cached. */
+    get guild(): Guild | null {
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            if (!this._cachedGuild) {
+                this._cachedGuild = this.client.guilds.get(this.guildID);
+
+                if (!this._cachedGuild) {
+                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                }
+            }
+
+            return this._cachedGuild;
+        }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
+    }
+
+    /** The role this integration uses for subscribers, if any. */
+    get role(): Role | null | undefined {
+        if (this.roleID !== null && this._cachedRole !== null) {
+            return this._cachedRole ?? (this._cachedRole = this._cachedGuild ? this._cachedGuild.roles.get(this.roleID) : undefined);
+        }
+
+        return this._cachedRole === null ? this._cachedRole : (this._cachedRole = null);
     }
 
     override toJSON(): JSONIntegration {

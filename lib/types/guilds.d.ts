@@ -632,7 +632,7 @@ export interface RawStageInstance {
     /** @deprecated */
     discoverable_disabled: boolean;
     guild_id: string;
-    guild_scheduled_event_id?: string;
+    guild_scheduled_event_id: string | null;
     id: string;
     privacy_level: StageInstancePrivacyLevels;
     topic: string;

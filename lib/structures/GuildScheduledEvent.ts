@@ -11,9 +11,8 @@ import type { JSONScheduledEvent } from "../types/json";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
-    private _guild?: Guild;
-    /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
-    channel?: StageChannel | null;
+    protected _cachedChannel?: StageChannel | null;
+    protected _cachedGuild?: Guild;
     /** The id of the channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     channelID: string | null;
     /** The creator of the event. Not present on events created before October 25th, 2021. */
@@ -48,7 +47,6 @@ export default class GuildScheduledEvent extends Base {
         this.entityID = null;
         this.entityMetadata = null;
         this.entityType = data.entity_type;
-        this._guild = client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.image = null;
         this.name = data.name;
@@ -65,7 +63,6 @@ export default class GuildScheduledEvent extends Base {
 
     protected update(data: Partial<RawScheduledEvent>): void {
         if (data.channel_id !== undefined) {
-            this.channel = data.channel_id === null ? null : this.client.getChannel<StageChannel>(data.channel_id);
             this.channelID = data.channel_id;
         }
         if (data.description !== undefined) {
@@ -103,14 +100,27 @@ export default class GuildScheduledEvent extends Base {
         }
     }
 
+    /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
+    get channel(): StageChannel | null | undefined {
+        if (this.channelID !== null && this._cachedChannel !== null) {
+            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<StageChannel>(this.channelID));
+        }
+
+        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+    }
     /** The guild this scheduled event belongs to. This will throw an error if the guild is not cached. */
     get guild(): Guild {
-        if (!this._guild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-        } else {
-            return this._guild;
+        if (!this._cachedGuild) {
+            this._cachedGuild = this.client.guilds.get(this.guildID);
+
+            if (!this._cachedGuild) {
+                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            }
         }
+
+        return this._cachedGuild;
     }
+
 
     /**
      * Delete this scheduled event.

@@ -41,9 +41,8 @@ try {
 
 /** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
 export default class Client extends TypedEmitter<ClientEvents> {
-    private _application?: ClientApplication;
-    private _user?: ExtendedUser;
-    private voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
+    protected _application?: ClientApplication;
+    protected _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
     groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
@@ -59,6 +58,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
     unavailableGuilds: TypedCollection<string, RawUnavailableGuild, UnavailableGuild>;
     users: TypedCollection<string, RawUser, User>;
     util: Util;
+    voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
     /**
      * @constructor
      * @param options The options to create the client with.

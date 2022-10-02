@@ -9,7 +9,7 @@ import type { JSONAutoModerationRule } from "../types/json";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
-    private _guild?: Guild;
+    protected _cachedGuild?: Guild;
     /** The actions that will execute when this rule is triggered. */
     actions: Array<AutoModerationAction>;
     /** The creator of this rule. */
@@ -47,7 +47,6 @@ export default class AutoModerationRule extends Base {
         this.eventType = data.event_type;
         this.exemptChannels = data.exempt_channels;
         this.exemptRoles = data.exempt_roles;
-        this._guild = client.guilds.get(data.guild_id);
         this.guildID = data.guild_id;
         this.name = data.name;
         this.triggerMetadata = {
@@ -102,11 +101,15 @@ export default class AutoModerationRule extends Base {
 
     /** The guild this rule is in. This will throw an error if the guild is not cached. */
     get guild(): Guild {
-        if (!this._guild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-        } else {
-            return this._guild;
+        if (!this._cachedGuild) {
+            this._cachedGuild = this.client.guilds.get(this.guildID);
+
+            if (!this._cachedGuild) {
+                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            }
         }
+
+        return this._cachedGuild;
     }
 
     /**

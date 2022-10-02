@@ -45,7 +45,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     owner?: User;
     /** The ID of the owner of this thread. */
     ownerID: string;
-    declare parent?: ThreadParentChannel;
     declare parentID: string;
     /** The amount of seconds between non-moderators sending messages. */
     rateLimitPerUser: number;
@@ -130,6 +129,10 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         if (data.total_message_sent !== undefined) {
             this.totalMessageSent = data.total_message_sent;
         }
+    }
+
+    override get parent(): ThreadParentChannel | undefined {
+        return super.parent as ThreadParentChannel | undefined;
     }
 
     /**
@@ -278,9 +281,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      * @param member The member to get the permissions of.
      */
     permissionsOf(member: string | Member): Permission {
-        if (!this["_guild"]) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the GUILDS intent.`);
-        }
         if (!this.parent) {
             throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the parent channel cached.`);
         }

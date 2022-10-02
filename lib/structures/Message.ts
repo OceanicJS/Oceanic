@@ -41,7 +41,8 @@ import * as Routes from "../util/Routes";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Base {
-    private _guild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+    protected _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
+    protected _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**
@@ -60,9 +61,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
     attachments: TypedCollection<string, RawAttachment, Attachment>;
     /** The author of this message. */
     author: User;
-    /** The channel this message was created in.*/
-    channel: T extends AnyTextChannelWithoutGroup ? T : undefined;
-    /** The ID of the channel this message was created in.*/
+    /** The ID of the channel this message was created in. */
     channelID: string;
     /** The components on this message. */
     components: Array<MessageActionRow>;
@@ -123,14 +122,12 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
     constructor(data: RawMessage, client: Client) {
         super(data.id, client);
         this.attachments = new TypedCollection(Attachment, client);
-        this.channel = client.getChannel<AnyTextChannelWithoutGroup>(data.channel_id) as T extends AnyTextChannelWithoutGroup ? T : undefined;
         this.channelID = data.channel_id;
         this.components = [];
         this.content = data.content;
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
-        this._guild = (data.guild_id === undefined ? null : client.guilds.get(data.guild_id)) as T extends AnyGuildTextChannel ? Guild : Guild | null;
         this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends AnyGuildTextChannel ? string : string | null;
         this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author }) : undefined) as T extends AnyGuildTextChannel ? Member : Member | undefined;
         this.mentions = {
@@ -281,13 +278,26 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         }
     }
 
+    /** The channel this message was created in. */
+    get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
+        return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined);
+    }
+
     /** The guild this message is in. This will throw an error if the guild is not cached. */
     get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
-        if (this._guild === undefined) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-        } else {
-            return this._guild;
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            if (!this._cachedGuild) {
+                this._cachedGuild = this.client.guilds.get(this.guildID);
+
+                if (!this._cachedGuild) {
+                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                }
+            }
+
+            return this._cachedGuild;
         }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyGuildTextChannel ? Guild : Guild | null);
     }
 
     /** A link to this message. */
