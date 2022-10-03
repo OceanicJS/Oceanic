@@ -99,7 +99,13 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
             }
 
             if (data.data.resolved.roles) {
-                Object.values(data.data.resolved.roles).forEach(role => resolved.roles.add(this._cachedGuild ? this._cachedGuild.roles.update(role, this.guildID!) : new Role(role, client, this.guildID!)));
+                Object.values(data.data.resolved.roles).forEach(role => {
+                    try {
+                        resolved.roles.add(this.guild?.roles.update(role, this.guildID!) ?? new Role(role, client, this.guildID!));
+                    } catch {
+                        resolved.roles.add(new Role(role, client, this.guildID!));
+                    }
+                });
             }
 
             if (data.data.resolved.users) {

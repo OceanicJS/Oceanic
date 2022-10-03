@@ -128,7 +128,11 @@ export default class Integration extends Base {
     /** The role this integration uses for subscribers, if any. */
     get role(): Role | null | undefined {
         if (this.roleID !== null && this._cachedRole !== null) {
-            return this._cachedRole ?? (this._cachedRole = this._cachedGuild ? this._cachedGuild.roles.get(this.roleID) : undefined);
+            try {
+                return this._cachedRole ?? (this._cachedRole = this.guild?.roles.get(this.roleID));
+            } catch {
+                return (this._cachedRole = undefined);
+            }
         }
 
         return this._cachedRole === null ? this._cachedRole : (this._cachedRole = null);

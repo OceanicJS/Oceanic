@@ -118,7 +118,11 @@ export default class VoiceState extends Base {
 
     /** The member associated with this voice state. */
     get member(): Member | undefined {
-        return this._cachedMember ?? (this._cachedMember = this._cachedGuild ? this._cachedGuild.members.get(this.userID) : undefined);
+        try {
+            return this._cachedMember ?? (this._cachedMember = this.guild.members.get(this.userID));
+        } catch {
+            return (this._cachedMember = undefined);
+        }
     }
 
     /** TThe user associated with this voice state. */

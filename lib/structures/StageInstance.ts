@@ -75,7 +75,11 @@ export default class StageInstance extends Base {
     /** The scheduled event for this stage instance, if applicable. */
     get scheduledEvent(): GuildScheduledEvent | null | undefined {
         if (this.scheduledEventID !== null && this._cachedScheduledEvent !== null) {
-            return this._cachedScheduledEvent ?? (this._cachedScheduledEvent = this._cachedGuild ? this._cachedGuild.scheduledEvents.get(this.scheduledEventID) : undefined);
+            try {
+                return this._cachedScheduledEvent ?? (this._cachedScheduledEvent = this.guild.scheduledEvents.get(this.scheduledEventID));
+            } catch {
+                return (this._cachedScheduledEvent = undefined);
+            }
         }
 
         return this._cachedScheduledEvent === null ? this._cachedScheduledEvent : (this._cachedScheduledEvent = null);
