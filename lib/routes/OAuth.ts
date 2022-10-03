@@ -27,6 +27,7 @@ import Guild from "../structures/Guild";
 import Webhook from "../structures/Webhook";
 import Integration from "../structures/Integration";
 import type RESTManager from "../rest/RESTManager";
+import OAuthHelper from "../rest/OAuthHelper";
 import { FormData } from "undici";
 
 /** Various methods for interacting with oauth. */
@@ -119,7 +120,7 @@ export default class OAuth {
     }
 
     /**
-     * Get the OAuth application information.
+     * Get the current OAuth2 application's information.
      */
     async getApplication(): Promise<Application> {
         return this.#manager.authRequest<RESTApplication>({
@@ -193,6 +194,10 @@ export default class OAuth {
         }).then(data => data.map(d => new Guild(d, this.#manager.client)));
     }
 
+    /** Get a helper instance that can be used with a specific bearer token. */
+    getHelper(token: string): OAuthHelper {
+        return new OAuthHelper(this.#manager, token);
+    }
 
     /**
      * Refresh an existing access token.
