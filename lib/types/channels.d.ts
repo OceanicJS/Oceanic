@@ -734,14 +734,6 @@ export interface RawInviteStageInstance {
     topic: string;
 }
 
-
-export interface InviteStageInstance {
-    members: Array<Member>;
-    participantCount: number;
-    speakerCount: number;
-    topic: string;
-}
-
 export interface CreateInviteOptions {
     /** How long the invite should last. */
     maxAge?: number;
