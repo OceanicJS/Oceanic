@@ -302,6 +302,17 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "CHANNEL_DELETE": {
+                if (packet.d.type === ChannelTypes.DM) {
+                    const channel = this.client.privateChannels.get(packet.d.id);
+                    this.client.privateChannels.delete(packet.d.id);
+                    this.client.emit("channelDelete", channel ?? {
+                        id:            packet.d.id,
+                        flags:         packet.d.flags,
+                        lastMessageID: packet.d.last_message_id,
+                        type:          packet.d.type
+                    });
+                    break;
+                }
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const channel = this.client.util.updateChannel<AnyGuildChannelWithoutThreads>(packet.d);
                 if (channel instanceof VoiceChannel || channel instanceof StageChannel) {

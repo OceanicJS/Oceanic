@@ -12,7 +12,7 @@ import type {
     UncachedThreadMember
 } from "./channels";
 import type { RawRequest } from "./request-handler";
-import type { AutoModerationActionExecution, Presence } from "./gateway";
+import type { AutoModerationActionExecution, DeletedPrivateChannel, Presence } from "./gateway";
 import type { AnyDispatchPacket } from "./gateway-raw";
 import type { Uncached } from "./shared";
 import type {
@@ -76,7 +76,7 @@ export interface ClientEvents {
     /** @event Emitted when a channel is created. Requires the `GUILDS` intent. */
     channelCreate: [channel: AnyGuildChannelWithoutThreads];
     /** @event Emitted when channel is deleted. Requires the `GUILDS` intent. */
-    channelDelete: [channel: AnyGuildChannelWithoutThreads];
+    channelDelete: [channel: AnyGuildChannelWithoutThreads | PrivateChannel | DeletedPrivateChannel];
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
     channelPinsUpdate: [channel: AnyTextChannelWithoutGroup | Uncached, timestamp: Date | null];
     /** @event Emitted when a channel is updated. Requires the `GUILDS` intent. */

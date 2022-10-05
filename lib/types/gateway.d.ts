@@ -1,7 +1,7 @@
 /** @module Types/Gateway */
 import type { RawUser } from "./users";
 import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
-import type { ActivityTypes, AutoModerationTriggerTypes, IntentNames } from "../Constants";
+import type { ActivityTypes, AutoModerationTriggerTypes, ChannelTypes, IntentNames } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type { ClientOptions as WSClientOptions } from "ws";
 
@@ -270,3 +270,17 @@ export interface AutoModerationActionExecution {
 }
 
 export type ShardStatus = "connecting" | "disconnected" | "handshaking" | "identifying" | "ready" | "resuming";
+
+export interface RawDeletedPrivateChannel {
+    flags: number;
+    id: string;
+    last_message_id: string | null;
+    type: ChannelTypes.DM;
+}
+
+export interface DeletedPrivateChannel {
+    flags: number;
+    id: string;
+    lastMessageID: string | null;
+    type: ChannelTypes.DM;
+}

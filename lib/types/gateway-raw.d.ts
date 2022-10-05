@@ -12,7 +12,7 @@ import type {
 } from "./guilds";
 import type { RawClientApplication, RawPartialApplication } from "./oauth";
 import type { RawExtendedUser, RawUser } from "./users";
-import type { PresenceUpdate, RawAutoModerationActionExecution } from "./gateway";
+import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel } from "./gateway";
 import type { RawGuildApplicationCommandPermissions } from "./application-commands";
 import type { RawAutoModerationRule } from "./auto-moderation";
 import type { RawGuildChannel, RawMessage, RawThreadChannel, RawThreadMember } from "./channels";
@@ -127,7 +127,7 @@ export interface ChannelCreatePacket extends BaseDispatchPacket {
 }
 
 export interface ChannelDeletePacket extends BaseDispatchPacket {
-    d: RawGuildChannel;
+    d: RawGuildChannel | RawDeletedPrivateChannel;
     t: "CHANNEL_DELETE";
 }
 
