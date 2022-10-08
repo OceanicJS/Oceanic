@@ -371,11 +371,11 @@ export enum ChannelFlags {
     REQUIRE_TAG = 1 << 4
 }
 
-/** @deprectated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. */
+/** @deprectated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. This will be removed in `1.2.0`. */
 export enum SortOrderModes {
-    /** Sort forum threads by activity. */
+    /** @deprecated Sort forum threads by activity. */
     RECENT_ACTIVITY = 0,
-    /** Sort forum threads by creation time (from most recent to oldest). */
+    /** @deprecated Sort forum threads by creation time (from most recent to oldest). */
     CREATION_TIME = 1
 }
 
@@ -820,7 +820,8 @@ export enum ThreadMemberFlags {
 }
 
 // entries are intentionally not aligned
-export enum JsonErrorCodes {
+/** The error codes that can be recieved. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
+export enum JSONErrorCodes {
     GENERAL_ERROR = 0,
     UNKNOWN_ACCOUNT = 10001,
     UNKNOWN_APPLICATION = 10002,
@@ -999,3 +1000,6 @@ export enum JsonErrorCodes {
     WEBHOOK_SERVICES_CANNOT_BE_USED_IN_FORUM_CHANNELS = 220004,
     MESSAGE_BLOCKED_BY_HARMFUL_LINKS_FILTER = 220005
 }
+
+/** @deprecated Use Use {@link Constants~JSONErrorCodes | JSONErrorCodes} instead. This will be removed in `1.2.0`. */
+export const JsonErrorCodes = JSONErrorCodes;

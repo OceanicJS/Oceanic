@@ -175,7 +175,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         if (data.mentions !== undefined) {
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
-                if (this.channel && "guildID" in this.channel && user.member) {
+                if (this.channel && "guildID" in (this.channel as T) && user.member) {
                     members.push(this.client.util.updateMember((this.channel as AnyGuildTextChannel).guildID, user.id, { ...user.member, user }));
                 }
                 return this.client.users.update(user);
