@@ -352,6 +352,12 @@ export interface JSONInvite {
     inviter?: string;
     maxAge?: number;
     maxUses?: number;
+    stageInstance?: {
+        members: Array<string>;
+        participantCount: number;
+        speakerCount: number;
+        topic: string;
+    };
     targetApplication?: JSONPartialApplication;
     targetType?: InviteTargetTypes;
     targetUser?: string;

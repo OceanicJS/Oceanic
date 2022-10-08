@@ -550,6 +550,8 @@ export enum GuildScheduledEventEntityTypes {
 }
 
 export enum StageInstancePrivacyLevels {
+    /** @deprecated */
+    PUBLIC     = 1,
     GUILD_ONLY = 2
 }
 

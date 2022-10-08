@@ -7,6 +7,7 @@ import PartialApplication from "./PartialApplication";
 import type {
     InviteChannel,
     InviteInfoTypes,
+    InviteStageInstance,
     PartialInviteChannel,
     RawInvite,
     RawInviteWithMetadata
@@ -45,6 +46,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     maxAge!: T extends "withMetadata" ? number : never;
     /** The maximum number of times this invite can be used, */
     maxUses!: T extends "withMetadata" ? number : never;
+    /** @deprecated The stage instance in the invite this channel is for (deprecated). */
+    stageInstance?: InviteStageInstance;
     /** The embedded application this invite will open. */
     targetApplication?: PartialApplication;
     /** The [target type](https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types) of this invite. */
@@ -106,6 +109,14 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         if (data.inviter !== undefined) {
             this.inviter = this.client.users.update(data.inviter);
+        }
+        if (data.stage_instance !== undefined) {
+            this.stageInstance = {
+                members:          data.stage_instance.members.map(member => this.client.util.updateMember(guild!.id, member.user!.id, member)),
+                participantCount: data.stage_instance.participant_count,
+                speakerCount:     data.stage_instance.speaker_count,
+                topic:            data.stage_instance.topic
+            };
         }
         if (data.target_application !== undefined) {
             this.targetApplication = new PartialApplication(data.target_application, this.client);
@@ -176,11 +187,17 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             inviter:                  this.inviter?.id,
             maxAge:                   this.maxAge,
             maxUses:                  this.maxUses,
-            targetApplication:        this.targetApplication?.toJSON(),
-            targetType:               this.targetType,
-            targetUser:               this.targetUser?.id,
-            temporary:                this.temporary,
-            uses:                     this.uses
+            stageInstance:            !this.stageInstance ? undefined : {
+                members:          this.stageInstance.members.map(member => member.id),
+                participantCount: this.stageInstance.participantCount,
+                speakerCount:     this.stageInstance.speakerCount,
+                topic:            this.stageInstance.topic
+            },
+            targetApplication: this.targetApplication?.toJSON(),
+            targetType:        this.targetType,
+            targetUser:        this.targetUser?.id,
+            temporary:         this.temporary,
+            uses:              this.uses
         };
     }
 }
