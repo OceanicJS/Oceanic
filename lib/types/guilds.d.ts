@@ -110,13 +110,18 @@ export interface RawRole {
     name: string;
     permissions: string;
     position: number;
-    tags?: RoleTags;
+    tags?: RawRoleTags;
     unicode_emoji?: string | null;
 }
-export interface RoleTags {
+export interface RawRoleTags {
     bot_id?: string;
     integration_id?: string;
     premium_subscriber?: null;
+}
+export interface RoleTags {
+    botID?: string;
+    integrationID?: string;
+    premiumSubscriber?: null;
 }
 export interface Emoji {
     animated?: boolean;

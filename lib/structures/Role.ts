@@ -70,7 +70,11 @@ export default class Role extends Base {
             this.position = data.position;
         }
         if (data.tags !== undefined) {
-            this.tags = data.tags ?? {};
+            this.tags = {
+                botID:             data.tags.bot_id,
+                integrationID:     data.tags.integration_id,
+                premiumSubscriber: data.tags.premium_subscriber
+            };
         }
         if (data.unicode_emoji !== undefined) {
             this.unicodeEmoji = data.unicode_emoji ?? null;
