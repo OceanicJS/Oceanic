@@ -16,7 +16,7 @@ import type {
     RawMessageComponentInteraction
 } from "../types/interactions";
 import type { InteractionTypes } from "../Constants";
-import { InteractionResponseTypes, ComponentTypes } from "../Constants";
+import { ComponentTypes, InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
@@ -67,7 +67,11 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
                 break;
             }
 
-            case ComponentTypes.SELECT_MENU: {
+            case ComponentTypes.STRING_SELECT:
+            case ComponentTypes.USER_SELECT:
+            case ComponentTypes.ROLE_SELECT:
+            case ComponentTypes.MENTIONABLE_SELECT:
+            case ComponentTypes.CHANNEL_SELECT: {
                 this.data = {
                     componentType: data.data.component_type,
                     customID:      data.data.custom_id,

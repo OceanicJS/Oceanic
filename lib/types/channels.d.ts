@@ -15,12 +15,13 @@ import type {
     MessageActivityTypes,
     MessageTypes,
     OverwriteTypes,
+    SelectMenuTypes,
+    SortOrderTypes,
     StickerFormatTypes,
     TextInputStyles,
     ThreadAutoArchiveDuration,
     ThreadChannelTypes,
-    VideoQualityModes,
-    SortOrderTypes
+    VideoQualityModes
 } from "../Constants";
 import type CategoryChannel from "../structures/CategoryChannel";
 import type GroupChannel from "../structures/GroupChannel";
@@ -420,7 +421,13 @@ export interface MessageReference {
 }
 
 export type RawComponent = RawMessageComponent | RawModalComponent;
-export type RawMessageComponent = RawButtonComponent | RawSelectMenu;
+export type RawMessageComponent =
+    RawButtonComponent
+    | RawStringSelectMenu
+    | RawUserSelectMenu
+    | RawRoleSelectMenu
+    | RawMentionableSelectMenu
+    | RawChannelSelectMenu;
 export type RawModalComponent = RawTextInput;
 export type RawButtonComponent = RawTextButton | URLButton;
 export interface RawActionRowBase {
@@ -437,7 +444,13 @@ export interface RawModalActionRow extends RawActionRowBase {
 }
 
 export type Component = MessageComponent | ModalComponent;
-export type MessageComponent = ButtonComponent | SelectMenu;
+export type MessageComponent =
+    ButtonComponent
+    | StringSelectMenu
+    | UserSelectMenu
+    | RoleSelectMenu
+    | MentionableSelectMenu
+    | ChannelSelectMenu;
 export type ModalComponent = TextInput;
 export type ButtonComponent = TextButton | URLButton;
 export interface ActionRowBase {
@@ -476,24 +489,67 @@ export interface URLButton extends ButtonBase {
     url: string;
 }
 
-export interface RawSelectMenu {
+export interface RawSelectMenuBase {
     custom_id: string;
     disabled?: boolean;
     max_values?: number;
     min_values?: number;
-    options: Array<SelectOption>;
     placeholder?: string;
-    type: ComponentTypes.SELECT_MENU;
+    type: SelectMenuTypes;
 }
 
-export interface SelectMenu {
+export interface RawStringSelectMenu extends RawSelectMenuBase {
+    options: Array<SelectOption>;
+    type: ComponentTypes.STRING_SELECT;
+}
+
+export interface RawUserSelectMenu extends RawSelectMenuBase {
+    type: ComponentTypes.USER_SELECT;
+}
+
+export interface RawRoleSelectMenu extends RawSelectMenuBase {
+    type: ComponentTypes.ROLE_SELECT;
+}
+
+export interface RawMentionableSelectMenu extends RawSelectMenuBase {
+    type: ComponentTypes.MENTIONABLE_SELECT;
+}
+
+export interface RawChannelSelectMenu extends RawSelectMenuBase {
+    channel_types: Array<ChannelTypes>;
+    type: ComponentTypes.CHANNEL_SELECT;
+}
+
+
+export interface SelectMenuBase {
     customID: string;
     disabled?: boolean;
     maxValues?: number;
     minValues?: number;
-    options: Array<SelectOption>;
     placeholder?: string;
-    type: ComponentTypes.SELECT_MENU;
+    type: SelectMenuTypes;
+}
+
+export interface StringSelectMenu extends SelectMenuBase {
+    options: Array<SelectOption>;
+    type: ComponentTypes.STRING_SELECT;
+}
+
+export interface UserSelectMenu extends SelectMenuBase {
+    type: ComponentTypes.USER_SELECT;
+}
+
+export interface RoleSelectMenu extends SelectMenuBase {
+    type: ComponentTypes.ROLE_SELECT;
+}
+
+export interface MentionableSelectMenu extends SelectMenuBase {
+    type: ComponentTypes.MENTIONABLE_SELECT;
+}
+
+export interface ChannelSelectMenu extends SelectMenuBase {
+    channelTypes: Array<ChannelTypes>;
+    type: ComponentTypes.CHANNEL_SELECT;
 }
 
 export interface SelectOption {

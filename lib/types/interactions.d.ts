@@ -1,12 +1,12 @@
 /** @module Types/Interactions */
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
-    RawModalActionRow,
-    RawAttachment,
-    RawMessage,
-    ModalActionRow,
     AnyGuildTextChannel,
-    RawInteractionResolvedChannel
+    ModalActionRow,
+    RawAttachment,
+    RawInteractionResolvedChannel,
+    RawMessage,
+    RawModalActionRow
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -17,7 +17,8 @@ import type {
     ComponentTypes,
     InteractionResponseTypes,
     InteractionTypes,
-    MessageComponentTypes
+    MessageComponentTypes,
+    SelectMenuTypes
 } from "../Constants";
 import type Attachment from "../structures/Attachment";
 import type Member from "../structures/Member";
@@ -136,7 +137,7 @@ export interface MessageComponentButtonInteractionData {
 }
 
 export interface MessageComponentSelectMenuInteractionData {
-    componentType: ComponentTypes.SELECT_MENU;
+    componentType: SelectMenuTypes;
     customID: string;
     values: Array<string>;
 }

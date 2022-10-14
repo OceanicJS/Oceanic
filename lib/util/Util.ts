@@ -11,27 +11,27 @@ import {
 } from "../Constants";
 import type {
     AllowedMentions,
+    AnyChannel,
+    AnyGuildChannelWithoutThreads,
+    AnyThreadChannel,
     ApplicationCommandOptions,
     CombinedApplicationCommandOption,
+    Embed,
+    EmbedOptions,
     MessageActionRow,
     ModalActionRow,
     RawAllowedMentions,
     RawApplicationCommandOption,
+    RawChannel,
+    RawEmbed,
+    RawEmbedOptions,
+    RawGuildChannel,
     RawMember,
     RawMessageActionRow,
     RawModalActionRow,
-    EmbedOptions,
-    RawEmbedOptions,
-    Embed,
-    RawEmbed,
-    RawThreadChannel,
-    AnyThreadChannel,
-    RawGuildChannel,
-    AnyGuildChannelWithoutThreads,
-    RawChannel,
-    AnyChannel,
-    RESTMember,
     RawSticker,
+    RawThreadChannel,
+    RESTMember,
     Sticker
 } from "../types";
 import Member from "../structures/Member";
@@ -72,7 +72,7 @@ export default class Util {
                             type:     component.type
                         };
                     }
-                } else if (component.type === ComponentTypes.SELECT_MENU) {
+                } else if (component.type === ComponentTypes.STRING_SELECT) {
                     return {
                         customID:    component.custom_id,
                         disabled:    component.disabled,
@@ -118,7 +118,7 @@ export default class Util {
                             type:      component.type
                         };
                     }
-                } else if (component.type === ComponentTypes.SELECT_MENU) {
+                } else if (component.type === ComponentTypes.STRING_SELECT) {
                     return {
                         custom_id:   component.customID,
                         disabled:    component.disabled,
@@ -139,6 +139,25 @@ export default class Util {
                         style:       component.style,
                         type:        component.type,
                         value:       component.value
+                    };
+                } else if (component.type === ComponentTypes.USER_SELECT || component.type === ComponentTypes.ROLE_SELECT || component.type === ComponentTypes.MENTIONABLE_SELECT) {
+                    return {
+                        custom_id:   component.customID,
+                        disabled:    component.disabled,
+                        max_values:  component.maxValues,
+                        min_values:  component.minValues,
+                        placeholder: component.placeholder,
+                        type:        component.type
+                    };
+                } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                    return {
+                        channel_types: component.channelTypes,
+                        custom_id:     component.customID,
+                        disabled:      component.disabled,
+                        max_values:    component.maxValues,
+                        min_values:    component.minValues,
+                        placeholder:   component.placeholder,
+                        type:          component.type
                     };
                 } else {
                     return component;
