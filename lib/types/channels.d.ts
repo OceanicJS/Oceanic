@@ -421,13 +421,7 @@ export interface MessageReference {
 }
 
 export type RawComponent = RawMessageComponent | RawModalComponent;
-export type RawMessageComponent =
-    RawButtonComponent
-    | RawStringSelectMenu
-    | RawUserSelectMenu
-    | RawRoleSelectMenu
-    | RawMentionableSelectMenu
-    | RawChannelSelectMenu;
+export type RawMessageComponent = RawButtonComponent | RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
 export type RawModalComponent = RawTextInput;
 export type RawButtonComponent = RawTextButton | URLButton;
 export interface RawActionRowBase {
@@ -444,13 +438,7 @@ export interface RawModalActionRow extends RawActionRowBase {
 }
 
 export type Component = MessageComponent | ModalComponent;
-export type MessageComponent =
-    ButtonComponent
-    | StringSelectMenu
-    | UserSelectMenu
-    | RoleSelectMenu
-    | MentionableSelectMenu
-    | ChannelSelectMenu;
+export type MessageComponent = ButtonComponent | StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
 export type ModalComponent = TextInput;
 export type ButtonComponent = TextButton | URLButton;
 export interface ActionRowBase {
@@ -489,68 +477,36 @@ export interface URLButton extends ButtonBase {
     url: string;
 }
 
-export interface RawSelectMenuBase {
+export interface RawSelectMenuBase<T extends SelectMenuTypes> {
     custom_id: string;
     disabled?: boolean;
     max_values?: number;
     min_values?: number;
     placeholder?: string;
-    type: SelectMenuTypes;
+    type: T;
 }
 
-export interface RawStringSelectMenu extends RawSelectMenuBase {
-    options: Array<SelectOption>;
-    type: ComponentTypes.STRING_SELECT;
-}
-
-export interface RawUserSelectMenu extends RawSelectMenuBase {
-    type: ComponentTypes.USER_SELECT;
-}
-
-export interface RawRoleSelectMenu extends RawSelectMenuBase {
-    type: ComponentTypes.ROLE_SELECT;
-}
-
-export interface RawMentionableSelectMenu extends RawSelectMenuBase {
-    type: ComponentTypes.MENTIONABLE_SELECT;
-}
-
-export interface RawChannelSelectMenu extends RawSelectMenuBase {
-    channel_types: Array<ChannelTypes>;
-    type: ComponentTypes.CHANNEL_SELECT;
-}
+export type RawStringSelectMenu      = RawSelectMenuBase<ComponentTypes.STRING_SELECT> & { options: Array<SelectOption>; };
+export type RawUserSelectMenu        = RawSelectMenuBase<ComponentTypes.USER_SELECT>;
+export type RawRoleSelectMenu        = RawSelectMenuBase<ComponentTypes.ROLE_SELECT>;
+export type RawMentionableSelectMenu = RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
+export type RawChannelSelectMenu     = RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT> & { channel_types: Array<ChannelTypes>; };
 
 
-export interface SelectMenuBase {
+export interface SelectMenuBase<T extends SelectMenuTypes> {
     customID: string;
     disabled?: boolean;
     maxValues?: number;
     minValues?: number;
     placeholder?: string;
-    type: SelectMenuTypes;
+    type: T;
 }
 
-export interface StringSelectMenu extends SelectMenuBase {
-    options: Array<SelectOption>;
-    type: ComponentTypes.STRING_SELECT;
-}
-
-export interface UserSelectMenu extends SelectMenuBase {
-    type: ComponentTypes.USER_SELECT;
-}
-
-export interface RoleSelectMenu extends SelectMenuBase {
-    type: ComponentTypes.ROLE_SELECT;
-}
-
-export interface MentionableSelectMenu extends SelectMenuBase {
-    type: ComponentTypes.MENTIONABLE_SELECT;
-}
-
-export interface ChannelSelectMenu extends SelectMenuBase {
-    channelTypes: Array<ChannelTypes>;
-    type: ComponentTypes.CHANNEL_SELECT;
-}
+export type StringSelectMenu      = SelectMenuBase<ComponentTypes.STRING_SELECT> & { options: Array<SelectOption>; };
+export type UserSelectMenu        = SelectMenuBase<ComponentTypes.USER_SELECT>;
+export type RoleSelectMenu        = SelectMenuBase<ComponentTypes.ROLE_SELECT>;
+export type MentionableSelectMenu = SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
+export type ChannelSelectMenu     = SelectMenuBase<ComponentTypes.CHANNEL_SELECT> & { channelTypes: Array<ChannelTypes>; };
 
 export interface SelectOption {
     default?: boolean;
