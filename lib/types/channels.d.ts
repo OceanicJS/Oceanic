@@ -421,38 +421,31 @@ export interface MessageReference {
 }
 
 export type RawComponent = RawMessageComponent | RawModalComponent;
-export type RawMessageComponent = RawButtonComponent | RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
+export type RawMessageComponent = RawButtonComponent | RawSelectMenuComponent;
 export type RawModalComponent = RawTextInput;
 export type RawButtonComponent = RawTextButton | URLButton;
-export interface RawActionRowBase {
-    components: Array<RawComponent>;
+export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
+
+export interface RawActionRowBase<T extends RawComponent> {
+    components: Array<T>;
     type: ComponentTypes.ACTION_ROW;
 }
 
-export interface RawMessageActionRow extends RawActionRowBase {
-    components: Array<RawMessageComponent>;
-}
-
-export interface RawModalActionRow extends RawActionRowBase {
-    components: Array<RawModalComponent>;
-}
+export type RawMessageActionRow = RawActionRowBase<RawMessageComponent>;
+export type RawModalActionRow = RawActionRowBase<RawModalComponent>;
 
 export type Component = MessageComponent | ModalComponent;
 export type MessageComponent = ButtonComponent | StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
 export type ModalComponent = TextInput;
 export type ButtonComponent = TextButton | URLButton;
-export interface ActionRowBase {
-    components: Array<Component>;
+
+export interface ActionRowBase<T extends Component> {
+    components: Array<T>;
     type: ComponentTypes.ACTION_ROW;
 }
 
-export interface MessageActionRow extends ActionRowBase {
-    components: Array<MessageComponent>;
-}
-
-export interface ModalActionRow extends ActionRowBase {
-    components: Array<ModalComponent>;
-}
+export type MessageActionRow = ActionRowBase<MessageComponent>;
+export type ModalActionRow = ActionRowBase<ModalComponent>;
 
 export interface ButtonBase {
     disabled?: boolean;
