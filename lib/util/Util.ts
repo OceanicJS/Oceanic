@@ -118,16 +118,6 @@ export default class Util {
                             type:      component.type
                         };
                     }
-                } else if (component.type === ComponentTypes.STRING_SELECT) {
-                    return {
-                        custom_id:   component.customID,
-                        disabled:    component.disabled,
-                        max_values:  component.maxValues,
-                        min_values:  component.minValues,
-                        options:     component.options,
-                        placeholder: component.placeholder,
-                        type:        component.type
-                    };
                 } else if (component.type === ComponentTypes.TEXT_INPUT) {
                     return {
                         custom_id:   component.customID,
@@ -140,8 +130,8 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                } else if (component.type === ComponentTypes.USER_SELECT || component.type === ComponentTypes.ROLE_SELECT || component.type === ComponentTypes.MENTIONABLE_SELECT) {
-                    return {
+                } else if (component.type === ComponentTypes.STRING_SELECT || component.type === ComponentTypes.USER_SELECT || component.type === ComponentTypes.ROLE_SELECT || component.type === ComponentTypes.MENTIONABLE_SELECT || component.type === ComponentTypes.CHANNEL_SELECT) {
+                    const rawComponent = {
                         custom_id:   component.customID,
                         disabled:    component.disabled,
                         max_values:  component.maxValues,
@@ -149,16 +139,13 @@ export default class Util {
                         placeholder: component.placeholder,
                         type:        component.type
                     };
-                } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                    return {
-                        channel_types: component.channelTypes,
-                        custom_id:     component.customID,
-                        disabled:      component.disabled,
-                        max_values:    component.maxValues,
-                        min_values:    component.minValues,
-                        placeholder:   component.placeholder,
-                        type:          component.type
-                    };
+
+                    if (component.type === ComponentTypes.STRING_SELECT) {
+                        return { ...rawComponent, options: component.options };
+                    } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                        return { ...rawComponent, channel_types: component.channelTypes };
+                    }
+                    return rawComponent;
                 } else {
                     return component;
                 }
