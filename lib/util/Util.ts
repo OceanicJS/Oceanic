@@ -72,16 +72,6 @@ export default class Util {
                             type:     component.type
                         };
                     }
-                } else if (component.type === ComponentTypes.STRING_SELECT) {
-                    return {
-                        customID:    component.custom_id,
-                        disabled:    component.disabled,
-                        maxValues:   component.max_values,
-                        minValues:   component.min_values,
-                        options:     component.options,
-                        placeholder: component.placeholder,
-                        type:        component.type
-                    };
                 } else if (component.type === ComponentTypes.TEXT_INPUT) {
                     return {
                         customID:    component.custom_id,
@@ -94,6 +84,22 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
+                } else if (component.type === ComponentTypes.STRING_SELECT || component.type === ComponentTypes.USER_SELECT || component.type === ComponentTypes.ROLE_SELECT || component.type === ComponentTypes.MENTIONABLE_SELECT || component.type === ComponentTypes.CHANNEL_SELECT) {
+                    const parsedComponent = {
+                        customID:    component.custom_id,
+                        disabled:    component.disabled,
+                        maxValues:   component.max_values,
+                        minValues:   component.min_values,
+                        placeholder: component.placeholder,
+                        type:        component.type
+                    };
+
+                    if (component.type === ComponentTypes.STRING_SELECT) {
+                        return { ...parsedComponent, options: component.options };
+                    } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                        return { ...parsedComponent, channelTypes: component.channel_types };
+                    }
+                    return parsedComponent;
                 } else {
                     return component;
                 }
