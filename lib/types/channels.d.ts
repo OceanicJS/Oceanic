@@ -435,9 +435,10 @@ export type RawMessageActionRow = RawActionRowBase<RawMessageComponent>;
 export type RawModalActionRow = RawActionRowBase<RawModalComponent>;
 
 export type Component = MessageComponent | ModalComponent;
-export type MessageComponent = ButtonComponent | StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
+export type MessageComponent = ButtonComponent | SelectMenuComponent;
 export type ModalComponent = TextInput;
 export type ButtonComponent = TextButton | URLButton;
+export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
 
 export interface ActionRowBase<T extends Component> {
     components: Array<T>;
