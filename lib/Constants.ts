@@ -452,7 +452,7 @@ export enum OAuthScopes {
 export enum ComponentTypes {
     ACTION_ROW         = 1,
     BUTTON             = 2,
-    /** @deprecated Use STRING_SELECT from now on */
+    /** @deprecated Named changed. See {@link Constants~ComponentTypes.STRING_SELECT | STRING_SELECT}. This will be removed in `1.3.0`. */
     SELECT_MENU        = 3,
     STRING_SELECT      = 3,
     TEXT_INPUT         = 4,
