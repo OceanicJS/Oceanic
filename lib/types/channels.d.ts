@@ -5,6 +5,7 @@ import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
 import { type  Uncached } from "./shared";
+import { ApplicationCommandInteractionResolvedData } from "./interactions";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -480,11 +481,23 @@ export interface RawSelectMenuBase<T extends SelectMenuTypes> {
     type: T;
 }
 
-export type RawStringSelectMenu      = RawSelectMenuBase<ComponentTypes.STRING_SELECT> & { options: Array<SelectOption>; };
-export type RawUserSelectMenu        = RawSelectMenuBase<ComponentTypes.USER_SELECT>;
-export type RawRoleSelectMenu        = RawSelectMenuBase<ComponentTypes.ROLE_SELECT>;
-export type RawMentionableSelectMenu = RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
-export type RawChannelSelectMenu     = RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT> & { channel_types: Array<ChannelTypes>; };
+export interface RawSelectMenuExtended<T extends SelectMenuTypes> extends RawSelectMenuBase<T> {
+    resolved: Exclude<ApplicationCommandInteractionResolvedData, "attachments" | "messages">;
+}
+
+export interface RawStringSelectMenuOptions {
+    options: Array<SelectOption>;
+}
+
+export interface RawChannelSelectMenuOptions {
+    channel_types: Array<ChannelTypes>;
+}
+
+export type RawStringSelectMenu      = RawSelectMenuBase<ComponentTypes.STRING_SELECT> & RawStringSelectMenuOptions;
+export type RawUserSelectMenu        = RawSelectMenuExtended<ComponentTypes.USER_SELECT>;
+export type RawRoleSelectMenu        = RawSelectMenuExtended<ComponentTypes.ROLE_SELECT>;
+export type RawMentionableSelectMenu = RawSelectMenuExtended<ComponentTypes.MENTIONABLE_SELECT>;
+export type RawChannelSelectMenu     = RawSelectMenuExtended<ComponentTypes.CHANNEL_SELECT> & RawChannelSelectMenuOptions;
 
 
 export interface SelectMenuBase<T extends SelectMenuTypes> {
@@ -496,11 +509,23 @@ export interface SelectMenuBase<T extends SelectMenuTypes> {
     type: T;
 }
 
-export type StringSelectMenu      = SelectMenuBase<ComponentTypes.STRING_SELECT> & { options: Array<SelectOption>; };
-export type UserSelectMenu        = SelectMenuBase<ComponentTypes.USER_SELECT>;
-export type RoleSelectMenu        = SelectMenuBase<ComponentTypes.ROLE_SELECT>;
-export type MentionableSelectMenu = SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
-export type ChannelSelectMenu     = SelectMenuBase<ComponentTypes.CHANNEL_SELECT> & { channelTypes: Array<ChannelTypes>; };
+export interface SelectMenuExtended<T extends SelectMenuTypes> extends SelectMenuBase<T> {
+    resolved: Exclude<ApplicationCommandInteractionResolvedData, "attachments" | "messages">;
+}
+
+export interface StringSelectMenuOptions {
+    options: Array<SelectOption>;
+}
+
+export interface ChannelSelectMenuOptions {
+    channelTypes: Array<ChannelTypes>;
+}
+
+export type StringSelectMenu      = SelectMenuBase<ComponentTypes.STRING_SELECT> & StringSelectMenuOptions;
+export type UserSelectMenu        = SelectMenuExtended<ComponentTypes.USER_SELECT>;
+export type RoleSelectMenu        = SelectMenuExtended<ComponentTypes.ROLE_SELECT>;
+export type MentionableSelectMenu = SelectMenuExtended<ComponentTypes.MENTIONABLE_SELECT>;
+export type ChannelSelectMenu     = SelectMenuExtended<ComponentTypes.CHANNEL_SELECT> & ChannelSelectMenuOptions;
 
 export interface SelectOption {
     default?: boolean;
