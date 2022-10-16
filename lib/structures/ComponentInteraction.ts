@@ -23,7 +23,8 @@ import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/c
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
-import { RawMember, RawUser } from "../types";
+import type { RawUser } from "../types/users";
+import type { RawMember } from "../types/guilds";
 import { MessageComponentInteractionResolvedData } from "../types/interactions";
 import TypedCollection from "../util/TypedCollection";
 import { RawInteractionResolvedChannel } from "../types/channels";

@@ -371,7 +371,7 @@ export enum ChannelFlags {
     REQUIRE_TAG = 1 << 4
 }
 
-/** @deprectated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. This will be removed in `1.2.0`. */
+/** @deprecated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. This will be removed in `1.2.0`. */
 export enum SortOrderModes {
     /** @deprecated Sort forum threads by activity. */
     RECENT_ACTIVITY = 0,
@@ -831,7 +831,7 @@ export enum ThreadMemberFlags {
 }
 
 // entries are intentionally not aligned
-/** The error codes that can be recieved. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
+/** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
     GENERAL_ERROR = 0,
     UNKNOWN_ACCOUNT = 10001,
@@ -967,7 +967,9 @@ export enum JSONErrorCodes {
     INVALID_GUILD = 50055,
     INVALID_MESSAGE_TYPE = 50068,
     PAYMENT_SOURCE_REQUIRED = 50070,
+    /** @deprecated use {@link JSONErrorCodes.CANNOT_MODIFY_SYSTEM_WEBHOOK} instead. This will be removed in `1.3.0`. */
     CANNOT_MODIFY_SYSTEM_WEBHOOOK = 50073,
+    CANNOT_MODIFY_SYSTEM_WEBHOOK = 50073,
     CANNOT_DELETE_COMMUNITY_REQUIRED_CHANNEL = 50074,
     CANNOT_EDIT_MESSAGE_STICKERS = 50080,
     INVALID_STICKER_SENT = 50081,

@@ -14,26 +14,21 @@ import type {
     AnyChannel,
     AnyGuildChannelWithoutThreads,
     AnyThreadChannel,
-    ApplicationCommandOptions,
-    CombinedApplicationCommandOption,
     Embed,
     EmbedOptions,
     MessageActionRow,
     ModalActionRow,
     RawAllowedMentions,
-    RawApplicationCommandOption,
     RawChannel,
     RawEmbed,
     RawEmbedOptions,
     RawGuildChannel,
-    RawMember,
     RawMessageActionRow,
     RawModalActionRow,
-    RawSticker,
-    RawThreadChannel,
-    RESTMember,
-    Sticker
-} from "../types";
+    RawThreadChannel
+} from "../types/channels";
+import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds";
+import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
 
