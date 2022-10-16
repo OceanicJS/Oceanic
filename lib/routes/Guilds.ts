@@ -1337,7 +1337,7 @@ export default class Guilds {
     }
 
     /**
-     * Get a sticker. Response will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * Get a sticker. Response will include a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
      * @param id The ID of the guild.
      * @param stickerID The ID of the sticker to get.
      */
@@ -1349,7 +1349,7 @@ export default class Guilds {
     }
 
     /**
-     * Get a guild's stickers. Stickers will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * Get a guild's stickers. Stickers will include a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
      * @param id The ID of the guild.
      */
     async getStickers(id: string): Promise<Array<Sticker>> {

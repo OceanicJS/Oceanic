@@ -16,12 +16,12 @@ import type {
     ForumEmoji,
     ForumTag,
     GetArchivedThreadsOptions,
-    JSONForumChannel,
     RawForumChannel,
     RawOverwrite,
     RawPublicThreadChannel,
     StartThreadInForumOptions
-} from "../types";
+} from "../types/channels";
+import type { JSONForumChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions, SortOrderTypes } from "../Constants";

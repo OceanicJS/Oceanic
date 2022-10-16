@@ -2,7 +2,7 @@
 import Base from "./Base";
 import User from "./User";
 import type { AuditLogActionTypes } from "../Constants";
-import type { AuditLogEntryOptions, RawAuditLogEntry, RoleAuditLogChange, StandardAuditLogChange } from "../types";
+import type { AuditLogEntryOptions, RawAuditLogEntry, RoleAuditLogChange, StandardAuditLogChange } from "../types/audit-log";
 import type Client from "../Client";
 
 /** Represents a guild audit log entry. */

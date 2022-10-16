@@ -1,13 +1,8 @@
 /** @module Routes/Miscellaneous */
 import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
-import {
-    RawSticker,
-    RawStickerPack,
-    Sticker,
-    StickerPack,
-    VoiceRegion
-} from "../types";
+import { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
+import type { VoiceRegion } from "../types/voice";
 
 /** Methods that don't fit anywhere else. */
 export default class Miscellaneous {
