@@ -1,4 +1,4 @@
-/** @module SelectMenuWrapper */
+/** @module SelectMenuValuesWrapper */
 import { ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
