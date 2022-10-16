@@ -22,9 +22,9 @@ import { ComponentTypes, InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
-import SelectMenuWrapper from "../util/SelectMenuWrapper";
+import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 import { RawMember, RawUser } from "../types";
-import { MessageCommandInteractionResolvedData } from "../types/interactions";
+import { MessageComponentInteractionResolvedData } from "../types/interactions";
 import TypedCollection from "../util/TypedCollection";
 import { RawInteractionResolvedChannel } from "../types/channels";
 
@@ -74,20 +74,12 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
                 };
                 break;
             }
-
-            case ComponentTypes.STRING_SELECT: {
-                this.data = {
-                    componentType: data.data.component_type,
-                    customID:      data.data.custom_id,
-                    values:        data.data.values!
-                };
-                break;
-            }
+            case ComponentTypes.STRING_SELECT:
             case ComponentTypes.USER_SELECT:
             case ComponentTypes.ROLE_SELECT:
             case ComponentTypes.MENTIONABLE_SELECT:
             case ComponentTypes.CHANNEL_SELECT: {
-                const resolved: MessageCommandInteractionResolvedData = {
+                const resolved: MessageComponentInteractionResolvedData = {
                     channels: new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>,
                     members:  new TypedCollection(Member, client),
                     roles:    new TypedCollection(Role, client),
@@ -125,8 +117,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
                 this.data = {
                     componentType: data.data.component_type,
                     customID:      data.data.custom_id,
-                    values:        data.data.values!,
-                    options:       new SelectMenuWrapper(client, data.data.resolved ?? {}, resolved),
+                    values:        new SelectMenuValuesWrapper(client, resolved, data.data.values!),
                     resolved
                 };
                 break;
