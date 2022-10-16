@@ -12,14 +12,14 @@ import Client from "../Client";
 /** A wrapper for select menu data. */
 export default class SelectMenuValuesWrapper {
     #client: Client;
+    /** The raw received values. */
+    raw: Array<string>;
     /** Then resolved data for this instance. */
     resolved: MessageComponentInteractionResolvedData;
-    /** The raw received values. */
-    values: Array<string>;
     constructor(client: Client, resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
         this.#client  = client;
         this.resolved = resolved;
-        this.values   = values;
+        this.raw   = values;
     }
 
     /**
@@ -29,7 +29,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
     getChannels(ensurePresent?: boolean): Array<InteractionResolvedChannel> {
-        return this.values.map(id => {
+        return this.raw.map(id => {
             const ch = this.resolved.channels.get(id);
             if (!ch && ensurePresent) {
                 throw new Error(`Failed to find channel in resolved data: ${id}`);
@@ -45,7 +45,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
      */
     getCompleteChannels(ensurePresent?: boolean): Array<AnyGuildChannel | PrivateChannel | InteractionResolvedChannel> {
-        return this.values.map(id => {
+        return this.raw.map(id => {
             const ch = this.resolved.channels.get(id);
             if (ch && ch.type === ChannelTypes.DM) {
                 return ch?.completeChannel ?? ch;
@@ -64,7 +64,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
      */
     getMembers(ensurePresent?: boolean): Array<Member> {
-        return this.values.map(id => {
+        return this.raw.map(id => {
             const member = this.resolved.members.get(id);
             if (!member && ensurePresent) {
                 throw new Error(`Failed to find member in resolved data: ${id}`);
@@ -81,7 +81,7 @@ export default class SelectMenuValuesWrapper {
      */
     getMentionables(ensurePresent?: boolean): Array<InteractionResolvedChannel | User | Role> {
         const res: Array<InteractionResolvedChannel | User | Role> = [];
-        for (const id of this.values) {
+        for (const id of this.raw) {
             const ch = this.resolved.channels.get(id);
             const role = this.resolved.roles.get(id);
             const user = this.resolved.users.get(id);
@@ -104,7 +104,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a role.
      */
     getRoles(ensurePresent?: boolean): Array<Role> {
-        return this.values.map(id => {
+        return this.raw.map(id => {
             const role = this.resolved.roles.get(id);
             if (!role && ensurePresent) {
                 throw new Error(`Failed to find role in resolved data: ${id}`);
@@ -117,7 +117,7 @@ export default class SelectMenuValuesWrapper {
      * Get the selected string values. This cannot fail.
      */
     getStrings(): Array<string> {
-        return this.values;
+        return this.raw;
     }
 
     /**
@@ -127,7 +127,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user.
      */
     getUsers(ensurePresent?: boolean): Array<User> {
-        return this.values.map(id => {
+        return this.raw.map(id => {
             const user = this.resolved.users.get(id);
             if (!user && ensurePresent) {
                 throw new Error(`Failed to find user in resolved data: ${id}`);
