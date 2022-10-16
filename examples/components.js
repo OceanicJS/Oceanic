@@ -45,10 +45,18 @@ client.on("messageCreate", async (msg) => {
                             style: ButtonStyles.LINK,
                             label: "Open Link",
                             url: "https://docs.oceanic.ws"
-                        },
+                        }
+                    ]
+                },
+                {
+                    // The top level component must always be an action row.
+                    // Full list of types: https://docs.oceanic.ws/latest/enums/Constants.ComponentTypes.html
+                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.MessageActionRow.html
+                    type: ComponentTypes.ACTION_ROW,
+                    components: [
                         {
                             // https://docs.oceanic.ws/latest/interfaces/Types_Channels.SelectMenu.html
-                            type: ComponentTypes.SELECT_MENU,
+                            type: ComponentTypes.STRING_SELECT,
                             customID: "select-menu",
                             disabled: false,
                             maxValues: 1, // The maximum number of values that can be selected (default 1)
