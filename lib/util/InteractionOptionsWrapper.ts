@@ -3,8 +3,8 @@ import { ApplicationCommandOptionTypes, ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
+import type { AnyGuildChannel } from "../types/channels";
 import type {
-    AnyGuildChannel,
     ApplicationCommandInteractionResolvedData,
     InteractionOptions,
     InteractionOptionsAttachment,
@@ -20,7 +20,7 @@ import type {
     InteractionOptionsUser,
     InteractionOptionsWithValue,
     SubCommandArray
-} from "../types";
+} from "../types/interactions";
 import type Attachment from "../structures/Attachment";
 import InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
 import PrivateChannel from "../structures/PrivateChannel";
@@ -161,7 +161,7 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a channel option's complete channel. This will only succeed if the channel is cached. If the channel is a private channel and it isn't cached, a `InteractionResolvedChannel` instance will still be returned.
+     * Get a channel option's complete channel. This will only succeed if the channel is cached. If the channel is a private channel, and it isn't cached, a `InteractionResolvedChannel` instance will still be returned.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */

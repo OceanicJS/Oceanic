@@ -1040,7 +1040,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Get a sticker. Response will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * Get a sticker. Response will include a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
      * @param stickerID The ID of the sticker to get.
      */
     async getSticker(stickerID: string): Promise<Sticker> {
@@ -1048,7 +1048,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Get this guild's stickers. Stickers will inlude a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
+     * Get this guild's stickers. Stickers will include a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
      */
     async getStickers(): Promise<Array<Sticker>> {
         return this.client.rest.guilds.getStickers(this.id);
