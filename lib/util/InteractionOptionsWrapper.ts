@@ -161,7 +161,7 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * Get a channel option's complete channel. This will only succeed if the channel is cached. If the channel is a private channel, and it isn't cached, a `InteractionResolvedChannel` instance will still be returned.
+     * Get a channel option's complete channel. This will only succeed if the channel is cached. If the channel is private and isn't cached, an `InteractionResolvedChannel` instance will still be returned.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
