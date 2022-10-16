@@ -13,7 +13,7 @@ export default class SelectMenuValuesWrapper {
     #client: Client;
     /** Then resolved data for this instance. */
     resolved: MessageComponentInteractionResolvedData;
-    /** The raw recieved values. */
+    /** The raw received values. */
     values: Array<string>;
     constructor(client: Client, resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
         this.#client  = client;
@@ -25,7 +25,7 @@ export default class SelectMenuValuesWrapper {
      * Get the selected channels.
      *
      * If `ensurePresent` is false, channels that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a channel.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
     getChannels(ensurePresent?: boolean): Array<InteractionResolvedChannel> {
         return this.values.map(id => {
@@ -38,11 +38,10 @@ export default class SelectMenuValuesWrapper {
     }
 
     /**
-     * Get the complete version of the selected channels. This will only succeed if the channel is cached. If the channel is a private channel and it isn't cached, a `InteractionResolvedChannel` instance will still be returned.
+     * Get the complete version of the selected channels. This will only succeed if the channel is cached. If the channel is a private channel, and it isn't cached, a `InteractionResolvedChannel` instance will still be returned.
      *
      * If `ensurePresent` is false, channels that aren't in resolved will be ignored.
-     * @param id The id of the option.
-     * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
      */
     getCompleteChannels(ensurePresent?: boolean): Array<AnyGuildChannel | PrivateChannel | InteractionResolvedChannel> {
         return this.values.map(id => {
@@ -61,7 +60,7 @@ export default class SelectMenuValuesWrapper {
      * Get the selected members.
      *
      * If `ensurePresent` is false, members that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a member.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
      */
     getMembers(ensurePresent?: boolean): Array<Member> {
         return this.values.map(id => {
@@ -77,7 +76,7 @@ export default class SelectMenuValuesWrapper {
      * Get the selected mentionables. (channels, users, roles)
      *
      * If `ensurePresent` is false, mentionables that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a channel, user, or role.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel, user, or role.
      */
     getMentionables(ensurePresent?: boolean): Array<InteractionResolvedChannel | User | Role> {
         const res: Array<InteractionResolvedChannel | User | Role> = [];
@@ -101,7 +100,7 @@ export default class SelectMenuValuesWrapper {
      * Get the selected roles.
      *
      * If `ensurePresent` is false, roles that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a role.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a role.
      */
     getRoles(ensurePresent?: boolean): Array<Role> {
         return this.values.map(id => {
@@ -124,7 +123,7 @@ export default class SelectMenuValuesWrapper {
      * Get the selected users.
      *
      * If `ensurePresent` is false, users that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a user.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user.
      */
     getUsers(ensurePresent?: boolean): Array<User> {
         return this.values.map(id => {
