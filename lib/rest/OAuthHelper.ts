@@ -6,11 +6,10 @@ import {
     Connection,
     RawAuthorizationInformation,
     RawConnection,
-    RawGuild,
     RESTApplication,
-    RESTMember,
     RevokeTokenOptions
-} from "../types";
+} from "../types/oauth";
+import { RawGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import PartialApplication from "../structures/PartialApplication";
 import Integration from "../structures/Integration";
@@ -18,7 +17,7 @@ import Member from "../structures/Member";
 import Guild from "../structures/Guild";
 import { FormData } from "undici";
 
-/** A helper to make using authenitcated oauth requests without needing a new client instance. */
+/** A helper to make using authenticated oauth requests without needing a new client instance. */
 export default class OAuthHelper {
     #manager: RESTManager;
     #token: string;
