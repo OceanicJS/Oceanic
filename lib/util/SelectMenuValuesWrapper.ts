@@ -74,9 +74,10 @@ export default class SelectMenuValuesWrapper {
     }
 
     /**
-     * Get a mentionable option value (channel, user, role).
-     * @param id The id of the option.
-     * @param required If true, an error will be thrown if the option is not present, or if the value cannot be found.
+     * Get the selected mentionables. (channels, users, roles)
+     *
+     * If `ensurePresent` is false, mentionables that aren't in resolved will be ignored.
+     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a channel, user, or role.
      */
     getMentionables(ensurePresent?: boolean): Array<InteractionResolvedChannel | User | Role> {
         const res: Array<InteractionResolvedChannel | User | Role> = [];
@@ -120,9 +121,10 @@ export default class SelectMenuValuesWrapper {
     }
 
     /**
-     * Get a user option value.
-     * @param id The id of the option.
-     * @param required If true, an error will be thrown if the option is not present, or if the user cannot be found.
+     * Get the selected users.
+     *
+     * If `ensurePresent` is false, users that aren't in resolved will be ignored.
+     * @param ensurePresent If true, an error will be thown if any value cannot be mapped to a user.
      */
     getUsers(ensurePresent?: boolean): Array<User> {
         return this.values.map(id => {
