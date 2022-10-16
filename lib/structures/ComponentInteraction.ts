@@ -3,10 +3,12 @@ import Interaction from "./Interaction";
 import Message from "./Message";
 import Guild from "./Guild";
 import Member from "./Member";
-import type User from "./User";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
+import Role from "./Role";
+import User from "./User";
+import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import type Client from "../Client";
 import type {
     InteractionContent,
@@ -20,6 +22,11 @@ import { ComponentTypes, InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
+import SelectMenuWrapper from "../util/SelectMenuWrapper";
+import { RawMember, RawUser } from "../types";
+import { MessageCommandInteractionResolvedData } from "../types/interactions";
+import TypedCollection from "../util/TypedCollection";
+import { RawInteractionResolvedChannel } from "../types/channels";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
@@ -50,6 +57,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
         super(data, client);
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
+
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
@@ -67,16 +75,61 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
                 break;
             }
 
-            case ComponentTypes.STRING_SELECT:
-            case ComponentTypes.USER_SELECT:
-            case ComponentTypes.ROLE_SELECT:
-            case ComponentTypes.MENTIONABLE_SELECT:
-            case ComponentTypes.CHANNEL_SELECT: {
+            case ComponentTypes.STRING_SELECT: {
                 this.data = {
                     componentType: data.data.component_type,
                     customID:      data.data.custom_id,
                     values:        data.data.values!
                 };
+                break;
+            }
+            case ComponentTypes.USER_SELECT:
+            case ComponentTypes.ROLE_SELECT:
+            case ComponentTypes.MENTIONABLE_SELECT:
+            case ComponentTypes.CHANNEL_SELECT: {
+                const resolved: MessageCommandInteractionResolvedData = {
+                    channels: new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>,
+                    members:  new TypedCollection(Member, client),
+                    roles:    new TypedCollection(Role, client),
+                    users:    new TypedCollection(User, client)
+                };
+
+                if (data.data.resolved) {
+                    if (data.data.resolved.channels) {
+                        Object.values(data.data.resolved.channels).forEach(channel => resolved.channels.update(channel));
+                    }
+
+                    if (data.data.resolved.members) {
+                        Object.entries(data.data.resolved.members).forEach(([id, member]) => {
+                            const m = member as unknown as RawMember & { user: RawUser; };
+                            m.user = data.data.resolved!.users![id];
+                            resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
+                        });
+                    }
+
+                    if (data.data.resolved.roles) {
+                        Object.values(data.data.resolved.roles).forEach(role => {
+                            try {
+                                resolved.roles.add(this.guild?.roles.update(role, this.guildID!) ?? new Role(role, client, this.guildID!));
+                            } catch {
+                                resolved.roles.add(new Role(role, client, this.guildID!));
+                            }
+                        });
+                    }
+
+                    if (data.data.resolved.users) {
+                        Object.values(data.data.resolved.users).forEach(user => resolved.users.add(client.users.update(user)));
+                    }
+                }
+
+                this.data = {
+                    componentType: data.data.component_type,
+                    customID:      data.data.custom_id,
+                    values:        data.data.values!,
+                    options:       new SelectMenuWrapper(client, data.data.resolved ?? {}, resolved),
+                    resolved
+                };
+                break;
             }
         }
     }

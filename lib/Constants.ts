@@ -462,7 +462,9 @@ export enum ComponentTypes {
     CHANNEL_SELECT     = 8
 }
 
-export type SelectMenuTypes = ComponentTypes.STRING_SELECT | ComponentTypes.USER_SELECT | ComponentTypes.ROLE_SELECT | ComponentTypes.MENTIONABLE_SELECT | ComponentTypes.CHANNEL_SELECT;
+export type SelectMenuNonResolvedTypes = ComponentTypes.STRING_SELECT;
+export type SelectMenuResolvedTypes = ComponentTypes.USER_SELECT | ComponentTypes.ROLE_SELECT | ComponentTypes.MENTIONABLE_SELECT | ComponentTypes.CHANNEL_SELECT;
+export type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
 
 export type MessageComponentTypes = ComponentTypes.BUTTON | SelectMenuTypes;
 export type ModalComponentTypes = ComponentTypes.TEXT_INPUT;
