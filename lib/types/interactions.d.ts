@@ -1,12 +1,12 @@
 /** @module Types/Interactions */
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
-    RawModalActionRow,
-    RawAttachment,
-    RawMessage,
-    ModalActionRow,
     AnyGuildTextChannel,
-    RawInteractionResolvedChannel
+    ModalActionRow,
+    RawAttachment,
+    RawInteractionResolvedChannel,
+    RawMessage,
+    RawModalActionRow
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -17,7 +17,8 @@ import type {
     ComponentTypes,
     InteractionResponseTypes,
     InteractionTypes,
-    MessageComponentTypes
+    MessageComponentTypes,
+    SelectMenuTypes
 } from "../Constants";
 import type Attachment from "../structures/Attachment";
 import type Member from "../structures/Member";
@@ -33,6 +34,7 @@ import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type PrivateChannel from "../structures/PrivateChannel";
 import TypedCollection from "../util/TypedCollection";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
+import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
 
@@ -123,9 +125,24 @@ export interface ApplicationCommandInteractionData {
 export type RawAutocompleteInteractionData = Omit<RawApplicationCommandInteractionData, "resolved" | "target_id">;
 export type AutocompleteInteractionData = Omit<ApplicationCommandInteractionData, "resolved" | "targetID">;
 
+export interface RawMessageComponentInteractionResolvedData {
+    channels?: Record<string, RawInteractionResolvedChannel>;
+    members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
+    roles?: Record<string, RawRole>;
+    users?: Record<string, RawUser>;
+}
+
+export interface MessageComponentInteractionResolvedData {
+    channels: TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
+    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
+    users: TypedCollection<string, RawUser, User>;
+}
+
 export interface RawMessageComponentInteractionData {
     component_type: MessageComponentTypes;
     custom_id: string;
+    resolved?: RawMessageComponentInteractionResolvedData;
     values?: Array<string>;
 }
 
@@ -136,9 +153,10 @@ export interface MessageComponentButtonInteractionData {
 }
 
 export interface MessageComponentSelectMenuInteractionData {
-    componentType: ComponentTypes.SELECT_MENU;
+    componentType: SelectMenuTypes;
     customID: string;
-    values: Array<string>;
+    resolved: MessageComponentInteractionResolvedData;
+    values: SelectMenuValuesWrapper;
 }
 
 export interface RawModalSubmitInteractionData {

@@ -11,29 +11,24 @@ import {
 } from "../Constants";
 import type {
     AllowedMentions,
-    ApplicationCommandOptions,
-    CombinedApplicationCommandOption,
+    AnyChannel,
+    AnyGuildChannelWithoutThreads,
+    AnyThreadChannel,
+    Embed,
+    EmbedOptions,
     MessageActionRow,
     ModalActionRow,
     RawAllowedMentions,
-    RawApplicationCommandOption,
-    RawMember,
+    RawChannel,
+    RawEmbed,
+    RawEmbedOptions,
+    RawGuildChannel,
     RawMessageActionRow,
     RawModalActionRow,
-    EmbedOptions,
-    RawEmbedOptions,
-    Embed,
-    RawEmbed,
-    RawThreadChannel,
-    AnyThreadChannel,
-    RawGuildChannel,
-    AnyGuildChannelWithoutThreads,
-    RawChannel,
-    AnyChannel,
-    RESTMember,
-    RawSticker,
-    Sticker
-} from "../types";
+    RawThreadChannel
+} from "../types/channels";
+import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds";
+import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
 
@@ -59,43 +54,59 @@ export default class Util {
         return components.map(row => ({
             type:       row.type,
             components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON) {
-                    if (component.style === ButtonStyles.LINK) {
-                        return component;
-                    } else {
+                switch (component.type) {
+                    case ComponentTypes.BUTTON: {
+                        if (component.style === ButtonStyles.LINK) {
+                            return component;
+                        } else {
+                            return {
+                                customID: component.custom_id,
+                                disabled: component.disabled,
+                                emoji:    component.emoji,
+                                label:    component.label,
+                                style:    component.style,
+                                type:     component.type
+                            };
+                        }
+                    }
+                    case ComponentTypes.TEXT_INPUT: {
                         return {
-                            customID: component.custom_id,
-                            disabled: component.disabled,
-                            emoji:    component.emoji,
-                            label:    component.label,
-                            style:    component.style,
-                            type:     component.type
+                            customID:    component.custom_id,
+                            label:       component.label,
+                            maxLength:   component.max_length,
+                            minLength:   component.min_length,
+                            placeholder: component.placeholder,
+                            required:    component.required,
+                            style:       component.style,
+                            type:        component.type,
+                            value:       component.value
                         };
                     }
-                } else if (component.type === ComponentTypes.SELECT_MENU) {
-                    return {
-                        customID:    component.custom_id,
-                        disabled:    component.disabled,
-                        maxValues:   component.max_values,
-                        minValues:   component.min_values,
-                        options:     component.options,
-                        placeholder: component.placeholder,
-                        type:        component.type
-                    };
-                } else if (component.type === ComponentTypes.TEXT_INPUT) {
-                    return {
-                        customID:    component.custom_id,
-                        label:       component.label,
-                        maxLength:   component.max_length,
-                        minLength:   component.min_length,
-                        placeholder: component.placeholder,
-                        required:    component.required,
-                        style:       component.style,
-                        type:        component.type,
-                        value:       component.value
-                    };
-                } else {
-                    return component;
+                    case ComponentTypes.STRING_SELECT:
+                    case ComponentTypes.USER_SELECT:
+                    case ComponentTypes.ROLE_SELECT:
+                    case ComponentTypes.MENTIONABLE_SELECT:
+                    case ComponentTypes.CHANNEL_SELECT: {
+                        const parsedComponent = {
+                            customID:    component.custom_id,
+                            disabled:    component.disabled,
+                            maxValues:   component.max_values,
+                            minValues:   component.min_values,
+                            placeholder: component.placeholder,
+                            type:        component.type
+                        };
+
+                        if (component.type === ComponentTypes.STRING_SELECT) {
+                            return { ...parsedComponent, options: component.options };
+                        } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                            return { ...parsedComponent, channelTypes: component.channel_types };
+                        } else {
+                            return parsedComponent;
+                        }
+                    }
+                    default: {
+                        return component;
+                    }
                 }
             })
         })) as never;
@@ -105,43 +116,60 @@ export default class Util {
         return components.map(row => ({
             type:       row.type,
             components: row.components.map(component => {
-                if (component.type === ComponentTypes.BUTTON) {
-                    if (component.style === ButtonStyles.LINK) {
-                        return component;
-                    } else {
+
+                switch (component.type) {
+                    case ComponentTypes.BUTTON: {
+                        if (component.style === ButtonStyles.LINK) {
+                            return component;
+                        } else {
+                            return {
+                                custom_id: component.customID,
+                                disabled:  component.disabled,
+                                emoji:     component.emoji,
+                                label:     component.label,
+                                style:     component.style,
+                                type:      component.type
+                            };
+                        }
+                    }
+                    case ComponentTypes.TEXT_INPUT: {
                         return {
-                            custom_id: component.customID,
-                            disabled:  component.disabled,
-                            emoji:     component.emoji,
-                            label:     component.label,
-                            style:     component.style,
-                            type:      component.type
+                            custom_id:   component.customID,
+                            label:       component.label,
+                            max_length:  component.maxLength,
+                            min_length:  component.minLength,
+                            placeholder: component.placeholder,
+                            required:    component.required,
+                            style:       component.style,
+                            type:        component.type,
+                            value:       component.value
                         };
                     }
-                } else if (component.type === ComponentTypes.SELECT_MENU) {
-                    return {
-                        custom_id:   component.customID,
-                        disabled:    component.disabled,
-                        max_values:  component.maxValues,
-                        min_values:  component.minValues,
-                        options:     component.options,
-                        placeholder: component.placeholder,
-                        type:        component.type
-                    };
-                } else if (component.type === ComponentTypes.TEXT_INPUT) {
-                    return {
-                        custom_id:   component.customID,
-                        label:       component.label,
-                        max_length:  component.maxLength,
-                        min_length:  component.minLength,
-                        placeholder: component.placeholder,
-                        required:    component.required,
-                        style:       component.style,
-                        type:        component.type,
-                        value:       component.value
-                    };
-                } else {
-                    return component;
+                    case ComponentTypes.STRING_SELECT:
+                    case ComponentTypes.USER_SELECT:
+                    case ComponentTypes.ROLE_SELECT:
+                    case ComponentTypes.MENTIONABLE_SELECT:
+                    case ComponentTypes.CHANNEL_SELECT: {
+                        const rawComponent = {
+                            custom_id:   component.customID,
+                            disabled:    component.disabled,
+                            max_values:  component.maxValues,
+                            min_values:  component.minValues,
+                            placeholder: component.placeholder,
+                            type:        component.type
+                        };
+
+                        if (component.type === ComponentTypes.STRING_SELECT) {
+                            return { ...rawComponent, options: component.options };
+                        } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                            return { ...rawComponent, channel_types: component.channelTypes };
+                        } else {
+                            return rawComponent;
+                        }
+                    }
+                    default: {
+                        return component;
+                    }
                 }
             })
         })) as never;

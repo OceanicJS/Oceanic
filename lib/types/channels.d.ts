@@ -15,12 +15,13 @@ import type {
     MessageActivityTypes,
     MessageTypes,
     OverwriteTypes,
+    SelectMenuTypes,
+    SortOrderTypes,
     StickerFormatTypes,
     TextInputStyles,
     ThreadAutoArchiveDuration,
     ThreadChannelTypes,
-    VideoQualityModes,
-    SortOrderTypes
+    VideoQualityModes
 } from "../Constants";
 import type CategoryChannel from "../structures/CategoryChannel";
 import type GroupChannel from "../structures/GroupChannel";
@@ -420,38 +421,32 @@ export interface MessageReference {
 }
 
 export type RawComponent = RawMessageComponent | RawModalComponent;
-export type RawMessageComponent = RawButtonComponent | RawSelectMenu;
+export type RawMessageComponent = RawButtonComponent | RawSelectMenuComponent;
 export type RawModalComponent = RawTextInput;
 export type RawButtonComponent = RawTextButton | URLButton;
-export interface RawActionRowBase {
-    components: Array<RawComponent>;
+export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
+
+export interface RawActionRowBase<T extends RawComponent> {
+    components: Array<T>;
     type: ComponentTypes.ACTION_ROW;
 }
 
-export interface RawMessageActionRow extends RawActionRowBase {
-    components: Array<RawMessageComponent>;
-}
-
-export interface RawModalActionRow extends RawActionRowBase {
-    components: Array<RawModalComponent>;
-}
+export type RawMessageActionRow = RawActionRowBase<RawMessageComponent>;
+export type RawModalActionRow = RawActionRowBase<RawModalComponent>;
 
 export type Component = MessageComponent | ModalComponent;
-export type MessageComponent = ButtonComponent | SelectMenu;
+export type MessageComponent = ButtonComponent | SelectMenuComponent;
 export type ModalComponent = TextInput;
 export type ButtonComponent = TextButton | URLButton;
-export interface ActionRowBase {
-    components: Array<Component>;
+export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
+
+export interface ActionRowBase<T extends Component> {
+    components: Array<T>;
     type: ComponentTypes.ACTION_ROW;
 }
 
-export interface MessageActionRow extends ActionRowBase {
-    components: Array<MessageComponent>;
-}
-
-export interface ModalActionRow extends ActionRowBase {
-    components: Array<ModalComponent>;
-}
+export type MessageActionRow = ActionRowBase<MessageComponent>;
+export type ModalActionRow = ActionRowBase<ModalComponent>;
 
 export interface ButtonBase {
     disabled?: boolean;
@@ -476,25 +471,52 @@ export interface URLButton extends ButtonBase {
     url: string;
 }
 
-export interface RawSelectMenu {
+export interface RawSelectMenuBase<T extends SelectMenuTypes> {
     custom_id: string;
     disabled?: boolean;
     max_values?: number;
     min_values?: number;
-    options: Array<SelectOption>;
     placeholder?: string;
-    type: ComponentTypes.SELECT_MENU;
+    type: T;
 }
 
-export interface SelectMenu {
+export interface RawStringSelectMenuOptions {
+    options: Array<SelectOption>;
+}
+
+export interface RawChannelSelectMenuOptions {
+    channel_types: Array<ChannelTypes>;
+}
+
+export type RawStringSelectMenu      = RawSelectMenuBase<ComponentTypes.STRING_SELECT> & RawStringSelectMenuOptions;
+export type RawUserSelectMenu        = RawSelectMenuBase<ComponentTypes.USER_SELECT>;
+export type RawRoleSelectMenu        = RawSelectMenuBase<ComponentTypes.ROLE_SELECT>;
+export type RawMentionableSelectMenu = RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
+export type RawChannelSelectMenu     = RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT> & RawChannelSelectMenuOptions;
+
+
+export interface SelectMenuBase<T extends SelectMenuTypes> {
     customID: string;
     disabled?: boolean;
     maxValues?: number;
     minValues?: number;
-    options: Array<SelectOption>;
     placeholder?: string;
-    type: ComponentTypes.SELECT_MENU;
+    type: T;
 }
+
+export interface StringSelectMenuOptions {
+    options: Array<SelectOption>;
+}
+
+export interface ChannelSelectMenuOptions {
+    channelTypes: Array<ChannelTypes>;
+}
+
+export type StringSelectMenu      = SelectMenuBase<ComponentTypes.STRING_SELECT> & StringSelectMenuOptions;
+export type UserSelectMenu        = SelectMenuBase<ComponentTypes.USER_SELECT>;
+export type RoleSelectMenu        = SelectMenuBase<ComponentTypes.ROLE_SELECT>;
+export type MentionableSelectMenu = SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
+export type ChannelSelectMenu     = SelectMenuBase<ComponentTypes.CHANNEL_SELECT> & ChannelSelectMenuOptions;
 
 export interface SelectOption {
     default?: boolean;

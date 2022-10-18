@@ -1,4 +1,4 @@
-const { ButtonStyles, Client, ComponentTypes } = require("oceanic.js");
+const { ButtonStyles, Client, ComponentTypes, ChannelTypes } = require("oceanic.js");
 
 const client = new Client({
     auth: "Bot [TOKEN]",
@@ -45,11 +45,19 @@ client.on("messageCreate", async (msg) => {
                             style: ButtonStyles.LINK,
                             label: "Open Link",
                             url: "https://docs.oceanic.ws"
-                        },
+                        }
+                    ]
+                },
+                {
+                    // The top level component must always be an action row.
+                    // Full list of types: https://docs.oceanic.ws/latest/enums/Constants.ComponentTypes.html
+                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.MessageActionRow.html
+                    type: ComponentTypes.ACTION_ROW,
+                    components: [
                         {
                             // https://docs.oceanic.ws/latest/interfaces/Types_Channels.SelectMenu.html
-                            type: ComponentTypes.SELECT_MENU,
-                            customID: "select-menu",
+                            type: ComponentTypes.STRING_SELECT,
+                            customID: "string-select",
                             disabled: false,
                             maxValues: 1, // The maximum number of values that can be selected (default 1)
                             minValues: 1, // The minimum number of values that can be selected (default 1)
@@ -70,6 +78,24 @@ client.on("messageCreate", async (msg) => {
                                     value: "option-2"
                                 }
                             ],
+                            placeholder: "Some Placeholder Text"
+                        }
+                    ]
+                },
+                {
+                    // The top level component must always be an action row.
+                    // Full list of types: https://docs.oceanic.ws/latest/enums/Constants.ComponentTypes.html
+                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.MessageActionRow.html
+                    type: ComponentTypes.ACTION_ROW,
+                    components: [
+                        {
+                            // https://docs.oceanic.ws/latest/interfaces/Types_Channels.SelectMenu.html
+                            type: ComponentTypes.CHANNEL_SELECT,
+                            channelTypes: [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_VOICE], // The types of channels that can be selected
+                            customID: "channel-select",
+                            disabled: false,
+                            maxValues: 1, // The maximum number of values that can be selected (default 1)
+                            minValues: 1, // The minimum number of values that can be selected (default 1)
                             placeholder: "Some Placeholder Text"
                         }
                     ]

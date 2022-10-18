@@ -371,7 +371,7 @@ export enum ChannelFlags {
     REQUIRE_TAG = 1 << 4
 }
 
-/** @deprectated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. This will be removed in `1.2.0`. */
+/** @deprecated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. This will be removed in `1.2.0`. */
 export enum SortOrderModes {
     /** @deprecated Sort forum threads by activity. */
     RECENT_ACTIVITY = 0,
@@ -450,12 +450,23 @@ export enum OAuthScopes {
 }
 
 export enum ComponentTypes {
-    ACTION_ROW  = 1,
-    BUTTON      = 2,
-    SELECT_MENU = 3,
-    TEXT_INPUT  = 4
+    ACTION_ROW         = 1,
+    BUTTON             = 2,
+    /** @deprecated Named changed. See {@link Constants~ComponentTypes.STRING_SELECT | STRING_SELECT}. This will be removed in `1.3.0`. */
+    SELECT_MENU        = 3,
+    STRING_SELECT      = 3,
+    TEXT_INPUT         = 4,
+    USER_SELECT        = 5,
+    ROLE_SELECT        = 6,
+    MENTIONABLE_SELECT = 7,
+    CHANNEL_SELECT     = 8
 }
-export type MessageComponentTypes = ComponentTypes.BUTTON | ComponentTypes.SELECT_MENU;
+
+export type SelectMenuNonResolvedTypes = ComponentTypes.STRING_SELECT;
+export type SelectMenuResolvedTypes = ComponentTypes.USER_SELECT | ComponentTypes.ROLE_SELECT | ComponentTypes.MENTIONABLE_SELECT | ComponentTypes.CHANNEL_SELECT;
+export type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
+
+export type MessageComponentTypes = ComponentTypes.BUTTON | SelectMenuTypes;
 export type ModalComponentTypes = ComponentTypes.TEXT_INPUT;
 
 export enum ButtonStyles {
@@ -820,7 +831,7 @@ export enum ThreadMemberFlags {
 }
 
 // entries are intentionally not aligned
-/** The error codes that can be recieved. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
+/** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
     GENERAL_ERROR = 0,
     UNKNOWN_ACCOUNT = 10001,
