@@ -79,25 +79,34 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                } else if (component.type === ComponentTypes.STRING_SELECT || component.type === ComponentTypes.USER_SELECT || component.type === ComponentTypes.ROLE_SELECT || component.type === ComponentTypes.MENTIONABLE_SELECT || component.type === ComponentTypes.CHANNEL_SELECT) {
-                    const parsedComponent = {
-                        customID:    component.custom_id,
-                        disabled:    component.disabled,
-                        maxValues:   component.max_values,
-                        minValues:   component.min_values,
-                        placeholder: component.placeholder,
-                        type:        component.type
-                    };
-
-                    if (component.type === ComponentTypes.STRING_SELECT) {
-                        return { ...parsedComponent, options: component.options };
-                    } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                        return { ...parsedComponent, channelTypes: component.channel_types };
-                    } else {
-                        return parsedComponent;
-                    }
                 } else {
-                    return component;
+                    switch (component.type) {
+                        case ComponentTypes.STRING_SELECT:
+                        case ComponentTypes.USER_SELECT:
+                        case ComponentTypes.ROLE_SELECT:
+                        case ComponentTypes.MENTIONABLE_SELECT:
+                        case ComponentTypes.CHANNEL_SELECT: {
+                            const parsedComponent = {
+                                customID:    component.custom_id,
+                                disabled:    component.disabled,
+                                maxValues:   component.max_values,
+                                minValues:   component.min_values,
+                                placeholder: component.placeholder,
+                                type:        component.type
+                            };
+
+                            if (component.type === ComponentTypes.STRING_SELECT) {
+                                return { ...parsedComponent, options: component.options };
+                            } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                                return { ...parsedComponent, channelTypes: component.channel_types };
+                            } else {
+                                return parsedComponent;
+                            }
+                        }
+                        default: {
+                            return component;
+                        }
+                    }
                 }
             })
         })) as never;
@@ -132,25 +141,34 @@ export default class Util {
                         type:        component.type,
                         value:       component.value
                     };
-                } else if (component.type === ComponentTypes.STRING_SELECT || component.type === ComponentTypes.USER_SELECT || component.type === ComponentTypes.ROLE_SELECT || component.type === ComponentTypes.MENTIONABLE_SELECT || component.type === ComponentTypes.CHANNEL_SELECT) {
-                    const rawComponent = {
-                        custom_id:   component.customID,
-                        disabled:    component.disabled,
-                        max_values:  component.maxValues,
-                        min_values:  component.minValues,
-                        placeholder: component.placeholder,
-                        type:        component.type
-                    };
-
-                    if (component.type === ComponentTypes.STRING_SELECT) {
-                        return { ...rawComponent, options: component.options };
-                    } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                        return { ...rawComponent, channel_types: component.channelTypes };
-                    } else {
-                        return rawComponent;
-                    }
                 } else {
-                    return component;
+                    switch (component.type) {
+                        case ComponentTypes.STRING_SELECT:
+                        case ComponentTypes.USER_SELECT:
+                        case ComponentTypes.ROLE_SELECT:
+                        case ComponentTypes.MENTIONABLE_SELECT:
+                        case ComponentTypes.CHANNEL_SELECT: {
+                            const rawComponent = {
+                                custom_id:   component.customID,
+                                disabled:    component.disabled,
+                                max_values:  component.maxValues,
+                                min_values:  component.minValues,
+                                placeholder: component.placeholder,
+                                type:        component.type
+                            };
+
+                            if (component.type === ComponentTypes.STRING_SELECT) {
+                                return { ...rawComponent, options: component.options };
+                            } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                                return { ...rawComponent, channel_types: component.channelTypes };
+                            } else {
+                                return rawComponent;
+                            }
+                        }
+                        default: {
+                            return component;
+                        }
+                    }
                 }
             })
         })) as never;
