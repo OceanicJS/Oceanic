@@ -1,5 +1,4 @@
-const { ButtonStyles, Client, ComponentTypes } = require("oceanic.js");
-const { ChannelTypes } = require("../lib");
+const { ButtonStyles, Client, ComponentTypes, ChannelTypes } = require("oceanic.js");
 
 const client = new Client({
     auth: "Bot [TOKEN]",
