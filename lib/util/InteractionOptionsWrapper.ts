@@ -31,7 +31,7 @@ export default class InteractionOptionsWrapper {
     #client: Client;
     /** The raw options from Discord.  */
     raw: Array<InteractionOptions>;
-    /** Then resolved data for this options instance. */
+    /** The resolved data for this options instance. */
     resolved: ApplicationCommandInteractionResolvedData | null;
     constructor(client: Client, data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
         this.#client = client;

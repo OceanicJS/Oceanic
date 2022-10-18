@@ -14,7 +14,7 @@ export default class SelectMenuValuesWrapper {
     #client: Client;
     /** The raw received values. */
     raw: Array<string>;
-    /** Then resolved data for this instance. */
+    /** The resolved data for this instance. */
     resolved: MessageComponentInteractionResolvedData;
     constructor(client: Client, resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
         this.#client  = client;
