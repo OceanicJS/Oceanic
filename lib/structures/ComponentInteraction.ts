@@ -57,7 +57,6 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
         super(data, client);
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
-
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
