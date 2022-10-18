@@ -481,10 +481,6 @@ export interface RawSelectMenuBase<T extends SelectMenuTypes> {
     type: T;
 }
 
-export interface RawSelectMenuExtended<T extends SelectMenuTypes> extends RawSelectMenuBase<T> {
-    resolved: MessageComponentInteractionResolvedData;
-}
-
 export interface RawStringSelectMenuOptions {
     options: Array<SelectOption>;
 }
@@ -494,10 +490,10 @@ export interface RawChannelSelectMenuOptions {
 }
 
 export type RawStringSelectMenu      = RawSelectMenuBase<ComponentTypes.STRING_SELECT> & RawStringSelectMenuOptions;
-export type RawUserSelectMenu        = RawSelectMenuExtended<ComponentTypes.USER_SELECT>;
-export type RawRoleSelectMenu        = RawSelectMenuExtended<ComponentTypes.ROLE_SELECT>;
-export type RawMentionableSelectMenu = RawSelectMenuExtended<ComponentTypes.MENTIONABLE_SELECT>;
-export type RawChannelSelectMenu     = RawSelectMenuExtended<ComponentTypes.CHANNEL_SELECT> & RawChannelSelectMenuOptions;
+export type RawUserSelectMenu        = RawSelectMenuBase<ComponentTypes.USER_SELECT>;
+export type RawRoleSelectMenu        = RawSelectMenuBase<ComponentTypes.ROLE_SELECT>;
+export type RawMentionableSelectMenu = RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
+export type RawChannelSelectMenu     = RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT> & RawChannelSelectMenuOptions;
 
 
 export interface SelectMenuBase<T extends SelectMenuTypes> {
