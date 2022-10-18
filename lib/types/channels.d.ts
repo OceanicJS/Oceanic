@@ -5,7 +5,6 @@ import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
 import { type  Uncached } from "./shared";
-import { MessageComponentInteractionResolvedData } from "./interactions";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -505,10 +504,6 @@ export interface SelectMenuBase<T extends SelectMenuTypes> {
     type: T;
 }
 
-export interface SelectMenuExtended<T extends SelectMenuTypes> extends SelectMenuBase<T> {
-    resolved: MessageComponentInteractionResolvedData;
-}
-
 export interface StringSelectMenuOptions {
     options: Array<SelectOption>;
 }
@@ -518,10 +513,10 @@ export interface ChannelSelectMenuOptions {
 }
 
 export type StringSelectMenu      = SelectMenuBase<ComponentTypes.STRING_SELECT> & StringSelectMenuOptions;
-export type UserSelectMenu        = SelectMenuExtended<ComponentTypes.USER_SELECT>;
-export type RoleSelectMenu        = SelectMenuExtended<ComponentTypes.ROLE_SELECT>;
-export type MentionableSelectMenu = SelectMenuExtended<ComponentTypes.MENTIONABLE_SELECT>;
-export type ChannelSelectMenu     = SelectMenuExtended<ComponentTypes.CHANNEL_SELECT> & ChannelSelectMenuOptions;
+export type UserSelectMenu        = SelectMenuBase<ComponentTypes.USER_SELECT>;
+export type RoleSelectMenu        = SelectMenuBase<ComponentTypes.ROLE_SELECT>;
+export type MentionableSelectMenu = SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
+export type ChannelSelectMenu     = SelectMenuBase<ComponentTypes.CHANNEL_SELECT> & ChannelSelectMenuOptions;
 
 export interface SelectOption {
     default?: boolean;
