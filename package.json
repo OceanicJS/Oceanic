@@ -1,69 +1,69 @@
 {
-  "name": "oceanic.js",
-  "version": "1.1.2",
-  "description": "A NodeJS library for interfacing with Discord.",
-  "main": "./dist/lib/index.js",
-  "types": "./dist/lib/index.d.ts",
-  "module": "./esm.mjs",
-  "exports": {
-    ".": {
-      "types": "./dist/lib/index.d.ts",
-      "require": "./dist/lib/index.js",
-      "import": "./esm.mjs"
+    "name": "oceanic.js",
+    "version": "1.2.0",
+    "description": "A NodeJS library for interfacing with Discord.",
+    "main": "./dist/lib/index.js",
+    "types": "./dist/lib/index.d.ts",
+    "module": "./esm.mjs",
+    "exports": {
+        ".": {
+            "types": "./dist/lib/index.d.ts",
+            "require": "./dist/lib/index.js",
+            "import": "./esm.mjs"
+        }
+    },
+    "scripts": {
+        "lint": "eslint lib --ext .ts",
+        "lint:fix": "eslint lib --ext .ts --fix",
+        "prepublishOnly": "node scripts/build",
+        "test:build": "npm run prepublishOnly",
+        "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
+        "test:docs": "npm i --no-save --ignore-scripts typedoc typedoc-plugin-extras typedoc-plugin-rename-defaults && node scripts/doc-test.js && npx --yes typedoc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/OceanicJS/Oceanic.git"
+    },
+    "keywords": [
+        "discord",
+        "library",
+        "discord-api",
+        "api"
+    ],
+    "author": "Donovan Daniels <hewwo@yiff.rocks>",
+    "contributors": [
+        "Nuckyz (https://github.com/Nuckyz)"
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/OceanicJS/Oceanic/issues"
+    },
+    "homepage": "https://github.com/OceanicJS/Oceanic#readme",
+    "devDependencies": {
+        "@favware/npm-deprecate": "^1.0.5",
+        "@types/node": "^18.11.0",
+        "@types/pako": "^2.0.0",
+        "@types/ws": "^8.5.3",
+        "@typescript-eslint/eslint-plugin": "^5.40.1",
+        "@typescript-eslint/parser": "^5.40.1",
+        "eslint": "^8.25.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-import-newlines": "^1.2.3",
+        "eslint-plugin-jsdoc": "^39.3.13",
+        "eslint-plugin-json": "^3.1.0",
+        "eslint-plugin-prefer-arrow": "^1.2.3",
+        "eslint-plugin-unicorn": "^44.0.2",
+        "eslint-plugin-unused-imports": "^2.0.0",
+        "typescript": "^4.8.4"
+    },
+    "dependencies": {
+        "undici": "^5.11.0",
+        "ws": "^8.9.0"
+    },
+    "engines": {
+        "node": ">=16.16.0"
+    },
+    "optionalDependencies": {
+        "@discordjs/voice": "^0.13.0"
     }
-  },
-  "scripts": {
-    "lint": "eslint lib --ext .ts",
-    "lint:fix": "eslint lib --ext .ts --fix",
-    "prepublishOnly": "node scripts/build",
-    "test:build": "npm run prepublishOnly",
-    "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
-    "test:docs": "npm i --no-save --ignore-scripts typedoc typedoc-plugin-extras typedoc-plugin-rename-defaults && node scripts/doc-test.js && npx --yes typedoc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OceanicJS/Oceanic.git"
-  },
-  "keywords": [
-    "discord",
-    "library",
-    "discord-api",
-    "api"
-  ],
-  "author": "Donovan Daniels <hewwo@yiff.rocks>",
-  "contributors": [
-    "Nuckyz (https://github.com/Nuckyz)"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/OceanicJS/Oceanic/issues"
-  },
-  "homepage": "https://github.com/OceanicJS/Oceanic#readme",
-  "devDependencies": {
-    "@favware/npm-deprecate": "^1.0.5",
-    "@types/node": "^18.11.0",
-    "@types/pako": "^2.0.0",
-    "@types/ws": "^8.5.3",
-    "@typescript-eslint/eslint-plugin": "^5.40.1",
-    "@typescript-eslint/parser": "^5.40.1",
-    "eslint": "^8.25.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-import-newlines": "^1.2.3",
-    "eslint-plugin-jsdoc": "^39.3.13",
-    "eslint-plugin-json": "^3.1.0",
-    "eslint-plugin-prefer-arrow": "^1.2.3",
-    "eslint-plugin-unicorn": "^44.0.2",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "typescript": "^4.8.4"
-  },
-  "dependencies": {
-    "undici": "^5.11.0",
-    "ws": "^8.9.0"
-  },
-  "engines": {
-    "node": ">=16.16.0"
-  },
-  "optionalDependencies": {
-    "@discordjs/voice": "^0.13.0"
-  }
 }
