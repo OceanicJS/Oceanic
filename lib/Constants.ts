@@ -371,14 +371,6 @@ export enum ChannelFlags {
     REQUIRE_TAG = 1 << 4
 }
 
-/** @deprecated Outdated names. Use {@link Constants~SortOrderTypes | SortOrderTypes} instead. This will be removed in `1.2.0`. */
-export enum SortOrderModes {
-    /** @deprecated Sort forum threads by activity. */
-    RECENT_ACTIVITY = 0,
-    /** @deprecated Sort forum threads by creation time (from most recent to oldest). */
-    CREATION_TIME = 1
-}
-
 export enum SortOrderTypes {
     /** Sort forum threads by activity. */
     LATEST_ACTIVITY = 0,
@@ -1011,6 +1003,3 @@ export enum JSONErrorCodes {
     WEBHOOK_SERVICES_CANNOT_BE_USED_IN_FORUM_CHANNELS = 220004,
     MESSAGE_BLOCKED_BY_HARMFUL_LINKS_FILTER = 220005
 }
-
-/** @deprecated Use Use {@link Constants~JSONErrorCodes | JSONErrorCodes} instead. This will be removed in `1.2.0`. */
-export const JsonErrorCodes = JSONErrorCodes;
