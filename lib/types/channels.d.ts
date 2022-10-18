@@ -5,8 +5,7 @@ import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
 import { type  Uncached } from "./shared";
-import { ApplicationCommandInteractionResolvedData } from "./interactions";
-import { RawRole } from "./guilds";
+import { MessageComponentInteractionResolvedData } from "./interactions";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -41,9 +40,6 @@ import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
 import Guild from "../structures/Guild";
 import Invite from "../structures/Invite";
-import TypedCollection from "../util/TypedCollection";
-import InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import Role from "../structures/Role";
 
 export interface RawChannel {
     application_id?: string;
@@ -476,13 +472,6 @@ export interface URLButton extends ButtonBase {
     url: string;
 }
 
-export interface SelectMenuResolvedData {
-    channels: TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>;
-    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
-    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
-    users: TypedCollection<string, RawUser, User>;
-}
-
 export interface RawSelectMenuBase<T extends SelectMenuTypes> {
     custom_id: string;
     disabled?: boolean;
@@ -493,7 +482,7 @@ export interface RawSelectMenuBase<T extends SelectMenuTypes> {
 }
 
 export interface RawSelectMenuExtended<T extends SelectMenuTypes> extends RawSelectMenuBase<T> {
-    resolved: SelectMenuResolvedData;
+    resolved: MessageComponentInteractionResolvedData;
 }
 
 export interface RawStringSelectMenuOptions {
@@ -521,7 +510,7 @@ export interface SelectMenuBase<T extends SelectMenuTypes> {
 }
 
 export interface SelectMenuExtended<T extends SelectMenuTypes> extends SelectMenuBase<T> {
-    resolved: Exclude<ApplicationCommandInteractionResolvedData, "attachments" | "messages">;
+    resolved: MessageComponentInteractionResolvedData;
 }
 
 export interface StringSelectMenuOptions {

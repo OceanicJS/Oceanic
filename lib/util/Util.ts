@@ -94,7 +94,7 @@ export default class Util {
                     } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
                         return { ...parsedComponent, channelTypes: component.channel_types };
                     } else {
-                        return { ...parsedComponent, resolved: component.resolved };
+                        return parsedComponent;
                     }
                 } else {
                     return component;
@@ -147,7 +147,7 @@ export default class Util {
                     } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
                         return { ...rawComponent, channel_types: component.channelTypes };
                     } else {
-                        return { ...rawComponent, resolved: component.resolved };
+                        return rawComponent;
                     }
                 } else {
                     return component;

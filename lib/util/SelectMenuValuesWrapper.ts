@@ -3,16 +3,16 @@ import { ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
+import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
+import type PrivateChannel from "../structures/PrivateChannel";
 import type { AnyGuildChannel } from "../types/channels";
 import type { MessageComponentInteractionResolvedData } from "../types/interactions";
-import InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import PrivateChannel from "../structures/PrivateChannel";
-import Client from "../Client";
+import type Client from "../Client";
 
 /** A wrapper for select menu data. */
 export default class SelectMenuValuesWrapper {
     #client: Client;
-    /** Then resolved data for this instance. */
+    /** The resolved data for this instance. */
     resolved: MessageComponentInteractionResolvedData;
     /** The raw received values. */
     values: Array<string>;

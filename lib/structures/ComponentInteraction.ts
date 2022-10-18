@@ -1,7 +1,7 @@
 /** @module ComponentInteraction */
 import Interaction from "./Interaction";
 import Message from "./Message";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import Member from "./Member";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
@@ -13,21 +13,20 @@ import type Client from "../Client";
 import type {
     InteractionContent,
     MessageComponentButtonInteractionData,
+    MessageComponentInteractionResolvedData,
     MessageComponentSelectMenuInteractionData,
     ModalData,
     RawMessageComponentInteraction
 } from "../types/interactions";
-import type { InteractionTypes } from "../Constants";
-import { ComponentTypes, InteractionResponseTypes } from "../Constants";
 import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
-import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 import type { RawUser } from "../types/users";
 import type { RawMember } from "../types/guilds";
-import { MessageComponentInteractionResolvedData } from "../types/interactions";
+import type { InteractionTypes } from "../Constants";
+import { ComponentTypes, InteractionResponseTypes } from "../Constants";
+import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 import TypedCollection from "../util/TypedCollection";
-import { RawInteractionResolvedChannel } from "../types/channels";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
@@ -81,7 +80,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
             case ComponentTypes.MENTIONABLE_SELECT:
             case ComponentTypes.CHANNEL_SELECT: {
                 const resolved: MessageComponentInteractionResolvedData = {
-                    channels: new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>,
+                    channels: new TypedCollection(InteractionResolvedChannel, client),
                     members:  new TypedCollection(Member, client),
                     roles:    new TypedCollection(Role, client),
                     users:    new TypedCollection(User, client)
