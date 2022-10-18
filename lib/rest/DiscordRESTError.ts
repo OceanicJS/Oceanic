@@ -7,7 +7,7 @@ import type { Headers, Response } from "undici";
 export default class DiscordRESTError extends Error {
     code: number;
     method: RESTMethod;
-    name = "DiscordRESTError";
+    override name = "DiscordRESTError";
     resBody: Record<string, unknown> | null;
     response: Response;
     constructor(res: Response, resBody: Record<string, unknown>, method: RESTMethod, stack?: string) {
@@ -22,7 +22,7 @@ export default class DiscordRESTError extends Error {
             message += `\n ${DiscordRESTError.flattenErrors((resBody as { errors: Record<string, unknown>;}).errors).join("\n ")}`;
         } else {
             const errors = DiscordRESTError.flattenErrors(resBody);
-            if (errors.length > 0) {
+            if (errors.length !== 0) {
                 message += `\n ${errors.join("\n ")}`;
             }
         }

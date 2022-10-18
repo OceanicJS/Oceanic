@@ -10,8 +10,8 @@ import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type CategoryChannel from "./CategoryChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
-import User from "./User";
-import Webhook from "./Webhook";
+import type User from "./User";
+import type Webhook from "./Webhook";
 import type { ThreadAutoArchiveDuration } from "../Constants";
 import { AllPermissions, Permissions, ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -70,7 +70,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
         this.update(data);
     }
 
-    protected update(data: Partial<RawTextChannel> | Partial<RawAnnouncementChannel>): void {
+    protected override update(data: Partial<RawTextChannel> | Partial<RawAnnouncementChannel>): void {
         super.update(data);
         if (data.default_auto_archive_duration !== undefined) {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
@@ -184,7 +184,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGuildChannelOptions): Promise<TextChannel | AnnouncementChannel> {
+    override async edit(options: EditGuildChannelOptions): Promise<TextChannel | AnnouncementChannel> {
         return this.client.rest.channels.edit<TextChannel | AnnouncementChannel>(this.id, options);
     }
 

@@ -43,7 +43,7 @@ export default class GuildPreview extends Base {
         this.update(data);
     }
 
-    protected update(data: RawGuildPreview): void {
+    protected override update(data: RawGuildPreview): void {
         if (data.approximate_member_count !== undefined) {
             this.approximateMemberCount = data.approximate_member_count;
         }

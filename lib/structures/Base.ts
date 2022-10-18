@@ -1,7 +1,7 @@
 /** @module Base */
 import type Client from "../Client";
 import type { JSONBase } from "../types/json";
-import { inspect } from "util";
+import { inspect } from "node:util";
 
 /** A base class which most other classes extend. */
 export default abstract class Base {

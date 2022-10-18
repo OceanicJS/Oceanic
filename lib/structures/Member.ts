@@ -1,9 +1,9 @@
 /** @module Member */
 import Base from "./Base";
 import type User from "./User";
-import Guild from "./Guild";
-import Permission from "./Permission";
-import VoiceState from "./VoiceState";
+import type Guild from "./Guild";
+import type Permission from "./Permission";
+import type VoiceState from "./VoiceState";
 import type { ImageFormat } from "../Constants";
 import type Client from "../Client";
 import type {
@@ -73,7 +73,7 @@ export default class Member extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawMember | RESTMember>): void {
+    protected override update(data: Partial<RawMember | RESTMember>): void {
         if (data.avatar !== undefined) {
             this.avatar = data.avatar;
         }

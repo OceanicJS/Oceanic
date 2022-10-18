@@ -7,17 +7,14 @@ import type InteractionResolvedChannel from "../structures/InteractionResolvedCh
 import type PrivateChannel from "../structures/PrivateChannel";
 import type { AnyGuildChannel } from "../types/channels";
 import type { MessageComponentInteractionResolvedData } from "../types/interactions";
-import type Client from "../Client";
 
 /** A wrapper for select menu data. */
 export default class SelectMenuValuesWrapper {
-    #client: Client;
     /** The raw received values. */
     raw: Array<string>;
     /** The resolved data for this instance. */
     resolved: MessageComponentInteractionResolvedData;
-    constructor(client: Client, resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
-        this.#client  = client;
+    constructor(resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
         this.resolved = resolved;
         this.raw   = values;
     }

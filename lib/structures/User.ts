@@ -1,6 +1,6 @@
 /** @module User */
 import Base from "./Base";
-import PrivateChannel from "./PrivateChannel";
+import type PrivateChannel from "./PrivateChannel";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -36,7 +36,7 @@ export default class User extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawUser>): void {
+    protected override update(data: Partial<RawUser>): void {
         if (data.accent_color !== undefined) {
             this.accentColor = data.accent_color;
         }

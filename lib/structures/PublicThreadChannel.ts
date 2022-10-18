@@ -16,7 +16,7 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
         this.appliedTags = [];
     }
 
-    protected update(data: Partial<RawPublicThreadChannel>): void {
+    protected override update(data: Partial<RawPublicThreadChannel>): void {
         super.update(data);
         if (data.applied_tags !== undefined) {
             this.appliedTags = data.applied_tags;
@@ -31,7 +31,7 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
-    toJSON(): JSONPublicThreadChannel {
+    override toJSON(): JSONPublicThreadChannel {
         return {
             ...super.toJSON(),
             appliedTags:    this.appliedTags,

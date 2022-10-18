@@ -4,7 +4,7 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
 import ThreadChannel from "./ThreadChannel";
-import { ChannelTypes } from "../Constants";
+import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type {
     ArchivedThreads,
@@ -31,7 +31,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
     /**
      * Convert this text channel to a announcement channel.
      */
-    async convert(): Promise<AnnouncementChannel> {
+    override async convert(): Promise<AnnouncementChannel> {
         return super.convert() as Promise<AnnouncementChannel>;
     }
 
@@ -67,7 +67,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
         return this.client.rest.channels.getPrivateArchivedThreads(this.id, options);
     }
 
-    toJSON(): JSONTextChannel {
+    override toJSON(): JSONTextChannel {
         return {
             ...super.toJSON(),
             threads: this.threads.map(thread => thread.id),

@@ -53,8 +53,8 @@ import type { VoiceRegion } from "../types/voice";
 import Channel from "../structures/Channel";
 import type RESTManager from "../rest/RESTManager";
 import type PrivateChannel from "../structures/PrivateChannel";
-import GroupChannel from "../structures/GroupChannel";
-import User from "../structures/User";
+import type GroupChannel from "../structures/GroupChannel";
+import type User from "../structures/User";
 import type { Uncached } from "../types/shared";
 
 /** Various methods for interacting with channels. */
@@ -260,7 +260,7 @@ export default class Channels {
         const chunks: Array<Array<string>> = [];
         messageIDs = [...messageIDs];
         const amountOfMessages = messageIDs.length;
-        while (messageIDs.length) {
+        while (messageIDs.length !== 0) {
             chunks.push(messageIDs.splice(0, 100));
         }
 
@@ -867,12 +867,10 @@ export default class Channels {
                     void (async (): Promise<void> => {
                         let removedResolver: (() => void) | null = null;
 
-                        if (await filter(message as Message<T>)) {
-                            if (!limitWasReach) {
-                                messageIDsToPurge.push(message.id);
-                                if (messageIDsToPurge.length === options.limit) {
-                                    limitWasReach = true;
-                                }
+                        if (await filter(message as Message<T>) && !limitWasReach) {
+                            messageIDsToPurge.push(message.id);
+                            if (messageIDsToPurge.length === options.limit) {
+                                limitWasReach = true;
                             }
                         }
 

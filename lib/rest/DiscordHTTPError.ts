@@ -6,7 +6,7 @@ import type { Headers, Response } from "undici";
 /** An HTTP error received from Discord. */
 export default class DiscordHTTPError extends Error {
     method: RESTMethod;
-    name = "DiscordHTTPError";
+    override name = "DiscordHTTPError";
     resBody: Record<string, unknown> | null;
     response: Response;
     constructor(res: Response, resBody: unknown | null, method: RESTMethod, stack?: string) {
@@ -17,7 +17,7 @@ export default class DiscordHTTPError extends Error {
 
         let message = `${res.status} ${res.statusText} on ${this.method} ${this.path}`;
         const errors = DiscordHTTPError.flattenErrors(resBody as Record<string, unknown>);
-        if (errors.length > 0) {
+        if (errors.length !== 0) {
             message += `\n  ${errors.join("\n  ")}`;
         }
         Object.defineProperty(this, "message", {

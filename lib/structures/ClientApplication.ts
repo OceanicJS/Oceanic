@@ -1,6 +1,6 @@
 /** @module ClientApplication */
 import Base from "./Base";
-import ApplicationCommand from "./ApplicationCommand";
+import type ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
 import type { RawClientApplication } from "../types/oauth";
 import type {
@@ -15,7 +15,7 @@ import type {
     RESTGuildApplicationCommandPermissions
 } from "../types/application-commands";
 import type { JSONClientApplication } from "../types/json";
-import { ApplicationCommandTypes } from "../Constants";
+import type { ApplicationCommandTypes } from "../Constants";
 
 /** A representation of the authorized client's application (typically received via gateway). */
 export default class ClientApplication extends Base {
@@ -27,7 +27,7 @@ export default class ClientApplication extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawClientApplication>): void {
+    protected override update(data: Partial<RawClientApplication>): void {
         if (data.flags !== undefined) {
             this.flags = data.flags;
         }

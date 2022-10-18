@@ -36,7 +36,7 @@ export default class Bucket {
         let val: number;
         let tokensAvailable = this.tokens < this.tokenLimit;
         let unreservedTokensAvailable = this.tokens < (this.tokenLimit - this.reservedTokens);
-        while (this.#queue.length > 0 && (unreservedTokensAvailable || (tokensAvailable && this.#queue[0].priority))) {
+        while (this.#queue.length !== 0 && (unreservedTokensAvailable || (tokensAvailable && this.#queue[0].priority))) {
             this.tokens++;
             tokensAvailable = this.tokens < this.tokenLimit;
             unreservedTokensAvailable = this.tokens < (this.tokenLimit - this.reservedTokens);
@@ -53,7 +53,7 @@ export default class Bucket {
             }
         }
 
-        if (this.#queue.length > 0 && !this.timeout) {
+        if (this.#queue.length !== 0 && !this.timeout) {
             this.timeout = setTimeout(() => {
                 this.timeout = null;
                 this.check();

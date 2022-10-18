@@ -37,7 +37,7 @@ export default class Attachment extends Base {
         this.width = data.width;
     }
 
-    toJSON(): JSONAttachment {
+    override toJSON(): JSONAttachment {
         return {
             ...super.toJSON(),
             contentType: this.contentType,

@@ -84,11 +84,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         let guild: Guild | undefined;
         if (data.guild) {
-            if (this.client.guilds.has(data.guild.id)) {
-                guild = this.client.guilds.update(data.guild as RawGuild);
-            } else {
-                guild = new Guild(data.guild as RawGuild, this.client);
-            }
+            guild = this.client.guilds.has(data.guild.id) ? this.client.guilds.update(data.guild as RawGuild) : new Guild(data.guild as RawGuild, this.client);
             this.guild = guild;
         }
 

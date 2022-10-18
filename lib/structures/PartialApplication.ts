@@ -29,7 +29,7 @@ export default class PartialApplication extends Base {
         this.update(data);
     }
 
-    protected update(data: RawPartialApplication): void {
+    protected override update(data: RawPartialApplication): void {
         if (data.bot_public !== undefined) {
             this.botPublic = data.bot_public;
         }

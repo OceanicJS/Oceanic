@@ -22,19 +22,16 @@ import type {
     SubCommandArray
 } from "../types/interactions";
 import type Attachment from "../structures/Attachment";
-import InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import PrivateChannel from "../structures/PrivateChannel";
-import Client from "../Client";
+import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
+import type PrivateChannel from "../structures/PrivateChannel";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
-    #client: Client;
     /** The raw options from Discord.  */
     raw: Array<InteractionOptions>;
     /** The resolved data for this options instance. */
     resolved: ApplicationCommandInteractionResolvedData | null;
-    constructor(client: Client, data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
-        this.#client = client;
+    constructor(data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
         this.raw = data;
         this.resolved = resolved;
     }
@@ -245,6 +242,7 @@ export default class InteractionOptionsWrapper {
             throw new Error("Attempt to use getMentionable with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
         let val: string | undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
         if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as InteractionOptionsMentionable | undefined)?.value)) {
             return undefined;
         }
@@ -363,11 +361,7 @@ export default class InteractionOptionsWrapper {
         // nested
             if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
                 const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
-                if (!sub?.options) {
-                    return [opt.name];
-                } else {
-                    return [opt.name, sub.name];
-                }
+                return !sub?.options ? [opt.name] : [opt.name, sub.name];
             } else {
                 return [opt.name];
             }

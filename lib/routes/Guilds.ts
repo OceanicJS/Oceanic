@@ -80,7 +80,7 @@ import AutoModerationRule from "../structures/AutoModerationRule";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type RESTManager from "../rest/RESTManager";
 import Guild from "../structures/Guild";
-import Member from "../structures/Member";
+import type Member from "../structures/Member";
 import type { Uncached } from "../types/shared";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import { File, FormData } from "undici";
@@ -403,9 +403,13 @@ export default class Guilds {
         let mime: string | undefined;
         switch (magic) {
             // png & apng have the same magic
-            case "89504E47": mime = "image/png"; break;
+            case "89504E47": {
+                mime = "image/png"; break;
+            }
             // lottie
-            case "7B227622": mime = "application/json"; break;
+            case "7B227622": {
+                mime = "application/json"; break;
+            }
         }
 
         const form = new FormData();
@@ -669,7 +673,7 @@ export default class Guilds {
             path:   Routes.GUILD_MEMBER(id, "@me"),
             json:   { nick: options.nick },
             reason
-        }).then(data => this.#manager.client.util.updateMember(id, data.user!.id, data));
+        }).then(data => this.#manager.client.util.updateMember(id, data.user.id, data));
     }
 
     /**
@@ -1222,7 +1226,7 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD_MEMBERS(id),
             query
-        }).then(data => data.map(d => this.#manager.client.util.updateMember(id, d.user!.id, d)));
+        }).then(data => data.map(d => this.#manager.client.util.updateMember(id, d.user.id, d)));
     }
 
     /**
@@ -1549,7 +1553,7 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD_SEARCH_MEMBERS(id),
             query
-        }).then(data => data.map(d => this.#manager.client.util.updateMember(id, d.user!.id, d)));
+        }).then(data => data.map(d => this.#manager.client.util.updateMember(id, d.user.id, d)));
     }
 
     /**

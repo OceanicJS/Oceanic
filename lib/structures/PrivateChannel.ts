@@ -33,7 +33,7 @@ export default class PrivateChannel extends Channel {
         this.recipient = client.users.update(data.recipients[0]);
     }
 
-    protected update(data: Partial<RawPrivateChannel>): void {
+    protected override update(data: Partial<RawPrivateChannel>): void {
         if (data.last_message_id !== undefined) {
             this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
             this.lastMessageID = data.last_message_id;

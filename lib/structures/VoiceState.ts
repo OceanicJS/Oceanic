@@ -2,7 +2,7 @@
 import Base from "./Base";
 import type VoiceChannel from "./VoiceChannel";
 import type StageChannel from "./StageChannel";
-import Member from "./Member";
+import type Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
@@ -55,7 +55,7 @@ export default class VoiceState extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawVoiceState>): void {
+    protected override update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
         }
@@ -130,7 +130,7 @@ export default class VoiceState extends Base {
         return this._cachedUser ?? (this._cachedUser = this.client.users.get(this.userID));
     }
 
-    toJSON(): JSONVoiceState {
+    override toJSON(): JSONVoiceState {
         return {
             ...super.toJSON(),
             channelID:               this.channelID,

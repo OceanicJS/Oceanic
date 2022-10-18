@@ -12,7 +12,7 @@ export default class UnavailableGuild extends Base {
         this.unavailable = data.unavailable;
     }
 
-    toJSON(): JSONUnavailableGuild {
+    override toJSON(): JSONUnavailableGuild {
         return {
             ...super.toJSON(),
             unavailable: this.unavailable

@@ -5,7 +5,7 @@ import Member from "./Member";
 import Message from "./Message";
 import Role from "./Role";
 import User from "./User";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
@@ -22,7 +22,7 @@ import type {
 } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
-import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup, RawInteractionResolvedChannel } from "../types/channels";
+import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { RawUser } from "../types/users";
 import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
@@ -57,7 +57,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
         this.channelID = data.channel_id!;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionResolvedChannel, client) as TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>,
+            channels:    new TypedCollection(InteractionResolvedChannel, client) ,
             members:     new TypedCollection(Member, client),
             messages:    new TypedCollection(Message, client),
             roles:       new TypedCollection(Role, client),
@@ -72,44 +72,44 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
 
         if (data.data.resolved) {
             if (data.data.resolved.attachments) {
-                Object.values(data.data.resolved.attachments).forEach(attachment => resolved.attachments.update(attachment));
+                for (const attachment of Object.values(data.data.resolved.attachments)) resolved.attachments.update(attachment);
             }
 
             if (data.data.resolved.channels) {
-                Object.values(data.data.resolved.channels).forEach(channel => resolved.channels.update(channel));
+                for (const channel of Object.values(data.data.resolved.channels)) resolved.channels.update(channel);
             }
 
             if (data.data.resolved.members) {
-                Object.entries(data.data.resolved.members).forEach(([id, member]) => {
+                for (const [id, member] of Object.entries(data.data.resolved.members)) {
                     const m = member as unknown as RawMember & { user: RawUser; };
-                    m.user = data.data.resolved!.users![id];
+                    m.user = data.data.resolved.users![id];
                     resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
-                });
+                }
             }
 
             if (data.data.resolved.messages) {
-                Object.values(data.data.resolved.messages).forEach(message => {
+                for (const message of Object.values(data.data.resolved.messages)) {
                     const channel = client.getChannel(message.channel_id);
                     if (channel && "messages" in channel) {
                         resolved.messages.add(channel.messages.update(message));
                     } else {
                         resolved.messages.update(message);
                     }
-                });
+                }
             }
 
             if (data.data.resolved.roles) {
-                Object.values(data.data.resolved.roles).forEach(role => {
+                for (const role of Object.values(data.data.resolved.roles)) {
                     try {
                         resolved.roles.add(this.guild?.roles.update(role, this.guildID!) ?? new Role(role, client, this.guildID!));
                     } catch {
                         resolved.roles.add(new Role(role, client, this.guildID!));
                     }
-                });
+                }
             }
 
             if (data.data.resolved.users) {
-                Object.values(data.data.resolved.users).forEach(user => resolved.users.add(client.users.update(user)));
+                for (const user of Object.values(data.data.resolved.users)) resolved.users.add(client.users.update(user));
             }
         }
 
@@ -117,7 +117,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
             guildID:  data.data.guild_id,
             id:       data.data.id,
             name:     data.data.name,
-            options:  new InteractionOptionsWrapper(client, data.data.options ?? [], resolved ?? null),
+            options:  new InteractionOptionsWrapper(data.data.options ?? [], resolved ?? null),
             resolved,
             target:   undefined,
             targetID: data.data.target_id,

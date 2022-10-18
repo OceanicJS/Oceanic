@@ -19,7 +19,7 @@ import type {
     BotActivity,
     ShardStatus
 } from "../types/gateway";
-import Member from "../structures/Member";
+import type Member from "../structures/Member";
 import Base from "../structures/Base";
 import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
 import ClientApplication from "../structures/ClientApplication";
@@ -52,7 +52,7 @@ import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChan
 import Interaction from "../structures/Interaction";
 import { is } from "../util/Util";
 import Guild from "../structures/Guild";
-import { ShardEvents } from "../types/events";
+import type { ShardEvents } from "../types/events";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
@@ -63,30 +63,30 @@ import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { Inflate } from "zlib-sync";
-import { randomBytes } from "crypto";
-import { inspect } from "util";
-import assert from "assert";
+import { randomBytes } from "node:crypto";
+import { inspect } from "node:util";
+import assert from "node:assert";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     Erlpack = require("erlpack");
-} catch { }
+} catch {}
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let ZlibSync: typeof import("pako") | typeof import("zlib-sync") | undefined, zlibConstants: typeof import("pako").constants | typeof import("zlib-sync") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     ZlibSync = require("zlib-sync");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     zlibConstants = require("zlib-sync");
 } catch {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
         ZlibSync = require("pako");
-        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, unicorn/prefer-module
         zlibConstants = require("pako").constants;
     } catch {}
 }
@@ -167,7 +167,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     private async checkReady(): Promise<void> {
         if (!this.ready) {
-            if (this.#getAllUsersQueue.length > 0) {
+            if (this.#getAllUsersQueue.length !== 0) {
                 const id = this.#getAllUsersQueue.shift()!;
                 await this.requestGuildMembers(id);
                 this.#getAllUsersQueue.splice(this.#getAllUsersQueue.indexOf(id), 1);
@@ -316,10 +316,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const channel = this.client.util.updateChannel<AnyGuildChannelWithoutThreads>(packet.d);
                 if (channel instanceof VoiceChannel || channel instanceof StageChannel) {
-                    channel.voiceMembers.forEach(member => {
+                    for (const [,member] of channel.voiceMembers) {
                         channel.voiceMembers.delete(member.id);
                         this.client.emit("voiceChannelLeave", member, channel);
-                    });
+                    }
                 }
                 guild?.channels.delete(packet.d.id);
                 this.client.emit("channelDelete", channel);
@@ -374,7 +374,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.voiceAdapters.get(packet.d.id)?.destroy();
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
-                guild?.channels.forEach(channel => delete this.client.channelGuildMap[channel.id]);
+                if (guild?.channels) {
+                    for (const [,channel] of guild.channels) delete this.client.channelGuildMap[channel.id];
+                }
                 this.client.guilds.delete(packet.d.id);
                 if (packet.d.unavailable) {
                     this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
@@ -427,10 +429,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["updateMemberLimit"](packet.d.members.length);
                 const members = packet.d.members.map(member => this.client.util.updateMember(packet.d.guild_id, member.user!.id, member));
-                packet.d.presences?.forEach(presence => {
+                if (packet.d.presences) for (const presence of packet.d.presences) {
                     const member = members.find(m => m.id === presence.user.id)!;
                     member.presence = presence;
-                });
+                }
                 if (!packet.d.nonce) {
                     this.client.emit("warn", "Received GUILD_MEMBERS_CHUNK without a nonce.");
                     break;
@@ -473,7 +475,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_MEMBER_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldMember = guild?.members.get(packet.d.user!.id)?.toJSON() ?? null;
+                const oldMember = guild?.members.get(packet.d.user.id)?.toJSON() ?? null;
                 const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user.id, {  deaf: oldMember?.deaf ?? false, mute: oldMember?.mute ?? false, ...packet.d });
                 this.client.emit("guildMemberUpdate", member, oldMember);
                 break;
@@ -822,15 +824,15 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 this.resumeURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
 
-                packet.d.guilds.forEach(guild => {
+                for (const guild of packet.d.guilds) {
                     this.client.guilds.delete(guild.id);
                     this.client.unavailableGuilds.update(guild);
-                });
+                }
 
                 this.preReady = true;
                 this.emit("preReady");
 
-                if (this.client.unavailableGuilds.size > 0 && packet.d.guilds.length > 0) {
+                if (this.client.unavailableGuilds.size !== 0 && packet.d.guilds.length !== 0) {
                     void this.restartGuildCreateTimeout();
                 } else {
                     void this.checkReady();
@@ -1100,8 +1102,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
 
         switch (packet.op) {
-            case GatewayOPCodes.DISPATCH: void this.onDispatch(packet); break;
-            case GatewayOPCodes.HEARTBEAT: this.heartbeat(true); break;
+            case GatewayOPCodes.DISPATCH: { void this.onDispatch(packet); break;
+            }
+            case GatewayOPCodes.HEARTBEAT: { this.heartbeat(true); break;
+            }
             case GatewayOPCodes.INVALID_SESSION: {
                 if (packet.d) {
                     this.client.emit("warn", "Session Invalidated. Session may be resumable, attempting to resume..", this.id);
@@ -1154,7 +1158,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            default: this.client.emit("warn", `Unrecognized gateway packet: ${packet}`, this.id);
+            default: { this.client.emit("warn", `Unrecognized gateway packet: ${packet}`, this.id);
+            }
         }
     }
 
@@ -1290,13 +1295,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
                     data = Buffer.from(this.#sharedZLib.result ?? "");
-                    if (Erlpack) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                        return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
-                    } else {
-                        return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
-                    }
-
+                    return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(data.toString())) as AnyReceivePacket);
                 } else {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, false);
@@ -1435,7 +1435,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     hardReset(): void {
         this.reset();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        this.client.voiceAdapters.forEach(voiceAdapter => voiceAdapter.destroy());
+        for (const [,voiceAdapter] of this.client.voiceAdapters) voiceAdapter.destroy();
         this.sequence = 0;
         this.sessionID = null;
         this.reconnectInterval = 1000;
@@ -1593,7 +1593,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    toString(): string {
+    override toString(): string {
         return Base.prototype.toString.call(this);
     }
 

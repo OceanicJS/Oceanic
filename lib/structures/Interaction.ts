@@ -41,12 +41,24 @@ export default class Interaction extends Base {
 
     static from<T extends AnyInteraction = AnyInteraction>(data: RawInteraction, client: Client): T {
         switch (data.type) {
-            case InteractionTypes.PING: return new PingInteraction(data, client) as T;
-            case InteractionTypes.APPLICATION_COMMAND: return new CommandInteraction(data as RawApplicationCommandInteraction, client) as T;
-            case InteractionTypes.MESSAGE_COMPONENT: return new ComponentInteraction(data as RawMessageComponentInteraction, client) as T;
-            case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: return new AutocompleteInteraction(data as RawAutocompleteInteraction, client) as T;
-            case InteractionTypes.MODAL_SUBMIT: return new ModalSubmitInteraction(data as RawModalSubmitInteraction, client) as T;
-            default: return new Interaction(data, client) as never;
+            case InteractionTypes.PING: {
+                return new PingInteraction(data, client) as T;
+            }
+            case InteractionTypes.APPLICATION_COMMAND: {
+                return new CommandInteraction(data as RawApplicationCommandInteraction, client) as T;
+            }
+            case InteractionTypes.MESSAGE_COMPONENT: {
+                return new ComponentInteraction(data as RawMessageComponentInteraction, client) as T;
+            }
+            case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
+                return new AutocompleteInteraction(data as RawAutocompleteInteraction, client) as T;
+            }
+            case InteractionTypes.MODAL_SUBMIT: {
+                return new ModalSubmitInteraction(data as RawModalSubmitInteraction, client) as T;
+            }
+            default: {
+                return new Interaction(data, client) as never;
+            }
         }
     }
 
@@ -63,10 +75,10 @@ export default class Interaction extends Base {
 
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
 const AutocompleteInteraction = (require("./AutocompleteInteraction") as typeof import("./AutocompleteInteraction")).default;
 const CommandInteraction = (require("./CommandInteraction") as typeof import("./CommandInteraction")).default;
 const ComponentInteraction = (require("./ComponentInteraction") as typeof import("./ComponentInteraction")).default;
 const ModalSubmitInteraction = (require("./ModalSubmitInteraction") as typeof import("./ModalSubmitInteraction")).default;
 const PingInteraction = (require("./PingInteraction") as typeof import("./PingInteraction")).default;
-/* eslint-enable */
+/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

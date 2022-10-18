@@ -5,9 +5,9 @@ import Message from "./Message";
 import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
-import Invite from "./Invite";
-import User from "./User";
-import Webhook from "./Webhook";
+import type Invite from "./Invite";
+import type User from "./User";
+import type Webhook from "./Webhook";
 import type { JoinVoiceChannelOptions } from "../types/voice";
 import type { ChannelTypes, VideoQualityModes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
@@ -74,7 +74,7 @@ export default class VoiceChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawVoiceChannel>): void {
+    protected override update(data: Partial<RawVoiceChannel>): void {
         super.update(data);
         if (data.bitrate !== undefined) {
             this.bitrate = data.bitrate;
@@ -182,7 +182,7 @@ export default class VoiceChannel extends GuildChannel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditVoiceChannelOptions): Promise<this> {
+    override async edit(options: EditVoiceChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 

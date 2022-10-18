@@ -30,18 +30,42 @@ export default class Channel extends Base {
 
     static from<T extends AnyChannel = AnyChannel>(data: RawChannel, client: Client): T {
         switch (data.type) {
-            case ChannelTypes.GUILD_TEXT: return new TextChannel(data as RawTextChannel, client) as T;
-            case ChannelTypes.DM: return new PrivateChannel(data as RawPrivateChannel, client) as T;
-            case ChannelTypes.GUILD_VOICE: return new VoiceChannel(data as RawVoiceChannel, client) as T;
-            case ChannelTypes.GROUP_DM: return new GroupChannel(data as RawGroupChannel, client) as T;
-            case ChannelTypes.GUILD_CATEGORY: return new CategoryChannel(data as RawCategoryChannel, client) as T;
-            case ChannelTypes.GUILD_ANNOUNCEMENT: return new AnnouncementChannel(data as RawAnnouncementChannel, client) as T;
-            case ChannelTypes.ANNOUNCEMENT_THREAD: return new AnnouncementThreadChannel(data as RawAnnouncementThreadChannel, client) as T;
-            case ChannelTypes.PUBLIC_THREAD: return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
-            case ChannelTypes.PRIVATE_THREAD: return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
-            case ChannelTypes.GUILD_STAGE_VOICE: return new StageChannel(data as RawStageChannel, client) as T;
-            case ChannelTypes.GUILD_FORUM: return new ForumChannel(data as RawForumChannel, client) as T;
-            default: return new Channel(data, client) as T;
+            case ChannelTypes.GUILD_TEXT: {
+                return new TextChannel(data as RawTextChannel, client) as T;
+            }
+            case ChannelTypes.DM: {
+                return new PrivateChannel(data as RawPrivateChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_VOICE: {
+                return new VoiceChannel(data as RawVoiceChannel, client) as T;
+            }
+            case ChannelTypes.GROUP_DM: {
+                return new GroupChannel(data as RawGroupChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_CATEGORY: {
+                return new CategoryChannel(data as RawCategoryChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_ANNOUNCEMENT: {
+                return new AnnouncementChannel(data as RawAnnouncementChannel, client) as T;
+            }
+            case ChannelTypes.ANNOUNCEMENT_THREAD: {
+                return new AnnouncementThreadChannel(data as RawAnnouncementThreadChannel, client) as T;
+            }
+            case ChannelTypes.PUBLIC_THREAD: {
+                return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
+            }
+            case ChannelTypes.PRIVATE_THREAD: {
+                return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_STAGE_VOICE: {
+                return new StageChannel(data as RawStageChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_FORUM: {
+                return new ForumChannel(data as RawForumChannel, client) as T;
+            }
+            default: {
+                return new Channel(data, client) as T;
+            }
         }
     }
 
@@ -66,7 +90,7 @@ export default class Channel extends Base {
 }
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
 const TextChannel = (require("./TextChannel") as typeof import("./TextChannel")).default;
 const PrivateChannel = (require("./PrivateChannel") as typeof import("./PrivateChannel")).default;
 const VoiceChannel = (require("./VoiceChannel") as typeof import("./VoiceChannel")).default;
@@ -78,4 +102,4 @@ const PrivateThreadChannel = (require("./PrivateThreadChannel") as typeof import
 const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel")).default;
 const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
 const ForumChannel = (require("./ForumChannel") as typeof import("./ForumChannel")).default;
-/* eslint-enable */
+/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

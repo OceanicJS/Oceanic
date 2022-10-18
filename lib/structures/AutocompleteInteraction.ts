@@ -1,8 +1,8 @@
 /** @module AutocompleteInteraction */
 import Interaction from "./Interaction";
-import Member from "./Member";
+import type Member from "./Member";
 import type User from "./User";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
@@ -46,7 +46,7 @@ export default class AutocompleteInteraction<T extends AnyTextChannelWithoutGrou
             guildID: data.data.guild_id,
             id:      data.data.id,
             name:    data.data.name,
-            options: new InteractionOptionsWrapper(client, data.data.options ?? [], null),
+            options: new InteractionOptionsWrapper(data.data.options ?? [], null),
             type:    data.data.type
         };
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;

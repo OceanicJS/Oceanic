@@ -33,7 +33,7 @@ export default class CategoryChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawCategoryChannel>): void {
+    protected override update(data: Partial<RawCategoryChannel>): void {
         super.update(data);
         if (data.position !== undefined) {
             this.position = data.position;
@@ -64,7 +64,7 @@ export default class CategoryChannel extends GuildChannel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditAnyGuildChannelOptions): Promise<this> {
+    override async edit(options: EditAnyGuildChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 

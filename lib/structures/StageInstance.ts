@@ -1,12 +1,12 @@
 /** @module StageInstance */
 import Base from "./Base";
-import StageChannel from "./StageChannel";
-import Guild from "./Guild";
-import GuildScheduledEvent from "./GuildScheduledEvent";
+import type StageChannel from "./StageChannel";
+import type Guild from "./Guild";
+import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
 import type { JSONStageInstance } from "../types/json";
-import { RawStageInstance } from "../types/guilds";
+import type { RawStageInstance } from "../types/guilds";
 
 /** Represents a stage instance. */
 export default class StageInstance extends Base {
@@ -36,7 +36,7 @@ export default class StageInstance extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawStageInstance>): void {
+    protected override update(data: Partial<RawStageInstance>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
         }

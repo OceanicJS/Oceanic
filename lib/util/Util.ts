@@ -34,7 +34,7 @@ import Channel from "../structures/Channel";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
-    static BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[A-Za-z0-9+/]{2}[A-Za-z0-9+/]{2})*(?:[A-Za-z0-9+/]{2}(==)?|[A-Za-z0-9+/]{3}=?)?$/;
+    static BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[\d+/A-Za-z]{4})*(?:[\d+/A-Za-z]{2}(==)?|[\d+/A-Za-z]{3}=?)?$/;
     #client: Client;
 
     constructor(client: Client) {
@@ -56,18 +56,14 @@ export default class Util {
             components: row.components.map(component => {
                 switch (component.type) {
                     case ComponentTypes.BUTTON: {
-                        if (component.style === ButtonStyles.LINK) {
-                            return component;
-                        } else {
-                            return {
-                                customID: component.custom_id,
-                                disabled: component.disabled,
-                                emoji:    component.emoji,
-                                label:    component.label,
-                                style:    component.style,
-                                type:     component.type
-                            };
-                        }
+                        return component.style === ButtonStyles.LINK ? component : {
+                            customID: component.custom_id,
+                            disabled: component.disabled,
+                            emoji:    component.emoji,
+                            label:    component.label,
+                            style:    component.style,
+                            type:     component.type
+                        };
                     }
                     case ComponentTypes.TEXT_INPUT: {
                         return {
@@ -119,18 +115,14 @@ export default class Util {
 
                 switch (component.type) {
                     case ComponentTypes.BUTTON: {
-                        if (component.style === ButtonStyles.LINK) {
-                            return component;
-                        } else {
-                            return {
-                                custom_id: component.customID,
-                                disabled:  component.disabled,
-                                emoji:     component.emoji,
-                                label:     component.label,
-                                style:     component.style,
-                                type:      component.type
-                            };
-                        }
+                        return component.style === ButtonStyles.LINK ? component : {
+                            custom_id: component.customID,
+                            disabled:  component.disabled,
+                            emoji:     component.emoji,
+                            label:     component.label,
+                            style:     component.style,
+                            type:      component.type
+                        };
                     }
                     case ComponentTypes.TEXT_INPUT: {
                         return {
@@ -181,9 +173,12 @@ export default class Util {
             let mime: string | undefined;
             const magic = this.getMagic(img);
             switch (magic) {
-                case "47494638": mime = "image/gif"; break;
-                case "89504E47": mime = "image/png"; break;
-                case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": mime = "image/jpeg"; break;
+                case "47494638": { mime = "image/gif"; break;
+                }
+                case "89504E47": { mime = "image/png"; break;
+                }
+                case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": { mime = "image/jpeg"; break;
+                }
             }
             if (!mime) {
                 throw new Error(`Failed to determine image format. (magic: ${magic})`);
@@ -332,24 +327,23 @@ export default class Util {
     }
 
     optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions {
-        const opt = option as RawApplicationCommandOption;
         return {
-            autocomplete:             opt.autocomplete,
-            channelTypes:             opt.channel_types,
-            choices:                  opt.choices,
-            description:              opt.description,
-            descriptionLocalizations: opt.description_localizations,
-            descriptionLocalized:     opt.description_localized,
-            max_length:               opt.max_length,
-            max_value:                opt.max_value,
-            min_length:               opt.min_length,
-            min_value:                opt.min_value,
-            name:                     opt.name,
-            nameLocalizations:        opt.name_localizations,
-            nameLocalized:            opt.name_localized,
-            options:                  opt.options?.map(o => this.optionToParsed(o)),
-            required:                 opt.required,
-            type:                     opt.type
+            autocomplete:             option.autocomplete,
+            channelTypes:             option.channel_types,
+            choices:                  option.choices,
+            description:              option.description,
+            descriptionLocalizations: option.description_localizations,
+            descriptionLocalized:     option.description_localized,
+            max_length:               option.max_length,
+            max_value:                option.max_value,
+            min_length:               option.min_length,
+            min_value:                option.min_value,
+            name:                     option.name,
+            nameLocalizations:        option.name_localizations,
+            nameLocalized:            option.name_localized,
+            options:                  option.options?.map(o => this.optionToParsed(o)),
+            required:                 option.required,
+            type:                     option.type
         } as ApplicationCommandOptions;
     }
 
@@ -378,7 +372,7 @@ export default class Util {
             const guild = this.#client.guilds.get(channelData.guild_id);
             if (guild) {
                 this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
-                const channel = guild.channels.has(channelData.id) ? guild.channels.update(channelData as RawGuildChannel) as AnyGuildChannelWithoutThreads : guild.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, this.#client));
+                const channel = guild.channels.has(channelData.id) ? guild.channels.update(channelData as RawGuildChannel)  : guild.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, this.#client));
                 return channel as T;
             }
         }

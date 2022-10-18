@@ -25,7 +25,7 @@ export default class ExtendedUser extends User {
         this.update(data);
     }
 
-    protected update(data: Partial<RawOAuthUser>): void {
+    protected override update(data: Partial<RawOAuthUser>): void {
         super.update(data);
         if (data.email !== undefined) {
             this.email = data.email;

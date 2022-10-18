@@ -3,9 +3,9 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
 import Permission from "./Permission";
 import Channel from "./Channel";
-import PrivateChannel from "./PrivateChannel";
-import ForumChannel from "./ForumChannel";
-import { ChannelTypes, GuildChannelTypes } from "../Constants";
+import type PrivateChannel from "./PrivateChannel";
+import type ForumChannel from "./ForumChannel";
+import type { ChannelTypes, GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildChannel } from "../types/channels";
 

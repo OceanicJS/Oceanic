@@ -172,7 +172,7 @@ export default class ShardManager extends Collection<number, Shard> {
             this.#buckets[rateLimitKey] = Date.now();
             this.#connectQueue.splice(this.#connectQueue.findIndex(s => s.id === shard.id), 1);
         }
-        if (!this.#connectTimeout && this.#connectQueue.length > 0) {
+        if (!this.#connectTimeout && this.#connectQueue.length !== 0) {
             this.#connectTimeout = setTimeout(() => {
                 this.#connectTimeout = null;
                 this.tryConnect();

@@ -60,7 +60,7 @@ export default class AutoModerationRule extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawAutoModerationRule>): void {
+    protected override update(data: Partial<RawAutoModerationRule>): void {
         if (data.actions !== undefined) {
             this.actions = data.actions.map(a => ({
                 metadata: {

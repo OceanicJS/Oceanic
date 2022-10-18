@@ -67,7 +67,7 @@ export default class Application extends ClientApplication {
         this.update(data);
     }
 
-    protected update(data: Partial<RESTApplication>): void {
+    protected override update(data: Partial<RESTApplication>): void {
         super.update(data);
         if (data.bot_public !== undefined) {
             this.botPublic = data.bot_public;
@@ -84,11 +84,7 @@ export default class Application extends ClientApplication {
         if (data.description !== undefined) {
             this.description = data.description;
         }
-        if (data.guild_id === undefined) {
-            this.guildID = null;
-        } else {
-            this.guildID = data.guild_id;
-        }
+        this.guildID = data.guild_id === undefined ? null : data.guild_id;
         if (data.icon !== undefined) {
             this.icon = data.icon;
         }

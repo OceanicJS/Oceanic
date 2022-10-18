@@ -61,7 +61,7 @@ export default class GuildScheduledEvent extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawScheduledEvent>): void {
+    protected override update(data: Partial<RawScheduledEvent>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
         }

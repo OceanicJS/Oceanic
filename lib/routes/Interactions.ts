@@ -4,7 +4,7 @@ import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
 import type RESTManager from "../rest/RESTManager";
-import Message from "../structures/Message";
+import type Message from "../structures/Message";
 import type { AnyTextChannelWithoutGroup } from "../types/channels";
 import type { Uncached } from "../types/shared";
 
@@ -34,7 +34,9 @@ export default class Interactions {
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse): Promise<void> {
         let data: unknown | undefined;
         switch (options.type) {
-            case InteractionResponseTypes.PONG: break;
+            case InteractionResponseTypes.PONG: {
+                break;
+            }
             case InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE:
             case InteractionResponseTypes.UPDATE_MESSAGE: {
                 data = {

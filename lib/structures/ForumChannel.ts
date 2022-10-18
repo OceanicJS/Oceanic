@@ -6,7 +6,7 @@ import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type CategoryChannel from "./CategoryChannel";
-import Webhook from "./Webhook";
+import type Webhook from "./Webhook";
 import type Client from "../Client";
 import type {
     ArchivedThreads,
@@ -78,7 +78,7 @@ export default class ForumChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected update(data: Partial<RawForumChannel>): void {
+    protected override update(data: Partial<RawForumChannel>): void {
         super.update(data);
         if (data.available_tags !== undefined) {
             this.availableTags = data.available_tags.map(tag => ({
@@ -241,7 +241,7 @@ export default class ForumChannel extends GuildChannel {
         return this.client.rest.channels.startThreadInForum(this.id, options);
     }
 
-    toJSON(): JSONForumChannel {
+    override toJSON(): JSONForumChannel {
         return {
             ...super.toJSON(),
             availableTags:                 this.availableTags,

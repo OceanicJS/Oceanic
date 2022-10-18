@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-math-trunc */
 /** @module Constants */
 import pkg from "../package.json";
 

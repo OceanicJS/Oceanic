@@ -2,7 +2,7 @@
 import Base from "./Base";
 import Attachment from "./Attachment";
 import User from "./User";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import type Member from "./Member";
 import PartialApplication from "./PartialApplication";
 import type ClientApplication from "./ClientApplication";
@@ -144,11 +144,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         this.type = data.type;
         this.webhookID = data.webhook_id;
         this.update(data);
-        if (data.author.discriminator !== "0000") {
-            this.author = client.users.update(data.author);
-        } else {
-            this.author = new User(data.author, client);
-        }
+        this.author = data.author.discriminator !== "0000" ? client.users.update(data.author) : new User(data.author, client);
         if (data.application !== undefined) {
             this.application = new PartialApplication(data.application, client);
             this.applicationID = data.application.id;
@@ -165,7 +161,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         }
     }
 
-    protected update(data: Partial<RawMessage>): void {
+    protected override update(data: Partial<RawMessage>): void {
         if (data.mention_everyone !== undefined) {
             this.mentions.everyone = data.mention_everyone;
         }
@@ -247,24 +243,20 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
             this.position = data.position;
         }
         if (data.reactions) {
-            data.reactions.forEach(reaction => {
+            for (const reaction of data.reactions) {
                 const name = reaction.emoji.id ? `${reaction.emoji.name}:${reaction.emoji.id}` : reaction.emoji.name;
                 this.reactions[name] = {
                     count: reaction.count,
                     me:    reaction.me
                 };
-            });
+            }
         }
 
         if (data.referenced_message !== undefined) {
             if (data.referenced_message === null) {
                 this.referencedMessage = null;
             } else {
-                if (this.channel) {
-                    this.referencedMessage = this.channel.messages?.update(data.referenced_message);
-                } else {
-                    this.referencedMessage = new Message(data.referenced_message, this.client);
-                }
+                this.referencedMessage = this.channel ? this.channel.messages?.update(data.referenced_message) : new Message(data.referenced_message, this.client);
             }
         }
 

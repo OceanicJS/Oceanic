@@ -1,10 +1,10 @@
 /** @module ModalSubmitInteraction */
 import Interaction from "./Interaction";
-import Member from "./Member";
+import type Member from "./Member";
 import type User from "./User";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import Permission from "./Permission";
-import Message from "./Message";
+import type Message from "./Message";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import type { InteractionTypes } from "../Constants";

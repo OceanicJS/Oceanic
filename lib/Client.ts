@@ -17,7 +17,7 @@ import type { BotActivity, GetBotGatewayResponse, SendStatuses } from "./types/g
 import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
-import { ClientEvents } from "./types/events";
+import type { ClientEvents } from "./types/events";
 import type { JoinVoiceChannelOptions } from "./types/voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -27,7 +27,7 @@ import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@disco
 // @ts-ignore
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     DiscordJSVoice = require("@discordjs/voice");
 } catch {}
 
@@ -35,7 +35,7 @@ try {
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     Erlpack = require("erlpack");
 } catch {}
 
@@ -74,10 +74,10 @@ export default class Client extends TypedEmitter<ClientEvents> {
             },
             auth:             options?.auth ?? null,
             collectionLimits: {
-                members: options?.collectionLimits?.members === undefined ?  Infinity : typeof options.collectionLimits.members === "object" ? {
+                members: options?.collectionLimits?.members === undefined ?  Infinity : (typeof options.collectionLimits.members === "object" ? {
                     unknown: Infinity,
                     ...options.collectionLimits.members
-                } : options.collectionLimits.members,
+                } : options.collectionLimits.members),
                 messages: options?.collectionLimits?.messages ?? 100,
                 users:    options?.collectionLimits?.users ?? Infinity
             },
@@ -179,11 +179,9 @@ export default class Client extends TypedEmitter<ClientEvents> {
             this.shards.options.shardIDs = [];
         }
 
-        if (this.shards.options.shardIDs.length === 0) {
-            if (this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined) {
-                for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++) {
-                    this.shards.options.shardIDs.push(i);
-                }
+        if (this.shards.options.shardIDs.length === 0 && this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined) {
+            for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++) {
+                this.shards.options.shardIDs.push(i);
             }
         }
 
@@ -199,7 +197,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
      */
     disconnect(reconnect = this.shards.options.autoReconnect): void {
         this.ready = false;
-        this.shards.forEach(shard => shard.disconnect(reconnect));
+        for (const [,shard] of this.shards) shard.disconnect(reconnect);
         this.shards["_resetConnectQueue"]();
     }
 
@@ -209,7 +207,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
      * @param activities An array of activities.
      */
     async editStatus(status: SendStatuses, activities: Array<BotActivity> = []): Promise<void>{
-        return this.shards.forEach(shard => shard.editStatus(status, activities));
+        for (const [,shard] of this.shards) await shard.editStatus(status, activities);
     }
 
     /**

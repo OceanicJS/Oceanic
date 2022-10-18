@@ -1,6 +1,6 @@
 /** @module Team */
 import Base from "./Base";
-import User from "./User";
+import type User from "./User";
 import type Client from "../Client";
 import type { RawTeam, TeamMember } from "../types/oauth";
 import type { JSONTeam } from "../types/json";
@@ -27,7 +27,7 @@ export default class Team extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawTeam>): void {
+    protected override update(data: Partial<RawTeam>): void {
         if (data.icon !== undefined) {
             this.icon = data.icon;
         }
@@ -40,13 +40,13 @@ export default class Team extends Base {
         }
         if (data.members !== undefined) {
             for (const member of this.members) {
-                if (!data.members.find(m => m.user.id === member.user.id)) {
+                if (!data.members.some(m => m.user.id === member.user.id)) {
                     this.members.splice(this.members.indexOf(member), 1);
                 }
             }
 
             for (const member of data.members) {
-                if (!this.members.find(m => m.user.id === member.user.id)) {
+                if (!this.members.some(m => m.user.id === member.user.id)) {
                     this.members.push({
                         membershipState: member.membership_state,
                         permissions:     member.permissions,

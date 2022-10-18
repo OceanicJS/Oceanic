@@ -47,7 +47,7 @@ export default class Role extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawRole>): void {
+    protected override update(data: Partial<RawRole>): void {
         if (data.color !== undefined) {
             this.color = data.color;
         }

@@ -3,7 +3,7 @@ import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
 import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
-import Message from "./Message";
+import type Message from "./Message";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
@@ -23,13 +23,13 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     }
 
     override get parent(): CategoryChannel | null | undefined {
-        return super.parent as CategoryChannel | null | undefined;
+        return super.parent;
     }
 
     /**
      * Convert this announcement channel to a text channel.
      */
-    async convert(): Promise<TextChannel> {
+    override async convert(): Promise<TextChannel> {
         return super.convert() as Promise<TextChannel>;
     }
 

@@ -1,6 +1,6 @@
 /** @module TypedEmitter */
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
-import EventEmitter from "events";
+import EventEmitter from "node:events";
 
 declare interface TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
     addListener<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void): this;
@@ -19,7 +19,7 @@ declare interface TypedEmitter<Events extends Record<string | symbol, any>> exte
 }
 
 class TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
-    emit<K extends keyof Events>(eventName: K, ...args: Events[K]): boolean {
+    override emit<K extends keyof Events>(eventName: K, ...args: Events[K]): boolean {
         if (this.listenerCount(eventName) === 0) {
             return false;
         }

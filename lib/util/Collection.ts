@@ -19,7 +19,7 @@ export default class Collection<K, V> extends Map<K, V> {
     filter<S extends V, ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, array: Array<V>) => value is S, thisArg?: ThisArg): Array<S>;
     filter<ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg): Array<V>;
     filter(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown): Array<V> {
-        return this.toArray().filter(predicate, thisArg) as Array<V>;
+        return this.toArray().filter(predicate, thisArg) ;
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find | Array#find } */
@@ -47,7 +47,7 @@ export default class Collection<K, V> extends Map<K, V> {
         }
 
         if (amount < 0) {
-            return this.last(amount! * -1);
+            return this.last(amount * -1);
         }
         amount = Math.min(amount, this.size);
 
@@ -67,7 +67,7 @@ export default class Collection<K, V> extends Map<K, V> {
             return iterator[iterator.length - 1];
         }
         if (amount < 0) {
-            return this.first(amount! * -1);
+            return this.first(amount * -1);
         }
         if (!amount) {
             return [];

@@ -1,9 +1,9 @@
 /** @module ThreadChannel */
 import GuildChannel from "./GuildChannel";
 import Message from "./Message";
-import User from "./User";
+import type User from "./User";
 import type Member from "./Member";
-import Permission from "./Permission";
+import type Permission from "./Permission";
 import type { ThreadChannelTypes } from "../Constants";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -78,7 +78,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         this.update(data);
     }
 
-    protected update(data: Partial<RawThreadChannel>): void {
+    protected override update(data: Partial<RawThreadChannel>): void {
         if (data.flags !== undefined) {
             this.flags = data.flags;
         }

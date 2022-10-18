@@ -20,7 +20,7 @@ export default class PingInteraction extends Interaction {
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PONG });
     }
 
-    toJSON(): JSONPingInteraction {
+    override toJSON(): JSONPingInteraction {
         return {
             ...super.toJSON(),
             type: this.type

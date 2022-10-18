@@ -5,7 +5,7 @@ import GuildChannel from "./GuildChannel";
 import Member from "./Member";
 import GuildScheduledEvent from "./GuildScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
-import User from "./User";
+import type User from "./User";
 import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
 import type TextChannel from "./TextChannel";
@@ -16,11 +16,11 @@ import Permission from "./Permission";
 import VoiceState from "./VoiceState";
 import StageInstance from "./StageInstance";
 import Channel from "./Channel";
-import StageChannel from "./StageChannel";
-import GuildTemplate from "./GuildTemplate";
-import GuildPreview from "./GuildPreview";
-import Invite from "./Invite";
-import Webhook from "./Webhook";
+import type StageChannel from "./StageChannel";
+import type GuildTemplate from "./GuildTemplate";
+import type GuildPreview from "./GuildPreview";
+import type Invite from "./Invite";
+import type Webhook from "./Webhook";
 import type {
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
@@ -101,7 +101,7 @@ import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/g
 import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
-import Shard from "../gateway/Shard";
+import type Shard from "../gateway/Shard";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
 import Collection from "../util/Collection";
@@ -276,9 +276,9 @@ export default class Guild extends Base {
         this.verificationLevel = data.verification_level;
         this.voiceStates = new TypedCollection(VoiceState, client);
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
-        data.roles.forEach(role => {
+        for (const role of data.roles) {
             this.roles.update(role, data.id);
-        });
+        }
         this.update(data);
 
         if (data.channels) {
@@ -386,7 +386,7 @@ export default class Guild extends Base {
         this.client.emit("debug", `The limit of the members collection of guild ${this.id} has been updated from ${original} to ${this.members.limit} to accommodate at least ${toAdd === true ? this.memberCount : this.members.size + toAdd} members.`);
     }
 
-    protected update(data: Partial<RawGuild>): void {
+    protected override update(data: Partial<RawGuild>): void {
         if (data.afk_channel_id !== undefined) {
             this.afkChannel = data.afk_channel_id === null ? null : this.client.getChannel<VoiceChannel>(data.afk_channel_id);
             this.afkChannelID = data.afk_channel_id;
@@ -395,7 +395,7 @@ export default class Guild extends Base {
             this.afkTimeout = data.afk_timeout;
         }
         if (data.application_id !== undefined) {
-            this.application = data.application_id === null ? null : this.client.application.id === data.application_id ? this.client.application : undefined;
+            this.application = data.application_id === null ? null : (this.client.application.id === data.application_id ? this.client.application : undefined);
             this.applicationID = data.application_id;
         }
         if (data.approximate_member_count !== undefined) {

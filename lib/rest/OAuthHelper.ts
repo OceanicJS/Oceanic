@@ -1,7 +1,7 @@
 /** @module OAuthHelper */
-import RESTManager from "./RESTManager";
+import type RESTManager from "./RESTManager";
 import Application from "../structures/Application";
-import {
+import type {
     AuthorizationInformation,
     Connection,
     RawAuthorizationInformation,
@@ -9,7 +9,7 @@ import {
     RESTApplication,
     RevokeTokenOptions
 } from "../types/oauth";
-import { RawGuild, RESTMember } from "../types/guilds";
+import type { RawGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import PartialApplication from "../structures/PartialApplication";
 import Integration from "../structures/Integration";

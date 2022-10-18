@@ -3,7 +3,7 @@ import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users"
 import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";
-import User from "../structures/User";
+import type User from "../structures/User";
 
 /** Various methods for interacting with users. */
 export default class Users {

@@ -6,7 +6,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:unicorn/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -269,6 +270,9 @@
             "private-constructor",
             "protected-constructor",
             "constructor",
+            "private-set",
+            "protected-set",
+            "set",
             "private-static-method",
             "protected-static-method",
             "static-method",
@@ -277,16 +281,13 @@
             "private-get",
             "protected-get",
             "get",
-            "private-set",
-            "protected-set",
-            "set",
             "method"
           ],
           "order": "alphabetically"
         }
       }
     ],
-    "@typescript-eslint/no-unnecessary-type-assertion": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/indent": [
       "error",
       4,
@@ -294,10 +295,32 @@
         "SwitchCase": 1
       }
     ],
-    "@typescript-eslint/explicit-function-return-type": "error",
     "jsdoc/newline-after-description": ["error", "never"],
     "arrow-parens": ["error", "as-needed"],
-    "curly": ["error", "all"],
-    "object-curly-newline": ["error", { "multiline": true }]
+    "unicorn/no-null": "off",
+    "unicorn/no-static-only-class": "off",
+    "unicorn/no-unreadable-array-destructuring": "off",
+    "unicorn/numeric-separators-style": [
+      "error",
+      {
+        "onlyIfContainsSeparator": true
+      }
+    ],
+    "unicorn/filename-case": "off",
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-await-expression-member": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/prefer-spread": "off",
+    "unicorn/explicit-length-check": [
+      "error",
+      {
+        "non-zero": "not-equal"
+      }
+    ],
+    "unicorn/catch-error-name": "off",
+    "unicorn/consistent-destructuring": "off",
+    "unicorn/prefer-number-properties": "off",
+    "unicorn/no-array-callback-reference": "off",
+    "unicorn/no-array-method-this-argument": "off"
   }
 }

@@ -1,7 +1,7 @@
 /** @module Integration */
 import Base from "./Base";
 import PartialApplication from "./PartialApplication";
-import User from "./User";
+import type User from "./User";
 import type Guild from "./Guild";
 import type Role from "./Role";
 import type { IntegrationAccount, RawIntegration } from "../types/guilds";
@@ -60,7 +60,7 @@ export default class Integration extends Base {
         this.update(data);
     }
 
-    protected update(data: Partial<RawIntegration>): void {
+    protected override update(data: Partial<RawIntegration>): void {
         if (data.account !== undefined) {
             this.account = data.account;
         }

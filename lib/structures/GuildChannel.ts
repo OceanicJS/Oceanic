@@ -28,7 +28,7 @@ export default class GuildChannel extends Channel {
         this.parentID = data.parent_id;
     }
 
-    protected update(data: Partial<RawGuildChannel>): void {
+    protected override update(data: Partial<RawGuildChannel>): void {
         super.update(data);
         if (data.guild_id !== undefined) {
             this.guildID = data.guild_id;

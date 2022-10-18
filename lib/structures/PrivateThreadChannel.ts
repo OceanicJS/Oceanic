@@ -21,7 +21,7 @@ export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadCha
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
-    toJSON(): JSONPrivateThreadChannel {
+    override toJSON(): JSONPrivateThreadChannel {
         return {
             ...super.toJSON(),
             threadMetadata: this.threadMetadata,

@@ -62,7 +62,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
         this.locale = data.locale!;
         this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined) as T extends AnyGuildTextChannel ? Member : Member | undefined;
         this.memberPermissions = (data.member !== undefined ? new Permission(data.member.permissions) : undefined) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
-        this.message = this.channel?.messages?.update(data.message) as Message<T> ?? new Message(data.message, client) as Message<T>;
+        this.message = this.channel?.messages?.update(data.message) as Message<T> ?? new Message(data.message, client) ;
         this.user = client.users.update((data.user ?? data.member!.user)!);
 
         switch (data.data.component_type) {
@@ -87,36 +87,36 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
 
                 if (data.data.resolved) {
                     if (data.data.resolved.channels) {
-                        Object.values(data.data.resolved.channels).forEach(channel => resolved.channels.update(channel));
+                        for (const channel of Object.values(data.data.resolved.channels)) resolved.channels.update(channel);
                     }
 
                     if (data.data.resolved.members) {
-                        Object.entries(data.data.resolved.members).forEach(([id, member]) => {
+                        for (const [id, member] of Object.entries(data.data.resolved.members)) {
                             const m = member as unknown as RawMember & { user: RawUser; };
-                            m.user = data.data.resolved!.users![id];
+                            m.user = data.data.resolved.users![id];
                             resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
-                        });
+                        }
                     }
 
                     if (data.data.resolved.roles) {
-                        Object.values(data.data.resolved.roles).forEach(role => {
+                        for (const role of Object.values(data.data.resolved.roles)) {
                             try {
                                 resolved.roles.add(this.guild?.roles.update(role, this.guildID!) ?? new Role(role, client, this.guildID!));
                             } catch {
                                 resolved.roles.add(new Role(role, client, this.guildID!));
                             }
-                        });
+                        }
                     }
 
                     if (data.data.resolved.users) {
-                        Object.values(data.data.resolved.users).forEach(user => resolved.users.add(client.users.update(user)));
+                        for (const user of Object.values(data.data.resolved.users)) resolved.users.add(client.users.update(user));
                     }
                 }
 
                 this.data = {
                     componentType: data.data.component_type,
                     customID:      data.data.custom_id,
-                    values:        new SelectMenuValuesWrapper(client, resolved, data.data.values!),
+                    values:        new SelectMenuValuesWrapper(resolved, data.data.values!),
                     resolved
                 };
                 break;

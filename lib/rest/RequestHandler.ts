@@ -32,7 +32,7 @@ export default class RequestHandler {
             agent:                      options.agent,
             baseURL:                    options.baseURL ?? API_URL,
             disableLatencyCompensation: !!options.disableLatencyCompensation,
-            host:                       options.host ? options.host : options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host,
+            host:                       options.host ?? (options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host),
             latencyThreshold:           options.latencyThreshold ?? 30000,
             ratelimiterOffset:          options.ratelimiterOffset ?? 0,
             requestTimeout:             options.requestTimeout ?? 15000,
@@ -41,8 +41,8 @@ export default class RequestHandler {
         this.latencyRef = {
             lastTimeOffsetCheck: 0,
             latency:             options.ratelimiterOffset ?? 0,
-            raw:                 new Array(10).fill(options.ratelimiterOffset) as Array<number>,
-            timeOffsets:         new Array(10).fill(0) as Array<number>,
+            raw:                 Array.from({ length: 10 }).fill(options.ratelimiterOffset) as Array<number>,
+            timeOffsets:         Array.from({ length: 10 }).fill(0) as Array<number>,
             timeoffset:          0
         };
 
@@ -51,7 +51,7 @@ export default class RequestHandler {
     private getRoute(path: string, method: string): string {
         let route = path.replace(/\/([a-z-]+)\/\d{15,21}/g, function(match, p) {
             return p === "channels" || p === "guilds" || p === "webhooks" ? match : `/${p as string}/:id`;
-        }).replace(/\/reactions\/[^/]+/g, "/reactions/:id").replace(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[A-Za-z0-9-_]{64,}/, "/webhooks/$1/:token");
+        }).replace(/\/reactions\/[^/]+/g, "/reactions/:id").replace(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[\w-]{64,}/, "/webhooks/$1/:token");
         if (method === "DELETE" && route.endsWith("/messages/:id")) {
             const messageID = path.slice(path.lastIndexOf("/") + 1);
             const createdAt = Base.getCreatedAt(messageID).getTime();
@@ -61,7 +61,7 @@ export default class RequestHandler {
                 method += "_NEW";
             }
             route = method + route;
-        } else if (method === "GET" && /\/guilds\/[0-9]+\/channels$/.test(route)) {
+        } else if (method === "GET" && /\/guilds\/\d+\/channels$/.test(route)) {
             route = "/guilds/:id/channels";
         }
 
@@ -76,7 +76,7 @@ export default class RequestHandler {
 
     private globalUnblock(): void {
         this.globalBlock = false;
-        while (this.readyQueue.length > 0) {
+        while (this.readyQueue.length !== 0) {
             this.readyQueue.shift()!();
         }
     }
@@ -127,14 +127,14 @@ export default class RequestHandler {
                         if (options.json) {
                             stringBody = JSON.stringify(options.json, (k, v: unknown) => typeof v === "bigint" ? v.toString() : v);
                         }
-                        if (options.form || (options.files && options.files.length > 0)) {
+                        if (options.form || (options.files && options.files.length !== 0)) {
                             const data = options.form ?? new FormData();
-                            options.files?.forEach((file, index) => {
+                            if (options.files) for (const [index, file] of options.files.entries()) {
                                 if (!file.contents) {
-                                    return;
+                                    continue;
                                 }
                                 data.set(`files[${index}]`, new UFile([file.contents], file.name));
-                            });
+                            }
                             if (stringBody) {
                                 data.set("payload_json", stringBody);
                             }
@@ -148,7 +148,7 @@ export default class RequestHandler {
                     if (this.options.host) {
                         headers.Host = this.options.host;
                     }
-                    const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length > 0 ? `?${options.query.toString()}` : ""}`;
+                    const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length !== 0 ? `?${options.query.toString()}` : ""}`;
                     let latency = Date.now();
                     const controller = new AbortController();
                     let timeout: NodeJS.Timeout | undefined;
@@ -168,7 +168,7 @@ export default class RequestHandler {
                     latency = Date.now() - latency;
                     if (!this.options.disableLatencyCompensation) {
                         this.latencyRef.raw.push(latency);
-                        this.latencyRef.latency = this.latencyRef.latency - ~~(this.latencyRef.raw.shift()! / 10) + ~~(latency / 10);
+                        this.latencyRef.latency = this.latencyRef.latency - Math.trunc(this.latencyRef.raw.shift()! / 10) + Math.trunc(latency / 10);
                     }
                     let resBody: Buffer | string | Record<string, unknown> | null;
                     if (res.status === 204) {
@@ -203,7 +203,7 @@ export default class RequestHandler {
                             this.#manager.client.emit("warn", `Your clock is ${this.latencyRef.timeoffset}ms behind Discord's server clock. Please check your connection and system time.`);
                         }
 
-                        this.latencyRef.timeoffset = this.latencyRef.timeoffset - ~~(this.latencyRef.timeOffsets.shift()! / 10) + ~~(timeOffset / 10);
+                        this.latencyRef.timeoffset = this.latencyRef.timeoffset - Math.trunc(this.latencyRef.timeOffsets.shift()! / 10) + Math.trunc(timeOffset / 10);
                         this.latencyRef.timeOffsets.push(timeOffset);
                     }
                     if (res.headers.has("x-ratelimit-limit")) {
@@ -274,15 +274,9 @@ export default class RequestHandler {
                         cb();
                         let { stack } = _stackHolder as { stack: string; };
                         if (stack.startsWith("Error\n")) {
-                            stack = stack.substring(6);
+                            stack = stack.slice(6);
                         }
-                        let err;
-                        if (resBody && typeof resBody === "object" && "code" in resBody) {
-                            err = new DiscordRESTError(res, resBody, options.method, stack);
-                        } else {
-                            err = new DiscordHTTPError(res, resBody, options.method, stack);
-                        }
-
+                        const err = resBody && typeof resBody === "object" && "code" in resBody ? new DiscordRESTError(res, resBody, options.method, stack) : new DiscordHTTPError(res, resBody, options.method, stack);
                         reject(err);
                         return;
                     }

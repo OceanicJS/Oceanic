@@ -44,11 +44,11 @@ export default class GroupChannel extends Channel {
         this.owner = this.client.users.get(data.owner_id);
         this.ownerID = data.owner_id;
         this.recipients = new TypedCollection(User, client);
-        data.recipients.forEach(r => this.recipients.add(client.users.update(r)));
+        for (const r of data.recipients) this.recipients.add(client.users.update(r));
         this.update(data);
     }
 
-    protected update(data: Partial<RawGroupChannel>): void {
+    protected override update(data: Partial<RawGroupChannel>): void {
         super.update(data);
         if (data.application_id !== undefined) {
             this.application = this.client.application.id === data.application_id ? this.client.application : undefined;
@@ -78,7 +78,7 @@ export default class GroupChannel extends Channel {
         }
         if (data.recipients !== undefined) {
             for (const id of this.recipients.keys()) {
-                if (!data.recipients.find(r => r.id === id)) {
+                if (!data.recipients.some(r => r.id === id)) {
                     this.recipients.delete(id);
                 }
             }
