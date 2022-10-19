@@ -270,9 +270,6 @@
             "private-constructor",
             "protected-constructor",
             "constructor",
-            "private-set",
-            "protected-set",
-            "set",
             "private-static-method",
             "protected-static-method",
             "static-method",
@@ -281,13 +278,17 @@
             "private-get",
             "protected-get",
             "get",
+            "private-set",
+            "protected-set",
+            "set",
             "method"
           ],
           "order": "alphabetically"
         }
       }
     ],
-    "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
+    "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/indent": [
       "error",
       4,
