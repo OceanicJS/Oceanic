@@ -4,6 +4,5 @@ const { resolve } = require("path");
 const dir = resolve(`${__dirname}/../`);
 if(existsSync(`${dir}/dist`)) rmSync(`${dir}/dist`, { recursive: true });
 execSync("tsc -p tsconfig.json", { stdio: "inherit", cwd: dir });
-console.log(readFileSync(`${dir}/dist/lib/index.js`).toString());
 writeFileSync(`${dir}/dist/lib/index.js`, readFileSync(`${dir}/dist/lib/index.js`).toString().replace(/tslib.+__exportStar\(require\("\.\/types\/index"\), exports\);\r?\n/, ""))
 cpSync(`${dir}/lib/types`, `${dir}/dist/lib/types`, { recursive: true });
