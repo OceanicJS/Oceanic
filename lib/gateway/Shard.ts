@@ -898,10 +898,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 };
                 if (channel) {
                     channel.threads?.delete(packet.d.id);
-                    if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
-                        channel.lastThread = null;
-                        channel.lastThreadID = null;
-                    }
                 }
                 this.client.emit("threadDelete", thread);
                 break;
