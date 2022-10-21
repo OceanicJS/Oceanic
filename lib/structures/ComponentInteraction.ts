@@ -282,7 +282,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             || this.data.componentType === ComponentTypes.CHANNEL_SELECT
             || this.data.componentType === ComponentTypes.ROLE_SELECT
             || this.data.componentType === ComponentTypes.MENTIONABLE_SELECT
-            || this.data.componentType === ComponentTypes.USER_SELECT
+            || this.data.componentType === ComponentTypes.USER_SELECT;
     }
 
     override toJSON(): JSONComponentInteraction {
