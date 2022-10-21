@@ -24,12 +24,12 @@ import type { Uncached } from "../types/shared";
 import type { RawUser } from "../types/users";
 import type { RawMember } from "../types/guilds";
 import type { InteractionTypes } from "../Constants";
-import { ComponentTypes, InteractionResponseTypes } from "../Constants";
+import { ComponentTypes, InteractionResponseTypes, SelectMenuTypes } from "../Constants";
 import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 import TypedCollection from "../util/TypedCollection";
 
 /** Represents a component interaction. */
-export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
+export default class ComponentInteraction<V extends ComponentTypes.BUTTON | SelectMenuTypes = ComponentTypes.BUTTON | SelectMenuTypes, T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
     private _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
     private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
@@ -37,7 +37,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
-    data: MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
+    data: V extends ComponentTypes.BUTTON ? MessageComponentButtonInteractionData : MessageComponentSelectMenuInteractionData;
     /** The id of the guild this interaction was sent from, if applicable. */
     guildID: T extends AnyGuildTextChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
@@ -70,7 +70,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
                 this.data = {
                     componentType: data.data.component_type,
                     customID:      data.data.custom_id
-                };
+                } as V extends ComponentTypes.BUTTON ? MessageComponentButtonInteractionData : MessageComponentSelectMenuInteractionData;
                 break;
             }
             case ComponentTypes.STRING_SELECT:
@@ -118,7 +118,7 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
                     customID:      data.data.custom_id,
                     values:        new SelectMenuValuesWrapper(resolved, data.data.values!),
                     resolved
-                };
+                } as V extends ComponentTypes.BUTTON ? MessageComponentButtonInteractionData : MessageComponentSelectMenuInteractionData;
                 break;
             }
         }
@@ -262,13 +262,27 @@ export default class ComponentInteraction<T extends AnyTextChannelWithoutGroup |
     }
 
     /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is ComponentInteraction<AnyGuildTextChannel> {
+    inCachedGuildChannel(): this is ComponentInteraction<V, AnyGuildTextChannel> {
         return this.channel instanceof GuildChannel;
     }
 
     /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inPrivateChannel(): this is ComponentInteraction<PrivateChannel | Uncached> {
+    inPrivateChannel(): this is ComponentInteraction<V, PrivateChannel | Uncached> {
         return this.guildID === null;
+    }
+
+    /** Whether this interaction is a button interaction. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the component type. */
+    isButtonComponentInteraction(): this is ComponentInteraction<ComponentTypes.BUTTON, T> {
+        return this.data.componentType === ComponentTypes.BUTTON;
+    }
+
+    /** Whether this interaction is a select menu interaction. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the component type. */
+    isSelectMenuComponentInteraction(): this is ComponentInteraction<SelectMenuTypes, T> {
+        return this.data.componentType === ComponentTypes.STRING_SELECT
+            || this.data.componentType === ComponentTypes.CHANNEL_SELECT
+            || this.data.componentType === ComponentTypes.ROLE_SELECT
+            || this.data.componentType === ComponentTypes.MENTIONABLE_SELECT
+            || this.data.componentType === ComponentTypes.USER_SELECT
     }
 
     override toJSON(): JSONComponentInteraction {
