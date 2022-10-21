@@ -97,7 +97,7 @@ export default class Interactions {
     }
 
     /**
-     * Delete the original interaction response. Does not work with ephemeral messages.
+     * Delete the original interaction response.
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      */

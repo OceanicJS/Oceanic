@@ -208,7 +208,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
     }
 
     /**
-     * Delete the original interaction response. Does not work with ephemeral messages.
+     * Delete the original interaction response.
      */
     async deleteOriginal(): Promise<void> {
         return this.client.rest.interactions.deleteOriginalMessage(this.applicationID, this.token);
