@@ -175,8 +175,6 @@ export default class Guild extends Base {
     owner?: User;
     /** The ID of the owner of this guild. */
     ownerID: string;
-    /** The permissions of the current user in this guild (only present when getting the current user's guilds). */
-    permissions?: Permission;
     /** The [preferred locale](https://discord.com/developers/docs/reference#locales) of this guild. */
     preferredLocale: string;
     /** If this guild has the boost progress bar enabled. */
@@ -466,9 +464,6 @@ export default class Guild extends Base {
         if (data.owner_id !== undefined) {
             this.ownerID = data.owner_id;
             this.owner = this.client.users.get(data.owner_id)!;
-        }
-        if (data.permissions !== undefined) {
-            this.permissions = new Permission(data.permissions);
         }
         if (data.preferred_locale !== undefined) {
             this.preferredLocale = data.preferred_locale;
@@ -1266,7 +1261,6 @@ export default class Guild extends Base {
             name:                        this.name,
             nsfwLevel:                   this.nsfwLevel,
             ownerID:                     this.ownerID,
-            permissions:                 this.permissions?.toJSON(),
             preferredLocale:             this.preferredLocale,
             premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
             premiumSubscriptionCount:    this.premiumSubscriptionCount,

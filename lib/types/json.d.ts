@@ -263,7 +263,6 @@ export interface JSONGuild extends JSONBase {
     name: string;
     nsfwLevel: GuildNSFWLevels;
     ownerID: string;
-    permissions?: JSONPermission;
     preferredLocale: string;
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
