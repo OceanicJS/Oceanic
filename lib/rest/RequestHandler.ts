@@ -41,7 +41,7 @@ export default class RequestHandler {
         this.latencyRef = {
             lastTimeOffsetCheck: 0,
             latency:             options.ratelimiterOffset ?? 0,
-            raw:                 Array.from({ length: 10 }).fill(options.ratelimiterOffset) as Array<number>,
+            raw:                 Array.from({ length: 10 }).fill(options.ratelimiterOffset ?? 0) as Array<number>,
             timeOffsets:         Array.from({ length: 10 }).fill(0) as Array<number>,
             timeoffset:          0
         };
