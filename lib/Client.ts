@@ -171,7 +171,7 @@ export default class Client extends TypedEmitter<ClientEvents> {
             if (!data) {
                 throw new Error("AutoConcurrency failed, missing required information from Discord.");
             }
-            this.shards.options.concurrency = data.maxConcurrency ?? 1;
+            this.shards.options.concurrency = data.sessionStartLimit.maxConcurrency ?? 1;
         }
 
 
