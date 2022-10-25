@@ -17,17 +17,17 @@ import type {
     RESTApplication,
     RevokeTokenOptions
 } from "../types/oauth";
-import type { RawGuild, RESTMember } from "../types/guilds";
+import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import { BASE_URL } from "../Constants";
 import Application from "../structures/Application";
 import PartialApplication from "../structures/PartialApplication";
 import Member from "../structures/Member";
-import Guild from "../structures/Guild";
 import Webhook from "../structures/Webhook";
 import Integration from "../structures/Integration";
 import type RESTManager from "../rest/RESTManager";
 import OAuthHelper from "../rest/OAuthHelper";
+import OAuthGuild from "../structures/OAuthGuild";
 import { FormData } from "undici";
 
 /** Various methods for interacting with oauth. */
@@ -183,15 +183,13 @@ export default class OAuth {
     }
 
     /**
-     * Get the currently authenticated user's guilds.
-     *
-     * Note: This does NOT add the guilds to the client's cache.
+     * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
      */
-    async getCurrentGuilds(): Promise<Array<Guild>> {
-        return this.#manager.authRequest<Array<RawGuild>>({
+    async getCurrentGuilds(): Promise<Array<OAuthGuild>> {
+        return this.#manager.authRequest<Array<RawOAuthGuild>>({
             method: "GET",
             path:   Routes.OAUTH_GUILDS
-        }).then(data => data.map(d => new Guild(d, this.#manager.client)));
+        }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
     }
 
     /** Get a helper instance that can be used with a specific bearer token. */

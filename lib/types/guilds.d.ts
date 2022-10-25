@@ -693,3 +693,12 @@ export interface StickerPack {
     skuID: string;
     stickers: Array<Sticker>;
 }
+
+export interface RawOAuthGuild {
+    features: Array<GuildFeature>;
+    icon: string | null;
+    id: string;
+    name: string;
+    owner: boolean;
+    permissions: string;
+}

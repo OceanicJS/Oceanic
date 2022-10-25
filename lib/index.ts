@@ -39,6 +39,8 @@ export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";
 export { default as ModalSubmitInteraction } from "./structures/ModalSubmitInteraction";
 export { default as OAuth } from "./routes/OAuth";
+export { default as OAuthGuild } from "./structures/OAuthGuild";
+export { default as OAuthHelper } from "./rest/OAuthHelper";
 export { default as PartialApplication } from "./structures/PartialApplication";
 export { default as Permission } from "./structures/Permission";
 export { default as PermissionOverwrite } from "./structures/PermissionOverwrite";
@@ -49,6 +51,7 @@ export { default as PublicThreadChannel } from "./structures/PublicThreadChannel
 export { default as RESTManager } from "./rest/RESTManager";
 export { default as Role } from "./structures/Role";
 export * as Routes from "./util/Routes";
+export { default as SelectMenuValuesWrapper } from "./util/SelectMenuValuesWrapper";
 export { default as SequentialBucket } from "./rest/SequentialBucket";
 export { default as Shard } from "./gateway/Shard";
 export { default as ShardManager } from "./gateway/ShardManager";

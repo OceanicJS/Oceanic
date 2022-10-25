@@ -9,12 +9,12 @@ import type {
     RESTApplication,
     RevokeTokenOptions
 } from "../types/oauth";
-import type { RawGuild, RESTMember } from "../types/guilds";
+import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import PartialApplication from "../structures/PartialApplication";
 import Integration from "../structures/Integration";
 import Member from "../structures/Member";
-import Guild from "../structures/Guild";
+import OAuthGuild from "../structures/OAuthGuild";
 import { FormData } from "undici";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */
@@ -92,16 +92,14 @@ export default class OAuthHelper {
     }
 
     /**
-     * Get the currently authenticated user's guilds.
-     *
-     * Note: This does NOT add the guilds to the client's cache.
+     * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
      */
-    async getCurrentGuilds(): Promise<Array<Guild>> {
-        return this.#manager.request<Array<RawGuild>>({
+    async getCurrentGuilds(): Promise<Array<OAuthGuild>> {
+        return this.#manager.request<Array<RawOAuthGuild>>({
             method: "GET",
             path:   Routes.OAUTH_GUILDS,
             auth:   this.#token
-        }).then(data => data.map(guild => new Guild(guild, this.#manager.client)));
+        }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
     }
 
 

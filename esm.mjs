@@ -37,6 +37,8 @@ const Member = (await import("./dist/lib/structures/Member.js")).default.default
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
 const OAuth = (await import("./dist/lib/routes/OAuth.js")).default.default;
+const OAuthGuild = (await import ("./dist/lib/structures/OAuthGuild")).default.default;
+const OAuthHelper = (await import ("./dist/lib/rest/OAuthHelper")).default.default;
 const PartialApplication = (await import("./dist/lib/structures/PartialApplication.js")).default.default;
 const Permission = (await import("./dist/lib/structures/Permission.js")).default.default;
 const PermissionOverwrite = (await import("./dist/lib/structures/PermissionOverwrite.js")).default.default;
@@ -47,6 +49,7 @@ const PublicThreadChannel = (await import("./dist/lib/structures/PublicThreadCha
 const RESTManager = (await import("./dist/lib/rest/RESTManager.js")).default.default;
 const Role = (await import("./dist/lib/structures/Role.js")).default.default;
 const Routes = (await import("./dist/lib/util/Routes.js")).default;
+const SelectMenuValuesWrapper = (await import ("./dist/lib/util/SelectMenuValuesWrapper")).default.default;
 const SequentialBucket = (await import("./dist/lib/rest/SequentialBucket.js")).default.default;
 const Shard = (await import("./dist/lib/gateway/Shard.js")).default.default;
 const ShardManager = (await import("./dist/lib/gateway/ShardManager.js")).default.default;
@@ -106,6 +109,8 @@ export {
     Message,
     ModalSubmitInteraction,
     OAuth,
+    OAuthGuild,
+    OAuthHelper,
     PartialApplication,
     Permission,
     PermissionOverwrite,
@@ -116,6 +121,7 @@ export {
     RESTManager,
     Role,
     Routes,
+    SelectMenuValuesWrapper,
     SequentialBucket,
     Shard,
     ShardManager,

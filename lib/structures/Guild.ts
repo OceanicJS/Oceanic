@@ -171,8 +171,6 @@ export default class Guild extends Base {
     name: string;
     /** The [nsfw level](https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level) of this guild. */
     nsfwLevel: GuildNSFWLevels;
-    /** If the current user is the owner of this guild (only present when getting the current user's guilds). */
-    oauthOwner?: boolean;
     /** The owner of this guild. */
     owner?: User;
     /** The ID of the owner of this guild. */
@@ -276,6 +274,7 @@ export default class Guild extends Base {
         this.verificationLevel = data.verification_level;
         this.voiceStates = new TypedCollection(VoiceState, client);
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
+        console.log(data);
         for (const role of data.roles) {
             this.roles.update(role, data.id);
         }
@@ -463,9 +462,6 @@ export default class Guild extends Base {
         }
         if (data.nsfw_level !== undefined) {
             this.nsfwLevel = data.nsfw_level;
-        }
-        if (data.owner !== undefined) {
-            this.oauthOwner = data.owner;
         }
         if (data.owner_id !== undefined) {
             this.ownerID = data.owner_id;
