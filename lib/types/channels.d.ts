@@ -166,13 +166,13 @@ export interface EditGroupDMOptions {
 }
 
 export interface EditGuildChannelOptions {
-    /** [Forum Thread] The ID of the forum available tags applied on the channel. */
+    /** [Forum Thread] The ID of the forum available tags applied on the channel. A maximum of 5 can be applied. */
     appliedTags?: Array<string>;
     /** [Thread] If the thread is archived. */
     archived?: boolean;
     /** [Thread] The duration after which the thread will be archived. */
     autoArchiveDuration?: ThreadAutoArchiveDuration;
-    /** [Forum] The {@link Types/Channels.ForumTag | tags} available in the channel. */
+    /** [Forum] The {@link Types/Channels.ForumTag | tags} available in the channel. A maximum of 20 can be present. */
     availableTags?: Array<Omit<ForumTag, "id"> & {
         /** The ID of this tag. Omit if you want to create a new tag. */
         id?: string;
