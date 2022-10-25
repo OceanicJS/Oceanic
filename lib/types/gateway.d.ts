@@ -126,7 +126,6 @@ export interface GetGatewayResponse {
 }
 
 export interface RawGetBotGatewayResponse extends GetGatewayResponse {
-    max_concurrency?: number;
     session_start_limit: RawSessionStartLimit;
     shards: number;
 }
@@ -147,7 +146,6 @@ export interface SessionStartLimit {
 
 
 export interface GetBotGatewayResponse extends GetGatewayResponse {
-    maxConcurrency?: number;
     sessionStartLimit: SessionStartLimit;
     shards: number;
 }

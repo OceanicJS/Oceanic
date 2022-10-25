@@ -60,7 +60,6 @@ export default class RESTManager {
             path:   Routes.GATEWAY_BOT
         }).then(data => ({
             url:               data.url,
-            maxConcurrency:    data.max_concurrency,
             shards:            data.shards,
             sessionStartLimit: {
                 total:          data.session_start_limit.total,
