@@ -168,7 +168,7 @@ export default class RequestHandler {
                     latency = Date.now() - latency;
                     if (!this.options.disableLatencyCompensation) {
                         this.latencyRef.raw.push(latency);
-                        this.latencyRef.latency = this.latencyRef.latency - Math.trunc(this.latencyRef.raw.shift()! / 10) + Math.trunc(latency / 10);
+                        this.latencyRef.latency = this.latencyRef.latency - Math.trunc(this.latencyRef.raw.shift() ?? 0 / 10) + Math.trunc(latency / 10);
                     }
                     let resBody: Buffer | string | Record<string, unknown> | null;
                     if (res.status === 204) {
