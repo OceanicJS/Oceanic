@@ -145,6 +145,9 @@ export default class ShardManager extends Collection<number, Shard> {
                     this.#client.ready = false;
                     this.#client.startTime = 0;
                     this.#client.emit("disconnect");
+                })
+                .on("preReady", () => {
+                    this.#client.emit("shardPreReady", id);
                 });
         }
 
