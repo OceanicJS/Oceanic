@@ -823,6 +823,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     url += "/";
                 }
                 this.resumeURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
+                this.sessionID = packet.d.session_id;
 
                 for (const guild of packet.d.guilds) {
                     this.client.guilds.delete(guild.id);
