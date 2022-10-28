@@ -635,6 +635,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const message = channel?.messages?.get(packet.d.id);
                 if (channel) {
                     channel.messages?.delete(packet.d.id);
+                    if (channel.lastMessageID === packet.d.id) {
+                        channel.lastMessageID = null;
+                        channel.lastMessage = null;
+                    }
                 }
                 this.client.emit("messageDelete", message ?? {
                     channel:   channel ?? { id: packet.d.channel_id },
@@ -900,6 +904,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 };
                 if (channel) {
                     channel.threads?.delete(packet.d.id);
+                    if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
+                        channel.lastThread = null;
+                        channel.lastThreadID = null;
+                    }
                 }
                 this.client.emit("threadDelete", thread);
                 break;
