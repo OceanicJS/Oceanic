@@ -173,11 +173,17 @@ export default class Util {
             let mime: string | undefined;
             const magic = this.getMagic(img);
             switch (magic) {
-                case "47494638": { mime = "image/gif"; break;
+                case "47494638": {
+                    mime = "image/gif";
+                    break;
                 }
-                case "89504E47": { mime = "image/png"; break;
+                case "89504E47": {
+                    mime = "image/png";
+                    break;
                 }
-                case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": { mime = "image/jpeg"; break;
+                case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": {
+                    mime = "image/jpeg";
+                    break;
                 }
             }
             if (!mime) {

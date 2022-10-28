@@ -119,8 +119,8 @@ export const GUILD_APPLICATION_COMMAND_PERMISSIONS = (applicationID: string, gui
 export const INTERACTION_CALLBACK                  = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
 
 // Misc
-export const GATEWAY     = "/gateway" as const;
-export const GATEWAY_BOT = "/gateway/bot" as const;
-export const USER        = (userID: string) => `/users/${userID}` as const;
-export const MESSAGE_LINK = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
+export const GATEWAY             = "/gateway" as const;
+export const GATEWAY_BOT         = "/gateway/bot" as const;
+export const USER                = (userID: string) => `/users/${userID}` as const;
+export const MESSAGE_LINK        = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
 export const NITRO_STICKER_PACKS = "/sticker-packs" as const;
