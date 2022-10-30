@@ -426,6 +426,8 @@ export enum OAuthScopes {
     MESSAGES_READ = "messages.read",
     /** allows your app to know a user's friends and implicit relationships - requires Discord approval */
     RELATIONSHIPS_READ = "relationships.read",
+    /** allows your app to update your connection and metadata for the app */
+    ROLE_CONNECTIONS_WRITE = "role_connection.write",
     /** for local rpc server access, this allows you to control a user's local Discord client - requires Discord approval */
     RPC = "rpc",
     /** for local rpc server access, this allows you to receive notifications pushed out to the user - requires Discord approval */
