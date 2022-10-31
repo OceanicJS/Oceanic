@@ -363,6 +363,9 @@ export default class Guild extends Base {
 
     // true = `memberCount`
     private updateMemberLimit(toAdd: true | number): void {
+        if (this.members.limit === Infinity || this.client.options.disableMemberLimitScaling) {
+            return;
+        }
         const original = this.members.limit;
         const num = toAdd === true ? this.memberCount : this.members.limit + toAdd;
         const round = 10 ** (Math.floor(Math.log10(num)) - 1);

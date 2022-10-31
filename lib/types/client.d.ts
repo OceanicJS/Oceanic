@@ -24,6 +24,11 @@ export interface ClientOptions {
      * @defaultValue 4096
      */
     defaultImageSize?: number;
+    /**
+     * When member limits are set on guilds, the limit is automatically raised if needed when requesting members from the gateway. This can be buggy and may not function correctly.
+     * @defaultValue false
+     */
+    disableMemberLimitScaling?: boolean;
     /** The gateway options. */
     gateway?: GatewayOptions;
     /** The options for the request handler. */

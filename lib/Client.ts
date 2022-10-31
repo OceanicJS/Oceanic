@@ -81,8 +81,9 @@ export default class Client extends TypedEmitter<ClientEvents> {
                 messages: options?.collectionLimits?.messages ?? 100,
                 users:    options?.collectionLimits?.users ?? Infinity
             },
-            defaultImageFormat: options?.defaultImageFormat ?? "png",
-            defaultImageSize:   options?.defaultImageSize ?? 4096
+            defaultImageFormat:        options?.defaultImageFormat ?? "png",
+            defaultImageSize:          options?.defaultImageSize ?? 4096,
+            disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false
         };
         this.voiceAdapters = new Map();
         this.channelGuildMap = {};
