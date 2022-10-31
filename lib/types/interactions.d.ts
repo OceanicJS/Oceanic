@@ -257,11 +257,11 @@ export type GuildCommandInteraction = CommandInteraction<AnyGuildTextChannel>;
 export type PrivateCommandInteraction = Omit<CommandInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions">;
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
-export type GuildComponentButtonInteraction = Omit<ComponentInteraction<AnyGuildTextChannel>, "data"> & { data: MessageComponentButtonInteractionData; };
-export type GuildComponentSelectMenuInteraction = Omit<ComponentInteraction<AnyGuildTextChannel>, "data"> & { data: MessageComponentSelectMenuInteractionData; };
+export type GuildComponentButtonInteraction = Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyGuildTextChannel>, "data"> & { data: MessageComponentButtonInteractionData; };
+export type GuildComponentSelectMenuInteraction = Omit<ComponentInteraction<SelectMenuTypes, AnyGuildTextChannel>, "data"> & { data: MessageComponentSelectMenuInteractionData; };
 export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
-export type PrivateComponentButtonInteraction = Omit<ComponentInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> & { data: MessageComponentButtonInteractionData; };
-export type PrivateComponentSelectMenuInteraction = Omit<ComponentInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> & { data: MessageComponentSelectMenuInteractionData; };
+export type PrivateComponentButtonInteraction = Omit<ComponentInteraction<ComponentTypes.BUTTON, PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> & { data: MessageComponentButtonInteractionData; };
+export type PrivateComponentSelectMenuInteraction = Omit<ComponentInteraction<SelectMenuTypes, PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> & { data: MessageComponentSelectMenuInteractionData; };
 export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentInteraction = GuildComponentInteraction | PrivateComponentInteraction;
 
