@@ -368,10 +368,13 @@ export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
 export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
 
 export enum ChannelFlags {
+    GUILD_FEED_REMOVED      = 1 << 0,
     /** For threads, if this thread is pinned in a forum channel. */
-    PINNED             = 1 << 1,
+    PINNED                  = 1 << 1,
+    ACTIVE_CHANNELS_REMOVED = 1 << 2,
     /** For forums, if tags are required when creating threads. */
-    REQUIRE_TAG = 1 << 4
+    REQUIRE_TAG             = 1 << 4,
+    IS_SPAM                 = 1 << 5
 }
 
 export enum SortOrderTypes {
