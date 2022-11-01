@@ -251,6 +251,7 @@ export const ConnectionServices = [
     "spotify",
     "skype",
     "steam",
+    "tiktok",
     "twitch",
     "twitter",
     "xbox",
