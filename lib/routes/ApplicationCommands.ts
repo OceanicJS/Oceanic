@@ -43,6 +43,7 @@ export default class ApplicationCommands {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
+                nsfw:                       opt.nsfw,
                 options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }))
@@ -68,6 +69,7 @@ export default class ApplicationCommands {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
+                nsfw:                       opt.nsfw,
                 options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }))
@@ -91,6 +93,7 @@ export default class ApplicationCommands {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
+                nsfw:                       opt.nsfw,
                 options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }
@@ -115,6 +118,7 @@ export default class ApplicationCommands {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
+                nsfw:                       opt.nsfw,
                 options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o)),
                 type:                       opt.type
             }
@@ -164,6 +168,7 @@ export default class ApplicationCommands {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
+                nsfw:                       opt.nsfw,
                 options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o))
             }
         }).then(data => new ApplicationCommand(data, this.#manager.client) as never);
@@ -188,6 +193,7 @@ export default class ApplicationCommands {
                 dm_permission:              opt.dmPermission,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
+                nsfw:                       opt.nsfw,
                 options:                    opt.options?.map(o => this.#manager.client.util.optionToRaw(o))
             }
         }).then(data => new ApplicationCommand(data, this.#manager.client) as never);
