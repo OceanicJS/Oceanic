@@ -62,7 +62,8 @@ export enum UserFlags {
     VERIFIED_DEVELOPER    = 1 << 17,
     CERTIFIED_MODERATOR   = 1 << 18,
     BOT_HTTP_INTERACTIONS = 1 << 19,
-    SPAMMER               = 1 << 20
+    SPAMMER               = 1 << 20,
+    ACTIVE_DEVELOPER      = 1 << 22,
 }
 
 export enum ApplicationFlags {
@@ -79,6 +80,7 @@ export enum ApplicationFlags {
     GATEWAY_MESSAGE_CONTENT_LIMITED  = 524288,
     EMBEDDED_FIRST_PARTY             = 1048576,
     APPLICATION_COMMAND_BADGE        = 2097152,
+    ACTIVE                           = 16777216
 }
 
 export const GuildFeatures = [

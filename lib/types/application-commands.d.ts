@@ -16,6 +16,7 @@ export interface RawApplicationCommand {
     name: string;
     name_localizations?: Record<string, string> | null;
     name_localized?: string;
+    nsfw?: boolean;
     options?: Array<RawApplicationCommandOption>;
     type: ApplicationCommandTypes;
     version: string;
@@ -155,6 +156,8 @@ export interface CreateApplicationCommandOptionsBase<T extends ApplicationComman
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
     nameLocalizations?: Record<string, string> | null;
+    /** Whether the command is age restricted. */
+    nsfw?: boolean;
     /** The type of the command. */
     type: T;
 }

@@ -40,6 +40,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     nameLocalizations?: Record<string, string> | null;
     /** The description of this application command in the requested locale. */
     nameLocalized?: string;
+    /** Whether the command is age restricted. */
+    nsfw?: boolean;
     /** The options on this command. Only valid for `CHAT_INPUT`. */
     options?: Array<ApplicationCommandOptions>;
     /** The [type](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types) of this command. */
@@ -59,6 +61,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
         this.nameLocalized = data.name_localized;
+        this.nsfw = data.nsfw;
         this.options = data.options?.map(o => client.util.optionToParsed(o));
         this.type = (data.type ?? ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;
@@ -140,6 +143,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
             guildID:                  this.guildID ?? undefined,
             name:                     this.name,
             nameLocalizations:        this.nameLocalizations,
+            nsfw:                     this.nsfw,
             options:                  this.options,
             type:                     this.type,
             version:                  this.version

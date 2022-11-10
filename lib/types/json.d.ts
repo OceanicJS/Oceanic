@@ -106,6 +106,7 @@ export interface JSONApplicationCommand extends JSONBase {
     guildID?: string;
     name: string;
     nameLocalizations?: Record<string, string> | null;
+    nsfw?: boolean;
     options?: Array<ApplicationCommandOptions>;
     type: ApplicationCommandTypes;
     version: string;
