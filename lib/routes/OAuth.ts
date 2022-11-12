@@ -185,17 +185,25 @@ export default class OAuth {
 
     /**
      * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
+     * @param options The options for getting the current user's guilds.
      */
     async getCurrentGuilds(options?: GetCurrentGuildsOptions): Promise<Array<OAuthGuild>> {
+        const query = new URLSearchParams();
+        if (options?.after) {
+            query.set("after", options.after);
+        }
+        if (options?.before) {
+            query.set("before", options.before);
+        }
+        if (options?.limit) {
+            query.set("limit", options.limit.toString());
+        }
+        if (options?.withCounts !== undefined) {
+            query.set("with_counts", options?.withCounts.toString());
+        }
         return this.#manager.authRequest<Array<RawOAuthGuild>>({
             method: "GET",
-            path:   Routes.OAUTH_GUILDS,
-            json:   {
-                after:       options?.after,
-                before:      options?.before,
-                limit:       options?.limit,
-                with_counts: options?.withCounts
-            }
+            path:   Routes.OAUTH_GUILDS
         }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
     }
 
