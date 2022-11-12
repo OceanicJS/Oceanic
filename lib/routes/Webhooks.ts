@@ -68,7 +68,7 @@ export default class Webhooks {
      */
     async deleteMessage(id: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions): Promise<void> {
         const query = new URLSearchParams();
-        if (options?.threadID) {
+        if (options?.threadID !== undefined) {
             query.set("thread_id", options.threadID);
         }
         await this.#manager.authRequest<null>({
@@ -127,7 +127,7 @@ export default class Webhooks {
             delete options.files;
         }
         const query = new URLSearchParams();
-        if (options.threadID) {
+        if (options.threadID !== undefined) {
             query.set("thread_id", options.threadID);
         }
         return this.#manager.authRequest<RawMessage>({
@@ -178,10 +178,10 @@ export default class Webhooks {
             delete options.files;
         }
         const query = new URLSearchParams();
-        if (options.wait) {
-            query.set("wait", "true");
+        if (options.wait !== undefined) {
+            query.set("wait", options.wait.toString());
         }
-        if (options.threadID) {
+        if (options.threadID !== undefined) {
             query.set("thread_id", options.threadID);
         }
         return this.#manager.authRequest<RawMessage | null>({
@@ -218,8 +218,8 @@ export default class Webhooks {
     async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
     async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
-        if (options.wait) {
-            query.set("wait", "true");
+        if (options.wait !== undefined) {
+            query.set("wait", options.wait.toString());
         }
         return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
@@ -243,8 +243,8 @@ export default class Webhooks {
     async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
     async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
-        if (options.wait) {
-            query.set("wait", "true");
+        if (options.wait !== undefined) {
+            query.set("wait", options.wait.toString());
         }
         return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
@@ -301,7 +301,7 @@ export default class Webhooks {
      */
     async getMessage<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
         const query = new URLSearchParams();
-        if (threadID) {
+        if (threadID !== undefined) {
             query.set("thread_id", threadID);
         }
         return this.#manager.authRequest<RawMessage>({

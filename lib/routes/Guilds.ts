@@ -969,7 +969,7 @@ export default class Guilds {
      */
     async get(id: string, withCounts?: boolean): Promise<Guild> {
         const query = new URLSearchParams();
-        if (withCounts) {
+        if (withCounts !== undefined) {
             query.set("with_counts", withCounts.toString());
         }
         return this.#manager.authRequest<RawGuild>({
@@ -1006,16 +1006,16 @@ export default class Guilds {
     async getAuditLog(id: string, options?: GetAuditLogOptions): Promise<AuditLog> {
         const guild = this.#manager.client.guilds.get(id);
         const query = new URLSearchParams();
-        if (options?.actionType) {
+        if (options?.actionType !== undefined) {
             query.set("action_type", options.actionType.toString());
         }
-        if (options?.before) {
+        if (options?.before !== undefined) {
             query.set("before", options.before);
         }
-        if (options?.limit) {
+        if (options?.limit !== undefined) {
             query.set("limit", options.limit.toString());
         }
-        if (options?.userID) {
+        if (options?.userID !== undefined) {
             query.set("user_id", options.userID);
         }
         return this.#manager.authRequest<RawAuditLog>({
@@ -1080,13 +1080,13 @@ export default class Guilds {
     async getBans(id: string, options?: GetBansOptions): Promise<Array<Ban>> {
         const _getBans = async (_options?: GetBansOptions): Promise<Array<Ban>> => {
             const query = new URLSearchParams();
-            if (_options?.after) {
+            if (_options?.after !== undefined) {
                 query.set("after", _options.after);
             }
-            if (_options?.before) {
+            if (_options?.before !== undefined) {
                 query.set("before", _options.before);
             }
-            if (_options?.limit) {
+            if (_options?.limit !== undefined) {
                 query.set("limit", _options.limit.toString());
             }
             return this.#manager.authRequest<Array<RawBan>>({
@@ -1216,10 +1216,10 @@ export default class Guilds {
      */
     async getMembers(id: string, options?: GetMembersOptions): Promise<Array<Member>> {
         const query = new URLSearchParams();
-        if (options?.after) {
+        if (options?.after !== undefined) {
             query.set("after", options.after);
         }
-        if (options?.limit) {
+        if (options?.limit !== undefined) {
             query.set("limit", options.limit.toString());
         }
         return this.#manager.authRequest<Array<RESTMember>>({
@@ -1247,10 +1247,10 @@ export default class Guilds {
      */
     async getPruneCount(id: string, options?: GetPruneCountOptions): Promise<number> {
         const query = new URLSearchParams();
-        if (options?.days) {
+        if (options?.days !== undefined) {
             query.set("days", options.days.toString());
         }
-        if (options?.includeRoles) {
+        if (options?.includeRoles !== undefined) {
             query.set("include_roles", options.includeRoles.join(","));
         }
         return this.#manager.authRequest<{ pruned: number; }>({
@@ -1280,7 +1280,7 @@ export default class Guilds {
      */
     async getScheduledEvent(id: string, eventID: string, withUserCount?: number): Promise<GuildScheduledEvent> {
         const query = new URLSearchParams();
-        if (withUserCount) {
+        if (withUserCount !== undefined) {
             query.set("with_user_count", withUserCount.toString());
         }
         return this.#manager.authRequest<RawScheduledEvent>({
@@ -1299,17 +1299,17 @@ export default class Guilds {
     async getScheduledEventUsers(id: string, eventID: string, options?: GetScheduledEventUsersOptions): Promise<Array<ScheduledEventUser>> {
         const guild = this.#manager.client.guilds.get(id);
         const query = new URLSearchParams();
-        if (options?.after) {
+        if (options?.after !== undefined) {
             query.set("after", options.after);
         }
-        if (options?.before) {
+        if (options?.before !== undefined) {
             query.set("before", options.before);
         }
-        if (options?.limit) {
+        if (options?.limit !== undefined) {
             query.set("limit", options.limit.toString());
         }
         if (options?.withMember !== undefined) {
-            query.set("with_member", options.withMember ? "true" : "false");
+            query.set("with_member", options.withMember.toString());
         }
         return this.#manager.authRequest<Array<RawScheduledEventUser>>({
             method: "GET",
@@ -1330,7 +1330,7 @@ export default class Guilds {
     async getScheduledEvents(id: string, withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
         const guild = this.#manager.client.guilds.get(id);
         const query = new URLSearchParams();
-        if (withUserCount) {
+        if (withUserCount !== undefined) {
             query.set("with_user_count", withUserCount.toString());
         }
         return this.#manager.authRequest<Array<RawScheduledEvent>>({
@@ -1460,8 +1460,8 @@ export default class Guilds {
      */
     async getWidgetImage(id: string, style?: WidgetImageStyle): Promise<Buffer> {
         const query = new URLSearchParams();
-        if (style) {
-            query.set("style", style.toString());
+        if (style !== undefined) {
+            query.set("style", style);
         }
         return this.#manager.request<Buffer>({
             method: "GET",
@@ -1546,7 +1546,7 @@ export default class Guilds {
     async searchMembers(id: string, options: SearchMembersOptions): Promise<Array<Member>> {
         const query = new URLSearchParams();
         query.set("query", options.query);
-        if (options.limit) {
+        if (options.limit !== undefined) {
             query.set("limit", options.limit.toString());
         }
         return this.#manager.authRequest<Array<RESTMember>>({

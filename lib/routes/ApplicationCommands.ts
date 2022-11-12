@@ -231,8 +231,8 @@ export default class ApplicationCommands {
      */
     async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         const query = new URLSearchParams();
-        if (options?.withLocalizations) {
-            query.set("with_localizations", "true");
+        if (options?.withLocalizations !== undefined) {
+            query.set("with_localizations", options.withLocalizations.toString());
         }
         return this.#manager.authRequest<RawApplicationCommand>({
             method:  "GET",
@@ -249,8 +249,8 @@ export default class ApplicationCommands {
      */
     async getGlobalCommands(applicationID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
-        if (options?.withLocalizations) {
-            query.set("with_localizations", "true");
+        if (options?.withLocalizations !== undefined) {
+            query.set("with_localizations", options.withLocalizations.toString());
         }
         return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method:  "GET",
@@ -269,8 +269,8 @@ export default class ApplicationCommands {
      */
     async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         const query = new URLSearchParams();
-        if (options?.withLocalizations) {
-            query.set("with_localizations", "true");
+        if (options?.withLocalizations !== undefined) {
+            query.set("with_localizations", options.withLocalizations.toString());
         }
         return this.#manager.authRequest<RawApplicationCommand>({
             method:  "GET",
@@ -288,8 +288,8 @@ export default class ApplicationCommands {
      */
     async getGuildCommands(applicationID: string, guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
-        if (options?.withLocalizations) {
-            query.set("with_localizations", "true");
+        if (options?.withLocalizations !== undefined) {
+            query.set("with_localizations", options.withLocalizations.toString());
         }
         return this.#manager.authRequest<Array<RawApplicationCommand>>({
             method:  "GET",

@@ -484,14 +484,14 @@ export default class Channels {
     async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
     async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
         const query = new URLSearchParams();
-        if (options?.guildScheduledEventID) {
+        if (options?.guildScheduledEventID !== undefined) {
             query.set("guild_scheduled_event_id", options.guildScheduledEventID);
         }
-        if (options?.withCounts) {
-            query.set("with_counts", "true");
+        if (options?.withCounts !== undefined) {
+            query.set("with_counts", options.withCounts.toString());
         }
-        if (options?.withExpiration) {
-            query.set("with_expiration", "true");
+        if (options?.withExpiration !== undefined) {
+            query.set("with_expiration", options.withExpiration.toString());
         }
         return this.#manager.authRequest<RawInvite>({
             method: "GET",
@@ -556,16 +556,16 @@ export default class Channels {
     async getMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(id: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
         const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => {
             const query = new URLSearchParams();
-            if (_options?.after) {
+            if (_options?.after !== undefined) {
                 query.set("after", _options.after);
             }
-            if (_options?.around) {
+            if (_options?.around !== undefined) {
                 query.set("around", _options.around);
             }
-            if (_options?.before) {
+            if (_options?.before !== undefined) {
                 query.set("before", _options.before);
             }
-            if (_options?.limit) {
+            if (_options?.limit !== undefined) {
                 query.set("limit", _options.limit.toString());
             }
             return this.#manager.authRequest<Array<RawMessage>>({
@@ -695,10 +695,10 @@ export default class Channels {
 
         const _getReactions = async (_options?: GetReactionsOptions): Promise<Array<User>> => {
             const query = new URLSearchParams();
-            if (_options?.after) {
+            if (_options?.after !== undefined) {
                 query.set("after", _options.after);
             }
-            if (_options?.limit) {
+            if (_options?.limit !== undefined) {
                 query.set("limit", _options.limit.toString());
             }
             return this.#manager.authRequest<Array<RawUser>>({

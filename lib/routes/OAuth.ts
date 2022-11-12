@@ -189,13 +189,13 @@ export default class OAuth {
      */
     async getCurrentGuilds(options?: GetCurrentGuildsOptions): Promise<Array<OAuthGuild>> {
         const query = new URLSearchParams();
-        if (options?.after) {
+        if (options?.after !== undefined) {
             query.set("after", options.after);
         }
-        if (options?.before) {
+        if (options?.before !== undefined) {
             query.set("before", options.before);
         }
-        if (options?.limit) {
+        if (options?.limit !== undefined) {
             query.set("limit", options.limit.toString());
         }
         if (options?.withCounts !== undefined) {
