@@ -188,3 +188,14 @@ export interface TeamMember {
     /** The user associated with this team member. */
     user: User;
 }
+
+export interface GetCurrentGuildsOptions {
+    /** Get guilds after this id. */
+    after?: string;
+    /** Get guilds before this id. */
+    before?: string;
+    /** Max number of guilds to return (1-200). */
+    limit?: number;
+    /** Whether to include approximate member and presence counts. */
+    withCounts?: boolean;
+}

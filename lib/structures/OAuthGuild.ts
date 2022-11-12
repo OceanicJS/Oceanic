@@ -7,6 +7,10 @@ import * as Routes from "../util/Routes";
 
 /** Represents a guild retrieved via oauth. */
 export default class OAuthGuild extends Base {
+    /** The approximate number of members in this guild (if retrieved with counts). */
+    approximateMemberCount?: number;
+    /** The approximate number of non-offline members in this guild (if retrieved with counts). */
+    approximatePresenceCount?: number;
     /** The [features](https://discord.com/developers/docs/resources/guild#guild-object-guild-features) this guild has. */
     features: Array<GuildFeature>;
     /** The icon hash of this guild. */
@@ -19,6 +23,8 @@ export default class OAuthGuild extends Base {
     permissions: Permission;
     constructor(data: RawOAuthGuild, client: Client) {
         super(data.id, client);
+        this.approximateMemberCount = data.approximate_member_count;
+        this.approximatePresenceCount = data.approximate_presence_count;
         this.features    = data.features;
         this.name        = data.name;
         this.icon        = data.icon;

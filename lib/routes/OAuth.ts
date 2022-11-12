@@ -15,7 +15,8 @@ import type {
     RefreshTokenOptions,
     RefreshTokenResponse,
     RESTApplication,
-    RevokeTokenOptions
+    RevokeTokenOptions,
+    GetCurrentGuildsOptions
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
@@ -185,10 +186,16 @@ export default class OAuth {
     /**
      * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
      */
-    async getCurrentGuilds(): Promise<Array<OAuthGuild>> {
+    async getCurrentGuilds(options?: GetCurrentGuildsOptions): Promise<Array<OAuthGuild>> {
         return this.#manager.authRequest<Array<RawOAuthGuild>>({
             method: "GET",
-            path:   Routes.OAUTH_GUILDS
+            path:   Routes.OAUTH_GUILDS,
+            json:   {
+                after:       options?.after,
+                before:      options?.before,
+                limit:       options?.limit,
+                with_counts: options?.withCounts
+            }
         }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
     }
 
