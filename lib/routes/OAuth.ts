@@ -203,7 +203,8 @@ export default class OAuth {
         }
         return this.#manager.authRequest<Array<RawOAuthGuild>>({
             method: "GET",
-            path:   Routes.OAUTH_GUILDS
+            path:   Routes.OAUTH_GUILDS,
+            query
         }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
     }
 
