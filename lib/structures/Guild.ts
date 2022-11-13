@@ -1138,7 +1138,7 @@ export default class Guild extends Base {
      * Leave this guild.
      */
     async leave(): Promise<void> {
-        return this.client.rest.guilds.delete(this.id);
+        return this.client.rest.users.leaveGuild(this.id);
     }
 
     /** Leave the connected voice or stage channel on this guild. */
