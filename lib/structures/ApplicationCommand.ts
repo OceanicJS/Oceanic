@@ -9,6 +9,7 @@ import type {
     ApplicationCommandOptionConversion,
     ApplicationCommandOptions,
     EditApplicationCommandPermissionsOptions,
+    Locale,
     RawApplicationCommand,
     RESTGuildApplicationCommandPermissions,
     TypeToEdit
@@ -27,7 +28,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** The description of this command. Empty string for non `CHAT_INPUT` commands. */
     description: T extends ApplicationCommandTypes.CHAT_INPUT ? string : "";
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
-    descriptionLocalizations?: Record<string, string> | null;
+    descriptionLocalizations?: Record<Locale, string> | null;
     /** The description of this application command in the requested locale. */
     descriptionLocalized?: string;
     /** If this command can be used in direct messages (global commands only). */
@@ -37,7 +38,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** The name of this command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
-    nameLocalizations?: Record<string, string> | null;
+    nameLocalizations?: Record<Locale, string> | null;
     /** The description of this application command in the requested locale. */
     nameLocalized?: string;
     /** Whether the command is age restricted. */

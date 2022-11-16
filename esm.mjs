@@ -62,6 +62,7 @@ const ThreadChannel = (await import("./dist/lib/structures/ThreadChannel.js")).d
 const TypedCollection = (await import("./dist/lib/util/TypedCollection.js")).default.default;
 const TypedEmitter = (await import("./dist/lib/util/TypedEmitter.js")).default.default;
 const UnavailableGuild = (await import("./dist/lib/structures/UnavailableGuild.js")).default.default;
+const UncaughtError = (await import("./dist/lib/util/UncaughtError.js")).default.default;
 const User = (await import("./dist/lib/structures/User.js")).default.default;
 const Util = (await import("./dist/lib/util/Util.js")).default.default;
 const VoiceChannel = (await import("./dist/lib/structures/VoiceChannel.js")).default.default;

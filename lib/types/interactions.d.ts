@@ -11,6 +11,7 @@ import type {
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
 import type { Uncached } from "./shared";
+import type { Locale } from "./application-commands";
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
@@ -243,7 +244,7 @@ export interface AutocompleteChoice {
     /** The name of the choice. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
-    nameLocalizations?: Record<string, string>;
+    nameLocalizations?: Record<Locale, string>;
     /** The value of the choice. */
     value: string;
 }
