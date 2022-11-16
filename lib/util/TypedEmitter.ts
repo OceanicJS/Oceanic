@@ -1,5 +1,6 @@
 /** @module TypedEmitter */
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
+import UncaughtError from "./UncaughtError";
 import EventEmitter from "node:events";
 
 declare interface TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
@@ -21,6 +22,9 @@ declare interface TypedEmitter<Events extends Record<string | symbol, any>> exte
 class TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
     override emit<K extends keyof Events>(eventName: K, ...args: Events[K]): boolean {
         if (this.listenerCount(eventName) === 0) {
+            if (eventName === "error") {
+                throw new UncaughtError(args[0]);
+            }
             return false;
         }
         return super.emit(eventName as string, ...args as Array<any>);

@@ -87,7 +87,7 @@ export interface ClientEvents {
     debug: [info: string, shard?: number];
     /** @event Emitted when all shards disconnect. */
     disconnect: [];
-    /** @event Emitted when an error happens. */
+    /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string, shard?: number];
     /** @event Emitted when a guild becomes available. Requires the `GUILDS` intent. */
     guildAvailable: [guild: Guild];
@@ -222,7 +222,7 @@ export interface ShardEvents {
     debug: [info: string];
     /** @event Emitted when this shard disconnects.*/
     disconnect: [err?: Error];
-    /** @event Emitted when an error happens. */
+    /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string];
     /** @event Emitted when this shard has processed the READY packet from Discord. */
     preReady: [];
