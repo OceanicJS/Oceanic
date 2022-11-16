@@ -16,15 +16,15 @@ export interface RawAutoModerationRule {
 }
 
 export interface RawTriggerMetadata {
-    /** KEYWORD_PRESET */
+    /** `KEYWORD`, `KEYWORD_PRESET` */
     allow_list?: Array<string>;
-    /** KEYWORD */
+    /** `KEYWORD` */
     keyword_filter?: Array<string>;
-    /** MENTION_SPAM */
+    /** `MENTION_SPAM` */
     mention_total_limit?: number;
-    /** KEYWORD_PRESET */
+    /** `KEYWORD_PRESET` */
     presets?: Array<AutoModerationKeywordPresetTypes>;
-    /** KEYWORD */
+    /** `KEYWORD` */
     regex_patterns?: Array<string>;
 }
 
@@ -34,14 +34,14 @@ export interface RawAutoModerationAction {
 }
 
 export interface RawActionMetadata {
-    /** SEND_ALERT_MESSAGE */
+    /** `SEND_ALERT_MESSAGE` */
     channel_id: string;
-    /** TIMEOUT */
+    /** `TIMEOUT` */
     duration_seconds: number;
 }
 
 export interface TriggerMetadata {
-    /** The keywords to allow. Valid for `KEYWORD_PRESET`. */
+    /** The keywords to allow. Valid for `KEYWORD` & `KEYWORD_PRESET`. */
     allowList?: Array<string>;
     /** The keywords to filter. Valid for `KEYWORD`. */
     keywordFilter?: Array<string>;
