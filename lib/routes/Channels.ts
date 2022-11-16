@@ -92,7 +92,7 @@ export default class Channels {
         });
     }
     /**
-     * Create a direct message.
+     * Create a direct message. This will not create a new channel if you have already started a dm with the user.
      * @param recipient The ID of the recipient of the direct message.
      */
     async createDM(recipient: string): Promise<PrivateChannel> {
