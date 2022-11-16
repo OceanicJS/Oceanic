@@ -1,4 +1,5 @@
 /** @module Routes/Users */
+import type Channels from "./Channels";
 import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
 import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";
@@ -10,6 +11,11 @@ export default class Users {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
+    }
+
+    /** Alias for {@link Routes/Channels#createDM | Channels#createDM}. */
+    get createDM(): typeof Channels.prototype.createDM {
+        return this.#manager.channels.createDM.bind(this.#manager.channels);
     }
 
     /**
