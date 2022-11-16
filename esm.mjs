@@ -135,6 +135,7 @@ export {
     TypedCollection,
     TypedEmitter,
     UnavailableGuild,
+    UncaughtError,
     User,
     Util,
     VoiceChannel,
