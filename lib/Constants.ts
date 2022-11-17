@@ -84,6 +84,7 @@ export enum ApplicationFlags {
 }
 
 export const GuildFeatures = [
+    "APPLICATION_COMMAND_PERMISSIONS_V2",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
     "AUTO_MODERATION",
