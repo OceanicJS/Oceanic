@@ -358,7 +358,13 @@ export default class Guild extends Base {
                 }
             }
         }
+    }
 
+    private toggleFeature(feature: GuildFeature, enable: boolean, reason?: string): Promise<Guild> {
+        const newFeatures = enable ?
+            (this.features.includes(feature) ? this.features : [...this.features, feature]) :
+            this.features.filter(name => name !== feature);
+        return this.edit({ features: newFeatures, reason });
     }
 
     // true = `memberCount`
@@ -739,6 +745,31 @@ export default class Guild extends Base {
     }
 
     /**
+     * Disable the `COMMUNITY` feature for this guild. Required the **Administrator** permission.
+     * @param reason The reason for disable the feature.
+     */
+    async disableCommunity(reason?: string): Promise<Guild> {
+        return this.toggleFeature("COMMUNITY", false, reason);
+    }
+
+    /**
+     * Disable the `DISCOVERABLE` feature for this guild. Required the **Administrator** permission.
+     * @param reason The reason for disabling the feature.
+     */
+    async disableDiscovery(reason?: string): Promise<Guild> {
+        return this.toggleFeature("DISCOVERABLE", false, reason);
+    }
+
+
+    /**
+     * Disable the `INVITES_DISABLED` feature for this guild. Required the **Manage Guild** permission.
+     * @param reason The reason for disabling the feature.
+     */
+    async disableInvites(reason?: string): Promise<Guild> {
+        return this.toggleFeature("INVITES_DISABLED", true, reason);
+    }
+
+    /**
      * The url of this guild's discovery splash.
      * @param format The format the url should be.
      * @param size The dimensions of the image.
@@ -876,6 +907,31 @@ export default class Guild extends Base {
      */
     async editWidget(options: WidgetSettings): Promise<Widget> {
         return this.client.rest.guilds.editWidget(this.id, options);
+    }
+
+
+    /**
+     * Enable the `COMMUNITY` feature for this guild. Required the **Administrator** permission.
+     * @param reason The reason for enabling the feature.
+     */
+    async enableCommunity(reason?: string): Promise<Guild> {
+        return this.toggleFeature("COMMUNITY", true, reason);
+    }
+
+    /**
+     * Enable the `DISCOVERABLE` feature for this guild. Required the **Administrator** permission. The server must also be passing all discovery requirements.
+     * @param reason The reason for enabling the feature.
+     */
+    async enableDiscovery(reason?: string): Promise<Guild> {
+        return this.toggleFeature("DISCOVERABLE", true, reason);
+    }
+
+    /**
+     * Enable the `INVITES_DISABLED` feature for this guild. Required the **Manage Guild** permission.
+     * @param reason The reason for enabling the feature.
+     */
+    async enableInvites(reason?: string): Promise<Guild> {
+        return this.toggleFeature("INVITES_DISABLED", false, reason);
     }
 
     /**
