@@ -745,7 +745,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Disable the `COMMUNITY` feature for this guild. Required the **Administrator** permission.
+     * Disable the `COMMUNITY` feature for this guild. Requires the **Administrator** permission.
      * @param reason The reason for disable the feature.
      */
     async disableCommunity(reason?: string): Promise<Guild> {
@@ -753,7 +753,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Disable the `DISCOVERABLE` feature for this guild. Required the **Administrator** permission.
+     * Disable the `DISCOVERABLE` feature for this guild. Requires the **Administrator** permission.
      * @param reason The reason for disabling the feature.
      */
     async disableDiscovery(reason?: string): Promise<Guild> {
@@ -762,7 +762,7 @@ export default class Guild extends Base {
 
 
     /**
-     * Disable the `INVITES_DISABLED` feature for this guild. Required the **Manage Guild** permission.
+     * Disable the `INVITES_DISABLED` feature for this guild. Requires the **Manage Guild** permission.
      * @param reason The reason for disabling the feature.
      */
     async disableInvites(reason?: string): Promise<Guild> {
@@ -911,7 +911,7 @@ export default class Guild extends Base {
 
 
     /**
-     * Enable the `COMMUNITY` feature for this guild. Required the **Administrator** permission.
+     * Enable the `COMMUNITY` feature for this guild. Requires the **Administrator** permission.
      * @param reason The reason for enabling the feature.
      */
     async enableCommunity(reason?: string): Promise<Guild> {
@@ -919,7 +919,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Enable the `DISCOVERABLE` feature for this guild. Required the **Administrator** permission. The server must also be passing all discovery requirements.
+     * Enable the `DISCOVERABLE` feature for this guild. Requires the **Administrator** permission. The server must also be passing all discovery requirements.
      * @param reason The reason for enabling the feature.
      */
     async enableDiscovery(reason?: string): Promise<Guild> {
@@ -927,7 +927,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Enable the `INVITES_DISABLED` feature for this guild. Required the **Manage Guild** permission.
+     * Enable the `INVITES_DISABLED` feature for this guild. Requires the **Manage Guild** permission.
      * @param reason The reason for enabling the feature.
      */
     async enableInvites(reason?: string): Promise<Guild> {
