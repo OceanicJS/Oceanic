@@ -65,7 +65,8 @@ export enum UserFlags {
     CERTIFIED_MODERATOR   = 1 << 18,
     BOT_HTTP_INTERACTIONS = 1 << 19,
     SPAMMER               = 1 << 20,
-    ACTIVE_DEVELOPER      = 1 << 22,
+
+    ACTIVE_DEVELOPER = 1 << 22,
 }
 
 export enum ApplicationFlags {

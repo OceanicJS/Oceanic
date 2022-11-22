@@ -344,7 +344,7 @@ export default class InteractionOptionsWrapper {
     }
 
     /**
-     * If present, returns the top level subcommand. This only goes one level deep, to get the subcommand of a subcommandgroup, you must call this twice in a ro.
+     * If present, returns the top level subcommand. This will return an array of the subcommand name, and subcommand group name, if applicable.
      * @param required If true, an error will be thrown if the option is not present.
      */
     getSubCommand<T extends SubCommandArray = SubCommandArray>(required?: false): T | undefined;
