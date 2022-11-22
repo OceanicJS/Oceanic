@@ -1,7 +1,7 @@
 /** @module Types/JSON */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { InstallParams, TeamMember } from "./oauth";
-import type { ApplicationCommandOptions, Locale } from "./application-commands";
+import type { ApplicationCommandOptions, LocaleMap } from "./application-commands";
 import type {
     ApplicationCommandInteractionData,
     AutocompleteInteractionData,
@@ -101,11 +101,11 @@ export interface JSONApplicationCommand extends JSONBase {
     applicationID: string;
     defaultMemberPermissions?: JSONPermission;
     description: string;
-    descriptionLocalizations?: Record<Locale, string> | null;
+    descriptionLocalizations?: LocaleMap | null;
     dmPermission?: boolean;
     guildID?: string;
     name: string;
-    nameLocalizations?: Record<Locale, string> | null;
+    nameLocalizations?: LocaleMap | null;
     nsfw?: boolean;
     options?: Array<ApplicationCommandOptions>;
     type: ApplicationCommandTypes;

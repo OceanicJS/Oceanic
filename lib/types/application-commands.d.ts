@@ -8,13 +8,13 @@ export interface RawApplicationCommand {
     application_id: string;
     default_member_permissions: string | null;
     description: string;
-    description_localizations?: Record<Locale, string> | null;
+    description_localizations?: LocaleMap | null;
     description_localized?: string;
     dm_permission?: boolean;
     guild_id?: string;
     id: string;
     name: string;
-    name_localizations?: Record<Locale, string> | null;
+    name_localizations?: LocaleMap | null;
     name_localized?: string;
     nsfw?: boolean;
     options?: Array<RawApplicationCommandOption>;
@@ -27,14 +27,14 @@ export interface RawApplicationCommandOption {
     channel_types?: Array<GuildChannelTypes>;
     choices?: Array<RawApplicationCommandOptionChoice>;
     description: string;
-    description_localizations?: Record<Locale, string> | null;
+    description_localizations?: LocaleMap | null;
     description_localized?: string;
     max_length?: number;
     max_value?: number;
     min_length?: number;
     min_value?: number;
     name: string;
-    name_localizations?: Record<Locale, string> | null;
+    name_localizations?: LocaleMap | null;
     name_localized?: string;
     options?: Array<RawApplicationCommandOption>;
     required?: boolean;
@@ -46,13 +46,13 @@ export interface CombinedApplicationCommandOption {
     channelTypes?: Array<GuildChannelTypes>;
     choices?: Array<ApplicationCommandOptionsChoices>;
     description: string;
-    descriptionLocalizations?: Record<Locale, string> | null;
+    descriptionLocalizations?: LocaleMap | null;
     maxLength?: number;
     maxValue?: number;
     minLength?: number;
     minValue?: number;
     name: string;
-    nameLocalizations?: Record<Locale, string> | null;
+    nameLocalizations?: LocaleMap | null;
     options?: Array<CombinedApplicationCommandOption>;
     required?: boolean;
     type: ApplicationCommandOptionTypes;
@@ -60,7 +60,7 @@ export interface CombinedApplicationCommandOption {
 
 export interface RawApplicationCommandOptionChoice {
     name: string;
-    name_localizations?: Record<Locale, string> | null;
+    name_localizations?: LocaleMap | null;
     value: string;
 }
 
@@ -81,11 +81,11 @@ export type ApplicationCommandOptionConversion<T extends EditApplicationCommandO
 
 export interface ApplicationCommandOptionBase<T extends ApplicationCommandOptionTypes = ApplicationCommandOptionTypes> {
     description: string;
-    descriptionLocalizations?: Record<Locale, string>;
+    descriptionLocalizations?: LocaleMap;
     /** The description of this application command in the requested locale. This cannot be sent. */
     descriptionLocalized?: string;
     name: string;
-    nameLocalizations?: Record<Locale, string>;
+    nameLocalizations?: LocaleMap;
     /** The description of this application command in the requested locale. This cannot be sent. */
     nameLocalized?: string;
     required?: T extends ApplicationCommandOptionTypes.SUB_COMMAND | ApplicationCommandOptionTypes.SUB_COMMAND_GROUP ? never : boolean;
@@ -101,7 +101,7 @@ interface ApplicationCommandOptionsChoices<T extends ApplicationCommandOptionsTy
 
 interface ApplicationCommandOptionsChoice<T extends ApplicationCommandOptionsTypesWithChoices = ApplicationCommandOptionsTypesWithChoices> {
     name: string;
-    nameLocalizations?: Record<Locale, string>;
+    nameLocalizations?: LocaleMap;
     value:
     T extends ApplicationCommandOptionTypes.STRING ? string :
         T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER ? number :
@@ -155,7 +155,7 @@ export interface CreateApplicationCommandOptionsBase<T extends ApplicationComman
     /** The name of the command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
-    nameLocalizations?: Record<Locale, string> | null;
+    nameLocalizations?: LocaleMap | null;
     /** Whether the command is age restricted. */
     nsfw?: boolean;
     /** The type of the command. */
@@ -168,7 +168,7 @@ export interface CreateChatInputApplicationCommandOptions extends CreateApplicat
     /** The description of the command. */
     description: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
-    descriptionLocalizations?: Record<Locale, string> | null;
+    descriptionLocalizations?: LocaleMap | null;
     /** See [Discord's docs](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure) for more information. Convert `snake_case` keys to `camelCase`. */
     options?: Array<ApplicationCommandOptions>;
 }
@@ -268,3 +268,4 @@ export type Locale =
     "vi" |
     "zh-CN" |
     "zh-TW";
+export type LocaleMap = Partial<Record<Locale, string>>;
