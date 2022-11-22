@@ -20,7 +20,6 @@ import type {
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
-import { BASE_URL } from "../Constants";
 import Application from "../structures/Application";
 import PartialApplication from "../structures/PartialApplication";
 import Member from "../structures/Member";
@@ -29,6 +28,8 @@ import Integration from "../structures/Integration";
 import type RESTManager from "../rest/RESTManager";
 import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
+import ExtendedUser from "../structures/ExtendedUser";
+import type { RawOAuthUser } from "../types";
 import { FormData } from "undici";
 
 /** Various methods for interacting with oauth. */
@@ -41,36 +42,15 @@ export default class OAuth {
     /**
      * Construct an oauth authorization url.
      * @param options The options to construct the url with.
+     * @deprecated Moved to {@link OAuthHelper#constructURL}. This will be removed in `1.5.0`.
      */
     static constructURL(options: OAuthURLOptions): string {
-        const params: Array<string> = [
-            `client_id=${options.clientID}`,
-            `response_type=${options.responseType ?? "code"}`,
-            `scope=${options.scopes.join("%20")}`
-        ];
-        if (options.redirectURI) {
-            params.push(`redirect_uri=${options.redirectURI}`);
-        }
-        if (typeof options.disableGuildSelect !== "undefined") {
-            params.push(`disable_guild_select=${String(options.disableGuildSelect)}`);
-        }
-        if (options.prompt) {
-            params.push(`prompt=${options.prompt}`);
-        }
-        if (options.permissions) {
-            params.push(`permissions=${options.permissions}`);
-        }
-        if (options.guildID) {
-            params.push(`guild_id=${options.guildID}`);
-        }
-        if (options.state) {
-            params.push(`state=${options.state}`);
-        }
-        return `${BASE_URL}${Routes.OAUTH_AUTHORIZE}?${params.join("&")}`;
+        return OAuthHelper.constructURL(options);
     }
 
-    get constructURL(): typeof OAuth["constructURL"] {
-        return OAuth.constructURL.bind(OAuth);
+    /** Alias for {@link OAuthHelper#constructURL}. */
+    get constructURL(): typeof OAuthHelper["constructURL"] {
+        return OAuthHelper.constructURL.bind(OAuthHelper);
     }
 
     /**
@@ -206,6 +186,18 @@ export default class OAuth {
             path:   Routes.OAUTH_GUILDS,
             query
         }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
+    }
+
+    /**
+     * Get the currently authenticated user's information.
+     *
+     * Note: This does not touch the client's cache in any way.
+     */
+    async getCurrentUser(): Promise<ExtendedUser> {
+        return this.#manager.authRequest<RawOAuthUser>({
+            method: "GET",
+            path:   Routes.OAUTH_CURRENT_USER
+        }).then(data => new ExtendedUser(data, this.#manager.client));
     }
 
     /** Get a helper instance that can be used with a specific bearer token. */

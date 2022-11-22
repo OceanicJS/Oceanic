@@ -50,12 +50,10 @@ export default class Users {
      * Get the currently authenticated user's information.
      *
      * Note: This does not touch the client's cache in any way.
+     * @deprecated Moved to {@link Routes/OAuth#getCurrentUser}. This will be removed in `1.5.0`.
      */
     async getCurrentUser(): Promise<ExtendedUser> {
-        return this.#manager.authRequest<RawOAuthUser>({
-            method: "GET",
-            path:   Routes.OAUTH_CURRENT_USER
-        }).then(data => new ExtendedUser(data, this.#manager.client));
+        return this.#manager.oauth.getCurrentUser();
     }
 
     /**

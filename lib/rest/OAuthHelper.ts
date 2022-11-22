@@ -4,6 +4,7 @@ import Application from "../structures/Application";
 import type {
     AuthorizationInformation,
     Connection,
+    OAuthURLOptions,
     RawAuthorizationInformation,
     RawConnection,
     RESTApplication,
@@ -15,6 +16,9 @@ import PartialApplication from "../structures/PartialApplication";
 import Integration from "../structures/Integration";
 import Member from "../structures/Member";
 import OAuthGuild from "../structures/OAuthGuild";
+import ExtendedUser from "../structures/ExtendedUser";
+import type { RawOAuthUser } from "../types";
+import { BASE_URL } from "../Constants";
 import { FormData } from "undici";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */
@@ -24,6 +28,37 @@ export default class OAuthHelper {
     constructor(manager: RESTManager, token: string) {
         this.#token = token;
         this.#manager = manager;
+    }
+
+    /**
+     * Construct an oauth authorization url.
+     * @param options The options to construct the url with.
+     */
+    static constructURL(options: OAuthURLOptions): string {
+        const params: Array<string> = [
+            `client_id=${options.clientID}`,
+            `response_type=${options.responseType ?? "code"}`,
+            `scope=${options.scopes.join("%20")}`
+        ];
+        if (options.redirectURI) {
+            params.push(`redirect_uri=${options.redirectURI}`);
+        }
+        if (typeof options.disableGuildSelect !== "undefined") {
+            params.push(`disable_guild_select=${String(options.disableGuildSelect)}`);
+        }
+        if (options.prompt) {
+            params.push(`prompt=${options.prompt}`);
+        }
+        if (options.permissions) {
+            params.push(`permissions=${options.permissions}`);
+        }
+        if (options.guildID) {
+            params.push(`guild_id=${options.guildID}`);
+        }
+        if (options.state) {
+            params.push(`state=${options.state}`);
+        }
+        return `${BASE_URL}${Routes.OAUTH_AUTHORIZE}?${params.join("&")}`;
     }
 
     /**
@@ -100,6 +135,19 @@ export default class OAuthHelper {
             path:   Routes.OAUTH_GUILDS,
             auth:   this.#token
         }).then(data => data.map(d => new OAuthGuild(d, this.#manager.client)));
+    }
+
+    /**
+     * Get the currently authenticated user's information.
+     *
+     * Note: This does not touch the client's cache in any way.
+     */
+    async getCurrentUser(): Promise<ExtendedUser> {
+        return this.#manager.request<RawOAuthUser>({
+            method: "GET",
+            path:   Routes.OAUTH_CURRENT_USER,
+            auth:   this.#token
+        }).then(data => new ExtendedUser(data, this.#manager.client));
     }
 
 
