@@ -425,7 +425,26 @@ export type RawMessageComponent = RawButtonComponent | RawSelectMenuComponent;
 export type RawModalComponent = RawTextInput;
 export type RawButtonComponent = RawTextButton | URLButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
-
+export type ToComponentFromRaw<T extends RawComponent> =
+    T extends RawTextButton ? TextButton :
+        T extends URLButton ? URLButton :
+            T extends RawStringSelectMenu ? StringSelectMenu :
+                T extends RawUserSelectMenu ? UserSelectMenu :
+                    T extends RawRoleSelectMenu ? RoleSelectMenu :
+                        T extends RawMentionableSelectMenu ? MentionableSelectMenu :
+                            T extends RawChannelSelectMenu ? ChannelSelectMenu :
+                                T extends RawTextInput ? TextInput :
+                                    never;
+export type ToRawFromComponent<T extends Component> =
+    T extends TextButton ? RawTextButton :
+        T extends URLButton ? URLButton :
+            T extends StringSelectMenu ? RawStringSelectMenu :
+                T extends UserSelectMenu ? RawUserSelectMenu :
+                    T extends RoleSelectMenu ? RawRoleSelectMenu :
+                        T extends MentionableSelectMenu ? RawMentionableSelectMenu :
+                            T extends ChannelSelectMenu ? RawChannelSelectMenu :
+                                T extends TextInput ? RawTextInput :
+                                    never;
 export interface RawActionRowBase<T extends RawComponent> {
     components: Array<T>;
     type: ComponentTypes.ACTION_ROW;

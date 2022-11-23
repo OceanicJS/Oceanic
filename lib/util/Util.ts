@@ -14,18 +14,22 @@ import type {
     AnyChannel,
     AnyGuildChannelWithoutThreads,
     AnyThreadChannel,
+    Component,
     Embed,
     EmbedOptions,
     MessageActionRow,
     ModalActionRow,
     RawAllowedMentions,
     RawChannel,
+    RawComponent,
     RawEmbed,
     RawEmbedOptions,
     RawGuildChannel,
     RawMessageActionRow,
     RawModalActionRow,
-    RawThreadChannel
+    RawThreadChannel,
+    ToComponentFromRaw,
+    ToRawFromComponent
 } from "../types/channels";
 import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds";
 import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
@@ -50,120 +54,123 @@ export default class Util {
         }
     }
 
+    componentToParsed<T extends RawComponent>(component: T): ToComponentFromRaw<T> {
+        switch (component.type) {
+            case ComponentTypes.BUTTON: {
+                return (component.style === ButtonStyles.LINK ? component : {
+                    customID: component.custom_id,
+                    disabled: component.disabled,
+                    emoji:    component.emoji,
+                    label:    component.label,
+                    style:    component.style,
+                    type:     component.type
+                }) as never;
+            }
+            case ComponentTypes.TEXT_INPUT: {
+                return {
+                    customID:    component.custom_id,
+                    label:       component.label,
+                    maxLength:   component.max_length,
+                    minLength:   component.min_length,
+                    placeholder: component.placeholder,
+                    required:    component.required,
+                    style:       component.style,
+                    type:        component.type,
+                    value:       component.value
+                } as never;
+            }
+            case ComponentTypes.STRING_SELECT:
+            case ComponentTypes.USER_SELECT:
+            case ComponentTypes.ROLE_SELECT:
+            case ComponentTypes.MENTIONABLE_SELECT:
+            case ComponentTypes.CHANNEL_SELECT: {
+                const parsedComponent = {
+                    customID:    component.custom_id,
+                    disabled:    component.disabled,
+                    maxValues:   component.max_values,
+                    minValues:   component.min_values,
+                    placeholder: component.placeholder,
+                    type:        component.type
+                };
+
+                if (component.type === ComponentTypes.STRING_SELECT) {
+                    return { ...parsedComponent, options: component.options } as never;
+                } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                    return { ...parsedComponent, channelTypes: component.channel_types } as never;
+                } else {
+                    return parsedComponent as never;
+                }
+            }
+            default: {
+                return component as never;
+            }
+        }
+    }
+
+    componentToRaw<T extends Component>(component: T): ToRawFromComponent<T> {
+        switch (component.type) {
+            case ComponentTypes.BUTTON: {
+                return (component.style === ButtonStyles.LINK ? component : {
+                    custom_id: component.customID,
+                    disabled:  component.disabled,
+                    emoji:     component.emoji,
+                    label:     component.label,
+                    style:     component.style,
+                    type:      component.type
+                }) as never;
+            }
+            case ComponentTypes.TEXT_INPUT: {
+                return {
+                    custom_id:   component.customID,
+                    label:       component.label,
+                    max_length:  component.maxLength,
+                    min_length:  component.minLength,
+                    placeholder: component.placeholder,
+                    required:    component.required,
+                    style:       component.style,
+                    type:        component.type,
+                    value:       component.value
+                } as never;
+            }
+            case ComponentTypes.STRING_SELECT:
+            case ComponentTypes.USER_SELECT:
+            case ComponentTypes.ROLE_SELECT:
+            case ComponentTypes.MENTIONABLE_SELECT:
+            case ComponentTypes.CHANNEL_SELECT: {
+                const rawComponent = {
+                    custom_id:   component.customID,
+                    disabled:    component.disabled,
+                    max_values:  component.maxValues,
+                    min_values:  component.minValues,
+                    placeholder: component.placeholder,
+                    type:        component.type
+                };
+
+                if (component.type === ComponentTypes.STRING_SELECT) {
+                    return { ...rawComponent, options: component.options } as never;
+                } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
+                    return { ...rawComponent, channel_types: component.channelTypes } as never;
+                } else {
+                    return rawComponent as never;
+                }
+            }
+            default: {
+                return component as never;
+            }
+        }
+    }
+
     componentsToParsed<T extends RawModalActionRow | RawMessageActionRow>(components: Array<T>): T extends RawModalActionRow ? Array<ModalActionRow> : T extends RawMessageActionRow ? Array<MessageActionRow> : never {
         return components.map(row => ({
             type:       row.type,
-            components: row.components.map(component => {
-                switch (component.type) {
-                    case ComponentTypes.BUTTON: {
-                        return component.style === ButtonStyles.LINK ? component : {
-                            customID: component.custom_id,
-                            disabled: component.disabled,
-                            emoji:    component.emoji,
-                            label:    component.label,
-                            style:    component.style,
-                            type:     component.type
-                        };
-                    }
-                    case ComponentTypes.TEXT_INPUT: {
-                        return {
-                            customID:    component.custom_id,
-                            label:       component.label,
-                            maxLength:   component.max_length,
-                            minLength:   component.min_length,
-                            placeholder: component.placeholder,
-                            required:    component.required,
-                            style:       component.style,
-                            type:        component.type,
-                            value:       component.value
-                        };
-                    }
-                    case ComponentTypes.STRING_SELECT:
-                    case ComponentTypes.USER_SELECT:
-                    case ComponentTypes.ROLE_SELECT:
-                    case ComponentTypes.MENTIONABLE_SELECT:
-                    case ComponentTypes.CHANNEL_SELECT: {
-                        const parsedComponent = {
-                            customID:    component.custom_id,
-                            disabled:    component.disabled,
-                            maxValues:   component.max_values,
-                            minValues:   component.min_values,
-                            placeholder: component.placeholder,
-                            type:        component.type
-                        };
-
-                        if (component.type === ComponentTypes.STRING_SELECT) {
-                            return { ...parsedComponent, options: component.options };
-                        } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                            return { ...parsedComponent, channelTypes: component.channel_types };
-                        } else {
-                            return parsedComponent;
-                        }
-                    }
-                    default: {
-                        return component;
-                    }
-                }
-            })
+            components: row.components.map(component => this.componentToParsed(component))
         })) as never;
     }
 
     componentsToRaw<T extends ModalActionRow | MessageActionRow>(components: Array<T>): T extends ModalActionRow ? Array<RawModalActionRow> : T extends MessageActionRow ? Array<RawMessageActionRow> : never {
         return components.map(row => ({
             type:       row.type,
-            components: row.components.map(component => {
-
-                switch (component.type) {
-                    case ComponentTypes.BUTTON: {
-                        return component.style === ButtonStyles.LINK ? component : {
-                            custom_id: component.customID,
-                            disabled:  component.disabled,
-                            emoji:     component.emoji,
-                            label:     component.label,
-                            style:     component.style,
-                            type:      component.type
-                        };
-                    }
-                    case ComponentTypes.TEXT_INPUT: {
-                        return {
-                            custom_id:   component.customID,
-                            label:       component.label,
-                            max_length:  component.maxLength,
-                            min_length:  component.minLength,
-                            placeholder: component.placeholder,
-                            required:    component.required,
-                            style:       component.style,
-                            type:        component.type,
-                            value:       component.value
-                        };
-                    }
-                    case ComponentTypes.STRING_SELECT:
-                    case ComponentTypes.USER_SELECT:
-                    case ComponentTypes.ROLE_SELECT:
-                    case ComponentTypes.MENTIONABLE_SELECT:
-                    case ComponentTypes.CHANNEL_SELECT: {
-                        const rawComponent = {
-                            custom_id:   component.customID,
-                            disabled:    component.disabled,
-                            max_values:  component.maxValues,
-                            min_values:  component.minValues,
-                            placeholder: component.placeholder,
-                            type:        component.type
-                        };
-
-                        if (component.type === ComponentTypes.STRING_SELECT) {
-                            return { ...rawComponent, options: component.options };
-                        } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                            return { ...rawComponent, channel_types: component.channelTypes };
-                        } else {
-                            return rawComponent;
-                        }
-                    }
-                    default: {
-                        return component;
-                    }
-                }
-            })
+            components: row.components.map(component => this.componentToRaw(component))
         })) as never;
     }
 
