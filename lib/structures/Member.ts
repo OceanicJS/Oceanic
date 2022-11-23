@@ -11,10 +11,10 @@ import type {
     EditMemberOptions,
     EditUserVoiceStateOptions,
     RawMember,
-    RESTMember
+    RESTMember,
+    Presence
 } from "../types/guilds";
 import type { JSONMember } from "../types/json";
-import type { Presence } from "../types/gateway";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {

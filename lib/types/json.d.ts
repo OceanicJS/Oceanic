@@ -17,7 +17,8 @@ import type {
     RoleTags,
     RawSticker,
     WelcomeScreen,
-    Sticker
+    Sticker,
+    Presence
 } from "./guilds";
 import type {
     ChannelMention,
@@ -34,7 +35,6 @@ import type {
     Embed
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
-import type { Presence } from "./gateway";
 import type {
     ApplicationCommandTypes,
     AutoModerationEventTypes,

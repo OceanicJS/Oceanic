@@ -12,7 +12,7 @@ import type {
     UncachedThreadMember
 } from "./channels";
 import type { RawRequest } from "./request-handler";
-import type { AutoModerationActionExecution, DeletedPrivateChannel, Presence } from "./gateway";
+import type { AutoModerationActionExecution, DeletedPrivateChannel } from "./gateway";
 import type { AnyDispatchPacket } from "./gateway-raw";
 import type { Uncached } from "./shared";
 import type {
@@ -37,7 +37,13 @@ import type {
     JSONVoiceState
 } from "./json";
 import type { GuildApplicationCommandPermissions } from "./application-commands";
-import type { GuildEmoji, PartialEmoji, PossiblyUncachedIntegration, Sticker } from "./guilds";
+import type {
+    GuildEmoji,
+    PartialEmoji,
+    PossiblyUncachedIntegration,
+    Sticker,
+    Presence
+} from "./guilds";
 import type { AnyInteractionGateway } from "./interactions";
 import type Guild from "../structures/Guild";
 import type UnavailableGuild from "../structures/UnavailableGuild";

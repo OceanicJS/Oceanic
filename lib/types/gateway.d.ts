@@ -226,7 +226,6 @@ export interface PresenceUpdate {
     status: ReceiveStatuses;
     user: { id: string; } & Partial<Omit<RawUser, "id">>;
 }
-export type Presence = Omit<PresenceUpdate, "user">;
 
 export interface ClientStatus {
     desktop?: string;

@@ -11,7 +11,7 @@ import type {
     ForumTag
 } from "./channels";
 import type { RawScheduledEvent } from "./scheduled-events";
-import type { PresenceUpdate } from "./gateway";
+import type { ClientStatus, PresenceUpdate, Activity as GatewayActivity } from "./gateway";
 import type { RawVoiceState } from "./voice";
 import { File } from "./request-handler";
 import type {
@@ -704,3 +704,15 @@ export interface RawOAuthGuild {
     owner: boolean;
     permissions: string;
 }
+
+export type Activity = Omit<GatewayActivity, "application_id" | "assets" | "created_at"> & {
+    applicationID?: string;
+    assets?: Partial<Record<"largeImage" | "largeText" | "smallImage" | "smallText", string>>;
+    createdAt: number;
+};
+
+export type Presence = Omit<PresenceUpdate, "user" | "guild_id" | "client_status" | "activities"> & {
+    activities?: Array<Activity>;
+    clientStatus: ClientStatus;
+    guildID: string;
+};

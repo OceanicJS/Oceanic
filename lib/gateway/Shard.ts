@@ -431,7 +431,33 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const members = packet.d.members.map(member => this.client.util.updateMember(packet.d.guild_id, member.user!.id, member));
                 if (packet.d.presences) for (const presence of packet.d.presences) {
                     const member = members.find(m => m.id === presence.user.id)!;
-                    member.presence = presence;
+                    member.presence = {
+                        clientStatus: presence.client_status,
+                        guildID:      presence.guild_id,
+                        status:       presence.status,
+                        activities:   presence.activities?.map(activity => ({
+                            createdAt:     activity.created_at,
+                            name:          activity.name,
+                            type:          activity.type,
+                            applicationID: activity.application_id,
+                            assets:        activity.assets ? {
+                                largeImage: activity.assets.large_image,
+                                largeText:  activity.assets.large_text,
+                                smallImage: activity.assets.small_image,
+                                smallText:  activity.assets.small_text
+                            } : undefined,
+                            buttons:    activity.buttons,
+                            details:    activity.details,
+                            emoji:      activity.emoji,
+                            flags:      activity.flags,
+                            instance:   activity.instance,
+                            party:      activity.party,
+                            secrets:    activity.secrets,
+                            state:      activity.state,
+                            timestamps: activity.timestamps,
+                            url:        activity.url
+                        }))
+                    };
                 }
                 if (!packet.d.nonce) {
                     this.client.emit("warn", "Received GUILD_MEMBERS_CHUNK without a nonce.");
@@ -792,14 +818,41 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const member = guild?.members.get(packet.d.user.id);
                 const oldPresence = member?.presence ?? null;
 
+                const presence = {
+                    clientStatus: packet.d.client_status,
+                    guildID:      packet.d.guild_id,
+                    status:       packet.d.status,
+                    activities:   packet.d.activities?.map(activity => ({
+                        createdAt:     activity.created_at,
+                        name:          activity.name,
+                        type:          activity.type,
+                        applicationID: activity.application_id,
+                        assets:        activity.assets ? {
+                            largeImage: activity.assets.large_image,
+                            largeText:  activity.assets.large_text,
+                            smallImage: activity.assets.small_image,
+                            smallText:  activity.assets.small_text
+                        } : undefined,
+                        buttons:    activity.buttons,
+                        details:    activity.details,
+                        emoji:      activity.emoji,
+                        flags:      activity.flags,
+                        instance:   activity.instance,
+                        party:      activity.party,
+                        secrets:    activity.secrets,
+                        state:      activity.state,
+                        timestamps: activity.timestamps,
+                        url:        activity.url
+                    }))
+                };
                 const userID = packet.d.user.id;
 
                 delete (packet.d as { user?: PresenceUpdate["user"]; }).user;
                 if (member) {
-                    member.presence = packet.d;
+                    member.presence = presence;
                 }
 
-                this.client.emit("presenceUpdate", guild ?? { id: packet.d.guild_id }, member ?? { id: userID },packet.d, oldPresence);
+                this.client.emit("presenceUpdate", guild ?? { id: packet.d.guild_id }, member ?? { id: userID }, presence, oldPresence);
                 break;
             }
 

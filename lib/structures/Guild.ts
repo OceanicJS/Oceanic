@@ -322,7 +322,33 @@ export default class Guild extends Base {
                 const member = this.members.get(presence.user.id);
                 if (member) {
                     delete (presence as { user?: PresenceUpdate["user"]; }).user;
-                    member.presence = presence;
+                    member.presence = {
+                        clientStatus: presence.client_status,
+                        guildID:      presence.guild_id,
+                        status:       presence.status,
+                        activities:   presence.activities?.map(activity => ({
+                            createdAt:     activity.created_at,
+                            name:          activity.name,
+                            type:          activity.type,
+                            applicationID: activity.application_id,
+                            assets:        activity.assets ? {
+                                largeImage: activity.assets.large_image,
+                                largeText:  activity.assets.large_text,
+                                smallImage: activity.assets.small_image,
+                                smallText:  activity.assets.small_text
+                            } : undefined,
+                            buttons:    activity.buttons,
+                            details:    activity.details,
+                            emoji:      activity.emoji,
+                            flags:      activity.flags,
+                            instance:   activity.instance,
+                            party:      activity.party,
+                            secrets:    activity.secrets,
+                            state:      activity.state,
+                            timestamps: activity.timestamps,
+                            url:        activity.url
+                        }))
+                    };
                 } else {
                     client.emit("debug", `Rogue presence (user: ${presence.user.id}, guild: ${this.id})`);
                 }

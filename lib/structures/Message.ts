@@ -11,6 +11,7 @@ import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
 import GuildChannel from "./GuildChannel";
+import type PrivateChannel from "./PrivateChannel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, MessageTypes } from "../Constants";
@@ -31,8 +32,7 @@ import type {
     StickerItem,
     MessageReaction,
     MessageActionRow,
-    AnyThreadChannel,
-    AnyPrivateChannel
+    AnyThreadChannel
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -383,8 +383,8 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         return this.channel instanceof GuildChannel;
     }
 
-    /** Whether this message belongs to a direct message channel (PrivateChannel, GroupChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
-    inDirectMessageChannel(): this is Message<AnyPrivateChannel | Uncached> {
+    /** Whether this message belongs to a direct message channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
+    inDirectMessageChannel(): this is Message<PrivateChannel | Uncached> {
         return this.guildID === null;
     }
 
