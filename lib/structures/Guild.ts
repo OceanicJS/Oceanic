@@ -303,7 +303,7 @@ export default class Guild extends Base {
         if (data.members) {
             for (const rawMember of data.members) {
                 const member = this.members.update({ ...rawMember, id: rawMember.user?.id }, this.id);
-                if (member.id === this.client.user.id) {
+                if (this.client["_user"] && member.id === this.client.user.id) {
                     this._clientMember = member;
                 }
             }
@@ -426,7 +426,7 @@ export default class Guild extends Base {
             this.afkTimeout = data.afk_timeout;
         }
         if (data.application_id !== undefined) {
-            this.application = data.application_id === null ? null : (this.client.application.id === data.application_id ? this.client.application : undefined);
+            this.application = this.client["_application"] && data.application_id === null ? null : (this.client.application.id === data.application_id ? this.client.application : undefined);
             this.applicationID = data.application_id;
         }
         if (data.approximate_member_count !== undefined) {

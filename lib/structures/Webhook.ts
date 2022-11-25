@@ -48,7 +48,7 @@ export default class Webhook extends Base {
     user: User | null;
     constructor(data: RawWebhook, client: Client) {
         super(data.id, client);
-        this.application = data.application_id === null ? null : (client.application.id === data.application_id ? client.application : undefined);
+        this.application = client["_application"] && data.application_id === null ? null : (client.application.id === data.application_id ? client.application : undefined);
         this.applicationID = data.application_id;
         this.avatar = data.avatar ?? null;
         this.channelID = data.channel_id;

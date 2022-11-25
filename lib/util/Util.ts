@@ -394,7 +394,7 @@ export default class Util {
 
     updateMember(guildID: string, memberID: string, member: RawMember | RESTMember): Member {
         const guild = this.#client.guilds.get(guildID);
-        if (guild && this.#client.user.id === memberID) {
+        if (guild && this.#client["_user"] && this.#client.user.id === memberID) {
             if (guild["_clientMember"]) {
                 guild["_clientMember"]["update"](member);
             } else {

@@ -51,7 +51,7 @@ export default class GroupChannel extends Channel {
     protected override update(data: Partial<RawGroupChannel>): void {
         super.update(data);
         if (data.application_id !== undefined) {
-            this.application = this.client.application.id === data.application_id ? this.client.application : undefined;
+            this.application = this.client["_application"] && this.client.application.id === data.application_id ? this.client.application : undefined;
             this.applicationID = data.application_id;
         }
         if (data.icon !== undefined) {

@@ -86,6 +86,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
             this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
             this.lastMessageID = data.last_message_id;
         }
+        // @TODO look over this to see if we can make it "safer" (accessing Client#user)
         if (data.member) {
             const index = this.members.findIndex(m => m.userID === this.client.user.id);
             if (index === -1) {

@@ -31,7 +31,7 @@ export default class Interaction extends Base {
     constructor(data: AnyRawInteraction, client: Client) {
         super(data.id, client);
         this.acknowledged = false;
-        this.application = client.application.id === data.application_id ? client.application : undefined;
+        this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
         this.applicationID = data.application_id;
         this.token = data.token;
         this.type = data.type;

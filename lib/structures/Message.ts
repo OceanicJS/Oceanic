@@ -149,7 +149,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
             this.application = new PartialApplication(data.application, client);
             this.applicationID = data.application.id;
         } else if (data.application_id !== undefined) {
-            this.application = client.application.id === data.application_id ? client.application : undefined;
+            this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
             this.applicationID = data.application_id;
         } else {
             this.applicationID = null;

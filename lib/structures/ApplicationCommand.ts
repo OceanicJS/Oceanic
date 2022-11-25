@@ -51,7 +51,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     version: string;
     constructor(data: RawApplicationCommand, client: Client) {
         super(data.id, client);
-        this.application = client.application.id === data.application_id ? client.application : undefined;
+        this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
         this.applicationID = data.application_id;
         this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
         this.description = data.description as never;
