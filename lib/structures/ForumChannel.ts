@@ -24,7 +24,7 @@ import type {
 import type { JSONForumChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
-import { AllPermissions, Permissions, SortOrderTypes } from "../Constants";
+import { AllPermissions, Permissions, SortOrderTypes, ForumLayoutTypes } from "../Constants";
 
 /** Represents a forum channel. */
 export default class ForumChannel extends GuildChannel {
@@ -32,6 +32,8 @@ export default class ForumChannel extends GuildChannel {
     availableTags: Array<ForumTag>;
     /** The default auto archive duration for threads. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+    /** The default forum layout used to display threads. */
+    defaultForumLayout: ForumLayoutTypes;
     /** The default reaction emoji for threads. */
     defaultReactionEmoji: ForumEmoji | null;
     /** The default sort order mode used to sort threads. */
@@ -63,6 +65,7 @@ export default class ForumChannel extends GuildChannel {
         super(data, client);
         this.availableTags = [];
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+        this.defaultForumLayout =  data.default_forum_layout;
         this.defaultReactionEmoji = null;
         this.defaultSortOrder = null;
         this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
@@ -90,6 +93,9 @@ export default class ForumChannel extends GuildChannel {
         }
         if (data.default_auto_archive_duration !== undefined) {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
+        }
+        if (data.default_forum_layout !== undefined) {
+            this.defaultForumLayout =  data.default_forum_layout;
         }
         if (data.default_reaction_emoji !== undefined) {
             this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
@@ -246,6 +252,7 @@ export default class ForumChannel extends GuildChannel {
             ...super.toJSON(),
             availableTags:                 this.availableTags,
             defaultAutoArchiveDuration:    this.defaultAutoArchiveDuration,
+            defaultForumLayout:            this.defaultForumLayout,
             defaultReactionEmoji:          this.defaultReactionEmoji,
             defaultSortOrder:              this.defaultSortOrder,
             defaultThreadRateLimitPerUser: this.defaultThreadRateLimitPerUser,

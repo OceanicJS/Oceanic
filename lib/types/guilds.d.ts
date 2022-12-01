@@ -31,7 +31,8 @@ import type {
     ThreadAutoArchiveDuration,
     VerificationLevels,
     VideoQualityModes,
-    SortOrderTypes
+    SortOrderTypes,
+    ForumLayoutTypes
 } from "../Constants";
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
@@ -360,6 +361,8 @@ export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads 
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for the channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
+    /** [Forum] The default forum layout used to display threads. */
+    defaultForumLayout?: ForumLayoutTypes;
     /** [Forum] The default reaction emoji for threads. */
     defaultReactionEmoji?: ForumEmoji | null;
     /** [Forum] The default sort order mode used to sort forum threads. */

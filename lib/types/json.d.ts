@@ -65,7 +65,8 @@ import type {
     VideoQualityModes,
     WebhookTypes,
     SortOrderTypes,
-    StageInstancePrivacyLevels
+    StageInstancePrivacyLevels,
+    ForumLayoutTypes
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
@@ -214,6 +215,7 @@ export interface JSONExtendedUser extends JSONUser {
 export interface JSONForumChannel extends JSONGuildChannel {
     availableTags: Array<ForumTag>;
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+    defaultForumLayout: ForumLayoutTypes;
     defaultReactionEmoji: ForumEmoji | null;
     defaultSortOrder: SortOrderTypes | null;
     defaultThreadRateLimitPerUser: number;

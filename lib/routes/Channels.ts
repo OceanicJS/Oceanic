@@ -374,6 +374,7 @@ export default class Channels {
                 })),
                 bitrate:                            options.bitrate,
                 default_auto_archive_duration:      options.defaultAutoArchiveDuration,
+                default_forum_layout:               options.defaultForumLayout,
                 default_reaction_emoji:             options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
                 default_sort_order:                 options.defaultSortOrder,
                 default_thread_rate_limit_per_user: options.defaultThreadRateLimitPerUser,

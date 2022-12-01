@@ -21,7 +21,8 @@ import type {
     TextInputStyles,
     ThreadAutoArchiveDuration,
     ThreadChannelTypes,
-    VideoQualityModes
+    VideoQualityModes,
+    ForumLayoutTypes
 } from "../Constants";
 import type CategoryChannel from "../structures/CategoryChannel";
 import type GroupChannel from "../structures/GroupChannel";
@@ -46,6 +47,7 @@ export interface RawChannel {
     available_tags?: Array<RawForumTag>;
     bitrate?: number;
     default_auto_archive_duration?: ThreadAutoArchiveDuration;
+    default_forum_layout?: ForumLayoutTypes;
     default_reaction_emoji?: {
         emoji_id: string | null;
         emoji_name: string | null;
@@ -93,7 +95,7 @@ export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadCha
 export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> & { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
 export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; } & Required<Pick<RawChannel, "applied_tags">>;
 export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; };
-export type RawForumChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration">> & { type: ChannelTypes.GUILD_FORUM; };
+export type RawForumChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> & { type: ChannelTypes.GUILD_FORUM; };
 
 export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
 export type RawInteractionResolvedChannel = Omit<Required<Pick<RawChannel, "id" | "type" | "permissions">>, "name"> & { name: string | null; } & Pick<RawChannel, "thread_metadata" | "parent_id">;
@@ -181,6 +183,8 @@ export interface EditGuildChannelOptions {
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for threads made in this channel. */
     defaultAutoArchiveDuration?: ThreadAutoArchiveDuration | null;
+    /** [Forum] The default forum layout used to display threads. */
+    defaultForumLayout?: ForumLayoutTypes;
     /** [Forum] The default reaction emoji for threads. */
     defaultReactionEmoji?: ForumEmoji | null;
     /** [Forum] The default sort order mode used to sort forum threads. */

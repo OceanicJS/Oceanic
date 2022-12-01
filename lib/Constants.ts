@@ -390,6 +390,15 @@ export enum SortOrderTypes {
     CREATION_DATE = 1
 }
 
+export enum ForumLayoutTypes {
+    /** A preferred forum layout hasn't been set by a server admin. */
+    DEFAULT = 0,
+    /** List View: display forum posts in a text-focused list. */
+    LIST = 1,
+    /** Gallery View: display forum posts in a media-focused gallery. */
+    GRID = 2
+}
+
 export enum TeamMembershipState {
     INVITED  = 1,
     ACCEPTED = 2
