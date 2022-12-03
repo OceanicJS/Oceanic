@@ -268,7 +268,8 @@ export type ConnectionService = typeof ConnectionServices[number];
 export const IntegrationTypes = [
     "twitch",
     "youtube",
-    "discord"
+    "discord",
+    "guild_subscription"
 ] as const;
 export type IntegrationType = typeof IntegrationTypes[number];
 
