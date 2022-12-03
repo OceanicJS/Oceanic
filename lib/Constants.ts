@@ -141,7 +141,9 @@ export type GuildFeature = typeof GuildFeatures[number];
 
 export enum DefaultMessageNotificationLevels {
     ALL_MESSAGES  = 0,
-    ONLY_MENTIONS = 1
+    ONLY_MENTIONS = 1,
+    NO_MESSAGES   = 2,
+    NULL          = 3
 }
 
 export enum ExplicitContentFilterLevels {
@@ -164,7 +166,7 @@ export enum VerificationLevels {
 }
 
 export enum GuildNSFWLevels {
-    DEFAULT         = 0,
+    DEFAULT        = 0,
     EXPLICIT       = 1,
     SAFE           = 2,
     AGE_RESTRICTED = 3
@@ -178,10 +180,12 @@ export enum PremiumTiers {
 }
 
 export enum SystemChannelFlags {
-    SUPPRESS_JOIN_NOTIFICATIONS           = 1 << 0,
-    SUPPRESS_PREMIUM_SUBSCRIPTIONS        = 1 << 1,
-    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2,
-    SUPPRESS_JOIN_NOTIFICATION_REPLIES    = 1 << 3,
+    SUPPRESS_JOIN_NOTIFICATIONS                              = 1 << 0,
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS                           = 1 << 1,
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS                    = 1 << 2,
+    SUPPRESS_JOIN_NOTIFICATION_REPLIES                       = 1 << 3,
+    SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS        = 1 << 4,
+    SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES = 1 << 5,
 }
 
 export enum StickerTypes {
@@ -498,15 +502,16 @@ export enum TextInputStyles {
 }
 
 export enum MessageFlags {
-    CROSSPOSTED                            = 1,
-    IS_CROSSPOST                           = 2,
-    SUPPRESS_EMBEDS                        = 4,
-    SOURCE_MESSAGE_DELETED                 = 8,
-    URGENT                                 = 16,
-    HAS_THREAD                             = 32,
-    EPHEMERAL                              = 64,
-    LOADING                                = 128,
-    FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 256,
+    CROSSPOSTED                            = 1 << 0,
+    IS_CROSSPOST                           = 1 << 1,
+    SUPPRESS_EMBEDS                        = 1 << 2,
+    SOURCE_MESSAGE_DELETED                 = 1 << 3,
+    URGENT                                 = 1 << 4,
+    HAS_THREAD                             = 1 << 5,
+    EPHEMERAL                              = 1 << 6,
+    LOADING                                = 1 << 7,
+    FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
+    SHOULD_SHOW_LINK_NOT_DISCORD_WARNING   = 1 << 10,
 }
 
 export enum MessageTypes {
@@ -678,7 +683,17 @@ export enum AuditLogActionTypes {
     AUTO_MODERATION_RULE_DELETE                 = 142,
     AUTO_MODERATION_BLOCK_MESSAGE               = 143,
     AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
-    AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145
+    AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145,
+
+    CREATOR_MONETIZATION_REQUEST_CREATED = 150,
+    CREATOR_MONETIZATION_TERMS_ACCEPTED  = 151,
+
+    ROLE_PROMPT_CREATE = 160,
+    ROLE_PROMPT_UPDATE = 161,
+    ROLE_PROMPT_DELETE = 162,
+
+    GUILD_HOME_FEATURE_ITEM = 171,
+    GUILD_HOME_REMOVE_ITEM  = 172,
 }
 
 export enum ApplicationCommandTypes {
@@ -824,6 +839,12 @@ export enum VoiceCloseCodes {
     UNKNOWN_ENCRYPTION_MODE = 4015,
 }
 
+export enum HubType {
+    DEFAUKT     = 0,
+    HIGH_SCHOOL = 1,
+    COLLEGE     = 2,
+}
+
 export enum ActivityTypes {
     GAME      = 0,
     STREAMING = 1,
@@ -834,22 +855,22 @@ export enum ActivityTypes {
 }
 
 export enum ActivityFlags {
-    INSTANCE                    = 1,
-    JOIN                        = 2,
-    SPECTATE                    = 4,
-    JOIN_REQUEST                = 8,
-    SYNC                        = 16,
-    PLAY                        = 32,
-    PARTY_PRIVACY_FRIENDS_ONLY  = 64,
-    PARTY_PRIVACY_VOICE_CHANNEL = 128,
-    EMBEDDED                    = 256
+    INSTANCE                    = 1 << 0,
+    JOIN                        = 1 << 1,
+    SPECTATE                    = 1 << 2,
+    JOIN_REQUEST                = 1 << 3,
+    SYNC                        = 1 << 4,
+    PLAY                        = 1 << 5,
+    PARTY_PRIVACY_FRIENDS_ONLY  = 1 << 6,
+    PARTY_PRIVACY_VOICE_CHANNEL = 1 << 7,
+    EMBEDDED                    = 1 << 8,
 }
 
 export enum ThreadMemberFlags {
-    HAS_INTERACTED = 1,
-    ALL_MESSAGES   = 2,
-    ONLY_MENTIONS  = 4,
-    NO_MESSAGES    = 8
+    HAS_INTERACTED = 1 << 0,
+    ALL_MESSAGES   = 1 << 1,
+    ONLY_MENTIONS  = 1 << 2,
+    NO_MESSAGES    = 1 << 3,
 }
 
 // entries are intentionally not aligned
