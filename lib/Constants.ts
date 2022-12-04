@@ -123,6 +123,7 @@ export const GuildFeatures = [
     "PARTNERED",
     "PREVIEW_ENABLED",
     "PREVIOUSLY_DISCOVERABLE",
+    "PRIVATE_THREADS",
     "ROLE_ICONS",
     "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
     "ROLE_SUBSCRIPTIONS_ENABLED",
@@ -840,7 +841,7 @@ export enum VoiceCloseCodes {
 }
 
 export enum HubType {
-    DEFAUKT     = 0,
+    DEFAULT     = 0,
     HIGH_SCHOOL = 1,
     COLLEGE     = 2,
 }
