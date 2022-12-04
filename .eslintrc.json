@@ -142,7 +142,7 @@
     "@typescript-eslint/unified-signatures": "error",
     "arrow-body-style": ["error", "as-needed"],
     "brace-style": ["error", "1tbs"],
-    "comma-dangle": "error",
+    "comma-dangle": "off",
     "complexity": "off",
     "dot-notation": "off",
     "eol-last": ["error", "always"],
@@ -322,6 +322,12 @@
     "unicorn/consistent-destructuring": "off",
     "unicorn/prefer-number-properties": "off",
     "unicorn/no-array-callback-reference": "off",
-    "unicorn/no-array-method-this-argument": "off"
+    "unicorn/no-array-method-this-argument": "off",
+    "@typescript-eslint/comma-dangle": [
+      "error",
+      {
+        "enums": "always-multiline"
+      }
+    ]
   }
 }
