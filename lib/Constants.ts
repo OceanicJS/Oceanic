@@ -840,11 +840,15 @@ export enum VoiceCloseCodes {
     UNKNOWN_ENCRYPTION_MODE = 4015,
 }
 
-export enum HubType {
+export enum HubTypes {
     DEFAULT     = 0,
     HIGH_SCHOOL = 1,
     COLLEGE     = 2,
 }
+
+
+/** @deprecated Use {@link Constants~HubTypes | HubTypes}. This will be removed in `1.4.0`. */
+export const HubType = HubTypes;
 
 export enum ActivityTypes {
     GAME      = 0,
