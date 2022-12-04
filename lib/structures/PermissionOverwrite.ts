@@ -18,6 +18,12 @@ export default class PermissionOverwrite extends Base {
         this.type = data.type;
     }
 
+    protected override update(data: Partial<RawOverwrite>): void {
+        if (data.allow !== undefined || data.deny !== undefined) {
+            this.permission = new Permission(data.allow ?? 0n, data.deny ?? 0n);
+        }
+    }
+
     get allow(): bigint {
         return this.permission.allow;
     }
