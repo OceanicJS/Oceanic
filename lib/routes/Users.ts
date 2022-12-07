@@ -13,7 +13,7 @@ export default class Users {
         this.#manager = manager;
     }
 
-    /** Alias for {@link Routes/Channels#createDM | Channels#createDM}. */
+    /** Alias for {@link Routes/Channels~Channels#createDM | Channels#createDM}. */
     get createDM(): typeof Channels.prototype.createDM {
         return this.#manager.channels.createDM.bind(this.#manager.channels);
     }
@@ -50,7 +50,7 @@ export default class Users {
      * Get the currently authenticated user's information.
      *
      * Note: This does not touch the client's cache in any way.
-     * @deprecated Moved to {@link Routes/OAuth#getCurrentUser}. This will be removed in `1.5.0`.
+     * @deprecated Moved to {@link Routes/OAuth~OAuth#getCurrentUser | OAuth#getCurrentUser}. This will be removed in `1.5.0`.
      */
     async getCurrentUser(): Promise<ExtendedUser> {
         return this.#manager.oauth.getCurrentUser();
