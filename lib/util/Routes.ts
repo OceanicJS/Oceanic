@@ -75,6 +75,8 @@ export const GROUP_RECIPIENT                         = (channelID: string, userI
 export const VOICE_REGIONS                             = "/voice/regions" as const;
 export const GUILD_VOICE_REGIONS                     = (guildID: string) => `/guilds/${guildID}/regions` as const;
 export const INVITE                                  = (code: string) => `/invites/${code}` as const;
+export const STAGE_INSTANCES = "/stage-instances" as const;
+export const CHANNEL_STAGE_INSTANCES 				  = (channelID: string) => `/stage-instances/${channelID}` as const;
 
 // OAuth
 export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;

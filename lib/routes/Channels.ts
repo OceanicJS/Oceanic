@@ -56,6 +56,8 @@ import type PrivateChannel from "../structures/PrivateChannel";
 import type GroupChannel from "../structures/GroupChannel";
 import type User from "../structures/User";
 import type { Uncached } from "../types/shared";
+import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInstance } from "../types/guilds";
+import StageInstance from "../structures/StageInstance";
 
 /** Various methods for interacting with channels. */
 export default class Channels {
@@ -196,6 +198,29 @@ export default class Channels {
             method: "PUT",
             path:   Routes.CHANNEL_REACTION_USER(id, messageID, emoji, "@me")
         });
+    }
+
+    /**
+     * Create a stage instance.
+     * @param id The ID of the channel to create the stage instance on.
+     * @param options The options for creating the stage instance.
+     */
+    async createStageInstance(id: string, options: CreateStageInstanceOptions): Promise<StageInstance> {
+        const reason = options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
+        return this.#manager.authRequest<RawStageInstance>({
+            method: "POST",
+            path:   Routes.STAGE_INSTANCES,
+            json:   {
+                channel_id:              id,
+                topic:                   options.topic,
+                privacy_level:           options.privacyLevel,
+                send_start_notification: options.sendStartNotification
+            },
+            reason
+        }).then(data => new StageInstance(data, this.#manager.client));
     }
 
     /**
@@ -340,6 +365,19 @@ export default class Channels {
     }
 
     /**
+     * Delete a stage instance.
+     * @param id The ID of the channel to delete the stage instance on.
+     * @param reason The reason for deleting the stage instance.
+     */
+    async deleteStageInstance(id: string, reason?: string): Promise<void> {
+        await this.#manager.authRequest<null>({
+            method: "DELETE",
+            path:   Routes.CHANNEL_STAGE_INSTANCES(id),
+            reason
+        });
+    }
+
+    /**
      * Edit a channel.
      * @param id The ID of the channel to edit.
      * @param options The options for editing the channel.
@@ -445,6 +483,28 @@ export default class Channels {
             },
             reason
         });
+    }
+
+    /**
+     * Edit a stage instance.
+     * @param id The ID of the channel to edit the stage instance on.
+     * @param options The options for editing the stage instance.
+     */
+    async editStageInstance(id: string, options: EditStageInstanceOptions): Promise<StageInstance> {
+        const reason = options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
+        return this.#manager.authRequest<RawStageInstance>({
+            method: "PATCH",
+            path:   Routes.CHANNEL_STAGE_INSTANCES(id),
+            json:   {
+                channel_id:    id,
+                topic:         options.topic,
+                privacy_level: options.privacyLevel
+            },
+            reason
+        }).then(data => new StageInstance(data, this.#manager.client));
     }
 
     /**
@@ -735,6 +795,17 @@ export default class Channels {
         }
 
         return reactions;
+    }
+
+    /**
+     * Get the stage instance associated with a channel.
+     * @param id The ID of the channel to get the stage instance on.
+     */
+    async getStageInstance(id: string): Promise<StageInstance> {
+        return this.#manager.authRequest<RawStageInstance>({
+            method: "GET",
+            path:   Routes.CHANNEL_STAGE_INSTANCES(id)
+        }).then(data => new StageInstance(data, this.#manager.client));
     }
 
     /**

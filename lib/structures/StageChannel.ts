@@ -5,6 +5,7 @@ import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
 import type Invite from "./Invite";
+import type StageInstance from "./StageInstance";
 import type { ChannelTypes } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
@@ -18,7 +19,7 @@ import type {
     RawStageChannel
 } from "../types/channels";
 import type { JSONStageChannel } from "../types/json";
-import type { RawMember } from "../types/guilds";
+import type { RawMember, CreateStageInstanceOptions, EditStageInstanceOptions } from "../types/guilds";
 import type { JoinVoiceChannelOptions } from "../types/voice";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -72,6 +73,7 @@ export default class StageChannel extends GuildChannel {
         return super.parent as CategoryChannel | null | undefined;
     }
 
+
     /**
      * Create an invite for this channel.
      * @param options The options to create an invite with.
@@ -81,12 +83,28 @@ export default class StageChannel extends GuildChannel {
     }
 
     /**
+     * Create a stage instance on this channel.
+     * @param options The options for creating the stage instance.
+     */
+    async createStageInstance(options: CreateStageInstanceOptions): Promise<StageInstance> {
+        return this.client.rest.channels.createStageInstance(this.id, options);
+    }
+
+    /**
      * Delete a permission overwrite on this channel.
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
+    }
+
+    /**
+     * Delete the stage instance on this channel.
+     * @param reason The reason for deleting the stage instance.
+     */
+    async deleteStageInstance(reason?: string): Promise<void> {
+        return this.client.rest.channels.deleteStageInstance(this.id, reason);
     }
 
     /**
@@ -104,6 +122,21 @@ export default class StageChannel extends GuildChannel {
      */
     async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
+    }
+
+    /**
+     * Edit the stage instance on this channel.
+     * @param options The options for editing the stage instance.
+     */
+    async editStageInstance(options: EditStageInstanceOptions): Promise<StageInstance> {
+        return this.client.rest.channels.editStageInstance(this.id, options);
+    }
+
+    /**
+     * Get the stage instance associated with this channel.
+     */
+    async getStageInstance(): Promise<StageInstance> {
+        return this.client.rest.channels.getStageInstance(this.id);
     }
 
     /**

@@ -646,6 +646,22 @@ export interface RawStageInstance {
     topic: string;
 }
 
+export interface CreateStageInstanceOptions {
+    /** The privacy level of the stage instance. */
+    privacyLevel?: StageInstancePrivacyLevels;
+    /** The reason for creating the stage instance. */
+    reason?: string;
+    /** Whether to notify @everyone that a stage instance has started. */
+    sendStartNotification?: boolean;
+    /** The topic of the stage instance. */
+    topic: string;
+}
+
+export type EditStageInstanceOptions = Pick<CreateStageInstanceOptions, "topic" | "privacyLevel"> & {
+    /** The reason for editing the stage instance. */
+    reason?: string;
+};
+
 export interface EditMFALevelOptions {
     /** The new MFA level. */
     level: MFALevels;
