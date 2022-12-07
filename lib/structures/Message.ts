@@ -47,14 +47,14 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
     activity?: MessageActivity;
     /**
      * The application associated with this message. This can be present in two scenarios:
-     * * If the message was from an interaction or application owned webhook (`ClientApplication`).
-     * * If the message has a rich presence embed (`PartialApplication`)
+     * * If the message was from an interaction or application owned webhook ({@link ClientApplication} if any shard has reached READY, {@link PartialApplication} otherwise).
+     * * If the message has a rich presence embed ({@link PartialApplication})
      */
-    application?: PartialApplication | ClientApplication | null;
+    application?: PartialApplication | ClientApplication;
     /**
      * The ID of the application associated with this message. This can be present in two scenarios:
-     * * If the message was from an interaction or application owned webhook (`ClientApplication`).
-     * * If the message has a rich presence embed (`PartialApplication`)
+     * * If the message was from an interaction or application owned webhook ({@link ClientApplication} if any shard has reached READY, {@link PartialApplication} otherwise).
+     * * If the message has a rich presence embed ({@link PartialApplication})
      */
     applicationID: string | null;
     /** The attachments on this message. */
@@ -145,11 +145,15 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         this.webhookID = data.webhook_id;
         this.update(data);
         this.author = data.author.discriminator !== "0000" ? client.users.update(data.author) : new User(data.author, client);
-        if (data.application !== undefined) {
-            this.application = new PartialApplication(data.application, client);
-            this.applicationID = data.application.id;
-        } else if (data.application_id !== undefined) {
-            this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
+        if (data.application_id !== undefined) {
+            if (client["_application"] && client.application.id === data.application_id) {
+                if (data.application) {
+                    client.application["update"](data.application);
+                }
+                this.application = client.application;
+            } else {
+                this.application = data.application ? new PartialApplication(data.application, client) : undefined;
+            }
             this.applicationID = data.application_id;
         } else {
             this.applicationID = null;
