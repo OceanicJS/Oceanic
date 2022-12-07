@@ -48,53 +48,53 @@ export default class Webhooks {
 
     /**
      * Delete a webhook.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param reason The reason for deleting the webhook.
      */
-    async delete(id: string, reason?: string): Promise<void> {
+    async delete(webhookID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.WEBHOOK(id),
+            path:   Routes.WEBHOOK(webhookID),
             reason
         });
     }
 
     /**
      * Delete a webhook message.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param messageID The ID of the message.
      * @param options The options for deleting the message.
      */
-    async deleteMessage(id: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions): Promise<void> {
+    async deleteMessage(webhookID: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions): Promise<void> {
         const query = new URLSearchParams();
         if (options?.threadID !== undefined) {
             query.set("thread_id", options.threadID);
         }
         await this.#manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.WEBHOOK_MESSAGE(id, token, messageID)
+            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID)
         });
     }
 
     /**
      * Delete a webhook via its token.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      */
-    async deleteToken(id: string, token: string): Promise<void> {
+    async deleteToken(webhookID: string, token: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.WEBHOOK(id, token)
+            path:   Routes.WEBHOOK(webhookID, token)
         });
     }
 
     /**
      * Edit a webhook.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param options The options for editing the webhook.
      */
-    async edit(id: string, options: EditWebhookOptions): Promise<Webhook> {
+    async edit(webhookID: string, options: EditWebhookOptions): Promise<Webhook> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -104,7 +104,7 @@ export default class Webhooks {
         }
         return this.#manager.authRequest<RawWebhook>({
             method: "PATCH",
-            path:   Routes.WEBHOOK(id),
+            path:   Routes.WEBHOOK(webhookID),
             json:   {
                 avatar:     options.avatar,
                 channel_id: options.channelID,
@@ -116,12 +116,12 @@ export default class Webhooks {
 
     /**
      * Edit a webhook message.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -132,7 +132,7 @@ export default class Webhooks {
         }
         return this.#manager.authRequest<RawMessage>({
             method: "PATCH",
-            path:   Routes.WEBHOOK_MESSAGE(id, token, messageID),
+            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID),
             json:   {
                 allowed_mentions: options.allowedMentions ? this.#manager.client.util.formatAllowedMentions(options.allowedMentions) : undefined,
                 attachments:      options.attachments,
@@ -147,16 +147,16 @@ export default class Webhooks {
 
     /**
      * Edit a webhook via its token.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param options The options for editing the webhook.
      */
-    async editToken(id: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {
+    async editToken(webhookID: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {
         if (options.avatar) {
             options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
         }
         return this.#manager.authRequest<RawWebhook>({
             method: "PATCH",
-            path:   Routes.WEBHOOK(id, token),
+            path:   Routes.WEBHOOK(webhookID, token),
             json:   {
                 avatar: options.avatar,
                 name:   options.name
@@ -166,13 +166,13 @@ export default class Webhooks {
 
     /**
      * Execute a webhook.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options for executing the webhook.
      */
-    async execute<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
-    async execute(id: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
-    async execute<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
+    async execute<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
+    async execute(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
+    async execute<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -186,7 +186,7 @@ export default class Webhooks {
         }
         return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
-            path:   Routes.WEBHOOK(id, token),
+            path:   Routes.WEBHOOK(webhookID, token),
             query,
             json:   {
                 allowed_mentions: this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
@@ -210,20 +210,20 @@ export default class Webhooks {
 
     /**
      * Execute a GitHub compatible webhook.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options to send. See GitHub's documentation for more information.
      */
-    async executeGithub(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
-    async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
-    async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
+    async executeGithub(webhookID: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
+    async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
+    async executeGithub<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
         if (options.wait !== undefined) {
             query.set("wait", options.wait.toString());
         }
         return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
-            path:   Routes.WEBHOOK_PLATFORM(id, token, "github"),
+            path:   Routes.WEBHOOK_PLATFORM(webhookID, token, "github"),
             query,
             json:   options
         }).then(res => {
@@ -235,20 +235,20 @@ export default class Webhooks {
 
     /**
      * Execute a slack compatible webhook.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
      */
-    async executeSlack(id: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
-    async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
-    async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
+    async executeSlack(webhookID: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
+    async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
+    async executeSlack<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         const query = new URLSearchParams();
         if (options.wait !== undefined) {
             query.set("wait", options.wait.toString());
         }
         return this.#manager.authRequest<RawMessage | null>({
             method: "POST",
-            path:   Routes.WEBHOOK_PLATFORM(id, token, "slack"),
+            path:   Routes.WEBHOOK_PLATFORM(webhookID, token, "slack"),
             query,
             json:   options
         }).then(res => {
@@ -260,13 +260,13 @@ export default class Webhooks {
 
     /**
      * Get a webhook by ID (and optionally token).
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      */
-    async get(id: string, token?: string): Promise<Webhook> {
+    async get(webhookID: string, token?: string): Promise<Webhook> {
         return this.#manager.authRequest<RawWebhook>({
             method: "GET",
-            path:   Routes.WEBHOOK(id, token)
+            path:   Routes.WEBHOOK(webhookID, token)
         }).then(data => new Webhook(data, this.#manager.client));
     }
 
@@ -294,19 +294,19 @@ export default class Webhooks {
 
     /**
      * Get a webhook message.
-     * @param id The ID of the webhook.
+     * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param messageID The ID of the message.
      * @param threadID The ID of the thread the message is in.
      */
-    async getMessage<T extends AnyTextChannelWithoutGroup | Uncached>(id: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
+    async getMessage<T extends AnyTextChannelWithoutGroup | Uncached>(webhookID: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
         const query = new URLSearchParams();
         if (threadID !== undefined) {
             query.set("thread_id", threadID);
         }
         return this.#manager.authRequest<RawMessage>({
             method: "GET",
-            path:   Routes.WEBHOOK_MESSAGE(id, token, messageID)
+            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID)
         }).then(data => new Message<T>(data, this.#manager.client));
     }
 }

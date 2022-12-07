@@ -72,11 +72,8 @@ export const CHANNEL_THREAD_MEMBER                   = (channelID: string, userI
 export const CHANNEL_THREAD_MEMBERS                  = (channelID: string) => `/channels/${channelID}/thread-members` as const;
 export const CHANNEL_TYPING                          = (channelID: string) => `/channels/${channelID}/typing` as const;
 export const GROUP_RECIPIENT                         = (channelID: string, userID: string) => `/channels/${channelID}/recipients/${userID}` as const;
-export const VOICE_REGIONS                             = "/voice/regions" as const;
+export const VOICE_REGIONS                           = "/voice/regions" as const;
 export const GUILD_VOICE_REGIONS                     = (guildID: string) => `/guilds/${guildID}/regions` as const;
-export const INVITE                                  = (code: string) => `/invites/${code}` as const;
-export const STAGE_INSTANCES = "/stage-instances" as const;
-export const CHANNEL_STAGE_INSTANCES 				  = (channelID: string) => `/stage-instances/${channelID}` as const;
 
 // OAuth
 export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;
@@ -121,8 +118,11 @@ export const GUILD_APPLICATION_COMMAND_PERMISSIONS = (applicationID: string, gui
 export const INTERACTION_CALLBACK                  = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
 
 // Misc
-export const GATEWAY             = "/gateway" as const;
-export const GATEWAY_BOT         = "/gateway/bot" as const;
-export const USER                = (userID: string) => `/users/${userID}` as const;
-export const MESSAGE_LINK        = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
-export const NITRO_STICKER_PACKS = "/sticker-packs" as const;
+export const GATEWAY                 = "/gateway" as const;
+export const GATEWAY_BOT             = "/gateway/bot" as const;
+export const USER                    = (userID: string) => `/users/${userID}` as const;
+export const MESSAGE_LINK            = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
+export const NITRO_STICKER_PACKS     = "/sticker-packs" as const;
+export const INVITE                  = (code: string) => `/invites/${code}` as const;
+export const STAGE_INSTANCES         = "/stage-instances" as const;
+export const STAGE_INSTANCE          = (channelID: string) => `/stage-instances/${channelID}` as const;

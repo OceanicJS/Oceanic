@@ -37,12 +37,12 @@ export default class Users {
 
     /**
      * Get a user.
-     * @param id the ID of the user
+     * @param userID the ID of the user
      */
-    async get(id: string): Promise<User> {
+    async get(userID: string): Promise<User> {
         return this.#manager.authRequest<RawUser>({
             method: "GET",
-            path:   Routes.USER(id)
+            path:   Routes.USER(userID)
         }).then(data => this.#manager.client.users.update(data));
     }
 
@@ -58,12 +58,12 @@ export default class Users {
 
     /**
      * Leave a guild.
-     * @param id The ID of the guild to leave.
+     * @param guildID The ID of the guild to leave.
      */
-    async leaveGuild(id: string): Promise<void> {
+    async leaveGuild(guildID: string): Promise<void> {
         await this.#manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.OAUTH_GUILD(id)
+            path:   Routes.OAUTH_GUILD(guildID)
         });
     }
 }

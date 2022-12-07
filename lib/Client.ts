@@ -213,15 +213,15 @@ export default class Client extends TypedEmitter<ClientEvents> {
 
     /**
      * Get a channel from an ID. This will return undefined if the channel is not cached.
-     * @param id The id of the channel.
+     * @param channelID The id of the channel.
      */
-    getChannel<T extends AnyChannel = AnyChannel>(id: string): T | undefined {
-        if (this.channelGuildMap[id]) {
-            return this.guilds.get(this.channelGuildMap[id])?.channels.get(id) as T;
-        } else if (this.threadGuildMap[id]) {
-            return this.guilds.get(this.threadGuildMap[id])?.threads.get(id) as T;
+    getChannel<T extends AnyChannel = AnyChannel>(channelID: string): T | undefined {
+        if (this.channelGuildMap[channelID]) {
+            return this.guilds.get(this.channelGuildMap[channelID])?.channels.get(channelID) as T;
+        } else if (this.threadGuildMap[channelID]) {
+            return this.guilds.get(this.threadGuildMap[channelID])?.threads.get(channelID) as T;
         }
-        return (this.privateChannels.get(id) ?? this.groupChannels.get(id)) as T;
+        return (this.privateChannels.get(channelID) ?? this.groupChannels.get(channelID)) as T;
     }
 
     /**
