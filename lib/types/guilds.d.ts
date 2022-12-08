@@ -115,14 +115,18 @@ export interface RawRole {
     unicode_emoji?: string | null;
 }
 export interface RawRoleTags {
+    available_for_purchase?: null;
     bot_id?: string;
     integration_id?: string;
     premium_subscriber?: null;
+    subscription_listing_id?: string;
 }
 export interface RoleTags {
+    availableForPurchase: boolean;
     botID?: string;
     integrationID?: string;
-    premiumSubscriber?: null;
+    premiumSubscriber: boolean;
+    subscriptionListingID?: string;
 }
 export interface Emoji {
     animated?: boolean;

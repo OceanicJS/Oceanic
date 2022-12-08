@@ -42,7 +42,10 @@ export default class Role extends Base {
         this.name = data.name;
         this.permissions = new Permission(data.permissions);
         this.position = data.position;
-        this.tags = {};
+        this.tags = {
+            availableForPurchase: false,
+            premiumSubscriber:    false
+        };
         this.unicodeEmoji = null;
         this.update(data);
     }
@@ -71,9 +74,11 @@ export default class Role extends Base {
         }
         if (data.tags !== undefined) {
             this.tags = {
-                botID:             data.tags.bot_id,
-                integrationID:     data.tags.integration_id,
-                premiumSubscriber: data.tags.premium_subscriber
+                availableForPurchase:  data.tags.available_for_purchase === null,
+                botID:                 data.tags.bot_id,
+                integrationID:         data.tags.integration_id,
+                premiumSubscriber:     data.tags.premium_subscriber === null,
+                subscriptionListingID: data.tags.subscription_listing_id
             };
         }
         if (data.unicode_emoji !== undefined) {
