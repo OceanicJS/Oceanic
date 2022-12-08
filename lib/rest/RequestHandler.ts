@@ -36,6 +36,7 @@ export default class RequestHandler {
             latencyThreshold:           options.latencyThreshold ?? 30000,
             ratelimiterOffset:          options.ratelimiterOffset ?? 0,
             requestTimeout:             options.requestTimeout ?? 15000,
+            superProperties:            options.superProperties ?? null,
             userAgent:                  options.userAgent ?? USER_AGENT
         };
         this.latencyRef = {
@@ -147,6 +148,9 @@ export default class RequestHandler {
 
                     if (this.options.host) {
                         headers.Host = this.options.host;
+                    }
+                    if (this.options.superProperties) {
+                        headers["X-Super-Properties"] = typeof this.options.superProperties === "object" ? JSON.stringify(this.options.superProperties) : this.options.superProperties;
                     }
                     const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length !== 0 ? `?${options.query.toString()}` : ""}`;
                     let latency = Date.now();

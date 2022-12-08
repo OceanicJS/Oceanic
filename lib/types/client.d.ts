@@ -73,6 +73,13 @@ export interface RESTOptions {
      */
     requestTimeout?: number;
     /**
+     * A value for the `X-Super-Properties` header, sent with all requests if present. This can be used to reveal some properties only visible to >= client builds. Provide either an object, or a base64 encoded string.
+     * @example eyJjbGllbnRfYnVpbGRfbnVtYmVyIjoxNjI5OTJ9
+     * @example { client_build_number: 162992 }
+     * @defaultValue null
+     */
+    superProperties?: string | Record<string, unknown> | null;
+    /**
      * The `User-Agent` header to use for requests.
      * @defaultValue Oceanic/\{VERSION\} (https://github.com/OceanicJS/Oceanic)
      */
