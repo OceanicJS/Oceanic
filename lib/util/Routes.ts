@@ -107,6 +107,7 @@ export const STICKER                     = (stickerID: string) => `/stickers/${s
 export const STICKER_PACK_BANNER         = (assetID: string) => APPLICATION_ASSET("710982414301790216", assetID);
 export const TEAM_ICON                   = (teamID: string, hash: string) => `/team-icons/${teamID}/${hash}` as const;
 export const USER_AVATAR                 = (userID: string, hash: string) => `/avatars/${userID}/${hash}` as const;
+export const USER_AVATAR_DECORATION      = (userID: string, hash: string) => `/avatar-decorations/${userID}/${hash}` as const;
 
 // Application Commands
 export const APPLICATION_COMMAND                   = (applicationID: string, commandID: string) => `/applications/${applicationID}/commands/${commandID}` as const;
