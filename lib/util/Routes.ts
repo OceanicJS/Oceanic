@@ -76,17 +76,18 @@ export const VOICE_REGIONS                           = "/voice/regions" as const
 export const GUILD_VOICE_REGIONS                     = (guildID: string) => `/guilds/${guildID}/regions` as const;
 
 // OAuth
-export const OAUTH_APPLICATION  = "/oauth2/applications/@me" as const;
-export const OAUTH_AUTHORIZE    = "/oauth2/authorize" as const;
-export const OAUTH_INFO         = "/oauth2/@me" as const;
-export const OAUTH_CURRENT_USER = "/users/@me" as const;
-export const OAUTH_CHANNELS     = "/users/@me/channels" as const;
-export const OAUTH_CONNECTIONS  = "/users/@me/connections" as const;
-export const OAUTH_GUILD        = (guildID: string) => `/users/@me/guilds/${guildID}` as const;
-export const OAUTH_GUILD_MEMBER = (guildID: string) => `${OAUTH_GUILD(guildID)}/member` as const;
-export const OAUTH_GUILDS       = "/users/@me/guilds" as const;
-export const OAUTH_TOKEN        = "/oauth2/token" as const;
-export const OAUTH_TOKEN_REVOKE = "/oauth2/token/revoke" as const;
+export const OAUTH_APPLICATION     = "/oauth2/applications/@me" as const;
+export const OAUTH_AUTHORIZE       = "/oauth2/authorize" as const;
+export const OAUTH_INFO            = "/oauth2/@me" as const;
+export const OAUTH_CURRENT_USER    = "/users/@me" as const;
+export const OAUTH_CHANNELS        = "/users/@me/channels" as const;
+export const OAUTH_CONNECTIONS     = "/users/@me/connections" as const;
+export const OAUTH_GUILD           = (guildID: string) => `/users/@me/guilds/${guildID}` as const;
+export const OAUTH_GUILD_MEMBER    = (guildID: string) => `${OAUTH_GUILD(guildID)}/member` as const;
+export const OAUTH_GUILDS          = "/users/@me/guilds" as const;
+export const OAUTH_TOKEN           = "/oauth2/token" as const;
+export const OAUTH_TOKEN_REVOKE    = "/oauth2/token/revoke" as const;
+export const OAUTH_ROLE_CONNECTION = (applicationID: string) => `/users/@me/applications/${applicationID}/role-connection` as const;
 
 // Images
 export const ACHIEVEMENT_ICON            = (applicationID: string, achievementID: string, hash: string) => `/app-assets/${applicationID}/achievements/${achievementID}/icons/${hash}` as const;
@@ -119,11 +120,12 @@ export const GUILD_APPLICATION_COMMAND_PERMISSIONS = (applicationID: string, gui
 export const INTERACTION_CALLBACK                  = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
 
 // Misc
-export const GATEWAY                 = "/gateway" as const;
-export const GATEWAY_BOT             = "/gateway/bot" as const;
-export const USER                    = (userID: string) => `/users/${userID}` as const;
-export const MESSAGE_LINK            = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
-export const NITRO_STICKER_PACKS     = "/sticker-packs" as const;
-export const INVITE                  = (code: string) => `/invites/${code}` as const;
-export const STAGE_INSTANCES         = "/stage-instances" as const;
-export const STAGE_INSTANCE          = (channelID: string) => `/stage-instances/${channelID}` as const;
+export const GATEWAY                   = "/gateway" as const;
+export const GATEWAY_BOT               = "/gateway/bot" as const;
+export const USER                      = (userID: string) => `/users/${userID}` as const;
+export const MESSAGE_LINK              = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
+export const NITRO_STICKER_PACKS       = "/sticker-packs" as const;
+export const INVITE                    = (code: string) => `/invites/${code}` as const;
+export const STAGE_INSTANCES           = "/stage-instances" as const;
+export const STAGE_INSTANCE            = (channelID: string) => `/stage-instances/${channelID}` as const;
+export const ROLE_CONNECTIONS_METADATA = (applicationID: string) => `/applications/${applicationID}/role-connections/metadata` as const;

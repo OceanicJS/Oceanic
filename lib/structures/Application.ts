@@ -38,6 +38,8 @@ export default class Application extends ClientApplication {
     primarySKUID?: string;
     /** A URL to this application's privacy policy. */
     privacyPolicyURL?: string;
+    /** This application's role connections verification url. */
+    roleConnectionsVerificationURL?: string;
     /** A list of rpc origin urls, if rpc is enabled. */
     rpcOrigins: Array<string>;
     /** If this application is a game sold on Discord, the slug that links to its store page. */
@@ -103,6 +105,9 @@ export default class Application extends ClientApplication {
         }
         if (data.privacy_policy_url !== undefined) {
             this.privacyPolicyURL = data.privacy_policy_url;
+        }
+        if (data.role_connections_verification_url !== undefined) {
+            this.roleConnectionsVerificationURL = data.role_connections_verification_url;
         }
         if (data.rpc_origins !== undefined) {
             this.rpcOrigins = data.rpc_origins;

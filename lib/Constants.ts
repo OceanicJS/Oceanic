@@ -451,7 +451,7 @@ export enum OAuthScopes {
     MESSAGES_READ = "messages.read",
     /** allows your app to know a user's friends and implicit relationships - requires Discord approval */
     RELATIONSHIPS_READ = "relationships.read",
-    /** allows your app to update your connection and metadata for the app */
+    /** allows your app to update a user's connection and metadata for the app */
     ROLE_CONNECTIONS_WRITE = "role_connection.write",
     /** for local rpc server access, this allows you to control a user's local Discord client - requires Discord approval */
     RPC = "rpc",
@@ -876,6 +876,17 @@ export enum ThreadMemberFlags {
     ALL_MESSAGES   = 1 << 1,
     ONLY_MENTIONS  = 1 << 2,
     NO_MESSAGES    = 1 << 3,
+}
+
+export enum RoleConnectionMetadataTypes {
+    INTEGER_LESS_THAN_OR_EQUAL     = 1,
+    INTEGER_GREATER_THAN_OR_EQUAL  = 2,
+    INTEGER_EQUAL                  = 3,
+    INTEGER_NOT_EQUAL              = 4,
+    DATETIME_LESS_THAN_OR_EQUAL    = 5,
+    DATETIME_GREATER_THAN_OR_EQUAL = 6,
+    BOOLEAN_EQUAL                  = 7,
+    BOOLEAN_NOT_EQUAL              = 8,
 }
 
 // entries are intentionally not aligned

@@ -16,7 +16,11 @@ import type {
     RefreshTokenResponse,
     RESTApplication,
     RevokeTokenOptions,
-    GetCurrentGuildsOptions
+    GetCurrentGuildsOptions,
+    RawRoleConnectionMetadata,
+    RoleConnectionMetadata,
+    RoleConnection,
+    RawRoleConnection
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
@@ -209,6 +213,47 @@ export default class OAuth {
     }
 
     /**
+     * Get an application's role connection metadata records.
+     * @param application The ID of the application.
+     */
+    async getRoleConnectionsMetatdata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
+        return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
+            method: "GET",
+            path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID)
+        }).then(data => data.map(d => ({
+            description:              d.description,
+            descriptionLocalizations: d.description_localizations,
+            key:                      d.key,
+            name:                     d.name,
+            nameLocalizations:        d.name_localizations,
+            type:                     d.type
+        })));
+    }
+
+    /**
+     * Get the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     */
+    async getUserRoleConnection(applicationID: string): Promise<RoleConnection> {
+        return this.#manager.authRequest<RawRoleConnection>({
+            method: "GET",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID)
+        }).then(data => ({
+            metadata: Object.entries(data.metadata).map(([key, value]) => ({
+                [key]: {
+                    description:              value.description,
+                    descriptionLocalizations: value.description_localizations,
+                    key:                      value.key,
+                    name:                     value.name,
+                    nameLocalizations:        value.name_localizations,
+                    type:                     value.type
+                }
+            })).reduce((a, b) => ({ ...a, ...b })),
+            platformName:     data.platform_name,
+            platformUsername: data.platform_username
+        }));
+    }
+    /**
      * Refresh an existing access token.
      * @param options The options for refreshing the token.
      */
@@ -246,5 +291,71 @@ export default class OAuth {
             path:   Routes.OAUTH_TOKEN_REVOKE,
             form
         });
+    }
+
+    /**
+     * Update an application's role connections metadata.
+     * @param application The ID of the application.
+     * @param metadata The metadata records.
+     */
+    async updateRoleConnectionsMetata(applicationID: string, metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
+        return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
+            method: "PUT",
+            path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID),
+            json:   metadata.map(d => ({
+                description:               d.description,
+                description_localizations: d.descriptionLocalizations,
+                key:                       d.key,
+                name:                      d.name,
+                name_localizations:        d.nameLocalizations,
+                type:                      d.type
+            }))
+        }).then(data => data.map(d => ({
+            description:              d.description,
+            descriptionLocalizations: d.description_localizations,
+            key:                      d.key,
+            name:                     d.name,
+            nameLocalizations:        d.name_localizations,
+            type:                     d.type
+        })));
+    }
+
+    /**
+     * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     * @param data The metadata to update.
+     */
+    async updateUserRoleConnection(applicationID: string, data: RoleConnection): Promise<RoleConnection> {
+        return this.#manager.authRequest<RawRoleConnection>({
+            method: "PUT",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
+            json:   {
+                metadata: Object.entries(data.metadata).map(([key, value]) => ({
+                    [key]: {
+                        description:               value.description,
+                        description_localizations: value.descriptionLocalizations,
+                        key:                       value.key,
+                        name:                      value.name,
+                        name_localizations:        value.nameLocalizations,
+                        type:                      value.type
+                    }
+                })).reduce((a, b) => ({ ...a, ...b })),
+                platform_name:     data.platformName,
+                platform_username: data.platformUsername
+            }
+        }).then(d => ({
+            metadata: Object.entries(d.metadata).map(([key, value]) => ({
+                [key]: {
+                    description:              value.description,
+                    descriptionLocalizations: value.description_localizations,
+                    key:                      value.key,
+                    name:                     value.name,
+                    nameLocalizations:        value.name_localizations,
+                    type:                     value.type
+                }
+            })).reduce((a, b) => ({ ...a, ...b })),
+            platformName:     d.platform_name,
+            platformUsername: d.platform_username
+        }));
     }
 }

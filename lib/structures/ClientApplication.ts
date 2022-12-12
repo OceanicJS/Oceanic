@@ -2,7 +2,7 @@
 import Base from "./Base";
 import type ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
-import type { RawClientApplication } from "../types/oauth";
+import type { RawClientApplication, RoleConnection, RoleConnectionMetadata } from "../types/oauth";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
@@ -166,10 +166,40 @@ export default class ClientApplication extends Base {
         return this.client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
     }
 
+    /**
+     * Get this application's role connection metadata records.
+     */
+    async getRoleConnectionsMetadata(): Promise<Array<RoleConnectionMetadata>> {
+        return this.client.rest.oauth.getRoleConnectionsMetatdata(this.id);
+    }
+
+    /**
+     * Get the authenticated user's role connection object for this application. This requires the `role_connections.write` scope.
+     */
+    async getUserRoleConnection(): Promise<RoleConnection> {
+        return this.client.rest.oauth.getUserRoleConnection(this.id);
+    }
+
     override toJSON(): JSONClientApplication {
         return {
             ...super.toJSON(),
             flags: this.flags
         };
+    }
+
+    /**
+     * Update this application's role connections metadata.
+     * @param metadata The metadata records.
+     */
+    async updateRoleConnectionsMetata(metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
+        return this.client.rest.oauth.updateRoleConnectionsMetata(this.id, metadata);
+    }
+
+    /**
+     * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param data The metadata to update.
+     */
+    async updateUserRoleConnection(data: RoleConnection): Promise<RoleConnection> {
+        return this.client.rest.oauth.updateUserRoleConnection(this.id, data);
     }
 }

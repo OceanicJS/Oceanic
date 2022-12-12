@@ -2,7 +2,14 @@
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
 import type { RawIntegration } from "./guilds";
-import type { ConnectionService, PermissionName, TeamMembershipState, VisibilityTypes } from "../Constants";
+import type { LocaleMap } from "./application-commands";
+import type {
+    ConnectionService,
+    PermissionName,
+    RoleConnectionMetadataTypes,
+    TeamMembershipState,
+    VisibilityTypes
+} from "../Constants";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
@@ -23,6 +30,7 @@ export interface RawApplication {
     owner?: RawUser;
     primary_sku_id?: string;
     privacy_policy_url?: string;
+    role_connections_verification_url?: string;
     rpc_origins?: Array<string>;
     slug?: string;
     // summary is deprecated and being removed in v11
@@ -198,4 +206,49 @@ export interface GetCurrentGuildsOptions {
     limit?: number;
     /** Whether to include approximate member and presence counts. */
     withCounts?: boolean;
+}
+
+export interface UpdateRoleConnectionOptions {
+    metadata?: Record<string, RoleConnectionMetadataOptions>;
+    platformName?: string;
+    platformUsername?: string;
+}
+
+export interface RoleConnectionMetadataOptions {
+    description: string;
+    descriptionLocalizations?: LocaleMap;
+    key: string;
+    name: string;
+    nameLocalizations?: LocaleMap;
+    type: RoleConnectionMetadataTypes;
+}
+
+export interface RawRoleConnection {
+    metadata: Record<string, RawRoleConnectionMetadata>;
+    platform_name: string | null;
+    platform_username: string | null;
+}
+
+export interface RawRoleConnectionMetadata {
+    description: string;
+    description_localizations?: LocaleMap;
+    key: string;
+    name: string;
+    name_localizations?: LocaleMap;
+    type: RoleConnectionMetadataTypes;
+}
+
+export interface RoleConnection {
+    metadata: Record<string, RoleConnectionMetadata>;
+    platformName: string | null;
+    platformUsername: string | null;
+}
+
+export interface RoleConnectionMetadata {
+    description: string;
+    descriptionLocalizations?: LocaleMap;
+    key: string;
+    name: string;
+    nameLocalizations?: LocaleMap;
+    type: RoleConnectionMetadataTypes;
 }
