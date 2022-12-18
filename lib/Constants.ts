@@ -567,8 +567,9 @@ export enum InteractionTypes {
 }
 
 export enum InviteTargetTypes {
-    STREAM               = 1,
-    EMBEDDED_APPLICATION = 2,
+    STREAM                      = 1,
+    EMBEDDED_APPLICATION        = 2,
+    ROLE_SUBSCRIPTIONS_PURCHASE = 3,
 }
 
 export enum GuildScheduledEventPrivacyLevels {
