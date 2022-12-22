@@ -849,10 +849,6 @@ export enum HubTypes {
     COLLEGE     = 2,
 }
 
-
-/** @deprecated Use {@link Constants~HubTypes | HubTypes}. This will be removed in `1.4.0`. */
-export const HubType = HubTypes;
-
 export enum ActivityTypes {
     GAME      = 0,
     STREAMING = 1,
