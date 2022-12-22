@@ -85,6 +85,7 @@ export interface RawGuild {
     region?: string | null;
     roles: Array<RawRole>;
     rules_channel_id: string | null;
+    safety_alerts_channel_id: string | null;
     splash: string | null;
     stage_instances: Array<RawStageInstance>;
     stickers?: Array<RawSticker>;

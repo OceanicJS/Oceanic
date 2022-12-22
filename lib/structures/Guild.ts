@@ -195,6 +195,10 @@ export default class Guild extends Base {
     rulesChannel?: TextChannel | null;
     /** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
     rulesChannelID: string | null;
+    /** The channel where safety related notices are posted. */
+    safetyAlertsChannel?: TextChannel | null;
+    /** The ID if the channel where safety related notices are posted. */
+    safetyAlertsChannelID: string | null;
     /** The scheduled events in this guild. */
     scheduledEvents: TypedCollection<string, RawScheduledEvent, GuildScheduledEvent>;
     /** The invite splash hash of this guild. */
@@ -207,7 +211,7 @@ export default class Guild extends Base {
     systemChannel?: TextChannel | null;
     /** The [flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags) for the system channel. */
     systemChannelFlags: number;
-    /** The id of the channel where welcome messages and boosts notices are posted. */
+    /** The ID of the channel where welcome messages and boosts notices are posted. */
     systemChannelID: string | null;
     /** The threads in this guild. */
     threads: TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
@@ -260,6 +264,7 @@ export default class Guild extends Base {
         this.publicUpdatesChannelID = null;
         this.roles = new TypedCollection(Role, client);
         this.rulesChannelID = null;
+        this.safetyAlertsChannelID = null;
         this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client);
         this.splash = null;
         this.stageInstances = new TypedCollection(StageInstance, client);
@@ -521,6 +526,10 @@ export default class Guild extends Base {
         if (data.rules_channel_id !== undefined) {
             this.rulesChannel = data.rules_channel_id === null ? null : this.client.getChannel<TextChannel>(data.rules_channel_id);
             this.rulesChannelID = data.rules_channel_id;
+        }
+        if (data.safety_alerts_channel_id !== undefined) {
+            this.safetyAlertsChannel = data.safety_alerts_channel_id === null ? null : this.client.getChannel<TextChannel>(data.safety_alerts_channel_id);
+            this.safetyAlertsChannelID = data.safety_alerts_channel_id;
         }
         if (data.splash !== undefined) {
             this.splash = data.splash;

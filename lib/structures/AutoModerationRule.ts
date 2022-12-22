@@ -50,11 +50,12 @@ export default class AutoModerationRule extends Base {
         this.guildID = data.guild_id;
         this.name = data.name;
         this.triggerMetadata = {
-            allowList:         data.trigger_metadata.allow_list,
-            keywordFilter:     data.trigger_metadata.keyword_filter,
-            mentionTotalLimit: data.trigger_metadata.mention_total_limit,
-            presets:           data.trigger_metadata.presets,
-            regexPatterns:     data.trigger_metadata.regex_patterns
+            allowList:                    data.trigger_metadata.allow_list,
+            keywordFilter:                data.trigger_metadata.keyword_filter,
+            mentionRaidProtectionEnabled: data.trigger_metadata.mention_raid_protection_enabled,
+            mentionTotalLimit:            data.trigger_metadata.mention_total_limit,
+            presets:                      data.trigger_metadata.presets,
+            regexPatterns:                data.trigger_metadata.regex_patterns
         };
         this.triggerType = data.trigger_type;
         this.update(data);

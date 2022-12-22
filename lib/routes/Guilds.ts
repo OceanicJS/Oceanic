@@ -210,11 +210,12 @@ export default class Guilds {
                 exempt_roles:     options.exemptRoles,
                 name:             options.name,
                 trigger_metadata: !options.triggerMetadata ? undefined : {
-                    allow_list:          options.triggerMetadata.allowList,
-                    keyword_filter:      options.triggerMetadata.keywordFilter,
-                    mention_total_limit: options.triggerMetadata.mentionTotalLimit,
-                    presets:             options.triggerMetadata.presets,
-                    regex_patterns:      options.triggerMetadata.regexPatterns
+                    allow_list:                      options.triggerMetadata.allowList,
+                    keyword_filter:                  options.triggerMetadata.keywordFilter,
+                    mention_raid_protection_enabled: options.triggerMetadata.mentionRaidProtectionEnabled,
+                    mention_total_limit:             options.triggerMetadata.mentionTotalLimit,
+                    presets:                         options.triggerMetadata.presets,
+                    regex_patterns:                  options.triggerMetadata.regexPatterns
                 },
                 trigger_type: options.triggerType
             },
@@ -630,11 +631,12 @@ export default class Guilds {
                 exempt_roles:     options.exemptRoles,
                 name:             options.name,
                 trigger_metadata: !options.triggerMetadata ? undefined : {
-                    allow_list:          options.triggerMetadata.allowList,
-                    keyword_filter:      options.triggerMetadata.keywordFilter,
-                    mention_total_limit: options.triggerMetadata.mentionTotalLimit,
-                    presets:             options.triggerMetadata.presets,
-                    regex_patterns:      options.triggerMetadata.regexPatterns
+                    allow_list:                      options.triggerMetadata.allowList,
+                    keyword_filter:                  options.triggerMetadata.keywordFilter,
+                    mention_raid_protection_enabled: options.triggerMetadata.mentionRaidProtectionEnabled,
+                    mention_total_limit:             options.triggerMetadata.mentionTotalLimit,
+                    presets:                         options.triggerMetadata.presets,
+                    regex_patterns:                  options.triggerMetadata.regexPatterns
                 }
             },
             reason

@@ -21,6 +21,8 @@ export interface RawTriggerMetadata {
     /** `KEYWORD` */
     keyword_filter?: Array<string>;
     /** `MENTION_SPAM` */
+    mention_raid_protection_enabled?: boolean;
+    /** `MENTION_SPAM` */
     mention_total_limit?: number;
     /** `KEYWORD_PRESET` */
     presets?: Array<AutoModerationKeywordPresetTypes>;
@@ -45,6 +47,8 @@ export interface TriggerMetadata {
     allowList?: Array<string>;
     /** The keywords to filter. Valid for `KEYWORD`. */
     keywordFilter?: Array<string>;
+    /** Whether to enable mention raid protection. Valid for `MENTION_SPAM`. */
+    mentionRaidProtectionEnabled?: boolean;
     /** The maximum number of mentions to allow. Valid for `MENTION_SPAM`. */
     mentionTotalLimit?: number;
     /** The presets to use. Valid for `KEYWORD_PRESET`. */
