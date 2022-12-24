@@ -5,6 +5,7 @@ import type Guild from "./Guild";
 import type Permission from "./Permission";
 import type VoiceState from "./VoiceState";
 import type { ImageFormat } from "../Constants";
+import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type {
     CreateBanOptions,
@@ -179,7 +180,7 @@ export default class Member extends Base {
      * @param size The dimensions of the image.
      */
     avatarURL(format?: ImageFormat, size?: number): string {
-        return this.avatar === null ? this.user.avatarURL(format, size) : this.client.util.formatImage(this.avatar, format, size);
+        return this.avatar === null ? this.user.avatarURL(format, size) : this.client.util.formatImage(Routes.GUILD_AVATAR(this.guildID, this.id, this.avatar), format, size);
     }
 
     /**
