@@ -197,13 +197,13 @@ export default class Util {
                 ["image/webp", /^52494646\d{8}57454250/]
             ];
             for (const format of magicMap) {
-                if (format[1].test(this.getMagic(img, 8))) {
+                if (format[1].test(this.getMagic(img, 16))) {
                     mime = format[0];
                     break;
                 }
             }
             if (!mime) {
-                throw new Error(`Failed to determine image format. (magic: ${this.getMagic(img, 8)})`);
+                throw new Error(`Failed to determine image format. (magic: ${this.getMagic(img, 16)})`);
             }
             img = `data:${mime};base64,${b64}`;
         }
