@@ -193,6 +193,7 @@ export default class Util {
                 ["image/jpeg", /^FFD8FFEE/],
                 // FF D8 FF E1 ?? ?? 45 78 69 66 00 00
                 ["image/jpeg", /^FFD8FFE1[\dA-F]{4}457869660000/],
+                // 52 49 46 46 ?? ?? ?? ?? 57 45 42 50
                 ["image/webp", /^52494646\d{8}57454250/]
             ];
             for (const format of magicMap) {
