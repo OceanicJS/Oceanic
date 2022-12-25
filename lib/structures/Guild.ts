@@ -31,7 +31,8 @@ import type {
     PremiumTiers,
     VerificationLevels,
     GuildChannelTypesWithoutThreads,
-    GatewayOPCodes
+    GatewayOPCodes,
+    MutableGuildFeatures
 } from "../Constants";
 import { AllPermissions, Permissions } from "../Constants";
 import * as Routes from "../util/Routes";
@@ -391,7 +392,7 @@ export default class Guild extends Base {
         }
     }
 
-    private toggleFeature(feature: GuildFeature, enable: boolean, reason?: string): Promise<Guild> {
+    private toggleFeature(feature: MutableGuildFeatures, enable: boolean, reason?: string): Promise<Guild> {
         const newFeatures = enable ?
             (this.features.includes(feature) ? this.features : [...this.features, feature]) :
             this.features.filter(name => name !== feature);
@@ -795,13 +796,20 @@ export default class Guild extends Base {
         return this.toggleFeature("DISCOVERABLE", false, reason);
     }
 
-
     /**
      * Disable the `INVITES_DISABLED` feature for this guild. Requires the **Manage Guild** permission.
      * @param reason The reason for disabling the feature.
      */
     async disableInvites(reason?: string): Promise<Guild> {
         return this.toggleFeature("INVITES_DISABLED", true, reason);
+    }
+
+    /**
+     * Disable the `RAID_ALERTS_ENABLED` feature for this guild. Requires the **Manage Guild** permission.
+     * @param reason The reason for disabling the feature.
+     */
+    async disableRaidAlerts(reason?: string): Promise<Guild> {
+        return this.toggleFeature("RAID_ALERTS_ENABLED", false, reason);
     }
 
     /**
@@ -967,6 +975,14 @@ export default class Guild extends Base {
      */
     async enableInvites(reason?: string): Promise<Guild> {
         return this.toggleFeature("INVITES_DISABLED", false, reason);
+    }
+
+    /**
+     * Enable the `RAID_ALERTS_ENABLED` feature for this guild. Requires the **Manage Guild** permission.
+     * @param reason The reason for enabling the feature.
+     */
+    async enableRaidAlerts(reason?: string): Promise<Guild> {
+        return this.toggleFeature("RAID_ALERTS_ENABLED", true, reason);
     }
 
     /**

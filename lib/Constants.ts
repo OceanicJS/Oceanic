@@ -141,6 +141,7 @@ export const GuildFeatures = [
     "WELCOME_SCREEN_ENABLED"
 ] as const;
 export type GuildFeature = typeof GuildFeatures[number];
+export type MutableGuildFeatures = "COMMUNITY" | "DISCOVERABLE" | "INVITES_DISABLED" | "RAID_ALERTS_ENABLED";
 
 export enum DefaultMessageNotificationLevels {
     ALL_MESSAGES  = 0,
