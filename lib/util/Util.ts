@@ -178,23 +178,31 @@ export default class Util {
         if (Buffer.isBuffer(img)) {
             const b64 = img.toString("base64");
             let mime: string | undefined;
-            const magic = this.getMagic(img);
-            switch (magic) {
-                case "47494638": {
-                    mime = "image/gif";
-                    break;
-                }
-                case "89504E47": {
-                    mime = "image/png";
-                    break;
-                }
-                case "FFD8FFDB": case "FFD8FFE0": case "49460001": case "FFD8FFEE": case "69660000": {
-                    mime = "image/jpeg";
+            const magicMap: Array<[mime: string, magic: RegExp]> = [
+                // 47 49 46 38
+                ["image/gif", /^47494638/],
+                // 89 50 4E 47
+                ["image/png", /^89504E47/],
+                // FF D8 FF DB
+                ["image/jpeg", /^FFD8FFDB/],
+                // FF D8 FF E0 00 10 4A 46 49 46 00 01
+                ["image/jpeg", /^FFD8FFE000104A4649460001/],
+                // 49 46 00 01
+                ["image/jpeg", /^49460001/],
+                // FF D8 FF EE
+                ["image/jpeg", /^FFD8FFEE/],
+                // FF D8 FF E1 ?? ?? 45 78 69 66 00 00
+                ["image/jpeg", /^FFD8FFE1[\dA-F]{4}457869660000/],
+                ["image/webp", /^52494646\d{8}57454250/]
+            ];
+            for (const format of magicMap) {
+                if (format[1].test(this.getMagic(img, 8))) {
+                    mime = format[0];
                     break;
                 }
             }
             if (!mime) {
-                throw new Error(`Failed to determine image format. (magic: ${magic})`);
+                throw new Error(`Failed to determine image format. (magic: ${this.getMagic(img, 8)})`);
             }
             img = `data:${mime};base64,${b64}`;
         }
@@ -335,8 +343,8 @@ export default class Util {
         return `${CDN_URL}${url}.${format}?size=${size}`;
     }
 
-    getMagic(file: Buffer): string {
-        return [...new Uint8Array(file.subarray(0, 4))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+    getMagic(file: Buffer, len = 4): string {
+        return [...new Uint8Array(file.subarray(0, len))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
     }
 
     optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions {
