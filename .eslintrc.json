@@ -42,9 +42,7 @@
     }
   },
   "plugins": [
-    "eslint-plugin-import",
-    "eslint-plugin-jsdoc",
-    "eslint-plugin-prefer-arrow",
+    "prefer-arrow",
     "@typescript-eslint",
     "jsdoc",
     "import-newlines",
@@ -156,21 +154,6 @@
     "eqeqeq": ["error", "always"],
     "guard-for-in": "error",
     "import-newlines/enforce": ["error", 4],
-    "import/no-extraneous-dependencies": "off",
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          "index",
-          "sibling",
-          "parent",
-          "internal",
-          "external",
-          "builtin",
-          "object"
-        ]
-      }
-    ],
     "indent": "off",
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "error",
@@ -181,7 +164,7 @@
         "align": "value"
       }
     ],
-    "keyword-spacing": ["error"],
+    "keyword-spacing": "error",
     "linebreak-style": ["error", "unix"],
     "new-parens": ["error", "always"],
     "no-caller": "error",
