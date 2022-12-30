@@ -4,8 +4,7 @@ import Message from "./Message";
 import type User from "./User";
 import type Member from "./Member";
 import type Permission from "./Permission";
-import type { ThreadChannelTypes } from "../Constants";
-import { ChannelTypes } from "../Constants";
+import { ChannelTypes, type ThreadChannelTypes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {

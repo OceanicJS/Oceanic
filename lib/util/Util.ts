@@ -1,13 +1,13 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
 import type Client from "../Client";
-import type { ImageFormat } from "../Constants";
 import {
     ButtonStyles,
     ComponentTypes,
     ImageFormats,
     MAX_IMAGE_SIZE,
-    MIN_IMAGE_SIZE
+    MIN_IMAGE_SIZE,
+    type ImageFormat
 } from "../Constants";
 import type {
     AllowedMentions,

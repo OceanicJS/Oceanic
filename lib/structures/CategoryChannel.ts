@@ -4,8 +4,7 @@ import GuildChannel from "./GuildChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type Client from "../Client";
-import type { ChannelTypes } from "../Constants";
-import { AllPermissions, Permissions } from "../Constants";
+import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
 import type {
     EditAnyGuildChannelOptions,

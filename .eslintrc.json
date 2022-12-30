@@ -140,6 +140,13 @@
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/unified-signatures": "error",
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "disallowTypeAnnotations": false,
+        "fixStyle": "inline-type-imports"
+      }
+    ],
     "arrow-body-style": ["error", "as-needed"],
     "brace-style": ["error", "1tbs"],
     "comma-dangle": "off",
@@ -181,7 +188,8 @@
     "no-console": "off",
     "no-debugger": "error",
     "no-duplicate-case": "error",
-    "no-duplicate-imports": "off",
+    // Is there a better solution for not allowing both import & import type at the same time?
+    "no-duplicate-imports": "error",
     "no-empty": [
       "error",
       {

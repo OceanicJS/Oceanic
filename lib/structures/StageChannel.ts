@@ -6,8 +6,7 @@ import type CategoryChannel from "./CategoryChannel";
 import Permission from "./Permission";
 import type Invite from "./Invite";
 import type StageInstance from "./StageInstance";
-import type { ChannelTypes } from "../Constants";
-import { AllPermissions, Permissions } from "../Constants";
+import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {

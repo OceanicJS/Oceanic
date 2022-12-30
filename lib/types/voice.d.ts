@@ -27,7 +27,7 @@ export interface VoiceRegion {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { DiscordGatewayAdapterCreator } from "@discordjs/voice";
+import { type DiscordGatewayAdapterCreator } from "@discordjs/voice";
 
 export interface JoinVoiceChannelOptions {
     /** The ID of the channel to join. */

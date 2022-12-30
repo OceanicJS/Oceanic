@@ -38,8 +38,8 @@ import type User from "../structures/User";
 import type VoiceChannel from "../structures/VoiceChannel";
 import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
-import Guild from "../structures/Guild";
-import Invite from "../structures/Invite";
+import type Guild from "../structures/Guild";
+import type Invite from "../structures/Invite";
 
 export interface RawChannel {
     application_id?: string;

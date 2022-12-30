@@ -65,7 +65,7 @@ import type Invite from "../structures/Invite";
 import type Message from "../structures/Message";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type StageInstance from "../structures/StageInstance";
-import ForumChannel from "../structures/ForumChannel";
+import type ForumChannel from "../structures/ForumChannel";
 
 
 export interface ClientEvents {
