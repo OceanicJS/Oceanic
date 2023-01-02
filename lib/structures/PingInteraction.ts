@@ -1,7 +1,6 @@
 /** @module PingInteraction */
 import Interaction from "./Interaction";
-import type { InteractionTypes } from "../Constants";
-import { InteractionResponseTypes } from "../Constants";
+import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
 import type { RawPingInteraction } from "../types/interactions";
 import type Client from "../Client";
 import type { JSONPingInteraction } from "../types/json";

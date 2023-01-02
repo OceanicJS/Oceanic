@@ -23,8 +23,14 @@ import type {
 } from "../types/channels";
 import type { JSONForumChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
-import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
-import { AllPermissions, Permissions, SortOrderTypes, ForumLayoutTypes } from "../Constants";
+import {
+    AllPermissions,
+    Permissions,
+    type SortOrderTypes,
+    type ForumLayoutTypes,
+    type ChannelTypes,
+    type ThreadAutoArchiveDuration
+} from "../Constants";
 
 /** Represents a forum channel. */
 export default class ForumChannel extends GuildChannel {

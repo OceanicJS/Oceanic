@@ -21,20 +21,21 @@ import type GuildTemplate from "./GuildTemplate";
 import type GuildPreview from "./GuildPreview";
 import type Invite from "./Invite";
 import type Webhook from "./Webhook";
-import type {
-    DefaultMessageNotificationLevels,
-    ExplicitContentFilterLevels,
-    GuildFeature,
-    GuildNSFWLevels,
-    ImageFormat,
-    MFALevels,
-    PremiumTiers,
-    VerificationLevels,
-    GuildChannelTypesWithoutThreads,
-    GatewayOPCodes,
-    MutableGuildFeatures
+import {
+    AllPermissions,
+    Permissions,
+    type DefaultMessageNotificationLevels,
+    type ExplicitContentFilterLevels,
+    type GuildFeature,
+    type GuildNSFWLevels,
+    type ImageFormat,
+    type MFALevels,
+    type PremiumTiers,
+    type VerificationLevels,
+    type GuildChannelTypesWithoutThreads,
+    type GatewayOPCodes,
+    type MutableGuildFeatures
 } from "../Constants";
-import { AllPermissions, Permissions } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";

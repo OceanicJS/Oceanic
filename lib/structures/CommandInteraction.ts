@@ -11,8 +11,7 @@ import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import TypedCollection from "../util/TypedCollection";
-import type { InteractionTypes } from "../Constants";
-import { ApplicationCommandTypes, InteractionResponseTypes } from "../Constants";
+import { ApplicationCommandTypes, InteractionResponseTypes, type InteractionTypes } from "../Constants";
 import type {
     ApplicationCommandInteractionData,
     InteractionContent,

@@ -13,7 +13,7 @@ import type {
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { ClientStatus, PresenceUpdate, Activity as GatewayActivity } from "./gateway";
 import type { RawVoiceState } from "./voice";
-import { File } from "./request-handler";
+import { type File } from "./request-handler";
 import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,

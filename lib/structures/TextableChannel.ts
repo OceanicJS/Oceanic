@@ -12,8 +12,7 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import type User from "./User";
 import type Webhook from "./Webhook";
-import type { ThreadAutoArchiveDuration } from "../Constants";
-import { AllPermissions, Permissions, ChannelTypes } from "../Constants";
+import { AllPermissions, Permissions, ChannelTypes, type ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {

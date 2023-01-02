@@ -9,8 +9,7 @@ import type Invite from "./Invite";
 import type User from "./User";
 import type Webhook from "./Webhook";
 import type { JoinVoiceChannelOptions } from "../types/voice";
-import type { ChannelTypes, VideoQualityModes } from "../Constants";
-import { AllPermissions, Permissions } from "../Constants";
+import { AllPermissions, Permissions, type ChannelTypes, type VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {

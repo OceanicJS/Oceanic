@@ -14,7 +14,7 @@ import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
-import { BASE_URL, MessageTypes } from "../Constants";
+import { BASE_URL, type MessageTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
     AnyGuildTextChannel,

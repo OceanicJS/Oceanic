@@ -23,8 +23,7 @@ import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 import type { RawUser } from "../types/users";
 import type { RawMember } from "../types/guilds";
-import type { InteractionTypes } from "../Constants";
-import { ComponentTypes, InteractionResponseTypes, SelectMenuTypes } from "../Constants";
+import { ComponentTypes, InteractionResponseTypes, type SelectMenuTypes, type InteractionTypes } from "../Constants";
 import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 import TypedCollection from "../util/TypedCollection";
 
