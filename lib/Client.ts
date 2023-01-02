@@ -40,7 +40,7 @@ try {
 } catch {}
 
 /** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
-export default class Client extends TypedEmitter<ClientEvents> {
+export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
     private _application?: ClientApplication;
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
