@@ -102,8 +102,8 @@ export default class GuildScheduledEvent extends Base {
 
     /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     get channel(): StageChannel | null | undefined {
-        if (this.channelID !== null && this._cachedChannel !== null) {
-            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<StageChannel>(this.channelID));
+        if (this.channelID !== null) {
+            return this._cachedChannel ??= this.client.getChannel<StageChannel>(this.channelID);
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);

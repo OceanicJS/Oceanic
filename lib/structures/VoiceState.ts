@@ -96,8 +96,8 @@ export default class VoiceState extends Base {
 
     /** The channel the user is connected to. */
     get channel(): VoiceChannel | StageChannel | null | undefined {
-        if (this.channelID !== null && this._cachedChannel === null) {
-            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<VoiceChannel | StageChannel>(this.channelID));
+        if (this.channelID !== null) {
+            return this._cachedChannel ??= this.client.getChannel<VoiceChannel | StageChannel>(this.channelID);
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
