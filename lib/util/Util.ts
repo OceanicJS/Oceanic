@@ -187,14 +187,14 @@ export default class Util {
                 ["image/jpeg", /^FFD8FFDB/],
                 // FF D8 FF E0 00 10 4A 46 49 46 00 01
                 ["image/jpeg", /^FFD8FFE000104A4649460001/],
-                // 49 46 00 01
-                ["image/jpeg", /^49460001/],
                 // FF D8 FF EE
                 ["image/jpeg", /^FFD8FFEE/],
                 // FF D8 FF E1 ?? ?? 45 78 69 66 00 00
                 ["image/jpeg", /^FFD8FFE1[\dA-F]{4}457869660000/],
                 // 52 49 46 46 ?? ?? ?? ?? 57 45 42 50
-                ["image/webp", /^52494646\d{8}57454250/]
+                ["image/webp", /^52494646\d{8}57454250/],
+                // 02 27 62 20 22 0 - lottie JSON (assuming all files will start with {"v":")
+                ["application/json", /^02276220220/]
             ];
             for (const format of magicMap) {
                 if (format[1].test(this.getMagic(img, 16))) {
