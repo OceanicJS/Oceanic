@@ -276,7 +276,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
 
     /** The channel this message was created in. */
     get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
-        return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined);
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined;
     }
 
     /** The guild this message is in. This will throw an error if the guild is not cached. */

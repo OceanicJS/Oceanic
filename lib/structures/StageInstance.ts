@@ -56,7 +56,7 @@ export default class StageInstance extends Base {
 
     /** The associated stage channel. */
     get channel(): StageChannel | undefined {
-        return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<StageChannel>(this.channelID));
+        return this._cachedChannel ??= this.client.getChannel<StageChannel>(this.channelID);
     }
 
     /** The guild of the associated stage channel. This will throw an error if the guild is not cached. */
