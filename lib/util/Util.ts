@@ -183,14 +183,8 @@ export default class Util {
                 ["image/gif", /^47494638/],
                 // 89 50 4E 47
                 ["image/png", /^89504E47/],
-                // FF D8 FF DB
-                ["image/jpeg", /^FFD8FFDB/],
-                // FF D8 FF E0 00 10 4A 46 49 46 00 01
-                ["image/jpeg", /^FFD8FFE000104A4649460001/],
-                // FF D8 FF EE
-                ["image/jpeg", /^FFD8FFEE/],
-                // FF D8 FF E1 ?? ?? 45 78 69 66 00 00
-                ["image/jpeg", /^FFD8FFE1[\dA-F]{4}457869660000/],
+                // FF D8 FF
+                ["image/jpeg", /^FFD8FF/],
                 // 52 49 46 46 ?? ?? ?? ?? 57 45 42 50
                 ["image/webp", /^52494646\d{8}57454250/],
                 // 02 27 62 20 22 0 - lottie JSON (assuming all files will start with {"v":")
