@@ -5,7 +5,7 @@ export const CDN_URL = "https://cdn.discordapp.com";
 // Webhooks
 export const CHANNEL_WEBHOOKS = (channelID: string) => `/channels/${channelID}/webhooks` as const;
 export const GUILD_WEBHOOKS   = (guildID: string) => `/guilds/${guildID}/webhooks` as const;
-export const WEBHOOK          = (webhookID: string, webhookToken?: string) => (!webhookToken ? `/webhooks/${webhookID}` : `/webhooks/${webhookID}/${webhookToken}`) as `/webhooks/${string}` | `/webhooks/${string}/${string}`;
+export const WEBHOOK          = (webhookID: string, webhookToken?: string) => (webhookToken ? `/webhooks/${webhookID}/${webhookToken}` : `/webhooks/${webhookID}`) as `/webhooks/${string}` | `/webhooks/${string}/${string}`;
 export const WEBHOOK_MESSAGE  = (webhookID: string, webhookToken: string, messageID: string) => `/webhooks/${webhookID}/${webhookToken}/messages/${messageID}` as const;
 export const WEBHOOK_PLATFORM = (webhookID: string, webhookToken: string, platform: "github" | "slack") => `/webhooks/${webhookID}/${webhookToken}/${platform}` as const;
 

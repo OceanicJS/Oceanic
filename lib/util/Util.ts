@@ -226,11 +226,11 @@ export default class Util {
 
     embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
         return embeds.map(embed => ({
-            author: embed.author !== undefined ? {
+            author: embed.author === undefined ? undefined : {
                 name:         embed.author.name,
                 iconURL:      embed.author.icon_url,
                 proxyIconURL: embed.author.proxy_icon_url
-            } : undefined,
+            },
             color:       embed.color,
             description: embed.description,
             fields:      embed.fields?.map(field => ({
@@ -238,47 +238,47 @@ export default class Util {
                 name:   field.name,
                 value:  field.value
             })),
-            footer: embed.footer !== undefined ? {
+            footer: embed.footer === undefined ? undefined : {
                 text:         embed.footer.text,
                 iconURL:      embed.footer.icon_url,
                 proxyIconURL: embed.footer.proxy_icon_url
-            } : undefined,
+            },
             timestamp: embed.timestamp,
             title:     embed.title,
-            image:     embed.image !== undefined ? {
+            image:     embed.image === undefined ? undefined : {
                 url:      embed.image.url,
                 height:   embed.image.height,
                 proxyURL: embed.image.proxy_url,
                 width:    embed.image.width
-            } : undefined,
-            provider: embed.provider !== undefined ? {
+            },
+            provider: embed.provider === undefined ? undefined : {
                 name: embed.provider.name,
                 url:  embed.provider.url
-            } : undefined,
-            thumbnail: embed.thumbnail !== undefined ? {
+            },
+            thumbnail: embed.thumbnail === undefined ? undefined : {
                 url:      embed.thumbnail.url,
                 height:   embed.thumbnail.height,
                 proxyURL: embed.thumbnail.proxy_url,
                 width:    embed.thumbnail.width
-            } : undefined,
+            },
             url:   embed.url,
             type:  embed.type,
-            video: embed.video !== undefined ? {
+            video: embed.video === undefined ? undefined : {
                 height:   embed.video.height,
                 proxyURL: embed.video.proxy_url,
                 url:      embed.video.url,
                 width:    embed.video.width
-            } : undefined
+            }
         }));
     }
 
     embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
         return embeds.map(embed => ({
-            author: embed.author !== undefined ? {
+            author: embed.author === undefined ? undefined :  {
                 name:     embed.author.name,
                 icon_url: embed.author.iconURL,
                 url:      embed.author.url
-            } :  undefined,
+            },
             color:       embed.color,
             description: embed.description,
             fields:      embed.fields?.map(field => ({
@@ -286,14 +286,14 @@ export default class Util {
                 name:   field.name,
                 value:  field.value
             })),
-            footer: embed.footer !== undefined ? {
+            footer: embed.footer === undefined ? undefined : {
                 text:     embed.footer.text,
                 icon_url: embed.footer.iconURL
-            } : undefined,
+            },
             timestamp: embed.timestamp,
             title:     embed.title,
-            image:     embed.image !== undefined ? { url: embed.image.url } : undefined,
-            thumbnail: embed.thumbnail !== undefined ? { url: embed.thumbnail.url } : undefined,
+            image:     embed.image === undefined ? undefined : { url: embed.image.url },
+            thumbnail: embed.thumbnail === undefined ? undefined : { url: embed.thumbnail.url },
             url:       embed.url
         }));
     }

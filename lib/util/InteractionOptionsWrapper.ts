@@ -351,19 +351,19 @@ export default class InteractionOptionsWrapper {
     getSubCommand<T extends SubCommandArray = SubCommandArray>(required: true): T;
     getSubCommand(required?: boolean): SubCommandArray | undefined {
         const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommand | InteractionOptionsSubCommandGroup;
-        if (!opt?.options) {
+        if (opt?.options) {
+        // nested
+            if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
+                const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
+                return sub?.options ? [opt.name, sub.name] : [opt.name];
+            } else {
+                return [opt.name];
+            }
+        } else {
             if (required) {
                 throw new Error("Missing required option: SubCommand/SubCommandGroup.");
             } else {
                 return undefined;
-            }
-        } else {
-        // nested
-            if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {
-                const sub = opt.options.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined;
-                return !sub?.options ? [opt.name] : [opt.name, sub.name];
-            } else {
-                return [opt.name];
             }
         }
     }

@@ -51,10 +51,10 @@ export default class SequentialBucket {
         --this.remaining;
         this.processing = true;
         this.#queue.shift()!(() => {
-            if (this.#queue.length !== 0) {
-                this.check(true);
-            } else {
+            if (this.#queue.length === 0) {
                 this.processing = false;
+            } else {
+                this.check(true);
             }
         });
     }

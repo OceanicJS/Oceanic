@@ -43,7 +43,7 @@ export default class OAuthHelper {
         if (options.redirectURI) {
             params.push(`redirect_uri=${options.redirectURI}`);
         }
-        if (typeof options.disableGuildSelect !== "undefined") {
+        if (options.disableGuildSelect !== undefined) {
             params.push(`disable_guild_select=${String(options.disableGuildSelect)}`);
         }
         if (options.prompt) {

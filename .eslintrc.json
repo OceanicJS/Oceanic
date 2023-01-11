@@ -42,6 +42,7 @@
     }
   },
   "plugins": [
+    "import",
     "prefer-arrow",
     "@typescript-eslint",
     "jsdoc",
@@ -154,6 +155,20 @@
     "eqeqeq": ["error", "always"],
     "guard-for-in": "error",
     "import-newlines/enforce": ["error", 4],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "index",
+          "sibling",
+          "parent",
+          "internal",
+          "external",
+          "builtin",
+          "object"
+        ]
+      }
+    ],
     "indent": "off",
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "error",
@@ -255,7 +270,6 @@
             "protected-field",
             "field",
             "abstract-field",
-            "private-abstract-method",
             "protected-abstract-method",
             "abstract-method",
             "private-constructor",
