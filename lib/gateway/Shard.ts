@@ -57,6 +57,7 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
+import AuditLogEntry from "../structures/AuditLogEntry";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -335,6 +336,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const oldChannel = this.client.getChannel<TextChannel>(packet.d.id)?.toJSON() ?? null;
                 const channel = this.client.util.updateChannel<TextChannel>(packet.d);
                 this.client.emit("channelUpdate", channel, oldChannel);
+                break;
+            }
+
+            case "GUILD_AUDIT_LOG_ENTRY_CREATE": {
+                this.client.emit("guildAuditLogEntryCreate", new AuditLogEntry(packet.d, this.client));
                 break;
             }
 
