@@ -42,6 +42,7 @@
     }
   },
   "plugins": [
+    "import",
     "prefer-arrow",
     "@typescript-eslint",
     "jsdoc",
@@ -154,6 +155,20 @@
     "eqeqeq": ["error", "always"],
     "guard-for-in": "error",
     "import-newlines/enforce": ["error", 4],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "index",
+          "sibling",
+          "parent",
+          "internal",
+          "external",
+          "builtin",
+          "object"
+        ]
+      }
+    ],
     "indent": "off",
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "error",
@@ -247,31 +262,34 @@
       {
         "default": {
           "memberTypes": [
+            "static-initialization",
             "signature",
+            "call-signature",
             "private-static-field",
             "protected-static-field",
             "static-field",
             "private-field",
             "protected-field",
             "field",
-            "abstract-field",
-            "private-abstract-method",
+            "protected-abstract-get",
+            "protected-abstract-set",
             "protected-abstract-method",
+            ["abstract-get", "abstract-set"],
             "abstract-method",
             "private-constructor",
             "protected-constructor",
             "constructor",
+            ["private-static-get", "protected-static-get"],
+            ["protected-static-get", "protected-static-get"],
+            ["static-get", "static-set"],
             "private-static-method",
             "protected-static-method",
             "static-method",
             "private-method",
             "protected-method",
-            "private-get",
-            "protected-get",
-            "get",
-            "private-set",
-            "protected-set",
-            "set",
+            ["private-get", "private-set"],
+            ["protected-get", "protected-set"],
+            ["get", "set"],
             "method"
           ],
           "order": "alphabetically"

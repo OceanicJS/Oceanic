@@ -209,14 +209,14 @@ export default class Guilds {
                 exempt_channels:  options.exemptChannels,
                 exempt_roles:     options.exemptRoles,
                 name:             options.name,
-                trigger_metadata: !options.triggerMetadata ? undefined : {
+                trigger_metadata: options.triggerMetadata ? {
                     allow_list:                      options.triggerMetadata.allowList,
                     keyword_filter:                  options.triggerMetadata.keywordFilter,
                     mention_raid_protection_enabled: options.triggerMetadata.mentionRaidProtectionEnabled,
                     mention_total_limit:             options.triggerMetadata.mentionTotalLimit,
                     presets:                         options.triggerMetadata.presets,
                     regex_patterns:                  options.triggerMetadata.regexPatterns
-                },
+                } : undefined,
                 trigger_type: options.triggerType
             },
             reason
@@ -310,7 +310,7 @@ export default class Guilds {
             reason
         }).then(data => ({
             ...data,
-            user: !data.user ? undefined : this.#manager.client.users.update(data.user)
+            user: data.user ? this.#manager.client.users.update(data.user) : undefined
         }));
     }
 
@@ -383,7 +383,7 @@ export default class Guilds {
             json:   {
                 channel_id:           options.channelID,
                 description:          options.description,
-                entity_metadata:      !options.entityMetadata ? undefined : { location: options.entityMetadata.location },
+                entity_metadata:      options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
                 entity_type:          options.entityType,
                 image:                options.image,
                 name:                 options.name,
@@ -630,14 +630,14 @@ export default class Guilds {
                 exempt_channels:  options.exemptChannels,
                 exempt_roles:     options.exemptRoles,
                 name:             options.name,
-                trigger_metadata: !options.triggerMetadata ? undefined : {
+                trigger_metadata: options.triggerMetadata ? {
                     allow_list:                      options.triggerMetadata.allowList,
                     keyword_filter:                  options.triggerMetadata.keywordFilter,
                     mention_raid_protection_enabled: options.triggerMetadata.mentionRaidProtectionEnabled,
                     mention_total_limit:             options.triggerMetadata.mentionTotalLimit,
                     presets:                         options.triggerMetadata.presets,
                     regex_patterns:                  options.triggerMetadata.regexPatterns
-                }
+                } : undefined
             },
             reason
         }).then(data =>  this.#manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this.#manager.client));
@@ -716,7 +716,7 @@ export default class Guilds {
             reason
         }).then(data => ({
             ...data,
-            user: !data.user ? undefined : this.#manager.client.users.update(data.user)
+            user: data.user ? this.#manager.client.users.update(data.user) : undefined
         }));
     }
 
@@ -830,7 +830,7 @@ export default class Guilds {
             json:   {
                 channel_id:           options.channelID,
                 description:          options.description,
-                entity_metadata:      !options.entityMetadata ? undefined : { location: options.entityMetadata.location },
+                entity_metadata:      options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
                 entity_type:          options.entityType,
                 image:                options.image,
                 name:                 options.name,
@@ -1160,7 +1160,7 @@ export default class Guilds {
             path:   Routes.GUILD_EMOJI(guildID, emojiID)
         }).then(data => ({
             ...data,
-            user: !data.user ? undefined : this.#manager.client.users.update(data.user)
+            user: data.user ? this.#manager.client.users.update(data.user) : undefined
         }));
     }
 
@@ -1174,7 +1174,7 @@ export default class Guilds {
             path:   Routes.GUILD_EMOJIS(guildID)
         }).then(data => data.map(d => ({
             ...d,
-            user: !d.user ? undefined : this.#manager.client.users.update(d.user)
+            user: d.user ? this.#manager.client.users.update(d.user) : undefined
         })));
     }
 

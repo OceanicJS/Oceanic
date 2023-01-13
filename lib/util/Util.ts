@@ -183,18 +183,12 @@ export default class Util {
                 ["image/gif", /^47494638/],
                 // 89 50 4E 47
                 ["image/png", /^89504E47/],
-                // FF D8 FF DB
-                ["image/jpeg", /^FFD8FFDB/],
-                // FF D8 FF E0 00 10 4A 46 49 46 00 01
-                ["image/jpeg", /^FFD8FFE000104A4649460001/],
-                // 49 46 00 01
-                ["image/jpeg", /^49460001/],
-                // FF D8 FF EE
-                ["image/jpeg", /^FFD8FFEE/],
-                // FF D8 FF E1 ?? ?? 45 78 69 66 00 00
-                ["image/jpeg", /^FFD8FFE1[\dA-F]{4}457869660000/],
+                // FF D8 FF
+                ["image/jpeg", /^FFD8FF/],
                 // 52 49 46 46 ?? ?? ?? ?? 57 45 42 50
-                ["image/webp", /^52494646\d{8}57454250/]
+                ["image/webp", /^52494646\d{8}57454250/],
+                // 02 27 62 20 22 0 - lottie JSON (assuming all files will start with {"v":")
+                ["application/json", /^02276220220/]
             ];
             for (const format of magicMap) {
                 if (format[1].test(this.getMagic(img, 16))) {
@@ -232,11 +226,11 @@ export default class Util {
 
     embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
         return embeds.map(embed => ({
-            author: embed.author !== undefined ? {
+            author: embed.author === undefined ? undefined : {
                 name:         embed.author.name,
                 iconURL:      embed.author.icon_url,
                 proxyIconURL: embed.author.proxy_icon_url
-            } : undefined,
+            },
             color:       embed.color,
             description: embed.description,
             fields:      embed.fields?.map(field => ({
@@ -244,47 +238,47 @@ export default class Util {
                 name:   field.name,
                 value:  field.value
             })),
-            footer: embed.footer !== undefined ? {
+            footer: embed.footer === undefined ? undefined : {
                 text:         embed.footer.text,
                 iconURL:      embed.footer.icon_url,
                 proxyIconURL: embed.footer.proxy_icon_url
-            } : undefined,
+            },
             timestamp: embed.timestamp,
             title:     embed.title,
-            image:     embed.image !== undefined ? {
+            image:     embed.image === undefined ? undefined : {
                 url:      embed.image.url,
                 height:   embed.image.height,
                 proxyURL: embed.image.proxy_url,
                 width:    embed.image.width
-            } : undefined,
-            provider: embed.provider !== undefined ? {
+            },
+            provider: embed.provider === undefined ? undefined : {
                 name: embed.provider.name,
                 url:  embed.provider.url
-            } : undefined,
-            thumbnail: embed.thumbnail !== undefined ? {
+            },
+            thumbnail: embed.thumbnail === undefined ? undefined : {
                 url:      embed.thumbnail.url,
                 height:   embed.thumbnail.height,
                 proxyURL: embed.thumbnail.proxy_url,
                 width:    embed.thumbnail.width
-            } : undefined,
+            },
             url:   embed.url,
             type:  embed.type,
-            video: embed.video !== undefined ? {
+            video: embed.video === undefined ? undefined : {
                 height:   embed.video.height,
                 proxyURL: embed.video.proxy_url,
                 url:      embed.video.url,
                 width:    embed.video.width
-            } : undefined
+            }
         }));
     }
 
     embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
         return embeds.map(embed => ({
-            author: embed.author !== undefined ? {
+            author: embed.author === undefined ? undefined :  {
                 name:     embed.author.name,
                 icon_url: embed.author.iconURL,
                 url:      embed.author.url
-            } :  undefined,
+            },
             color:       embed.color,
             description: embed.description,
             fields:      embed.fields?.map(field => ({
@@ -292,14 +286,14 @@ export default class Util {
                 name:   field.name,
                 value:  field.value
             })),
-            footer: embed.footer !== undefined ? {
+            footer: embed.footer === undefined ? undefined : {
                 text:     embed.footer.text,
                 icon_url: embed.footer.iconURL
-            } : undefined,
+            },
             timestamp: embed.timestamp,
             title:     embed.title,
-            image:     embed.image !== undefined ? { url: embed.image.url } : undefined,
-            thumbnail: embed.thumbnail !== undefined ? { url: embed.thumbnail.url } : undefined,
+            image:     embed.image === undefined ? undefined : { url: embed.image.url },
+            thumbnail: embed.thumbnail === undefined ? undefined : { url: embed.thumbnail.url },
             url:       embed.url
         }));
     }

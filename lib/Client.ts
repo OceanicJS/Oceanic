@@ -102,10 +102,10 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
     /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
     get application(): ClientApplication {
-        if (!this._application) {
-            throw new Error(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
-        } else {
+        if (this._application) {
             return this._application;
+        } else {
+            throw new Error(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
         }
     }
 
@@ -115,10 +115,10 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
     /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. */
     get user(): ExtendedUser {
-        if (!this._user) {
-            throw new Error(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
-        } else {
+        if (this._user) {
             return this._user;
+        } else {
+            throw new Error(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
         }
     }
 

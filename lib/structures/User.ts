@@ -84,7 +84,7 @@ export default class User extends Base {
      * @param size The dimensions of the image.
      */
     avatarDecorationURL(size?: number): string | null {
-        return !this.avatarDecoration ? null : this.client.util.formatImage(Routes.USER_AVATAR_DECORATION(this.id, this.avatarDecoration), "png", size);
+        return this.avatarDecoration ? this.client.util.formatImage(Routes.USER_AVATAR_DECORATION(this.id, this.avatarDecoration), "png", size) : null;
     }
 
     /**

@@ -41,7 +41,7 @@ export default class Collection<K, V> extends Map<K, V> {
     first(): V | undefined;
     first(amount: number): Array<V>;
     first(amount?: number): V | Array<V> | undefined {
-        if (typeof amount === "undefined") {
+        if (amount === undefined) {
             const iterable = this.values();
             return iterable.next().value as V;
         }
@@ -63,7 +63,7 @@ export default class Collection<K, V> extends Map<K, V> {
     last(amount: number): Array<V>;
     last(amount?: number): V | Array<V> | undefined {
         const iterator = Array.from(this.values());
-        if (typeof amount === "undefined") {
+        if (amount === undefined) {
             return iterator[iterator.length - 1];
         }
         if (amount < 0) {

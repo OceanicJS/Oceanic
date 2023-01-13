@@ -31,7 +31,7 @@ export default class InteractionResolvedChannel extends Channel {
             archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
             archived:            !!data.thread_metadata.archived,
             autoArchiveDuration: data.thread_metadata.auto_archive_duration,
-            createTimestamp:     !data.thread_metadata.create_timestamp ? null : new Date(data.thread_metadata.create_timestamp),
+            createTimestamp:     data.thread_metadata.create_timestamp ? new Date(data.thread_metadata.create_timestamp) : null,
             locked:              !!data.thread_metadata.locked,
             invitable:           data.thread_metadata.invitable
         } :  null;

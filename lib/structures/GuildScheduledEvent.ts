@@ -136,7 +136,7 @@ export default class GuildScheduledEvent extends Base {
      * @param size The size of the image.
      */
     imageURL(format?: ImageFormat, size?: number): string | null {
-        return !this.image ? null : this.client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size);
+        return this.image ? this.client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size) : null;
     }
 
     override toJSON(): JSONScheduledEvent {

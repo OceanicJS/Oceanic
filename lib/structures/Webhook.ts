@@ -234,7 +234,7 @@ export default class Webhook extends Base {
      * @param size The dimensions of the image.
      */
     sourceGuildIconURL(format?: ImageFormat, size?: number): string | null {
-        return !this.sourceGuild?.icon ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size);
+        return this.sourceGuild?.icon ? this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size) : null;
     }
 
     override toJSON(): JSONWebhook {

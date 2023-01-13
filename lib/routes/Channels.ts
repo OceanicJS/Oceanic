@@ -172,12 +172,12 @@ export default class Channels {
                 embeds:            options.embeds ? this.#manager.client.util.embedsToRaw(options.embeds) : undefined,
                 flags:             options.flags,
                 sticker_ids:       options.stickerIDs,
-                message_reference: !options.messageReference ? undefined : {
+                message_reference: options.messageReference ? {
                     channel_id:         options.messageReference.channelID,
                     fail_if_not_exists: options.messageReference.failIfNotExists,
                     guild_id:           options.messageReference.guildID,
                     message_id:         options.messageReference.messageID
-                },
+                } : undefined,
                 tts: options.tts
             },
             files
@@ -360,7 +360,7 @@ export default class Channels {
         }
         await this.#manager.authRequest<null>({
             method: "DELETE",
-            path:   !emoji ? Routes.CHANNEL_REACTIONS(channelID, messageID) : Routes.CHANNEL_REACTION(channelID, messageID, emoji)
+            path:   emoji ? Routes.CHANNEL_REACTION(channelID, messageID, emoji) : Routes.CHANNEL_REACTIONS(channelID, messageID)
         });
     }
 

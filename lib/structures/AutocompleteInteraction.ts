@@ -51,8 +51,8 @@ export default class AutocompleteInteraction<T extends AnyTextChannelWithoutGrou
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = (data.member !== undefined ? this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member) : undefined) as T extends AnyGuildTextChannel ? Member : Member | undefined;
-        this.memberPermissions = (data.member !== undefined ? new Permission(data.member.permissions) : undefined) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | undefined;
+        this.memberPermissions = (data.member === undefined ? undefined : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.user = client.users.update(data.user ?? data.member!.user);
     }
 
