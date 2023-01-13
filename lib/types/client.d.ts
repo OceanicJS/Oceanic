@@ -88,6 +88,11 @@ export interface RESTOptions {
 
 export interface CollectionLimitsOptions {
     /**
+     * The maximum number of audit log entries to keep cached. This applies to all guilds. Entries are only cached if recieved via the `GUILD_AUDIT_LOG_ENTRY_CREATE` gateway event.
+     * @defaultValue 50
+     */
+    auditLogEntries?: number;
+    /**
      * The maximum number of members to cache. A number to apply to all guilds individually, or a dictionary of guild IDs to member limits. The key `unknown` can be used to set the limit for all guilds not specified.
      *
      * Note: If you request members from the gateway, this will be increased (on the specific guild) as needed to accommodate those members.

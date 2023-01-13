@@ -74,7 +74,8 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             },
             auth:             options?.auth ?? null,
             collectionLimits: {
-                members: options?.collectionLimits?.members === undefined ?  Infinity : (typeof options.collectionLimits.members === "object" ? {
+                auditLogEntries: options?.collectionLimits?.auditLogEntries ?? 50,
+                members:         options?.collectionLimits?.members === undefined ?  Infinity : (typeof options.collectionLimits.members === "object" ? {
                     unknown: Infinity,
                     ...options.collectionLimits.members
                 } : options.collectionLimits.members),

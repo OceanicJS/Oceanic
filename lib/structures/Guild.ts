@@ -242,7 +242,7 @@ export default class Guild extends Base {
         this.afkChannelID = null;
         this.afkTimeout = 0;
         this.applicationID = data.application_id;
-        this.auditLogEntries = new TypedCollection(AuditLogEntry, client);
+        this.auditLogEntries = new TypedCollection(AuditLogEntry, client, client.options.collectionLimits.auditLogEntries);
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client);
         this.banner = null;
         this.channels = new TypedCollection(GuildChannel, client) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
