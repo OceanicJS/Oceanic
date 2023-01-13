@@ -505,7 +505,7 @@ export interface StageInstanceUpdatePacket extends BaseDispatchPacket {
 }
 
 export interface GuildAuditLogEntryCreatePacket extends BaseDispatchPacket {
-    d: RawAuditLogEntry;
+    d: RawAuditLogEntry & { guild_id: string; };
     t: "GUILD_AUDIT_LOG_ENTRY_CREATE";
 }
 

@@ -96,8 +96,8 @@ export interface ClientEvents {
     disconnect: [];
     /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string, shard?: number];
-    /** @event Emitted when an audit log entry is created. Requires the `GUILD_MODERATION` intent. */
-    guildAuditLogEntryCreate: [auditLogEntry: AuditLogEntry];
+    /** @event Emitted when an audit log entry is created. Requires both the `GUILD_MODERATION` intent, as well as the `VIEW_AUDIT_LOG` permission. */
+    guildAuditLogEntryCreate: [guild: Guild | Uncached, auditLogEntry: AuditLogEntry];
     /** @event Emitted when a guild becomes available. Requires the `GUILDS` intent. */
     guildAvailable: [guild: Guild];
     /** @event Emitted when a guild ban is created. Requires the `GUILD_BANS` intent. */

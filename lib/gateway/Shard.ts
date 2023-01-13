@@ -340,7 +340,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "GUILD_AUDIT_LOG_ENTRY_CREATE": {
-                this.client.emit("guildAuditLogEntryCreate", new AuditLogEntry(packet.d, this.client));
+                const guild = this.client.guilds.get(packet.d.guild_id);
+                this.client.emit("guildAuditLogEntryCreate", guild ?? { id: packet.d.guild_id }, guild?.auditLogEntries.update(packet.d) ?? new AuditLogEntry(packet.d, this.client));
                 break;
             }
 
