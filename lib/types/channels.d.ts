@@ -1,5 +1,5 @@
 /** @module Types/Channels */
-import type { PartialEmoji, PartialGuild, RawMember } from "./guilds";
+import type { PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
 import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
@@ -753,7 +753,7 @@ export interface RawInvite {
     channel_id?: string;
     code: string;
     expires_at?: string;
-    guild?: PartialGuild;
+    guild?: RawInviteGuild;
     guild_scheduled_event?: RawScheduledEvent;
     inviter?: RawUser;
     /** @deprecated */

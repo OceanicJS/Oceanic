@@ -1,5 +1,6 @@
 import Base from "./Base";
 import Permission from "./Permission";
+import type Guild from "./Guild";
 import type { GuildFeature, ImageFormat } from "../Constants";
 import type { RawOAuthGuild } from "../types";
 import type Client from "../Client";
@@ -7,6 +8,7 @@ import * as Routes from "../util/Routes";
 
 /** Represents a guild retrieved via oauth. */
 export default class OAuthGuild extends Base {
+    private _cachedCompleteGuild?: Guild;
     /** The approximate number of members in this guild (if retrieved with counts). */
     approximateMemberCount?: number;
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
@@ -30,6 +32,11 @@ export default class OAuthGuild extends Base {
         this.icon        = data.icon;
         this.owner       = data.owner;
         this.permissions = new Permission(data.permissions);
+    }
+
+    /** The complete guild this OAuthGuild represents, if cached. */
+    get completeGuild(): Guild | undefined {
+        return this._cachedCompleteGuild ??= this.client.guilds.get(this.id);
     }
 
     /**

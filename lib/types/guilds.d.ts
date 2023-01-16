@@ -100,7 +100,7 @@ export interface RawGuild {
     widget_channel_id?: string | null;
     widget_enabled?: boolean;
 }
-export type PartialGuild = Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level">;
+export type RawInviteGuild = Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level">;
 
 export interface RawRole {
     color: number;
