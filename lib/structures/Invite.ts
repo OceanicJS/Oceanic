@@ -185,6 +185,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             code:                     this.code,
             createdAt:                this.createdAt?.getTime(),
             expiresAt:                this.expiresAt?.getTime(),
+            guild:                    this.guild?.toJSON(),
             guildID:                  this.guildID ?? undefined,
             guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
             inviter:                  this.inviter?.id,

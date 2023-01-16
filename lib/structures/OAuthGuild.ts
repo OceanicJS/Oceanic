@@ -2,7 +2,7 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import type { RawOAuthGuild } from "../types";
+import type { JSONOAuthGuild, RawOAuthGuild } from "../types";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
 
@@ -46,5 +46,18 @@ export default class OAuthGuild extends Base {
      */
     iconURL(format?: ImageFormat, size?: number): string | null {
         return this.icon === null ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
+    }
+
+    override toJSON(): JSONOAuthGuild {
+        return {
+            ...super.toJSON(),
+            approximateMemberCount:   this.approximateMemberCount,
+            approximatePresenceCount: this.approximatePresenceCount,
+            features:                 this.features,
+            icon:                     this.icon,
+            name:                     this.name,
+            owner:                    this.owner,
+            permissions:              this.permissions.toJSON()
+        };
     }
 }

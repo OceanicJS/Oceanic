@@ -349,6 +349,7 @@ export interface JSONInvite {
     code: string;
     createdAt?: number;
     expiresAt?: number;
+    guild?: JSONInviteGuild;
     guildID?: string;
     guildScheduledEvent?: JSONScheduledEvent;
     inviter?: string;
@@ -365,6 +366,18 @@ export interface JSONInvite {
     targetUser?: string;
     temporary?: boolean;
     uses?: number;
+}
+export interface JSONInviteGuild extends JSONBase {
+    banner: string | null;
+    description: string | null;
+    features: Array<GuildFeature>;
+    icon: string | null;
+    name: string;
+    nsfwLevel: GuildNSFWLevels;
+    premiumSubscriptionCount?: number;
+    splash: string | null;
+    vanityURLCode: string | null;
+    verificationLevel: VerificationLevels;
 }
 export interface JSONMember extends JSONBase {
     avatar: string | null;
@@ -432,6 +445,15 @@ export interface JSONModalSubmitInteraction extends JSONInteraction {
     member?: JSONMember;
     type: InteractionTypes.MODAL_SUBMIT;
     user: JSONUser;
+}
+export interface JSONOAuthGuild extends JSONBase {
+    approximateMemberCount?: number;
+    approximatePresenceCount?: number;
+    features: Array<GuildFeature>;
+    icon: string | null;
+    name: string;
+    owner: boolean;
+    permissions: JSONPermission;
 }
 export interface JSONPartialApplication extends JSONBase {
     botPublic?: boolean;

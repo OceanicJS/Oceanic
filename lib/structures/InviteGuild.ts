@@ -1,7 +1,7 @@
 import Base from "./Base";
 import type Guild from "./Guild";
 import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants";
-import type { RawInviteGuild } from "../types";
+import type { JSONInviteGuild, RawInviteGuild } from "../types";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
 
@@ -72,5 +72,21 @@ export default class InviteGuild extends Base {
      */
     splashURL(format?: ImageFormat, size?: number): string | null {
         return this.splash === null ? null : this.client.util.formatImage(Routes.GUILD_SPLASH(this.id, this.splash), format, size);
+    }
+
+    override toJSON(): JSONInviteGuild {
+        return {
+            ...super.toJSON(),
+            banner:                   this.banner,
+            description:              this.description,
+            features:                 this.features,
+            icon:                     this.icon,
+            name:                     this.name,
+            nsfwLevel:                this.nsfwLevel,
+            premiumSubscriptionCount: this.premiumSubscriptionCount,
+            splash:                   this.splash,
+            vanityURLCode:            this.vanityURLCode,
+            verificationLevel:        this.verificationLevel
+        };
     }
 }
