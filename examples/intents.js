@@ -20,19 +20,19 @@ client.on("error", (error) => {
 
 // New Guild Joined
 // https://docs.oceanic.ws/latest/interfaces/Events.ClientEvents.html#guildCreate
-bot.on("guildCreate", (guild) => {
+client.on("guildCreate", (guild) => {
     console.log("Guild Joined:", guild.name);
 });
 
 // Message Sent
 // https://docs.oceanic.ws/latest/interfaces/Events.ClientEvents.html#messageCreate
-bot.on("messageCreate", (msg) => {
+client.on("messageCreate", (msg) => {
     console.log(`New message: ${msg.content}`);
 });
 
 // This event will never be seen as neither `GUILD_MESSAGE_TYPING` or `DIRECT_MESSAGE_TYPING` were included in the intents
 // https://docs.oceanic.ws/latest/interfaces/Events.ClientEvents.html#typingStart
-bot.on("typingStart", (channel, user) => { // When a user starts typing
+client.on("typingStart", (channel, user) => { // When a user starts typing
     console.log(`${user.id} is typing in ${channel.id}`); // User or channel are not necessarily complete (Uncached) to retrieve names
 });
 
