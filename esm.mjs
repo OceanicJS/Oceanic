@@ -33,6 +33,7 @@ const Integration = (await import("./dist/lib/structures/Integration.js")).defau
 const InteractionResolvedChannel = (await import("./dist/lib/structures/InteractionResolvedChannel.js")).default.default;
 const InteractionOptionsWrapper = (await import("./dist/lib/util/InteractionOptionsWrapper.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
+const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
@@ -106,6 +107,7 @@ export {
     InteractionResolvedChannel,
     InteractionOptionsWrapper,
     Invite,
+    InviteGuild,
     Member,
     Message,
     ModalSubmitInteraction,
