@@ -100,7 +100,7 @@ export interface RawGuild {
     widget_channel_id?: string | null;
     widget_enabled?: boolean;
 }
-export type PartialGuild = Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level">;
+export type RawInviteGuild = Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level">;
 
 export interface RawRole {
     color: number;
@@ -729,14 +729,14 @@ export interface RawOAuthGuild {
     permissions: string;
 }
 
-export type Activity = Omit<GatewayActivity, "application_id" | "assets" | "created_at"> & {
+export type PresenceActivity = Omit<GatewayActivity, "application_id" | "assets" | "created_at"> & {
     applicationID?: string;
     assets?: Partial<Record<"largeImage" | "largeText" | "smallImage" | "smallText", string>>;
     createdAt: number;
 };
 
 export type Presence = Omit<PresenceUpdate, "user" | "guild_id" | "client_status" | "activities"> & {
-    activities?: Array<Activity>;
+    activities?: Array<PresenceActivity>;
     clientStatus: ClientStatus;
     guildID: string;
 };

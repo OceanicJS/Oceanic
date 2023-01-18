@@ -98,6 +98,12 @@ export default class VoiceChannel extends GuildChannel {
             this.videoQualityMode = data.video_quality_mode;
         }
         if (data.permission_overwrites !== undefined) {
+            for (const id of this.permissionOverwrites.keys()) {
+                if (!data.permission_overwrites.some(overwrite => overwrite.id === id)) {
+                    this.permissionOverwrites.delete(id);
+                }
+            }
+
             data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
         }
     }
