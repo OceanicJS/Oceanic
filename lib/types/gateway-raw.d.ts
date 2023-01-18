@@ -19,6 +19,7 @@ import type { RawGuildChannel, RawMessage, RawThreadChannel, RawThreadMember } f
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
+import type { RawAuditLogEntry } from "./audit-log";
 import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;
@@ -503,8 +504,13 @@ export interface StageInstanceUpdatePacket extends BaseDispatchPacket {
     t: "STAGE_INSTANCE_UPDATE";
 }
 
+export interface GuildAuditLogEntryCreatePacket extends BaseDispatchPacket {
+    d: RawAuditLogEntry & { guild_id: string; };
+    t: "GUILD_AUDIT_LOG_ENTRY_CREATE";
+}
+
 export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
-GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket |
+GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
 ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket |
 ThreadCreatePacket | ThreadDeletePacket | ThreadUpdatePacket | ThreadListSyncPacket | ThreadMemberUpdatePacket | ThreadMembersUpdatePacket |

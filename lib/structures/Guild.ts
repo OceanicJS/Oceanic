@@ -21,6 +21,7 @@ import type GuildTemplate from "./GuildTemplate";
 import type GuildPreview from "./GuildPreview";
 import type Invite from "./Invite";
 import type Webhook from "./Webhook";
+import AuditLogEntry from "./AuditLogEntry";
 import {
     AllPermissions,
     Permissions,
@@ -98,7 +99,7 @@ import type {
     ScheduledEventUser
 } from "../types/scheduled-events";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { AuditLog, GetAuditLogOptions } from "../types/audit-log";
+import type { AuditLog, GetAuditLogOptions, RawAuditLogEntry } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
 import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
 import type { JSONGuild } from "../types/json";
@@ -127,6 +128,8 @@ export default class Guild extends Base {
     approximateMemberCount?: number;
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
     approximatePresenceCount?: number;
+    /** The cached audit log entries. This requires both the {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION} intent, as well as the {@link Constants~Permissions.VIEW_AUDIT_LOG | VIEW_AUDIT_LOG } permission. */
+    auditLogEntries: TypedCollection<string, RawAuditLogEntry, AuditLogEntry>;
     /** The auto moderation rules in this guild. */
     autoModerationRules: TypedCollection<string, RawAutoModerationRule, AutoModerationRule>;
     /** The hash of this guild's banner. */
@@ -239,6 +242,7 @@ export default class Guild extends Base {
         this.afkChannelID = null;
         this.afkTimeout = 0;
         this.applicationID = data.application_id;
+        this.auditLogEntries = new TypedCollection(AuditLogEntry, client, client.options.collectionLimits.auditLogEntries);
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client);
         this.banner = null;
         this.channels = new TypedCollection(GuildChannel, client) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
