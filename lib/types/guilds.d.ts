@@ -118,6 +118,7 @@ export interface RawRole {
 export interface RawRoleTags {
     available_for_purchase?: null;
     bot_id?: string;
+    guild_connections?: null;
     integration_id?: string;
     premium_subscriber?: null;
     subscription_listing_id?: string;
@@ -125,6 +126,7 @@ export interface RawRoleTags {
 export interface RoleTags {
     availableForPurchase: boolean;
     botID?: string;
+    guildConnections: boolean;
     integrationID?: string;
     premiumSubscriber: boolean;
     subscriptionListingID?: string;

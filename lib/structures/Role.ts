@@ -44,6 +44,7 @@ export default class Role extends Base {
         this.position = data.position;
         this.tags = {
             availableForPurchase: false,
+            guildConnections:     false,
             premiumSubscriber:    false
         };
         this.unicodeEmoji = null;
@@ -75,6 +76,7 @@ export default class Role extends Base {
         if (data.tags !== undefined) {
             this.tags = {
                 availableForPurchase:  data.tags.available_for_purchase === null,
+                guildConnections:      data.tags.guild_connections === null,
                 botID:                 data.tags.bot_id,
                 integrationID:         data.tags.integration_id,
                 premiumSubscriber:     data.tags.premium_subscriber === null,
