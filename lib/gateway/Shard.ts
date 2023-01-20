@@ -296,7 +296,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "CHANNEL_CREATE": {
-                const channel = this.client.util.updateChannel<AnyGuildChannelWithoutThreads>(packet.d);
+                const channel = packet.d.type === ChannelTypes.GROUP_DM ? this.client.groupChannels.update(packet.d) : this.client.util.updateChannel<AnyGuildChannelWithoutThreads>(packet.d);
                 this.client.emit("channelCreate", channel);
                 break;
             }

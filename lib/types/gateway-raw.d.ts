@@ -15,7 +15,13 @@ import type { RawExtendedUser, RawUser } from "./users";
 import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel } from "./gateway";
 import type { RawGuildApplicationCommandPermissions } from "./application-commands";
 import type { RawAutoModerationRule } from "./auto-moderation";
-import type { RawGuildChannel, RawMessage, RawThreadChannel, RawThreadMember } from "./channels";
+import type {
+    RawGroupChannel,
+    RawGuildChannel,
+    RawMessage,
+    RawThreadChannel,
+    RawThreadMember
+} from "./channels";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
@@ -123,7 +129,7 @@ export interface AutoModerationActionExecutionPacket extends BaseDispatchPacket 
 }
 
 export interface ChannelCreatePacket extends BaseDispatchPacket {
-    d: RawGuildChannel;
+    d: RawGuildChannel | RawGroupChannel;
     t: "CHANNEL_CREATE";
 }
 
