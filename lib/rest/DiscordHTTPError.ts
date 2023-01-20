@@ -1,4 +1,5 @@
 /** @module DiscordHTTPError */
+import DiscordRESTError from "./DiscordRESTError";
 import type { RESTMethod } from "../Constants";
 import type { JSONDiscordHTTPError } from "../types/json";
 import type { Headers, Response } from "undici";
@@ -16,7 +17,7 @@ export default class DiscordHTTPError extends Error {
         this.resBody = resBody as DiscordHTTPError["resBody"];
 
         let message = `${res.status} ${res.statusText} on ${this.method} ${this.path}`;
-        const errors = DiscordHTTPError.flattenErrors(resBody as Record<string, unknown>);
+        const errors = DiscordRESTError.flattenErrors(resBody as Record<string, unknown>);
         if (errors.length !== 0) {
             message += `\n  ${errors.join("\n  ")}`;
         }
@@ -29,19 +30,6 @@ export default class DiscordHTTPError extends Error {
         } else {
             Error.captureStackTrace(this, DiscordHTTPError);
         }
-    }
-
-    static flattenErrors(errors: Record<string, unknown>, keyPrefix = ""): Array<string> {
-        let messages: Array<string> = [];
-        for (const fieldName in errors) {
-            if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") {
-                continue;
-            }
-            if (Array.isArray(errors[fieldName])) {
-                messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
-            }
-        }
-        return messages;
     }
 
     get headers(): Headers {
