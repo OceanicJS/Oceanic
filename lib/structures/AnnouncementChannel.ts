@@ -6,7 +6,7 @@ import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type Message from "./Message";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { EditGuildChannelOptions, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
+import type { EditGuildChannelOptions, FollowedChannel, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 
@@ -47,6 +47,14 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
      */
     override async edit(options: EditGuildChannelOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
+    }
+
+    /**
+     * Follow this announcement channel.
+     * @param webhookChannelID The ID of the channel crossposted messages should be sent to. The client must have the `MANAGE_WEBHOOKS` permission in this channel.
+     */
+    async follow(webhookChannelID: string): Promise<FollowedChannel> {
+        return this.client.rest.channels.followAnnouncement(this.id, webhookChannelID);
     }
 
     override toJSON(): JSONAnnouncementChannel {
