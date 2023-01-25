@@ -76,7 +76,7 @@ export default class Member extends Base {
     }
 
     private toggleFlag(flag: GuildMemberFlags, enable: boolean, reason?: string): Promise<Member> {
-        return this.edit({ flags: enable ? this.flags | flag : this.flags & ~ flag, reason });
+        return this.edit({ flags: enable ? this.flags | flag : this.flags & ~flag, reason });
     }
 
     protected override update(data: Partial<RawMember | RESTMember>): void {
