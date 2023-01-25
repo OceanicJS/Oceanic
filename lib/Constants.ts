@@ -893,6 +893,12 @@ export enum RoleConnectionMetadataTypes {
     BOOLEAN_NOT_EQUAL              = 8,
 }
 
+export enum GuildMemberFlags {
+    DID_REJOIN            = 1 << 0,
+    COMPLETED_ONBOARDING  = 1 << 1,
+    BYPASSES_VERIFICATION = 1 << 2,
+    STARTED_ONBOARDING    = 1 << 3,
+}
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {

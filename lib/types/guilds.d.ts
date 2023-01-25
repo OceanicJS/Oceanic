@@ -483,6 +483,8 @@ export interface EditMemberOptions {
     communicationDisabledUntil?: string | null;
     /** If the member should be deafened. */
     deaf?: boolean;
+    /** The member's [flags](https://discord.com/developers/docs/resources/guild#guild-member-object-flags). */
+    flags?: number;
     /** If the member should be muted. */
     mute?: boolean;
     /** The new nickname of the member. `null` to reset. */
