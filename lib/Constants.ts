@@ -258,6 +258,7 @@ export const ConnectionServices = [
     "epicgames",
     "facebook",
     "github",
+    "instagram",
     "leagueoflegends",
     "paypal",
     "playstation",
@@ -741,7 +742,7 @@ export enum InteractionResponseTypes {
 export enum Intents {
     GUILDS                        = 1 << 0,
     GUILD_MEMBERS                 = 1 << 1,
-    /** @deprecated {@see Constants~Intents.GUILD_MODERATION | GUILD_MODERATION}. This will be removed in `1.6.0`. */
+    /** @deprecated {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION}. This will be removed in `1.6.0`. */
     GUILD_BANS                    = 1 << 2,
     GUILD_MODERATION              = 1 << 2,
     GUILD_EMOJIS_AND_STICKERS     = 1 << 3,

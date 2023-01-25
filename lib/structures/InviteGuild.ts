@@ -1,3 +1,4 @@
+/** @module InviteGuild */
 import Base from "./Base";
 import type Guild from "./Guild";
 import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants";
