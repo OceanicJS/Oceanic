@@ -244,6 +244,12 @@ export interface RoleConnection {
     platformUsername: string | null;
 }
 
+export interface UpdateUserApplicationRoleConnectionOptions {
+    metadata: Record<string, string>;
+    platformName: string | null;
+    platformUsername: string | null;
+}
+
 export interface RoleConnectionMetadata {
     description: string;
     descriptionLocalizations?: LocaleMap;
