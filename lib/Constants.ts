@@ -247,10 +247,13 @@ export const ThreadAutoArchiveDurations = [
 ] as const;
 export type ThreadAutoArchiveDuration = typeof ThreadAutoArchiveDurations[number];
 
-export enum VisibilityTypes {
+export enum ConnectionVisibilityTypes {
     NONE     = 0,
     EVERYONE = 1,
 }
+
+/** @deprecated Use {@link Constants~ConnectionVisibilityTypes | ConnectionVisibilityTypes}. This will be removed in `1.6.0`. */
+export const VisibilityTypes = ConnectionVisibilityTypes;
 
 export const ConnectionServices = [
     "battlenet",
