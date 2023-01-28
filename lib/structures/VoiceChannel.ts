@@ -29,6 +29,7 @@ import type { RawMember } from "../types/guilds";
 import type { JSONVoiceChannel } from "../types/json";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+import type { CreateWebhookOptions } from "../types";
 import type { VoiceConnection } from "@discordjs/voice";
 
 /** Represents a guild voice channel. */
@@ -135,6 +136,14 @@ export default class VoiceChannel extends GuildChannel {
      */
     async createReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.createReaction(this.id, messageID, emoji);
+    }
+
+    /**
+     * Create a webhook in this channel.
+     * @param options The options to create the webhook with.
+     */
+    async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+        return this.client.rest.webhooks.create(this.id, options);
     }
 
     /**

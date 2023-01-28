@@ -34,6 +34,7 @@ import type {
     PurgeOptions
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
+import type { CreateWebhookOptions } from "../types";
 
 /** Represents a guild textable channel. */
 export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {
@@ -137,6 +138,14 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      */
     async createReaction(messageID: string, emoji: string): Promise<void> {
         return this.client.rest.channels.createReaction(this.id, messageID, emoji);
+    }
+
+    /**
+     * Create a webhook in this channel.
+     * @param options The options to create the webhook with.
+     */
+    async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+        return this.client.rest.webhooks.create(this.id, options);
     }
 
     /**

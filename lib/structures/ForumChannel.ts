@@ -31,6 +31,7 @@ import {
     type ChannelTypes,
     type ThreadAutoArchiveDuration
 } from "../Constants";
+import type { CreateWebhookOptions } from "../types";
 
 /** Represents a forum channel. */
 export default class ForumChannel extends GuildChannel {
@@ -158,6 +159,14 @@ export default class ForumChannel extends GuildChannel {
      */
     async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", this>> {
         return this.client.rest.channels.createInvite<"withMetadata", this>(this.id, options);
+    }
+
+    /**
+     * Create a webhook in this channel.
+     * @param options The options to create the webhook with.
+     */
+    async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+        return this.client.rest.webhooks.create(this.id, options);
     }
 
     /**
