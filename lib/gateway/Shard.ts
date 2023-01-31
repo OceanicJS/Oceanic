@@ -886,6 +886,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     url += "/";
                 }
                 this.resumeURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
+                if (this.client.shards.options.compress) {
+                    this.resumeURL += "&compress=zlib-stream";
+                }
                 this.sessionID = packet.d.session_id;
 
                 for (const guild of packet.d.guilds) {
