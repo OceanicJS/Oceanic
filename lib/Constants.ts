@@ -521,6 +521,7 @@ export enum MessageFlags {
     LOADING                                = 1 << 7,
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
     SHOULD_SHOW_LINK_NOT_DISCORD_WARNING   = 1 << 10,
+    SUPPRESS_NOTIFICATIONS                 = 1 << 12,
 }
 
 export enum MessageTypes {
