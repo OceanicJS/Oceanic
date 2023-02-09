@@ -130,7 +130,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         if (sub?.length) {
             text += ` ${sub.slice(0, 2).join(" ")}`;
         }
-        return `<${text}:${this.id}>`;
+        return `</${text}:${this.id}>`;
     }
 
     override toJSON(): JSONApplicationCommand {
