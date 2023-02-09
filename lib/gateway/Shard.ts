@@ -19,7 +19,7 @@ import type {
     BotActivity,
     ShardStatus
 } from "../types/gateway";
-import type Member from "../structures/Member";
+import Member from "../structures/Member";
 import Base from "../structures/Base";
 import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
 import ClientApplication from "../structures/ClientApplication";
@@ -58,6 +58,7 @@ import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
+import type User from "../structures/User";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -496,12 +497,17 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 // eslint-disable-next-line @typescript-eslint/dot-notation
-                const member = guild?.members.get(packet.d.user.id)?.["update"]({ user: packet.d.user }) ?? this.client.users.update(packet.d.user);
+                let user: Member | User | undefined = guild?.members.get(packet.d.user.id);
+                if (user instanceof Member) {
+                    user["update"]({ user: packet.d.user });
+                } else {
+                    user = this.client.users.update(packet.d.user);
+                }
                 if (guild) {
                     guild.memberCount--;
                     guild.members.delete(packet.d.user.id);
                 }
-                this.client.emit("guildMemberRemove", member, guild ?? { id: packet.d.guild_id });
+                this.client.emit("guildMemberRemove", user, guild ?? { id: packet.d.guild_id });
                 break;
             }
 
