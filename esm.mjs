@@ -37,7 +37,6 @@ const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).defau
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
-const OAuth = (await import("./dist/lib/routes/OAuth.js")).default.default;
 const OAuthGuild = (await import ("./dist/lib/structures/OAuthGuild.js")).default.default;
 const OAuthHelper = (await import ("./dist/lib/rest/OAuthHelper.js")).default.default;
 const PartialApplication = (await import("./dist/lib/structures/PartialApplication.js")).default.default;
@@ -111,7 +110,6 @@ export {
     Member,
     Message,
     ModalSubmitInteraction,
-    OAuth,
     OAuthGuild,
     OAuthHelper,
     PartialApplication,

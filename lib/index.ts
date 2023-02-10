@@ -39,8 +39,6 @@ export { default as InviteGuild } from "./structures/InviteGuild";
 export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";
 export { default as ModalSubmitInteraction } from "./structures/ModalSubmitInteraction";
-/** @depecated Use {@link OAuthHelper~OAuthHelper.constructURL} for the `constructURL` function. {@link Routes/OAuth~OAuth.constructURL}, along with this export will be removed in `1.5.0`. */
-export { default as OAuth } from "./routes/OAuth";
 export { default as OAuthGuild } from "./structures/OAuthGuild";
 export { default as OAuthHelper } from "./rest/OAuthHelper";
 export { default as PartialApplication } from "./structures/PartialApplication";

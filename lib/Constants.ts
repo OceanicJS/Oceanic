@@ -46,8 +46,6 @@ export enum UserFlags {
     STAFF             = 1 << 0,
     PARTNER           = 1 << 1,
     HYPESQUAD         = 1 << 2,
-    /** @deprecated Use {@link Constants~UserFlags#BUG_HUNTER_LEVEL_1 | BUG_HUNTER_LEVEL_1}. This will be removed in `1.5.0`. */
-    BUGHUNTER_LEVEL_1  = 1 << 3,
     BUG_HUNTER_LEVEL_1 = 1 << 3,
 
     HYPESQUAD_BRAVERY    = 1 << 6,

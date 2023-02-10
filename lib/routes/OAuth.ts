@@ -6,7 +6,6 @@ import type {
     Connection,
     ExchangeCodeOptions,
     ExchangeCodeResponse,
-    OAuthURLOptions,
     RawAuthorizationInformation,
     RawClientCredentialsTokenResponse,
     RawConnection,
@@ -41,23 +40,6 @@ export default class OAuth {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
-    }
-
-    /**
-     * Construct an oauth authorization url.
-     * @param options The options to construct the url with.
-     * @deprecated Moved to {@link OAuthHelper~OAuthHelper.constructURL | OAuthHelper#constructURL}. This will be removed in `1.5.0`.
-     */
-    static constructURL(options: OAuthURLOptions): string {
-        return OAuthHelper.constructURL(options);
-    }
-
-    /**
-     * Alias for {@link Routes/OAuth~OAuth.constructURL | OAuth#constructURL}.
-     * @deprecated Moved to {@link OAuthHelper~OAuthHelper.constructURL | OAuthHelper#constructURL}. This will be removed in `1.5.0`.
-     */
-    get constructURL(): typeof OAuthHelper["constructURL"] {
-        return OAuthHelper.constructURL.bind(OAuthHelper);
     }
 
     /**
