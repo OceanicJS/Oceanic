@@ -44,6 +44,12 @@ export default class StageChannel extends TextableChannel<StageChannel> {
         if (data.rtc_region !== undefined) {
             this.rtcRegion = data.rtc_region;
         }
+        if (data.user_limit !== undefined) {
+            this.userLimit = data.user_limit;
+        }
+        if (data.video_quality_mode !== undefined) {
+            this.videoQualityMode = data.video_quality_mode;
+        }
     }
 
     override get parent(): CategoryChannel | null | undefined {

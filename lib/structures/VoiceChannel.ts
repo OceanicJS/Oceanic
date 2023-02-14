@@ -1,6 +1,4 @@
 /** @module VoiceChannel */
-import PermissionOverwrite from "./PermissionOverwrite";
-import Message from "./Message";
 import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import TextableChannel from "./TextableChannel";
@@ -30,16 +28,10 @@ export default class VoiceChannel extends TextableChannel<VoiceChannel> {
     constructor(data: RawVoiceChannel, client: Client) {
         super(data, client);
         this.bitrate = data.bitrate;
-        this.lastMessageID = data.last_message_id;
-        this.messages = new TypedCollection(Message<this>, client, client.options.collectionLimits.messages);
-        this.nsfw = false;
-        this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
-        this.position = data.position;
         this.rtcRegion = data.rtc_region;
-        this.topic = data.topic;
+        this.userLimit = data.user_limit;
         this.videoQualityMode = data.video_quality_mode;
         this.voiceMembers = new TypedCollection(Member, client);
-        this.userLimit = data.user_limit;
         this.update(data);
     }
 
@@ -48,33 +40,14 @@ export default class VoiceChannel extends TextableChannel<VoiceChannel> {
         if (data.bitrate !== undefined) {
             this.bitrate = data.bitrate;
         }
-        if (data.last_message_id !== undefined) {
-            this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
-            this.lastMessageID = data.last_message_id;
-        }
-        if (data.nsfw !== undefined) {
-            this.nsfw = data.nsfw;
-        }
-        if (data.position !== undefined) {
-            this.position = data.position;
-        }
         if (data.rtc_region !== undefined) {
             this.rtcRegion = data.rtc_region;
         }
-        if (data.topic !== undefined) {
-            this.topic = data.topic;
+        if (data.user_limit !== undefined) {
+            this.userLimit = data.user_limit;
         }
         if (data.video_quality_mode !== undefined) {
             this.videoQualityMode = data.video_quality_mode;
-        }
-        if (data.permission_overwrites !== undefined) {
-            for (const id of this.permissionOverwrites.keys()) {
-                if (!data.permission_overwrites.some(overwrite => overwrite.id === id)) {
-                    this.permissionOverwrites.delete(id);
-                }
-            }
-
-            data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
         }
     }
 
