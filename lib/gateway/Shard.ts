@@ -19,7 +19,7 @@ import type {
     BotActivity,
     ShardStatus
 } from "../types/gateway";
-import type Member from "../structures/Member";
+import Member from "../structures/Member";
 import Base from "../structures/Base";
 import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
 import ClientApplication from "../structures/ClientApplication";
@@ -57,6 +57,8 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
+import AuditLogEntry from "../structures/AuditLogEntry";
+import type User from "../structures/User";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -295,7 +297,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "CHANNEL_CREATE": {
-                const channel = this.client.util.updateChannel<AnyGuildChannelWithoutThreads>(packet.d);
+                const channel = packet.d.type === ChannelTypes.GROUP_DM ? this.client.groupChannels.update(packet.d) : this.client.util.updateChannel<AnyGuildChannelWithoutThreads>(packet.d);
                 this.client.emit("channelCreate", channel);
                 break;
             }
@@ -335,6 +337,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const oldChannel = this.client.getChannel<TextChannel>(packet.d.id)?.toJSON() ?? null;
                 const channel = this.client.util.updateChannel<TextChannel>(packet.d);
                 this.client.emit("channelUpdate", channel, oldChannel);
+                break;
+            }
+
+            case "GUILD_AUDIT_LOG_ENTRY_CREATE": {
+                const guild = this.client.guilds.get(packet.d.guild_id);
+                this.client.emit("guildAuditLogEntryCreate", guild ?? { id: packet.d.guild_id }, guild?.auditLogEntries.update(packet.d) ?? new AuditLogEntry(packet.d, this.client));
                 break;
             }
 
@@ -489,12 +497,17 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 // eslint-disable-next-line @typescript-eslint/dot-notation
-                const member = guild?.members.get(packet.d.user.id)?.["update"]({ user: packet.d.user }) ?? this.client.users.update(packet.d.user);
+                let user: Member | User | undefined = guild?.members.get(packet.d.user.id);
+                if (user instanceof Member) {
+                    user["update"]({ user: packet.d.user });
+                } else {
+                    user = this.client.users.update(packet.d.user);
+                }
                 if (guild) {
                     guild.memberCount--;
                     guild.members.delete(packet.d.user.id);
                 }
-                this.client.emit("guildMemberRemove", member, guild ?? { id: packet.d.guild_id });
+                this.client.emit("guildMemberRemove", user, guild ?? { id: packet.d.guild_id });
                 break;
             }
 
@@ -879,6 +892,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     url += "/";
                 }
                 this.resumeURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
+                if (this.client.shards.options.compress) {
+                    this.resumeURL += "&compress=zlib-stream";
+                }
                 this.sessionID = packet.d.session_id;
 
                 for (const guild of packet.d.guilds) {

@@ -4,7 +4,7 @@ import type User from "./User";
 import type Guild from "./Guild";
 import type Permission from "./Permission";
 import type VoiceState from "./VoiceState";
-import type { ImageFormat } from "../Constants";
+import { GuildMemberFlags, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type {
@@ -26,8 +26,8 @@ export default class Member extends Base {
     communicationDisabledUntil: Date | null;
     /** If this member is server deafened. */
     deaf: boolean;
-    /** Undocumented. */
-    flags?: number;
+    /** The member's [flags](https://discord.com/developers/docs/resources/guild#guild-member-object-flags). */
+    flags: number;
     /** The id of the guild this member is for. */
     guildID: string;
     /** Undocumented. */
@@ -63,6 +63,7 @@ export default class Member extends Base {
         this.avatar = null;
         this.communicationDisabledUntil = null;
         this.deaf = !!data.deaf;
+        this.flags = 0;
         this.guildID = guildID;
         this.joinedAt = null;
         this.mute = !!data.mute;
@@ -72,6 +73,10 @@ export default class Member extends Base {
         this.roles = [];
         this.user = user;
         this.update(data);
+    }
+
+    private toggleFlag(flag: GuildMemberFlags, enable: boolean, reason?: string): Promise<Member> {
+        return this.edit({ flags: enable ? this.flags | flag : this.flags & ~flag, reason });
     }
 
     protected override update(data: Partial<RawMember | RESTMember>): void {
@@ -192,7 +197,15 @@ export default class Member extends Base {
     }
 
     /**
-     * Edit this member. Use \<Guild\>.editCurrentMember if you wish to update the nick of this client using the CHANGE_NICKNAME permission.
+     * Disable the `BYPASSES_VERIFICATION` flag for this member. Requires the **Manage Guild** permission.
+     * @param reason The reason for disabling the flag.
+     */
+    async disableVerificationBypass(): Promise<void> {
+        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, false);
+    }
+
+    /**
+     * Edit this member. Use {@link Guild.editCurrentMember | Guild#editCurrentMember} if you wish to update the nick of this client using the `CHANGE_NICKNAME` permission.
      * @param options The options for editing the member.
      */
     async edit(options: EditMemberOptions): Promise<Member> {
@@ -205,6 +218,14 @@ export default class Member extends Base {
      */
     async editVoiceState(options: EditUserVoiceStateOptions): Promise<void> {
         return this.client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
+    }
+
+    /**
+     * Enable the `BYPASSES_VERIFICATION` flag for this member. Requires the **Manage Guild** permission.
+     * @param reason The reason for enabling the flag.
+     */
+    async enableVerificationBypass(): Promise<void> {
+        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, true);
     }
 
     /**

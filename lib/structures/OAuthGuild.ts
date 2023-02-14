@@ -1,12 +1,15 @@
+/** @module OAuthGuild */
 import Base from "./Base";
 import Permission from "./Permission";
+import type Guild from "./Guild";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import type { RawOAuthGuild } from "../types";
+import type { JSONOAuthGuild, RawOAuthGuild } from "../types";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
 
 /** Represents a guild retrieved via oauth. */
 export default class OAuthGuild extends Base {
+    private _cachedCompleteGuild?: Guild;
     /** The approximate number of members in this guild (if retrieved with counts). */
     approximateMemberCount?: number;
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
@@ -32,6 +35,11 @@ export default class OAuthGuild extends Base {
         this.permissions = new Permission(data.permissions);
     }
 
+    /** The complete guild this OAuthGuild represents, if cached. */
+    get completeGuild(): Guild | undefined {
+        return this._cachedCompleteGuild ??= this.client.guilds.get(this.id);
+    }
+
     /**
      * The url of this guild's icon.
      * @param format The format the url should be.
@@ -39,5 +47,18 @@ export default class OAuthGuild extends Base {
      */
     iconURL(format?: ImageFormat, size?: number): string | null {
         return this.icon === null ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
+    }
+
+    override toJSON(): JSONOAuthGuild {
+        return {
+            ...super.toJSON(),
+            approximateMemberCount:   this.approximateMemberCount,
+            approximatePresenceCount: this.approximatePresenceCount,
+            features:                 this.features,
+            icon:                     this.icon,
+            name:                     this.name,
+            owner:                    this.owner,
+            permissions:              this.permissions.toJSON()
+        };
     }
 }

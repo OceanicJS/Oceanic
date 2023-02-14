@@ -22,8 +22,9 @@ export default class Webhooks {
     constructor(manager: RESTManager) {
         this.#manager = manager;
     }
+
     /**
-     * Creat a channel webhook.
+     * Create a channel webhook.
      * @param channelID The ID of the channel to create the webhook in.
      * @param options The options to create the webhook with.
      */

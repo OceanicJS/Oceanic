@@ -66,6 +66,8 @@ import type Message from "../structures/Message";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type StageInstance from "../structures/StageInstance";
 import type ForumChannel from "../structures/ForumChannel";
+import type AuditLogEntry from "../structures/AuditLogEntry";
+import type GroupChannel from "../structures/GroupChannel";
 
 
 export interface ClientEvents {
@@ -79,8 +81,8 @@ export interface ClientEvents {
     autoModerationRuleDelete: [rule: AutoModerationRule];
     /** @event Emitted when an auto moderation rule is updated. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleUpdate: [rule: AutoModerationRule, oldRule: JSONAutoModerationRule | null];
-    /** @event Emitted when a channel is created. Requires the `GUILDS` intent. */
-    channelCreate: [channel: AnyGuildChannelWithoutThreads];
+    /** @event Emitted when a channel is created. Guild channels require the `GUILDS` intent. */
+    channelCreate: [channel: AnyGuildChannelWithoutThreads | GroupChannel];
     /** @event Emitted when channel is deleted. Requires the `GUILDS` intent. */
     channelDelete: [channel: AnyGuildChannelWithoutThreads | PrivateChannel | DeletedPrivateChannel];
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
@@ -95,6 +97,8 @@ export interface ClientEvents {
     disconnect: [];
     /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string, shard?: number];
+    /** @event Emitted when an audit log entry is created. Requires both the `GUILD_MODERATION` intent, as well as the `VIEW_AUDIT_LOG` permission. */
+    guildAuditLogEntryCreate: [guild: Guild | Uncached, auditLogEntry: AuditLogEntry];
     /** @event Emitted when a guild becomes available. Requires the `GUILDS` intent. */
     guildAvailable: [guild: Guild];
     /** @event Emitted when a guild ban is created. Requires the `GUILD_BANS` intent. */

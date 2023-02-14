@@ -8,7 +8,7 @@ import type {
     PermissionName,
     RoleConnectionMetadataTypes,
     TeamMembershipState,
-    VisibilityTypes
+    ConnectionVisibilityTypes
 } from "../Constants";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
@@ -87,7 +87,7 @@ export interface RawConnection {
     two_way_link: boolean;
     type: ConnectionService;
     verified: boolean;
-    visibility: VisibilityTypes;
+    visibility: ConnectionVisibilityTypes;
 }
 
 export interface Connection {
@@ -100,7 +100,7 @@ export interface Connection {
     twoWayLink: boolean;
     type: ConnectionService;
     verified: boolean;
-    visibility: VisibilityTypes;
+    visibility: ConnectionVisibilityTypes;
 }
 
 export interface OAuthURLOptions {
@@ -240,6 +240,12 @@ export interface RawRoleConnectionMetadata {
 
 export interface RoleConnection {
     metadata: Record<string, RoleConnectionMetadata>;
+    platformName: string | null;
+    platformUsername: string | null;
+}
+
+export interface UpdateUserApplicationRoleConnectionOptions {
+    metadata: Record<string, string>;
     platformName: string | null;
     platformUsername: string | null;
 }

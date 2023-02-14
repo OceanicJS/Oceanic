@@ -2,7 +2,7 @@
 import Base from "./Base";
 import type ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
-import type { RawClientApplication, RoleConnection, RoleConnectionMetadata } from "../types/oauth";
+import type { RawClientApplication, RoleConnection, RoleConnectionMetadata, UpdateUserApplicationRoleConnectionOptions } from "../types/oauth";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
@@ -199,7 +199,7 @@ export default class ClientApplication extends Base {
      * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
      * @param data The metadata to update.
      */
-    async updateUserRoleConnection(data: RoleConnection): Promise<RoleConnection> {
+    async updateUserRoleConnection(data: UpdateUserApplicationRoleConnectionOptions): Promise<RoleConnection> {
         return this.client.rest.oauth.updateUserRoleConnection(this.id, data);
     }
 }

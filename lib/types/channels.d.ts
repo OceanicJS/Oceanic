@@ -1,5 +1,5 @@
 /** @module Types/Channels */
-import type { PartialEmoji, PartialGuild, RawMember } from "./guilds";
+import type { PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
 import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
@@ -60,6 +60,7 @@ export interface RawChannel {
     id: string;
     last_message_id?: string | null;
     last_pin_timestamp?: string | null;
+    managed?: boolean;
     member?: RawChannelThreadMember;
     member_count?: number;
     message_count?: number;
@@ -84,7 +85,7 @@ export interface RawChannel {
 }
 export type RawGuildChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> & { name: string; type: GuildChannelTypes; };
 export type RawPrivateChannel = Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> & { type: ChannelTypes.DM; };
-// managed and nicks are undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
+// nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
 export type RawGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> & { managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; };
 export type RawTextChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_TEXT; };
 export type RawCategoryChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel,  "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_CATEGORY; };
@@ -753,7 +754,7 @@ export interface RawInvite {
     channel_id?: string;
     code: string;
     expires_at?: string;
-    guild?: PartialGuild;
+    guild?: RawInviteGuild;
     guild_scheduled_event?: RawScheduledEvent;
     inviter?: RawUser;
     /** @deprecated */

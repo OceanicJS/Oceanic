@@ -46,8 +46,6 @@ export enum UserFlags {
     STAFF             = 1 << 0,
     PARTNER           = 1 << 1,
     HYPESQUAD         = 1 << 2,
-    /** @deprecated Use {@link Constants~UserFlags#BUG_HUNTER_LEVEL_1 | BUG_HUNTER_LEVEL_1}. This will be removed in `1.5.0`. */
-    BUGHUNTER_LEVEL_1  = 1 << 3,
     BUG_HUNTER_LEVEL_1 = 1 << 3,
 
     HYPESQUAD_BRAVERY    = 1 << 6,
@@ -247,10 +245,13 @@ export const ThreadAutoArchiveDurations = [
 ] as const;
 export type ThreadAutoArchiveDuration = typeof ThreadAutoArchiveDurations[number];
 
-export enum VisibilityTypes {
+export enum ConnectionVisibilityTypes {
     NONE     = 0,
     EVERYONE = 1,
 }
+
+/** @deprecated Use {@link Constants~ConnectionVisibilityTypes | ConnectionVisibilityTypes}. This will be removed in `1.6.0`. */
+export const VisibilityTypes = ConnectionVisibilityTypes;
 
 export const ConnectionServices = [
     "battlenet",
@@ -258,6 +259,7 @@ export const ConnectionServices = [
     "epicgames",
     "facebook",
     "github",
+    "instagram",
     "leagueoflegends",
     "paypal",
     "playstation",
@@ -456,7 +458,7 @@ export enum OAuthScopes {
     /** allows your app to know a user's friends and implicit relationships - requires Discord approval */
     RELATIONSHIPS_READ = "relationships.read",
     /** allows your app to update a user's connection and metadata for the app */
-    ROLE_CONNECTIONS_WRITE = "role_connection.write",
+    ROLE_CONNECTIONS_WRITE = "role_connections.write",
     /** for local rpc server access, this allows you to control a user's local Discord client - requires Discord approval */
     RPC = "rpc",
     /** for local rpc server access, this allows you to receive notifications pushed out to the user - requires Discord approval */
@@ -517,6 +519,7 @@ export enum MessageFlags {
     LOADING                                = 1 << 7,
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
     SHOULD_SHOW_LINK_NOT_DISCORD_WARNING   = 1 << 10,
+    SUPPRESS_NOTIFICATIONS                 = 1 << 12,
 }
 
 export enum MessageTypes {
@@ -741,7 +744,9 @@ export enum InteractionResponseTypes {
 export enum Intents {
     GUILDS                        = 1 << 0,
     GUILD_MEMBERS                 = 1 << 1,
+    /** @deprecated {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION}. This will be removed in `1.6.0`. */
     GUILD_BANS                    = 1 << 2,
+    GUILD_MODERATION              = 1 << 2,
     GUILD_EMOJIS_AND_STICKERS     = 1 << 3,
     GUILD_INTEGRATIONS            = 1 << 4,
     GUILD_WEBHOOKS                = 1 << 5,
@@ -890,6 +895,12 @@ export enum RoleConnectionMetadataTypes {
     BOOLEAN_NOT_EQUAL              = 8,
 }
 
+export enum GuildMemberFlags {
+    DID_REJOIN            = 1 << 0,
+    COMPLETED_ONBOARDING  = 1 << 1,
+    BYPASSES_VERIFICATION = 1 << 2,
+    STARTED_ONBOARDING    = 1 << 3,
+}
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
@@ -954,6 +965,7 @@ export enum JSONErrorCodes {
     MAXIMUM_NUMBER_OF_WEBHOOKS = 30007,
     MAXIMUM_NUMBER_OF_EMOJIS = 30008,
     MAXIMUM_NUMBER_OF_REACTIONS = 30010,
+    MAXIMUM_NUMBER_OF_GROUP_CHANNELS = 30011,
     MAXIMUM_NUMBER_OF_CHANNELS = 30013,
     MAXIMUM_NUMBER_OF_ATTACHMENTS = 30015,
     MAXIMUM_NUMBER_OF_INVITES = 30016,

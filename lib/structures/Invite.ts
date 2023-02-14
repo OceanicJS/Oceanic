@@ -1,9 +1,10 @@
 /** @module Invite */
 import Channel from "./Channel";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
+import InviteGuild from "./InviteGuild";
 import type {
     InviteChannel,
     InviteInfoTypes,
@@ -14,7 +15,6 @@ import type {
 } from "../types/channels";
 import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
-import type { RawGuild } from "../types/guilds";
 import type { JSONInvite } from "../types/json";
 import type { Uncached } from "../types/shared";
 
@@ -35,7 +35,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The date at which this invite expires. */
     expiresAt?: T extends "withMetadata" | "withoutExpiration" ? never : Date;
     /** The guild this invite leads to or `null` if this invite leads to a Group DM. */
-    guild: Guild | null;
+    guild: InviteGuild | null;
     /** The ID of the guild this invite leads to or `null` if this invite leads to a Group DM. */
     guildID: string | null;
     /** The scheduled event associated with this invite. */
@@ -84,8 +84,15 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         let guild: Guild | undefined;
         if (data.guild) {
-            guild = this.client.guilds.has(data.guild.id) ? this.client.guilds.update(data.guild as RawGuild) : new Guild(data.guild as RawGuild, this.client);
-            this.guild = guild;
+            if (this.guild === null) {
+                this.guild = new InviteGuild(data.guild, this.client);
+            } else {
+                this.guild["update"](data.guild);
+            }
+
+            if (this.client.guilds.has(data.guild.id)) {
+                this.client.guilds.update(data.guild);
+            }
         }
 
         if (this.channelID === null) {
@@ -178,6 +185,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             code:                     this.code,
             createdAt:                this.createdAt?.getTime(),
             expiresAt:                this.expiresAt?.getTime(),
+            guild:                    this.guild?.toJSON(),
             guildID:                  this.guildID ?? undefined,
             guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
             inviter:                  this.inviter?.id,
