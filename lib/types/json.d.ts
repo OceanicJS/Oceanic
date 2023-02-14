@@ -70,6 +70,7 @@ import type {
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
+    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     rateLimitPerUser: 0;
     threads: Array<string>;
     type: ChannelTypes.GUILD_ANNOUNCEMENT;
@@ -518,13 +519,14 @@ export interface JSONScheduledEvent extends JSONBase {
     status: GuildScheduledEventStatuses;
     userCount?: number;
 }
-export interface JSONStageChannel extends JSONGuildChannel {
+export interface JSONStageChannel extends JSONTextableChannel {
     bitrate: number;
-    permissionOverwrites: Array<JSONPermissionOverwrite>;
-    position: number;
+    messages: Array<string>;
     rtcRegion: string | null;
-    topic: string | null;
     type: ChannelTypes.GUILD_STAGE_VOICE;
+    userLimit: number;
+    videoQualityMode: VideoQualityModes;
+    voiceMembers: Array<string>;
 }
 export interface JSONStageInstance extends JSONBase {
     channelID: string;
@@ -541,7 +543,6 @@ export interface JSONTeam extends JSONBase {
     ownerID: string;
 }
 export interface JSONTextableChannel extends JSONGuildChannel {
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     lastMessageID: string | null;
     messages: Array<string>;
     nsfw: boolean;
@@ -552,6 +553,7 @@ export interface JSONTextableChannel extends JSONGuildChannel {
     type: Exclude<TextChannelTypes, PrivateChannelTypes>;
 }
 export interface JSONTextChannel extends JSONTextableChannel {
+    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     threads: Array<string>;
     type: ChannelTypes.GUILD_TEXT;
 }
@@ -580,14 +582,10 @@ export interface JSONUser extends JSONBase {
     system: boolean;
     username: string;
 }
-export interface JSONVoiceChannel extends JSONGuildChannel {
+export interface JSONVoiceChannel extends JSONTextableChannel {
     bitrate: number;
     messages: Array<string>;
-    nsfw: boolean;
-    permissionOverwrites: Array<JSONPermissionOverwrite>;
-    position: number;
     rtcRegion: string | null;
-    topic: string | null;
     type: ChannelTypes.GUILD_VOICE;
     userLimit: number;
     videoQualityMode: VideoQualityModes;

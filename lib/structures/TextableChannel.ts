@@ -12,7 +12,9 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import type User from "./User";
 import type Webhook from "./Webhook";
-import { AllPermissions, Permissions, ChannelTypes, type ThreadAutoArchiveDuration } from "../Constants";
+import type VoiceChannel from "./VoiceChannel";
+import type StageChannel from "./StageChannel";
+import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
@@ -34,12 +36,10 @@ import type {
     PurgeOptions
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
-import type { CreateWebhookOptions } from "../types";
+import type { CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
 
 /** Represents a guild textable channel. */
-export default class TextableChannel<T extends TextChannel | AnnouncementChannel = TextChannel | AnnouncementChannel> extends GuildChannel {
-    /** The default auto archive duration for threads created in this channel. */
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+export default class TextableChannel<T extends TextChannel | AnnouncementChannel | VoiceChannel | StageChannel = TextChannel | AnnouncementChannel | VoiceChannel | StageChannel> extends GuildChannel {
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
     lastMessage?: Message<T> | null;
     /** The ID of last message sent in this channel. */
@@ -57,9 +57,8 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     /** The topic of the channel. */
     topic: string | null;
     declare type: T["type"];
-    constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
+    constructor(data: RawTextChannel | RawAnnouncementChannel | RawVoiceChannel | RawStageChannel, client: Client) {
         super(data, client);
-        this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         this.lastMessageID = data.last_message_id;
         this.messages = new TypedCollection(Message<T>, client, client.options.collectionLimits.messages);
         this.nsfw = data.nsfw;
@@ -70,11 +69,8 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
         this.update(data);
     }
 
-    protected override update(data: Partial<RawTextChannel> | Partial<RawAnnouncementChannel>): void {
+    protected override update(data: Partial<RawTextChannel | RawAnnouncementChannel | RawVoiceChannel | RawStageChannel>): void {
         super.update(data);
-        if (data.default_auto_archive_duration !== undefined) {
-            this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        }
         if (data.last_message_id !== undefined) {
             this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
             this.lastMessageID = data.last_message_id;
@@ -104,15 +100,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
 
     override get parent(): CategoryChannel | undefined | null {
         return super.parent as CategoryChannel | undefined | null;
-    }
-
-    /**
-     * [Text] Convert this text channel to an announcement channel.
-     *
-     * [Announcement] Convert this announcement channel to a text channel.
-     */
-    async convert(): Promise<TextChannel | AnnouncementChannel> {
-        return this.edit({ type: this.type === ChannelTypes.GUILD_TEXT ? ChannelTypes.GUILD_ANNOUNCEMENT : ChannelTypes.GUILD_TEXT });
     }
 
     /**
@@ -198,8 +185,8 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    override async edit(options: EditGuildChannelOptions): Promise<TextChannel | AnnouncementChannel> {
-        return this.client.rest.channels.edit<TextChannel | AnnouncementChannel>(this.id, options);
+    override async edit(options: EditGuildChannelOptions): Promise<T> {
+        return this.client.rest.channels.edit<T>(this.id, options);
     }
 
     /**
@@ -355,15 +342,14 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     override toJSON(): JSONTextableChannel {
         return {
             ...super.toJSON(),
-            defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
-            lastMessageID:              this.lastMessageID,
-            messages:                   this.messages.map(message => message.id),
-            nsfw:                       this.nsfw,
-            permissionOverwrites:       this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
-            position:                   this.position,
-            rateLimitPerUser:           this.rateLimitPerUser,
-            topic:                      this.topic,
-            type:                       this.type
+            lastMessageID:        this.lastMessageID,
+            messages:             this.messages.map(message => message.id),
+            nsfw:                 this.nsfw,
+            permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
+            position:             this.position,
+            rateLimitPerUser:     this.rateLimitPerUser,
+            topic:                this.topic,
+            type:                 this.type
         };
     }
 
