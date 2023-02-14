@@ -62,8 +62,8 @@ export default class Webhook extends Base {
 
     /** The channel this webhook is for, if applicable. */
     get channel(): AnyGuildTextChannel | null | undefined {
-        if (this.channelID !== null && this._cachedChannel !== null) {
-            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<AnyGuildTextChannel>(this.channelID));
+        if (this.channelID !== null) {
+            return this._cachedChannel ??= this.client.getChannel<AnyGuildTextChannel>(this.channelID);
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);

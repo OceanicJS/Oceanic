@@ -151,14 +151,14 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
     /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
     get channel(): (CH extends InviteChannel ? CH : PartialInviteChannel) | null {
-        if (this.channelID !== null && this._cachedChannel !== null) {
+        if (this.channelID !== null) {
             if (this._cachedChannel instanceof Channel) {
                 return this._cachedChannel;
             }
 
             const cachedChannel = this.client.getChannel<InviteChannel>(this.channelID);
 
-            return (cachedChannel ? (this._cachedChannel = cachedChannel as CH extends InviteChannel ? CH : PartialInviteChannel) : this._cachedChannel);
+            return cachedChannel ? (this._cachedChannel = cachedChannel as CH extends InviteChannel ? CH : PartialInviteChannel) : this._cachedChannel;
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);

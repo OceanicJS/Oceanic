@@ -134,7 +134,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
 
     /** The channel this interaction was sent from. */
     get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
-        return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined);
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined;
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
