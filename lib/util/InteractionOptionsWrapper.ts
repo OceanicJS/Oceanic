@@ -169,7 +169,7 @@ export default class InteractionOptionsWrapper {
         if (!resolved) {
             return undefined; // required will be handled in getChannel
         }
-        const channel = resolved.completeChannel ?? resolved.type === ChannelTypes.DM ? resolved : undefined;
+        const channel = resolved.completeChannel ?? (resolved.type === ChannelTypes.DM ? resolved : undefined);
         if (!channel && required) {
             throw new Error(`Failed to resolve complete channel for required option: ${name}`);
         }
