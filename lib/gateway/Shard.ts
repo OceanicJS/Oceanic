@@ -369,8 +369,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                             this.client.emit("guildCreate", guild);
                         }
                     } else {
-                        this.client.unavailableGuilds.delete(guild.id);
-                        void this.restartGuildCreateTimeout();
+                        if (this.client.unavailableGuilds.delete(guild.id)) {
+                            void this.restartGuildCreateTimeout();
+                        } else {
+                            this.client.emit("guildCreate", guild);
+                        }
                     }
                 }
                 break;
