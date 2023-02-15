@@ -119,7 +119,6 @@ export default class StageChannel extends TextableChannel<StageChannel> {
         return {
             ...super.toJSON(),
             bitrate:          this.bitrate,
-            messages:         this.messages.map(message => message.id),
             rtcRegion:        this.rtcRegion,
             type:             this.type,
             userLimit:        this.userLimit,
