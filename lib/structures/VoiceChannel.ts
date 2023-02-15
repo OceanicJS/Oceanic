@@ -88,7 +88,6 @@ export default class VoiceChannel extends TextableChannel<VoiceChannel> {
         return {
             ...super.toJSON(),
             bitrate:          this.bitrate,
-            messages:         this.messages.map(message => message.id),
             rtcRegion:        this.rtcRegion,
             type:             this.type,
             userLimit:        this.userLimit,
