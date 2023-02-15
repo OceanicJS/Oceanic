@@ -39,11 +39,7 @@ export default class InteractionResolvedChannel extends Channel {
 
     /** The complete channel this channel option represents, if it's cached. */
     get completeChannel(): AnyGuildChannel | PrivateChannel | undefined {
-        if (!this._cachedCompleteChannel) {
-            return (this._cachedCompleteChannel = this.client.getChannel(this.id));
-        }
-
-        return this._cachedCompleteChannel;
+        return this._cachedCompleteChannel ??= this.client.getChannel(this.id);
     }
 
     /** The parent of this channel, if this represents a thread. */
