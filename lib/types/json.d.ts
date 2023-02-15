@@ -521,7 +521,6 @@ export interface JSONScheduledEvent extends JSONBase {
 }
 export interface JSONStageChannel extends JSONTextableChannel {
     bitrate: number;
-    messages: Array<string>;
     rtcRegion: string | null;
     type: ChannelTypes.GUILD_STAGE_VOICE;
     userLimit: number;
@@ -584,7 +583,6 @@ export interface JSONUser extends JSONBase {
 }
 export interface JSONVoiceChannel extends JSONTextableChannel {
     bitrate: number;
-    messages: Array<string>;
     rtcRegion: string | null;
     type: ChannelTypes.GUILD_VOICE;
     userLimit: number;
