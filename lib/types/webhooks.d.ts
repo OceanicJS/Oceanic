@@ -28,7 +28,7 @@ export interface CreateWebhookOptions {
     /** The avatar (buffer, or full data url). */
     avatar?: Buffer | string | null;
     /** The name of the webhook. */
-    name?: string;
+    name: string;
     /** The reason for creating this webhook. */
     reason?: string;
 }
