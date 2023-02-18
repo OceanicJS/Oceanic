@@ -925,6 +925,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
                 this.status = "ready";
                 this.client.shards["_ready"](this.id);
+                void this.checkReady();
                 this.emit("resume");
                 break;
             }
