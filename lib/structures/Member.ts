@@ -3,6 +3,7 @@ import Base from "./Base";
 import type User from "./User";
 import type Guild from "./Guild";
 import type Permission from "./Permission";
+import type Role from "./Role";
 import type VoiceState from "./VoiceState";
 import { GuildMemberFlags, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
@@ -12,6 +13,7 @@ import type {
     EditMemberOptions,
     EditUserVoiceStateOptions,
     RawMember,
+    RawRole,
     RESTMember,
     Presence
 } from "../types/guilds";
@@ -142,6 +144,12 @@ export default class Member extends Base {
 
         return this._cachedGuild;
     }
+    
+    /** The member's highest role in the hierarchy. */
+    get highestRole(): RawRole | Role {
+        return this.guild.roles.filter(role => this.roles.includes(role.id)).reduce((prev, role) => (role.position > prev.position ? role : prev), this.guild.roles.first());
+    }
+
     /** A string that will mention this member. */
     get mention(): string {
         return this.user.mention;
