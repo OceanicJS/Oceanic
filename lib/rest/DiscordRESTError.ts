@@ -6,16 +6,27 @@ import type { Headers, Response } from "undici";
 /** A REST error received from Discord. */
 export default class DiscordRESTError extends Error {
     code: number;
-    method: RESTMethod;
+    method!: RESTMethod;
     override name = "DiscordRESTError";
-    resBody: Record<string, unknown> | null;
-    response: Response;
+    resBody!: Record<string, unknown> | null;
+    response!: Response;
     constructor(res: Response, resBody: Record<string, unknown>, method: RESTMethod, stack?: string) {
         super();
         this.code = Number(resBody.code);
-        this.method = method;
-        this.response = res;
-        this.resBody = resBody as DiscordRESTError["resBody"];
+        Object.defineProperties(this, {
+            method: {
+                value:      method,
+                enumerable: false
+            },
+            response: {
+                value:      res,
+                enumerable: false
+            },
+            resBody: {
+                value:      resBody,
+                enumerable: false
+            }
+        });
 
         let message = "message" in resBody ? `${(resBody as {message: string; }).message} on ${this.method} ${this.path}` : `Unknown Error on ${this.method} ${this.path}`;
         if ("errors" in resBody) {
@@ -26,10 +37,8 @@ export default class DiscordRESTError extends Error {
                 message += `\n ${errors.join("\n ")}`;
             }
         }
-        Object.defineProperty(this, "message", {
-            enumerable: false,
-            value:      message
-        });
+        this.message = message;
+
         if (stack) {
             this.stack = `${this.name}: ${this.message}\n${stack}`;
         } else {
