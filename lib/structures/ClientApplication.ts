@@ -191,8 +191,8 @@ export default class ClientApplication extends Base {
      * Update this application's role connections metadata.
      * @param metadata The metadata records.
      */
-    async updateRoleConnectionsMetata(metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
-        return this.client.rest.oauth.updateRoleConnectionsMetata(this.id, metadata);
+    async updateRoleConnectionsMetadata(metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
+        return this.client.rest.oauth.updateRoleConnectionsMetadata(this.id, metadata);
     }
 
     /**
