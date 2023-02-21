@@ -280,7 +280,7 @@ export default class OAuth {
      * @param application The ID of the application.
      * @param metadata The metadata records.
      */
-    async updateRoleConnectionsMetata(applicationID: string, metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
+    async updateRoleConnectionsMetadata(applicationID: string, metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
             method: "PUT",
             path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID),
