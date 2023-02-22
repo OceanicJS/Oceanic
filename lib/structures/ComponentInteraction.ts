@@ -11,6 +11,7 @@ import User from "./User";
 import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import type Client from "../Client";
 import type {
+    InitialInteractionContent,
     InteractionContent,
     MessageComponentButtonInteractionData,
     MessageComponentInteractionResolvedData,
@@ -158,7 +159,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      * @note You cannot attach files in an initial response. Defer the interaction, then use {@link ComponentInteraction~ComponentInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: Omit<InteractionContent, "files">): Promise<void> {
+    async createMessage(options: InitialInteractionContent): Promise<void> {
         if (this.acknowledged) {
             throw new Error("Interactions cannot have more than one initial response.");
         }

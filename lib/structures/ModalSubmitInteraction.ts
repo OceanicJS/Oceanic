@@ -8,7 +8,7 @@ import type Message from "./Message";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
-import type { InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
+import type { InitialInteractionContent, InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
 import type Client from "../Client";
 import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
@@ -88,7 +88,7 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
      * @note You cannot attach files in an initial response. Defer the interaction, then use {@link ModalSubmitInteraction~ModalSubmitInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: Omit<InteractionContent, "files">): Promise<void> {
+    async createMessage(options: InitialInteractionContent): Promise<void> {
         if ("files" in options && (options.files as []).length !== 0) {
             this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
         }

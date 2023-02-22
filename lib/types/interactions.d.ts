@@ -38,6 +38,7 @@ import type InteractionResolvedChannel from "../structures/InteractionResolvedCh
 import type SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 
 export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
+export type InitialInteractionContent = Omit<InteractionContent, "files">;
 
 export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalInteractionResponse;
 export interface PingInteractionResponse {

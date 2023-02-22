@@ -17,7 +17,8 @@ import type {
     InteractionContent,
     ModalData,
     RawApplicationCommandInteraction,
-    ApplicationCommandInteractionResolvedData
+    ApplicationCommandInteractionResolvedData,
+    InitialInteractionContent
 } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
@@ -167,7 +168,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
      * @note You cannot attach files in an initial response. Defer the interaction, then use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: Omit<InteractionContent, "files">): Promise<void> {
+    async createMessage(options: InitialInteractionContent): Promise<void> {
         if (this.acknowledged) {
             throw new Error("Interactions cannot have more than one initial response.");
         }
