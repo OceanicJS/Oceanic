@@ -99,7 +99,12 @@
         "allow": ["arrowFunctions"]
       }
     ],
-    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-empty-interface": [
+      "error",
+      {
+        "allowSingleExtends": true
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-inferrable-types": "error",
     "@typescript-eslint/no-misused-new": "error",
