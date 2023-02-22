@@ -205,7 +205,7 @@ export default class Member extends Base {
     }
 
     /**
-     * Edit this member. Use {@link Guild.editCurrentMember | Guild#editCurrentMember} if you wish to update the nick of this client using the `CHANGE_NICKNAME` permission.
+     * Edit this member. Use {@link Guild~Guild#editCurrentMember | Guild#editCurrentMember} if you wish to update the nick of this client using the `CHANGE_NICKNAME` permission.
      * @param options The options for editing the member.
      */
     async edit(options: EditMemberOptions): Promise<Member> {

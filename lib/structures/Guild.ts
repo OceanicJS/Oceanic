@@ -128,7 +128,7 @@ export default class Guild extends Base {
     approximateMemberCount?: number;
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
     approximatePresenceCount?: number;
-    /** The cached audit log entries. This requires both the {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION} intent, as well as the {@link Constants~Permissions.VIEW_AUDIT_LOG | VIEW_AUDIT_LOG } permission. */
+    /** The cached audit log entries. This requires both the {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION} intent, as well as the {@link Constants~Permissions | VIEW_AUDIT_LOG } permission. */
     auditLogEntries: TypedCollection<string, RawAuditLogEntry, AuditLogEntry>;
     /** The auto moderation rules in this guild. */
     autoModerationRules: TypedCollection<string, RawAutoModerationRule, AutoModerationRule>;

@@ -163,12 +163,16 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
     }
 
     /**
-     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
+     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
+     * @note You cannot attach files in an initial response. Defer the interaction, then use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: InteractionContent): Promise<void> {
+    async createMessage(options: Omit<InteractionContent, "files">): Promise<void> {
         if (this.acknowledged) {
             throw new Error("Interactions cannot have more than one initial response.");
+        }
+        if ("files" in options && (options.files as []).length !== 0) {
+            this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
