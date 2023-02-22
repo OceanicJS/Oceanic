@@ -39,9 +39,9 @@ export interface RawApplication {
     terms_of_service_url?: string;
     verify_key: string;
 }
-export type RawPartialApplication = Pick<RawApplication, "id" | "name" | "icon" | "description"> & Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">>;
-export type RESTApplication = Omit<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins"> & Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">>;
-export type RawClientApplication = Required<Pick<RawApplication, "id" | "flags">>;
+export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
+export interface RESTApplication extends Omit<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params">, Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">> {}
+export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
 
 export interface RawTeam {
     icon: string | null;
@@ -162,8 +162,8 @@ export interface RefreshTokenOptions {
     refreshToken: string;
 }
 
-export type RawRefreshTokenResponse = Omit<RawExchangeCodeResponse, "webhook">;
-export type RefreshTokenResponse = Omit<ExchangeCodeResponse, "webhook">;
+export interface RawRefreshTokenResponse extends Omit<RawExchangeCodeResponse, "webhook"> {}
+export interface RefreshTokenResponse extends Omit<ExchangeCodeResponse, "webhook"> {}
 
 export interface ClientCredentialsTokenOptions {
     /** The id of the client to perform the authorization with. This can be omitted if the global authorization is the proper (Basic base64(clientID:clientSecret)) already, or if connected to the gateway and ready. */
@@ -174,8 +174,8 @@ export interface ClientCredentialsTokenOptions {
     scopes: Array<string>;
 }
 
-export type RawClientCredentialsTokenResponse = Omit<RawExchangeCodeResponse, "refresh_token">;
-export type ClientCredentialsTokenResponse = Omit<ExchangeCodeResponse, "refreshToken">;
+export interface RawClientCredentialsTokenResponse extends Omit<RawExchangeCodeResponse, "refresh_token"> {}
+export interface ClientCredentialsTokenResponse extends Omit<ExchangeCodeResponse, "refreshToken"> {}
 
 export interface RevokeTokenOptions {
     /** The id of the client the authorization was performed with. */

@@ -83,23 +83,23 @@ export interface RawChannel {
     user_limit?: number;
     video_quality_mode?: VideoQualityModes;
 }
-export type RawGuildChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> & { name: string; type: GuildChannelTypes; };
-export type RawPrivateChannel = Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> & { type: ChannelTypes.DM; };
+export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> { name: string; type: GuildChannelTypes; }
+export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> { type: ChannelTypes.DM; }
 // nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export type RawGroupChannel = Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> & { managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; };
-export type RawTextChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_TEXT; };
-export type RawCategoryChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel,  "permission_overwrites" | "position">> & { type: ChannelTypes.GUILD_CATEGORY; };
-export type RawAnnouncementChannel = Omit<RawTextChannel, "type"> & { type: ChannelTypes.GUILD_ANNOUNCEMENT; };
-export type RawVoiceChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user">> & { type: ChannelTypes.GUILD_VOICE; };
-export type RawStageChannel = Omit<RawVoiceChannel, "type"> & { type: ChannelTypes.GUILD_STAGE_VOICE; };
+export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> { managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
+export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_TEXT; }
+export interface RawCategoryChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel,  "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_CATEGORY; }
+export interface RawAnnouncementChannel extends Omit<RawTextChannel, "type"> { type: ChannelTypes.GUILD_ANNOUNCEMENT; }
+export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user">> { type: ChannelTypes.GUILD_VOICE; }
+export interface RawStageChannel extends Omit<RawVoiceChannel, "type"> { type: ChannelTypes.GUILD_STAGE_VOICE; }
 export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
-export type RawAnnouncementThreadChannel = Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> & { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; };
-export type RawPublicThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { type: ChannelTypes.PUBLIC_THREAD; } & Required<Pick<RawChannel, "applied_tags">>;
-export type RawPrivateThreadChannel = Omit<RawAnnouncementThreadChannel, "type"> & { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; };
-export type RawForumChannel = Omit<RawGuildChannel, "type"> & Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> & { type: ChannelTypes.GUILD_FORUM; };
+export interface RawAnnouncementThreadChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; }
+export interface RawPublicThreadChannel extends Omit<RawAnnouncementThreadChannel, "type">, Required<Pick<RawChannel, "applied_tags">> { type: ChannelTypes.PUBLIC_THREAD; }
+export interface RawPrivateThreadChannel extends Omit<RawAnnouncementThreadChannel, "type" | "member"> { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; }
+export interface RawForumChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> { type: ChannelTypes.GUILD_FORUM; }
 
-export type PartialChannel = Pick<RawChannel, "id" | "name" | "type">;
-export type RawInteractionResolvedChannel = Omit<Required<Pick<RawChannel, "id" | "type" | "permissions">>, "name"> & { name: string | null; } & Pick<RawChannel, "thread_metadata" | "parent_id">;
+export interface PartialChannel extends Pick<RawChannel, "id" | "name" | "type"> {}
+export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type" | "permissions">>, "name">, Pick<RawChannel, "thread_metadata" | "parent_id"> { name: string | null; }
 
 export interface RawOverwrite {
     allow: string;
@@ -224,16 +224,16 @@ export interface EditGuildChannelOptions {
     videoQualityMode?: VideoQualityModes | null;
 }
 
-export type EditChannelOptions = EditGroupDMOptions & EditGuildChannelOptions;
-export type EditAnyGuildChannelOptions = Pick<EditGuildChannelOptions, "name" | "position" | "permissionOverwrites">;
-export type EditTextChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "topic" | "nsfw" | "rateLimitPerUser" | "parentID" | "defaultAutoArchiveDuration"> & { type?: ChannelTypes.GUILD_ANNOUNCEMENT; };
-export type EditAnnouncementChannelOptions = Omit<EditTextChannelOptions, "rateLimitPerUser"> & { type?: ChannelTypes.GUILD_TEXT; };
-export type EditVoiceChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "nsfw" | "bitrate" | "userLimit" | "parentID" | "rtcRegion" | "videoQualityMode">;
-export type EditStageChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "bitrate" | "rtcRegion">;
+export interface EditChannelOptions extends EditGroupDMOptions, EditGuildChannelOptions {}
+export interface EditAnyGuildChannelOptions extends Pick<EditGuildChannelOptions, "name" | "position" | "permissionOverwrites"> {}
+export interface EditTextChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "topic" | "nsfw" | "rateLimitPerUser" | "parentID" | "defaultAutoArchiveDuration"> { type?: ChannelTypes.GUILD_ANNOUNCEMENT; }
+export interface EditAnnouncementChannelOptions extends Omit<EditTextChannelOptions, "rateLimitPerUser" | "type"> { type?: ChannelTypes.GUILD_TEXT; }
+export interface EditVoiceChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "nsfw" | "bitrate" | "userLimit" | "parentID" | "rtcRegion" | "videoQualityMode"> {}
+export interface EditStageChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "bitrate" | "rtcRegion"> {}
 export type EditThreadChannelOptions = EditPublicThreadChannelOptions | EditPrivateThreadChannelOptions;
-export type EditPublicThreadChannelOptions = Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags" | "appliedTags">;
-export type EditPrivateThreadChannelOptions = EditPublicThreadChannelOptions & Pick<EditGuildChannelOptions, "invitable">;
-export type EditForumChannelOptions = EditAnyGuildChannelOptions & Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic">;
+export interface EditPublicThreadChannelOptions extends Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags" | "appliedTags"> {}
+export interface EditPrivateThreadChannelOptions extends EditPublicThreadChannelOptions, Pick<EditGuildChannelOptions, "invitable"> {}
+export interface EditForumChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic"> {}
 
 export interface AddGroupRecipientOptions {
     /** The access token of the user to add. */
@@ -512,11 +512,11 @@ export interface RawChannelSelectMenuOptions {
     channel_types: Array<ChannelTypes>;
 }
 
-export type RawStringSelectMenu      = RawSelectMenuBase<ComponentTypes.STRING_SELECT> & RawStringSelectMenuOptions;
-export type RawUserSelectMenu        = RawSelectMenuBase<ComponentTypes.USER_SELECT>;
-export type RawRoleSelectMenu        = RawSelectMenuBase<ComponentTypes.ROLE_SELECT>;
-export type RawMentionableSelectMenu = RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
-export type RawChannelSelectMenu     = RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT> & RawChannelSelectMenuOptions;
+export interface RawStringSelectMenu extends RawSelectMenuBase<ComponentTypes.STRING_SELECT>, RawStringSelectMenuOptions {}
+export interface RawUserSelectMenu extends RawSelectMenuBase<ComponentTypes.USER_SELECT> {}
+export interface RawRoleSelectMenu extends RawSelectMenuBase<ComponentTypes.ROLE_SELECT> {}
+export interface RawMentionableSelectMenu extends RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT> {}
+export interface RawChannelSelectMenu extends RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT>, RawChannelSelectMenuOptions {}
 
 
 export interface SelectMenuBase<T extends SelectMenuTypes> {
@@ -536,11 +536,11 @@ export interface ChannelSelectMenuOptions {
     channelTypes: Array<ChannelTypes>;
 }
 
-export type StringSelectMenu      = SelectMenuBase<ComponentTypes.STRING_SELECT> & StringSelectMenuOptions;
-export type UserSelectMenu        = SelectMenuBase<ComponentTypes.USER_SELECT>;
-export type RoleSelectMenu        = SelectMenuBase<ComponentTypes.ROLE_SELECT>;
-export type MentionableSelectMenu = SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>;
-export type ChannelSelectMenu     = SelectMenuBase<ComponentTypes.CHANNEL_SELECT> & ChannelSelectMenuOptions;
+export interface StringSelectMenu extends SelectMenuBase<ComponentTypes.STRING_SELECT>, StringSelectMenuOptions {}
+export interface UserSelectMenu extends SelectMenuBase<ComponentTypes.USER_SELECT> {}
+export interface RoleSelectMenu extends SelectMenuBase<ComponentTypes.ROLE_SELECT> {}
+export interface MentionableSelectMenu extends SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT> {}
+export interface ChannelSelectMenu extends SelectMenuBase<ComponentTypes.CHANNEL_SELECT>, ChannelSelectMenuOptions {}
 
 export interface SelectOption {
     default?: boolean;
@@ -587,7 +587,7 @@ export interface RawAttachment {
     width?: number;
 }
 // @TODO verify what can be sent with `attachments` in message creation/deletion, this is an assumption
-export type MessageAttachment = Pick<RawAttachment, "id"> & Partial<Pick<RawAttachment, "description" | "filename">>;
+export interface MessageAttachment extends Pick<RawAttachment, "id">, Partial<Pick<RawAttachment, "description" | "filename">> {}
 
 export interface RawAllowedMentions {
     parse: Array<"everyone" | "roles" | "users">;
@@ -732,7 +732,7 @@ export interface GetReactionsOptions {
     limit?: number;
 }
 
-export type EditMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags">;
+export interface EditMessageOptions extends Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags"> {}
 
 export interface EditPermissionOptions {
     /** The permissions to allow. */

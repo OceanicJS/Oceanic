@@ -34,7 +34,7 @@ export interface ClientOptions {
     /** The options for the request handler. */
     rest?: RESTOptions;
 }
-type ClientInstanceOptions = Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits">> & { collectionLimits: Required<CollectionLimitsOptions>; };
+export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits">> { collectionLimits: Required<CollectionLimitsOptions>; }
 
 export interface RESTOptions {
     /**

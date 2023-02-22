@@ -18,11 +18,11 @@ export interface RawWebhook {
     url?: string;
     user?: RawUser;
 }
-export type BasicWebhook = Pick<RawWebhook, "type" | "id" | "name" | "avatar" | "channel_id" | "guild_id" | "application_id">;
-export type OAuthWebhook = Required<BasicWebhook & Pick<RawWebhook, "url" | "token">>;
-export type GuildWebhook = BasicWebhook & Pick<RawWebhook, "user" | "token">;
-export type ApplicationWebhook = Pick<RawWebhook, "type" | "id" | "name" | "avatar" | "channel_id" | "guild_id" | "application_id"> & Required<Pick<RawWebhook, "token">>;
-export type ChannelFollowerWebhook = BasicWebhook & Required<Pick<RawWebhook, "source_guild" | "source_channel">> & Pick<RawWebhook, "user">;
+export interface BasicWebhook extends Pick<RawWebhook, "type" | "id" | "name" | "avatar" | "channel_id" | "guild_id" | "application_id"> {}
+export interface OAuthWebhook extends Required<BasicWebhook & Pick<RawWebhook, "url" | "token">> {}
+export interface GuildWebhook extends BasicWebhook, Pick<RawWebhook, "user" | "token"> {}
+export interface ApplicationWebhook extends Pick<RawWebhook, "type" | "id" | "name" | "avatar" | "channel_id" | "guild_id" | "application_id">, Required<Pick<RawWebhook, "token">> {}
+export interface ChannelFollowerWebhook extends BasicWebhook, Required<Pick<RawWebhook, "source_guild" | "source_channel">>, Pick<RawWebhook, "user"> {}
 
 export interface CreateWebhookOptions {
     /** The avatar (buffer, or full data url). */
@@ -46,7 +46,7 @@ export interface EditWebhookOptions extends EditWebhookTokenOptions {
     reason?: string;
 }
 
-export type ExecuteWebhookOptions = Pick<CreateMessageOptions, "content" | "tts" | "embeds" | "allowedMentions" | "components" | "attachments" | "flags" | "files"> & {
+export interface ExecuteWebhookOptions extends Pick<CreateMessageOptions, "content" | "tts" | "embeds" | "allowedMentions" | "components" | "attachments" | "flags" | "files"> {
     /** The url of an avatar to use. */
     avatarURL?: string;
     /** The id of the thread to send the message to. */
@@ -57,15 +57,15 @@ export type ExecuteWebhookOptions = Pick<CreateMessageOptions, "content" | "tts"
     username?: string;
     /** If the created message should be returned. */
     wait?: boolean;
-};
-export type ExecuteWebhookWaitOptions = Omit<ExecuteWebhookOptions, "wait">  & { wait: true; };
+}
+export interface ExecuteWebhookWaitOptions extends Omit<ExecuteWebhookOptions, "wait"> { wait: true; }
 
 export interface GetWebhookMessageOptions {
     messageID: string;
     threadID?: string;
 }
 
-export type EditWebhookMessageOptions = Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID" | "files">;
+export interface EditWebhookMessageOptions extends Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID" | "files"> {}
 
 export interface DeleteWebhookMessageOptions {
     /** The id of the thread the message is in. */

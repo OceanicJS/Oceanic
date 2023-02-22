@@ -134,15 +134,15 @@ interface ApplicationCommandOptionsSubCommandGroup extends ApplicationCommandOpt
     options?: Array<ApplicationCommandOptionsSubCommand | ApplicationCommandOptionsWithValue>;
 }
 
-type ApplicationCommandOptionsAttachment  = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT>;
-type ApplicationCommandOptionsBoolean     = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.BOOLEAN>;
-type ApplicationCommandOptionsChannel     = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.CHANNEL> & ApplicationCommandOptionsChannelTypes;
-type ApplicationCommandOptionsInteger     = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;
-type ApplicationCommandOptionsMentionable = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.MENTIONABLE>;
-type ApplicationCommandOptionsNumber      = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.NUMBER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.NUMBER>>;
-type ApplicationCommandOptionsRole        = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ROLE>;
-type ApplicationCommandOptionsString      = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxLength | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
-type ApplicationCommandOptionsUser        = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.USER>;
+export interface ApplicationCommandOptionsAttachment extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT> {}
+export interface ApplicationCommandOptionsBoolean extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.BOOLEAN> {}
+export interface ApplicationCommandOptionsChannel extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.CHANNEL>, ApplicationCommandOptionsChannelTypes {}
+export type ApplicationCommandOptionsInteger = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;
+export interface ApplicationCommandOptionsMentionable extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.MENTIONABLE> {}
+export type ApplicationCommandOptionsNumber = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.NUMBER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.NUMBER>>;
+export interface ApplicationCommandOptionsRole extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ROLE> {}
+export type ApplicationCommandOptionsString = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxLength | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
+export interface ApplicationCommandOptionsUser extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.USER> {}
 
 // desc, options
 export interface CreateApplicationCommandOptionsBase<T extends ApplicationCommandTypes = ApplicationCommandTypes> {
@@ -163,7 +163,10 @@ export interface CreateApplicationCommandOptionsBase<T extends ApplicationComman
 }
 
 export type CreateApplicationCommandOptions = CreateChatInputApplicationCommandOptions | CreateUserApplicationCommandOptions | CreateMessageApplicationCommandOptions;
-export type CreateGuildApplicationCommandOptions = Omit<CreateChatInputApplicationCommandOptions, "dmPermission"> | Omit<CreateUserApplicationCommandOptions, "dmPermission"> | Omit<CreateMessageApplicationCommandOptions, "dmPermission">;
+export interface CreateGuildChatInputApplicationCommandOptions extends Omit<CreateChatInputApplicationCommandOptions, "dmPermission"> {}
+export interface CreateGuildUserApplicationCommandOptions extends Omit<CreateUserApplicationCommandOptions, "dmPermission"> {}
+export interface CreateGuildMessageApplicationCommandOptions extends Omit<CreateMessageApplicationCommandOptions, "dmPermission"> {}
+export type CreateGuildApplicationCommandOptions = CreateGuildChatInputApplicationCommandOptions | CreateGuildUserApplicationCommandOptions | CreateGuildMessageApplicationCommandOptions;
 export interface CreateChatInputApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.CHAT_INPUT> {
     /** The description of the command. */
     description: string;
@@ -177,14 +180,14 @@ export type CreateUserApplicationCommandOptions = CreateApplicationCommandOption
 export type CreateMessageApplicationCommandOptions = CreateApplicationCommandOptionsBase<ApplicationCommandTypes.MESSAGE>;
 
 export type EditApplicationCommandOptions = EditChatInputApplicationCommandOptions | EditUserApplicationCommandOptions | EditMessageApplicationCommandOptions;
-export type EditChatInputApplicationCommandOptions = Partial<Omit<CreateChatInputApplicationCommandOptions, "type">>;
-export type EditUserApplicationCommandOptions = Partial<Omit<CreateUserApplicationCommandOptions, "type">>;
-export type EditMessageApplicationCommandOptions = Partial<Omit<CreateMessageApplicationCommandOptions, "type">>;
+export interface EditChatInputApplicationCommandOptions extends Partial<Omit<CreateChatInputApplicationCommandOptions, "type">> {}
+export interface EditUserApplicationCommandOptions extends Partial<Omit<CreateUserApplicationCommandOptions, "type">> {}
+export interface EditMessageApplicationCommandOptions extends Partial<Omit<CreateMessageApplicationCommandOptions, "type">> {}
 
 export type EditGuildApplicationCommandOptions = EditGuildChatInputApplicationCommandOptions | EditGuildUserApplicationCommandOptions | EditGuildMessageApplicationCommandOptions;
-export type EditGuildChatInputApplicationCommandOptions = Partial<Omit<CreateChatInputApplicationCommandOptions, "type" | "dmPermission">>;
-export type EditGuildUserApplicationCommandOptions = Partial<Omit<CreateUserApplicationCommandOptions, "type" | "dmPermission">>;
-export type EditGuildMessageApplicationCommandOptions = Partial<Omit<CreateMessageApplicationCommandOptions, "type" | "dmPermission">>;
+export interface EditGuildChatInputApplicationCommandOptions extends Partial<Omit<CreateChatInputApplicationCommandOptions, "type" | "dmPermission">> {}
+export interface EditGuildUserApplicationCommandOptions extends Partial<Omit<CreateUserApplicationCommandOptions, "type" | "dmPermission">> {}
+export interface EditGuildMessageApplicationCommandOptions extends Partial<Omit<CreateMessageApplicationCommandOptions, "type" | "dmPermission">> {}
 
 export interface RawGuildApplicationCommandPermissions {
     application_id: string;

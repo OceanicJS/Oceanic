@@ -4,7 +4,7 @@ import type { RESTMethod } from "../Constants";
 import type { FormData } from "undici";
 
 // internal use
-type RequestHandlerInstanceOptions = Required<Omit<RESTOptions, "agent">> & Pick<RESTOptions, "agent">;
+export interface RequestHandlerInstanceOptions extends Required<Omit<RESTOptions, "agent">>, Pick<RESTOptions, "agent"> {}
 
 export interface RequestOptions {
     auth?: boolean | string;

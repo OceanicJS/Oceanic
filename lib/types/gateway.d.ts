@@ -199,7 +199,7 @@ export interface Activity {
     type: ActivityTypes;
     url?: string | null;
 }
-export type BotActivity = Pick<Activity, "name" | "url"> & { type: BotActivityTypes; };
+export interface BotActivity extends Pick<Activity, "name" | "url"> { type: BotActivityTypes; }
 
 export interface ActivityEmoji {
     animated?: boolean;
