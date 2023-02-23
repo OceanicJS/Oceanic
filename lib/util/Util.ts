@@ -1,5 +1,6 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
+import RawContainer, { type RawComponentsContainer, type RawEmbedsContainer, type RawContainerData } from "./RawContainer";
 import type Client from "../Client";
 import {
     ButtonStyles,
@@ -10,6 +11,7 @@ import {
     type ImageFormat
 } from "../Constants";
 import type {
+    ActionRowToRaw,
     AllowedMentions,
     AnyChannel,
     AnyGuildChannelWithoutThreads,
@@ -43,6 +45,14 @@ export default class Util {
 
     constructor(client: Client) {
         this.#client = client;
+    }
+
+    static raw(data: RawEmbedOptions): RawEmbedsContainer;
+    static raw(data: Array<RawEmbedOptions>): Array<RawEmbedsContainer>;
+    static raw<T extends RawModalActionRow | RawMessageActionRow>(data: T): RawComponentsContainer<T>;
+    static raw<T extends RawModalActionRow | RawMessageActionRow>(data: Array<T>): Array<RawComponentsContainer<T>>;
+    static raw<O extends RawContainerData>(data: O | Array<O>): RawContainer<O> | Array<RawContainer<O>> {
+        return Array.isArray(data) ? data.map(d => new RawContainer(d)) : new RawContainer(data);
     }
 
     /** @hidden intentionally not documented - this is an internal function */
@@ -167,11 +177,20 @@ export default class Util {
         })) as never;
     }
 
-    componentsToRaw<T extends ModalActionRow | MessageActionRow>(components: Array<T>): T extends ModalActionRow ? Array<RawModalActionRow> : T extends MessageActionRow ? Array<RawMessageActionRow> : never {
-        return components.map(row => ({
-            type:       row.type,
-            components: row.components.map(component => this.componentToRaw(component))
-        })) as never;
+    componentsToRaw<T extends ModalActionRow | MessageActionRow>(components: Array<T | RawComponentsContainer<ActionRowToRaw<T>>>): Array<ActionRowToRaw<T>> {
+        const results: Array<RawModalActionRow | RawMessageActionRow> = [];
+        for (const row of components) {
+            if (row instanceof RawContainer) {
+                results.push(row.get() as never);
+            } else {
+                results.push({
+                    type:       row.type,
+                    components: row.components.map(component => this.componentToRaw(component) as never)
+                });
+            }
+        }
+
+        return results as never;
     }
 
     convertImage(img: Buffer | string): string {
@@ -272,30 +291,39 @@ export default class Util {
         }));
     }
 
-    embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
-        return embeds.map(embed => ({
-            author: embed.author === undefined ? undefined :  {
-                name:     embed.author.name,
-                icon_url: embed.author.iconURL,
-                url:      embed.author.url
-            },
-            color:       embed.color,
-            description: embed.description,
-            fields:      embed.fields?.map(field => ({
-                inline: field.inline,
-                name:   field.name,
-                value:  field.value
-            })),
-            footer: embed.footer === undefined ? undefined : {
-                text:     embed.footer.text,
-                icon_url: embed.footer.iconURL
-            },
-            timestamp: embed.timestamp,
-            title:     embed.title,
-            image:     embed.image === undefined ? undefined : { url: embed.image.url },
-            thumbnail: embed.thumbnail === undefined ? undefined : { url: embed.thumbnail.url },
-            url:       embed.url
-        }));
+    embedsToRaw(embeds: Array<EmbedOptions | RawEmbedsContainer>): Array<RawEmbedOptions> {
+        const results: Array<RawEmbedOptions> = [];
+        for (const embed of embeds) {
+            if (embed instanceof RawContainer) {
+                results.push(embed.get());
+            } else {
+                results.push({
+                    author: embed.author === undefined ? undefined :  {
+                        name:     embed.author.name,
+                        icon_url: embed.author.iconURL,
+                        url:      embed.author.url
+                    },
+                    color:       embed.color,
+                    description: embed.description,
+                    fields:      embed.fields?.map(field => ({
+                        inline: field.inline,
+                        name:   field.name,
+                        value:  field.value
+                    })),
+                    footer: embed.footer === undefined ? undefined : {
+                        text:     embed.footer.text,
+                        icon_url: embed.footer.iconURL
+                    },
+                    timestamp: embed.timestamp,
+                    title:     embed.title,
+                    image:     embed.image === undefined ? undefined : { url: embed.image.url },
+                    thumbnail: embed.thumbnail === undefined ? undefined : { url: embed.thumbnail.url },
+                    url:       embed.url
+                });
+            }
+        }
+
+        return results;
     }
 
     formatAllowedMentions(allowed?: AllowedMentions): RawAllowedMentions {

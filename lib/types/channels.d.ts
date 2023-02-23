@@ -40,6 +40,7 @@ import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
 import type Guild from "../structures/Guild";
 import type Invite from "../structures/Invite";
+import type { RawComponentsContainer, RawEmbedsContainer } from "../util/RawContainer";
 
 export interface RawChannel {
     application_id?: string;
@@ -250,11 +251,11 @@ export interface CreateMessageOptions {
     /** An array of [partial attachments](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files. */
     attachments?: Array<MessageAttachment>;
     /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`. */
-    components?: Array<MessageActionRow>;
+    components?: Array<MessageActionRow | RawComponentsContainer<RawMessageActionRow>>;
     /** The content of the message. */
     content?: string;
     /** An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send. Convert `snake_case` keys to `camelCase`. */
-    embeds?: Array<EmbedOptions>;
+    embeds?: Array<EmbedOptions | RawEmbedsContainer>;
     /** The files to send. */
     files?: Array<File>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message. */
@@ -455,8 +456,11 @@ export interface RawActionRowBase<T extends RawComponent> {
     type: ComponentTypes.ACTION_ROW;
 }
 
-export type RawMessageActionRow = RawActionRowBase<RawMessageComponent>;
-export type RawModalActionRow = RawActionRowBase<RawModalComponent>;
+export interface RawMessageActionRow extends RawActionRowBase<RawMessageComponent> {}
+export interface RawModalActionRow extends RawActionRowBase<RawModalComponent> {}
+export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow> =
+T extends MessageActionRow ? RawMessageActionRow :
+    T extends ModalActionRow ? RawModalActionRow : never;
 
 export type Component = MessageComponent | ModalComponent;
 export type MessageComponent = ButtonComponent | SelectMenuComponent;
