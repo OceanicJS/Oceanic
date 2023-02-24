@@ -256,6 +256,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         action: {
                             metadata: {
                                 channelID:       packet.d.action.metadata.channel_id,
+                                customMessage:   packet.d.action.metadata.custom_message,
                                 durationSeconds: packet.d.action.metadata.duration_seconds
                             },
                             type: packet.d.action.type

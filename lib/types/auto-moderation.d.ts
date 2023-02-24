@@ -37,9 +37,11 @@ export interface RawAutoModerationAction {
 
 export interface RawActionMetadata {
     /** `SEND_ALERT_MESSAGE` */
-    channel_id: string;
+    channel_id?: string;
+    /** `BLOCK_MESSAGE` */
+    custom_message?: string;
     /** `TIMEOUT` */
-    duration_seconds: number;
+    duration_seconds?: number;
 }
 
 export interface TriggerMetadata {
@@ -66,9 +68,11 @@ export interface AutoModerationAction {
 
 export interface ActionMetadata {
     /** The ID of the channel to send the message to. Valid for `SEND_ALERT_MESSAGE`. */
-    channelID: string;
+    channelID?: string;
+    /** The custom message to send. Valid for `BLOCK_MESSAGE`. */
+    customMessage?: string;
     /** The duration of the timeout in seconds. Valid for `TIMEOUT`. */
-    durationSeconds: number;
+    durationSeconds?: number;
 }
 
 export interface CreateAutoModerationRuleOptions {

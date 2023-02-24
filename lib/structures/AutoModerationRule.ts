@@ -37,6 +37,7 @@ export default class AutoModerationRule extends Base {
         this.actions = data.actions.map(a => ({
             metadata: {
                 channelID:       a.metadata.channel_id,
+                customMessage:   a.metadata.custom_message,
                 durationSeconds: a.metadata.duration_seconds
             },
             type: a.type
@@ -66,6 +67,7 @@ export default class AutoModerationRule extends Base {
             this.actions = data.actions.map(a => ({
                 metadata: {
                     channelID:       a.metadata.channel_id,
+                    customMessage:   a.metadata.custom_message,
                     durationSeconds: a.metadata.duration_seconds
                 },
                 type: a.type
