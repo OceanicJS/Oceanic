@@ -42,6 +42,11 @@ export default class OAuth {
         this.#manager = manager;
     }
 
+    /** An alias for {@link Routes/OAuth~OAuth.updateRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
+    get updateRoleConnectionsMetata(): OAuth["updateRoleConnectionsMetadata"] {
+        return this.updateRoleConnectionsMetadata.bind(this);
+    }
+
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
      * @param options The options to for the client credentials grant.
