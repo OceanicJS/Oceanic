@@ -33,7 +33,7 @@ export default class ClientApplication extends Base {
         }
     }
 
-    /** An alias for {@link ClientApplication~ClientApplication.updateRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
+    /** An alias for {@link ClientApplication~ClientApplication.updateRoleConnectionsMetadata | ClientApplication#updateRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
     get updateRoleConnectionsMetata(): ClientApplication["updateRoleConnectionsMetadata"] {
         return this.updateRoleConnectionsMetadata.bind(this);
     }

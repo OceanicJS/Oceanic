@@ -42,7 +42,7 @@ export default class OAuth {
         this.#manager = manager;
     }
 
-    /** An alias for {@link Routes/OAuth~OAuth.updateRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
+    /** An alias for {@link Routes/OAuth~OAuth.updateRoleConnectionsMetadata | OAuth#updateRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
     get updateRoleConnectionsMetata(): OAuth["updateRoleConnectionsMetadata"] {
         return this.updateRoleConnectionsMetadata.bind(this);
     }
