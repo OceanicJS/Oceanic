@@ -28,7 +28,7 @@ export default class Role extends Base {
     /** The position of this role. */
     position: number;
     /** The [tags](https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure) of this role. */
-    tags: RoleTags;
+    tags!: RoleTags;
     /** The unicode emoji of this role. */
     unicodeEmoji: string | null;
     constructor(data: RawRole, client: Client, guildID: string) {
@@ -42,11 +42,6 @@ export default class Role extends Base {
         this.name = data.name;
         this.permissions = new Permission(data.permissions);
         this.position = data.position;
-        this.tags = {
-            availableForPurchase: false,
-            guildConnections:     false,
-            premiumSubscriber:    false
-        };
         this.unicodeEmoji = null;
         this.update(data);
     }
