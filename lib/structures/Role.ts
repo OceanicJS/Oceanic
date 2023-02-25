@@ -73,19 +73,18 @@ export default class Role extends Base {
         if (data.position !== undefined) {
             this.position = data.position;
         }
-        if (data.tags !== undefined) {
-            this.tags = {
-                availableForPurchase:  data.tags.available_for_purchase === null,
-                guildConnections:      data.tags.guild_connections === null,
-                botID:                 data.tags.bot_id,
-                integrationID:         data.tags.integration_id,
-                premiumSubscriber:     data.tags.premium_subscriber === null,
-                subscriptionListingID: data.tags.subscription_listing_id
-            };
-        }
         if (data.unicode_emoji !== undefined) {
             this.unicodeEmoji = data.unicode_emoji ?? null;
         }
+
+        this.tags = {
+            availableForPurchase:  data.tags?.available_for_purchase === null,
+            guildConnections:      data.tags?.guild_connections === null,
+            botID:                 data.tags?.bot_id,
+            integrationID:         data.tags?.integration_id,
+            premiumSubscriber:     data.tags?.premium_subscriber === null,
+            subscriptionListingID: data.tags?.subscription_listing_id
+        };
     }
 
     /** The guild this role is in. This will throw an error if the guild is not cached. */
