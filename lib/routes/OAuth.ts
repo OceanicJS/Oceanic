@@ -203,7 +203,7 @@ export default class OAuth {
      * Get an application's role connection metadata records.
      * @param application The ID of the application.
      */
-    async getRoleConnectionsMetatdata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
+    async getRoleConnectionsMetadata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
             method: "GET",
             path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID)

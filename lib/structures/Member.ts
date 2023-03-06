@@ -237,7 +237,7 @@ export default class Member extends Base {
     }
 
     /**
-     * remove a role from this member.
+     * Remove a role from this member.
      * @param roleID The ID of the role to remove.
      * @param reason The reason for removing the role.
      */

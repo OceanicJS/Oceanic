@@ -660,9 +660,9 @@ export default class Guild extends Base {
     }
 
     /**
-     * Create a bon for a user.
+     * Create a ban for a user.
      * @param userID The ID of the user.
-     * @param options The options for creating the bon.
+     * @param options The options for creating the ban.
      */
     async createBan(userID: string, options?: CreateBanOptions): Promise<void> {
         return this.client.rest.guilds.createBan(this.id, userID, options);
@@ -1311,7 +1311,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * remove a role from a member.
+     * Remove a role from a member.
      * @param memberID The ID of the member.
      * @param roleID The ID of the role to remove.
      * @param reason The reason for removing the role.

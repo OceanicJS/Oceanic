@@ -522,7 +522,7 @@ export interface CreateBanOptions {
     deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
     /** The number of seconds to delete messages from. Takes precedence over `deleteMessageDays`. */
     deleteMessageSeconds?: number;
-    /** The reason for creating the bon. */
+    /** The reason for creating the ban. */
     reason?: string;
 }
 

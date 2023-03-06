@@ -8,3 +8,4 @@ Guidelines:
 * Ensure you are following the eslint rules. You can use `npm run lint` & `npm run lint:fix` to test locally.
 * If any of the tests fail on your pull request, attempt to understand why. Your pull request will not be merged without all three tests passing. (test code, test docs, lint)
 * Don't be hostile.
+* Pull requests to fix a few words in docs will be denied. Point them out in our support server and we will get to them.

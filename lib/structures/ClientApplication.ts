@@ -175,7 +175,7 @@ export default class ClientApplication extends Base {
      * Get this application's role connection metadata records.
      */
     async getRoleConnectionsMetadata(): Promise<Array<RoleConnectionMetadata>> {
-        return this.client.rest.oauth.getRoleConnectionsMetatdata(this.id);
+        return this.client.rest.oauth.getRoleConnectionsMetadata(this.id);
     }
 
     /**
