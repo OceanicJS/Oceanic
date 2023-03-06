@@ -42,6 +42,11 @@ export default class OAuth {
         this.#manager = manager;
     }
 
+    /** An alias for {@link Routes/OAuth~OAuth.getRoleConnectionsMetadata | OAuth#getRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
+    get getRoleConnectionsMetatdata(): OAuth["getRoleConnectionsMetadata"] {
+        return this.getRoleConnectionsMetadata.bind(this);
+    }
+
     /** An alias for {@link Routes/OAuth~OAuth.updateRoleConnectionsMetadata | OAuth#updateRoleConnectionsMetadata}. This will be removed in `1.6.0`. */
     get updateRoleConnectionsMetata(): OAuth["updateRoleConnectionsMetadata"] {
         return this.updateRoleConnectionsMetadata.bind(this);
@@ -203,7 +208,7 @@ export default class OAuth {
      * Get an application's role connection metadata records.
      * @param application The ID of the application.
      */
-    async getRoleConnectionsMetatdata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
+    async getRoleConnectionsMetadata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
             method: "GET",
             path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID)

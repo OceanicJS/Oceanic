@@ -224,10 +224,10 @@ export default class Guilds {
     }
 
     /**
-     * Create a bon for a user.
+     * Create a ban for a user.
      * @param guildID The ID of the guild.
      * @param userID The ID of the user to ban.
-     * @param options The options for creating the bon.
+     * @param options The options for creating the ban.
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
         const reason = options?.reason;
@@ -1528,7 +1528,7 @@ export default class Guilds {
     }
 
     /**
-     * remove a role from a member.
+     * Remove a role from a member.
      * @param guildID The ID of the guild.
      * @param memberID The ID of the member.
      * @param roleID The ID of the role to remove.
