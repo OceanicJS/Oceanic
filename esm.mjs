@@ -68,6 +68,7 @@ const Util = (await import("./dist/lib/util/Util.js")).default.default;
 const VoiceChannel = (await import("./dist/lib/structures/VoiceChannel.js")).default.default;
 const VoiceState = (await import("./dist/lib/structures/VoiceState.js")).default.default;
 const Webhook = (await import("./dist/lib/structures/Webhook.js")).default.default;
+const Time = (await import("./dist/lib/structures/Time")).default.default;
 
 export * from "./dist/lib/Constants.js";
 
@@ -140,5 +141,6 @@ export {
     Util,
     VoiceChannel,
     VoiceState,
-    Webhook
+    Webhook,
+    Time
 };
