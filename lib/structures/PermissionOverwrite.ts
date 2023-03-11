@@ -32,7 +32,7 @@ export default class PermissionOverwrite extends Base {
     }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
-    get json(): Record<keyof typeof Permissions, boolean> {
+    get json(): Partial<Record<keyof typeof Permissions, boolean>> {
         return this.permission.json;
     }
 

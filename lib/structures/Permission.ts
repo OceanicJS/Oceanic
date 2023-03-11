@@ -8,7 +8,7 @@ export default class Permission {
     allow: bigint;
     /** The denied permissions for this permission instance. */
     deny: bigint;
-    #json: Record<keyof typeof Permissions, boolean> | undefined;
+    #json: Partial<Record<keyof typeof Permissions, boolean>> | undefined;
     constructor(allow: bigint | string, deny: bigint | string = 0n) {
         this.allow = BigInt(allow);
         this.deny = BigInt(deny);
@@ -21,11 +21,11 @@ export default class Permission {
     }
 
     /** A key-value map of permission to if it's been allowed or denied (not present if neither) */
-    get json(): Record<keyof typeof Permissions, boolean> {
+    get json(): Partial<Record<keyof typeof Permissions, boolean>> {
         if (this.#json) {
             return this.#json;
         } else {
-            const json = {} as Record<keyof typeof Permissions, boolean>;
+            const json: Partial<Record<keyof typeof Permissions, boolean>> = {};
             for (const perm of Object.keys(Permissions) as Array<keyof typeof Permissions>) {
                 if (this.allow & Permissions[perm]) {
                     json[perm] = true;
