@@ -16,8 +16,8 @@ export default class Time {
     }
 
     /** Get how many days in the requested month. */
-    daysInMonth(date: Date): number {
-        const d = new Date(date);
+    daysInMonth(): number {
+        const d = this.date;
 
         d.setDate(1);
         d.setMonth(d.getMonth() + 1);
@@ -51,13 +51,14 @@ export default class Time {
     }
 
     /** Get the time between two dates, ex: just to conform if an account has been alive for a long/short periods of time. */
-    timeBetween(birthDate: Date, datumDate: Date, returns?: "object" | "array" | "string"): {days: number;months: number;years: number;} | string | Array<number> | null {
-
+    timeBetween(datumDate: Date, returns?: "object" | "array" | "string"): {days: number;months: number;years: number;} | string | Array<number> | null {
+        const birthDate = this.date;
+        const pointed = new Date(datumDate);
         // Make sure birthDate is before datumDate
-        if (birthDate.getTime() - datumDate.getTime() > 0) return null;
+        if (birthDate.getTime() - pointed.getTime() > 0) return null;
 
         const dob = new Date(+birthDate),
-            now = new Date(+datumDate),
+            now = new Date(+pointed),
             nowY = now.getFullYear();
 
         let tDate = new Date(+dob),
@@ -104,7 +105,7 @@ export default class Time {
 
         // Adjust if needed
         if (days < 0) {
-            days = days + this.daysInMonth(tDate);
+            days = days + this.daysInMonth();
         }
         dob.setDate(dob.getDate() + days);
 
