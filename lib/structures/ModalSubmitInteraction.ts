@@ -4,7 +4,7 @@ import type Member from "./Member";
 import type User from "./User";
 import type Guild from "./Guild";
 import Permission from "./Permission";
-import type Message from "./Message";
+import Message from "./Message";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
@@ -34,6 +34,8 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
     member: T extends AnyGuildTextChannel ? Member : Member | undefined;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
     memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    /** The message this interaction is from, if the modal was triggered from a component interaction. */
+    message?: Message<T>;
     declare type: InteractionTypes.MODAL_SUBMIT;
     /** The user that invoked this interaction. */
     user: User;
@@ -50,6 +52,9 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
         this.locale = data.locale!;
         this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | undefined;
         this.memberPermissions = (data.member === undefined ? undefined : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        if (data.message !== undefined) {
+            this.message = (this.channel?.messages?.update(data.message) ?? new Message(data.message, client)) as Message<T>;
+        }
         this.user = client.users.update(data.user ?? data.member!.user);
     }
 

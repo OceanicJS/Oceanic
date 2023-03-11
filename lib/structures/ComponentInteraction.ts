@@ -62,7 +62,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         this.locale = data.locale!;
         this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | undefined;
         this.memberPermissions = (data.member === undefined ? undefined : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
-        this.message = this.channel?.messages?.update(data.message) as Message<T> ?? new Message(data.message, client) ;
+        this.message = (this.channel?.messages?.update(data.message) ?? new Message(data.message, client)) as Message<T>;
         this.user = client.users.update((data.user ?? data.member!.user)!);
 
         switch (data.data.component_type) {
