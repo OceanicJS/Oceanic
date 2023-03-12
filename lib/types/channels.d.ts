@@ -40,7 +40,6 @@ import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
 import type Guild from "../structures/Guild";
 import type Invite from "../structures/Invite";
-import type { RawComponentsContainer, RawEmbedsContainer } from "../util/RawContainer";
 
 export interface RawChannel {
     application_id?: string;
@@ -250,12 +249,12 @@ export interface CreateMessageOptions {
     allowedMentions?: AllowedMentions;
     /** An array of [partial attachments](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files. */
     attachments?: Array<MessageAttachment>;
-    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. Convert `snake_case` keys to `camelCase`. */
-    components?: Array<MessageActionRow | RawComponentsContainer<RawMessageActionRow>>;
+    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawMessageComponents | Util#rawMessageComponents}. */
+    components?: Array<MessageActionRow>;
     /** The content of the message. */
     content?: string;
-    /** An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send. Convert `snake_case` keys to `camelCase`. */
-    embeds?: Array<EmbedOptions | RawEmbedsContainer>;
+    /** An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawEmbeds | Util#rawEmbeds}. */
+    embeds?: Array<EmbedOptions>;
     /** The files to send. */
     files?: Array<File>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to send with the message. */

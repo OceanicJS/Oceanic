@@ -36,7 +36,6 @@ import type PrivateChannel from "../structures/PrivateChannel";
 import type TypedCollection from "../util/TypedCollection";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
 import type SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
-import type { RawComponentsContainer } from "../util/RawContainer";
 
 export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files"> {}
 export interface InitialInteractionContent extends Omit<InteractionContent, "files"> {}
@@ -72,7 +71,8 @@ export interface ModalInteractionResponse {
 
 
 export interface ModalData {
-    components: Array<ModalActionRow | RawComponentsContainer<RawModalActionRow>>;
+    /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawModalComponents | Util#rawModalComponents}. */
+    components: Array<ModalActionRow>;
     /** The custom ID of the modal. */
     customID: string;
     /** The title of the modal. */
