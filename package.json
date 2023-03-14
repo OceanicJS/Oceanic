@@ -41,7 +41,7 @@
   "homepage": "https://github.com/OceanicJS/Oceanic#readme",
   "devDependencies": {
     "@favware/npm-deprecate": "^1.0.7",
-    "@types/node": "^18.15.0",
+    "@types/node": "^18.15.2",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
@@ -64,6 +64,6 @@
     "node": ">=16.16.0"
   },
   "optionalDependencies": {
-    "@discordjs/voice": "^0.14.0"
+    "@discordjs/voice": "^0.15.0"
   }
 }
