@@ -8,6 +8,7 @@ updates:
       - "DonovanDMC"
     commit-message:
       include: "scope"
+      prefix: ""
     target-branch: "dev"
     versioning-strategy: "increase"
     labels:
