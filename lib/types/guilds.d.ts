@@ -637,12 +637,6 @@ export interface RawUnavailableGuild {
     unavailable: true;
 }
 
-export interface RawGuild {
-    afkChannelID: string | null;
-    afkTimeout: number;
-    applicationID: string | null;
-}
-
 export type PossiblyUncachedIntegration = Integration | { applicationID?: string; id: string; };
 
 export interface RawStageInstance {
