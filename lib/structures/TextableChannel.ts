@@ -60,7 +60,7 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
     constructor(data: RawTextChannel | RawAnnouncementChannel | RawVoiceChannel | RawStageChannel, client: Client) {
         super(data, client);
         this.lastMessageID = data.last_message_id;
-        this.messages = new TypedCollection(Message<T>, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<T>, client, this.client.util._getLimit("messages", this.id));
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;

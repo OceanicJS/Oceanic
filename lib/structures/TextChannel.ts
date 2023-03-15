@@ -28,7 +28,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
     constructor(data: RawTextChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.threads = new TypedCollection(ThreadChannel, client) as TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+        this.threads = new TypedCollection(ThreadChannel, client, this.client.util._getLimit("channelThreads", this.id)) as TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
     }
 
     /**

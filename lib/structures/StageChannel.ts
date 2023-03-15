@@ -32,7 +32,7 @@ export default class StageChannel extends TextableChannel<StageChannel> {
         this.rtcRegion = data.rtc_region;
         this.userLimit = data.user_limit;
         this.videoQualityMode = data.video_quality_mode;
-        this.voiceMembers = new TypedCollection(Member, client);
+        this.voiceMembers = new TypedCollection(Member, client, this.client.util._getLimit("voiceMembers", this.id));
         this.update(data);
     }
 

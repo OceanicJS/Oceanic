@@ -86,14 +86,64 @@ export interface RESTOptions {
     userAgent?: string;
 }
 
+/**
+ * Changing many of these may have the side effect of silently breaking various functionalities. Most of these are not intended to be changed, and are only exposed for advanced use cases.
+ *
+ * For the options which accept a number and an object:
+ * - number: applies for all instances in which the limit would apply
+ * - object: dictionary of ids to limits. When setting limits, if the id is present, the specific number listed with that id will be used. Else, the `default` key will be used. If the `default` key is not present, whatever the default for that specific option is will be used.
+ *
+ * See the `Dictionary Key` header for each option for what the `id` refers to.
+ */
 export interface CollectionLimitsOptions {
     /**
-     * The maximum number of audit log entries to keep cached. This applies to all guilds. Entries are only cached if recieved via the `GUILD_AUDIT_LOG_ENTRY_CREATE` gateway event.
+     * The maximum number of audit log entries to keep cached. Entries are only cached if recieved via the `GUILD_AUDIT_LOG_ENTRY_CREATE` gateway event.
+     * @dictionaryKey guild id
      * @defaultValue 50
      */
-    auditLogEntries?: number;
+    auditLogEntries?: number | Record<string, number>;
     /**
-     * The maximum number of members to cache. A number to apply to all guilds individually, or a dictionary of guild IDs to member limits. The key `unknown` can be used to set the limit for all guilds not specified.
+     * The maximum number of auto moderation rules to keep cached. Entries are only cached if fetched via REST, or recieved via the `AUTO_MODERATION_RULE_CREATE`/`AUTO_MODERATION_RULE_UPDATE` events.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    autoModerationRules?: number | Record<string, number>;
+    /**
+     * The maximum number of threads to cache per channel. This does not effect the threads cached at the guild level.
+     * @dictionaryKey channel id
+     * @defaultValue Infinity
+     */
+    channelThreads?: number | Record<string, number>;
+    /**
+     * The maximum number of guild channels to cache.
+     * @defaultValue Infinity
+     */
+    channels?: number | Record<string, number>;
+    /**
+     * The maximum number of group channels to cache.
+     * @defaultValue 10
+     */
+    groupChannels?: number;
+    /**
+     * The maximum number of threads to cache per guild. This does not effect the threads cached on each channel.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    guildThreads?: number | Record<string, number>;
+    /**
+     * The maximum number of guilds to cache.
+     * @defaultValue Infinity
+     * @note Changing this WILL silently break a lot of things which rely on caching.
+     */
+    guilds?: number;
+    /**
+     * The maximum number of guild integrations to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    integrations?: number | Record<string, number>;
+    /**
+     * The maximum number of members to cache.
      *
      * Note: If you request members from the gateway, this will be increased (on the specific guild) as needed to accommodate those members.
      * @defaultValue Infinity
@@ -101,12 +151,54 @@ export interface CollectionLimitsOptions {
     members?: number | Record<string, number>;
     /**
      * The maximum number of messages to cache.
+     * @dictionaryKey channel id
      * @defaultValue 100
      */
-    messages?: number;
+    messages?: number | Record<string, number>;
+    /**
+     * The maximum number of private channels to cache.
+     * @defaultValue 25
+     */
+    privateChannels?: number;
+    /**
+     * The maximum number of roles to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    roles?: number | Record<string, number>;
+    /**
+     * The maximum number of scheduled events to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    scheduledEvents?: number | Record<string, number>;
+    /**
+     * The maximum number of stage instances to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    stageInstances?: number | Record<string, number>;
+    /**
+     * The maximum number of unavailable guilds to cache.
+     * @defaultValue Infinity
+     * @note Changing this WILL break many things. The client may not even ready poperly.
+     */
+    unavailableGuilds?: number;
     /**
      * The maximum number of users to cache globally.
      * @defaultValue Infinity
      */
     users?: number;
+    /**
+     * The maximum number of voice members to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    voiceMembers?: number | Record<string, number>;
+    /**
+     * The maximum number of voice states to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    voiceStates?: number | Record<string, number>;
 }

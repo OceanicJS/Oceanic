@@ -83,7 +83,7 @@ export default class ForumChannel extends GuildChannel {
         this.position = data.position;
         this.rateLimitPerUser = 0;
         this.template = data.template;
-        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client);
+        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
         this.topic = data.topic;
         this.update(data);
     }

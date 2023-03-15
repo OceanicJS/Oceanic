@@ -22,7 +22,7 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     constructor(data: RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.threads = new TypedCollection(AnnouncementThreadChannel, client);
+        this.threads = new TypedCollection(AnnouncementThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
     }
 
     override get parent(): CategoryChannel | null | undefined {

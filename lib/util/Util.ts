@@ -35,6 +35,7 @@ import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds
 import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
+import type { CollectionLimitsOptions } from "../types";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -73,6 +74,27 @@ export default class Util {
         } catch (err) {
             throw new Error(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
         }
+    }
+
+    /** @hidden intended for internal use only */
+    _getLimit(name: Exclude<keyof CollectionLimitsOptions, "users">, id?: string): number {
+        const opt = this.#client.options.collectionLimits[name];
+        if (typeof opt === "number") {
+            return opt;
+        }
+        return (id === undefined ? undefined : opt[id]) ?? opt.default ?? Infinity;
+    }
+
+    _setLimit(values?: Record<string, number> | number, defaultValue = Infinity): Record<string, number> | number {
+        if (values === undefined) {
+            return defaultValue;
+        }
+
+        if (typeof values === "object") {
+            return { default: defaultValue, ...values };
+        }
+
+        return values;
     }
 
     componentToParsed<T extends RawComponent>(component: T): ToComponentFromRaw<T> {

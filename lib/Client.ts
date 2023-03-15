@@ -65,6 +65,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      */
     constructor(options?: ClientOptions) {
         super();
+        this.util = new Util(this);
         this.options = {
             allowedMentions: options?.allowedMentions ?? {
                 everyone:    false,
@@ -74,13 +75,24 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             },
             auth:             options?.auth ?? null,
             collectionLimits: {
-                auditLogEntries: options?.collectionLimits?.auditLogEntries ?? 50,
-                members:         options?.collectionLimits?.members === undefined ?  Infinity : (typeof options.collectionLimits.members === "object" ? {
-                    unknown: Infinity,
-                    ...options.collectionLimits.members
-                } : options.collectionLimits.members),
-                messages: options?.collectionLimits?.messages ?? 100,
-                users:    options?.collectionLimits?.users ?? Infinity
+                auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
+                autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
+                channelThreads:      this.util._setLimit(options?.collectionLimits?.channelThreads, Infinity),
+                channels:            this.util._setLimit(options?.collectionLimits?.channels, Infinity),
+                groupChannels:       options?.collectionLimits?.groupChannels ?? 10,
+                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
+                guilds:              options?.collectionLimits?.guilds ?? Infinity,
+                integrations:        this.util._setLimit(options?.collectionLimits?.integrations, Infinity),
+                members:             this.util._setLimit(options?.collectionLimits?.members, Infinity),
+                messages:            this.util._setLimit(options?.collectionLimits?.messages, 100),
+                privateChannels:     options?.collectionLimits?.privateChannels ?? 25,
+                roles:               this.util._setLimit(options?.collectionLimits?.roles, Infinity),
+                scheduledEvents:     this.util._setLimit(options?.collectionLimits?.scheduledEvents, Infinity),
+                stageInstances:      this.util._setLimit(options?.collectionLimits?.stageInstances, Infinity),
+                unavailableGuilds:   options?.collectionLimits?.unavailableGuilds ?? Infinity,
+                users:               options?.collectionLimits?.users ?? Infinity,
+                voiceMembers:        this.util._setLimit(options?.collectionLimits?.voiceMembers, Infinity),
+                voiceStates:         this.util._setLimit(options?.collectionLimits?.voiceStates, Infinity)
             },
             defaultImageFormat:        options?.defaultImageFormat ?? "png",
             defaultImageSize:          options?.defaultImageSize ?? 4096,
@@ -88,17 +100,16 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         };
         this.voiceAdapters = new Map();
         this.channelGuildMap = {};
-        this.groupChannels = new TypedCollection(GroupChannel, this, 10);
-        this.guilds = new TypedCollection(Guild, this);
-        this.privateChannels = new TypedCollection(PrivateChannel, this, 25);
+        this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels); // 10
+        this.guilds = new TypedCollection(Guild, this, this.options.collectionLimits.guilds);
+        this.privateChannels = new TypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels); // 25
         this.ready = false;
         this.guildShardMap = {};
         this.rest = new RESTManager(this, options?.rest);
         this.shards = new ShardManager(this, options?.gateway);
         this.threadGuildMap = {};
-        this.unavailableGuilds = new TypedCollection(UnavailableGuild, this);
+        this.unavailableGuilds = new TypedCollection(UnavailableGuild, this, this.options.collectionLimits.unavailableGuilds);
         this.users = new TypedCollection(User, this, this.options.collectionLimits.users);
-        this.util = new Util(this);
     }
 
     /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */

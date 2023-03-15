@@ -57,7 +57,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
         this.channelID = data.channel_id!;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionResolvedChannel, client) ,
+            channels:    new TypedCollection(InteractionResolvedChannel, client),
             members:     new TypedCollection(Member, client),
             messages:    new TypedCollection(Message, client),
             roles:       new TypedCollection(Role, client),
