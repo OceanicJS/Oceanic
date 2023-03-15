@@ -1181,10 +1181,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
 
         switch (packet.op) {
-            case GatewayOPCodes.DISPATCH: { void this.onDispatch(packet); break;
+            case GatewayOPCodes.DISPATCH: {
+                void this.onDispatch(packet); break;
             }
-            case GatewayOPCodes.HEARTBEAT: { this.heartbeat(true); break;
+
+            case GatewayOPCodes.HEARTBEAT: {
+                this.heartbeat(true); break;
             }
+
             case GatewayOPCodes.INVALID_SESSION: {
                 if (packet.d) {
                     this.client.emit("warn", "Session Invalidated. Session may be resumable, attempting to resume..", this.id);

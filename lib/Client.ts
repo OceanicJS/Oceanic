@@ -100,9 +100,9 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         };
         this.voiceAdapters = new Map();
         this.channelGuildMap = {};
-        this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels); // 10
+        this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);
         this.guilds = new TypedCollection(Guild, this, this.options.collectionLimits.guilds);
-        this.privateChannels = new TypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels); // 25
+        this.privateChannels = new TypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels);
         this.ready = false;
         this.guildShardMap = {};
         this.rest = new RESTManager(this, options?.rest);
