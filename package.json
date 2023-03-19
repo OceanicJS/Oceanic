@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "eslint lib --ext .ts",
     "lint:fix": "eslint lib --ext .ts --fix",
-    "prepublishOnly": "node scripts/build",
+    "prepublishOnly": "rm -rf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
     "test:build": "npm run prepublishOnly",
     "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
     "test:docs": "npm i --no-save --ignore-scripts typedoc typedoc-plugin-extras typedoc-plugin-rename-defaults && node scripts/doc-test.js && npx --yes typedoc"
@@ -41,7 +41,7 @@
   "homepage": "https://github.com/OceanicJS/Oceanic#readme",
   "devDependencies": {
     "@favware/npm-deprecate": "^1.0.7",
-    "@types/node": "^18.15.2",
+    "@types/node": "^18.15.3",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
@@ -49,12 +49,12 @@
     "eslint": "^8.36.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-import-newlines": "^1.3.1",
-    "eslint-plugin-jsdoc": "^40.0.1",
+    "eslint-plugin-jsdoc": "^40.1.0",
     "eslint-plugin-json": "^3.1.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-unicorn": "^46.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "typescript": "^4.9.5"
+    "typescript": "<5.5 >=5.x"
   },
   "dependencies": {
     "undici": "^5.21.0",
