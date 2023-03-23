@@ -322,7 +322,7 @@ export const Permissions = {
     MANAGE_ROLES:                        268435456n,      // 1 << 28
     MANAGE_WEBHOOKS:                     536870912n,      // 1 << 29
     MANAGE_GUILD_EXPRESSIONS:            1073741824n,     // 1 << 30
-    /** @deprecated Use {@link Constants~Permissions.MANAGE_GUILD_EXPRESSIONS | MANAGE_GUILD_EXPRESSIONS}. This will be removed in `1.7.0`.  */
+    /** @deprecated Use {@link Constants~Permissions.MANAGE_GUILD_EXPRESSIONS | MANAGE_GUILD_EXPRESSIONS}. This will be removed in `1.8.0`.  */
     MANAGE_EMOJIS_AND_STICKERS:          1073741824n,     // 1 << 30
     USE_APPLICATION_COMMANDS:            2147483648n,     // 1 << 31
     REQUEST_TO_SPEAK:                    4294967296n,     // 1 << 32
@@ -761,7 +761,7 @@ export enum Intents {
     GUILD_BANS                    = 1 << 2,
     GUILD_MODERATION              = 1 << 2,
     GUILD_EXPRESSIONS             = 1 << 3,
-    /** @deprecated {@link Constants~Intents.GUILD_EMOJIS_AND_STICKERS | GUILD_EMOJIS_AND_STICKERS}. This will be removed in `1.7.0`. */
+    /** @deprecated {@link Constants~Intents.GUILD_EXPRESSIONS | GUILD_EXPRESSIONS}. This will be removed in `1.8.0`. */
     GUILD_EMOJIS_AND_STICKERS     = 1 << 3,
     GUILD_INTEGRATIONS            = 1 << 4,
     GUILD_WEBHOOKS                = 1 << 5,
