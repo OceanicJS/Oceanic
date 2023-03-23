@@ -757,11 +757,11 @@ export enum InteractionResponseTypes {
 export enum Intents {
     GUILDS                        = 1 << 0,
     GUILD_MEMBERS                 = 1 << 1,
-    /** @deprecated {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION}. This will be removed in `1.6.0`. */
+    /** @deprecated Use {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION}. This will be removed in `1.6.0`. */
     GUILD_BANS                    = 1 << 2,
     GUILD_MODERATION              = 1 << 2,
     GUILD_EXPRESSIONS             = 1 << 3,
-    /** @deprecated {@link Constants~Intents.GUILD_EXPRESSIONS | GUILD_EXPRESSIONS}. This will be removed in `1.8.0`. */
+    /** @deprecated Use {@link Constants~Intents.GUILD_EXPRESSIONS | GUILD_EXPRESSIONS}. This will be removed in `1.8.0`. */
     GUILD_EMOJIS_AND_STICKERS     = 1 << 3,
     GUILD_INTEGRATIONS            = 1 << 4,
     GUILD_WEBHOOKS                = 1 << 5,
