@@ -291,48 +291,53 @@ export enum IntegrationExpireBehaviors {
 
 // values won't be statically typed if we use bit shifting, and enums can't use bigints
 export const Permissions = {
-    CREATE_INSTANT_INVITE:               1n,             // 1 << 0
-    KICK_MEMBERS:                        2n,             // 1 << 1
-    BAN_MEMBERS:                         4n,             // 1 << 2
-    ADMINISTRATOR:                       8n,             // 1 << 3
-    MANAGE_CHANNELS:                     16n,            // 1 << 4
-    MANAGE_GUILD:                        32n,            // 1 << 5
-    ADD_REACTIONS:                       64n,            // 1 << 6
-    VIEW_AUDIT_LOG:                      128n,           // 1 << 7
-    PRIORITY_SPEAKER:                    256n,           // 1 << 8
-    STREAM:                              512n,           // 1 << 9
-    VIEW_CHANNEL:                        1024n,          // 1 << 10
-    SEND_MESSAGES:                       2048n,          // 1 << 11
-    SEND_TTS_MESSAGES:                   4096n,          // 1 << 12
-    MANAGE_MESSAGES:                     8192n,          // 1 << 13
-    EMBED_LINKS:                         16384n,         // 1 << 14
-    ATTACH_FILES:                        32768n,         // 1 << 15
-    READ_MESSAGE_HISTORY:                65536n,         // 1 << 16
-    MENTION_EVERYONE:                    131072n,        // 1 << 17
-    USE_EXTERNAL_EMOJIS:                 262144n,        // 1 << 18
-    VIEW_GUILD_INSIGHTS:                 524288n,        // 1 << 19
-    CONNECT:                             1048576n,       // 1 << 20
-    SPEAK:                               2097152n,       // 1 << 21
-    MUTE_MEMBERS:                        4194304n,       // 1 << 22
-    DEAFEN_MEMBERS:                      8388608n,       // 1 << 23
-    MOVE_MEMBERS:                        16777216n,      // 1 << 24
-    USE_VAD:                             33554432n,      // 1 << 25
-    CHANGE_NICKNAME:                     67108864n,      // 1 << 26
-    MANAGE_NICKNAMES:                    134217728n,     // 1 << 27
-    MANAGE_ROLES:                        268435456n,     // 1 << 28
-    MANAGE_WEBHOOKS:                     536870912n,     // 1 << 29
-    MANAGE_EMOJIS_AND_STICKERS:          1073741824n,    // 1 << 30
-    USE_APPLICATION_COMMANDS:            2147483648n,    // 1 << 31
-    REQUEST_TO_SPEAK:                    4294967296n,    // 1 << 32
-    MANAGE_EVENTS:                       8589934592n,    // 1 << 33
-    MANAGE_THREADS:                      17179869184n,   // 1 << 34
-    CREATE_PUBLIC_THREADS:               34359738368n,   // 1 << 35
-    CREATE_PRIVATE_THREADS:              68719476736n,   // 1 << 36
-    USE_EXTERNAL_STICKERS:               137438953472n,  // 1 << 37
-    SEND_MESSAGES_IN_THREADS:            274877906944n,  // 1 << 38
-    USE_EMBEDDED_ACTIVITIES:             549755813888n,  // 1 << 39
-    MODERATE_MEMBERS:                    1099511627776n, // 1 << 40
-    VIEW_CREATOR_MONETIZATION_ANALYTICS: 2199023255552n  // 1 << 41
+    CREATE_INSTANT_INVITE:               1n,              // 1 << 0
+    KICK_MEMBERS:                        2n,              // 1 << 1
+    BAN_MEMBERS:                         4n,              // 1 << 2
+    ADMINISTRATOR:                       8n,              // 1 << 3
+    MANAGE_CHANNELS:                     16n,             // 1 << 4
+    MANAGE_GUILD:                        32n,             // 1 << 5
+    ADD_REACTIONS:                       64n,             // 1 << 6
+    VIEW_AUDIT_LOG:                      128n,            // 1 << 7
+    PRIORITY_SPEAKER:                    256n,            // 1 << 8
+    STREAM:                              512n,            // 1 << 9
+    VIEW_CHANNEL:                        1024n,           // 1 << 10
+    SEND_MESSAGES:                       2048n,           // 1 << 11
+    SEND_TTS_MESSAGES:                   4096n,           // 1 << 12
+    MANAGE_MESSAGES:                     8192n,           // 1 << 13
+    EMBED_LINKS:                         16384n,          // 1 << 14
+    ATTACH_FILES:                        32768n,          // 1 << 15
+    READ_MESSAGE_HISTORY:                65536n,          // 1 << 16
+    MENTION_EVERYONE:                    131072n,         // 1 << 17
+    USE_EXTERNAL_EMOJIS:                 262144n,         // 1 << 18
+    VIEW_GUILD_INSIGHTS:                 524288n,         // 1 << 19
+    CONNECT:                             1048576n,        // 1 << 20
+    SPEAK:                               2097152n,        // 1 << 21
+    MUTE_MEMBERS:                        4194304n,        // 1 << 22
+    DEAFEN_MEMBERS:                      8388608n,        // 1 << 23
+    MOVE_MEMBERS:                        16777216n,       // 1 << 24
+    USE_VAD:                             33554432n,       // 1 << 25
+    CHANGE_NICKNAME:                     67108864n,       // 1 << 26
+    MANAGE_NICKNAMES:                    134217728n,      // 1 << 27
+    MANAGE_ROLES:                        268435456n,      // 1 << 28
+    MANAGE_WEBHOOKS:                     536870912n,      // 1 << 29
+    MANAGE_GUILD_EXPRESSIONS:            1073741824n,     // 1 << 30
+    /** @deprecated Use {@link Constants~Permissions.MANAGE_GUILD_EXPRESSIONS | MANAGE_GUILD_EXPRESSIONS}. This will be removed in `1.7.0`.  */
+    MANAGE_EMOJIS_AND_STICKERS:          1073741824n,     // 1 << 30
+    USE_APPLICATION_COMMANDS:            2147483648n,     // 1 << 31
+    REQUEST_TO_SPEAK:                    4294967296n,     // 1 << 32
+    MANAGE_EVENTS:                       8589934592n,     // 1 << 33
+    MANAGE_THREADS:                      17179869184n,    // 1 << 34
+    CREATE_PUBLIC_THREADS:               34359738368n,    // 1 << 35
+    CREATE_PRIVATE_THREADS:              68719476736n,    // 1 << 36
+    USE_EXTERNAL_STICKERS:               137438953472n,   // 1 << 37
+    SEND_MESSAGES_IN_THREADS:            274877906944n,   // 1 << 38
+    USE_EMBEDDED_ACTIVITIES:             549755813888n,   // 1 << 39
+    MODERATE_MEMBERS:                    1099511627776n,  // 1 << 40
+    VIEW_CREATOR_MONETIZATION_ANALYTICS: 2199023255552n,  // 1 << 41
+    USE_SOUNDBOARD:                      4398046511104n,  // 1 << 42
+    CREATE_GUILD_EXPRESSIONS:            8796093022208n,  // 1 << 43
+    CREATE_EVENTS:                       17592186044416n  // 1 << 44
 } as const;
 export type PermissionName = keyof typeof Permissions;
 export const AllGuildPermissions = Permissions.KICK_MEMBERS |
@@ -346,10 +351,13 @@ export const AllGuildPermissions = Permissions.KICK_MEMBERS |
     Permissions.MANAGE_NICKNAMES |
     Permissions.MANAGE_ROLES |
     Permissions.MANAGE_WEBHOOKS |
-    Permissions.MANAGE_EMOJIS_AND_STICKERS |
+    Permissions.MANAGE_GUILD_EXPRESSIONS |
     Permissions.MANAGE_EVENTS |
     Permissions.MODERATE_MEMBERS |
-    Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS;
+    Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS |
+    Permissions.USE_SOUNDBOARD |
+    Permissions.CREATE_GUILD_EXPRESSIONS |
+    Permissions.CREATE_EVENTS;
 export const AllTextPermissions = Permissions.CREATE_INSTANT_INVITE |
     Permissions.MANAGE_CHANNELS |
     Permissions.ADD_REACTIONS |
@@ -383,7 +391,8 @@ export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
     Permissions.USE_VAD |
     Permissions.MANAGE_ROLES |
     Permissions.REQUEST_TO_SPEAK |
-    Permissions.USE_EMBEDDED_ACTIVITIES;
+    Permissions.USE_EMBEDDED_ACTIVITIES |
+    Permissions.USE_SOUNDBOARD;
 export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
 
 export enum ChannelFlags {
@@ -687,6 +696,10 @@ export enum AuditLogActionTypes {
 
     APPLICATION_COMMAND_PERMISSION_UPDATE = 121,
 
+    SOUNDBOARD_SOUND_CREATE = 130,
+    SOUNDBOARD_SOUND_UPDATE = 131,
+    SOUNDBOARD_SOUND_DELETE = 132,
+
     AUTO_MODERATION_RULE_CREATE                 = 140,
     AUTO_MODERATION_RULE_UPDATE                 = 141,
     AUTO_MODERATION_RULE_DELETE                 = 142,
@@ -747,6 +760,8 @@ export enum Intents {
     /** @deprecated {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION}. This will be removed in `1.6.0`. */
     GUILD_BANS                    = 1 << 2,
     GUILD_MODERATION              = 1 << 2,
+    GUILD_EXPRESSIONS             = 1 << 3,
+    /** @deprecated {@link Constants~Intents.GUILD_EMOJIS_AND_STICKERS | GUILD_EMOJIS_AND_STICKERS}. This will be removed in `1.7.0`. */
     GUILD_EMOJIS_AND_STICKERS     = 1 << 3,
     GUILD_INTEGRATIONS            = 1 << 4,
     GUILD_WEBHOOKS                = 1 << 5,

@@ -344,13 +344,13 @@ export interface EditGuildOptions {
     preferredLocale?: string | null;
     /** If the premium progress bar is enabled. */
     premiumProgressBarEnabled?: boolean;
-    /** The ID of the public updates channel. `null` to reset. */
+    /** The ID of the public updates channel. `null` to reset, or `1` to create a new channel. */
     publicUpdatesChannelID?: string | null;
     /** The reason for editing the guild. */
     reason?: string;
     /** @deprecated The region of the guild. */
     region?: string | null;
-    /** The ID of the rules channel. `null` to reset. */
+    /** The ID of the rules channel. `null` to reset, or `1` to create a new channel. */
     rulesChannelID?: string | null;
     /** The splash of the guild (buffer, or full data url). `null` to reset. */
     splash?: Buffer | string | null;
