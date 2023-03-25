@@ -17,9 +17,9 @@ jobs:
         name: Check If Publish Is Needed
         run: |
           if ! node scripts/should-publish; then
-            echo "::set-output name=should-publish::false"
+            echo "should-publish=false" >> "$GITHUB_OUTPUT"
           else 
-            echo "::set-output name=should-publish::true"
+            echo "should-publish=true" >> "$GITHUB_OUTPUT"
           fi
   publish:
     needs: [should-publish]

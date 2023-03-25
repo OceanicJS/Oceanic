@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Dependencies
-      run: npm i
+      run: npm ci
     - name: Set Version
       run: |
         git config user.email "<>"
