@@ -68,20 +68,22 @@ export enum UserFlags {
 }
 
 export enum ApplicationFlags {
-    EMBEDDED_RELEASED                = 1 << 1,
-    MANAGED_EMOJI                    = 1 << 2,
-    GROUP_DM_CREATE                  = 1 << 4,
-    GATEWAY_PRESENCE                 = 1 << 12,
-    GATEWAY_PRESENCE_LIMITED         = 1 << 13,
-    GATEWAY_GUILD_MEMBERS            = 1 << 14,
-    GATEWAY_GUILD_MEMBERS_LIMITED    = 1 << 15,
-    VERIFICATION_PENDING_GUILD_LIMIT = 1 << 16,
-    EMBEDDED                         = 1 << 17,
-    GATEWAY_MESSAGE_CONTENT          = 1 << 18,
-    GATEWAY_MESSAGE_CONTENT_LIMITED  = 1 << 19,
-    EMBEDDED_FIRST_PARTY             = 1 << 20,
-    APPLICATION_COMMAND_BADGE        = 1 << 21,
-    ACTIVE                           = 1 << 24,
+    EMBEDDED_RELEASED                             = 1 << 1,
+    MANAGED_EMOJI                                 = 1 << 2,
+    EMBEDDED_IAP                                  = 1 << 3,
+    GROUP_DM_CREATE                               = 1 << 4,
+    APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 1 << 6,
+    GATEWAY_PRESENCE                              = 1 << 12,
+    GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
+    GATEWAY_GUILD_MEMBERS                         = 1 << 14,
+    GATEWAY_GUILD_MEMBERS_LIMITED                 = 1 << 15,
+    VERIFICATION_PENDING_GUILD_LIMIT              = 1 << 16,
+    EMBEDDED                                      = 1 << 17,
+    GATEWAY_MESSAGE_CONTENT                       = 1 << 18,
+    GATEWAY_MESSAGE_CONTENT_LIMITED               = 1 << 19,
+    EMBEDDED_FIRST_PARTY                          = 1 << 20,
+    APPLICATION_COMMAND_BADGE                     = 1 << 23,
+    ACTIVE                                        = 1 << 24,
 }
 
 export const GuildFeatures = [
