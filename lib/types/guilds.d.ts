@@ -64,6 +64,7 @@ export interface RawGuild {
     id: string;
     joined_at: string;
     large: boolean;
+    latest_onboarding_question_id?: string | null;
     max_members?: number;
     max_presences?: number;
     max_stage_video_channel_users?: number;
@@ -255,6 +256,11 @@ export interface RawIntegrationApplication {
 }
 
 export interface PartialEmoji extends Pick<Emoji, "id" | "name" | "animated"> {}
+export interface NullablePartialEmoji {
+    animated: boolean;
+    id: string | null;
+    name: string | null;
+}
 
 export interface CreateEmojiOptions {
     /** The image (buffer, or full data url). */
@@ -738,4 +744,54 @@ export interface Presence extends Omit<PresenceUpdate, "user" | "guild_id" | "cl
     activities?: Array<PresenceActivity>;
     clientStatus: ClientStatus;
     guildID: string;
+}
+
+export interface RawOnboardingPromptOption {
+    channel_ids: Array<string>;
+    description: string | null;
+    emoji: PartialEmoji;
+    id: string;
+    role_ids: Array<string>;
+    title: string;
+}
+
+export interface RawOnboardingPrompt {
+    id: string;
+    in_onboarding: boolean;
+    options: Array<RawOnboardingPromptOption>;
+    required: boolean;
+    single_select: boolean;
+    title: string;
+}
+
+export interface RawOnboarding {
+    default_channel_ids: Array<string>;
+    enabled: boolean;
+    guild_id: string;
+    prompts: Array<RawOnboardingPrompt>;
+}
+
+export interface OnboardingPromptOption {
+    channelIDs: Array<string>;
+    description: string | null;
+    emoji: PartialEmoji;
+    id: string;
+    roleIDs: Array<string>;
+    title: string;
+}
+
+export interface OnboardingPrompt {
+    id: string;
+    inOnboarding: boolean;
+    options: Array<OnboardingPromptOption>;
+    required: boolean;
+    singleSelect: boolean;
+    title: string;
+}
+
+export interface Onboarding {
+    defaultChannelIDs: Array<string>;
+    enabled: boolean;
+    guildID: string;
+    prompts: Array<OnboardingPrompt>;
 }

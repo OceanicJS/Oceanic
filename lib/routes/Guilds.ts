@@ -44,7 +44,9 @@ import type {
     RawSticker,
     Sticker,
     CreateStickerOptions,
-    EditStickerOptions
+    EditStickerOptions,
+    RawOnboarding,
+    Onboarding
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -1231,6 +1233,36 @@ export default class Guilds {
             path:   Routes.GUILD_MEMBERS(guildID),
             query
         }).then(data => data.map(d => this.#manager.client.util.updateMember(guildID, d.user.id, d)));
+    }
+
+    /**
+     * Get a guild's onboarding info.
+     * @param guildID The ID of the guild.
+     */
+    async getOnboarding(guildID: string): Promise<Onboarding> {
+        return this.#manager.authRequest<RawOnboarding>({
+            method: "GET",
+            path:   Routes.GUILD_ONBOARDING(guildID)
+        }).then(data => ({
+            defaultChannelIDs: data.default_channel_ids,
+            enabled:           data.enabled,
+            guildID:           data.guild_id,
+            prompts:           data.prompts.map(p => ({
+                id:           p.id,
+                inOnboarding: p.in_onboarding,
+                options:      p.options.map(o => ({
+                    channelIDs:  o.channel_ids,
+                    description: o.description,
+                    emoji:       o.emoji,
+                    id:          o.id,
+                    roleIDs:     o.role_ids,
+                    title:       o.title
+                })),
+                required:     p.required,
+                singleSelect: p.single_select,
+                title:        p.title
+            }))
+        }));
     }
 
     /**

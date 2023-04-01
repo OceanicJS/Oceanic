@@ -89,7 +89,8 @@ import type {
     RESTMember,
     CreateStickerOptions,
     Sticker,
-    EditStickerOptions
+    EditStickerOptions,
+    Onboarding
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -158,6 +159,7 @@ export default class Guild extends Base {
     joinedAt: Date | null;
     /** If this guild is considered large. */
     large: boolean;
+    latestOnboardingQuestionID: string | null;
     /** The maximum amount of members this guild can have. */
     maxMembers?: number;
     /** The maximum amount of people that can be present at a time in this guild. Only present for very large guilds. */
@@ -257,6 +259,7 @@ export default class Guild extends Base {
         this.invites = new Collection();
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
+        this.latestOnboardingQuestionID = null;
         this.memberCount = data.member_count ?? data.approximate_member_count ?? 0;
         this.members = new TypedCollection(Member, client, client.util._getLimit("members", this.id));
         this.mfaLevel = data.mfa_level;
@@ -481,6 +484,12 @@ export default class Guild extends Base {
         }
         if (data.joined_at !== undefined) {
             this.joinedAt = new Date(data.joined_at);
+        }
+        if (data.large !== undefined) {
+            this.large = data.large;
+        }
+        if (data.latest_onboarding_question_id !== undefined) {
+            this.latestOnboardingQuestionID = data.latest_onboarding_question_id;
         }
         if (data.max_members !== undefined) {
             this.maxMembers = data.max_members;
@@ -1094,6 +1103,13 @@ export default class Guild extends Base {
      */
     async getMembers(options?: GetMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.getMembers(this.id, options);
+    }
+
+    /**
+     * Get the onboarding information for this guild.
+     */
+    async getOnboarding(): Promise<Onboarding> {
+        return this.client.rest.guilds.getOnboarding(this.id);
     }
 
     /**

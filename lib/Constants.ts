@@ -935,6 +935,12 @@ export enum GuildMemberFlags {
     BYPASSES_VERIFICATION = 1 << 2,
     STARTED_ONBOARDING    = 1 << 3,
 }
+
+export enum OnboardingPromptTypes {
+    MULTIPLE_CHOICE = 0,
+    DROPDOWN        = 1,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {

@@ -47,6 +47,7 @@ export const GUILD_WELCOME_SCREEN        = (guildID: string) => `/guilds/${guild
 export const GUILD_VOICE_STATE           = (guildID: string, userID: string) => `/guilds/${guildID}/voice-states/${userID}` as const;
 export const GUILD_STICKER			     = (guildID: string, stickerID: string) => `/guilds/${guildID}/stickers/${stickerID}` as const;
 export const GUILD_STICKERS			     = (guildID: string) => `/guilds/${guildID}/stickers` as const;
+export const GUILD_ONBOARDING            = (guildID: string) => `/guilds/${guildID}/onboarding` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;
