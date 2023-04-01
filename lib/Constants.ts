@@ -349,7 +349,8 @@ export const Permissions = {
     VIEW_CREATOR_MONETIZATION_ANALYTICS: 2199023255552n,  // 1 << 41
     USE_SOUNDBOARD:                      4398046511104n,  // 1 << 42
     CREATE_GUILD_EXPRESSIONS:            8796093022208n,  // 1 << 43
-    CREATE_EVENTS:                       17592186044416n  // 1 << 44
+    CREATE_EVENTS:                       17592186044416n, // 1 << 44
+    USE_EXTERNAL_SOUNDS:                 35184372088832n  // 1 << 45
 } as const;
 export type PermissionName = keyof typeof Permissions;
 export const AllGuildPermissions = Permissions.KICK_MEMBERS |
@@ -369,7 +370,8 @@ export const AllGuildPermissions = Permissions.KICK_MEMBERS |
     Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS |
     Permissions.USE_SOUNDBOARD |
     Permissions.CREATE_GUILD_EXPRESSIONS |
-    Permissions.CREATE_EVENTS;
+    Permissions.CREATE_EVENTS |
+    Permissions.USE_EXTERNAL_SOUNDS;
 export const AllTextPermissions = Permissions.CREATE_INSTANT_INVITE |
     Permissions.MANAGE_CHANNELS |
     Permissions.ADD_REACTIONS |
@@ -404,7 +406,8 @@ export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
     Permissions.MANAGE_ROLES |
     Permissions.REQUEST_TO_SPEAK |
     Permissions.USE_EMBEDDED_ACTIVITIES |
-    Permissions.USE_SOUNDBOARD;
+    Permissions.USE_SOUNDBOARD |
+    Permissions.USE_EXTERNAL_SOUNDS;
 export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
 
 export enum ChannelFlags {
