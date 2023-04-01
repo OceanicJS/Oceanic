@@ -635,6 +635,7 @@ export enum AutoModerationTriggerTypes {
     SPAM           = 3,
     KEYWORD_PRESET = 4,
     MENTION_SPAM   = 5,
+    MEMBER_PROFILE = 6,
 }
 
 export enum AutoModerationKeywordPresetTypes {
