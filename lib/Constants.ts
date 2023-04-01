@@ -1,5 +1,16 @@
 /* eslint-disable unicorn/prefer-math-trunc */
 /** @module Constants */
+import type PrivateChannel from "./structures/PrivateChannel";
+import type TextChannel from "./structures/TextChannel";
+import type VoiceChannel from "./structures/VoiceChannel";
+import type GroupChannel from "./structures/GroupChannel";
+import type CategoryChannel from "./structures/CategoryChannel";
+import type AnnouncementChannel from "./structures/AnnouncementChannel";
+import type AnnouncementThreadChannel from "./structures/AnnouncementThreadChannel";
+import type PublicThreadChannel from "./structures/PublicThreadChannel";
+import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
+import type StageChannel from "./structures/StageChannel";
+import type ForumChannel from "./structures/ForumChannel";
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;
@@ -231,13 +242,36 @@ export enum ChannelTypes {
 }
 
 export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY;
+export type NotImplementedChannels = ChannelTypeMap[NotImplementedChannelTypes];
 export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
+export type PrivateChannels = ChannelTypeMap[PrivateChannelTypes];
 export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
+export type GuildChannels = ChannelTypeMap[GuildChannelTypes];
 export type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
+export type GuildChannelsWithoutThreads = ChannelTypeMap[GuildChannelTypesWithoutThreads];
 export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.DM | ChannelTypes.GROUP_DM | ChannelTypes.GUILD_ANNOUNCEMENT | ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD | ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
+export type TextChannels = ChannelTypeMap[TextChannelTypes];
 export type GuildTextChannelTypes = Exclude<TextChannelTypes, PrivateChannelTypes>;
+export type GuildTextChannels = ChannelTypeMap[GuildTextChannelTypes];
 export type ThreadChannelTypes = ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD;
+export type ThreadChannels = ChannelTypeMap[ThreadChannelTypes];
 export type VoiceChannelTypes = ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
+export type VoiceChannels = ChannelTypeMap[VoiceChannelTypes];
+
+interface ChannelTypeMap {
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: AnnouncementThreadChannel;
+    [ChannelTypes.DM]: PrivateChannel;
+    [ChannelTypes.GROUP_DM]: GroupChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: AnnouncementChannel;
+    [ChannelTypes.GUILD_CATEGORY]: CategoryChannel;
+    [ChannelTypes.GUILD_DIRECTORY]: never;
+    [ChannelTypes.GUILD_FORUM]: ForumChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: StageChannel;
+    [ChannelTypes.GUILD_TEXT]: TextChannel;
+    [ChannelTypes.GUILD_VOICE]: VoiceChannel;
+    [ChannelTypes.PRIVATE_THREAD]: PrivateThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: PublicThreadChannel;
+}
 
 export enum OverwriteTypes {
     ROLE   = 0,
@@ -940,6 +974,11 @@ export enum GuildMemberFlags {
 export enum OnboardingPromptTypes {
     MULTIPLE_CHOICE = 0,
     DROPDOWN        = 1,
+}
+
+export enum AnimationTypes {
+    PREMIUM = 0,
+    BASIC   = 1,
 }
 
 // entries are intentionally not aligned

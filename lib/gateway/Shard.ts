@@ -8,7 +8,8 @@ import {
     GatewayCloseCodes,
     GatewayOPCodes,
     GATEWAY_VERSION,
-    Intents
+    Intents,
+    type VoiceChannels
 } from "../Constants";
 import type {
     UpdatePresenceOptions,
@@ -1112,6 +1113,17 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "USER_UPDATE": {
                 const oldUser = this.client.users.get(packet.d.id)?.toJSON() ?? null;
                 this.client.emit("userUpdate", this.client.users.update(packet.d), oldUser);
+                break;
+            }
+
+            case "VOICE_CHANNEL_EFFECT_SEND": {
+                const channel = this.client.getChannel<VoiceChannels>(packet.d.channel_id);
+                const guild = this.client.guilds.get(packet.d.guild_id);
+                const user = guild?.members.get(packet.d.user_id) ?? this.client.users.get(packet.d.user_id);
+                this.client.emit("voiceChannelEffectSend", channel ?? { id: packet.d.channel_id, guild: guild ?? { id: packet.d.guild_id } }, user ?? { id: packet.d.user_id }, {
+                    animationID:   packet.d.animation_id,
+                    animationType: packet.d.animation_type
+                });
                 break;
             }
 

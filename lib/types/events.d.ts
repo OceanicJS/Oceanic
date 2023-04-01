@@ -12,7 +12,7 @@ import type {
     UncachedThreadMember
 } from "./channels";
 import type { RawRequest } from "./request-handler";
-import type { AutoModerationActionExecution, DeletedPrivateChannel } from "./gateway";
+import type { AutoModerationActionExecution, DeletedPrivateChannel, VoiceChannelEffect } from "./gateway";
 import type { AnyDispatchPacket } from "./gateway-raw";
 import type { Uncached } from "./shared";
 import type {
@@ -68,6 +68,7 @@ import type StageInstance from "../structures/StageInstance";
 import type ForumChannel from "../structures/ForumChannel";
 import type AuditLogEntry from "../structures/AuditLogEntry";
 import type GroupChannel from "../structures/GroupChannel";
+import type { VoiceChannels } from "../Constants";
 
 
 export interface ClientEvents {
@@ -213,6 +214,8 @@ export interface ClientEvents {
     unavailableGuildCreate: [guild: UnavailableGuild];
     /** @event Emitted when a user is updated. */
     userUpdate: [user: User, oldUser: JSONUser | null];
+    /** @event Emitted when a user uses an effect in a voice channel. Requires the `GUILD_VOICE_STATES` event. */
+    voiceChannelEffectSend: [channel: VoiceChannels | (Uncached & { guild: Guild | Uncached; }), user: Member | User | Uncached, effect: VoiceChannelEffect];
     /** @event Emitted when a user joins a voice channel. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelJoin: [member: Member, channel: VoiceChannel | StageChannel | Uncached];
     /** @event Emitted when a user leaves a voice channel. Requires the `GUILD_VOICE_STATES` intent. */

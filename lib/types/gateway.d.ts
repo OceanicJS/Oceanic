@@ -1,7 +1,14 @@
 /** @module Types/Gateway */
+import type { PartialEmoji } from ".";
 import type { RawUser } from "./users";
 import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
-import type { ActivityTypes, AutoModerationTriggerTypes, ChannelTypes, IntentNames } from "../Constants";
+import type {
+    ActivityTypes,
+    AnimationTypes,
+    AutoModerationTriggerTypes,
+    ChannelTypes,
+    IntentNames
+} from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type { ClientOptions as WSClientOptions } from "ws";
 
@@ -280,4 +287,18 @@ export interface DeletedPrivateChannel {
     id: string;
     lastMessageID: string | null;
     type: ChannelTypes.DM;
+}
+
+export interface RawVoiceChannelEffect {
+    animation_id?: number;
+    animation_type?: AnimationTypes;
+    channel_id: string;
+    emoji?: PartialEmoji | null;
+    guild_id: string;
+    user_id: string;
+}
+
+export interface VoiceChannelEffect {
+    animationID?: number;
+    animationType?: AnimationTypes;
 }
