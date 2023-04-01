@@ -358,6 +358,8 @@ export interface EditGuildOptions {
     region?: string | null;
     /** The ID of the rules channel. `null` to reset, or `1` to create a new channel. */
     rulesChannelID?: string | null;
+    /** The ID of the channel where safety alert are received. `null` to reset, or `1` to create a new channel. */
+    safetyAlertsChannelID?: string | null;
     /** The splash of the guild (buffer, or full data url). `null` to reset. */
     splash?: Buffer | string | null;
     /** The system channel flags. */
