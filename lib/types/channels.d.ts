@@ -139,6 +139,7 @@ export interface RawThreadMember {
     flags: number;
     id: string;
     join_timestamp: string;
+    member?: RawMember;
     user_id: string;
 }
 export type RawChannelThreadMember = Pick<RawThreadMember, "flags" | "join_timestamp">;
@@ -148,6 +149,17 @@ export interface ThreadMember extends UncachedThreadMember {
     flags: number;
     /** The time at which this member joined the thread. */
     joinTimestamp: Date;
+    /** The guild member associated with this thread member, if fetched with `withMember` set to true. */
+    member?: Member;
+}
+
+export interface GetThreadMembersOptions {
+    /** Get members after this member id. */
+    after?: string;
+    /** The maximum number of thread members returned, defaults to 100.*/
+    limit?: number;
+    /** If the results should include a `member` object. This also enables pagination. */
+    withMember?: boolean;
 }
 
 export interface UncachedThreadMember {

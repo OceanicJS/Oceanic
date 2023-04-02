@@ -39,7 +39,9 @@ import type {
     PartialInviteChannel,
     RawThreadChannel,
     PurgeOptions,
-    AnyGuildTextChannel
+    AnyGuildTextChannel,
+    GetThreadMembersOptions,
+    AnyGuildChannel
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -828,17 +830,34 @@ export default class Channels {
     /**
      * Get the members of a thread.
      * @param channelID The ID of the thread.
+     * @param options The options for getting the thread members.
      */
-    async getThreadMembers(channelID: string): Promise<Array<ThreadMember>> {
+    async getThreadMembers(channelID: string, options?: GetThreadMembersOptions): Promise<Array<ThreadMember>> {
+        const query = new URLSearchParams();
+        if (options?.after !== undefined) {
+            query.set("after", options.after);
+        }
+        if (options?.limit !== undefined) {
+            query.set("limit", options.limit.toString());
+        }
+        if (options?.withMember !== undefined) {
+            query.set("limit", options.withMember.toString());
+        }
         return this.#manager.authRequest<Array<RawThreadMember>>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBERS(channelID)
-        }).then(data => data.map(d => ({
-            flags:         d.flags,
-            id:            d.id,
-            joinTimestamp: new Date(d.join_timestamp),
-            userID:        d.user_id
-        })));
+        }).then(data => data.map(d => {
+            // eslint-disable-next-line @typescript-eslint/dot-notation
+            const guild = this.#manager.client.getChannel<AnyGuildChannel>(channelID)?.["_cachedGuild"];
+            const member = guild && options?.withMember ? guild.members.update(d.member!, guild.id) : undefined;
+            return {
+                flags:         d.flags,
+                id:            d.id,
+                joinTimestamp: new Date(d.join_timestamp),
+                member,
+                userID:        d.user_id
+            };
+        }));
     }
 
     /** @deprecated Get the list of usable voice regions. Moved to `misc`. */
