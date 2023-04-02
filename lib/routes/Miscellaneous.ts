@@ -3,12 +3,24 @@ import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
 import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
 import type { VoiceRegion } from "../types/voice";
+import type { RESTApplication } from "../types";
+import Application from "../structures/Application";
 
 /** Methods that don't fit anywhere else. */
 export default class Miscellaneous {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
+    }
+
+    /**
+     * Get the currently authenticated bot's application info.
+     */
+    async getApplication(): Promise<Application> {
+        return this.#manager.authRequest<RESTApplication>({
+            method: "GET",
+            path:   Routes.APPLICATION
+        }).then(data => new Application(data, this.#manager.client));
     }
 
     /**

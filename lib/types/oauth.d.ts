@@ -1,7 +1,7 @@
 /** @module Types/OAuth */
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
-import type { RawIntegration } from "./guilds";
+import type { RawIntegration, RawOAuthGuild } from "./guilds";
 import type { LocaleMap } from "./application-commands";
 import type {
     ConnectionService,
@@ -16,31 +16,40 @@ import type Webhook from "../structures/Webhook";
 import type Integration from "../structures/Integration";
 
 export interface RawApplication {
-    bot_public: boolean;
-    bot_require_code_grant: boolean;
+    approximate_guild_count?: number;
+    bot_public?: boolean;
+    bot_require_code_grant?: boolean;
     cover_image?: string;
     custom_install_url?: string;
     description: string;
     flags?: number;
+    guild?: RawOAuthGuild;
     guild_id?: string;
+    hook: boolean;
     icon: string | null;
     id: string;
     install_params?: InstallParams;
+    interactions_endpoint_url?: string | null;
     name: string;
     owner?: RawUser;
     primary_sku_id?: string;
     privacy_policy_url?: string;
-    role_connections_verification_url?: string;
+    redirect_uris?: Array<string>;
+    role_connections_verification_url?: string | null;
     rpc_origins?: Array<string>;
     slug?: string;
     // summary is deprecated and being removed in v11
     tags?: Array<string>;
-    team: RawTeam | null;
+    team?: RawTeam | null;
     terms_of_service_url?: string;
+    type: number | null;
     verify_key: string;
 }
+
+type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
-export interface RESTApplication extends Omit<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params">, Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">> {}
+export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
+export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
 export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
 
 export interface RawTeam {

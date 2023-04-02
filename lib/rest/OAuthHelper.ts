@@ -1,13 +1,13 @@
 /** @module OAuthHelper */
 import type RESTManager from "./RESTManager";
-import Application from "../structures/Application";
+import OAuthApplication from "../structures/OAuthApplication";
 import type {
     AuthorizationInformation,
     Connection,
     OAuthURLOptions,
     RawAuthorizationInformation,
     RawConnection,
-    RESTApplication,
+    RESTOAuthApplication,
     RevokeTokenOptions
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
@@ -64,12 +64,12 @@ export default class OAuthHelper {
     /**
      * Get the current OAuth2 application's information.
      */
-    async getApplication(): Promise<Application> {
-        return this.#manager.request<RESTApplication>({
+    async getApplication(): Promise<OAuthApplication> {
+        return this.#manager.request<RESTOAuthApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION,
             auth:   this.#token
-        }).then(data => new Application(data, this.#manager.client));
+        }).then(data => new OAuthApplication(data, this.#manager.client));
     }
 
     /**

@@ -13,7 +13,7 @@ import type {
     RawRefreshTokenResponse,
     RefreshTokenOptions,
     RefreshTokenResponse,
-    RESTApplication,
+    RESTOAuthApplication,
     RevokeTokenOptions,
     GetCurrentGuildsOptions,
     RawRoleConnectionMetadata,
@@ -23,7 +23,7 @@ import type {
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
-import Application from "../structures/Application";
+import OAuthApplication from "../structures/OAuthApplication";
 import PartialApplication from "../structures/PartialApplication";
 import Member from "../structures/Member";
 import Webhook from "../structures/Webhook";
@@ -97,11 +97,11 @@ export default class OAuth {
     /**
      * Get the current OAuth2 application's information.
      */
-    async getApplication(): Promise<Application> {
-        return this.#manager.authRequest<RESTApplication>({
+    async getApplication(): Promise<OAuthApplication> {
+        return this.#manager.authRequest<RESTOAuthApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION
-        }).then(data => new Application(data, this.#manager.client));
+        }).then(data => new OAuthApplication(data, this.#manager.client));
     }
 
     /**

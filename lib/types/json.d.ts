@@ -80,23 +80,24 @@ export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
     type: ChannelTypes.ANNOUNCEMENT_THREAD;
 }
 export interface JSONApplication extends JSONClientApplication {
-    botPublic: boolean;
-    botRequireCodeGrant: boolean;
+    approximateGuildCount: number;
     coverImage: string | null;
     customInstallURL?: string;
     description: string;
-    guildID?: string;
+    guild: JSONOAuthGuild | null;
+    guildID: string | null;
     icon: string | null;
     installParams?: InstallParams;
+    interactionsEndpointURL: string | null;
     name: string;
-    ownerID: string;
     primarySKUID?: string;
     privacyPolicyURL?: string;
+    roleConnectionsVerificationURL: string | null;
     rpcOrigins: Array<string>;
     slug?: string;
     tags?: Array<string>;
-    team: JSONTeam | null;
     termsOfServiceURL?: string;
+    type: number | null;
     verifyKey: string;
 }
 export interface JSONApplicationCommand extends JSONBase {
@@ -446,6 +447,29 @@ export interface JSONModalSubmitInteraction extends JSONInteraction {
     member?: JSONMember;
     type: InteractionTypes.MODAL_SUBMIT;
     user: JSONUser;
+}
+export interface JSONOAuthApplication extends JSONClientApplication {
+    botPublic: boolean;
+    botRequireCodeGrant: boolean;
+    coverImage: string | null;
+    customInstallURL?: string;
+    description: string;
+    guildID: string | null;
+    icon: string | null;
+    installParams?: InstallParams;
+    name: string;
+    owner: JSONUser;
+    ownerID: string;
+    primarySKUID?: string;
+    privacyPolicyURL?: string;
+    roleConnectionsVerificationURL?: string;
+    rpcOrigins: Array<string>;
+    slug?: string;
+    tags?: Array<string>;
+    team: JSONTeam | null;
+    termsOfServiceURL?: string;
+    type: number | null;
+    verifyKey: string;
 }
 export interface JSONOAuthGuild extends JSONBase {
     approximateMemberCount?: number;
