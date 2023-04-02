@@ -841,11 +841,12 @@ export default class Channels {
             query.set("limit", options.limit.toString());
         }
         if (options?.withMember !== undefined) {
-            query.set("limit", options.withMember.toString());
+            query.set("with_member", options.withMember.toString());
         }
         return this.#manager.authRequest<Array<RawThreadMember>>({
             method: "GET",
-            path:   Routes.CHANNEL_THREAD_MEMBERS(channelID)
+            path:   Routes.CHANNEL_THREAD_MEMBERS(channelID),
+            query
         }).then(data => data.map(d => {
             // eslint-disable-next-line @typescript-eslint/dot-notation
             const guild = this.#manager.client.getChannel<AnyGuildChannel>(channelID)?.["_cachedGuild"];
