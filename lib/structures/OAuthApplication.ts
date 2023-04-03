@@ -1,4 +1,4 @@
-/** @module Application */
+/** @module OAuthApplication */
 import type User from "./User";
 import Team from "./Team";
 import ClientApplication from "./ClientApplication";
