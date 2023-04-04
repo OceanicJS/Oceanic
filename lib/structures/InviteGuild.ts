@@ -31,14 +31,14 @@ export default class InviteGuild extends Base {
     verificationLevel: VerificationLevels;
     constructor(data: RawInviteGuild, client: Client) {
         super(data.id, client);
-        this.banner      = data.banner;
+        this.banner = data.banner;
         this.description = data.description;
-        this.features    = data.features;
-        this.name        = data.name;
-        this.nsfwLevel   = data.nsfw_level;
-        this.icon        = data.icon;
+        this.features = data.features;
+        this.name = data.name;
+        this.nsfwLevel = data.nsfw_level;
+        this.icon = data.icon;
         this.premiumSubscriptionCount = data.premium_subscription_count;
-        this.splash      = data.splash;
+        this.splash = data.splash;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
     }

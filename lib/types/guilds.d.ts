@@ -75,7 +75,7 @@ export interface RawGuild {
     name: string;
     nsfw_level: GuildNSFWLevels;
     owner?: boolean;
-    owner_id: string;
+    owner_id: string | null;
     permissions?: string;
     preferred_locale: string;
     premium_progress_bar_enabled: boolean;

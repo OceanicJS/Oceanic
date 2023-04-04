@@ -179,9 +179,9 @@ export default class Guild extends Base {
     /** The [nsfw level](https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level) of this guild. */
     nsfwLevel: GuildNSFWLevels;
     /** The owner of this guild. */
-    owner?: User;
+    owner?: User | null;
     /** The ID of the owner of this guild. */
-    ownerID: string;
+    ownerID: string | null;
     /** The [preferred locale](https://discord.com/developers/docs/reference#locales) of this guild. */
     preferredLocale: string;
     /** If this guild has the boost progress bar enabled. */
@@ -265,7 +265,7 @@ export default class Guild extends Base {
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
         this.nsfwLevel = data.nsfw_level;
-        this.owner = client.users.get(data.owner_id)!;
+        this.owner = data.owner_id === null ? null : client.users.get(data.owner_id)!;
         this.ownerID = data.owner_id;
         this.preferredLocale = data.preferred_locale;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
@@ -517,7 +517,7 @@ export default class Guild extends Base {
         }
         if (data.owner_id !== undefined) {
             this.ownerID = data.owner_id;
-            this.owner = this.client.users.get(data.owner_id)!;
+            this.owner = data.owner_id === null ? null : this.client.users.get(data.owner_id)!;
         }
         if (data.preferred_locale !== undefined) {
             this.preferredLocale = data.preferred_locale;

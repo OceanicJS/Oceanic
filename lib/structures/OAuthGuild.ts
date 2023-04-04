@@ -28,10 +28,10 @@ export default class OAuthGuild extends Base {
         super(data.id, client);
         this.approximateMemberCount = data.approximate_member_count;
         this.approximatePresenceCount = data.approximate_presence_count;
-        this.features    = data.features;
-        this.name        = data.name;
-        this.icon        = data.icon;
-        this.owner       = data.owner;
+        this.features = data.features;
+        this.name = data.name;
+        this.icon = data.icon;
+        this.owner = data.owner;
         this.permissions = new Permission(data.permissions);
     }
 
