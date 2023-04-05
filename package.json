@@ -1,6 +1,6 @@
 {
   "name": "oceanic.js",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "A NodeJS library for interfacing with Discord.",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
@@ -44,8 +44,8 @@
     "@types/node": "^18.15.11",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.4",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.57.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
     "eslint": "^8.37.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-import-newlines": "^1.3.1",
@@ -64,6 +64,6 @@
     "node": ">=16.16.0"
   },
   "optionalDependencies": {
-    "@discordjs/voice": "^0.15.0"
+    "@discordjs/voice": "^0.16.0"
   }
 }
