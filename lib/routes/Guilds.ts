@@ -597,6 +597,7 @@ export default class Guilds {
                 public_updates_channel_id:     options.publicUpdatesChannelID,
                 region:                        options.region,
                 rules_channel_id:              options.rulesChannelID,
+                safety_alerts_channel_id:      options.safetyAlertsChannelID,
                 splash:                        options.splash,
                 system_channel_flags:          options.systemChannelFlags,
                 system_channel_id:             options.systemChannelID,
