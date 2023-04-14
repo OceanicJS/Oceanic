@@ -592,6 +592,7 @@ export interface TextInput {
 export interface RawAttachment {
     content_type?: string;
     description?: string;
+    duration_secs?: number;
     ephemeral?: boolean;
     filename: string;
     height?: number;
@@ -599,6 +600,7 @@ export interface RawAttachment {
     proxy_url: string;
     size: number;
     url: string;
+    waveform?: string | null;
     width?: number;
 }
 // @TODO verify what can be sent with `attachments` in message creation/deletion, this is an assumption

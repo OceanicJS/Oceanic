@@ -16,3 +16,5 @@ typedoc.json
 CONTRIBUTING.md
 .npm-deprecaterc.json
 .vscode/
+.gitattributes
+.node-version
