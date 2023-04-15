@@ -41,6 +41,10 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
     user: User;
     constructor(data: RawModalSubmitInteraction, client: Client) {
         super(data, client);
+        if (data.message !== undefined && data.guild_id !== undefined) {
+            data.message.guild_id = data.guild_id;
+        }
+
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
         this.data = {

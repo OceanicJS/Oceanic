@@ -55,6 +55,10 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     user: User;
     constructor(data: RawMessageComponentInteraction, client: Client) {
         super(data, client);
+        if (data.message !== undefined && data.guild_id !== undefined) {
+            data.message.guild_id = data.guild_id;
+        }
+
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
