@@ -47,7 +47,7 @@ export default class Webhook extends Base {
     user: User | null;
     constructor(data: RawWebhook, client: Client) {
         super(data.id, client);
-        this.application = client["_application"] && data.application_id === null ? null : (client.application.id === data.application_id ? client.application : undefined);
+        this.application = (!client["_application"] || data.application_id === null) ? null : (client.application.id === data.application_id ? client.application : undefined);
         this.applicationID = data.application_id;
         this.avatar = data.avatar ?? null;
         this.channelID = data.channel_id;
@@ -62,8 +62,8 @@ export default class Webhook extends Base {
 
     /** The channel this webhook is for, if applicable. */
     get channel(): AnyGuildTextChannel | null | undefined {
-        if (this.channelID !== null) {
-            return this._cachedChannel ??= this.client.getChannel<AnyGuildTextChannel>(this.channelID);
+        if (this.channelID !== null && this._cachedChannel !== null) {
+            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<AnyGuildTextChannel>(this.channelID));
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
