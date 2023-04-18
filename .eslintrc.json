@@ -310,6 +310,7 @@
       }
     ],
     "jsdoc/tag-lines": "error",
+    "jsdoc/no-types": "error",
     "arrow-parens": ["error", "as-needed"],
     "unicorn/no-null": "off",
     "unicorn/no-static-only-class": "off",
