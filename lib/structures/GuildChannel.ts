@@ -5,9 +5,9 @@ import type CategoryChannel from "./CategoryChannel";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type ForumChannel from "./ForumChannel";
-import type { GuildChannelTypes } from "../Constants";
+import type { ChannelTypeMap, GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel } from "../types/channels";
+import type { EditChannelOptionsMap, RawGuildChannel } from "../types/channels";
 import type { JSONGuildChannel } from "../types/json";
 
 /** Represents a guild channel. */
@@ -67,8 +67,9 @@ export default class GuildChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGuildChannelOptions): Promise<AnyGuildChannel> {
-        return this.client.rest.channels.edit(this.id, options);
+    async edit(options: EditChannelOptionsMap[this["type"]]): Promise<this> {
+        // edit is called down the chain
+        return this.client.rest.channels.edit<ChannelTypeMap[this["type"]]>(this.id, options) as unknown as Promise<this>;
     }
 
     override toJSON(): JSONGuildChannel {

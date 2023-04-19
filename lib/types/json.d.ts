@@ -53,12 +53,10 @@ import type {
     MFALevels,
     OverwriteTypes,
     PremiumTiers,
-    PrivateChannelTypes,
     RESTMethod,
     GuildScheduledEventEntityTypes,
     GuildScheduledEventPrivacyLevels,
     GuildScheduledEventStatuses,
-    TextChannelTypes,
     ThreadAutoArchiveDuration,
     ThreadChannelTypes,
     VerificationLevels,
@@ -66,7 +64,9 @@ import type {
     WebhookTypes,
     SortOrderTypes,
     StageInstancePrivacyLevels,
-    ForumLayoutTypes
+    ForumLayoutTypes,
+    GuildTextChannelTypes,
+    VoiceChannelTypes
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
@@ -543,13 +543,8 @@ export interface JSONScheduledEvent extends JSONBase {
     status: GuildScheduledEventStatuses;
     userCount?: number;
 }
-export interface JSONStageChannel extends JSONTextableChannel {
-    bitrate: number;
-    rtcRegion: string | null;
+export interface JSONStageChannel extends JSONTextableVoiceChannel {
     type: ChannelTypes.GUILD_STAGE_VOICE;
-    userLimit: number;
-    videoQualityMode: VideoQualityModes;
-    voiceMembers: Array<string>;
 }
 export interface JSONStageInstance extends JSONBase {
     channelID: string;
@@ -573,8 +568,18 @@ export interface JSONTextableChannel extends JSONGuildChannel {
     position: number;
     rateLimitPerUser: number;
     topic: string | null;
-    type: Exclude<TextChannelTypes, PrivateChannelTypes>;
+    type: GuildTextChannelTypes;
 }
+
+export interface JSONTextableVoiceChannel extends JSONTextableChannel {
+    bitrate: number;
+    rtcRegion: string | null;
+    type: VoiceChannelTypes;
+    userLimit: number;
+    videoQualityMode: VideoQualityModes;
+    voiceMembers: Array<string>;
+}
+
 export interface JSONTextChannel extends JSONTextableChannel {
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     threads: Array<string>;
@@ -605,13 +610,8 @@ export interface JSONUser extends JSONBase {
     system: boolean;
     username: string;
 }
-export interface JSONVoiceChannel extends JSONTextableChannel {
-    bitrate: number;
-    rtcRegion: string | null;
+export interface JSONVoiceChannel extends JSONTextableVoiceChannel {
     type: ChannelTypes.GUILD_VOICE;
-    userLimit: number;
-    videoQualityMode: VideoQualityModes;
-    voiceMembers: Array<string>;
 }
 export interface JSONVoiceState extends JSONBase {
     channelID: string | null;

@@ -6,13 +6,7 @@ import Permission from "./Permission";
 import type Client from "../Client";
 import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
-import type {
-    EditAnyGuildChannelOptions,
-    EditPermissionOptions,
-    RawCategoryChannel,
-    RawGuildChannel,
-    RawOverwrite
-} from "../types/channels";
+import type { EditPermissionOptions, RawCategoryChannel, RawGuildChannel, RawOverwrite } from "../types/channels";
 import type { JSONCategoryChannel } from "../types/json";
 
 /** Represents a guild category channel. */
@@ -57,14 +51,6 @@ export default class CategoryChannel extends GuildChannel {
      */
     async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel.
-     */
-    override async edit(options: EditAnyGuildChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**

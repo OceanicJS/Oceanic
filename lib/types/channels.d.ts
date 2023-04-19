@@ -242,10 +242,26 @@ export interface EditTextChannelOptions extends EditAnyGuildChannelOptions, Pick
 export interface EditAnnouncementChannelOptions extends Omit<EditTextChannelOptions, "rateLimitPerUser" | "type"> { type?: ChannelTypes.GUILD_TEXT; }
 export interface EditVoiceChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "nsfw" | "bitrate" | "userLimit" | "parentID" | "rtcRegion" | "videoQualityMode"> {}
 export interface EditStageChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "bitrate" | "rtcRegion"> {}
-export type EditThreadChannelOptions = EditPublicThreadChannelOptions | EditPrivateThreadChannelOptions;
+export interface EditThreadChannelOptions extends EditPublicThreadChannelOptions, EditPrivateThreadChannelOptions {}
 export interface EditPublicThreadChannelOptions extends Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags" | "appliedTags"> {}
 export interface EditPrivateThreadChannelOptions extends EditPublicThreadChannelOptions, Pick<EditGuildChannelOptions, "invitable"> {}
 export interface EditForumChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic"> {}
+
+export interface EditChannelOptionsMap {
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: EditPublicThreadChannelOptions;
+    [ChannelTypes.DM]: never;
+    [ChannelTypes.GROUP_DM]: EditGroupDMOptions;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: EditAnnouncementChannelOptions;
+    [ChannelTypes.GUILD_CATEGORY]: EditAnyGuildChannelOptions;
+    [ChannelTypes.GUILD_DIRECTORY]: never;
+    [ChannelTypes.GUILD_FORUM]: EditForumChannelOptions;
+    [ChannelTypes.GUILD_STAGE_VOICE]: EditStageChannelOptions;
+    [ChannelTypes.GUILD_TEXT]: EditTextChannelOptions;
+    [ChannelTypes.GUILD_VOICE]: EditVoiceChannelOptions;
+    [ChannelTypes.PRIVATE_THREAD]: EditPrivateThreadChannelOptions;
+    [ChannelTypes.PUBLIC_THREAD]: EditPublicThreadChannelOptions;
+}
+
 
 export interface AddGroupRecipientOptions {
     /** The access token of the user to add. */

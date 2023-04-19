@@ -2,13 +2,7 @@
 import ThreadChannel from "./ThreadChannel";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type {
-    EditPublicThreadChannelOptions,
-    GetThreadMembersOptions,
-    RawPublicThreadChannel,
-    ThreadMember,
-    ThreadMetadata
-} from "../types/channels";
+import type { GetThreadMembersOptions, RawPublicThreadChannel, ThreadMember, ThreadMetadata } from "../types/channels";
 import type { JSONPublicThreadChannel } from "../types/json";
 
 /** Represents a public thread channel. */
@@ -27,14 +21,6 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
         if (data.applied_tags !== undefined) {
             this.appliedTags = data.applied_tags;
         }
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options to edit the channel with.
-     */
-    override async edit(options: EditPublicThreadChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**

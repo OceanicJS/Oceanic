@@ -1,17 +1,16 @@
 /** @module VoiceState */
 import Base from "./Base";
-import type VoiceChannel from "./VoiceChannel";
-import type StageChannel from "./StageChannel";
 import type Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
 import type { RawVoiceState } from "../types/voice";
 import type { JSONVoiceState } from "../types/json";
+import type { VoiceChannels } from "../Constants";
 
 /** Represents a guild member's voice state. */
-export default class VoiceState extends Base {
-    private _cachedChannel?: VoiceChannel | StageChannel | null;
+export default class VoiceState<T extends VoiceChannels = VoiceChannels> extends Base {
+    private _cachedChannel?: T | null;
     private _cachedGuild?: Guild;
     private _cachedMember?: Member;
     private _cachedUser?: User;
@@ -96,12 +95,12 @@ export default class VoiceState extends Base {
     }
 
     /** The channel the user is connected to. */
-    get channel(): VoiceChannel | StageChannel | null | undefined {
+    get channel(): T | null | undefined {
         if (this.channelID !== null) {
-            return this._cachedChannel ??= this.client.getChannel<VoiceChannel | StageChannel>(this.channelID);
+            return this._cachedChannel ??= this.client.getChannel<T>(this.channelID);
         }
 
-        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+        return (this._cachedChannel ??= null);
     }
 
     /** The guild this voice state is a part of. This will throw an error if the guild is not cached. */

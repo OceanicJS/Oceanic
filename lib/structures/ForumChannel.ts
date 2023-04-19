@@ -11,7 +11,6 @@ import type Client from "../Client";
 import type {
     ArchivedThreads,
     CreateInviteOptions,
-    EditForumChannelOptions,
     EditPermissionOptions,
     ForumEmoji,
     ForumTag,
@@ -176,14 +175,6 @@ export default class ForumChannel extends GuildChannel {
      */
     async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel
-     */
-    override async edit(options: EditForumChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**

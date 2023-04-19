@@ -1,6 +1,5 @@
 /** @module TextableChannel */
 import GuildChannel from "./GuildChannel";
-import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
@@ -12,15 +11,12 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import type User from "./User";
 import type Webhook from "./Webhook";
-import type VoiceChannel from "./VoiceChannel";
-import type StageChannel from "./StageChannel";
-import { AllPermissions, Permissions } from "../Constants";
+import { AllPermissions, Permissions, type GuildTextChannels } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
     CreateInviteOptions,
     CreateMessageOptions,
-    EditGuildChannelOptions,
     EditMessageOptions,
     EditPermissionOptions,
     GetArchivedThreadsOptions,
@@ -39,7 +35,7 @@ import type { JSONTextableChannel } from "../types/json";
 import type { CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
 
 /** Represents a guild textable channel. */
-export default class TextableChannel<T extends TextChannel | AnnouncementChannel | VoiceChannel | StageChannel = TextChannel | AnnouncementChannel | VoiceChannel | StageChannel> extends GuildChannel {
+export default class TextableChannel<T extends GuildTextChannels = GuildTextChannels> extends GuildChannel {
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
     lastMessage?: Message<T> | null;
     /** The ID of last message sent in this channel. */
@@ -179,14 +175,6 @@ export default class TextableChannel<T extends TextChannel | AnnouncementChannel
      */
     async deleteReactions(messageID: string, emoji?: string): Promise<void> {
         return this.client.rest.channels.deleteReactions(this.id, messageID, emoji);
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel.
-     */
-    override async edit(options: EditGuildChannelOptions): Promise<T> {
-        return this.client.rest.channels.edit<T>(this.id, options);
     }
 
     /**

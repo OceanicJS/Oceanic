@@ -11,7 +11,6 @@ import type {
     AnyThreadChannel,
     CreateMessageOptions,
     EditMessageOptions,
-    EditThreadChannelOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
     PrivateThreadMetadata,
@@ -195,14 +194,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      */
     async deleteReactions(messageID: string, emoji?: string): Promise<void> {
         return this.client.rest.channels.deleteReactions(this.id, messageID, emoji);
-    }
-
-    /**
-     * Edit this thread.
-     * @param options The options for editing the channel.
-     */
-    override async edit(options: EditThreadChannelOptions): Promise<AnyThreadChannel> {
-        return this.client.rest.channels.edit<AnyThreadChannel>(this.id, options);
     }
 
     /**

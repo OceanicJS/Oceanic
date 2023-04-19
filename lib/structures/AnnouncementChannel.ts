@@ -6,7 +6,7 @@ import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type Message from "./Message";
 import { ChannelTypes, type ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
-import type { EditGuildChannelOptions, FollowedChannel, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
+import type { FollowedChannel, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 
@@ -42,14 +42,6 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
      */
     async crosspostMessage(messageID: string): Promise<Message<this>> {
         return this.client.rest.channels.crosspostMessage<this>(this.id, messageID);
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel.
-     */
-    override async edit(options: EditGuildChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**

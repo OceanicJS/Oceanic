@@ -8,7 +8,6 @@ import { ChannelTypes, type ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
 import type {
     ArchivedThreads,
-    EditTextChannelOptions,
     FollowedChannel,
     GetArchivedThreadsOptions,
     RawPrivateThreadChannel,
@@ -36,14 +35,6 @@ export default class TextChannel extends TextableChannel<TextChannel> {
      */
     async convert(): Promise<AnnouncementChannel> {
         return this.client.rest.channels.edit<AnnouncementChannel>(this.id, { type: ChannelTypes.GUILD_ANNOUNCEMENT });
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel
-     */
-    override async edit(options: EditTextChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**
