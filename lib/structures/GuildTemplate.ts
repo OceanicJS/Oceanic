@@ -76,12 +76,9 @@ export default class GuildTemplate {
 
     /** The source guild of this template. This will throw an error if the guild is not cached. */
     get sourceGuild(): Guild {
+        this._cachedSourceGuild ??= this.client.guilds.get(this.sourceGuildID);
         if (!this._cachedSourceGuild) {
-            this._cachedSourceGuild = this.client.guilds.get(this.sourceGuildID);
-
-            if (!this._cachedSourceGuild) {
-                throw new Error(`${this.constructor.name}#sourceGuild is not present if you don't have the GUILDS intent.`);
-            }
+            throw new Error(`${this.constructor.name}#sourceGuild is not present if you don't have the GUILDS intent.`);
         }
 
         return this._cachedSourceGuild;

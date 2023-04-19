@@ -104,12 +104,9 @@ export default class AutoModerationRule extends Base {
 
     /** The guild this rule is in. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-            }
+            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
         }
 
         return this._cachedGuild;

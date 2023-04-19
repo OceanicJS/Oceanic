@@ -105,12 +105,9 @@ export default class VoiceState<T extends VoiceChannels = VoiceChannels> extends
 
     /** The guild this voice state is a part of. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-            }
+            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
         }
 
         return this._cachedGuild;
@@ -118,11 +115,7 @@ export default class VoiceState<T extends VoiceChannels = VoiceChannels> extends
 
     /** The member associated with this voice state. */
     get member(): Member | undefined {
-        try {
-            return this._cachedMember ?? (this._cachedMember = this.guild.members.get(this.userID));
-        } catch {
-            return (this._cachedMember = undefined);
-        }
+        return this._cachedMember ?? (this._cachedMember = this["_cachedGuild"]?.members.get(this.userID));
     }
 
     /** TThe user associated with this voice state. */

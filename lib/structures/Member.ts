@@ -122,50 +122,57 @@ export default class Member extends Base {
     get bot(): boolean {
         return this.user.bot;
     }
+
     /** The 4 digits after the username of the user associated with this member. */
     get discriminator(): string {
         return this.user.discriminator;
     }
+
     /** The nick of this member if set, or the username of this member's user. */
     get displayName(): string {
         return this.nick ?? this.username;
     }
+
     /** The guild this member is for. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-            }
+            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
         }
 
         return this._cachedGuild;
     }
+
     /** A string that will mention this member. */
     get mention(): string {
         return this.user.mention;
     }
+
     /** The permissions of this member. */
     get permissions(): Permission {
         return this.guild.permissionsOf(this);
     }
+
     /** The user associated with this member's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     get publicFlags(): number {
         return this.user.publicFlags;
     }
+
     /** If this user associated with this member is an official discord system user. */
     get system(): boolean {
         return this.user.system;
     }
+
     /** A combination of the user associated with this member's username and discriminator. */
     get tag(): string {
         return this.user.tag;
     }
+
     /** The username associated with this member's user. */
     get username(): string {
         return this.user.username;
     }
+
     /** The voice state of this member. */
     get voiceState(): VoiceState | null {
         return this.guild.voiceStates.get(this.id) ?? null;
