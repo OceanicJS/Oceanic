@@ -7,6 +7,7 @@ import type Client from "../Client";
 import type { RawVoiceState } from "../types/voice";
 import type { JSONVoiceState } from "../types/json";
 import type { VoiceChannels } from "../Constants";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild member's voice state. */
 export default class VoiceState<T extends VoiceChannels = VoiceChannels> extends Base {
@@ -107,7 +108,15 @@ export default class VoiceState<T extends VoiceChannels = VoiceChannels> extends
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;

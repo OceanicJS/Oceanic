@@ -109,11 +109,14 @@ import type Shard from "../gateway/Shard";
 import Collection from "../util/Collection";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
+import { UncachedError } from "../util/Errors";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
     private _clientMember?: Member;
+    // if the guild was retrieved from rest
+    private _rest;
     private _shard?: Shard;
     /** This guild's afk voice channel. */
     afkChannel?: VoiceChannel | null;
@@ -238,9 +241,8 @@ export default class Guild extends Base {
     widgetChannelID: string | null;
     /** If the widget is enabled. */
     widgetEnabled?: boolean;
-    constructor(data: RawGuild, client: Client) {
+    constructor(data: RawGuild, client: Client, rest?: boolean) {
         super(data.id, client);
-        this._shard = this.client.guildShardMap[this.id] === undefined ? undefined : this.client.shards.get(this.client.guildShardMap[this.id]);
         this.afkChannelID = null;
         this.afkTimeout = 0;
         this.applicationID = data.application_id;
@@ -290,6 +292,7 @@ export default class Guild extends Base {
             this.roles.update(role, data.id);
         }
         this.update(data);
+        this._rest = !!rest;
 
         if (data.channels) {
             for (const channelData of data.channels) {
@@ -585,10 +588,15 @@ export default class Guild extends Base {
         }
     }
 
-    /** The client's member for this guild. This will throw an error if the guild was obtained via rest and the member is not cached.*/
+    /** The client's member for this guild. This will throw an error if the member is not cached.*/
     get clientMember(): Member {
+        this._clientMember ??= this.client["_user"] === undefined ? undefined : this.members.get(this.client["_user"].id);
         if (!this._clientMember) {
-            throw new Error(`${this.constructor.name}#clientMember is not present if the guild was obtained via rest and the member is not cached.`);
+            if (this._rest) {
+                throw new UncachedError(`${this.constructor.name}#clientMember is not present when the guild is obtained via rest.`);
+            }
+
+            throw new UncachedError(`The client's member has not been cached for ${this.constructor.name}#clientMember.`);
         }
 
         return this._clientMember;
@@ -596,16 +604,34 @@ export default class Guild extends Base {
 
     /** The shard this guild is on. Gateway only. */
     get shard(): Shard {
+        this._shard ??= this.client.shards["_forGuild"](this.id);
+        if (this.client.options.restMode) {
+            throw new TypeError(`${this.constructor.name}#shard will not be present with rest mode enabled.`);
+        }
+
+        if (!this.client["_connected"]) {
+            throw new TypeError(`${this.constructor.name}#shard will not be present without a gateway connection.`);
+        }
+
         if (!this._shard) {
-            throw new Error(`${this.constructor.name}#shard is not present if the guild was received via REST, or you do not have the GUILDS intent.`);
+            throw new TypeError(`Failed to determine shard for ${this.constructor.name}#shard (guild: ${this.id})`);
         }
         return this._shard;
     }
 
     /** The voice adapter creator for this guild that can be used with [@discordjs/voice](https://discord.js.org/#/docs/voice/main/general/welcome) to play audio in voice and stage channels. */
     get voiceAdapterCreator(): DiscordGatewayAdapterCreator {
+        this._shard ??= this.client.shards["_forGuild"](this.id);
+        if (this.client.options.restMode) {
+            throw new TypeError(`${this.constructor.name}#voiceAdapterCreator cannot be used with rest mode enabled.`);
+        }
+
+        if (!this.client["_connected"]) {
+            throw new TypeError(`${this.constructor.name}#shard cannot be used without a gateway connection.`);
+        }
+
         if (!this._shard) {
-            throw new Error(`Cannot use ${this.constructor.name}.voiceAdapterCreator if the guild was received via REST, or you do not have the GUILDS intent as this guild does not belong to any Shard.`);
+            throw new TypeError(`Failed to determine shard for ${this.constructor.name}#voiceAdapterCreator (guild: ${this.id})`);
         }
 
         return (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
@@ -1283,7 +1309,7 @@ export default class Guild extends Base {
             member = this.members.get(member)!;
         }
         if (!member) {
-            throw new Error("Member not found");
+            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
         }
         if (member.id === this.ownerID) {
             return new Permission(AllPermissions);

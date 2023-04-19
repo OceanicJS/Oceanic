@@ -1,16 +1,17 @@
 /** @module OAuthApplication */
 import type User from "./User";
 import Team from "./Team";
-import ClientApplication from "./ClientApplication";
 import type Guild from "./Guild";
+import Base from "./Base";
 import type Client from "../Client";
 import type { InstallParams, RESTOAuthApplication } from "../types/oauth";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { JSONOAuthApplication } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents an oauth application. */
-export default class OAuthApplication extends ClientApplication {
+export default class OAuthApplication extends Base {
     private _cachedGuild?: Guild | null;
     /** When false, only the application's owners can invite the bot to guilds. */
     botPublic: boolean;
@@ -22,6 +23,8 @@ export default class OAuthApplication extends ClientApplication {
     customInstallURL?: string;
     /** The description of the application. */
     description: string;
+    /** This application's [public flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    flags: number;
     /** If this application is a game sold on Discord, the ID of the guild to which it has been linked. */
     guildID: string | null;
     /** The icon hash of the application. */
@@ -55,11 +58,12 @@ export default class OAuthApplication extends ClientApplication {
     /** The bot's hex encoded public key. */
     verifyKey: string;
     constructor(data: RESTOAuthApplication, client: Client) {
-        super(data, client);
+        super(data.id, client);
         this.botPublic = !!data.bot_public;
         this.botRequireCodeGrant = !!data.bot_require_code_grant;
         this.coverImage = null;
         this.description = data.description;
+        this.flags = data.flags;
         this.guildID = data.guild_id ?? null;
         this.icon = null;
         this.name = data.name;
@@ -88,6 +92,9 @@ export default class OAuthApplication extends ClientApplication {
         }
         if (data.description !== undefined) {
             this.description = data.description;
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
         }
         this.guildID = data.guild_id === undefined ? null : data.guild_id;
         if (data.icon !== undefined) {
@@ -137,7 +144,15 @@ export default class OAuthApplication extends ClientApplication {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client["_connected"]) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
             }
 
             return this._cachedGuild;
@@ -163,6 +178,7 @@ export default class OAuthApplication extends ClientApplication {
             coverImage:          this.coverImage,
             customInstallURL:    this.customInstallURL,
             description:         this.description,
+            flags:               this.flags,
             guildID:             this.guildID,
             icon:                this.icon,
             installParams:       this.installParams,

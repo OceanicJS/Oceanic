@@ -13,6 +13,7 @@ import type Client from "../Client";
 import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a modal submit interaction. */
 export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
@@ -72,7 +73,15 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client["_connected"]) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
             }
 
             return this._cachedGuild;
@@ -99,7 +108,7 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
             this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
         }
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
@@ -111,7 +120,7 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
      */
     async defer(flags?: number): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
@@ -123,7 +132,7 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
      */
     async deferUpdate(flags?: number): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESSAGE, data: { flags } });
@@ -167,7 +176,7 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
      */
     async editParent(options: InteractionContent): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UPDATE_MESSAGE, data: options });

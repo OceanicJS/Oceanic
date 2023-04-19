@@ -6,6 +6,7 @@ import type Client from "../Client";
 import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
 import type { JSONAutoModerationRule } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
@@ -106,7 +107,7 @@ export default class AutoModerationRule extends Base {
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            throw new UncachedError(this, "guild", "GUILDS", this.client);
         }
 
         return this._cachedGuild;

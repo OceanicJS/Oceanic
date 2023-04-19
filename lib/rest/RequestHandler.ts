@@ -96,7 +96,7 @@ export default class RequestHandler {
     async request<T = unknown>(options: RequestOptions): Promise<T> {
         options.method = options.method.toUpperCase() as RESTMethod;
         if (!RESTMethods.includes(options.method)) {
-            throw new Error(`Invalid method "${options.method}.`);
+            throw new TypeError(`Invalid method "${options.method}.`);
         }
         const _stackHolder = {};
         Error.captureStackTrace(_stackHolder);

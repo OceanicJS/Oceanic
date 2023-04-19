@@ -16,6 +16,7 @@ import type {
     Presence
 } from "../types/guilds";
 import type { JSONMember } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
@@ -57,7 +58,7 @@ export default class Member extends Base {
             id = (user = client.users.update(data.user)).id;
         }
         if (!user) {
-            throw new Error(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
+            throw new TypeError(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
         }
         super(user.id, client);
         this.avatar = null;
@@ -137,7 +138,15 @@ export default class Member extends Base {
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;

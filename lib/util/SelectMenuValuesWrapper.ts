@@ -1,4 +1,5 @@
 /** @module SelectMenuValuesWrapper */
+import { WrapperError } from "./Errors";
 import { ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
@@ -29,7 +30,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const ch = this.resolved.channels.get(id);
             if (!ch && ensurePresent) {
-                throw new Error(`Failed to find channel in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find channel in resolved data: ${id}`);
             }
             return ch!;
         }).filter(Boolean);
@@ -48,7 +49,7 @@ export default class SelectMenuValuesWrapper {
                 return ch?.completeChannel ?? ch;
             }
             if (!ch && ensurePresent) {
-                throw new Error(`Failed to find channel in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find channel in resolved data: ${id}`);
             }
             return ch!;
         }).filter(Boolean);
@@ -64,7 +65,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const member = this.resolved.members.get(id);
             if (!member && ensurePresent) {
-                throw new Error(`Failed to find member in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find member in resolved data: ${id}`);
             }
             return member!;
         }).filter(Boolean);
@@ -84,7 +85,7 @@ export default class SelectMenuValuesWrapper {
             const user = this.resolved.users.get(id);
             if ((!ch && !role && !user)) {
                 if (ensurePresent) {
-                    throw new Error(`Failed to find mentionable in resolved data: ${id}`);
+                    throw new WrapperError(`Failed to find mentionable in resolved data: ${id}`);
                 }
             } else {
                 res.push((ch ?? role ?? user)!);
@@ -104,7 +105,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const role = this.resolved.roles.get(id);
             if (!role && ensurePresent) {
-                throw new Error(`Failed to find role in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find role in resolved data: ${id}`);
             }
             return role!;
         }).filter(Boolean);
@@ -127,7 +128,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const user = this.resolved.users.get(id);
             if (!user && ensurePresent) {
-                throw new Error(`Failed to find user in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find user in resolved data: ${id}`);
             }
             return user!;
         }).filter(Boolean);

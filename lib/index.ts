@@ -22,6 +22,8 @@ export { default as Collection } from "./util/Collection";
 export { default as ComponentInteraction } from "./structures/ComponentInteraction";
 export { default as DiscordHTTPError } from "./rest/DiscordHTTPError";
 export { default as DiscordRESTError } from "./rest/DiscordRESTError";
+export * from "./util/Errors";
+export * as Errors from "./util/Errors";
 export { default as ExtendedUser } from "./structures/ExtendedUser";
 export { default as ForumChannel } from "./structures/ForumChannel";
 export { default as GatewayError } from "./gateway/GatewayError";

@@ -3,8 +3,9 @@ import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
 import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
 import type { VoiceRegion } from "../types/voice";
-import type { RESTApplication } from "../types";
+import type { RESTApplication, RawClientApplication } from "../types";
 import Application from "../structures/Application";
+import ClientApplication from "../structures/ClientApplication";
 
 /** Methods that don't fit anywhere else. */
 export default class Miscellaneous {
@@ -21,6 +22,16 @@ export default class Miscellaneous {
             method: "GET",
             path:   Routes.APPLICATION
         }).then(data => new Application(data, this.#manager.client));
+    }
+
+    /**
+     * Get the currently authenticated bot's application info as a bare {@link ClientApplication~ClientApplication | ClientApplication}.
+     */
+    async getClientApplication(): Promise<ClientApplication> {
+        return this.#manager.authRequest<RawClientApplication>({
+            method: "GET",
+            path:   Routes.APPLICATION
+        }).then(data => new ClientApplication(data, this.#manager.client));
     }
 
     /**

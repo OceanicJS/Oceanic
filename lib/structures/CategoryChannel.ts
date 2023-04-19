@@ -8,6 +8,7 @@ import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
 import type { EditPermissionOptions, RawCategoryChannel, RawGuildChannel, RawOverwrite } from "../types/channels";
 import type { JSONCategoryChannel } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {
@@ -71,7 +72,7 @@ export default class CategoryChannel extends GuildChannel {
             member = this.guild.members.get(member)!;
         }
         if (!member) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
+            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
         }
         let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {

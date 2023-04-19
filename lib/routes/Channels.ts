@@ -393,7 +393,7 @@ export default class Channels {
             try {
                 options.icon = this.#manager.client.util.convertImage(options.icon);
             } catch (err) {
-                throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
+                throw new TypeError("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
             }
         }
 

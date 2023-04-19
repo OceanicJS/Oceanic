@@ -38,6 +38,7 @@ import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import type { JSONMessage } from "../types/json";
 import * as Routes from "../util/Routes";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Base {
@@ -284,7 +285,15 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client["_connected"]) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
             }
 
             return this._cachedGuild;
@@ -345,7 +354,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
      */
     async deleteWebhook(token: string, options: DeleteWebhookMessageOptions): Promise<void> {
         if (!this.webhookID) {
-            throw new Error("This message is not a webhook message.");
+            throw new TypeError("This message is not a webhook message.");
         }
         return this.client.rest.webhooks.deleteMessage(this.webhookID, token, this.id, options);
     }
@@ -365,7 +374,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
      */
     async editWebhook(token: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
         if (!this.webhookID) {
-            throw new Error("This message is not a webhook message.");
+            throw new TypeError("This message is not a webhook message.");
         }
         return this.client.rest.webhooks.editMessage<never>(this.webhookID, token, this.id, options);
     }

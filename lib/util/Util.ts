@@ -72,7 +72,7 @@ export default class Util {
         try {
             return this.convertImage(image);
         } catch (err) {
-            throw new Error(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
+            throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
         }
     }
 
@@ -240,12 +240,12 @@ export default class Util {
                 }
             }
             if (!mime) {
-                throw new Error(`Failed to determine image format. (magic: ${this.getMagic(img, 16)})`);
+                throw new TypeError(`Failed to determine image format. (magic: ${this.getMagic(img, 16)})`);
             }
             img = `data:${mime};base64,${b64}`;
         }
         if (!Util.BASE64URL_REGEX.test(img)) {
-            throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
+            throw new TypeError("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
         }
         return img;
     }

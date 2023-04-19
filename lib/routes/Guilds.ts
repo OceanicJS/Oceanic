@@ -183,7 +183,7 @@ export default class Guilds {
                 system_channel_id:             options.systemChannelID,
                 verification_level:            options.verificationLevel
             }
-        }).then(data => new Guild(data, this.#manager.client));
+        }).then(data => new Guild(data, this.#manager.client, true));
     }
 
     /**
@@ -334,7 +334,7 @@ export default class Guilds {
                 icon: options.icon,
                 name: options.name
             }
-        }).then(data => new Guild(data, this.#manager.client));
+        }).then(data => new Guild(data, this.#manager.client, true));
     }
 
     /**
@@ -604,7 +604,7 @@ export default class Guilds {
                 verification_level:            options.verificationLevel
             },
             reason
-        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data) : new Guild(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data, true) : new Guild(data, this.#manager.client, true));
     }
 
     /**
@@ -983,7 +983,7 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD(guildID),
             query
-        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data) : new Guild(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data, true) : new Guild(data, this.#manager.client));
     }
 
     /**

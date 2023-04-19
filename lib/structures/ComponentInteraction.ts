@@ -27,6 +27,7 @@ import type { RawMember } from "../types/guilds";
 import { ComponentTypes, InteractionResponseTypes, type SelectMenuTypes, type InteractionTypes } from "../Constants";
 import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 import TypedCollection from "../util/TypedCollection";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<V extends ComponentTypes.BUTTON | SelectMenuTypes = ComponentTypes.BUTTON | SelectMenuTypes, T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
@@ -138,7 +139,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild = this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                throw new UncachedError(this, "guild", "GUILDS", this.client);
             }
 
             return this._cachedGuild;
@@ -162,7 +163,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      */
     async createMessage(options: InitialInteractionContent): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         if ("files" in options && (options.files as []).length !== 0) {
             this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
@@ -177,7 +178,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      */
     async createModal(options: ModalData): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
@@ -189,7 +190,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      */
     async defer(flags?: number): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
@@ -201,7 +202,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      */
     async deferUpdate(flags?: number): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_UPDATE_MESSAGE, data: { flags } });
@@ -245,7 +246,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      */
     async editParent(options: InteractionContent): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UPDATE_MESSAGE, data: options });

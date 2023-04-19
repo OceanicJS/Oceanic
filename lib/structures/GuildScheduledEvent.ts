@@ -8,6 +8,7 @@ import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPr
 import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
 import type { JSONScheduledEvent } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
@@ -112,7 +113,15 @@ export default class GuildScheduledEvent extends Base {
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;

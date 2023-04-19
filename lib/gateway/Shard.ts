@@ -60,6 +60,7 @@ import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type User from "../structures/User";
+import { DependencyError } from "../util/Errors";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -195,12 +196,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
     private initialize(): void {
         if (!this._token) {
-            return this.disconnect(false, new Error("Invalid Token."));
+            return this.disconnect(false, new TypeError("Invalid Token."));
         }
         this.status = "connecting";
         if (this.client.shards.options.compress) {
             if (!ZlibSync) {
-                throw new Error("Cannot use compression without pako or zlib-sync.");
+                throw new DependencyError("Cannot use compression without pako or zlib-sync.");
             }
             this.client.emit("debug", "Initializing zlib-sync-based compression.");
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
@@ -1602,7 +1603,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
         if (!opts.query && !opts.user_ids) {
             if (!(this.client.shards.options.intents & Intents.GUILD_MEMBERS)) {
-                throw new Error("Cannot request all members without the GUILD_MEMBERS intent.");
+                throw new TypeError("Cannot request all members without the GUILD_MEMBERS intent.");
             }
             const guild = this.client.guilds.get(guildID);
             if (guild) {
@@ -1610,10 +1611,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
         }
         if (opts.presences && (!(this.client.shards.options.intents & Intents.GUILD_PRESENCES))) {
-            throw new Error("Cannot request presences without the GUILD_PRESENCES intent.");
+            throw new TypeError("Cannot request presences without the GUILD_PRESENCES intent.");
         }
         if (opts.user_ids && opts.user_ids.length > 100) {
-            throw new Error("Cannot request more than 100 users at once.");
+            throw new TypeError("Cannot request more than 100 users at once.");
         }
         this.send(GatewayOPCodes.REQUEST_GUILD_MEMBERS, opts);
         return new Promise<Array<Member>>((resolve, reject) => this.#requestMembersPromise[opts.nonce] = {

@@ -19,6 +19,7 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import type { ClientEvents } from "./types/events";
 import type { JoinVoiceChannelOptions } from "./types/voice";
+import { DependencyError, UncachedError } from "./util/Errors";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";
@@ -42,12 +43,13 @@ try {
 /** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
     private _application?: ClientApplication;
+    private _connected = false;
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
     groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
-    guilds: TypedCollection<string, RawGuild, Guild>;
+    guilds: TypedCollection<string, RawGuild, Guild, [rest?: boolean]>;
     options: ClientInstanceOptions;
     privateChannels: TypedCollection<string, RawPrivateChannel, PrivateChannel>;
     ready: boolean;
@@ -96,7 +98,8 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             },
             defaultImageFormat:        options?.defaultImageFormat ?? "png",
             defaultImageSize:          options?.defaultImageSize ?? 4096,
-            disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false
+            disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false,
+            restMode:                  false
         };
         this.voiceAdapters = new Map();
         this.channelGuildMap = {};
@@ -112,12 +115,12 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         this.users = new TypedCollection(User, this, this.options.collectionLimits.users);
     }
 
-    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
+    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. If using a client for rest only, consider enabling rest mode. */
     get application(): ClientApplication {
         if (this._application) {
             return this._application;
         } else {
-            throw new Error(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
+            throw new UncachedError(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client, or enable rest mode.`);
         }
     }
 
@@ -125,19 +128,19 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         return this.startTime ? Date.now() - this.startTime : 0;
     }
 
-    /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. */
+    /** The client's user. This will throw an error if not using a gateway connection or no shard is READY. If using a client for rest only, consider enabling rest mode. */
     get user(): ExtendedUser {
         if (this._user) {
             return this._user;
         } else {
-            throw new Error(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
+            throw new UncachedError(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client, or enable rest mode.`);
         }
     }
 
     /** The active voice connections of this client. */
     get voiceConnections(): Map<string, VoiceConnection> {
         if (!DiscordJSVoice) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
+            throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return DiscordJSVoice.getVoiceConnections();
@@ -145,8 +148,12 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
     /** Connect the client to Discord. */
     async connect(): Promise<void> {
+        if (this.options.restMode) {
+            throw new TypeError("Rest mode has been enabled on this client. You cannot connect to the gateway.");
+        }
+
         if (!this.options.auth || !this.options.auth.startsWith("Bot ")) {
-            throw new Error("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
+            throw new TypeError("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
         }
         let url: string, data: GetBotGatewayResponse | undefined;
         try {
@@ -157,7 +164,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 url = (await this.rest.getGateway()).url;
             }
         } catch (err) {
-            throw new Error("Failed to get gateway information.", { cause: err as Error });
+            throw new TypeError("Failed to get gateway information.", { cause: err as Error });
         }
         if (url.includes("?")) {
             url = url.slice(0, url.indexOf("?"));
@@ -172,7 +179,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
         if (this.shards.options.maxShards === -1) {
             if (!data || !data.shards) {
-                throw new Error("AutoSharding failed, missing required information from Discord.");
+                throw new TypeError("AutoSharding failed, missing required information from Discord.");
             }
             this.shards.options.maxShards = data.shards;
             if (this.shards.options.lastShardID === -1) {
@@ -182,7 +189,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
         if (this.shards.options.concurrency === -1) {
             if (!data) {
-                throw new Error("AutoConcurrency failed, missing required information from Discord.");
+                throw new TypeError("AutoConcurrency failed, missing required information from Discord.");
             }
             this.shards.options.concurrency = data.sessionStartLimit.maxConcurrency;
         }
@@ -198,7 +205,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             }
         }
 
-
+        this._connected = true;
         for (const id of this.shards.options.shardIDs) {
             this.shards.spawn(id);
         }
@@ -242,7 +249,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      */
     getVoiceConnection(guildID: string): VoiceConnection | undefined {
         if (!DiscordJSVoice) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
+            throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         return DiscordJSVoice.getVoiceConnection(guildID);
@@ -254,7 +261,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * */
     joinVoiceChannel(options: JoinVoiceChannelOptions): VoiceConnection {
         if (!DiscordJSVoice) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
+            throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return DiscordJSVoice.joinVoiceChannel({
@@ -275,5 +282,15 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     leaveVoiceChannel(guildID: string): void {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return this.getVoiceConnection(guildID)?.destroy();
+    }
+
+    /**
+     * Initialize this client for rest only use. Currently, this sets both the `application` and `user` properties, as would happen with a gateway connection.
+     */
+    async restMode(): Promise<this> {
+        this._application = await this.rest.misc.getClientApplication();
+        this._user = await this.rest.oauth.getCurrentUser();
+        this.options.restMode = true;
+        return this;
     }
 }

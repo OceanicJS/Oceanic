@@ -20,6 +20,7 @@ const Collection = (await import("./dist/lib/util/Collection.js")).default.defau
 const ComponentInteraction = (await import("./dist/lib/structures/ComponentInteraction.js")).default.default;
 const DiscordHTTPError = (await import("./dist/lib/rest/DiscordHTTPError.js")).default.default;
 const DiscordRESTError = (await import("./dist/lib/rest/DiscordRESTError.js")).default.default;
+const Errors = (await import("./dist/lib/util/Errors.js")).default;
 const ExtendedUser = (await import("./dist/lib/structures/ExtendedUser.js")).default.default;
 const ForumChannel = (await import("./dist/lib/structures/ForumChannel.js")).default.default;
 const GatewayError = (await import("./dist/lib/gateway/GatewayError.js")).default.default;
@@ -71,6 +72,7 @@ const VoiceState = (await import("./dist/lib/structures/VoiceState.js")).default
 const Webhook = (await import("./dist/lib/structures/Webhook.js")).default.default;
 
 export * from "./dist/lib/Constants.js";
+export * from "./dist/lib/util/Errors.js";
 
 export {
     Channel,
@@ -94,6 +96,7 @@ export {
     ComponentInteraction,
     DiscordHTTPError,
     DiscordRESTError,
+    Errors,
     ExtendedUser,
     ForumChannel,
     GatewayError,

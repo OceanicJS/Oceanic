@@ -13,6 +13,7 @@ import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/c
 import type { JSONAutocompleteInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
+import { UncachedError } from "../util/Errors";
 
 /** Represents an autocomplete interaction. */
 export default class AutocompleteInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
@@ -66,7 +67,7 @@ export default class AutocompleteInteraction<T extends AnyTextChannelWithoutGrou
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                throw new UncachedError(this, "guild", "GUILDS", this.client);
             }
 
             return this._cachedGuild;
@@ -91,7 +92,7 @@ export default class AutocompleteInteraction<T extends AnyTextChannelWithoutGrou
      */
     async result(choices: Array<AutocompleteChoice>): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT, data: { choices } });

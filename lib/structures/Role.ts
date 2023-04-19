@@ -5,6 +5,7 @@ import type Guild from "./Guild";
 import type Client from "../Client";
 import type { RawRole, RoleTags, EditRoleOptions } from "../types/guilds";
 import type { JSONRole } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
@@ -86,7 +87,15 @@ export default class Role extends Base {
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;

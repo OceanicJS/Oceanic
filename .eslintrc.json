@@ -337,11 +337,13 @@
     "unicorn/prefer-number-properties": "off",
     "unicorn/no-array-callback-reference": "off",
     "unicorn/no-array-method-this-argument": "off",
+    "unicorn/custom-error-definition": "error",
     "@typescript-eslint/comma-dangle": [
       "error",
       {
         "enums": "always-multiline"
       }
-    ]
+    ],
+    "@typescript-eslint/strict-boolean-expressions": "error"
   }
 }

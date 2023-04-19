@@ -22,6 +22,7 @@ import type {
     ThreadParentChannel
 } from "../types/channels";
 import type { JSONThreadChannel } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel> extends GuildChannel {
@@ -273,7 +274,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      */
     permissionsOf(member: string | Member): Permission {
         if (!this.parent) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the parent channel cached.`);
+            throw new UncachedError(`${this.constructor.name}#permisionsOf cannot be used if the parent channel is not cached.`);
         }
         return this.parent.permissionsOf(member);
     }

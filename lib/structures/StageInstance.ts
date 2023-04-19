@@ -7,6 +7,7 @@ import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
 import type { JSONStageInstance } from "../types/json";
 import type { RawStageInstance } from "../types/guilds";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a stage instance. */
 export default class StageInstance extends Base {
@@ -63,7 +64,15 @@ export default class StageInstance extends Base {
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;

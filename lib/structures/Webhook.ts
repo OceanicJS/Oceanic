@@ -18,6 +18,7 @@ import type {
     RawWebhook
 } from "../types/webhooks";
 import type { JSONWebhook } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a webhook. */
 export default class Webhook extends Base {
@@ -74,7 +75,15 @@ export default class Webhook extends Base {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client["_connected"]) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
             }
 
             return this._cachedGuild;
@@ -113,7 +122,7 @@ export default class Webhook extends Base {
     async deleteMessage(messageID: string, options?: DeleteWebhookMessageOptions, token?: string): Promise<void> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.deleteMessage(this.id, t, messageID, options);
     }
@@ -125,7 +134,7 @@ export default class Webhook extends Base {
     async deleteToken(token?: string): Promise<void> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.deleteToken(this.id, t);
     }
@@ -148,7 +157,7 @@ export default class Webhook extends Base {
     async editMessage<T extends AnyGuildTextChannel = AnyGuildTextChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.editMessage<T>(this.id, t, messageID, options);
     }
@@ -161,7 +170,7 @@ export default class Webhook extends Base {
     async editToken(options: EditWebhookOptions, token?: string): Promise<Webhook> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.editToken(this.id, t, options);
     }
@@ -176,7 +185,7 @@ export default class Webhook extends Base {
     async execute<T extends AnyGuildTextChannel>(options: ExecuteWebhookOptions, token?: string): Promise<Message<T> | void> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.execute<T>(this.id, t, options as ExecuteWebhookWaitOptions);
     }
@@ -191,7 +200,7 @@ export default class Webhook extends Base {
     async executeGithub<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.executeGithub<T>(this.id, t, options as Record<string, unknown>);
     }
@@ -206,7 +215,7 @@ export default class Webhook extends Base {
     async executeSlack<T extends AnyGuildTextChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.executeSlack<T>(this.id, t, options as Record<string, unknown>);
     }
@@ -220,7 +229,7 @@ export default class Webhook extends Base {
     async getMessage<T extends AnyGuildTextChannel>(messageID: string, threadID?: string, token?: string): Promise<Message<T>> {
         const t = this.token ?? token;
         if (!t) {
-            throw new Error("Token is not present on webhook, and was not provided in options.");
+            throw new TypeError("Token is not present on webhook, and was not provided in options.");
         }
         return this.client.rest.webhooks.getMessage<T>(this.id, t, messageID, threadID);
     }

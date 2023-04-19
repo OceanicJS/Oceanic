@@ -8,6 +8,7 @@ import type { IntegrationAccount, RawIntegration } from "../types/guilds";
 import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
 import type Client from "../Client";
 import type { JSONIntegration } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {
@@ -113,7 +114,15 @@ export default class Integration extends Base {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client["_connected"]) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
             }
 
             return this._cachedGuild;

@@ -448,12 +448,13 @@ export interface JSONModalSubmitInteraction extends JSONInteraction {
     type: InteractionTypes.MODAL_SUBMIT;
     user: JSONUser;
 }
-export interface JSONOAuthApplication extends JSONClientApplication {
+export interface JSONOAuthApplication extends JSONBase {
     botPublic: boolean;
     botRequireCodeGrant: boolean;
     coverImage: string | null;
     customInstallURL?: string;
     description: string;
+    flags: number;
     guildID: string | null;
     icon: string | null;
     installParams?: InstallParams;

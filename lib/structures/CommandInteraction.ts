@@ -27,6 +27,7 @@ import type { RawUser } from "../types/users";
 import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a command interaction. */
 export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
@@ -143,7 +144,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+                throw new UncachedError(this, "guild", "GUILDS", this.client);
             }
 
             return this._cachedGuild;
@@ -167,7 +168,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
      */
     async createMessage(options: InitialInteractionContent): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         if ("files" in options && (options.files as []).length !== 0) {
             this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
@@ -182,7 +183,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
      */
     async createModal(options: ModalData): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
@@ -194,7 +195,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
      */
     async defer(flags?: number): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });

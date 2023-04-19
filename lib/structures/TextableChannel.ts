@@ -33,6 +33,7 @@ import type {
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
 import type { CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild textable channel. */
 export default class TextableChannel<T extends GuildTextChannels = GuildTextChannels> extends GuildChannel {
@@ -259,7 +260,7 @@ export default class TextableChannel<T extends GuildTextChannels = GuildTextChan
             member = this.guild.members.get(member)!;
         }
         if (!member) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
+            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
         }
         let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
