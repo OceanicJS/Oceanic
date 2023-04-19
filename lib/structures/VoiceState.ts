@@ -58,6 +58,7 @@ export default class VoiceState extends Base {
     protected override update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
+            this._cachedChannel = null;
         }
         if (data.deaf !== undefined) {
             this.deaf = data.deaf;
