@@ -207,6 +207,7 @@ export default class Guilds {
                     },
                     type: a.type
                 })),
+                enabled:          options.enabled,
                 event_type:       options.eventType,
                 exempt_channels:  options.exemptChannels,
                 exempt_roles:     options.exemptRoles,
@@ -630,6 +631,7 @@ export default class Guilds {
                     },
                     type: a.type
                 })),
+                enabled:          options.enabled,
                 event_type:       options.eventType,
                 exempt_channels:  options.exemptChannels,
                 exempt_roles:     options.exemptRoles,
