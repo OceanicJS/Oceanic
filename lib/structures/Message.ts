@@ -159,7 +159,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
             }
             this.applicationID = data.application_id;
         }
-        if (data.attachments) {
+        if (data.attachments.length !== 0) {
             for (const attachment of data.attachments) {
                 this.attachments.update(attachment);
             }

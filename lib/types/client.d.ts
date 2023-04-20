@@ -33,10 +33,12 @@ export interface ClientOptions {
     gateway?: GatewayOptions;
     /** The options for the request handler. */
     rest?: RESTOptions;
+}
+export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits">> {
+    collectionLimits: Required<CollectionLimitsOptions>;
     /** If rest mode has been enabled. */
     restMode: boolean;
 }
-export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits">> { collectionLimits: Required<CollectionLimitsOptions>; }
 
 export interface RESTOptions {
     /**

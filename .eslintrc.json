@@ -343,7 +343,6 @@
       {
         "enums": "always-multiline"
       }
-    ],
-    "@typescript-eslint/strict-boolean-expressions": "error"
+    ]
   }
 }

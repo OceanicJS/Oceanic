@@ -12,6 +12,7 @@ export class UncaughtError extends Error {
     }
 }
 
+/** An error ancountered when an object is unexpectedly not cached. */
 export class UncachedError extends Error {
     override name = "UncachedError";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
@@ -28,6 +29,7 @@ export class UncachedError extends Error {
     }
 }
 
+/** An error encountered within {@link InteractionOptionsWrapper~InteractionOptionsWrapper | InteractionOptionsWrapper} & {@link SelectMenuValuesWrapper~SelectMenuValuesWrapper | SelectMenuValuesWrapper}. */
 export class WrapperError extends Error {
     override name = "WrapperError";
     constructor(message: string) {
@@ -35,9 +37,21 @@ export class WrapperError extends Error {
     }
 }
 
+/** An error encountered when a needed dependency is missing. */
 export class DependencyError extends Error {
     override name = "DependencyError";
     constructor(message: string) {
         super(message);
+    }
+}
+
+
+/** A gateway error. */
+export default class GatewayError extends Error {
+    code: number;
+    override name = "GatewayError";
+    constructor(message: string, code: number) {
+        super(message);
+        this.code = code;
     }
 }

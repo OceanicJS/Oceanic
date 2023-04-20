@@ -298,7 +298,11 @@ export default class Guild extends Base {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+                const channel = this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+                const parent = channel.parentID === null ? null : this.channels.get(channel.parentID);
+                if (parent && "channels" in parent) {
+                    parent.channels.add(channel);
+                }
             }
         }
 
@@ -307,8 +311,7 @@ export default class Guild extends Base {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
                 client.threadGuildMap[threadData.id] = this.id;
-                const thread = Channel.from<AnyThreadChannel>(threadData, client);
-                this.threads.add(thread);
+                const thread = this.threads.add(Channel.from<AnyThreadChannel>(threadData, client));
                 const channel = this.channels.get(thread.parentID);
                 if (channel && "threads" in channel) {
                     (channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(thread);

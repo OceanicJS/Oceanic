@@ -11,6 +11,7 @@ export default class DiscordRESTError extends Error {
     resBody!: Record<string, unknown> | null;
     response!: Response;
     constructor(res: Response, resBody: Record<string, unknown>, method: RESTMethod, stack?: string) {
+        // eslint-disable-next-line unicorn/custom-error-definition
         super();
         this.code = Number(resBody.code);
         Object.defineProperties(this, {

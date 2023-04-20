@@ -1,7 +1,7 @@
 /** @module TypedEmitter */
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
-import UncaughtError from "./UncaughtError";
+import { UncaughtError } from "./Errors";
 import EventEmitter from "node:events";
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
 
 declare interface TypedEmitter<Events extends Record<string | symbol, any>> extends EventEmitter {
     addListener<K extends keyof Events>(event: K, listener: (...args: Events[K]) => void): this;

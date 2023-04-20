@@ -23,7 +23,6 @@ const DiscordRESTError = (await import("./dist/lib/rest/DiscordRESTError.js")).d
 const Errors = (await import("./dist/lib/util/Errors.js")).default;
 const ExtendedUser = (await import("./dist/lib/structures/ExtendedUser.js")).default.default;
 const ForumChannel = (await import("./dist/lib/structures/ForumChannel.js")).default.default;
-const GatewayError = (await import("./dist/lib/gateway/GatewayError.js")).default.default;
 const GroupChannel = (await import("./dist/lib/structures/GroupChannel.js")).default.default;
 const Guild = (await import("./dist/lib/structures/Guild.js")).default.default;
 const GuildChannel = (await import("./dist/lib/structures/GuildChannel.js")).default.default;
@@ -64,7 +63,6 @@ const ThreadChannel = (await import("./dist/lib/structures/ThreadChannel.js")).d
 const TypedCollection = (await import("./dist/lib/util/TypedCollection.js")).default.default;
 const TypedEmitter = (await import("./dist/lib/util/TypedEmitter.js")).default.default;
 const UnavailableGuild = (await import("./dist/lib/structures/UnavailableGuild.js")).default.default;
-const UncaughtError = (await import("./dist/lib/util/UncaughtError.js")).default.default;
 const User = (await import("./dist/lib/structures/User.js")).default.default;
 const Util = (await import("./dist/lib/util/Util.js")).default.default;
 const VoiceChannel = (await import("./dist/lib/structures/VoiceChannel.js")).default.default;
@@ -99,7 +97,6 @@ export {
     Errors,
     ExtendedUser,
     ForumChannel,
-    GatewayError,
     GroupChannel,
     Guild,
     GuildChannel,
@@ -140,7 +137,6 @@ export {
     TypedCollection,
     TypedEmitter,
     UnavailableGuild,
-    UncaughtError,
     User,
     Util,
     VoiceChannel,

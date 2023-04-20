@@ -1,5 +1,4 @@
 /** @module Shard */
-import GatewayError from "./GatewayError";
 import type Client from "../Client";
 import TypedEmitter from "../util/TypedEmitter";
 import Bucket from "../rest/Bucket";
@@ -60,7 +59,7 @@ import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type User from "../structures/User";
-import { DependencyError } from "../util/Errors";
+import GatewayError, { DependencyError } from "../util/Errors";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
