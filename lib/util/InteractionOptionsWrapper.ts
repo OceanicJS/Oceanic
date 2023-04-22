@@ -38,14 +38,7 @@ export default class InteractionOptionsWrapper {
     }
 
     private _getFocusedOption<T extends InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger>(required = false): T | undefined {
-        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
-        const sub = this.getSubCommand(false);
-        if (sub?.length === 1) {
-            baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        } else if (sub?.length === 2) {
-            baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        }
-        const opt = (baseOptions ?? this.raw).find(o => o.focused === true) as T | undefined;
+        const opt = this.getOptions().find(o => o.focused === true) as T | undefined;
         if (!opt && required) {
             throw new WrapperError("Missing required focused option");
         } else {
@@ -54,14 +47,7 @@ export default class InteractionOptionsWrapper {
     }
 
     private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes): T | undefined {
-        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
-        const sub = this.getSubCommand(false);
-        if (sub?.length === 1) {
-            baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        } else if (sub?.length === 2) {
-            baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        }
-        const opt = (baseOptions ?? this.raw).find(o => o.name === name && o.type === type) as T | undefined;
+        const opt = this.getOptions().find(o => o.name === name && o.type === type) as T | undefined;
         if (!opt && required) {
             throw new WrapperError(`Missing required option: ${name}`);
         } else {
@@ -287,6 +273,27 @@ export default class InteractionOptionsWrapper {
     getNumberOption(name: string, required: true): InteractionOptionsNumber;
     getNumberOption(name: string, required?: boolean): InteractionOptionsNumber | undefined {
         return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
+    }
+
+    /** Get the options received in this interaction, excluding subcommands or subcommand groups. */
+    getOptions(): Array<InteractionOptionsWithValue> {
+        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
+        const sub = this.getSubCommand(false) ?? [];
+        switch (sub.length) {
+            case 0: {
+                baseOptions = this.raw as Array<InteractionOptionsWithValue>;
+                break;
+            }
+            case 1: {
+                baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+                break;
+            }
+            case 2: {
+                baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+                break;
+            }
+        }
+        return baseOptions ?? [];
     }
 
     /**
