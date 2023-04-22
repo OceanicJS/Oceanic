@@ -25,6 +25,11 @@ export interface ClientOptions {
      */
     defaultImageSize?: number;
     /**
+     * Enable to disable as much caching as reasonably possible. You should only enable this option if you absolutely know what you are doing. This will break many features that rely on caching. Unles set to the string "no-warning", this will emit a node warning (via `process.emitWarning`) when the client is constructed.
+     * @defaultValue false
+     */
+    disableCache?: boolean | "no-warning";
+    /**
      * When member limits are set on guilds, the limit is automatically raised if needed when requesting members from the gateway. This can be buggy and may not function correctly.
      * @defaultValue false
      */
@@ -34,8 +39,9 @@ export interface ClientOptions {
     /** The options for the request handler. */
     rest?: RESTOptions;
 }
-export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits">> {
+export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits" | "disableCache">> {
     collectionLimits: Required<CollectionLimitsOptions>;
+    disableCache: boolean;
     /** If rest mode has been enabled. */
     restMode: boolean;
 }

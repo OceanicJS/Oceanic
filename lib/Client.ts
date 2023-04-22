@@ -9,7 +9,7 @@ import Guild from "./structures/Guild";
 import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
 import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
-import type {  ClientInstanceOptions, ClientOptions } from "./types/client";
+import type {  ClientInstanceOptions, ClientOptions, CollectionLimitsOptions } from "./types/client";
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
@@ -68,6 +68,27 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     constructor(options?: ClientOptions) {
         super();
         this.util = new Util(this);
+        const disableCache = options?.disableCache === true || options?.disableCache === "no-warning";
+        const colZero = {
+            auditLogEntries:     0,
+            autoModerationRules: 0,
+            channelThreads:      0,
+            channels:            0,
+            groupChannels:       0,
+            guildThreads:        0,
+            guilds:              0,
+            integrations:        0,
+            members:             0,
+            messages:            0,
+            privateChannels:     0,
+            roles:               0,
+            scheduledEvents:     0,
+            stageInstances:      0,
+            unavailableGuilds:   0,
+            users:               0,
+            voiceMembers:        0,
+            voiceStates:         0
+        } satisfies Required<CollectionLimitsOptions>;
         this.options = {
             allowedMentions: options?.allowedMentions ?? {
                 everyone:    false,
@@ -76,7 +97,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 roles:       true
             },
             auth:             options?.auth ?? null,
-            collectionLimits: {
+            collectionLimits: disableCache ? colZero : {
                 auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
                 autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
                 channelThreads:      this.util._setLimit(options?.collectionLimits?.channelThreads, Infinity),
@@ -99,8 +120,21 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             defaultImageFormat:        options?.defaultImageFormat ?? "png",
             defaultImageSize:          options?.defaultImageSize ?? 4096,
             disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false,
-            restMode:                  false
+            restMode:                  false,
+            disableCache
         };
+        if (options?.disableCache === true) {
+            process.emitWarning("Enabling the disableCache option is not recommended. This will break many aspects of the library, as it is not designed to function without cache.", {
+                code:   "OCEANIC_CACHE_DISABLED",
+                detail: "Set the disableCache option to the literal string \"no-warning\" to disable this warning."
+            });
+        }
+        if (disableCache && options?.collectionLimits !== undefined && JSON.stringify(options.collectionLimits) !== JSON.stringify(colZero)) {
+            process.emitWarning("Providing the collectionsLimit option when the disableCache option has been enabled is redundant. Any provided values will be ignored.", {
+                code:   "OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED",
+                detail: "Remove the collectionsLimit option, or zero out all of the possible options to disable this warning."
+            });
+        }
         this.voiceAdapters = new Map();
         this.channelGuildMap = {};
         this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);

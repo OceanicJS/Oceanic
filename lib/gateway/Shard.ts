@@ -22,7 +22,6 @@ import type {
 import Member from "../structures/Member";
 import Base from "../structures/Base";
 import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
-import ClientApplication from "../structures/ClientApplication";
 import type { RawOAuthUser, RawUser } from "../types/users";
 import type { RawGuild } from "../types/guilds";
 import ExtendedUser from "../structures/ExtendedUser";
@@ -60,6 +59,7 @@ import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type User from "../structures/User";
 import GatewayError, { DependencyError } from "../util/Errors";
+import ClientApplication from "../structures/ClientApplication";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -1384,7 +1384,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (this.#sharedZLib.err) {
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
-                        this.client.emit("error", new Error(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg ?? ""}`));
+                        this.client.emit("error", new GatewayError(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg ?? ""}`, 0));
                         return;
                     }
 
