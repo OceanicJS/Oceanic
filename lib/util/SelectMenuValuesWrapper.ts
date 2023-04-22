@@ -40,7 +40,7 @@ export default class SelectMenuValuesWrapper {
      * Get the complete version of the selected channels. This will only succeed if the channel is cached. If the channel is private and isn't cached, an `InteractionResolvedChannel` instance will still be returned.
      *
      * If `ensurePresent` is false, channels that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
     getCompleteChannels(ensurePresent?: boolean): Array<AnyGuildChannel | PrivateChannel | InteractionResolvedChannel> {
         return this.raw.map(id => {

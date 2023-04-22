@@ -7,6 +7,7 @@ import type User from "../structures/User";
 import type { AnyGuildChannel } from "../types/channels";
 import type {
     ApplicationCommandInteractionResolvedData,
+    AutoCompleteFocusedOption,
     InteractionOptions,
     InteractionOptionsAttachment,
     InteractionOptionsBoolean,
@@ -35,15 +36,6 @@ export default class InteractionOptionsWrapper {
     constructor(data: Array<InteractionOptions>, resolved: ApplicationCommandInteractionResolvedData | null) {
         this.raw = data;
         this.resolved = resolved;
-    }
-
-    private _getFocusedOption<T extends InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger>(required = false): T | undefined {
-        const opt = this.getOptions().find(o => o.focused === true) as T | undefined;
-        if (!opt && required) {
-            throw new WrapperError("Missing required focused option");
-        } else {
-            return opt;
-        }
     }
 
     private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes): T | undefined {
@@ -167,10 +159,15 @@ export default class InteractionOptionsWrapper {
      * Get the focused option (in an autocomplete interaction).
      * @param required If true, an error will be thrown if no focused option is present.
      */
-    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required?: false): T | undefined;
-    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required: true): T;
-    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required?: boolean): T | undefined {
-        return this._getFocusedOption<T>(required);
+    getFocused<T extends AutoCompleteFocusedOption = AutoCompleteFocusedOption>(required?: false): T | undefined;
+    getFocused<T extends AutoCompleteFocusedOption = AutoCompleteFocusedOption>(required: true): T;
+    getFocused<T extends AutoCompleteFocusedOption = AutoCompleteFocusedOption>(required?: boolean): T | undefined {
+        const opt = this.getOptions().find(o => o.focused === true) as T | undefined;
+        if (!opt && required) {
+            throw new WrapperError("Missing required focused option");
+        } else {
+            return opt;
+        }
     }
 
     /**
@@ -275,7 +272,7 @@ export default class InteractionOptionsWrapper {
         return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
     }
 
-    /** Get the options received in this interaction, excluding subcommands or subcommand groups. */
+    /** Get the options received in this interaction, excluding subcommands and subcommand groups. */
     getOptions(): Array<InteractionOptionsWithValue> {
         let baseOptions: Array<InteractionOptionsWithValue> | undefined;
         const sub = this.getSubCommand(false) ?? [];

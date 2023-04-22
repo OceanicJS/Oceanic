@@ -273,3 +273,4 @@ export interface PrivateModalSubmitInteraction extends Omit<ModalSubmitInteracti
 export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
 
 export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];
+export type AutoCompleteFocusedOption = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger;
