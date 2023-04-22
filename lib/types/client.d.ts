@@ -25,7 +25,7 @@ export interface ClientOptions {
      */
     defaultImageSize?: number;
     /**
-     * Enable to disable as much caching as reasonably possible. You should only enable this option if you absolutely know what you are doing. This will break many features that rely on caching. Unles set to the string "no-warning", this will emit a node warning (via `process.emitWarning`) when the client is constructed.
+     * Enable to disable as much caching as reasonably possible. You should only enable this option if you absolutely know what you are doing. This will break many features that rely on caching. Unless set to the literal string "no-warning", this will emit a node warning (via `process.emitWarning`) when the client is constructed.
      * @defaultValue false
      */
     disableCache?: boolean | "no-warning";
