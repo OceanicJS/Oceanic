@@ -19,8 +19,10 @@ export default class User extends Base {
     banner?: string | null;
     /** If this user is a bot. */
     bot: boolean;
-    /** The 4 digits after the user's username. */
+    /** The user's Discord-tag. */
     discriminator: string;
+    /** The user's display name, if it is set. */
+    globalName: string | null
     /** The user's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     publicFlags: number;
     /** If this user is an official discord system user. */
@@ -32,6 +34,7 @@ export default class User extends Base {
         this.avatar = null;
         this.bot = !!data.bot;
         this.discriminator = data.discriminator;
+        this.globalName = data.global_name;
         this.publicFlags = 0;
         this.system = !!data.system;
         this.username = data.username;
@@ -54,6 +57,9 @@ export default class User extends Base {
         if (data.discriminator !== undefined) {
             this.discriminator = data.discriminator;
         }
+        if (data.global_name !== undefined) {
+            this.globalName = data.global_name;
+        }
         if (data.public_flags !== undefined) {
             this.publicFlags = data.public_flags;
         }
@@ -62,9 +68,9 @@ export default class User extends Base {
         }
     }
 
-    /** The default avatar value of this user (discriminator modulo 5). */
+    /** The default avatar value of this user (user id shifted by 22, then modulo 5). */
     get defaultAvatar(): number {
-        return Number(this.discriminator) % 5;
+        return Number(BigInt(this.id) >> 22n) % 5;
     }
 
     /** A string that will mention this user. */

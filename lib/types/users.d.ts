@@ -12,6 +12,7 @@ export interface RESTUser {
     discriminator: string;
     email?: string | null;
     flags?: number;
+    global_name: string | null
     id: string;
     locale?: string;
     member?: RawMember;
@@ -22,7 +23,7 @@ export interface RESTUser {
     username: string;
     verified?: boolean;
 }
-export type RawUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration" | "bot" | "system" | "banner" | "accent_color"> & Required<Pick<RESTUser, "public_flags">>;
+export type RawUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration" | "bot" | "system" | "banner" | "accent_color" | "global_name"> & Required<Pick<RESTUser, "public_flags">>;
 export type RawUserWithMember = RawUser & Pick<RESTUser, "member">;
 export type RawOAuthUser = Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration" | "bot" | "system"> & Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags">>;
 export type RawExtendedUser = Pick<RawOAuthUser, "avatar" | "avatar_decoration" | "bot" | "discriminator" | "email" | "flags" | "id" | "mfa_enabled" | "username" | "verified">;

@@ -117,7 +117,7 @@ export default class Member extends Base {
     get bot(): boolean {
         return this.user.bot;
     }
-    /** The 4 digits after the username of the user associated with this member. */
+    /** The Discord-tag of the user associated with this member. */
     get discriminator(): string {
         return this.user.discriminator;
     }
