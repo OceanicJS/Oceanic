@@ -68,7 +68,7 @@ export default class User extends Base {
         }
     }
 
-    /** The default avatar value of this user (user id shifted by 22, then modulo 5). */
+    /** The default avatar value of this user (user id right shifted by 22, then modulo 5). */
     get defaultAvatar(): number {
         return Number(BigInt(this.id) >> 22n) % 5;
     }
