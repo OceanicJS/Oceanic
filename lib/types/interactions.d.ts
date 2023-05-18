@@ -2,6 +2,7 @@
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
     AnyGuildTextChannel,
+    AnyPrivateChannel,
     ModalActionRow,
     RawAttachment,
     RawInteractionResolvedChannel,
@@ -32,7 +33,6 @@ import type ComponentInteraction from "../structures/ComponentInteraction";
 import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
 import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
-import type PrivateChannel from "../structures/PrivateChannel";
 import type TypedCollection from "../util/TypedCollection";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
 import type SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
@@ -253,23 +253,55 @@ export interface AutocompleteChoice {
 
 
 export type GuildAutocompleteInteraction = AutocompleteInteraction<AnyGuildTextChannel>;
-export interface PrivateAutocompleteInteraction extends Omit<AutocompleteInteraction<PrivateChannel | Uncached>, | "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {}
+export interface PrivateAutocompleteInteraction extends Omit<AutocompleteInteraction<AnyPrivateChannel | Uncached>, | "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type AnyAutocompleteInteraction = GuildAutocompleteInteraction | PrivateAutocompleteInteraction;
 
 export type GuildCommandInteraction = CommandInteraction<AnyGuildTextChannel>;
-export interface PrivateCommandInteraction extends Omit<CommandInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {}
+export interface PrivateCommandInteraction extends Omit<CommandInteraction<AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
 export interface GuildComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyGuildTextChannel>, "data"> { data: MessageComponentButtonInteractionData; }
 export interface GuildComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, AnyGuildTextChannel>, "data"> { data: MessageComponentSelectMenuInteractionData; }
 export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
-export interface PrivateComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> { data: MessageComponentButtonInteractionData; }
-export interface PrivateComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> { data: MessageComponentSelectMenuInteractionData; }
+export interface PrivateComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> {
+    data: MessageComponentButtonInteractionData;
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
+export interface PrivateComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> {
+    data: MessageComponentSelectMenuInteractionData;
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentInteraction = GuildComponentInteraction | PrivateComponentInteraction;
 
 export type GuildModalSubmitInteraction = ModalSubmitInteraction<AnyGuildTextChannel>;
-export interface PrivateModalSubmitInteraction extends Omit<ModalSubmitInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {}
+export interface PrivateModalSubmitInteraction extends Omit<ModalSubmitInteraction<AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
 
 export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];

@@ -10,14 +10,14 @@ import type PrivateChannel from "./PrivateChannel";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
 import type { InitialInteractionContent, InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
 import type Client from "../Client";
-import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
+import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a modal submit interaction. */
-export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
-    private _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
+export default class ModalSubmitInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
+    private _cachedChannel!: T extends AnyTextChannel ? T : undefined;
     private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
     appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
@@ -32,9 +32,9 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
-    member: T extends AnyGuildTextChannel ? Member : Member | undefined;
+    member: T extends AnyGuildTextChannel ? Member : Member | null;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
-    memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | null;
     /** The message this interaction is from, if the modal was triggered from a component interaction. */
     message?: Message<T>;
     declare type: InteractionTypes.MODAL_SUBMIT;
@@ -55,17 +55,17 @@ export default class ModalSubmitInteraction<T extends AnyTextChannelWithoutGroup
         this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | undefined;
-        this.memberPermissions = (data.member === undefined ? undefined : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | null;
+        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | null;
         if (data.message !== undefined) {
-            this.message = (this.channel?.messages?.update(data.message) ?? new Message(data.message, client)) as Message<T>;
+            this.message = (this.channel && "messages" in this.channel && (this.channel.messages.update(data.message) as Message<T>)) || new Message<T>(data.message, client);
         }
         this.user = client.users.update(data.user ?? data.member!.user);
     }
 
     /** The channel this interaction was sent from. */
-    get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
-        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined;
+    get channel(): T extends AnyTextChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannel ? T : undefined;
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
