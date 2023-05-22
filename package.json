@@ -15,10 +15,10 @@
   "scripts": {
     "lint": "eslint lib --ext .ts",
     "lint:fix": "eslint lib --ext .ts --fix",
-    "prepublishOnly": "rm -rf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
+    "prepare": "rimraf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
     "test:build": "npm run prepublishOnly",
     "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
-    "test:docs": "npm i --no-save --ignore-scripts $(npm run --silent docs:verisons) && node scripts/doc-test.js && npx --yes typedoc",
+    "test:docs": "rimraf docs && npm i --no-save --ignore-scripts $(npm run --silent docs:verisons) && node scripts/doc-test.js && npx --yes typedoc",
     "docs:verisons": "node -e 'process.stdout.write(Object.entries(require(\"./package.json\").docsDependencies).map(([k, v]) => `${k}@${v}`).join(\" \"));'",
     "test": "npm run lint && npm run test:build && npm run test:esm && npm run test:docs"
   },
@@ -61,6 +61,7 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-unicorn": "^47.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "rimraf": "^5.0.1",
     "typescript": "<5.5 >=5.x"
   },
   "dependencies": {
