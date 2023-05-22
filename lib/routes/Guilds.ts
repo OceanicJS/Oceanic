@@ -37,7 +37,6 @@ import type {
     GetVanityURLResponse,
     EditUserVoiceStateOptions,
     EditCurrentUserVoiceStateOptions,
-    CreateChannelReturn,
     CreateChannelOptions,
     EditMFALevelOptions,
     RESTMember,
@@ -50,7 +49,7 @@ import type {
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { GuildChannelTypesWithoutThreads, MFALevels } from "../Constants";
+import type { ChannelTypeMap, MFALevels } from "../Constants";
 import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Webhook from "../structures/Webhook";
@@ -67,7 +66,8 @@ import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTe
 import GuildPreview from "../structures/GuildPreview";
 import type {
     AnyGuildChannelWithoutThreads,
-    InviteChannel,
+    AnyInviteChannel,
+    GuildChannelsWithoutThreads,
     PartialInviteChannel,
     RawGuildChannel,
     RawInvite,
@@ -253,7 +253,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for creating the channel.
      */
-    async createChannel<T extends GuildChannelTypesWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
+    async createChannel<T extends GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -1199,7 +1199,7 @@ export default class Guilds {
      * Get the invites of a guild.
      * @param guildID The ID of the guild to get the invites of.
      */
-    async getInvites<CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(guildID: string): Promise<Array<Invite<"withMetadata", CH>>> {
+    async getInvites<CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(guildID: string): Promise<Array<Invite<"withMetadata", CH>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.GUILD_INVITES(guildID)

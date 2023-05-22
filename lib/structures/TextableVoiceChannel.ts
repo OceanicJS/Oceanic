@@ -3,10 +3,10 @@ import Member from "./Member";
 import type CategoryChannel from "./CategoryChannel";
 import TextableChannel from "./TextableChannel";
 import type VoiceState from "./VoiceState";
-import type { VideoQualityModes, VoiceChannelTypes, VoiceChannels } from "../Constants";
+import type { VideoQualityModes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
-import type { RawStageChannel, RawVoiceChannel } from "../types/channels";
+import type { AnyVoiceChannel, RawStageChannel, RawVoiceChannel, VoiceChannels } from "../types/channels";
 import type { JSONTextableVoiceChannel } from "../types/json";
 import type { RawMember } from "../types/guilds";
 import type { JoinVoiceChannelOptions } from "../types/voice";
@@ -15,12 +15,12 @@ import type { JoinVoiceChannelOptions } from "../types/voice";
 import type { VoiceConnection } from "@discordjs/voice";
 
 /** Represents a guild stage channel. */
-export default class TextableVoiceChannel<T extends VoiceChannels = VoiceChannels> extends TextableChannel<T> {
+export default class TextableVoiceChannel<T extends AnyVoiceChannel = AnyVoiceChannel> extends TextableChannel<T> {
     /** The bitrate of the stage channel. */
     bitrate: number;
     /** The id of the voice region of the channel, `null` is automatic. */
     rtcRegion: string | null;
-    declare type: VoiceChannelTypes;
+    declare type: VoiceChannels;
     /** The maximum number of members in this voice channel, `0` is unlimited. */
     userLimit: number;
     /** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */

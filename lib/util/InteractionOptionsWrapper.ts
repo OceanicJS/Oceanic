@@ -4,7 +4,7 @@ import { ApplicationCommandOptionTypes, ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
-import type { AnyGuildChannel } from "../types/channels";
+import type { AnyImplementedChannel } from "../types/channels";
 import type {
     ApplicationCommandInteractionResolvedData,
     AutoCompleteFocusedOption,
@@ -25,7 +25,6 @@ import type {
 } from "../types/interactions";
 import type Attachment from "../structures/Attachment";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type PrivateChannel from "../structures/PrivateChannel";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
@@ -141,9 +140,9 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
-    getCompleteChannel<T extends AnyGuildChannel | PrivateChannel | InteractionResolvedChannel = AnyGuildChannel | PrivateChannel | InteractionResolvedChannel>(name: string, required?: false): T | undefined;
-    getCompleteChannel<T extends AnyGuildChannel | PrivateChannel | InteractionResolvedChannel = AnyGuildChannel | PrivateChannel | InteractionResolvedChannel>(name: string, required: true): T;
-    getCompleteChannel(name: string, required?: boolean): AnyGuildChannel | PrivateChannel | InteractionResolvedChannel | undefined {
+    getCompleteChannel<T extends AnyImplementedChannel | InteractionResolvedChannel = AnyImplementedChannel | InteractionResolvedChannel>(name: string, required?: false): T | undefined;
+    getCompleteChannel<T extends AnyImplementedChannel | InteractionResolvedChannel = AnyImplementedChannel | InteractionResolvedChannel>(name: string, required: true): T;
+    getCompleteChannel(name: string, required?: boolean): AnyImplementedChannel | InteractionResolvedChannel | undefined {
         const resolved = this.getChannel(name, required as false);
         if (!resolved) {
             return undefined; // required will be handled in getChannel

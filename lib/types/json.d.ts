@@ -32,7 +32,11 @@ import type {
     ForumTag,
     ForumEmoji,
     MessageActionRow,
-    Embed
+    Embed,
+    GuildChannels,
+    TextableGuildChannels,
+    ThreadChannels,
+    VoiceChannels
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type {
@@ -42,7 +46,6 @@ import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
-    GuildChannelTypes,
     GuildFeature,
     GuildNSFWLevels,
     IntegrationExpireBehaviors,
@@ -58,15 +61,12 @@ import type {
     GuildScheduledEventPrivacyLevels,
     GuildScheduledEventStatuses,
     ThreadAutoArchiveDuration,
-    ThreadChannelTypes,
     VerificationLevels,
     VideoQualityModes,
     WebhookTypes,
     SortOrderTypes,
     StageInstancePrivacyLevels,
-    ForumLayoutTypes,
-    GuildTextChannelTypes,
-    VoiceChannelTypes
+    ForumLayoutTypes
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONTextableChannel {
@@ -295,7 +295,7 @@ export interface JSONGuildChannel extends JSONChannel {
     guildID: string;
     name: string;
     parentID: string | null;
-    type: GuildChannelTypes;
+    type: GuildChannels;
 }
 export interface JSONGuildPreview extends JSONBase {
     approximateMemberCount: number;
@@ -569,13 +569,13 @@ export interface JSONTextableChannel extends JSONGuildChannel {
     position: number;
     rateLimitPerUser: number;
     topic: string | null;
-    type: GuildTextChannelTypes;
+    type: TextableGuildChannels;
 }
 
 export interface JSONTextableVoiceChannel extends JSONTextableChannel {
     bitrate: number;
     rtcRegion: string | null;
-    type: VoiceChannelTypes;
+    type: VoiceChannels;
     userLimit: number;
     videoQualityMode: VideoQualityModes;
     voiceMembers: Array<string>;
@@ -596,7 +596,7 @@ export interface JSONThreadChannel extends JSONGuildChannel {
     rateLimitPerUser: number;
     threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     totalMessageSent: number;
-    type: ThreadChannelTypes;
+    type: ThreadChannels;
 }
 export interface JSONUnavailableGuild extends JSONBase {
     unavailable: true;

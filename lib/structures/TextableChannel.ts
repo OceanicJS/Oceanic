@@ -11,7 +11,7 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import type User from "./User";
 import type Webhook from "./Webhook";
-import { AllPermissions, Permissions, type GuildTextChannels } from "../Constants";
+import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
@@ -32,11 +32,11 @@ import type {
     PurgeOptions
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
-import type { CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
+import type { AnyTextableGuildChannel, CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild textable channel. */
-export default class TextableChannel<T extends GuildTextChannels = GuildTextChannels> extends GuildChannel {
+export default class TextableChannel<T extends AnyTextableGuildChannel = AnyTextableGuildChannel> extends GuildChannel {
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
     lastMessage?: Message<T> | null;
     /** The ID of last message sent in this channel. */

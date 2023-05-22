@@ -1,6 +1,7 @@
 /** @module Types/ApplicationCommands */
+import type { ImplementedChannels } from ".";
 import type { ExclusifyUnion } from "./shared";
-import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes, GuildChannelTypes } from "../Constants";
+import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
 
@@ -24,7 +25,7 @@ export interface RawApplicationCommand {
 
 export interface RawApplicationCommandOption {
     autocomplete?: boolean;
-    channel_types?: Array<GuildChannelTypes>;
+    channel_types?: Array<ImplementedChannels>;
     choices?: Array<RawApplicationCommandOptionChoice>;
     description: string;
     description_localizations?: LocaleMap | null;
@@ -43,7 +44,7 @@ export interface RawApplicationCommandOption {
 
 export interface CombinedApplicationCommandOption {
     autocomplete?: boolean;
-    channelTypes?: Array<GuildChannelTypes>;
+    channelTypes?: Array<ImplementedChannels>;
     choices?: Array<ApplicationCommandOptionsChoices>;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
@@ -109,7 +110,7 @@ interface ApplicationCommandOptionsChoice<T extends ApplicationCommandOptionsTyp
 }
 
 interface ApplicationCommandOptionsChannelTypes {
-    channelTypes?: Array<GuildChannelTypes>;
+    channelTypes?: Array<ImplementedChannels>;
 }
 
 interface ApplicationCommandOptionsMinMaxValue {

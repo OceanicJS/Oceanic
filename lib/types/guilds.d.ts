@@ -8,7 +8,8 @@ import type {
     RawThreadChannel,
     ThreadMember,
     ForumEmoji,
-    ForumTag
+    ForumTag,
+    GuildChannelsWithoutThreads
 } from "./channels";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { ClientStatus, PresenceUpdate, Activity as GatewayActivity } from "./gateway";
@@ -18,7 +19,6 @@ import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
-    GuildChannelTypesWithoutThreads,
     GuildFeature,
     GuildNSFWLevels,
     IntegrationExpireBehaviors,
@@ -36,11 +36,6 @@ import type {
 } from "../Constants";
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
-import type TextChannel from "../structures/TextChannel";
-import type VoiceChannel from "../structures/VoiceChannel";
-import type CategoryChannel from "../structures/CategoryChannel";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type StageChannel from "../structures/StageChannel";
 
 // channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only
@@ -370,7 +365,7 @@ export interface EditGuildOptions {
     verificationLevel?: VerificationLevels;
 }
 
-export interface CreateChannelOptions<T extends GuildChannelTypesWithoutThreads = GuildChannelTypesWithoutThreads> {
+export interface CreateChannelOptions<T extends GuildChannelsWithoutThreads = GuildChannelsWithoutThreads> {
     /** [Forum] The {@link Types/Channels.ForumTag | tags} available in the channel. */
     availableTags?: Array<Omit<ForumTag, "id">> | null;
     /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
@@ -414,14 +409,6 @@ export interface CreateVoiceChannelOptions extends Omit<CreateChannelOptions<Cha
 export interface CreateCategoryChannelOptions extends Omit<CreateChannelOptions<ChannelTypes.GUILD_CATEGORY>, "defaultAutoArchiveDuration" | "nsfw" | "parentID" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode"> {}
 export interface CreateAnnouncementChannelOptions extends Omit<CreateChannelOptions<ChannelTypes.GUILD_ANNOUNCEMENT>, "rtcRegion" | "userLimit" | "videoQualityMode"> {}
 export interface CreateStageChannelOptions extends Omit<CreateChannelOptions<ChannelTypes.GUILD_STAGE_VOICE>, "defaultAutoArchiveDuration" | "nsfw" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode"> {}
-
-export type CreateChannelReturn<T extends GuildChannelTypesWithoutThreads> =
-    T extends ChannelTypes.GUILD_TEXT ? TextChannel :
-        T extends ChannelTypes.GUILD_VOICE ? VoiceChannel :
-            T extends ChannelTypes.GUILD_CATEGORY ? CategoryChannel :
-                T extends ChannelTypes.GUILD_ANNOUNCEMENT ? AnnouncementChannel :
-                    T extends ChannelTypes.GUILD_STAGE_VOICE ? StageChannel :
-                        never;
 
 export interface CreateRoleOptions {
     /** The color of the role. */

@@ -241,37 +241,42 @@ export enum ChannelTypes {
     GUILD_FORUM          = 15,
 }
 
-export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY;
-export type NotImplementedChannels = ChannelTypeMap[NotImplementedChannelTypes];
-export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
-export type PrivateChannels = ChannelTypeMap[PrivateChannelTypes];
-export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
-export type GuildChannels = ChannelTypeMap[GuildChannelTypes];
-export type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
-export type GuildChannelsWithoutThreads = ChannelTypeMap[GuildChannelTypesWithoutThreads];
-export type TextChannelTypes =  | ChannelTypes.DM | ChannelTypes.GROUP_DM ;
-export type TextChannels = ChannelTypeMap[TextChannelTypes];
-export type GuildTextChannelTypes = ChannelTypes.GUILD_TEXT| ChannelTypes.GUILD_ANNOUNCEMENT | ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD | VoiceChannelTypes;
-export type GuildTextChannels = ChannelTypeMap[GuildTextChannelTypes];
-export type ThreadChannelTypes = ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD;
-export type ThreadChannels = ChannelTypeMap[ThreadChannelTypes];
-export type VoiceChannelTypes = ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
-export type VoiceChannels = ChannelTypeMap[VoiceChannelTypes];
+function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: ReadonlyArray<T>, excludeTypes: ReadonlyArray<E>): Array<Exclude<T, E>> {
+    return original.filter((value: T) => !excludeTypes.includes(value as unknown as E)) as Array<Exclude<T, E>>;
+}
 
+export const AnyChannelTypes = Object.values(ChannelTypes).filter(v => typeof v === "number") as Array<ChannelTypes>;
+export const NotImplementedChannelTypes = [ChannelTypes.GUILD_DIRECTORY] as const;
+export const ImplementedChannelTypes = exclude(AnyChannelTypes, NotImplementedChannelTypes);
+export const GuildChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_ANNOUNCEMENT, ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD, ChannelTypes.GUILD_STAGE_VOICE, ChannelTypes.GUILD_DIRECTORY, ChannelTypes.GUILD_FORUM] as const;
+export const ThreadChannelTypes = [ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD] as const;
+export const GuildChannelTypesWithoutThreads = exclude(GuildChannelTypes, ThreadChannelTypes);
+export const PrivateChannelTypes = [ChannelTypes.DM, ChannelTypes.GROUP_DM] as const;
+export const EditableChannelTypes = exclude([ChannelTypes.GROUP_DM, ...GuildChannelTypes], NotImplementedChannelTypes);
+export const TextableChannelTypes = exclude([ChannelTypes.DM, ...GuildChannelTypes], [...NotImplementedChannelTypes, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_FORUM]);
+export const TextableGuildChannelTypes = exclude(TextableChannelTypes, [ChannelTypes.DM]);
+export const TextableChannelTypesWithoutThreads = exclude(TextableChannelTypes, ThreadChannelTypes);
+export const TextableGuildChannelTypesWithoutThreads = exclude(TextableGuildChannelTypes, ThreadChannelTypes);
+export const VoiceChannelTypes = [ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE] as const;
+export const InviteChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_ANNOUNCEMENT, ...VoiceChannelTypes, ChannelTypes.GUILD_FORUM] as const;
+export const InteractionChannelTypes = [...TextableChannelTypes, ChannelTypes.GROUP_DM] as const;
+
+/* eslint-disable @typescript-eslint/member-ordering */
 export interface ChannelTypeMap {
-    [ChannelTypes.ANNOUNCEMENT_THREAD]: AnnouncementThreadChannel;
+    [ChannelTypes.GUILD_TEXT]: TextChannel;
     [ChannelTypes.DM]: PrivateChannel;
+    [ChannelTypes.GUILD_VOICE]: VoiceChannel;
     [ChannelTypes.GROUP_DM]: GroupChannel;
-    [ChannelTypes.GUILD_ANNOUNCEMENT]: AnnouncementChannel;
     [ChannelTypes.GUILD_CATEGORY]: CategoryChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: AnnouncementChannel;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: AnnouncementThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: PublicThreadChannel;
+    [ChannelTypes.PRIVATE_THREAD]: PrivateThreadChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: StageChannel;
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: ForumChannel;
-    [ChannelTypes.GUILD_STAGE_VOICE]: StageChannel;
-    [ChannelTypes.GUILD_TEXT]: TextChannel;
-    [ChannelTypes.GUILD_VOICE]: VoiceChannel;
-    [ChannelTypes.PRIVATE_THREAD]: PrivateThreadChannel;
-    [ChannelTypes.PUBLIC_THREAD]: PublicThreadChannel;
 }
+/* eslint-enable @typescript-eslint/member-ordering */
 
 export enum OverwriteTypes {
     ROLE   = 0,
@@ -386,6 +391,7 @@ export namespace Permissions {
     export const SEND_VOICE_MESSAGES                 = 70368744177664n; // 1 << 46
 }
 
+export const PermissionNames = Object.keys(Permissions) as Array<PermissionName>;
 export type PermissionName = keyof typeof Permissions;
 export const AllGuildPermissions = Permissions.KICK_MEMBERS |
     Permissions.BAN_MEMBERS |

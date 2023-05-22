@@ -5,9 +5,9 @@ import type CategoryChannel from "./CategoryChannel";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type ForumChannel from "./ForumChannel";
-import type { ChannelTypeMap, GuildChannelTypes } from "../Constants";
+import type { ChannelTypeMap } from "../Constants";
 import type Client from "../Client";
-import type { EditChannelOptionsMap, RawGuildChannel } from "../types/channels";
+import type { EditChannelOptionsMap, GuildChannels, RawGuildChannel } from "../types/channels";
 import type { JSONGuildChannel } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
@@ -21,7 +21,7 @@ export default class GuildChannel extends Channel {
     name: string;
     /** The ID of the parent of this channel, if applicable. */
     parentID: string | null;
-    declare type: GuildChannelTypes;
+    declare type: GuildChannels;
     constructor(data: RawGuildChannel, client: Client) {
         super(data, client);
         this.guildID = data.guild_id;

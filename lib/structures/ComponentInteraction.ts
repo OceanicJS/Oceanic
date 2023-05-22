@@ -19,7 +19,7 @@ import type {
     ModalData,
     RawMessageComponentInteraction
 } from "../types/interactions";
-import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
+import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
 import type { JSONComponentInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 import type { RawUser } from "../types/users";
@@ -30,25 +30,25 @@ import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a component interaction. */
-export default class ComponentInteraction<V extends ComponentTypes.BUTTON | SelectMenuTypes = ComponentTypes.BUTTON | SelectMenuTypes, T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
-    private _cachedChannel!: T extends AnyTextChannel ? T : undefined;
-    private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+export default class ComponentInteraction<V extends ComponentTypes.BUTTON | SelectMenuTypes = ComponentTypes.BUTTON | SelectMenuTypes, T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
+    private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
+    private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
-    appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    appPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
     data: V extends ComponentTypes.BUTTON ? MessageComponentButtonInteractionData : MessageComponentSelectMenuInteractionData;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID: T extends AnyGuildTextChannel ? string : string | null;
+    guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
-    guildLocale: T extends AnyGuildTextChannel ? string : string | undefined;
+    guildLocale: T extends AnyTextableGuildChannel ? string : string | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
-    member: T extends AnyGuildTextChannel ? Member : Member | null;
+    member: T extends AnyTextableGuildChannel ? Member : Member | null;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
-    memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | null;
+    memberPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | null;
     /** The message the interaction is from. */
     message: Message<T>;
     declare type: InteractionTypes.MESSAGE_COMPONENT;
@@ -60,13 +60,13 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             data.message.guild_id = data.guild_id;
         }
 
-        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
-        this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
-        this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
+        this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
+        this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | null;
-        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | null;
+        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyTextableGuildChannel ? Member : Member | null;
+        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | null;
         this.message = (this.channel && "messages" in this.channel && (this.channel.messages.update(data.message) as Message<T>)) || new Message<T>(data.message, client);
         this.user = client.users.update((data.user ?? data.member!.user)!);
 
@@ -130,12 +130,12 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     }
 
     /** The channel this interaction was sent from. */
-    get channel(): T extends AnyTextChannel ? T : undefined {
-        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannel ? T : undefined;
+    get channel(): T extends AnyInteractionChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyInteractionChannel ? T : undefined;
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
-    get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
+    get guild(): T extends AnyTextableGuildChannel ? Guild : Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild = this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
@@ -145,7 +145,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             return this._cachedGuild;
         }
 
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyGuildTextChannel ? Guild : Guild | null);
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyTextableGuildChannel ? Guild : Guild | null);
     }
 
     /**
@@ -268,7 +268,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     }
 
     /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is ComponentInteraction<V, AnyGuildTextChannel> {
+    inCachedGuildChannel(): this is ComponentInteraction<V, AnyTextableGuildChannel> {
         return this.channel instanceof GuildChannel;
     }
 

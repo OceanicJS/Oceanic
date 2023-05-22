@@ -2,7 +2,7 @@
 import type {
     AddGroupRecipientOptions,
     AnyChannel,
-    AnyTextChannelWithoutGroup,
+    AnyTextableChannel,
     ArchivedThreads,
     CreateInviteOptions,
     CreateMessageOptions,
@@ -13,7 +13,7 @@ import type {
     GetChannelMessagesOptions,
     GetArchivedThreadsOptions,
     GetReactionsOptions,
-    InviteChannel,
+    AnyInviteChannel,
     RawArchivedThreads,
     RawChannel,
     RawFollowedChannel,
@@ -39,7 +39,7 @@ import type {
     PartialInviteChannel,
     RawThreadChannel,
     PurgeOptions,
-    AnyGuildTextChannel,
+    AnyTextableGuildChannel,
     GetThreadMembersOptions,
     AnyGuildChannel,
     GetChannelMessagesIteratorOptions,
@@ -134,7 +134,7 @@ export default class Channels {
      * @param channelID The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
      */
-    async createInvite<T extends InviteInfoTypes, CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
+    async createInvite<T extends InviteInfoTypes, CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -160,7 +160,7 @@ export default class Channels {
      * @param channelID The ID of the channel to create the message in.
      * @param options The options for creating the message.
      */
-    async createMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options: CreateMessageOptions): Promise<Message<T>> {
+    async createMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options: CreateMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -257,7 +257,7 @@ export default class Channels {
      * @param code The code of the invite to delete.
      * @param reason The reason for deleting the invite.
      */
-    async deleteInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
+    async deleteInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
         return this.#manager.authRequest<RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),
@@ -443,7 +443,7 @@ export default class Channels {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -540,11 +540,11 @@ export default class Channels {
      * @param code The code of the invite to get.
      * @param options The options for getting the invite.
      */
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
         const query = new URLSearchParams();
         if (options?.guildScheduledEventID !== undefined) {
             query.set("guild_scheduled_event_id", options.guildScheduledEventID);
@@ -566,7 +566,7 @@ export default class Channels {
      * Get the invites of a channel.
      * @param channelID The ID of the channel to get the invites of.
      */
-    async getInvites<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(channelID: string): Promise<Array<Invite<"withMetadata", T>>> {
+    async getInvites<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string): Promise<Array<Invite<"withMetadata", T>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(channelID)
@@ -603,7 +603,7 @@ export default class Channels {
      * @param channelID The ID of the channel the message is in
      * @param messageID The ID of the message to get.
      */
-    async getMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
+    async getMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID)
@@ -615,7 +615,7 @@ export default class Channels {
      * @param channelID The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options?: GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
+    async getMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
         const query = new URLSearchParams();
         let chosenOption: "after" | "around" | "before";
         if (options?.around !== undefined) {
@@ -677,7 +677,7 @@ export default class Channels {
      * @param channelID The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessagesIterator<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): Promise<MessagesIterator<T>> {
+    async getMessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): Promise<MessagesIterator<T>> {
         const filter = options?.filter?.bind(this) ?? ((): true => true);
         const chosenOption = options?.after === undefined ? "before" : "after";
 
@@ -727,7 +727,7 @@ export default class Channels {
      * Get the pinned messages in a channel.
      * @param channelID The ID of the channel to get the pinned messages from.
      */
-    async getPinnedMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string): Promise<Array<Message<T>>> {
+    async getPinnedMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string): Promise<Array<Message<T>>> {
         return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(channelID)
@@ -950,7 +950,7 @@ export default class Channels {
      * @param channelID The ID of the channel to purge.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async purgeMessages<T extends AnyGuildTextChannel | Uncached = AnyGuildTextChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
+    async purgeMessages<T extends AnyTextableGuildChannel | Uncached = AnyTextableGuildChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
         const filter = (message: Message<T>): boolean | "break" | PromiseLike<boolean | "break"> => {
             if (message.timestamp.getTime() < Date.now() - 1209600000) {
                 return "break";

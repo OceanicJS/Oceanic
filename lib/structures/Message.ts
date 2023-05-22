@@ -17,8 +17,8 @@ import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, type MessageTypes } from "../Constants";
 import type { Uncached } from "../types/shared";
 import type {
-    AnyGuildTextChannel,
-    AnyTextChannelWithoutGroup,
+    AnyTextableGuildChannel,
+    AnyTextableChannel,
     ChannelMention,
     EditMessageOptions,
     Embed,
@@ -41,9 +41,9 @@ import * as Routes from "../util/Routes";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a message. */
-export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Base {
-    private _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
-    private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+export default class Message<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> extends Base {
+    private _cachedChannel!: T extends AnyTextableChannel ? T : undefined;
+    private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
     activity?: MessageActivity;
     /**
@@ -75,11 +75,11 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
     flags: number;
     /** The ID of the guild this message is in. */
-    guildID: T extends AnyGuildTextChannel ? string : string | null;
+    guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The interaction info, if this message was the result of an interaction. */
     interaction?: MessageInteraction;
     /** The member that created this message, if this message is in a guild. */
-    member: T extends AnyGuildTextChannel ? Member : Member | undefined;
+    member: T extends AnyTextableGuildChannel ? Member : Member | undefined;
     /** Channels mentioned in a `CROSSPOSTED` channel follower message. See [Discord's docs](https://discord.com/developers/docs/resources/channel#channel-mention-object) for more information. */
     mentionChannels?: Array<ChannelMention>;
     /** The mentions in this message. */
@@ -129,8 +129,8 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
-        this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends AnyGuildTextChannel ? string : string | null;
-        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author })) as T extends AnyGuildTextChannel ? Member : Member | undefined;
+        this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends AnyTextableGuildChannel ? string : string | null;
+        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author })) as T extends AnyTextableGuildChannel ? Member : Member | undefined;
         this.mentions = {
             channels: [],
             everyone: false,
@@ -177,7 +177,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
                 if (this.channel && "guildID" in (this.channel as T) && user.member) {
-                    members.push(this.client.util.updateMember((this.channel as AnyGuildTextChannel).guildID, user.id, { ...user.member, user }));
+                    members.push(this.client.util.updateMember((this.channel as AnyTextableGuildChannel).guildID, user.id, { ...user.member, user }));
                 }
                 return this.client.users.update(user);
             });
@@ -276,12 +276,12 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
     }
 
     /** The channel this message was created in. */
-    get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
-        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined;
+    get channel(): T extends AnyTextableChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextableChannel ? T : undefined;
     }
 
     /** The guild this message is in. This will throw an error if the guild is not cached. */
-    get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
+    get guild(): T extends AnyTextableGuildChannel ? Guild : Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
@@ -299,7 +299,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
             return this._cachedGuild;
         }
 
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyGuildTextChannel ? Guild : Guild | null);
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyTextableGuildChannel ? Guild : Guild | null);
     }
 
     /** A link to this message. */
@@ -389,7 +389,7 @@ export default class Message<T extends AnyTextChannelWithoutGroup | Uncached = A
     }
 
     /** Whether this message belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is Message<AnyGuildTextChannel> {
+    inCachedGuildChannel(): this is Message<AnyTextableGuildChannel> {
         return this.channel instanceof GuildChannel;
     }
 

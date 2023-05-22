@@ -9,38 +9,38 @@ import type PrivateChannel from "./PrivateChannel";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
 import type { AutocompleteChoice, AutocompleteInteractionData, RawAutocompleteInteraction } from "../types/interactions";
 import type Client from "../Client";
-import type { AnyGuildTextChannel, AnyTextChannel } from "../types/channels";
+import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
 import type { JSONAutocompleteInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
 import { UncachedError } from "../util/Errors";
 
 /** Represents an autocomplete interaction. */
-export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached = AnyTextChannel | Uncached> extends Interaction {
-    private _cachedChannel!: T extends AnyTextChannel ? T : undefined;
-    private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+export default class AutocompleteInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
+    private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
+    private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
-    appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    appPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
     data: AutocompleteInteractionData;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID: T extends AnyGuildTextChannel ? string : string | null;
+    guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
-    guildLocale: T extends AnyGuildTextChannel ? string : string | undefined;
+    guildLocale: T extends AnyTextableGuildChannel ? string : string | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
-    member: T extends AnyGuildTextChannel ? Member : Member | null;
+    member: T extends AnyTextableGuildChannel ? Member : Member | null;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
-    memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | null;
+    memberPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | null;
     declare type: InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE;
     /** The user that invoked this interaction. */
     user: User;
     constructor(data: RawAutocompleteInteraction, client: Client) {
         super(data, client);
-        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
         this.data = {
             guildID: data.data.guild_id,
@@ -49,21 +49,21 @@ export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached
             options: new InteractionOptionsWrapper(data.data.options ?? [], null),
             type:    data.data.type
         };
-        this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
-        this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
+        this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
+        this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | null;
-        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | null;
+        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyTextableGuildChannel ? Member : Member | null;
+        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | null;
         this.user = client.users.update(data.user ?? data.member!.user);
     }
 
     /** The channel this interaction was sent from. */
-    get channel(): T extends AnyTextChannel ? T : undefined {
-        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextChannel ? T : undefined;
+    get channel(): T extends AnyInteractionChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyInteractionChannel ? T : undefined;
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
-    get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
+    get guild(): T extends AnyTextableGuildChannel ? Guild : Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
@@ -73,11 +73,11 @@ export default class AutocompleteInteraction<T extends AnyTextChannel | Uncached
             return this._cachedGuild;
         }
 
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyGuildTextChannel ? Guild : Guild | null);
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyTextableGuildChannel ? Guild : Guild | null);
     }
 
     /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is AutocompleteInteraction<AnyGuildTextChannel> {
+    inCachedGuildChannel(): this is AutocompleteInteraction<AnyTextableGuildChannel> {
         return this.channel instanceof GuildChannel;
     }
 

@@ -5,8 +5,7 @@ import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type PrivateChannel from "../structures/PrivateChannel";
-import type { AnyGuildChannel } from "../types/channels";
+import type { AnyImplementedChannel } from "../types/channels";
 import type { MessageComponentInteractionResolvedData } from "../types/interactions";
 
 /** A wrapper for select menu data. */
@@ -42,7 +41,7 @@ export default class SelectMenuValuesWrapper {
      * If `ensurePresent` is false, channels that aren't in resolved will be ignored.
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
-    getCompleteChannels(ensurePresent?: boolean): Array<AnyGuildChannel | PrivateChannel | InteractionResolvedChannel> {
+    getCompleteChannels(ensurePresent?: boolean): Array<AnyImplementedChannel | InteractionResolvedChannel> {
         return this.raw.map(id => {
             const ch = this.resolved.channels.get(id);
             if (ch && ch.type === ChannelTypes.DM) {

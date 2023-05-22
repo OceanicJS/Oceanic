@@ -7,8 +7,7 @@ import {
     GatewayCloseCodes,
     GatewayOPCodes,
     GATEWAY_VERSION,
-    Intents,
-    type VoiceChannels
+    Intents
 } from "../Constants";
 import type {
     UpdatePresenceOptions,
@@ -29,15 +28,15 @@ import AutoModerationRule from "../structures/AutoModerationRule";
 import Channel from "../structures/Channel";
 import type {
     AnyGuildChannelWithoutThreads,
-    AnyTextChannel,
+    AnyTextableChannel,
     AnyThreadChannel,
-    InviteChannel,
+    AnyInviteChannel,
     PossiblyUncachedInvite,
     RawMessage,
     ThreadMember,
     ThreadParentChannel,
     UncachedThreadMember,
-    AnyTextChannelWithoutGroup
+    AnyVoiceChannel
 } from "../types/channels";
 import type TextChannel from "../structures/TextChannel";
 import type { JSONAnnouncementThreadChannel } from "../types/json";
@@ -330,7 +329,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "CHANNEL_PINS_UPDATE": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 this.client.emit("channelPinsUpdate", channel ?? { id: packet.d.channel_id }, packet.d.last_pin_timestamp === undefined || packet.d.last_pin_timestamp === null ? null : new Date(packet.d.last_pin_timestamp));
                 break;
             }
@@ -647,7 +646,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INVITE_DELETE": {
-                const channel = this.client.getChannel<InviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                const channel = this.client.getChannel<AnyInviteChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
                 const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) ?? { id: packet.d.guild_id } : undefined;
                 let invite: PossiblyUncachedInvite = {
                     code: packet.d.code,
@@ -663,7 +662,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_CREATE": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const message = channel?.messages?.update(packet.d) ?? new Message(packet.d, this.client);
                 if (channel) {
                     channel.lastMessage = message as never;
@@ -674,7 +673,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_DELETE": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const message = channel?.messages?.get(packet.d.id);
                 if (channel) {
                     channel.messages?.delete(packet.d.id);
@@ -693,7 +692,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_DELETE_BULK": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
                 this.client.emit("messageDeleteBulk", packet.d.ids.map(id => {
                     const message = channel?.messages?.get(id);
@@ -710,7 +709,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_REACTION_ADD": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const message = channel?.messages?.get(packet.d.message_id);
                 const reactor = packet.d.member
                     ? (packet.d.guild_id ? this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member) : this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id })
@@ -743,7 +742,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_REACTION_REMOVE": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const message = channel?.messages?.get(packet.d.message_id);
                 const reactor = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
 
@@ -771,7 +770,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_REACTION_REMOVE_ALL": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const message = channel?.messages?.get(packet.d.message_id);
 
                 if (message) {
@@ -789,7 +788,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_REACTION_REMOVE_EMOJI": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const message = channel?.messages?.get(packet.d.message_id);
 
                 if (message) {
@@ -810,7 +809,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "MESSAGE_UPDATE": {
-                const channel = this.client.getChannel<AnyTextChannelWithoutGroup>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const oldMessage = channel?.messages?.get(packet.d.id)?.toJSON() ?? null;
                 if (!oldMessage && !packet.d.author) {
                     this.client.emit("debug", `Got partial MESSAGE_UPDATE for uncached message ${packet.d.id} for channel ${packet.d.channel_id}, discarding..`);
@@ -1098,7 +1097,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "TYPING_START": {
-                const channel = this.client.getChannel<AnyTextChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
                 const startTimestamp = new Date(packet.d.timestamp);
                 if (packet.d.member) {
                     const member = this.client.util.updateMember(packet.d.guild_id!, packet.d.user_id, packet.d.member);
@@ -1117,7 +1116,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "VOICE_CHANNEL_EFFECT_SEND": {
-                const channel = this.client.getChannel<VoiceChannels>(packet.d.channel_id);
+                const channel = this.client.getChannel<AnyVoiceChannel>(packet.d.channel_id);
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const user = guild?.members.get(packet.d.user_id) ?? this.client.users.get(packet.d.user_id);
                 this.client.emit("voiceChannelEffectSend", channel ?? { id: packet.d.channel_id, guild: guild ?? { id: packet.d.guild_id } }, user ?? { id: packet.d.user_id }, {

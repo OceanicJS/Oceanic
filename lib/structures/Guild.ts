@@ -33,9 +33,9 @@ import {
     type MFALevels,
     type PremiumTiers,
     type VerificationLevels,
-    type GuildChannelTypesWithoutThreads,
     type GatewayOPCodes,
-    type MutableGuildFeatures
+    type MutableGuildFeatures,
+    type ChannelTypeMap
 } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -43,11 +43,12 @@ import TypedCollection from "../util/TypedCollection";
 import type {
     AnyGuildChannel,
     AnyGuildChannelWithoutThreads,
-    AnyGuildTextChannel,
+    AnyTextableGuildChannel,
     AnyThreadChannel,
-    InviteChannel,
+    AnyInviteChannel,
     RawGuildChannel,
-    RawThreadChannel
+    RawThreadChannel,
+    GuildChannelsWithoutThreads
 } from "../types/channels";
 import type {
     AddMemberOptions,
@@ -78,7 +79,6 @@ import type {
     WidgetImageStyle,
     WidgetSettings,
     RawIntegration,
-    CreateChannelReturn,
     Widget,
     GetActiveThreadsResponse,
     Ban,
@@ -194,7 +194,7 @@ export default class Guild extends Base {
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
     /** The channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
-    publicUpdatesChannel?: AnyGuildTextChannel | null;
+    publicUpdatesChannel?: AnyTextableGuildChannel | null;
     /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannelID: string | null;
     /** @deprecated The region of this guild.*/
@@ -538,7 +538,7 @@ export default class Guild extends Base {
             this.premiumTier = data.premium_tier;
         }
         if (data.public_updates_channel_id !== undefined) {
-            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyGuildTextChannel>(data.public_updates_channel_id);
+            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyTextableGuildChannel>(data.public_updates_channel_id);
             this.publicUpdatesChannelID = data.public_updates_channel_id;
         }
         if (data.region !== undefined) {
@@ -710,8 +710,8 @@ export default class Guild extends Base {
      * Create a channel in this guild.
      * @param options The options for creating the channel.
      */
-    async createChannel<T extends GuildChannelTypesWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
-        return this.client.rest.guilds.createChannel(this.id, type, options);
+    async createChannel<T extends GuildChannelsWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
+        return this.client.rest.guilds.createChannel<T>(this.id, type, options);
     }
 
     /**
@@ -1114,7 +1114,7 @@ export default class Guild extends Base {
     /**
      * Get the invites of this guild.
      */
-    async getInvites(): Promise<Array<Invite<"withMetadata", InviteChannel>>> {
+    async getInvites(): Promise<Array<Invite<"withMetadata", AnyInviteChannel>>> {
         return this.client.rest.guilds.getInvites(this.id);
     }
 

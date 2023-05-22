@@ -6,11 +6,11 @@ import type User from "./User";
 import type Client from "../Client";
 import type { RawVoiceState } from "../types/voice";
 import type { JSONVoiceState } from "../types/json";
-import type { VoiceChannels } from "../Constants";
 import { UncachedError } from "../util/Errors";
+import type { AnyVoiceChannel } from "../types";
 
 /** Represents a guild member's voice state. */
-export default class VoiceState<T extends VoiceChannels = VoiceChannels> extends Base {
+export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> extends Base {
     private _cachedChannel?: T | null;
     private _cachedGuild?: Guild;
     private _cachedMember?: Member;

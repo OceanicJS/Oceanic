@@ -1,7 +1,7 @@
 /** @module Types/Interactions */
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
-    AnyGuildTextChannel,
+    AnyTextableGuildChannel,
     AnyPrivateChannel,
     ModalActionRow,
     RawAttachment,
@@ -252,7 +252,7 @@ export interface AutocompleteChoice {
 }
 
 
-export type GuildAutocompleteInteraction = AutocompleteInteraction<AnyGuildTextChannel>;
+export type GuildAutocompleteInteraction = AutocompleteInteraction<AnyTextableGuildChannel>;
 export interface PrivateAutocompleteInteraction extends Omit<AutocompleteInteraction<AnyPrivateChannel | Uncached>, | "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
     guild: null;
     guildID: null;
@@ -262,7 +262,7 @@ export interface PrivateAutocompleteInteraction extends Omit<AutocompleteInterac
 }
 export type AnyAutocompleteInteraction = GuildAutocompleteInteraction | PrivateAutocompleteInteraction;
 
-export type GuildCommandInteraction = CommandInteraction<AnyGuildTextChannel>;
+export type GuildCommandInteraction = CommandInteraction<AnyTextableGuildChannel>;
 export interface PrivateCommandInteraction extends Omit<CommandInteraction<AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
     guild: null;
     guildID: null;
@@ -272,8 +272,8 @@ export interface PrivateCommandInteraction extends Omit<CommandInteraction<AnyPr
 }
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
-export interface GuildComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyGuildTextChannel>, "data"> { data: MessageComponentButtonInteractionData; }
-export interface GuildComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, AnyGuildTextChannel>, "data"> { data: MessageComponentSelectMenuInteractionData; }
+export interface GuildComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyTextableGuildChannel>, "data"> { data: MessageComponentButtonInteractionData; }
+export interface GuildComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, AnyTextableGuildChannel>, "data"> { data: MessageComponentSelectMenuInteractionData; }
 export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
 export interface PrivateComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> {
     data: MessageComponentButtonInteractionData;
@@ -294,7 +294,7 @@ export interface PrivateComponentSelectMenuInteraction extends Omit<ComponentInt
 export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentInteraction = GuildComponentInteraction | PrivateComponentInteraction;
 
-export type GuildModalSubmitInteraction = ModalSubmitInteraction<AnyGuildTextChannel>;
+export type GuildModalSubmitInteraction = ModalSubmitInteraction<AnyTextableGuildChannel>;
 export interface PrivateModalSubmitInteraction extends Omit<ModalSubmitInteraction<AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
     guild: null;
     guildID: null;

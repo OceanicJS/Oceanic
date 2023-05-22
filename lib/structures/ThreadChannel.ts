@@ -4,7 +4,7 @@ import Message from "./Message";
 import type User from "./User";
 import type Member from "./Member";
 import type Permission from "./Permission";
-import { ChannelTypes, type ThreadChannelTypes } from "../Constants";
+import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
@@ -19,7 +19,8 @@ import type {
     ThreadMember,
     ThreadMetadata,
     PurgeOptions,
-    ThreadParentChannel
+    ThreadParentChannel,
+    ThreadChannels
 } from "../types/channels";
 import type { JSONThreadChannel } from "../types/json";
 import { UncachedError } from "../util/Errors";
@@ -51,7 +52,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     /** The total number of messages ever sent in the thread. Includes deleted messages. */
     totalMessageSent: number;
-    declare type: ThreadChannelTypes;
+    declare type: ThreadChannels;
     constructor(data: RawThreadChannel, client: Client) {
         super(data, client);
         this.flags = data.flags;

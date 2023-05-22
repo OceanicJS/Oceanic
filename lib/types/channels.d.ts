@@ -9,7 +9,6 @@ import type {
     ButtonStyles,
     ChannelTypes,
     ComponentTypes,
-    GuildChannelTypes,
     InteractionTypes,
     InviteTargetTypes,
     MessageActivityTypes,
@@ -20,22 +19,31 @@ import type {
     StickerFormatTypes,
     TextInputStyles,
     ThreadAutoArchiveDuration,
-    ThreadChannelTypes,
     VideoQualityModes,
-    ForumLayoutTypes
+    ForumLayoutTypes,
+    ChannelTypeMap,
+    PrivateChannelTypes,
+    NotImplementedChannelTypes,
+    GuildChannelTypes,
+    ThreadChannelTypes,
+    GuildChannelTypesWithoutThreads,
+    EditableChannelTypes,
+    TextableChannelTypes,
+    TextableGuildChannelTypes,
+    TextableChannelTypesWithoutThreads,
+    TextableGuildChannelTypesWithoutThreads,
+    VoiceChannelTypes,
+    InteractionChannelTypes,
+    InviteChannelTypes,
+    ImplementedChannelTypes
 } from "../Constants";
-import type CategoryChannel from "../structures/CategoryChannel";
-import type GroupChannel from "../structures/GroupChannel";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PrivateChannel from "../structures/PrivateChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type StageChannel from "../structures/StageChannel";
 import type TextChannel from "../structures/TextChannel";
 import type User from "../structures/User";
-import type VoiceChannel from "../structures/VoiceChannel";
 import type ForumChannel from "../structures/ForumChannel";
 import type Message from "../structures/Message";
 import type Guild from "../structures/Guild";
@@ -83,7 +91,7 @@ export interface RawChannel {
     user_limit?: number;
     video_quality_mode?: VideoQualityModes;
 }
-export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> { name: string; type: GuildChannelTypes; }
+export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> { name: string; type: GuildChannels; }
 export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> { type: ChannelTypes.DM; }
 // nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
 export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> { managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
@@ -718,36 +726,53 @@ export interface StickerItem {
     name: string;
 }
 
+export type NotImplementedChannels = typeof NotImplementedChannelTypes[number];
+export type ImplementedChannels = typeof ImplementedChannelTypes[number];
+export type GuildChannels = typeof GuildChannelTypes[number];
+export type ThreadChannels = typeof ThreadChannelTypes[number];
+export type GuildChannelsWithoutThreads = typeof GuildChannelTypesWithoutThreads[number];
+export type PrivateChannels = typeof PrivateChannelTypes[number];
+export type EditableChannels = typeof EditableChannelTypes[number];
+export type TextableChannels = typeof TextableChannelTypes[number];
+export type TextableGuildChannels = typeof TextableGuildChannelTypes[number];
+export type TextableChannelsWithoutThreads = typeof TextableChannelTypesWithoutThreads[number];
+export type TextableGuildChannelsWithoutThreads = typeof TextableGuildChannelTypesWithoutThreads[number];
+export type VoiceChannels = typeof VoiceChannelTypes[number];
+export type InviteChannels = typeof InviteChannelTypes[number];
+export type InteractionChannels = typeof InteractionChannelTypes[number];
 
-export type AnyChannel = TextChannel | PrivateChannel | VoiceChannel | GroupChannel | CategoryChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel | StageChannel | ForumChannel;
-export type AnyPrivateChannel = PrivateChannel | GroupChannel;
-export type AnyEditableChannel = Exclude<AnyChannel, PrivateChannel>;
-export type AnyGuildChannel = Exclude<AnyChannel, AnyPrivateChannel>;
-export type AnyGuildChannelWithoutThreads = Exclude<AnyGuildChannel, AnyThreadChannel>;
-export type AnyTextChannelWithoutThreads = Exclude<AnyTextChannel, AnyThreadChannel>;
-export type AnyTextChannel = TextChannel | PrivateChannel | VoiceChannel | StageChannel | GroupChannel | AnnouncementChannel | AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
-export type AnyTextChannelWithoutGroup = Exclude<AnyTextChannel, GroupChannel>;
-export type AnyGuildTextChannel = Exclude<AnyTextChannel, AnyPrivateChannel>;
-export type AnyGuildTextChannelWithoutThreads = Exclude<AnyGuildTextChannel, AnyThreadChannel>;
-export type AnyThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel;
-export type AnyVoiceChannel = VoiceChannel | StageChannel;
-export type InviteChannel = Exclude<AnyChannel, PrivateChannel | CategoryChannel | GroupChannel | AnyThreadChannel>;
+
+export type AnyChannel = ChannelTypeMap[ChannelTypes];
+export type AnyNotImplementedChannel = ChannelTypeMap[NotImplementedChannels];
+export type AnyImplementedChannel = ChannelTypeMap[ImplementedChannels];
+export type AnyGuildChannel = ChannelTypeMap[GuildChannels];
+export type AnyThreadChannel = ChannelTypeMap[ThreadChannels];
+export type AnyGuildChannelWithoutThreads = ChannelTypeMap[GuildChannelsWithoutThreads];
+export type AnyPrivateChannel = ChannelTypeMap[PrivateChannels];
+export type AnyEditableChannel = ChannelTypeMap[EditableChannels];
+export type AnyTextableChannel = ChannelTypeMap[TextableChannels];
+export type AnyTextableGuildChannel = ChannelTypeMap[TextableGuildChannels];
+export type AnyTextableChannelWithoutThreads = ChannelTypeMap[TextableChannelsWithoutThreads];
+export type AnyTextableGuildChannelWithoutThreads = ChannelTypeMap[TextableGuildChannelsWithoutThreads];
+export type AnyVoiceChannel = ChannelTypeMap[VoiceChannels];
+export type AnyInviteChannel = ChannelTypeMap[InviteChannels];
+export type AnyInteractionChannel = ChannelTypeMap[InteractionChannels];
 
 export interface PartialInviteChannel {
     icon?: string | null;
     id: string;
     name: string | null;
-    type: Exclude<ChannelTypes, ChannelTypes.DM | ChannelTypes.GUILD_CATEGORY | ChannelTypes.GROUP_DM | ThreadChannelTypes>;
+    type: Exclude<ChannelTypes, ChannelTypes.DM | ChannelTypes.GUILD_CATEGORY | ChannelTypes.GROUP_DM | ThreadChannels>;
 }
 
 export type PossiblyUncachedInvite = Invite | UncachedInvite;
 export interface UncachedInvite {
-    channel?: InviteChannel | Uncached;
+    channel?: AnyInviteChannel | Uncached;
     code: string;
     guild?: Guild | Uncached;
 }
 
-export interface GetChannelMessagesOptions<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> {
+export interface GetChannelMessagesOptions<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> {
     /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
     after?: string;
     /** Get messages around this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
@@ -763,7 +788,7 @@ export interface GetChannelMessagesOptions<T extends AnyTextChannelWithoutGroup 
     filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
 }
 
-export interface GetChannelMessagesIteratorOptions<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> {
+export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> {
     /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
     after?: string;
     /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
@@ -777,7 +802,7 @@ export interface GetChannelMessagesIteratorOptions<T extends AnyTextChannelWitho
     filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
 }
 
-export interface MessagesIterator<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends AsyncIterable<Array<Message<T>>> {
+export interface MessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> extends AsyncIterable<Array<Message<T>>> {
     /** The most recent "last" message seen by the iterator, used for future requests. */
     lastMessage?: string;
     /** The current limit of remaining messages to get. */
@@ -891,7 +916,7 @@ export interface StartThreadWithoutMessageOptions extends StartThreadFromMessage
     /** [Private Thread Only] If non-moderators can add other non-moderators to the thread. */
     invitable?: boolean;
     /** The type of thread to create. */
-    type: ThreadChannelTypes;
+    type: ThreadChannels;
 }
 
 export interface StartThreadInForumOptions extends StartThreadFromMessageOptions {
@@ -997,11 +1022,11 @@ export interface ForumEmoji {
     name: string | null;
 }
 
-export type PossiblyUncachedMessage = Message | { channel: AnyTextChannelWithoutGroup | Uncached; channelID: string; guild?: Guild; guildID?: string; } & Uncached;
+export type PossiblyUncachedMessage = Message | { channel: AnyTextableChannel | Uncached; channelID: string; guild?: Guild; guildID?: string; } & Uncached;
 export type PossiblyUncachedThread = AnyThreadChannel | Pick<AnyThreadChannel, "id" | "type"> & { guild?: Guild; guildID: string; parent?: ThreadParentChannel; parentID: string; };
 export type MinimalPossiblyUncachedThread = AnyThreadChannel | { guild?: Guild; guildID: string; id: string; };
 
-export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
+export interface PurgeOptions<T extends AnyTextableGuildChannel | Uncached> {
     /** The ID of the message to purge after. */
     after?: string;
     /** The ID of the message to purge around. */
