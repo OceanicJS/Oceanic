@@ -49,9 +49,9 @@ export default class RequestHandler {
     }
 
     private getRoute(path: string, method: string): string {
-        let route = path.replace(/\/([a-z-]+)\/\d{15,21}/g, function(match, p) {
+        let route = path.replaceAll(/\/([a-z-]+)\/\d{15,21}/g, function(match, p) {
             return p === "channels" || p === "guilds" || p === "webhooks" ? match : `/${p as string}/:id`;
-        }).replace(/\/reactions\/[^/]+/g, "/reactions/:id").replace(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[\w-]{64,}/, "/webhooks/$1/:token");
+        }).replaceAll(/\/reactions\/[^/]+/g, "/reactions/:id").replaceAll(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[\w-]{64,}/, "/webhooks/$1/:token");
         if (method === "DELETE" && route.endsWith("/messages/:id")) {
             const messageID = path.slice(path.lastIndexOf("/") + 1);
             const createdAt = Base.getCreatedAt(messageID).getTime();

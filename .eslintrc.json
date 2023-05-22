@@ -176,7 +176,7 @@
     "indent": "off",
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "error",
-    "jsdoc/no-undefined-types": "error",
+    "jsdoc/no-undefined-types": "off",
     "key-spacing": [
       "error",
       {
@@ -343,6 +343,7 @@
       {
         "enums": "always-multiline"
       }
-    ]
+    ],
+    "unicorn/prefer-event-target": "off"
   }
 }
