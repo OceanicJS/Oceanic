@@ -41,7 +41,9 @@ import type {
     PurgeOptions,
     AnyGuildTextChannel,
     GetThreadMembersOptions,
-    AnyGuildChannel
+    AnyGuildChannel,
+    GetChannelMessagesIteratorOptions,
+    MessagesIterator
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -613,71 +615,112 @@ export default class Channels {
      * @param channelID The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => {
-            const query = new URLSearchParams();
-            if (_options?.after !== undefined) {
-                query.set("after", _options.after);
+    async getMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options?: GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
+        const query = new URLSearchParams();
+        let chosenOption: "after" | "around" | "before";
+        if (options?.around !== undefined) {
+            query.set("around", options.around);
+            chosenOption = "around";
+        // eslint-disable-next-line unicorn/no-negated-condition
+        } else if (options?.after !== undefined) {
+            query.set("after", options.after);
+            chosenOption = "after";
+        } else {
+            if (options?.before !== undefined) {
+                query.set("before", options.before);
             }
-            if (_options?.around !== undefined) {
-                query.set("around", _options.around);
+            chosenOption = "before";
+        }
+
+        if (chosenOption === "around" || (options?.limit && options.limit <= 100)) {
+            const filter = options?.filter?.bind(this) ?? ((): true => true);
+            if (options?.limit !== undefined) {
+                query.set("limit", Math.min(options.limit, 100).toString());
             }
-            if (_options?.before !== undefined) {
-                query.set("before", _options.before);
-            }
-            if (_options?.limit !== undefined) {
-                query.set("limit", _options.limit.toString());
-            }
-            return this.#manager.authRequest<Array<RawMessage>>({
+
+            const messages = await this.#manager.authRequest<Array<RawMessage>>({
                 method: "GET",
                 path:   Routes.CHANNEL_MESSAGES(channelID),
                 query
             }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+
+            for (const message of messages) {
+                const f = filter(message);
+
+                if (f === false) {
+                    messages.splice(messages.indexOf(message), 1);
+                }
+
+                if (f === "break") {
+                    messages.splice(messages.indexOf(message));
+                    break;
+                }
+            }
+
+            return messages;
+        }
+
+        const results: Array<Message<T>> = [];
+        const it = await this.getMessagesIterator<T>(channelID, options);
+
+        for await (const messages of it) {
+            const limit = messages.length < 100 ? messages.length : it.limit + 100;
+            this.#manager.client.emit("debug", `Getting ${limit} more message${limit === 1 ? "" : "s"} for ${channelID}: ${it.lastMessage ?? ""}`);
+            results.push(...messages);
+        }
+
+        return results;
+    }
+
+    /**
+     * Get an async iterator for getting messages in a channel.
+     * @param channelID The ID of the channel to get messages from.
+     * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
+     */
+    async getMessagesIterator<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): Promise<MessagesIterator<T>> {
+        const filter = options?.filter?.bind(this) ?? ((): true => true);
+        const chosenOption = options?.after === undefined ? "before" : "after";
+
+        // arrow functions cannot be generator functions
+        // eslint-disable-next-line unicorn/no-this-assignment
+        const self = this;
+        const it = {
+            lastMessage: chosenOption === "after" ? options?.after : options?.before,
+            limit:       options?.limit ?? 100,
+            async *[Symbol.asyncIterator](): AsyncGenerator<Array<Message<T>>> {
+                loop: while (it.limit > 0) {
+                    const messages = await self.getMessages<T>(channelID, {
+                        limit:          it.limit >= 100 ? 100 : it.limit,
+                        [chosenOption]: it.lastMessage
+                    });
+
+                    if (messages.length < 100 || it.limit <= 100) {
+                        yield messages;
+                        break loop;
+                    }
+
+                    it.limit -= messages.length;
+
+                    for (const message of Array.from(messages)) {
+                        const f = filter(message);
+                        if (f === false) {
+                            messages.splice(messages.indexOf(message), 1);
+                        }
+
+                        if (f === "break") {
+                            messages.splice(messages.indexOf(message));
+                            yield messages;
+                            break loop;
+                        }
+                    }
+
+                    it.lastMessage = messages.at(-1)?.id;
+                    yield messages;
+                }
+            }
         };
 
-        const limit = options?.limit ?? 100;
-        let chosenOption: "after" | "around" | "before";
-        if (options?.after) {
-            chosenOption = "after";
-        } else if (options?.around) {
-            chosenOption = "around";
-        } else if (options?.before) {
-            chosenOption = "before";
-        } else {
-            chosenOption = "before";
-        }
-        let optionValue = options?.[chosenOption] ?? undefined;
-
-        let messages: Array<Message<T>> = [];
-        while (messages.length < limit) {
-            const limitLeft = limit - messages.length;
-            const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
-            if (options?.limit && options?.limit > 100) {
-                this.#manager.client.emit("debug", `Getting ${limitLeft} more message${limitLeft === 1 ? "" : "s"} for ${channelID}: ${optionValue ?? ""}`);
-            }
-            const messagesChunk = await _getMessages({
-                limit:          limitToFetch,
-                [chosenOption]: optionValue
-            });
-
-            if (messagesChunk.length === 0) {
-                break;
-            }
-
-            messages = messages.concat(messagesChunk);
-
-            if (chosenOption === "around") {
-                break;
-            } else {
-                optionValue = messages.at(-1)!.id;
-            }
-
-            if (messagesChunk.length < 100) {
-                break;
-            }
-        }
-
-        return messages;
+        return it;
     }
 
     /**
@@ -908,7 +951,13 @@ export default class Channels {
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
     async purgeMessages<T extends AnyGuildTextChannel | Uncached = AnyGuildTextChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
-        const filter = options.filter?.bind(this) ?? ((): true => true);
+        const filter = (message: Message<T>): boolean | "break" | PromiseLike<boolean | "break"> => {
+            if (message.timestamp.getTime() < Date.now() - 1209600000) {
+                return "break";
+            }
+
+            return options?.filter?.(message) ?? true;
+        };
         let chosenOption: "after" | "around" | "before";
         if (options.after) {
             chosenOption = "after";
@@ -919,64 +968,34 @@ export default class Channels {
         }
 
         if (chosenOption === "around" || options.limit <= 100) {
-            const messages = await this.getMessages(channelID, {
+            const messages = await this.getMessages<T>(channelID, {
                 limit:          options.limit,
                 [chosenOption]: options[chosenOption]
             });
+            for (const message of messages) {
+                const f = filter(message);
+                if (f === false) {
+                    messages.splice(messages.indexOf(message), 1);
+                }
+
+                if (f === "break") {
+                    messages.splice(messages.indexOf(message));
+                    break;
+                }
+            }
             return this.deleteMessages(channelID, messages.map(message => message.id), options.reason);
         }
 
-        const it = {
-            lastMessage:            options[chosenOption],
-            done:                   false,
-            limit:                  options.limit,
-            [Symbol.asyncIterator]: () => ({
-                next: async(): Promise<{
-                    done: boolean;
-                    value: Array<string>;
-                }> => {
-                    if (it.done) {
-                        return { done: true, value: [] };
-                    }
-                    const messages = await this.getMessages<T>(channelID, {
-                        limit:          it.limit >= 100 ? 100 : it.limit,
-                        [chosenOption]: it.lastMessage
-                    });
-
-                    if (messages.length < 100 || it.limit <= 100) {
-                        it.done = true;
-                    }
-
-                    if (it.limit > 100) {
-                        it.limit -= 100;
-                    }
-
-                    for (const message of Array.from(messages)) {
-                        if (message.timestamp.getTime() < Date.now() - 1209600000) {
-                            it.done = true;
-                            messages.splice(messages.indexOf(message));
-                            break;
-                        }
-
-
-                        if (!filter(message)) {
-                            messages.splice(messages.indexOf(message), 1);
-                        }
-                    }
-
-                    it.lastMessage = messages.at(-1)?.id;
-                    return {
-                        done:  false,
-                        value: messages.map(message => message.id)
-                    };
-                }
-            })
-        };
+        const it = await this.getMessagesIterator<T>(channelID, {
+            after:  options.after,
+            before: options.before,
+            limit:  options.limit,
+            filter
+        });
 
         let deleted = 0;
-
         for await (const messages of it) {
-            deleted += await this.deleteMessages(channelID, messages, options.reason);
+            deleted += await this.deleteMessages(channelID, messages.map(message => message.id), options.reason);
         }
         return deleted;
     }

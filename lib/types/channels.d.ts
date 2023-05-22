@@ -747,15 +747,41 @@ export interface UncachedInvite {
     guild?: Guild | Uncached;
 }
 
-export interface GetChannelMessagesOptions {
-    /** Get messages after this message id. */
+export interface GetChannelMessagesOptions<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> {
+    /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
     after?: string;
-    /** Get messages around this message id. */
+    /** Get messages around this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
     around?: string;
-    /** Get messages before this message id. */
+    /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
     before?: string;
     /** The maximum amount of messages to get. Defaults to 100. Use Infinity if you wish to get as many messages as possible. */
     limit?: number;
+    /**
+     * A function used to reject certain messages. If `"break"` is returned, further iteration of messages will stop and the previously allowed messages will be returned.
+     * @param message The message to filter.
+     */
+    filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface GetChannelMessagesIteratorOptions<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> {
+    /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    after?: string;
+    /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    before?: string;
+    /** The maximum amount of messages to get. Defaults to 100. Use Infinity if you wish to get as many messages as possible. */
+    limit?: number;
+    /**
+     * A function used to reject certain messages. If `"break"` is returned, the iterator will immediately exit and yield the previously allowed messages.
+     * @param message The message to filter.
+     */
+    filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface MessagesIterator<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends AsyncIterable<Array<Message<T>>> {
+    /** The most recent "last" message seen by the iterator, used for future requests. */
+    lastMessage?: string;
+    /** The current limit of remaining messages to get. */
+    limit: number;
 }
 
 export interface GetReactionsOptions {
@@ -987,10 +1013,10 @@ export interface PurgeOptions<T extends AnyGuildTextChannel | Uncached> {
     /** The reason for purging the messages. */
     reason?: string;
     /**
-     * The filter to apply to messages to decide if they should be purged.
+     * A function used to reject certain messages. If `"break"` is returned, further iteration of messages will stop and purging will begin immediately.
      * @param message The message to filter.
      */
-    filter?(message: Message<T>): boolean | PromiseLike<boolean>;
+    filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
 }
 
 export type ThreadParentChannel = TextChannel | AnnouncementChannel | ForumChannel;
