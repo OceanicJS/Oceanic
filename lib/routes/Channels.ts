@@ -285,14 +285,13 @@ export default class Channels {
      */
     async deleteMessages(channelID: string, messageIDs: Array<string>, reason?: string): Promise<number> {
         const chunks: Array<Array<string>> = [];
-        messageIDs = [...messageIDs];
+        messageIDs = Array.from(messageIDs);
         const amountOfMessages = messageIDs.length;
         while (messageIDs.length !== 0) {
             chunks.push(messageIDs.splice(0, 100));
         }
 
         let done = 0;
-        const deleteMessagesPromises: Array<Promise<unknown>> = [];
         for (const chunk of chunks.values()) {
             if (chunks.length > 1) {
                 const left = amountOfMessages - done;
@@ -301,20 +300,18 @@ export default class Channels {
 
             if (chunk.length === 1) {
                 this.#manager.client.emit("debug", "deleteMessages created a chunk with only 1 element, using deleteMessage instead.");
-                deleteMessagesPromises.push(this.deleteMessage(channelID, chunk[0], reason));
+                await this.deleteMessage(channelID, chunk[0], reason);
                 continue;
             }
 
-            deleteMessagesPromises.push(this.#manager.authRequest<null>({
+            await this.#manager.authRequest<null>({
                 method: "POST",
                 path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(channelID),
                 json:   { messages: chunk },
                 reason
-            }));
+            });
             done += chunk.length;
         }
-
-        await Promise.all(deleteMessagesPromises);
 
         return amountOfMessages;
     }
@@ -912,88 +909,76 @@ export default class Channels {
      */
     async purgeMessages<T extends AnyGuildTextChannel | Uncached = AnyGuildTextChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
         const filter = options.filter?.bind(this) ?? ((): true => true);
-
-        const messageIDsToPurge: Array<string> = [];
         let chosenOption: "after" | "around" | "before";
         if (options.after) {
             chosenOption = "after";
         } else if (options.around) {
             chosenOption = "around";
-        } else if (options.before) {
-            chosenOption = "before";
         } else {
             chosenOption = "before";
         }
-        let optionValue = options[chosenOption] ?? undefined;
 
-        let finishedFetchingMessages = false;
-        let limitWasReach = false;
-        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
+        if (chosenOption === "around" || options.limit <= 100) {
             const messages = await this.getMessages(channelID, {
-                limit:          100,
-                [chosenOption]: optionValue
+                limit:          options.limit,
+                [chosenOption]: options[chosenOption]
             });
+            return this.deleteMessages(channelID, messages.map(message => message.id), options.reason);
+        }
 
-            if (messages.length === 0) {
-                finishedFetchingMessages = true;
-                return;
-            }
+        const it = {
+            lastMessage:            options[chosenOption],
+            done:                   false,
+            limit:                  options.limit,
+            [Symbol.asyncIterator]: () => ({
+                next: async(): Promise<{
+                    done: boolean;
+                    value: Array<string>;
+                }> => {
+                    if (it.done) {
+                        return { done: true, value: [] };
+                    }
+                    const messages = await this.getMessages<T>(channelID, {
+                        limit:          it.limit >= 100 ? 100 : it.limit,
+                        [chosenOption]: it.lastMessage
+                    });
 
-            if (chosenOption === "around") {
-                finishedFetchingMessages = true;
-            } else {
-                optionValue = messages.at(-1)!.id;
-            }
+                    if (messages.length < 100 || it.limit <= 100) {
+                        it.done = true;
+                    }
 
-            const filterPromises: Array<Promise<unknown>> = [];
-            const resolvers: Array<(() => void) | null> = [];
-            for (const [index, message] of messages.entries()) {
-                if (message.timestamp.getTime() < Date.now() - 1209600000) {
-                    finishedFetchingMessages = true;
-                    break;
+                    if (it.limit > 100) {
+                        it.limit -= 100;
+                    }
+
+                    for (const message of Array.from(messages)) {
+                        if (message.timestamp.getTime() < Date.now() - 1209600000) {
+                            it.done = true;
+                            messages.splice(messages.indexOf(message));
+                            break;
+                        }
+
+
+                        if (!filter(message)) {
+                            messages.splice(messages.indexOf(message), 1);
+                        }
+                    }
+
+                    it.lastMessage = messages.at(-1)?.id;
+                    return {
+                        done:  false,
+                        value: messages.map(message => message.id)
+                    };
                 }
-
-                filterPromises.push(new Promise<void>(resolve => {
-                    resolvers.push(resolve);
-
-                    void (async (): Promise<void> => {
-                        let removedResolver: (() => void) | null = null;
-
-                        if (await filter(message as Message<T>) && !limitWasReach) {
-                            messageIDsToPurge.push(message.id);
-                            if (messageIDsToPurge.length === options.limit) {
-                                limitWasReach = true;
-                            }
-                        }
-
-                        removedResolver = resolvers[index];
-                        resolvers[index] = null;
-
-                        if (removedResolver) {
-                            removedResolver();
-                        }
-
-                        if (limitWasReach) {
-                            for (const [resolverIndex, resolver] of resolvers.entries()) {
-                                if (resolver) {
-                                    resolver();
-                                    resolvers[resolverIndex] = null;
-                                }
-                            }
-                        }
-                    })();
-                }));
-            }
-
-            await Promise.all(filterPromises);
-
-            if (!finishedFetchingMessages && !limitWasReach) {
-                await addMessageIDsToPurgeBatch();
-            }
+            })
         };
-        await addMessageIDsToPurgeBatch();
 
-        return this.deleteMessages(channelID, messageIDsToPurge, options.reason);
+        let deleted = 0;
+
+        for await (const messages of it) {
+            deleted += await this.deleteMessages(channelID, messages, options.reason);
+        }
+        return deleted;
     }
 
     /**
