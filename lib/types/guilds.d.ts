@@ -252,9 +252,8 @@ export interface RawIntegrationApplication {
 
 export interface PartialEmoji extends Pick<Emoji, "id" | "name" | "animated"> {}
 export interface NullablePartialEmoji {
-    animated: boolean;
-    id: string | null;
-    name: string | null;
+    id?: string | null;
+    name?: string | null;
 }
 
 export interface CreateEmojiOptions {

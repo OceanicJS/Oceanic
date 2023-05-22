@@ -1,5 +1,5 @@
 /** @module Types/Channels */
-import type { PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
+import type { NullablePartialEmoji, PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
 import type { RawApplication, RawPartialApplication } from "./oauth";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
@@ -513,7 +513,7 @@ export type ModalActionRow = ActionRowBase<ModalComponent>;
 
 export interface ButtonBase {
     disabled?: boolean;
-    emoji?: PartialEmoji;
+    emoji?: NullablePartialEmoji;
     label?: string;
     style: ButtonStyles;
     type: ComponentTypes.BUTTON;
@@ -584,7 +584,7 @@ export interface ChannelSelectMenu extends SelectMenuBase<ComponentTypes.CHANNEL
 export interface SelectOption {
     default?: boolean;
     description?: string;
-    emoji?: PartialEmoji;
+    emoji?: NullablePartialEmoji;
     label: string;
     value: string;
 }
