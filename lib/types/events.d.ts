@@ -164,8 +164,8 @@ export interface ClientEvents {
     messageDelete: [message: PossiblyUncachedMessage];
     /** @event Emitted when messages are bulk deleted. Requires the `GUILD_MESSAGES` intent. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageDeleteBulk: [messages: Array<PossiblyUncachedMessage>];
-    /** @event Emitted when a reaction is added to a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
-    messageReactionAdd: [message: PossiblyUncachedMessage, reactor: Member | User | Uncached, reaction: PartialEmoji];
+    /** @event Emitted when a reaction is added to a message. For uncached methods, `author` will not be present if the reaction was added to a webhook message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
+    messageReactionAdd: [message: PossiblyUncachedMessage & { author?: Member | User | Uncached; }, reactor: Member | User | Uncached, reaction: PartialEmoji];
     /** @event Emitted when a reaction is removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
     messageReactionRemove: [message: PossiblyUncachedMessage, reactor: Member | User | Uncached, reaction: PartialEmoji];
     /** @event Emitted when all reactions are removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */

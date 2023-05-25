@@ -710,6 +710,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "MESSAGE_REACTION_ADD": {
                 const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
                 const message = channel?.messages?.get(packet.d.message_id);
                 const reactor = packet.d.member
                     ? (packet.d.guild_id ? this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member) : this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id })
@@ -734,9 +735,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.emit("messageReactionAdd", message ?? {
                     channel:   channel ?? { id: packet.d.channel_id },
                     channelID: packet.d.channel_id,
-                    guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
+                    guild,
                     guildID:   packet.d.guild_id,
-                    id:        packet.d.message_id
+                    id:        packet.d.message_id ,
+                    author:    packet.d.message_author_id === undefined ? undefined : guild?.members.get(packet.d.user_id) ?? this.client.users.get(packet.d.user_id) ?? { id: packet.d.message_author_id }
                 }, reactor, packet.d.emoji);
                 break;
             }

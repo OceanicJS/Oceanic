@@ -411,6 +411,7 @@ export interface MessageReactionAddPacket extends BaseDispatchPacket {
         emoji: PartialEmoji;
         guild_id?: string;
         member?: RawMember;
+        message_author_id?: string;
         message_id: string;
         user_id: string;
     };
