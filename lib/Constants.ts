@@ -11,6 +11,7 @@ import type PublicThreadChannel from "./structures/PublicThreadChannel";
 import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
 import type StageChannel from "./structures/StageChannel";
 import type ForumChannel from "./structures/ForumChannel";
+import type { ReverseMap, StringMap } from "./types/misc";
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;
@@ -391,66 +392,100 @@ export namespace Permissions {
     export const SEND_VOICE_MESSAGES                 = 70368744177664n; // 1 << 46
 }
 
+// bigints can't be used as object keys, so we need to convert them to strings
+const PermissionValueToName = Object.fromEntries(Object.entries(Permissions).map(([k, v]) => [String(v), k] as [string, string])) as ReverseMap<StringMap<typeof Permissions>>;
+
+export const AllPermissions = Object.values(Permissions).reduce((a, b) => a | b, 0n);
+export const TextPermissions = [
+    Permissions.CREATE_INSTANT_INVITE,
+    Permissions.MANAGE_CHANNELS,
+    Permissions.ADD_REACTIONS,
+    Permissions.VIEW_CHANNEL,
+    Permissions.SEND_MESSAGES,
+    Permissions.SEND_TTS_MESSAGES,
+    Permissions.MANAGE_MESSAGES,
+    Permissions.EMBED_LINKS,
+    Permissions.ATTACH_FILES,
+    Permissions.READ_MESSAGE_HISTORY,
+    Permissions.MENTION_EVERYONE,
+    Permissions.USE_EXTERNAL_EMOJIS,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_WEBHOOKS,
+    Permissions.USE_APPLICATION_COMMANDS,
+    Permissions.MANAGE_THREADS,
+    Permissions.CREATE_PUBLIC_THREADS,
+    Permissions.CREATE_PRIVATE_THREADS,
+    Permissions.USE_EXTERNAL_STICKERS,
+    Permissions.SEND_MESSAGES_IN_THREADS,
+    Permissions.SEND_VOICE_MESSAGES
+] as const;
+export const AllTextPermissions = TextPermissions.reduce((all, p) => all | p, 0n);
+export const AllTextPermissionNames = TextPermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
+
+export const VoicePermissions = [
+    Permissions.CREATE_INSTANT_INVITE,
+    Permissions.MANAGE_CHANNELS,
+    Permissions.ADD_REACTIONS,
+    Permissions.PRIORITY_SPEAKER,
+    Permissions.STREAM,
+    Permissions.VIEW_CHANNEL,
+    Permissions.SEND_MESSAGES,
+    Permissions.SEND_TTS_MESSAGES,
+    Permissions.MANAGE_MESSAGES,
+    Permissions.EMBED_LINKS,
+    Permissions.ATTACH_FILES,
+    Permissions.READ_MESSAGE_HISTORY,
+    Permissions.MENTION_EVERYONE,
+    Permissions.USE_EXTERNAL_EMOJIS,
+    Permissions.CONNECT,
+    Permissions.SPEAK,
+    Permissions.MUTE_MEMBERS,
+    Permissions.DEAFEN_MEMBERS,
+    Permissions.MOVE_MEMBERS,
+    Permissions.USE_VAD,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_WEBHOOKS,
+    Permissions.USE_APPLICATION_COMMANDS,
+    Permissions.MANAGE_EVENTS,
+    Permissions.USE_EXTERNAL_STICKERS,
+    Permissions.USE_EMBEDDED_ACTIVITIES,
+    Permissions.USE_SOUNDBOARD,
+    Permissions.USE_EXTERNAL_SOUNDS,
+    Permissions.SEND_VOICE_MESSAGES
+] as const;
+export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
+export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
+
+export const StagePermissions = [
+    Permissions.CREATE_INSTANT_INVITE,
+    Permissions.MANAGE_CHANNELS,
+    Permissions.ADD_REACTIONS,
+    Permissions.STREAM,
+    Permissions.VIEW_CHANNEL,
+    Permissions.SEND_MESSAGES,
+    Permissions.SEND_TTS_MESSAGES,
+    Permissions.MANAGE_MESSAGES,
+    Permissions.EMBED_LINKS,
+    Permissions.ATTACH_FILES,
+    Permissions.READ_MESSAGE_HISTORY,
+    Permissions.MENTION_EVERYONE,
+    Permissions.USE_EXTERNAL_EMOJIS,
+    Permissions.CONNECT,
+    Permissions.MUTE_MEMBERS,
+    Permissions.MOVE_MEMBERS,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_WEBHOOKS,
+    Permissions.USE_APPLICATION_COMMANDS,
+    Permissions.REQUEST_TO_SPEAK,
+    Permissions.MANAGE_EVENTS,
+    Permissions.USE_EXTERNAL_STICKERS,
+    Permissions.SEND_VOICE_MESSAGES
+] as const;
+export const AllStagePermissions = StagePermissions.reduce((all, p) => all | p, 0n);
+export const AllStagePermissionNames = StagePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
+
 export const PermissionNames = Object.keys(Permissions) as Array<PermissionName>;
 export type PermissionName = keyof typeof Permissions;
-export const AllGuildPermissions = Permissions.KICK_MEMBERS |
-    Permissions.BAN_MEMBERS |
-    Permissions.ADMINISTRATOR |
-    Permissions.MANAGE_CHANNELS |
-    Permissions.MANAGE_GUILD |
-    Permissions.VIEW_AUDIT_LOG |
-    Permissions.VIEW_GUILD_INSIGHTS |
-    Permissions.CHANGE_NICKNAME |
-    Permissions.MANAGE_NICKNAMES |
-    Permissions.MANAGE_ROLES |
-    Permissions.MANAGE_WEBHOOKS |
-    Permissions.MANAGE_GUILD_EXPRESSIONS |
-    Permissions.MANAGE_EVENTS |
-    Permissions.MODERATE_MEMBERS |
-    Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS |
-    Permissions.USE_SOUNDBOARD |
-    Permissions.CREATE_GUILD_EXPRESSIONS |
-    Permissions.CREATE_EVENTS |
-    Permissions.USE_EXTERNAL_SOUNDS |
-    Permissions.SEND_VOICE_MESSAGES;
-export const AllTextPermissions = Permissions.CREATE_INSTANT_INVITE |
-    Permissions.MANAGE_CHANNELS |
-    Permissions.ADD_REACTIONS |
-    Permissions.VIEW_CHANNEL |
-    Permissions.SEND_MESSAGES |
-    Permissions.SEND_TTS_MESSAGES |
-    Permissions.MANAGE_MESSAGES |
-    Permissions.EMBED_LINKS |
-    Permissions.ATTACH_FILES |
-    Permissions.READ_MESSAGE_HISTORY |
-    Permissions.MENTION_EVERYONE |
-    Permissions.USE_EXTERNAL_EMOJIS |
-    Permissions.MANAGE_ROLES |
-    Permissions.MANAGE_WEBHOOKS |
-    Permissions.USE_APPLICATION_COMMANDS |
-    Permissions.MANAGE_THREADS |
-    Permissions.CREATE_PUBLIC_THREADS |
-    Permissions.CREATE_PRIVATE_THREADS |
-    Permissions.USE_EXTERNAL_STICKERS |
-    Permissions.SEND_MESSAGES_IN_THREADS |
-    Permissions.SEND_VOICE_MESSAGES;
-export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
-    Permissions.MANAGE_CHANNELS |
-    Permissions.PRIORITY_SPEAKER |
-    Permissions.STREAM |
-    Permissions.VIEW_CHANNEL |
-    Permissions.CONNECT |
-    Permissions.SPEAK |
-    Permissions.MUTE_MEMBERS |
-    Permissions.DEAFEN_MEMBERS |
-    Permissions.MOVE_MEMBERS |
-    Permissions.USE_VAD |
-    Permissions.MANAGE_ROLES |
-    Permissions.REQUEST_TO_SPEAK |
-    Permissions.USE_EMBEDDED_ACTIVITIES |
-    Permissions.USE_SOUNDBOARD |
-    Permissions.USE_EXTERNAL_SOUNDS;
-export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
 
 export enum ChannelFlags {
     GUILD_FEED_REMOVED      = 1 << 0,
