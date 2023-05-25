@@ -45,7 +45,8 @@ import type {
     CreateStickerOptions,
     EditStickerOptions,
     RawOnboarding,
-    Onboarding
+    Onboarding,
+    EditOnboardingOptions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -771,6 +772,63 @@ export default class Guilds {
     }
 
     /**
+     * Edit a guild's onboarding configuration.
+     * @param guildID The ID of the guild.
+     * @param options The options for editing the onboarding configuration.
+     */
+    async editOnboarding(guildID: string, options: EditOnboardingOptions): Promise<Onboarding> {
+        const reason = options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
+        return this.#manager.authRequest<RawOnboarding>({
+            method: "PATCH",
+            path:   Routes.GUILD_ONBOARDING(guildID),
+            json:   {
+                enabled:             options.enabled,
+                default_channel_ids: options.defaultChannelIDs,
+                prompts:             options.prompts?.map(p => ({
+                    id:           p.id,
+                    in_oboarding: p.inOnboarding,
+                    options:      p.options.map(o => ({
+                        channel_ids: o.channelIDs,
+                        description: o.description,
+                        emoji:       o.emoji,
+                        id:          o.id,
+                        role_ids:    o.roleIDs,
+                        title:       o.title
+                    })),
+                    required:      p.required,
+                    single_select: p.singleSelect,
+                    title:         p.title
+                })),
+                mode: options.mode
+            },
+            reason
+        }).then(data => ({
+            defaultChannelIDs: data.default_channel_ids,
+            enabled:           data.enabled,
+            guildID:           data.guild_id,
+            mode:              data.mode,
+            prompts:           data.prompts.map(p => ({
+                id:           p.id,
+                inOnboarding: p.in_onboarding,
+                options:      p.options.map(o => ({
+                    channelIDs:  o.channel_ids,
+                    description: o.description,
+                    emoji:       o.emoji,
+                    id:          o.id,
+                    roleIDs:     o.role_ids,
+                    title:       o.title
+                })),
+                required:     p.required,
+                singleSelect: p.single_select,
+                title:        p.title
+            }))
+        }));
+    }
+
+    /**
      * Edit an existing role.
      * @param guildID The ID of the guild.
      * @param options The options for editing the role.
@@ -1250,6 +1308,7 @@ export default class Guilds {
             defaultChannelIDs: data.default_channel_ids,
             enabled:           data.enabled,
             guildID:           data.guild_id,
+            mode:              data.mode,
             prompts:           data.prompts.map(p => ({
                 id:           p.id,
                 inOnboarding: p.in_onboarding,

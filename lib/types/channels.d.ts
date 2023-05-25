@@ -762,7 +762,7 @@ export interface PartialInviteChannel {
     icon?: string | null;
     id: string;
     name: string | null;
-    type: Exclude<ChannelTypes, ChannelTypes.DM | ChannelTypes.GUILD_CATEGORY | ChannelTypes.GROUP_DM | ThreadChannels>;
+    type: InviteChannels;
 }
 
 export type PossiblyUncachedInvite = Invite | UncachedInvite;

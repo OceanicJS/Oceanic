@@ -32,7 +32,8 @@ import type {
     VerificationLevels,
     VideoQualityModes,
     SortOrderTypes,
-    ForumLayoutTypes
+    ForumLayoutTypes,
+    OnboardingModes
 } from "../Constants";
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
@@ -492,6 +493,19 @@ export interface EditMemberOptions {
 
 export interface EditCurrentMemberOptions extends Pick<EditMemberOptions, "nick" | "reason"> {}
 
+export interface EditOnboardingOptions {
+    /** Channel IDs that members get opted into automatically. */
+    defaultChannelIDs?: Array<string>;
+    /** If onboarding is enabled. */
+    enabled?: boolean;
+    /** The mode for onboarding, used to determine requirements. */
+    mode?: OnboardingModes;
+    /** The prompts shown during onboarding. */
+    prompts?: Array<OnboardingPrompt>;
+    /** The reason for editing the onboarding configuration. */
+    reason?: string;
+}
+
 export interface GetBansOptions {
     /** The ID of the user to get bans after. */
     after?: string;
@@ -756,6 +770,7 @@ export interface RawOnboarding {
     default_channel_ids: Array<string>;
     enabled: boolean;
     guild_id: string;
+    mode: OnboardingModes;
     prompts: Array<RawOnboardingPrompt>;
 }
 
@@ -781,5 +796,6 @@ export interface Onboarding {
     defaultChannelIDs: Array<string>;
     enabled: boolean;
     guildID: string;
+    mode: OnboardingModes;
     prompts: Array<OnboardingPrompt>;
 }

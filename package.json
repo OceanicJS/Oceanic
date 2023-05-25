@@ -16,10 +16,10 @@
     "lint": "eslint lib --ext .ts",
     "lint:fix": "eslint lib --ext .ts --fix",
     "prepare": "rimraf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
-    "test:build": "npm run prepublishOnly",
+    "test:build": "npm run prepare",
     "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
     "test:docs": "rimraf docs && npm i --no-save --ignore-scripts $(npm run --silent docs:verisons) && node scripts/doc-test.js && npx --yes typedoc",
-    "docs:verisons": "node -e 'process.stdout.write(Object.entries(require(\"./package.json\").docsDependencies).map(([k, v]) => `${k}@${v}`).join(\" \"));'",
+    "docs:verisons": "node -e 'process.stdout.write(Object.entries(require(`./package.json`).docsDependencies).map(([k, v]) => `${k}@${v}`).join(` `));'",
     "test": "npm run lint && npm run test:build && npm run test:esm && npm run test:docs"
   },
   "docsDependencies": {
