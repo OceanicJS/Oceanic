@@ -154,9 +154,9 @@ export interface ClientEvents {
     integrationUpdate: [guild: Guild | Uncached, integration: Integration, oldIntegration: JSONIntegration | null];
     /** @event Emitted when an interaction is created. */
     interactionCreate: [interaction: AnyInteractionGateway];
-    /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent. */
+    /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` perission on the channel. */
     inviteCreate: [invite: Invite];
-    /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent. */
+    /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` perission on the channel. */
     inviteDelete: [invite: PossiblyUncachedInvite];
     /** @event Emitted when a message is created. Requires the `GUILD_MESSAGES` intent for guild messages, `DIRECT_MESSAGES` for direct messages. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageCreate: [message: Message];
