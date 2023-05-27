@@ -154,9 +154,9 @@ export interface ClientEvents {
     integrationUpdate: [guild: Guild | Uncached, integration: Integration, oldIntegration: JSONIntegration | null];
     /** @event Emitted when an interaction is created. */
     interactionCreate: [interaction: AnyInteractionGateway];
-    /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` perission on the channel. */
+    /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` permission on the channel. */
     inviteCreate: [invite: Invite];
-    /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` perission on the channel. */
+    /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` permission on the channel. */
     inviteDelete: [invite: PossiblyUncachedInvite];
     /** @event Emitted when a message is created. Requires the `GUILD_MESSAGES` intent for guild messages, `DIRECT_MESSAGES` for direct messages. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageCreate: [message: Message];
@@ -164,7 +164,7 @@ export interface ClientEvents {
     messageDelete: [message: PossiblyUncachedMessage];
     /** @event Emitted when messages are bulk deleted. Requires the `GUILD_MESSAGES` intent. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageDeleteBulk: [messages: Array<PossiblyUncachedMessage>];
-    /** @event Emitted when a reaction is added to a message. For uncached methods, `author` will not be present if the reaction was added to a webhook message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
+    /** @event Emitted when a reaction is added to a message. For uncached messages, `author` will not be present if the reaction was added to a webhook message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
     messageReactionAdd: [message: PossiblyUncachedMessage & { author?: Member | User | Uncached; }, reactor: Member | User | Uncached, reaction: PartialEmoji];
     /** @event Emitted when a reaction is removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
     messageReactionRemove: [message: PossiblyUncachedMessage, reactor: Member | User | Uncached, reaction: PartialEmoji];
