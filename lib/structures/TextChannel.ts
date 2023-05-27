@@ -1,33 +1,19 @@
 /** @module TextChannel */
-import TextableChannel from "./TextableChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
 import ThreadChannel from "./ThreadChannel";
-import { ChannelTypes, type ThreadAutoArchiveDuration } from "../Constants";
+import ThreadableChannel from "./ThreadableChannel";
+import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type {
-    ArchivedThreads,
-    FollowedChannel,
-    GetArchivedThreadsOptions,
-    RawPrivateThreadChannel,
-    RawPublicThreadChannel,
-    RawTextChannel
-} from "../types/channels";
+import type { ArchivedThreads, FollowedChannel, GetArchivedThreadsOptions, RawTextChannel } from "../types/channels";
 import type { JSONTextChannel } from "../types/json";
-import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild text channel. */
-export default class TextChannel extends TextableChannel<TextChannel> {
-    /** The default auto archive duration for threads created in this channel. */
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
-    /** The threads in this channel. */
-    threads: TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+export default class TextChannel extends ThreadableChannel<TextChannel, PublicThreadChannel | PrivateThreadChannel>  {
     declare type: ChannelTypes.GUILD_TEXT;
     constructor(data: RawTextChannel, client: Client) {
-        super(data, client);
-        this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.threads = new TypedCollection(ThreadChannel, client, this.client.util._getLimit("channelThreads", this.id)) as TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+        super(data, client, ThreadChannel);
     }
 
     /**
@@ -64,9 +50,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
     override toJSON(): JSONTextChannel {
         return {
             ...super.toJSON(),
-            defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
-            threads:                    this.threads.map(thread => thread.id),
-            type:                       this.type
+            type: this.type
         };
     }
 }

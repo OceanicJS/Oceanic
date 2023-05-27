@@ -432,12 +432,12 @@ export interface CreateRoleOptions {
 export interface ModifyChannelPositionsEntry {
     /** The ID of the channel to move. */
     id: string;
-    /** If the permissions should be synced (if moving to a new category). */
-    lockPermissions?: boolean;
+    /** If the permissions should be synced with the category. */
+    lockPermissions?: boolean | null;
     /** The ID of the new parent category. */
-    parentID?: string;
+    parentID?: string | null;
     /** The position to move the channel to. */
-    position?: number;
+    position?: number | null;
 }
 
 export interface GetActiveThreadsResponse {

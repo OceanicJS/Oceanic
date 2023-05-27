@@ -12,6 +12,19 @@ import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
 import type StageChannel from "./structures/StageChannel";
 import type ForumChannel from "./structures/ForumChannel";
 import type { ReverseMap, StringMap } from "./types/misc";
+import type {
+    RawAnnouncementChannel,
+    RawAnnouncementThreadChannel,
+    RawCategoryChannel,
+    RawForumChannel,
+    RawGroupChannel,
+    RawPrivateChannel,
+    RawPrivateThreadChannel,
+    RawPublicThreadChannel,
+    RawStageChannel,
+    RawTextChannel,
+    RawVoiceChannel
+} from "./types/channels";
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;
@@ -276,6 +289,20 @@ export interface ChannelTypeMap {
     [ChannelTypes.GUILD_STAGE_VOICE]: StageChannel;
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: ForumChannel;
+}
+export interface RawChannelTypeMap {
+    [ChannelTypes.GUILD_TEXT]: RawTextChannel;
+    [ChannelTypes.DM]: RawPrivateChannel;
+    [ChannelTypes.GUILD_VOICE]: RawVoiceChannel;
+    [ChannelTypes.GROUP_DM]: RawGroupChannel;
+    [ChannelTypes.GUILD_CATEGORY]: RawCategoryChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: RawAnnouncementChannel;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: RawAnnouncementThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: RawPublicThreadChannel;
+    [ChannelTypes.PRIVATE_THREAD]: RawPrivateThreadChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: RawStageChannel;
+    [ChannelTypes.GUILD_DIRECTORY]: never;
+    [ChannelTypes.GUILD_FORUM]: RawForumChannel;
 }
 /* eslint-enable @typescript-eslint/member-ordering */
 

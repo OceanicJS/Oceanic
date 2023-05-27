@@ -90,7 +90,8 @@ import type {
     CreateStickerOptions,
     Sticker,
     EditStickerOptions,
-    Onboarding
+    Onboarding,
+    EditOnboardingOptions
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -927,6 +928,14 @@ export default class Guild extends Base {
      */
     async editMember(memberID: string, options: EditMemberOptions): Promise<Member> {
         return this.client.rest.guilds.editMember(this.id, memberID, options);
+    }
+
+    /**
+     * Edit this guild's onboarding configuration.
+     * @param options The options for editing the onboarding configuration.
+     */
+    async editOnboarding(options: EditOnboardingOptions): Promise<Onboarding> {
+        return this.client.rest.guilds.editOnboarding(this.id, options);
     }
 
     /**

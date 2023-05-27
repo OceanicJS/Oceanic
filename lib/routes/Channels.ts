@@ -740,13 +740,41 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      */
     async getPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+        const qs = new URLSearchParams();
+        if (options?.before !== undefined) {
+            qs.set("before", options.before);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
-            json:   {
-                before: options?.before,
-                limit:  options?.limit
-            }
+            query:  qs
+        }).then(data => ({
+            hasMore: data.has_more,
+            members: data.members.map(m => ({
+                flags:         m.flags,
+                id:            m.id,
+                joinTimestamp: new Date(m.join_timestamp),
+                userID:        m.user_id
+            }) as ThreadMember),
+            threads: data.threads.map(d => this.#manager.client.util.updateThread(d))
+        }));
+    }
+
+    async getPrivateJoinedArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+        const qs = new URLSearchParams();
+        if (options?.before !== undefined) {
+            qs.set("before", options.before);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
+        return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+            method: "GET",
+            path:   Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
+            query:  qs
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
@@ -765,13 +793,17 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      */
     async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<T>> {
+        const qs = new URLSearchParams();
+        if (options?.before !== undefined) {
+            qs.set("before", options.before);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(channelID),
-            json:   {
-                before: options?.before,
-                limit:  options?.limit
-            }
+            query:  qs
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({

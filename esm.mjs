@@ -58,8 +58,10 @@ const StageChannel = (await import("./dist/lib/structures/StageChannel.js")).def
 const StageInstance = (await import("./dist/lib/structures/StageInstance.js")).default.default;
 const Team = (await import("./dist/lib/structures/Team.js")).default.default;
 const TextableChannel = (await import("./dist/lib/structures/TextableChannel.js")).default.default;
-const TextChannel = (await import("./dist/lib/structures/TextChannel.js")).default.default;
+const TextableVoiceChannel = (await import("./dist/lib/structures/TextableVoiceChannel.js")).default.default;
+const ThreadableChannel = (await import("./dist/lib/structures/ThreadableChannel.js")).default.default;
 const ThreadChannel = (await import("./dist/lib/structures/ThreadChannel.js")).default.default;
+const TextChannel = (await import("./dist/lib/structures/TextChannel.js")).default.default;
 const TypedCollection = (await import("./dist/lib/util/TypedCollection.js")).default.default;
 const TypedEmitter = (await import("./dist/lib/util/TypedEmitter.js")).default.default;
 const UnavailableGuild = (await import("./dist/lib/structures/UnavailableGuild.js")).default.default;
@@ -132,7 +134,9 @@ export {
     StageInstance,
     Team,
     TextableChannel,
+    TextableVoiceChannel,
     TextChannel,
+    ThreadableChannel,
     ThreadChannel,
     TypedCollection,
     TypedEmitter,

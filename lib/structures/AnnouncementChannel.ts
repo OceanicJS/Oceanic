@@ -1,26 +1,22 @@
 /** @module AnnouncementChannel */
-import TextableChannel from "./TextableChannel";
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
 import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type Message from "./Message";
-import { ChannelTypes, type ThreadAutoArchiveDuration } from "../Constants";
+import ThreadableChannel from "./ThreadableChannel";
+import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { FollowedChannel, RawAnnouncementChannel, RawAnnouncementThreadChannel } from "../types/channels";
+import type { FollowedChannel, RawAnnouncementChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild announcement channel. */
-export default class AnnouncementChannel extends TextableChannel<AnnouncementChannel> {
-    /** The default auto archive duration for threads created in this channel. */
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+export default class AnnouncementChannel extends ThreadableChannel<AnnouncementChannel, AnnouncementThreadChannel> {
     /** The amount of seconds between non-moderators sending messages. Always zero in announcement channels. */
     declare rateLimitPerUser: 0;
-    /** The threads in this channel. */
-    threads: TypedCollection<string, RawAnnouncementThreadChannel, AnnouncementThreadChannel>;
     declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
     constructor(data: RawAnnouncementChannel, client: Client) {
-        super(data, client);
+        super(data, client, AnnouncementThreadChannel);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         this.threads = new TypedCollection(AnnouncementThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
     }
@@ -55,10 +51,8 @@ export default class AnnouncementChannel extends TextableChannel<AnnouncementCha
     override toJSON(): JSONAnnouncementChannel {
         return {
             ...super.toJSON(),
-            defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
-            rateLimitPerUser:           0,
-            threads:                    this.threads.map(thread => thread.id),
-            type:                       this.type
+            rateLimitPerUser: 0,
+            type:             this.type
         };
     }
 }

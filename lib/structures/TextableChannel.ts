@@ -1,11 +1,8 @@
 /** @module TextableChannel */
 import GuildChannel from "./GuildChannel";
-import type TextChannel from "./TextChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
 import type Invite from "./Invite";
-import type PublicThreadChannel from "./PublicThreadChannel";
-import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type CategoryChannel from "./CategoryChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
@@ -19,16 +16,12 @@ import type {
     CreateMessageOptions,
     EditMessageOptions,
     EditPermissionOptions,
-    GetArchivedThreadsOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
     RawMessage,
     RawAnnouncementChannel,
     RawOverwrite,
     RawTextChannel,
-    StartThreadFromMessageOptions,
-    StartThreadWithoutMessageOptions,
-    ArchivedThreads,
     PurgeOptions
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
@@ -227,14 +220,6 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
     }
 
     /**
-     * Get the public archived threads in this channel.
-     * @param options The options for getting the public archived threads.
-     */
-    async getPublicArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<T extends TextChannel ? PublicThreadChannel : AnnouncementThreadChannel>> {
-        return this.client.rest.channels.getPublicArchivedThreads<T extends TextChannel ? PublicThreadChannel : AnnouncementThreadChannel>(this.id, options);
-    }
-
-    /**
      * Get the users who reacted with a specific emoji on a message in this channel.
      * @param messageID The ID of the message to get reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
@@ -309,23 +294,6 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
      */
     async sendTyping(): Promise<void> {
         return this.client.rest.channels.sendTyping(this.id);
-    }
-
-    /**
-     * Create a thread from an existing message in this channel.
-     * @param messageID The ID of the message to create a thread from.
-     * @param options The options for creating the thread.
-     */
-    async startThreadFromMessage(messageID: string, options: StartThreadFromMessageOptions): Promise<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel> {
-        return this.client.rest.channels.startThreadFromMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, messageID, options);
-    }
-
-    /**
-     * Create a thread without an existing message in this channel.
-     * @param options The options for creating the thread.
-     */
-    async startThreadWithoutMessage(options: StartThreadWithoutMessageOptions): Promise<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel> {
-        return this.client.rest.channels.startThreadWithoutMessage<T extends TextChannel ? AnnouncementThreadChannel : PublicThreadChannel>(this.id, options);
     }
 
     override toJSON(): JSONTextableChannel {

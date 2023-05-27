@@ -69,10 +69,8 @@ import type {
     ForumLayoutTypes
 } from "../Constants";
 
-export interface JSONAnnouncementChannel extends JSONTextableChannel {
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+export interface JSONAnnouncementChannel extends JSONThreadableChannel {
     rateLimitPerUser: 0;
-    threads: Array<string>;
     type: ChannelTypes.GUILD_ANNOUNCEMENT;
 }
 export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
@@ -581,10 +579,13 @@ export interface JSONTextableVoiceChannel extends JSONTextableChannel {
     voiceMembers: Array<string>;
 }
 
-export interface JSONTextChannel extends JSONTextableChannel {
+export interface JSONTextChannel extends JSONThreadableChannel {
+    type: ChannelTypes.GUILD_TEXT;
+}
+export interface JSONThreadableChannel extends JSONTextableChannel {
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     threads: Array<string>;
-    type: ChannelTypes.GUILD_TEXT;
+    type: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
 }
 export interface JSONThreadChannel extends JSONGuildChannel {
     flags: number;
