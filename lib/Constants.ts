@@ -67,21 +67,23 @@ export enum PremiumTypes {
     NITRO_BASIC   = 3,
 }
 
+// @TODO: bigints?
 export enum UserFlags {
-    STAFF             = 1 << 0,
-    PARTNER           = 1 << 1,
-    HYPESQUAD         = 1 << 2,
-    BUG_HUNTER_LEVEL_1 = 1 << 3,
-
-    HYPESQUAD_BRAVERY    = 1 << 6,
-    HYPESQUAD_BRILLIANCE = 1 << 7,
-    HYPESQUAD_BALANCE    = 1 << 8,
-    EARLY_SUPPORTER      = 1 << 9,
-    PSEUDO_TEAM_USER     = 1 << 10,
-
-    SYSTEM = 1 << 12,
-
-    BUG_HUNTER_LEVEL_2 = 1 << 14,
+    STAFF                      = 1 << 0,
+    PARTNER                    = 1 << 1,
+    HYPESQUAD                  = 1 << 2,
+    BUG_HUNTER_LEVEL_1         = 1 << 3,
+    MFA_SMS                    = 1 << 4,
+    PREMIUM_PROMO_DISMISSED    = 1 << 5,
+    HYPESQUAD_BRAVERY          = 1 << 6,
+    HYPESQUAD_BRILLIANCE       = 1 << 7,
+    HYPESQUAD_BALANCE          = 1 << 8,
+    EARLY_SUPPORTER            = 1 << 9,
+    PSEUDO_TEAM_USER           = 1 << 10,
+    INTERNAL_APPLICATION       = 1 << 11,
+    SYSTEM                     = 1 << 12,
+    HAS_UNREAD_URGENT_MESSAGES = 1 << 13,
+    BUG_HUNTER_LEVEL_2         = 1 << 14,
 
     VERIFIED_BOT          = 1 << 16,
     VERIFIED_DEVELOPER    = 1 << 17,
@@ -90,6 +92,22 @@ export enum UserFlags {
     SPAMMER               = 1 << 20,
 
     ACTIVE_DEVELOPER = 1 << 22,
+
+    HIGH_GLOBAL_RATE_LIMIT       = 2 ** 33,
+    DELETED                      = 2 ** 34,
+    DISABLED_SUSPICIOUS_ACTIVITY = 2 ** 35,
+    SELF_DELETED                 = 2 ** 36,
+    PREMIUM_DISCRIMINATOR        = 2 ** 37,
+    USED_DESKTOP_CLIENT          = 2 ** 38,
+    USED_WEB_CLIENT              = 2 ** 39,
+    USED_MOBILE_CLIENT           = 2 ** 40,
+    DISABLED                     = 2 ** 41,
+
+    VERIFIED_EMAIL = 2 ** 43,
+    QUARANTINED    = 2 ** 44,
+
+    COLLABORATOR            = 2 ** 50,
+    RESTRICTED_COLLABORATOR = 2 ** 51,
 }
 
 export enum ApplicationFlags {
@@ -97,7 +115,13 @@ export enum ApplicationFlags {
     MANAGED_EMOJI                                 = 1 << 2,
     EMBEDDED_IAP                                  = 1 << 3,
     GROUP_DM_CREATE                               = 1 << 4,
+    RPC_PRIVATE_BETA                              = 1 << 5,
     APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 1 << 6,
+
+    ALLOW_ASSETS                                  = 1 << 8,
+    ALLOW_ACTIVITY_ACTION_SPECTATE                = 1 << 9,
+    ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 1 << 10,
+    RPC_HAS_CONNECTED_ACCOUNT                     = 1 << 11,
     GATEWAY_PRESENCE                              = 1 << 12,
     GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
     GATEWAY_GUILD_MEMBERS                         = 1 << 14,
@@ -107,6 +131,7 @@ export enum ApplicationFlags {
     GATEWAY_MESSAGE_CONTENT                       = 1 << 18,
     GATEWAY_MESSAGE_CONTENT_LIMITED               = 1 << 19,
     EMBEDDED_FIRST_PARTY                          = 1 << 20,
+
     APPLICATION_COMMAND_BADGE                     = 1 << 23,
     ACTIVE                                        = 1 << 24,
 }
@@ -515,13 +540,20 @@ export const PermissionNames = Object.keys(Permissions) as Array<PermissionName>
 export type PermissionName = keyof typeof Permissions;
 
 export enum ChannelFlags {
-    GUILD_FEED_REMOVED      = 1 << 0,
+    GUILD_FEED_REMOVED                            = 1 << 0,
     /** For threads, if this thread is pinned in a forum channel. */
-    PINNED                  = 1 << 1,
-    ACTIVE_CHANNELS_REMOVED = 1 << 2,
+    PINNED                                        = 1 << 1,
+    ACTIVE_CHANNELS_REMOVED                       = 1 << 2,
     /** For forums, if tags are required when creating threads. */
-    REQUIRE_TAG             = 1 << 4,
-    IS_SPAM                 = 1 << 5,
+    REQUIRE_TAG                                   = 1 << 4,
+    IS_SPAM                                       = 1 << 5,
+    IS_GUILD_RESOURCE_CHANNEL                     = 1 << 7,
+    CLYDE_AI                                      = 1 << 8,
+    IS_SCHEDULED_FOR_DELETION                     = 1 << 9,
+    IS_MEDIA_CHANNEL                              = 1 << 10,
+    SUMMARIES_DISABLED                            = 1 << 11,
+    APPLICATION_SHELF_CONSENT                     = 1 << 12,
+    IS_ROLE_SUBSCRIPTION_TEMPLATE_PREVIEW_CHANNEL = 1 << 13,
 }
 
 export enum SortOrderTypes {
@@ -685,12 +717,16 @@ export enum MessageTypes {
     STAGE_RAISE_HAND                             = 30,
     STAGE_TOPIC_CHANGE                           = 31,
     GUILD_APPLICATION_PREMIUM_SUBSCRIPTION       = 32,
+    PRIVATE_CHANNEL_INTEGRATION_ADDED            = 33,
+    PRIVATE_CHANNEL_INTEGRATION_REMOVED          = 34,
+    PREMIUM_REFERRAL                             = 35,
 }
 
 export enum MessageActivityTypes {
     JOIN         = 1,
     SPECTATE     = 2,
     LISTEN       = 3,
+    WATCH        = 4,
     JOIN_REQUEST = 5,
 }
 
@@ -716,7 +752,7 @@ export enum GuildScheduledEventStatuses {
     SCHEDULED = 1,
     ACTIVE    = 2,
     COMPLETED = 3,
-    CANCELED = 4,
+    CANCELED  = 4,
 }
 
 export enum GuildScheduledEventEntityTypes {
@@ -828,6 +864,7 @@ export enum AuditLogActionTypes {
     AUTO_MODERATION_BLOCK_MESSAGE               = 143,
     AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
     AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145,
+    AUTO_MODERATION_QUARANTINE_USER             = 146,
 
     CREATOR_MONETIZATION_REQUEST_CREATED = 150,
     CREATOR_MONETIZATION_TERMS_ACCEPTED  = 151,
@@ -843,6 +880,11 @@ export enum AuditLogActionTypes {
 
     GUILD_HOME_FEATURE_ITEM = 171,
     GUILD_HOME_REMOVE_ITEM  = 172,
+
+    HARMFUL_LINKS_BLOCKED_MESSAGE = 180,
+
+    HOME_SETTINGS_CREATE = 190,
+    HOME_SETTINGS_UPDATE = 191,
 }
 
 export enum ApplicationCommandTypes {
@@ -1034,10 +1076,15 @@ export enum RoleConnectionMetadataTypes {
 }
 
 export enum GuildMemberFlags {
-    DID_REJOIN            = 1 << 0,
-    COMPLETED_ONBOARDING  = 1 << 1,
-    BYPASSES_VERIFICATION = 1 << 2,
-    STARTED_ONBOARDING    = 1 << 3,
+    DID_REJOIN                                     = 1 << 0,
+    COMPLETED_ONBOARDING                           = 1 << 1,
+    BYPASSES_VERIFICATION                          = 1 << 2,
+    STARTED_ONBOARDING                             = 1 << 3,
+    IS_GUEST                                       = 1 << 4,
+    STARTED_HOME_ACTIONS                           = 1 << 5,
+    COMPLETED_HOME_ACTIONS                         = 1 << 6,
+    AUTOMOD_QUARANTINED_USERNAME_OR_GUILD_NICKNAME = 1 << 7,
+    AUTOMOD_QUARANTINED_BIO                        = 1 << 8,
 }
 
 export enum OnboardingPromptTypes {
