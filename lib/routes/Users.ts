@@ -47,16 +47,6 @@ export default class Users {
     }
 
     /**
-     * Get the currently authenticated user's information.
-     *
-     * Note: This does not touch the client's cache in any way.
-     * @deprecated Moved to {@link Routes/OAuth~OAuth#getCurrentUser | OAuth#getCurrentUser}. This will be removed in `1.5.0`.
-     */
-    async getCurrentUser(): Promise<ExtendedUser> {
-        return this.#manager.oauth.getCurrentUser();
-    }
-
-    /**
      * Leave a guild.
      * @param guildID The ID of the guild to leave.
      */

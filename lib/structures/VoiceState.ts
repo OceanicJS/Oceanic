@@ -1,17 +1,17 @@
 /** @module VoiceState */
 import Base from "./Base";
-import type VoiceChannel from "./VoiceChannel";
-import type StageChannel from "./StageChannel";
 import type Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
 import type { RawVoiceState } from "../types/voice";
 import type { JSONVoiceState } from "../types/json";
+import { UncachedError } from "../util/Errors";
+import type { AnyVoiceChannel } from "../types";
 
 /** Represents a guild member's voice state. */
-export default class VoiceState extends Base {
-    private _cachedChannel?: VoiceChannel | StageChannel | null;
+export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> extends Base {
+    private _cachedChannel?: T | null;
     private _cachedGuild?: Guild;
     private _cachedMember?: Member;
     private _cachedUser?: User;
@@ -58,6 +58,7 @@ export default class VoiceState extends Base {
     protected override update(data: Partial<RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
+            this._cachedChannel = null;
         }
         if (data.deaf !== undefined) {
             this.deaf = data.deaf;
@@ -95,22 +96,27 @@ export default class VoiceState extends Base {
     }
 
     /** The channel the user is connected to. */
-    get channel(): VoiceChannel | StageChannel | null | undefined {
-        if (this.channelID !== null && this._cachedChannel !== null) {
-            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<VoiceChannel | StageChannel>(this.channelID));
+    get channel(): T | null | undefined {
+        if (this.channelID !== null) {
+            return this._cachedChannel ??= this.client.getChannel<T>(this.channelID);
         }
 
-        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+        return (this._cachedChannel ??= null);
     }
 
     /** The guild this voice state is a part of. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
             }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;
@@ -118,11 +124,7 @@ export default class VoiceState extends Base {
 
     /** The member associated with this voice state. */
     get member(): Member | undefined {
-        try {
-            return this._cachedMember ?? (this._cachedMember = this.guild.members.get(this.userID));
-        } catch {
-            return (this._cachedMember = undefined);
-        }
+        return this._cachedMember ?? (this._cachedMember = this["_cachedGuild"]?.members.get(this.userID));
     }
 
     /** TThe user associated with this voice state. */

@@ -21,6 +21,7 @@ import type GuildTemplate from "./GuildTemplate";
 import type GuildPreview from "./GuildPreview";
 import type Invite from "./Invite";
 import type Webhook from "./Webhook";
+import AuditLogEntry from "./AuditLogEntry";
 import {
     AllPermissions,
     Permissions,
@@ -32,9 +33,9 @@ import {
     type MFALevels,
     type PremiumTiers,
     type VerificationLevels,
-    type GuildChannelTypesWithoutThreads,
     type GatewayOPCodes,
-    type MutableGuildFeatures
+    type MutableGuildFeatures,
+    type ChannelTypeMap
 } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -42,11 +43,12 @@ import TypedCollection from "../util/TypedCollection";
 import type {
     AnyGuildChannel,
     AnyGuildChannelWithoutThreads,
-    AnyGuildTextChannel,
+    AnyTextableGuildChannel,
     AnyThreadChannel,
-    InviteChannel,
+    AnyInviteChannel,
     RawGuildChannel,
-    RawThreadChannel
+    RawThreadChannel,
+    GuildChannelsWithoutThreads
 } from "../types/channels";
 import type {
     AddMemberOptions,
@@ -77,7 +79,6 @@ import type {
     WidgetImageStyle,
     WidgetSettings,
     RawIntegration,
-    CreateChannelReturn,
     Widget,
     GetActiveThreadsResponse,
     Ban,
@@ -88,7 +89,9 @@ import type {
     RESTMember,
     CreateStickerOptions,
     Sticker,
-    EditStickerOptions
+    EditStickerOptions,
+    Onboarding,
+    EditOnboardingOptions
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -98,20 +101,23 @@ import type {
     ScheduledEventUser
 } from "../types/scheduled-events";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { AuditLog, GetAuditLogOptions } from "../types/audit-log";
+import type { AuditLog, GetAuditLogOptions, RawAuditLogEntry } from "../types/audit-log";
 import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
 import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 import type Shard from "../gateway/Shard";
+import Collection from "../util/Collection";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
-import Collection from "../util/Collection";
+import { UncachedError } from "../util/Errors";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
 export default class Guild extends Base {
     private _clientMember?: Member;
+    // if the guild was retrieved from rest
+    private _rest;
     private _shard?: Shard;
     /** This guild's afk voice channel. */
     afkChannel?: VoiceChannel | null;
@@ -127,6 +133,8 @@ export default class Guild extends Base {
     approximateMemberCount?: number;
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
     approximatePresenceCount?: number;
+    /** The cached audit log entries. This requires both the {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION} intent, as well as the {@link Constants~Permissions | VIEW_AUDIT_LOG } permission. */
+    auditLogEntries: TypedCollection<string, RawAuditLogEntry, AuditLogEntry>;
     /** The auto moderation rules in this guild. */
     autoModerationRules: TypedCollection<string, RawAutoModerationRule, AutoModerationRule>;
     /** The hash of this guild's banner. */
@@ -155,6 +163,7 @@ export default class Guild extends Base {
     joinedAt: Date | null;
     /** If this guild is considered large. */
     large: boolean;
+    latestOnboardingQuestionID: string | null;
     /** The maximum amount of members this guild can have. */
     maxMembers?: number;
     /** The maximum amount of people that can be present at a time in this guild. Only present for very large guilds. */
@@ -174,9 +183,9 @@ export default class Guild extends Base {
     /** The [nsfw level](https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level) of this guild. */
     nsfwLevel: GuildNSFWLevels;
     /** The owner of this guild. */
-    owner?: User;
+    owner?: User | null;
     /** The ID of the owner of this guild. */
-    ownerID: string;
+    ownerID: string | null;
     /** The [preferred locale](https://discord.com/developers/docs/reference#locales) of this guild. */
     preferredLocale: string;
     /** If this guild has the boost progress bar enabled. */
@@ -186,7 +195,7 @@ export default class Guild extends Base {
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
     /** The channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
-    publicUpdatesChannel?: AnyGuildTextChannel | null;
+    publicUpdatesChannel?: AnyTextableGuildChannel | null;
     /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannelID: string | null;
     /** @deprecated The region of this guild.*/
@@ -233,15 +242,15 @@ export default class Guild extends Base {
     widgetChannelID: string | null;
     /** If the widget is enabled. */
     widgetEnabled?: boolean;
-    constructor(data: RawGuild, client: Client) {
+    constructor(data: RawGuild, client: Client, rest?: boolean) {
         super(data.id, client);
-        this._shard = this.client.guildShardMap[this.id] === undefined ? undefined : this.client.shards.get(this.client.guildShardMap[this.id]);
         this.afkChannelID = null;
         this.afkTimeout = 0;
         this.applicationID = data.application_id;
-        this.autoModerationRules = new TypedCollection(AutoModerationRule, client);
+        this.auditLogEntries = new TypedCollection(AuditLogEntry, client, client.util._getLimit("auditLogEntries", this.id));
+        this.autoModerationRules = new TypedCollection(AutoModerationRule, client, client.util._getLimit("autoModerationRules", this.id));
         this.banner = null;
-        this.channels = new TypedCollection(GuildChannel, client) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
+        this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id)) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
@@ -249,46 +258,52 @@ export default class Guild extends Base {
         this.explicitContentFilter = data.explicit_content_filter;
         this.features = [];
         this.icon = null;
-        this.integrations = new TypedCollection(Integration, client);
+        this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
         this.invites = new Collection();
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
+        this.latestOnboardingQuestionID = null;
         this.memberCount = data.member_count ?? data.approximate_member_count ?? 0;
-        this.members = new TypedCollection(Member, client, typeof client.options.collectionLimits.members === "number" ? client.options.collectionLimits.members : client.options.collectionLimits.members[data.id] ?? client.options.collectionLimits.members.unknown ?? Infinity);
+        this.members = new TypedCollection(Member, client, client.util._getLimit("members", this.id));
         this.mfaLevel = data.mfa_level;
         this.name = data.name;
         this.nsfwLevel = data.nsfw_level;
-        this.owner = client.users.get(data.owner_id)!;
+        this.owner = data.owner_id === null ? null : client.users.get(data.owner_id)!;
         this.ownerID = data.owner_id;
         this.preferredLocale = data.preferred_locale;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
         this.premiumTier = data.premium_tier;
         this.publicUpdatesChannelID = null;
-        this.roles = new TypedCollection(Role, client);
+        this.roles = new TypedCollection(Role, client, client.util._getLimit("roles", this.id));
         this.rulesChannelID = null;
         this.safetyAlertsChannelID = null;
-        this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client);
+        this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client, client.util._getLimit("scheduledEvents", this.id));
         this.splash = null;
-        this.stageInstances = new TypedCollection(StageInstance, client);
+        this.stageInstances = new TypedCollection(StageInstance, client, client.util._getLimit("stageInstances", this.id));
         this.stickers = [];
         this.systemChannelID = null;
         this.systemChannelFlags = data.system_channel_flags;
-        this.threads = new TypedCollection(ThreadChannel, client) as TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
+        this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id)) as TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
-        this.voiceStates = new TypedCollection(VoiceState, client);
+        this.voiceStates = new TypedCollection(VoiceState, client, client.util._getLimit("voiceStates", this.id));
         this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
         for (const role of data.roles) {
             this.roles.update(role, data.id);
         }
         this.update(data);
+        this._rest = !!rest;
 
         if (data.channels) {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+                const channel = this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+                const parent = channel.parentID === null ? null : this.channels.get(channel.parentID);
+                if (parent && "channels" in parent) {
+                    parent.channels.add(channel);
+                }
             }
         }
 
@@ -297,11 +312,10 @@ export default class Guild extends Base {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
                 client.threadGuildMap[threadData.id] = this.id;
-                const thread = Channel.from<AnyThreadChannel>(threadData, client);
-                this.threads.add(thread);
+                const thread = this.threads.add(Channel.from<AnyThreadChannel>(threadData, client));
                 const channel = this.channels.get(thread.parentID);
                 if (channel && "threads" in channel) {
-                    channel.threads.update(thread as never);
+                    (channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(thread);
                 }
             }
         }
@@ -478,6 +492,12 @@ export default class Guild extends Base {
         if (data.joined_at !== undefined) {
             this.joinedAt = new Date(data.joined_at);
         }
+        if (data.large !== undefined) {
+            this.large = data.large;
+        }
+        if (data.latest_onboarding_question_id !== undefined) {
+            this.latestOnboardingQuestionID = data.latest_onboarding_question_id;
+        }
         if (data.max_members !== undefined) {
             this.maxMembers = data.max_members;
         }
@@ -504,7 +524,7 @@ export default class Guild extends Base {
         }
         if (data.owner_id !== undefined) {
             this.ownerID = data.owner_id;
-            this.owner = this.client.users.get(data.owner_id)!;
+            this.owner = data.owner_id === null ? null : this.client.users.get(data.owner_id)!;
         }
         if (data.preferred_locale !== undefined) {
             this.preferredLocale = data.preferred_locale;
@@ -519,7 +539,7 @@ export default class Guild extends Base {
             this.premiumTier = data.premium_tier;
         }
         if (data.public_updates_channel_id !== undefined) {
-            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyGuildTextChannel>(data.public_updates_channel_id);
+            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyTextableGuildChannel>(data.public_updates_channel_id);
             this.publicUpdatesChannelID = data.public_updates_channel_id;
         }
         if (data.region !== undefined) {
@@ -572,10 +592,15 @@ export default class Guild extends Base {
         }
     }
 
-    /** The client's member for this guild. This will throw an error if the guild was obtained via rest and the member is not cached.*/
+    /** The client's member for this guild. This will throw an error if the member is not cached.*/
     get clientMember(): Member {
+        this._clientMember ??= this.client["_user"] === undefined ? undefined : this.members.get(this.client["_user"].id);
         if (!this._clientMember) {
-            throw new Error(`${this.constructor.name}#clientMember is not present if the guild was obtained via rest and the member is not cached.`);
+            if (this._rest) {
+                throw new UncachedError(`${this.constructor.name}#clientMember is not present when the guild is obtained via rest.`);
+            }
+
+            throw new UncachedError(`The client's member has not been cached for ${this.constructor.name}#clientMember.`);
         }
 
         return this._clientMember;
@@ -583,16 +608,34 @@ export default class Guild extends Base {
 
     /** The shard this guild is on. Gateway only. */
     get shard(): Shard {
+        this._shard ??= this.client.shards["_forGuild"](this.id);
+        if (this.client.options.restMode) {
+            throw new TypeError(`${this.constructor.name}#shard will not be present with rest mode enabled.`);
+        }
+
+        if (!this.client["_connected"]) {
+            throw new TypeError(`${this.constructor.name}#shard will not be present without a gateway connection.`);
+        }
+
         if (!this._shard) {
-            throw new Error(`${this.constructor.name}#shard is not present if the guild was received via REST, or you do not have the GUILDS intent.`);
+            throw new TypeError(`Failed to determine shard for ${this.constructor.name}#shard (guild: ${this.id})`);
         }
         return this._shard;
     }
 
     /** The voice adapter creator for this guild that can be used with [@discordjs/voice](https://discord.js.org/#/docs/voice/main/general/welcome) to play audio in voice and stage channels. */
     get voiceAdapterCreator(): DiscordGatewayAdapterCreator {
+        this._shard ??= this.client.shards["_forGuild"](this.id);
+        if (this.client.options.restMode) {
+            throw new TypeError(`${this.constructor.name}#voiceAdapterCreator cannot be used with rest mode enabled.`);
+        }
+
+        if (!this.client["_connected"]) {
+            throw new TypeError(`${this.constructor.name}#shard cannot be used without a gateway connection.`);
+        }
+
         if (!this._shard) {
-            throw new Error(`Cannot use ${this.constructor.name}.voiceAdapterCreator if the guild was received via REST, or you do not have the GUILDS intent as this guild does not belong to any Shard.`);
+            throw new TypeError(`Failed to determine shard for ${this.constructor.name}#voiceAdapterCreator (guild: ${this.id})`);
         }
 
         return (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
@@ -656,9 +699,9 @@ export default class Guild extends Base {
     }
 
     /**
-     * Create a bon for a user.
+     * Create a ban for a user.
      * @param userID The ID of the user.
-     * @param options The options for creating the bon.
+     * @param options The options for creating the ban.
      */
     async createBan(userID: string, options?: CreateBanOptions): Promise<void> {
         return this.client.rest.guilds.createBan(this.id, userID, options);
@@ -668,8 +711,8 @@ export default class Guild extends Base {
      * Create a channel in this guild.
      * @param options The options for creating the channel.
      */
-    async createChannel<T extends GuildChannelTypesWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
-        return this.client.rest.guilds.createChannel(this.id, type, options);
+    async createChannel<T extends GuildChannelsWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
+        return this.client.rest.guilds.createChannel<T>(this.id, type, options);
     }
 
     /**
@@ -888,6 +931,14 @@ export default class Guild extends Base {
     }
 
     /**
+     * Edit this guild's onboarding configuration.
+     * @param options The options for editing the onboarding configuration.
+     */
+    async editOnboarding(options: EditOnboardingOptions): Promise<Onboarding> {
+        return this.client.rest.guilds.editOnboarding(this.id, options);
+    }
+
+    /**
      * Edit an existing role.
      * @param options The options for editing the role.
      */
@@ -1072,7 +1123,7 @@ export default class Guild extends Base {
     /**
      * Get the invites of this guild.
      */
-    async getInvites(): Promise<Array<Invite<"withMetadata", InviteChannel>>> {
+    async getInvites(): Promise<Array<Invite<"withMetadata", AnyInviteChannel>>> {
         return this.client.rest.guilds.getInvites(this.id);
     }
 
@@ -1090,6 +1141,13 @@ export default class Guild extends Base {
      */
     async getMembers(options?: GetMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.getMembers(this.id, options);
+    }
+
+    /**
+     * Get the onboarding information for this guild.
+     */
+    async getOnboarding(): Promise<Onboarding> {
+        return this.client.rest.guilds.getOnboarding(this.id);
     }
 
     /**
@@ -1263,7 +1321,7 @@ export default class Guild extends Base {
             member = this.members.get(member)!;
         }
         if (!member) {
-            throw new Error("Member not found");
+            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
         }
         if (member.id === this.ownerID) {
             return new Permission(AllPermissions);
@@ -1307,7 +1365,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * remove a role from a member.
+     * Remove a role from a member.
      * @param memberID The ID of the member.
      * @param roleID The ID of the role to remove.
      * @param reason The reason for removing the role.

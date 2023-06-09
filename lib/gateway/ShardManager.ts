@@ -42,10 +42,11 @@ export default class ShardManager extends Collection<number, Shard> {
                 afk:		      options.presence?.afk ?? false,
                 status:		   options.presence?.status ?? "online"
             },
-            reconnectDelay:       options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
-            seedVoiceConnections: options.seedVoiceConnections ?? false,
-            shardIDs:             options.shardIDs ?? [],
-            ws:                   options.ws ?? {}
+            reconnectDelay:          options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
+            removeDisallowedIntents: options.removeDisallowedIntents ?? false,
+            seedVoiceConnections:    options.seedVoiceConnections ?? false,
+            shardIDs:                options.shardIDs ?? [],
+            ws:                      options.ws ?? {}
         };
 
         if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {
@@ -77,9 +78,16 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         if (this.options.getAllUsers && !(this.options.intents & Intents.GUILD_MEMBERS)) {
-            throw new Error("Guild members cannot be requested without the GUILD_MEMBERS intent");
+            throw new TypeError("Guild members cannot be requested without the GUILD_MEMBERS intent");
         }
 
+    }
+
+    private _forGuild(guild: string): Shard | undefined {
+        if (this.options.maxShards === -1) {
+            return undefined;
+        }
+        return this.get((this.#client.guildShardMap[guild] ??= Number((BigInt(guild) >> 22n) % BigInt(this.options.maxShards))));
     }
 
     private _ready(id: number): void {

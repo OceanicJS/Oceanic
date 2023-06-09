@@ -1,11 +1,11 @@
 /** @module SelectMenuValuesWrapper */
+import { WrapperError } from "./Errors";
 import { ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type PrivateChannel from "../structures/PrivateChannel";
-import type { AnyGuildChannel } from "../types/channels";
+import type { AnyImplementedChannel } from "../types/channels";
 import type { MessageComponentInteractionResolvedData } from "../types/interactions";
 
 /** A wrapper for select menu data. */
@@ -29,7 +29,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const ch = this.resolved.channels.get(id);
             if (!ch && ensurePresent) {
-                throw new Error(`Failed to find channel in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find channel in resolved data: ${id}`);
             }
             return ch!;
         }).filter(Boolean);
@@ -39,16 +39,16 @@ export default class SelectMenuValuesWrapper {
      * Get the complete version of the selected channels. This will only succeed if the channel is cached. If the channel is private and isn't cached, an `InteractionResolvedChannel` instance will still be returned.
      *
      * If `ensurePresent` is false, channels that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
-    getCompleteChannels(ensurePresent?: boolean): Array<AnyGuildChannel | PrivateChannel | InteractionResolvedChannel> {
+    getCompleteChannels(ensurePresent?: boolean): Array<AnyImplementedChannel | InteractionResolvedChannel> {
         return this.raw.map(id => {
             const ch = this.resolved.channels.get(id);
             if (ch && ch.type === ChannelTypes.DM) {
                 return ch?.completeChannel ?? ch;
             }
             if (!ch && ensurePresent) {
-                throw new Error(`Failed to find channel in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find channel in resolved data: ${id}`);
             }
             return ch!;
         }).filter(Boolean);
@@ -64,7 +64,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const member = this.resolved.members.get(id);
             if (!member && ensurePresent) {
-                throw new Error(`Failed to find member in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find member in resolved data: ${id}`);
             }
             return member!;
         }).filter(Boolean);
@@ -84,7 +84,7 @@ export default class SelectMenuValuesWrapper {
             const user = this.resolved.users.get(id);
             if ((!ch && !role && !user)) {
                 if (ensurePresent) {
-                    throw new Error(`Failed to find mentionable in resolved data: ${id}`);
+                    throw new WrapperError(`Failed to find mentionable in resolved data: ${id}`);
                 }
             } else {
                 res.push((ch ?? role ?? user)!);
@@ -104,7 +104,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const role = this.resolved.roles.get(id);
             if (!role && ensurePresent) {
-                throw new Error(`Failed to find role in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find role in resolved data: ${id}`);
             }
             return role!;
         }).filter(Boolean);
@@ -127,7 +127,7 @@ export default class SelectMenuValuesWrapper {
         return this.raw.map(id => {
             const user = this.resolved.users.get(id);
             if (!user && ensurePresent) {
-                throw new Error(`Failed to find user in resolved data: ${id}`);
+                throw new WrapperError(`Failed to find user in resolved data: ${id}`);
             }
             return user!;
         }).filter(Boolean);

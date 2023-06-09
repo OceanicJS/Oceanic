@@ -20,9 +20,9 @@ const Collection = (await import("./dist/lib/util/Collection.js")).default.defau
 const ComponentInteraction = (await import("./dist/lib/structures/ComponentInteraction.js")).default.default;
 const DiscordHTTPError = (await import("./dist/lib/rest/DiscordHTTPError.js")).default.default;
 const DiscordRESTError = (await import("./dist/lib/rest/DiscordRESTError.js")).default.default;
+const Errors = (await import("./dist/lib/util/Errors.js")).default;
 const ExtendedUser = (await import("./dist/lib/structures/ExtendedUser.js")).default.default;
 const ForumChannel = (await import("./dist/lib/structures/ForumChannel.js")).default.default;
-const GatewayError = (await import("./dist/lib/gateway/GatewayError.js")).default.default;
 const GroupChannel = (await import("./dist/lib/structures/GroupChannel.js")).default.default;
 const Guild = (await import("./dist/lib/structures/Guild.js")).default.default;
 const GuildChannel = (await import("./dist/lib/structures/GuildChannel.js")).default.default;
@@ -33,10 +33,11 @@ const Integration = (await import("./dist/lib/structures/Integration.js")).defau
 const InteractionResolvedChannel = (await import("./dist/lib/structures/InteractionResolvedChannel.js")).default.default;
 const InteractionOptionsWrapper = (await import("./dist/lib/util/InteractionOptionsWrapper.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
+const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
-const OAuth = (await import("./dist/lib/routes/OAuth.js")).default.default;
+const OAuthApplication = (await import("./dist/lib/structures/OAuthApplication.js")).default.default;
 const OAuthGuild = (await import ("./dist/lib/structures/OAuthGuild.js")).default.default;
 const OAuthHelper = (await import ("./dist/lib/rest/OAuthHelper.js")).default.default;
 const PartialApplication = (await import("./dist/lib/structures/PartialApplication.js")).default.default;
@@ -57,12 +58,13 @@ const StageChannel = (await import("./dist/lib/structures/StageChannel.js")).def
 const StageInstance = (await import("./dist/lib/structures/StageInstance.js")).default.default;
 const Team = (await import("./dist/lib/structures/Team.js")).default.default;
 const TextableChannel = (await import("./dist/lib/structures/TextableChannel.js")).default.default;
-const TextChannel = (await import("./dist/lib/structures/TextChannel.js")).default.default;
+const TextableVoiceChannel = (await import("./dist/lib/structures/TextableVoiceChannel.js")).default.default;
+const ThreadableChannel = (await import("./dist/lib/structures/ThreadableChannel.js")).default.default;
 const ThreadChannel = (await import("./dist/lib/structures/ThreadChannel.js")).default.default;
+const TextChannel = (await import("./dist/lib/structures/TextChannel.js")).default.default;
 const TypedCollection = (await import("./dist/lib/util/TypedCollection.js")).default.default;
 const TypedEmitter = (await import("./dist/lib/util/TypedEmitter.js")).default.default;
 const UnavailableGuild = (await import("./dist/lib/structures/UnavailableGuild.js")).default.default;
-const UncaughtError = (await import("./dist/lib/util/UncaughtError.js")).default.default;
 const User = (await import("./dist/lib/structures/User.js")).default.default;
 const Util = (await import("./dist/lib/util/Util.js")).default.default;
 const VoiceChannel = (await import("./dist/lib/structures/VoiceChannel.js")).default.default;
@@ -70,6 +72,7 @@ const VoiceState = (await import("./dist/lib/structures/VoiceState.js")).default
 const Webhook = (await import("./dist/lib/structures/Webhook.js")).default.default;
 
 export * from "./dist/lib/Constants.js";
+export * from "./dist/lib/util/Errors.js";
 
 export {
     Channel,
@@ -93,9 +96,9 @@ export {
     ComponentInteraction,
     DiscordHTTPError,
     DiscordRESTError,
+    Errors,
     ExtendedUser,
     ForumChannel,
-    GatewayError,
     GroupChannel,
     Guild,
     GuildChannel,
@@ -106,10 +109,11 @@ export {
     InteractionResolvedChannel,
     InteractionOptionsWrapper,
     Invite,
+    InviteGuild,
     Member,
     Message,
     ModalSubmitInteraction,
-    OAuth,
+    OAuthApplication,
     OAuthGuild,
     OAuthHelper,
     PartialApplication,
@@ -130,12 +134,13 @@ export {
     StageInstance,
     Team,
     TextableChannel,
+    TextableVoiceChannel,
     TextChannel,
+    ThreadableChannel,
     ThreadChannel,
     TypedCollection,
     TypedEmitter,
     UnavailableGuild,
-    UncaughtError,
     User,
     Util,
     VoiceChannel,

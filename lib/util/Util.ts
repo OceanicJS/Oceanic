@@ -35,6 +35,7 @@ import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds
 import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
+import type { CollectionLimitsOptions } from "../types";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -45,13 +46,55 @@ export default class Util {
         this.#client = client;
     }
 
+    static rawEmbeds(embeds: RawEmbed): Embed;
+    static rawEmbeds(embeds: Array<RawEmbed>): Array<Embed>;
+    static rawEmbeds(embeds: RawEmbed | Array<RawEmbed>): Embed | Array<Embed> {
+        const data = Util.prototype.embedsToParsed(Array.isArray(embeds) ? embeds : [embeds]);
+        return Array.isArray(embeds) ? data : data[0];
+    }
+
+    static rawMessageComponents(components: RawMessageActionRow): MessageActionRow;
+    static rawMessageComponents(components: Array<RawMessageActionRow>): Array<MessageActionRow>;
+    static rawMessageComponents(components: RawMessageActionRow | Array<RawMessageActionRow>): MessageActionRow | Array<MessageActionRow> {
+        const data = Util.prototype.componentsToParsed(Array.isArray(components) ? components : [components]);
+        return Array.isArray(components) ? data : data[0];
+    }
+
+    static rawModalComponents(components: RawModalActionRow): ModalActionRow;
+    static rawModalComponents(components: Array<RawModalActionRow>): Array<ModalActionRow>;
+    static rawModalComponents(components: RawModalActionRow | Array<RawModalActionRow>): ModalActionRow | Array<ModalActionRow> {
+        const data = Util.prototype.componentsToParsed(Array.isArray(components) ? components : [components]);
+        return Array.isArray(components) ? data : data[0];
+    }
+
     /** @hidden intentionally not documented - this is an internal function */
     _convertImage(image: Buffer | string, name: string): string {
         try {
             return this.convertImage(image);
         } catch (err) {
-            throw new Error(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
+            throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
         }
+    }
+
+    /** @hidden intended for internal use only */
+    _getLimit(name: Exclude<keyof CollectionLimitsOptions, "users">, id?: string): number {
+        const opt = this.#client.options.collectionLimits[name];
+        if (typeof opt === "number") {
+            return opt;
+        }
+        return (id === undefined ? undefined : opt[id]) ?? opt.default ?? Infinity;
+    }
+
+    _setLimit(values?: Record<string, number> | number, defaultValue = Infinity): Record<string, number> | number {
+        if (values === undefined) {
+            return defaultValue;
+        }
+
+        if (typeof values === "object") {
+            return { default: defaultValue, ...values };
+        }
+
+        return values;
     }
 
     componentToParsed<T extends RawComponent>(component: T): ToComponentFromRaw<T> {
@@ -197,12 +240,12 @@ export default class Util {
                 }
             }
             if (!mime) {
-                throw new Error(`Failed to determine image format. (magic: ${this.getMagic(img, 16)})`);
+                throw new TypeError(`Failed to determine image format. (magic: ${this.getMagic(img, 16)})`);
             }
             img = `data:${mime};base64,${b64}`;
         }
         if (!Util.BASE64URL_REGEX.test(img)) {
-            throw new Error("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
+            throw new TypeError("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
         }
         return img;
     }

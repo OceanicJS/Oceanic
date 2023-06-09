@@ -12,13 +12,20 @@ import type {
 } from "./guilds";
 import type { RawClientApplication, RawPartialApplication } from "./oauth";
 import type { RawExtendedUser, RawUser } from "./users";
-import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel } from "./gateway";
+import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel, RawVoiceChannelEffect } from "./gateway";
 import type { RawGuildApplicationCommandPermissions } from "./application-commands";
 import type { RawAutoModerationRule } from "./auto-moderation";
-import type { RawGuildChannel, RawMessage, RawThreadChannel, RawThreadMember } from "./channels";
+import type {
+    RawGroupChannel,
+    RawGuildChannel,
+    RawMessage,
+    RawThreadChannel,
+    RawThreadMember
+} from "./channels";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
+import type { RawAuditLogEntry } from "./audit-log";
 import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;
@@ -122,7 +129,7 @@ export interface AutoModerationActionExecutionPacket extends BaseDispatchPacket 
 }
 
 export interface ChannelCreatePacket extends BaseDispatchPacket {
-    d: RawGuildChannel;
+    d: RawGuildChannel | RawGroupChannel;
     t: "CHANNEL_CREATE";
 }
 
@@ -404,6 +411,7 @@ export interface MessageReactionAddPacket extends BaseDispatchPacket {
         emoji: PartialEmoji;
         guild_id?: string;
         member?: RawMember;
+        message_author_id?: string;
         message_id: string;
         user_id: string;
     };
@@ -461,12 +469,12 @@ export interface UserUpdatePacket extends BaseDispatchPacket {
     t: "USER_UPDATE";
 }
 
-export interface VoiceStateUpdate extends BaseDispatchPacket {
+export interface VoiceStateUpdatePacket extends BaseDispatchPacket {
     d: RawVoiceState;
     t: "VOICE_STATE_UPDATE";
 }
 
-export interface VoiceServerUpdate extends BaseDispatchPacket {
+export interface VoiceServerUpdatePacket extends BaseDispatchPacket {
     d: {
         endpoint: string | null;
         guild_id: string;
@@ -503,8 +511,18 @@ export interface StageInstanceUpdatePacket extends BaseDispatchPacket {
     t: "STAGE_INSTANCE_UPDATE";
 }
 
+export interface GuildAuditLogEntryCreatePacket extends BaseDispatchPacket {
+    d: RawAuditLogEntry & { guild_id: string; };
+    t: "GUILD_AUDIT_LOG_ENTRY_CREATE";
+}
+
+export interface VoiceChannelEffectSendPacket extends BaseDispatchPacket {
+    d: RawVoiceChannelEffect;
+    t: "VOICE_CHANNEL_EFFECT_SEND";
+}
+
 export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
-GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket |
+GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
 ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket |
 ThreadCreatePacket | ThreadDeletePacket | ThreadUpdatePacket | ThreadListSyncPacket | ThreadMemberUpdatePacket | ThreadMembersUpdatePacket |
@@ -515,4 +533,4 @@ GuildScheduledEventCreatePacket | GuildScheduledEventDeletePacket | GuildSchedul
 IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket |
 InviteCreatePacket | InviteDeletePacket |
 MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
-TypingStartPacket | UserUpdatePacket | VoiceStateUpdate | VoiceServerUpdate | WebhooksUpdatePacket | InteractionCreatePacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket;
+TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket;

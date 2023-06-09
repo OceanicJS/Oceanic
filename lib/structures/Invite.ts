@@ -1,11 +1,12 @@
 /** @module Invite */
 import Channel from "./Channel";
-import Guild from "./Guild";
+import type Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
+import InviteGuild from "./InviteGuild";
 import type {
-    InviteChannel,
+    AnyInviteChannel,
     InviteInfoTypes,
     InviteStageInstance,
     PartialInviteChannel,
@@ -14,13 +15,12 @@ import type {
 } from "../types/channels";
 import type Client from "../Client";
 import type { InviteTargetTypes } from "../Constants";
-import type { RawGuild } from "../types/guilds";
 import type { JSONInvite } from "../types/json";
 import type { Uncached } from "../types/shared";
 
 /** Represents an invite. */
-export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends InviteChannel | Uncached = InviteChannel | Uncached> {
-    private _cachedChannel!: (CH extends InviteChannel ? CH : PartialInviteChannel) | null;
+export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends AnyInviteChannel | Uncached = AnyInviteChannel | Uncached> {
+    private _cachedChannel!: (CH extends AnyInviteChannel ? CH : PartialInviteChannel) | null;
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
@@ -35,7 +35,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The date at which this invite expires. */
     expiresAt?: T extends "withMetadata" | "withoutExpiration" ? never : Date;
     /** The guild this invite leads to or `null` if this invite leads to a Group DM. */
-    guild: Guild | null;
+    guild: InviteGuild | null;
     /** The ID of the guild this invite leads to or `null` if this invite leads to a Group DM. */
     guildID: string | null;
     /** The scheduled event associated with this invite. */
@@ -84,15 +84,22 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         let guild: Guild | undefined;
         if (data.guild) {
-            guild = this.client.guilds.has(data.guild.id) ? this.client.guilds.update(data.guild as RawGuild) : new Guild(data.guild as RawGuild, this.client);
-            this.guild = guild;
+            if (this.guild === null) {
+                this.guild = new InviteGuild(data.guild, this.client);
+            } else {
+                this.guild["update"](data.guild);
+            }
+
+            if (this.client.guilds.has(data.guild.id)) {
+                this.client.guilds.update(data.guild);
+            }
         }
 
         if (this.channelID === null) {
             this._cachedChannel = null;
         } else {
             let channel: Channel | PartialInviteChannel | undefined;
-            channel = this.client.getChannel<InviteChannel>(this.channelID);
+            channel = this.client.getChannel<AnyInviteChannel>(this.channelID);
             if (data.channel !== undefined) {
                 if (channel && channel instanceof Channel) {
                     channel["update"](data.channel);
@@ -100,7 +107,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
                     channel = data.channel as PartialInviteChannel;
                 }
             }
-            this._cachedChannel = channel as (CH extends InviteChannel ? CH : PartialInviteChannel) | null;
+            this._cachedChannel = channel as (CH extends AnyInviteChannel ? CH : PartialInviteChannel) | null;
         }
 
         if (data.inviter !== undefined) {
@@ -143,15 +150,15 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     }
 
     /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name, and `type`. */
-    get channel(): (CH extends InviteChannel ? CH : PartialInviteChannel) | null {
-        if (this.channelID !== null && this._cachedChannel !== null) {
+    get channel(): (CH extends AnyInviteChannel ? CH : PartialInviteChannel) | null {
+        if (this.channelID !== null) {
             if (this._cachedChannel instanceof Channel) {
                 return this._cachedChannel;
             }
 
-            const cachedChannel = this.client.getChannel<InviteChannel>(this.channelID);
+            const cachedChannel = this.client.getChannel<AnyInviteChannel>(this.channelID);
 
-            return (cachedChannel ? (this._cachedChannel = cachedChannel as CH extends InviteChannel ? CH : PartialInviteChannel) : this._cachedChannel);
+            return cachedChannel ? (this._cachedChannel = cachedChannel as CH extends AnyInviteChannel ? CH : PartialInviteChannel) : this._cachedChannel;
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
@@ -166,7 +173,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     }
 
     /** Whether this invite belongs to a cached channel. The only difference on using this method over a simple if statement is to easily update all the invite properties typing definitions based on the channel it belongs to. */
-    inCachedChannel(): this is Invite<T, InviteChannel> {
+    inCachedChannel(): this is Invite<T, AnyInviteChannel> {
         return this.channel instanceof Channel;
     }
 
@@ -178,6 +185,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             code:                     this.code,
             createdAt:                this.createdAt?.getTime(),
             expiresAt:                this.expiresAt?.getTime(),
+            guild:                    this.guild?.toJSON(),
             guildID:                  this.guildID ?? undefined,
             guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
             inviter:                  this.inviter?.id,

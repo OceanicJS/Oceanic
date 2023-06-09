@@ -1,5 +1,30 @@
 /* eslint-disable unicorn/prefer-math-trunc */
 /** @module Constants */
+import type PrivateChannel from "./structures/PrivateChannel";
+import type TextChannel from "./structures/TextChannel";
+import type VoiceChannel from "./structures/VoiceChannel";
+import type GroupChannel from "./structures/GroupChannel";
+import type CategoryChannel from "./structures/CategoryChannel";
+import type AnnouncementChannel from "./structures/AnnouncementChannel";
+import type AnnouncementThreadChannel from "./structures/AnnouncementThreadChannel";
+import type PublicThreadChannel from "./structures/PublicThreadChannel";
+import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
+import type StageChannel from "./structures/StageChannel";
+import type ForumChannel from "./structures/ForumChannel";
+import type { ReverseMap, StringMap } from "./types/misc";
+import type {
+    RawAnnouncementChannel,
+    RawAnnouncementThreadChannel,
+    RawCategoryChannel,
+    RawForumChannel,
+    RawGroupChannel,
+    RawPrivateChannel,
+    RawPrivateThreadChannel,
+    RawPublicThreadChannel,
+    RawStageChannel,
+    RawTextChannel,
+    RawVoiceChannel
+} from "./types/channels";
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;
@@ -42,23 +67,23 @@ export enum PremiumTypes {
     NITRO_BASIC   = 3,
 }
 
+// @TODO: bigints?
 export enum UserFlags {
-    STAFF             = 1 << 0,
-    PARTNER           = 1 << 1,
-    HYPESQUAD         = 1 << 2,
-    /** @deprecated Use {@link Constants~UserFlags#BUG_HUNTER_LEVEL_1 | BUG_HUNTER_LEVEL_1}. This will be removed in `1.5.0`. */
-    BUGHUNTER_LEVEL_1  = 1 << 3,
-    BUG_HUNTER_LEVEL_1 = 1 << 3,
-
-    HYPESQUAD_BRAVERY    = 1 << 6,
-    HYPESQUAD_BRILLIANCE = 1 << 7,
-    HYPESQUAD_BALANCE    = 1 << 8,
-    EARLY_SUPPORTER      = 1 << 9,
-    PSEUDO_TEAM_USER     = 1 << 10,
-
-    SYSTEM = 1 << 12,
-
-    BUG_HUNTER_LEVEL_2 = 1 << 14,
+    STAFF                      = 1 << 0,
+    PARTNER                    = 1 << 1,
+    HYPESQUAD                  = 1 << 2,
+    BUG_HUNTER_LEVEL_1         = 1 << 3,
+    MFA_SMS                    = 1 << 4,
+    PREMIUM_PROMO_DISMISSED    = 1 << 5,
+    HYPESQUAD_BRAVERY          = 1 << 6,
+    HYPESQUAD_BRILLIANCE       = 1 << 7,
+    HYPESQUAD_BALANCE          = 1 << 8,
+    EARLY_SUPPORTER            = 1 << 9,
+    PSEUDO_TEAM_USER           = 1 << 10,
+    INTERNAL_APPLICATION       = 1 << 11,
+    SYSTEM                     = 1 << 12,
+    HAS_UNREAD_URGENT_MESSAGES = 1 << 13,
+    BUG_HUNTER_LEVEL_2         = 1 << 14,
 
     VERIFIED_BOT          = 1 << 16,
     VERIFIED_DEVELOPER    = 1 << 17,
@@ -67,60 +92,104 @@ export enum UserFlags {
     SPAMMER               = 1 << 20,
 
     ACTIVE_DEVELOPER = 1 << 22,
+
+    HIGH_GLOBAL_RATE_LIMIT       = 2 ** 33,
+    DELETED                      = 2 ** 34,
+    DISABLED_SUSPICIOUS_ACTIVITY = 2 ** 35,
+    SELF_DELETED                 = 2 ** 36,
+    PREMIUM_DISCRIMINATOR        = 2 ** 37,
+    USED_DESKTOP_CLIENT          = 2 ** 38,
+    USED_WEB_CLIENT              = 2 ** 39,
+    USED_MOBILE_CLIENT           = 2 ** 40,
+    DISABLED                     = 2 ** 41,
+
+    VERIFIED_EMAIL = 2 ** 43,
+    QUARANTINED    = 2 ** 44,
+
+    COLLABORATOR            = 2 ** 50,
+    RESTRICTED_COLLABORATOR = 2 ** 51,
 }
 
 export enum ApplicationFlags {
-    EMBEDDED_RELEASED                = 1 << 1,
-    MANAGED_EMOJI                    = 1 << 2,
-    GROUP_DM_CREATE                  = 1 << 4,
-    GATEWAY_PRESENCE                 = 1 << 12,
-    GATEWAY_PRESENCE_LIMITED         = 1 << 13,
-    GATEWAY_GUILD_MEMBERS            = 1 << 14,
-    GATEWAY_GUILD_MEMBERS_LIMITED    = 1 << 15,
-    VERIFICATION_PENDING_GUILD_LIMIT = 1 << 16,
-    EMBEDDED                         = 1 << 17,
-    GATEWAY_MESSAGE_CONTENT          = 1 << 18,
-    GATEWAY_MESSAGE_CONTENT_LIMITED  = 1 << 19,
-    EMBEDDED_FIRST_PARTY             = 1 << 20,
-    APPLICATION_COMMAND_BADGE        = 1 << 21,
-    ACTIVE                           = 1 << 24,
+    EMBEDDED_RELEASED                             = 1 << 1,
+    MANAGED_EMOJI                                 = 1 << 2,
+    EMBEDDED_IAP                                  = 1 << 3,
+    GROUP_DM_CREATE                               = 1 << 4,
+    RPC_PRIVATE_BETA                              = 1 << 5,
+    /** Indicates if an app uses the {@link https://discord.com/developers/docs/resources/auto-moderation | Auto Moderation API}. Applications must have at least 100 enabled auto moderation rules to get the badge. */
+    APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 1 << 6,
+
+    ALLOW_ASSETS                                  = 1 << 8,
+    ALLOW_ACTIVITY_ACTION_SPECTATE                = 1 << 9,
+    ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 1 << 10,
+    RPC_HAS_CONNECTED_ACCOUNT                     = 1 << 11,
+    /** Intent required for bots in **100 or more servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
+    GATEWAY_PRESENCE                              = 1 << 12,
+    /** Intent required for bots in **under 100 servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
+    GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
+    /** Intent required for bots in **100 or more servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
+    GATEWAY_GUILD_MEMBERS                         = 1 << 14,
+    /** Intent required for bots in **under 100 servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
+    GATEWAY_GUILD_MEMBERS_LIMITED                 = 1 << 15,
+    /** Indicates unusual growth of an app that prevents verification */
+    VERIFICATION_PENDING_GUILD_LIMIT              = 1 << 16,
+    /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
+    EMBEDDED                                      = 1 << 17,
+    /** Intent required for bots in **100 or more servers** to receive {@link https://support-dev.discord.com/hc/en-us/articles/4404772028055 | message content}. */
+    GATEWAY_MESSAGE_CONTENT                       = 1 << 18,
+    /** Intent required for bots in **under 100 servers** to receive {@link https://support-dev.discord.com/hc/en-us/articles/4404772028055 | message content}. */
+    GATEWAY_MESSAGE_CONTENT_LIMITED               = 1 << 19,
+    EMBEDDED_FIRST_PARTY                          = 1 << 20,
+
+    /** Indicates if an app has registered global {@link https://discord.com/developers/docs/interactions/application-commands | application commands}. */
+    APPLICATION_COMMAND_BADGE                     = 1 << 23,
+    ACTIVE                                        = 1 << 24,
 }
 
 export const GuildFeatures = [
-    "APPLICATION_COMMAND_PERMISSIONS_V2",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
+    "APPLICATION_COMMAND_PERMISSIONS_V2",
     "AUTO_MODERATION",
     "BANNER",
     "BOT_DEVELOPER_EARLY_ACCESS",
+    "CLYDE_ENABLED",
+    "COMMUNITY_EXP_LARGE_GATED",
+    "COMMUNITY_EXP_LARGE_UNGATED",
+    "COMMUNITY_EXP_MEDIUM",
     "COMMUNITY",
-    "CREATOR_MONETIZABLE",
     "CREATOR_MONETIZABLE_DISABLED",
     "CREATOR_MONETIZABLE_PROVISIONAL",
+    "CREATOR_MONETIZABLE",
     "CREATOR_STORE_PAGE",
     "DEVELOPER_SUPPORT_SERVER",
-    "DISCOVERABLE",
     "DISCOVERABLE_DISABLED",
+    "DISCOVERABLE",
     "ENABLED_DISCOVERABLE_BEFORE",
     "EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT",
     "FEATURABLE",
     "GUILD_HOME_TEST",
+    "GUILD_ONBOARDING_EVER_ENABLED",
+    "GUILD_ONBOARDING_HAS_PROMPTS",
+    "GUILD_ONBOARDING",
+    "GUILD_WEB_PAGE_VANITY_URL",
     "HAD_EARLY_ACTIVITIES_ACCESS",
     "HAS_DIRECTORY_ENTRY",
     "HUB",
     "INCREASED_THREAD_LIMIT",
     "INTERNAL_EMPLOYEE_ONLY",
-    "INVITES_DISABLED",
     "INVITE_SPLASH",
+    "INVITES_DISABLED",
     "LINKED_TO_HUB",
+    "MARKETPLACES_CONNECTION_ROLES",
     "MEMBER_PROFILES",
     "MEMBER_VERIFICATION_GATE_ENABLED",
     "MONETIZATION_ENABLED",
     "MORE_EMOJI",
     "MORE_EMOJIS",
     "MORE_STICKERS",
-    "NEWS",
     "NEW_THREAD_PERMISSIONS",
+    "NEWS",
     "PARTNERED",
     "PREVIEW_ENABLED",
     "PREVIOUSLY_DISCOVERABLE",
@@ -130,9 +199,10 @@ export const GuildFeatures = [
     "ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE",
     "ROLE_SUBSCRIPTIONS_ENABLED",
     "SEVEN_DAY_THREAD_ARCHIVE",
+    "SOUNDBOARD",
     "TEXT_IN_VOICE_ENABLED",
-    "THREADS_ENABLED",
     "THREADS_ENABLED_TESTING",
+    "THREADS_ENABLED",
     "THREE_DAY_THREAD_ARCHIVE",
     "TICKETED_EVENTS_ENABLED",
     "VANITY_URL",
@@ -220,14 +290,56 @@ export enum ChannelTypes {
     GUILD_FORUM          = 15,
 }
 
-export type NotImplementedChannelTypes = ChannelTypes.GUILD_DIRECTORY;
-export type PrivateChannelTypes = ChannelTypes.DM | ChannelTypes.GROUP_DM;
-export type GuildChannelTypes = Exclude<ChannelTypes, PrivateChannelTypes | NotImplementedChannelTypes>;
-export type GuildChannelTypesWithoutThreads = Exclude<GuildChannelTypes, ThreadChannelTypes>;
-export type TextChannelTypes = ChannelTypes.GUILD_TEXT | ChannelTypes.DM | ChannelTypes.GROUP_DM | ChannelTypes.GUILD_ANNOUNCEMENT | ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD;
-export type GuildTextChannelTypes = Exclude<TextChannelTypes, PrivateChannelTypes>;
-export type ThreadChannelTypes = ChannelTypes.ANNOUNCEMENT_THREAD | ChannelTypes.PUBLIC_THREAD | ChannelTypes.PRIVATE_THREAD;
-export type VoiceChannelTypes = ChannelTypes.GUILD_VOICE | ChannelTypes.GUILD_STAGE_VOICE;
+function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: ReadonlyArray<T>, excludeTypes: ReadonlyArray<E>): Array<Exclude<T, E>> {
+    return original.filter((value: T) => !excludeTypes.includes(value as unknown as E)) as Array<Exclude<T, E>>;
+}
+
+export const AnyChannelTypes = Object.values(ChannelTypes).filter(v => typeof v === "number") as Array<ChannelTypes>;
+export const NotImplementedChannelTypes = [ChannelTypes.GUILD_DIRECTORY] as const;
+export const ImplementedChannelTypes = exclude(AnyChannelTypes, NotImplementedChannelTypes);
+export const GuildChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_ANNOUNCEMENT, ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD, ChannelTypes.GUILD_STAGE_VOICE, ChannelTypes.GUILD_DIRECTORY, ChannelTypes.GUILD_FORUM] as const;
+export const ThreadChannelTypes = [ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD] as const;
+export const GuildChannelTypesWithoutThreads = exclude(GuildChannelTypes, ThreadChannelTypes);
+export const PrivateChannelTypes = [ChannelTypes.DM, ChannelTypes.GROUP_DM] as const;
+export const EditableChannelTypes = exclude([ChannelTypes.GROUP_DM, ...GuildChannelTypes], NotImplementedChannelTypes);
+export const TextableChannelTypes = exclude([ChannelTypes.DM, ...GuildChannelTypes], [...NotImplementedChannelTypes, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_FORUM]);
+export const TextableGuildChannelTypes = exclude(TextableChannelTypes, [ChannelTypes.DM]);
+export const TextableChannelTypesWithoutThreads = exclude(TextableChannelTypes, ThreadChannelTypes);
+export const TextableGuildChannelTypesWithoutThreads = exclude(TextableGuildChannelTypes, ThreadChannelTypes);
+export const VoiceChannelTypes = [ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE] as const;
+export const InviteChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_ANNOUNCEMENT, ...VoiceChannelTypes, ChannelTypes.GUILD_FORUM] as const;
+export const InteractionChannelTypes = [...TextableChannelTypes, ChannelTypes.GROUP_DM] as const;
+
+/* eslint-disable @typescript-eslint/member-ordering */
+export interface ChannelTypeMap {
+    [ChannelTypes.GUILD_TEXT]: TextChannel;
+    [ChannelTypes.DM]: PrivateChannel;
+    [ChannelTypes.GUILD_VOICE]: VoiceChannel;
+    [ChannelTypes.GROUP_DM]: GroupChannel;
+    [ChannelTypes.GUILD_CATEGORY]: CategoryChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: AnnouncementChannel;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: AnnouncementThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: PublicThreadChannel;
+    [ChannelTypes.PRIVATE_THREAD]: PrivateThreadChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: StageChannel;
+    [ChannelTypes.GUILD_DIRECTORY]: never;
+    [ChannelTypes.GUILD_FORUM]: ForumChannel;
+}
+export interface RawChannelTypeMap {
+    [ChannelTypes.GUILD_TEXT]: RawTextChannel;
+    [ChannelTypes.DM]: RawPrivateChannel;
+    [ChannelTypes.GUILD_VOICE]: RawVoiceChannel;
+    [ChannelTypes.GROUP_DM]: RawGroupChannel;
+    [ChannelTypes.GUILD_CATEGORY]: RawCategoryChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: RawAnnouncementChannel;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: RawAnnouncementThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: RawPublicThreadChannel;
+    [ChannelTypes.PRIVATE_THREAD]: RawPrivateThreadChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: RawStageChannel;
+    [ChannelTypes.GUILD_DIRECTORY]: never;
+    [ChannelTypes.GUILD_FORUM]: RawForumChannel;
+}
+/* eslint-enable @typescript-eslint/member-ordering */
 
 export enum OverwriteTypes {
     ROLE   = 0,
@@ -247,7 +359,7 @@ export const ThreadAutoArchiveDurations = [
 ] as const;
 export type ThreadAutoArchiveDuration = typeof ThreadAutoArchiveDurations[number];
 
-export enum VisibilityTypes {
+export enum ConnectionVisibilityTypes {
     NONE     = 0,
     EVERYONE = 1,
 }
@@ -258,6 +370,7 @@ export const ConnectionServices = [
     "epicgames",
     "facebook",
     "github",
+    "instagram",
     "leagueoflegends",
     "paypal",
     "playstation",
@@ -288,110 +401,169 @@ export enum IntegrationExpireBehaviors {
 }
 
 // values won't be statically typed if we use bit shifting, and enums can't use bigints
-export const Permissions = {
-    CREATE_INSTANT_INVITE:               1n,             // 1 << 0
-    KICK_MEMBERS:                        2n,             // 1 << 1
-    BAN_MEMBERS:                         4n,             // 1 << 2
-    ADMINISTRATOR:                       8n,             // 1 << 3
-    MANAGE_CHANNELS:                     16n,            // 1 << 4
-    MANAGE_GUILD:                        32n,            // 1 << 5
-    ADD_REACTIONS:                       64n,            // 1 << 6
-    VIEW_AUDIT_LOG:                      128n,           // 1 << 7
-    PRIORITY_SPEAKER:                    256n,           // 1 << 8
-    STREAM:                              512n,           // 1 << 9
-    VIEW_CHANNEL:                        1024n,          // 1 << 10
-    SEND_MESSAGES:                       2048n,          // 1 << 11
-    SEND_TTS_MESSAGES:                   4096n,          // 1 << 12
-    MANAGE_MESSAGES:                     8192n,          // 1 << 13
-    EMBED_LINKS:                         16384n,         // 1 << 14
-    ATTACH_FILES:                        32768n,         // 1 << 15
-    READ_MESSAGE_HISTORY:                65536n,         // 1 << 16
-    MENTION_EVERYONE:                    131072n,        // 1 << 17
-    USE_EXTERNAL_EMOJIS:                 262144n,        // 1 << 18
-    VIEW_GUILD_INSIGHTS:                 524288n,        // 1 << 19
-    CONNECT:                             1048576n,       // 1 << 20
-    SPEAK:                               2097152n,       // 1 << 21
-    MUTE_MEMBERS:                        4194304n,       // 1 << 22
-    DEAFEN_MEMBERS:                      8388608n,       // 1 << 23
-    MOVE_MEMBERS:                        16777216n,      // 1 << 24
-    USE_VAD:                             33554432n,      // 1 << 25
-    CHANGE_NICKNAME:                     67108864n,      // 1 << 26
-    MANAGE_NICKNAMES:                    134217728n,     // 1 << 27
-    MANAGE_ROLES:                        268435456n,     // 1 << 28
-    MANAGE_WEBHOOKS:                     536870912n,     // 1 << 29
-    MANAGE_EMOJIS_AND_STICKERS:          1073741824n,    // 1 << 30
-    USE_APPLICATION_COMMANDS:            2147483648n,    // 1 << 31
-    REQUEST_TO_SPEAK:                    4294967296n,    // 1 << 32
-    MANAGE_EVENTS:                       8589934592n,    // 1 << 33
-    MANAGE_THREADS:                      17179869184n,   // 1 << 34
-    CREATE_PUBLIC_THREADS:               34359738368n,   // 1 << 35
-    CREATE_PRIVATE_THREADS:              68719476736n,   // 1 << 36
-    USE_EXTERNAL_STICKERS:               137438953472n,  // 1 << 37
-    SEND_MESSAGES_IN_THREADS:            274877906944n,  // 1 << 38
-    USE_EMBEDDED_ACTIVITIES:             549755813888n,  // 1 << 39
-    MODERATE_MEMBERS:                    1099511627776n, // 1 << 40
-    VIEW_CREATOR_MONETIZATION_ANALYTICS: 2199023255552n  // 1 << 41
-} as const;
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace Permissions {
+    export const CREATE_INSTANT_INVITE               = 1n;              // 1 << 0
+    export const KICK_MEMBERS                        = 2n;              // 1 << 1
+    export const BAN_MEMBERS                         = 4n;              // 1 << 2
+    export const ADMINISTRATOR                       = 8n;              // 1 << 3
+    export const MANAGE_CHANNELS                     = 16n;             // 1 << 4
+    export const MANAGE_GUILD                        = 32n;             // 1 << 5
+    export const ADD_REACTIONS                       = 64n;             // 1 << 6
+    export const VIEW_AUDIT_LOG                      = 128n;            // 1 << 7
+    export const PRIORITY_SPEAKER                    = 256n;            // 1 << 8
+    export const STREAM                              = 512n;            // 1 << 9
+    export const VIEW_CHANNEL                        = 1024n;           // 1 << 10
+    export const SEND_MESSAGES                       = 2048n;           // 1 << 11
+    export const SEND_TTS_MESSAGES                   = 4096n;           // 1 << 12
+    export const MANAGE_MESSAGES                     = 8192n;           // 1 << 13
+    export const EMBED_LINKS                         = 16384n;          // 1 << 14
+    export const ATTACH_FILES                        = 32768n;          // 1 << 15
+    export const READ_MESSAGE_HISTORY                = 65536n;          // 1 << 16
+    export const MENTION_EVERYONE                    = 131072n;         // 1 << 17
+    export const USE_EXTERNAL_EMOJIS                 = 262144n;         // 1 << 18
+    export const VIEW_GUILD_INSIGHTS                 = 524288n;         // 1 << 19
+    export const CONNECT                             = 1048576n;        // 1 << 20
+    export const SPEAK                               = 2097152n;        // 1 << 21
+    export const MUTE_MEMBERS                        = 4194304n;        // 1 << 22
+    export const DEAFEN_MEMBERS                      = 8388608n;        // 1 << 23
+    export const MOVE_MEMBERS                        = 16777216n;       // 1 << 24
+    export const USE_VAD                             = 33554432n;       // 1 << 25
+    export const CHANGE_NICKNAME                     = 67108864n;       // 1 << 26
+    export const MANAGE_NICKNAMES                    = 134217728n;      // 1 << 27
+    export const MANAGE_ROLES                        = 268435456n;      // 1 << 28
+    export const MANAGE_WEBHOOKS                     = 536870912n;      // 1 << 29
+    export const MANAGE_GUILD_EXPRESSIONS            = 1073741824n;     // 1 << 30
+    /** @deprecated Use {@link Constants~Permissions | MANAGE_GUILD_EXPRESSIONS}. This will be removed in `1.8.0`.  */
+    export const MANAGE_EMOJIS_AND_STICKERS          = 1073741824n;     // 1 << 30
+    export const USE_APPLICATION_COMMANDS            = 2147483648n;     // 1 << 31
+    export const REQUEST_TO_SPEAK                    = 4294967296n;     // 1 << 32
+    export const MANAGE_EVENTS                       = 8589934592n;     // 1 << 33
+    export const MANAGE_THREADS                      = 17179869184n;    // 1 << 34
+    export const CREATE_PUBLIC_THREADS               = 34359738368n;    // 1 << 35
+    export const CREATE_PRIVATE_THREADS              = 68719476736n;    // 1 << 36
+    export const USE_EXTERNAL_STICKERS               = 137438953472n;   // 1 << 37
+    export const SEND_MESSAGES_IN_THREADS            = 274877906944n;   // 1 << 38
+    export const USE_EMBEDDED_ACTIVITIES             = 549755813888n;   // 1 << 39
+    export const MODERATE_MEMBERS                    = 1099511627776n;  // 1 << 40
+    export const VIEW_CREATOR_MONETIZATION_ANALYTICS = 2199023255552n;  // 1 << 41
+    export const USE_SOUNDBOARD                      = 4398046511104n;  // 1 << 42
+    export const CREATE_GUILD_EXPRESSIONS            = 8796093022208n;  // 1 << 43
+    export const CREATE_EVENTS                       = 17592186044416n; // 1 << 44
+    export const USE_EXTERNAL_SOUNDS                 = 35184372088832n; // 1 << 45
+    export const SEND_VOICE_MESSAGES                 = 70368744177664n; // 1 << 46
+}
+
+// bigints can't be used as object keys, so we need to convert them to strings
+const PermissionValueToName = Object.fromEntries(Object.entries(Permissions).map(([k, v]) => [String(v), k] as [string, string])) as ReverseMap<StringMap<typeof Permissions>>;
+
+export const AllPermissions = Object.values(Permissions).reduce((a, b) => a | b, 0n);
+export const TextPermissions = [
+    Permissions.CREATE_INSTANT_INVITE,
+    Permissions.MANAGE_CHANNELS,
+    Permissions.ADD_REACTIONS,
+    Permissions.VIEW_CHANNEL,
+    Permissions.SEND_MESSAGES,
+    Permissions.SEND_TTS_MESSAGES,
+    Permissions.MANAGE_MESSAGES,
+    Permissions.EMBED_LINKS,
+    Permissions.ATTACH_FILES,
+    Permissions.READ_MESSAGE_HISTORY,
+    Permissions.MENTION_EVERYONE,
+    Permissions.USE_EXTERNAL_EMOJIS,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_WEBHOOKS,
+    Permissions.USE_APPLICATION_COMMANDS,
+    Permissions.MANAGE_THREADS,
+    Permissions.CREATE_PUBLIC_THREADS,
+    Permissions.CREATE_PRIVATE_THREADS,
+    Permissions.USE_EXTERNAL_STICKERS,
+    Permissions.SEND_MESSAGES_IN_THREADS,
+    Permissions.SEND_VOICE_MESSAGES
+] as const;
+export const AllTextPermissions = TextPermissions.reduce((all, p) => all | p, 0n);
+export const AllTextPermissionNames = TextPermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
+
+export const VoicePermissions = [
+    Permissions.CREATE_INSTANT_INVITE,
+    Permissions.MANAGE_CHANNELS,
+    Permissions.ADD_REACTIONS,
+    Permissions.PRIORITY_SPEAKER,
+    Permissions.STREAM,
+    Permissions.VIEW_CHANNEL,
+    Permissions.SEND_MESSAGES,
+    Permissions.SEND_TTS_MESSAGES,
+    Permissions.MANAGE_MESSAGES,
+    Permissions.EMBED_LINKS,
+    Permissions.ATTACH_FILES,
+    Permissions.READ_MESSAGE_HISTORY,
+    Permissions.MENTION_EVERYONE,
+    Permissions.USE_EXTERNAL_EMOJIS,
+    Permissions.CONNECT,
+    Permissions.SPEAK,
+    Permissions.MUTE_MEMBERS,
+    Permissions.DEAFEN_MEMBERS,
+    Permissions.MOVE_MEMBERS,
+    Permissions.USE_VAD,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_WEBHOOKS,
+    Permissions.USE_APPLICATION_COMMANDS,
+    Permissions.MANAGE_EVENTS,
+    Permissions.USE_EXTERNAL_STICKERS,
+    Permissions.USE_EMBEDDED_ACTIVITIES,
+    Permissions.USE_SOUNDBOARD,
+    Permissions.USE_EXTERNAL_SOUNDS,
+    Permissions.SEND_VOICE_MESSAGES
+] as const;
+export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
+export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
+
+export const StagePermissions = [
+    Permissions.CREATE_INSTANT_INVITE,
+    Permissions.MANAGE_CHANNELS,
+    Permissions.ADD_REACTIONS,
+    Permissions.STREAM,
+    Permissions.VIEW_CHANNEL,
+    Permissions.SEND_MESSAGES,
+    Permissions.SEND_TTS_MESSAGES,
+    Permissions.MANAGE_MESSAGES,
+    Permissions.EMBED_LINKS,
+    Permissions.ATTACH_FILES,
+    Permissions.READ_MESSAGE_HISTORY,
+    Permissions.MENTION_EVERYONE,
+    Permissions.USE_EXTERNAL_EMOJIS,
+    Permissions.CONNECT,
+    Permissions.MUTE_MEMBERS,
+    Permissions.MOVE_MEMBERS,
+    Permissions.MANAGE_ROLES,
+    Permissions.MANAGE_WEBHOOKS,
+    Permissions.USE_APPLICATION_COMMANDS,
+    Permissions.REQUEST_TO_SPEAK,
+    Permissions.MANAGE_EVENTS,
+    Permissions.USE_EXTERNAL_STICKERS,
+    Permissions.SEND_VOICE_MESSAGES
+] as const;
+export const AllStagePermissions = StagePermissions.reduce((all, p) => all | p, 0n);
+export const AllStagePermissionNames = StagePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
+
+export const PermissionNames = Object.keys(Permissions) as Array<PermissionName>;
 export type PermissionName = keyof typeof Permissions;
-export const AllGuildPermissions = Permissions.KICK_MEMBERS |
-    Permissions.BAN_MEMBERS |
-    Permissions.ADMINISTRATOR |
-    Permissions.MANAGE_CHANNELS |
-    Permissions.MANAGE_GUILD |
-    Permissions.VIEW_AUDIT_LOG |
-    Permissions.VIEW_GUILD_INSIGHTS |
-    Permissions.CHANGE_NICKNAME |
-    Permissions.MANAGE_NICKNAMES |
-    Permissions.MANAGE_ROLES |
-    Permissions.MANAGE_WEBHOOKS |
-    Permissions.MANAGE_EMOJIS_AND_STICKERS |
-    Permissions.MANAGE_EVENTS |
-    Permissions.MODERATE_MEMBERS |
-    Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS;
-export const AllTextPermissions = Permissions.CREATE_INSTANT_INVITE |
-    Permissions.MANAGE_CHANNELS |
-    Permissions.ADD_REACTIONS |
-    Permissions.VIEW_CHANNEL |
-    Permissions.SEND_MESSAGES |
-    Permissions.SEND_TTS_MESSAGES |
-    Permissions.MANAGE_MESSAGES |
-    Permissions.EMBED_LINKS |
-    Permissions.ATTACH_FILES |
-    Permissions.READ_MESSAGE_HISTORY |
-    Permissions.MENTION_EVERYONE |
-    Permissions.USE_EXTERNAL_EMOJIS |
-    Permissions.MANAGE_ROLES |
-    Permissions.MANAGE_WEBHOOKS |
-    Permissions.USE_APPLICATION_COMMANDS |
-    Permissions.MANAGE_THREADS |
-    Permissions.CREATE_PUBLIC_THREADS |
-    Permissions.CREATE_PRIVATE_THREADS |
-    Permissions.USE_EXTERNAL_STICKERS |
-    Permissions.SEND_MESSAGES_IN_THREADS;
-export const AllVoicePermissions = Permissions.CREATE_INSTANT_INVITE |
-    Permissions.MANAGE_CHANNELS |
-    Permissions.PRIORITY_SPEAKER |
-    Permissions.STREAM |
-    Permissions.VIEW_CHANNEL |
-    Permissions.CONNECT |
-    Permissions.SPEAK |
-    Permissions.MUTE_MEMBERS |
-    Permissions.DEAFEN_MEMBERS |
-    Permissions.MOVE_MEMBERS |
-    Permissions.USE_VAD |
-    Permissions.MANAGE_ROLES |
-    Permissions.REQUEST_TO_SPEAK |
-    Permissions.USE_EMBEDDED_ACTIVITIES;
-export const AllPermissions = AllGuildPermissions | AllTextPermissions | AllVoicePermissions;
 
 export enum ChannelFlags {
-    GUILD_FEED_REMOVED      = 1 << 0,
+    GUILD_FEED_REMOVED                            = 1 << 0,
     /** For threads, if this thread is pinned in a forum channel. */
-    PINNED                  = 1 << 1,
-    ACTIVE_CHANNELS_REMOVED = 1 << 2,
+    PINNED                                        = 1 << 1,
+    ACTIVE_CHANNELS_REMOVED                       = 1 << 2,
     /** For forums, if tags are required when creating threads. */
-    REQUIRE_TAG             = 1 << 4,
-    IS_SPAM                 = 1 << 5,
+    REQUIRE_TAG                                   = 1 << 4,
+    IS_SPAM                                       = 1 << 5,
+    IS_GUILD_RESOURCE_CHANNEL                     = 1 << 7,
+    CLYDE_AI                                      = 1 << 8,
+    IS_SCHEDULED_FOR_DELETION                     = 1 << 9,
+    IS_MEDIA_CHANNEL                              = 1 << 10,
+    SUMMARIES_DISABLED                            = 1 << 11,
+    APPLICATION_SHELF_CONSENT                     = 1 << 12,
+    IS_ROLE_SUBSCRIPTION_TEMPLATE_PREVIEW_CHANNEL = 1 << 13,
 }
 
 export enum SortOrderTypes {
@@ -456,7 +628,7 @@ export enum OAuthScopes {
     /** allows your app to know a user's friends and implicit relationships - requires Discord approval */
     RELATIONSHIPS_READ = "relationships.read",
     /** allows your app to update a user's connection and metadata for the app */
-    ROLE_CONNECTIONS_WRITE = "role_connection.write",
+    ROLE_CONNECTIONS_WRITE = "role_connections.write",
     /** for local rpc server access, this allows you to control a user's local Discord client - requires Discord approval */
     RPC = "rpc",
     /** for local rpc server access, this allows you to receive notifications pushed out to the user - requires Discord approval */
@@ -517,6 +689,8 @@ export enum MessageFlags {
     LOADING                                = 1 << 7,
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
     SHOULD_SHOW_LINK_NOT_DISCORD_WARNING   = 1 << 10,
+    SUPPRESS_NOTIFICATIONS                 = 1 << 12,
+    IS_VOICE_MESSAGE                       = 1 << 13,
 }
 
 export enum MessageTypes {
@@ -553,12 +727,16 @@ export enum MessageTypes {
     STAGE_RAISE_HAND                             = 30,
     STAGE_TOPIC_CHANGE                           = 31,
     GUILD_APPLICATION_PREMIUM_SUBSCRIPTION       = 32,
+    PRIVATE_CHANNEL_INTEGRATION_ADDED            = 33,
+    PRIVATE_CHANNEL_INTEGRATION_REMOVED          = 34,
+    PREMIUM_REFERRAL                             = 35,
 }
 
 export enum MessageActivityTypes {
     JOIN         = 1,
     SPECTATE     = 2,
     LISTEN       = 3,
+    WATCH        = 4,
     JOIN_REQUEST = 5,
 }
 
@@ -584,7 +762,7 @@ export enum GuildScheduledEventStatuses {
     SCHEDULED = 1,
     ACTIVE    = 2,
     COMPLETED = 3,
-    CANCELED = 4,
+    CANCELED  = 4,
 }
 
 export enum GuildScheduledEventEntityTypes {
@@ -608,6 +786,7 @@ export enum AutoModerationTriggerTypes {
     SPAM           = 3,
     KEYWORD_PRESET = 4,
     MENTION_SPAM   = 5,
+    MEMBER_PROFILE = 6,
 }
 
 export enum AutoModerationKeywordPresetTypes {
@@ -620,6 +799,7 @@ export enum AutoModerationActionTypes {
     BLOCK_MESSAGE      = 1,
     SEND_ALERT_MESSAGE = 2,
     TIMEOUT            = 3,
+    QUARANTINE_USER    = 4,
 }
 
 export enum AuditLogActionTypes {
@@ -684,22 +864,37 @@ export enum AuditLogActionTypes {
 
     APPLICATION_COMMAND_PERMISSION_UPDATE = 121,
 
+    SOUNDBOARD_SOUND_CREATE = 130,
+    SOUNDBOARD_SOUND_UPDATE = 131,
+    SOUNDBOARD_SOUND_DELETE = 132,
+
     AUTO_MODERATION_RULE_CREATE                 = 140,
     AUTO_MODERATION_RULE_UPDATE                 = 141,
     AUTO_MODERATION_RULE_DELETE                 = 142,
     AUTO_MODERATION_BLOCK_MESSAGE               = 143,
     AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
     AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145,
+    AUTO_MODERATION_QUARANTINE_USER             = 146,
 
     CREATOR_MONETIZATION_REQUEST_CREATED = 150,
     CREATOR_MONETIZATION_TERMS_ACCEPTED  = 151,
 
-    ROLE_PROMPT_CREATE = 160,
-    ROLE_PROMPT_UPDATE = 161,
-    ROLE_PROMPT_DELETE = 162,
+    ROLE_PROMPT_CREATE       = 160,
+    ROLE_PROMPT_UPDATE       = 161,
+    ROLE_PROMPT_DELETE       = 162,
+    ONBOARDING_PROMPT_CREATE = 163,
+    ONBOARDING_PROMPT_UPDATE = 164,
+    ONBOARDING_PROMPT_DELETE = 165,
+    ONBOARDING_CREATE        = 166,
+    ONBOARDING_UPDATE        = 167,
 
     GUILD_HOME_FEATURE_ITEM = 171,
     GUILD_HOME_REMOVE_ITEM  = 172,
+
+    HARMFUL_LINKS_BLOCKED_MESSAGE = 180,
+
+    HOME_SETTINGS_CREATE = 190,
+    HOME_SETTINGS_UPDATE = 191,
 }
 
 export enum ApplicationCommandTypes {
@@ -741,7 +936,7 @@ export enum InteractionResponseTypes {
 export enum Intents {
     GUILDS                        = 1 << 0,
     GUILD_MEMBERS                 = 1 << 1,
-    GUILD_BANS                    = 1 << 2,
+    GUILD_MODERATION              = 1 << 2,
     GUILD_EMOJIS_AND_STICKERS     = 1 << 3,
     GUILD_INTEGRATIONS            = 1 << 4,
     GUILD_WEBHOOKS                = 1 << 5,
@@ -762,27 +957,31 @@ export enum Intents {
 
 export type IntentNames = keyof typeof Intents;
 
-export const AllNonPrivilegedIntents =
-    Intents.GUILDS |
-    Intents.GUILD_BANS |
-    Intents.GUILD_EMOJIS_AND_STICKERS |
-    Intents.GUILD_INTEGRATIONS |
-    Intents.GUILD_WEBHOOKS |
-    Intents.GUILD_INVITES |
-    Intents.GUILD_VOICE_STATES |
-    Intents.GUILD_MESSAGES |
-    Intents.GUILD_MESSAGE_REACTIONS |
-    Intents.GUILD_MESSAGE_TYPING |
-    Intents.DIRECT_MESSAGES |
-    Intents.DIRECT_MESSAGE_REACTIONS |
-    Intents.DIRECT_MESSAGE_TYPING |
-    Intents.GUILD_SCHEDULED_EVENTS |
-    Intents.AUTO_MODERATION_CONFIGURATION |
-    Intents.AUTO_MODERATION_EXECUTION;
-export const AllPrivilegedIntents =
-    Intents.GUILD_MEMBERS |
-    Intents.GUILD_PRESENCES |
-    Intents.MESSAGE_CONTENT;
+export const NonPrivilegedIntents = [
+    Intents.GUILDS,
+    Intents.GUILD_MODERATION,
+    Intents.GUILD_EMOJIS_AND_STICKERS,
+    Intents.GUILD_INTEGRATIONS,
+    Intents.GUILD_WEBHOOKS,
+    Intents.GUILD_INVITES,
+    Intents.GUILD_VOICE_STATES,
+    Intents.GUILD_MESSAGES,
+    Intents.GUILD_MESSAGE_REACTIONS,
+    Intents.GUILD_MESSAGE_TYPING,
+    Intents.DIRECT_MESSAGES,
+    Intents.DIRECT_MESSAGE_REACTIONS,
+    Intents.DIRECT_MESSAGE_TYPING,
+    Intents.GUILD_SCHEDULED_EVENTS,
+    Intents.AUTO_MODERATION_CONFIGURATION,
+    Intents.AUTO_MODERATION_EXECUTION
+] as const;
+export const AllNonPrivilegedIntents = NonPrivilegedIntents.reduce((all, p) => all | p, 0);
+export const PrivilegedIntents = [
+    Intents.GUILD_MEMBERS,
+    Intents.GUILD_PRESENCES,
+    Intents.MESSAGE_CONTENT
+] as const;
+export const AllPrivilegedIntents = PrivilegedIntents.reduce((all, p) => all | p, 0);
 export const AllIntents = AllNonPrivilegedIntents | AllPrivilegedIntents;
 
 export enum GatewayOPCodes {
@@ -890,6 +1089,33 @@ export enum RoleConnectionMetadataTypes {
     BOOLEAN_NOT_EQUAL              = 8,
 }
 
+export enum GuildMemberFlags {
+    DID_REJOIN                                     = 1 << 0,
+    COMPLETED_ONBOARDING                           = 1 << 1,
+    BYPASSES_VERIFICATION                          = 1 << 2,
+    STARTED_ONBOARDING                             = 1 << 3,
+    IS_GUEST                                       = 1 << 4,
+    STARTED_HOME_ACTIONS                           = 1 << 5,
+    COMPLETED_HOME_ACTIONS                         = 1 << 6,
+    AUTOMOD_QUARANTINED_USERNAME_OR_GUILD_NICKNAME = 1 << 7,
+    AUTOMOD_QUARANTINED_BIO                        = 1 << 8,
+}
+
+export enum OnboardingPromptTypes {
+    MULTIPLE_CHOICE = 0,
+    DROPDOWN        = 1,
+}
+
+export enum AnimationTypes {
+    PREMIUM = 0,
+    BASIC   = 1,
+}
+
+export enum OnboardingModes {
+    DEFAULT = 0,
+    ADVANCED = 1,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
@@ -954,6 +1180,7 @@ export enum JSONErrorCodes {
     MAXIMUM_NUMBER_OF_WEBHOOKS = 30007,
     MAXIMUM_NUMBER_OF_EMOJIS = 30008,
     MAXIMUM_NUMBER_OF_REACTIONS = 30010,
+    MAXIMUM_NUMBER_OF_GROUP_CHANNELS = 30011,
     MAXIMUM_NUMBER_OF_CHANNELS = 30013,
     MAXIMUM_NUMBER_OF_ATTACHMENTS = 30015,
     MAXIMUM_NUMBER_OF_INVITES = 30016,
@@ -1045,11 +1272,19 @@ export enum JSONErrorCodes {
     MONETIZATION_REQUIRED = 50097,
     BOOSTS_REQUIRED = 50101,
     INVALID_JSON = 50109,
+    OWNER_CANNOT_BE_PENDING_MEMBER = 50131,
     OWNERSHIP_CANNOT_BE_TRANSFERRED_TO_BOT = 50132,
     FAILED_TO_RESIZE_ASSET = 50138,
     CANNOT_MIX_SUBSCRIPTION_AND_NON_SUBSCRIPTION_ROLES = 50144,
     CANNOT_CONVERT_BETWEEN_PREMIUM_AND_NORMAL_EMOJI = 50145,
     UPLOADED_FILE_NOT_FOUND = 50146,
+    VOICE_MESSAGES_DO_NOT_SUPPORT_ADDITIONAL_CONTENT = 50159,
+    VOICE_MESSAGES_MUST_HAVE_A_SINGLE_AUDIO_ATTACHMENT = 50160,
+    VOICE_MESSAGES_MUST_HAVE_SUPPORTING_METADATA = 50161,
+    VOICE_MESSAGES_CANNOT_BE_EDITED = 50162,
+    CANNOT_DELETE_GUILD_SUBSCRIPTION_INTEGRATION = 50163,
+    CANNOT_SEND_VOICE_MESSAGES_IN_CHANNEL = 50173,
+    USER_MUST_FIRST_BE_VERIFIED = 50600,
     NO_PERMISSION_TO_SEND_STICKER = 50600,
     TWO_FACTOR_REQUIRED = 60003,
     NO_USERS_WITH_DISCORDTAG_EXIST = 80004,

@@ -6,6 +6,7 @@ import type Client from "../Client";
 import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
 import type { JSONAutoModerationRule } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
@@ -37,6 +38,7 @@ export default class AutoModerationRule extends Base {
         this.actions = data.actions.map(a => ({
             metadata: {
                 channelID:       a.metadata.channel_id,
+                customMessage:   a.metadata.custom_message,
                 durationSeconds: a.metadata.duration_seconds
             },
             type: a.type
@@ -66,6 +68,7 @@ export default class AutoModerationRule extends Base {
             this.actions = data.actions.map(a => ({
                 metadata: {
                     channelID:       a.metadata.channel_id,
+                    customMessage:   a.metadata.custom_message,
                     durationSeconds: a.metadata.duration_seconds
                 },
                 type: a.type
@@ -102,12 +105,9 @@ export default class AutoModerationRule extends Base {
 
     /** The guild this rule is in. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-            }
+            throw new UncachedError(this, "guild", "GUILDS", this.client);
         }
 
         return this._cachedGuild;

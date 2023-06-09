@@ -15,6 +15,7 @@ import type {
     TypeToEdit
 } from "../types/application-commands";
 import type { JSONApplicationCommand } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
@@ -71,12 +72,9 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** The guild this command is in (guild commands only). This will throw an error if the guild is not cached. */
     get guild(): Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
+            this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                this._cachedGuild = this.client.guilds.get(this.guildID);
-
-                if (!this._cachedGuild) {
-                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-                }
+                throw new UncachedError(this, "guild", "GUILDS", this.client);
             }
 
             return this._cachedGuild;
@@ -106,7 +104,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      */
     async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
         if (!this.guildID) {
-            throw new Error("editGuildCommandPermissions cannot be used on global commands.");
+            throw new TypeError("editGuildCommandPermissions cannot be used on global commands.");
         }
         return this.client.rest.applicationCommands.editGuildCommandPermissions(this.applicationID, this.guildID, this.id, options);
     }
@@ -116,7 +114,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      */
     async getGuildPermission(): Promise<RESTGuildApplicationCommandPermissions> {
         if (!this.guildID) {
-            throw new Error("getGuildPermission cannot be used on global commands.");
+            throw new TypeError("getGuildPermission cannot be used on global commands.");
         }
         return this.client.rest.applicationCommands.getGuildPermission(this.applicationID, this.guildID, this.id);
     }
@@ -130,7 +128,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         if (sub?.length) {
             text += ` ${sub.slice(0, 2).join(" ")}`;
         }
-        return `<${text}:${this.id}>`;
+        return `</${text}:${this.id}>`;
     }
 
     override toJSON(): JSONApplicationCommand {

@@ -17,56 +17,58 @@ import type {
     InteractionContent,
     ModalData,
     RawApplicationCommandInteraction,
-    ApplicationCommandInteractionResolvedData
+    ApplicationCommandInteractionResolvedData,
+    InitialInteractionContent
 } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
-import type { AnyGuildTextChannel, AnyTextChannelWithoutGroup } from "../types/channels";
+import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
 import type { RawUser } from "../types/users";
 import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a command interaction. */
-export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached> extends Interaction {
-    private _cachedChannel!: T extends AnyTextChannelWithoutGroup ? T : undefined;
-    private _cachedGuild?: T extends AnyGuildTextChannel ? Guild : Guild | null;
+export default class CommandInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
+    private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
+    private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
-    appPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    appPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
     data: ApplicationCommandInteractionData;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID: T extends AnyGuildTextChannel ? string : string | null;
+    guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
-    guildLocale: T extends AnyGuildTextChannel ? string : string | undefined;
+    guildLocale: T extends AnyTextableGuildChannel ? string : string | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
-    member: T extends AnyGuildTextChannel ? Member : Member | undefined;
+    member: T extends AnyTextableGuildChannel ? Member : Member | null;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
-    memberPermissions: T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+    memberPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | null;
     declare type: InteractionTypes.APPLICATION_COMMAND;
     /** The user that invoked this interaction. */
     user: User;
     constructor(data: RawApplicationCommandInteraction, client: Client) {
         super(data, client);
-        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionResolvedChannel, client) ,
+            channels:    new TypedCollection(InteractionResolvedChannel, client),
             members:     new TypedCollection(Member, client),
             messages:    new TypedCollection(Message, client),
             roles:       new TypedCollection(Role, client),
             users:       new TypedCollection(User, client)
         };
-        this.guildID = (data.guild_id ?? null) as T extends AnyGuildTextChannel ? string : string | null;
-        this.guildLocale = data.guild_locale as T extends AnyGuildTextChannel ? string : string | undefined;
+        this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
+        this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
         this.locale = data.locale!;
-        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyGuildTextChannel ? Member : Member | undefined;
-        this.memberPermissions = (data.member === undefined ? undefined : new Permission(data.member.permissions)) as T extends AnyGuildTextChannel ? Permission : Permission | undefined;
+        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyTextableGuildChannel ? Member : Member | null;
+        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | null;
         this.user = client.users.update((data.user ?? data.member!.user)!);
 
         if (data.data.resolved) {
@@ -133,25 +135,22 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
     }
 
     /** The channel this interaction was sent from. */
-    get channel(): T extends AnyTextChannelWithoutGroup ? T : undefined {
-        return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel(this.channelID) as T extends AnyTextChannelWithoutGroup ? T : undefined);
+    get channel(): T extends AnyInteractionChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyInteractionChannel ? T : undefined;
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
-    get guild(): T extends AnyGuildTextChannel ? Guild : Guild | null {
+    get guild(): T extends AnyTextableGuildChannel ? Guild : Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
+            this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
-                this._cachedGuild = this.client.guilds.get(this.guildID);
-
-                if (!this._cachedGuild) {
-                    throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
-                }
+                throw new UncachedError(this, "guild", "GUILDS", this.client);
             }
 
             return this._cachedGuild;
         }
 
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyGuildTextChannel ? Guild : Guild | null);
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyTextableGuildChannel ? Guild : Guild | null);
     }
 
     /**
@@ -163,12 +162,16 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
     }
 
     /**
-     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use `createFollowup`.
+     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
+     * @note You cannot attach files in an initial response. Defer the interaction, then use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: InteractionContent): Promise<void> {
+    async createMessage(options: InitialInteractionContent): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
+        }
+        if ("files" in options && (options.files as []).length !== 0) {
+            this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
@@ -180,7 +183,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
      */
     async createModal(options: ModalData): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.MODAL, data: options });
@@ -192,7 +195,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
      */
     async defer(flags?: number): Promise<void> {
         if (this.acknowledged) {
-            throw new Error("Interactions cannot have more than one initial response.");
+            throw new TypeError("Interactions cannot have more than one initial response.");
         }
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE, data: { flags } });
@@ -246,7 +249,7 @@ export default class CommandInteraction<T extends AnyTextChannelWithoutGroup | U
     }
 
     /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is CommandInteraction<AnyGuildTextChannel> {
+    inCachedGuildChannel(): this is CommandInteraction<AnyTextableGuildChannel> {
         return this.channel instanceof GuildChannel;
     }
 

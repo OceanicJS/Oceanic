@@ -93,14 +93,18 @@
       }
     ],
     "@typescript-eslint/method-signature-style": ["error", "method"],
-    "@typescript-eslint/no-duplicate-imports": "error",
     "@typescript-eslint/no-empty-function": [
       "error",
       {
         "allow": ["arrowFunctions"]
       }
     ],
-    "@typescript-eslint/no-empty-interface": "error",
+    "@typescript-eslint/no-empty-interface": [
+      "error",
+      {
+        "allowSingleExtends": true
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-inferrable-types": "error",
     "@typescript-eslint/no-misused-new": "error",
@@ -172,7 +176,7 @@
     "indent": "off",
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "error",
-    "jsdoc/no-undefined-types": "error",
+    "jsdoc/no-undefined-types": "off",
     "key-spacing": [
       "error",
       {
@@ -305,7 +309,8 @@
         "SwitchCase": 1
       }
     ],
-    "jsdoc/newline-after-description": ["error", "never"],
+    "jsdoc/tag-lines": "error",
+    "jsdoc/no-types": "error",
     "arrow-parens": ["error", "as-needed"],
     "unicorn/no-null": "off",
     "unicorn/no-static-only-class": "off",
@@ -332,11 +337,13 @@
     "unicorn/prefer-number-properties": "off",
     "unicorn/no-array-callback-reference": "off",
     "unicorn/no-array-method-this-argument": "off",
+    "unicorn/custom-error-definition": "error",
     "@typescript-eslint/comma-dangle": [
       "error",
       {
         "enums": "always-multiline"
       }
-    ]
+    ],
+    "unicorn/prefer-event-target": "off"
   }
 }

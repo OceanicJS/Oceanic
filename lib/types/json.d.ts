@@ -32,7 +32,11 @@ import type {
     ForumTag,
     ForumEmoji,
     MessageActionRow,
-    Embed
+    Embed,
+    GuildChannels,
+    TextableGuildChannels,
+    ThreadChannels,
+    VoiceChannels
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type {
@@ -42,7 +46,6 @@ import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,
     ExplicitContentFilterLevels,
-    GuildChannelTypes,
     GuildFeature,
     GuildNSFWLevels,
     IntegrationExpireBehaviors,
@@ -53,14 +56,11 @@ import type {
     MFALevels,
     OverwriteTypes,
     PremiumTiers,
-    PrivateChannelTypes,
     RESTMethod,
     GuildScheduledEventEntityTypes,
     GuildScheduledEventPrivacyLevels,
     GuildScheduledEventStatuses,
-    TextChannelTypes,
     ThreadAutoArchiveDuration,
-    ThreadChannelTypes,
     VerificationLevels,
     VideoQualityModes,
     WebhookTypes,
@@ -69,9 +69,8 @@ import type {
     ForumLayoutTypes
 } from "../Constants";
 
-export interface JSONAnnouncementChannel extends JSONTextableChannel {
+export interface JSONAnnouncementChannel extends JSONThreadableChannel {
     rateLimitPerUser: 0;
-    threads: Array<string>;
     type: ChannelTypes.GUILD_ANNOUNCEMENT;
 }
 export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
@@ -79,23 +78,24 @@ export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
     type: ChannelTypes.ANNOUNCEMENT_THREAD;
 }
 export interface JSONApplication extends JSONClientApplication {
-    botPublic: boolean;
-    botRequireCodeGrant: boolean;
+    approximateGuildCount: number;
     coverImage: string | null;
     customInstallURL?: string;
     description: string;
-    guildID?: string;
+    guild: JSONOAuthGuild | null;
+    guildID: string | null;
     icon: string | null;
     installParams?: InstallParams;
+    interactionsEndpointURL: string | null;
     name: string;
-    ownerID: string;
     primarySKUID?: string;
     privacyPolicyURL?: string;
+    roleConnectionsVerificationURL: string | null;
     rpcOrigins: Array<string>;
     slug?: string;
     tags?: Array<string>;
-    team: JSONTeam | null;
     termsOfServiceURL?: string;
+    type: number | null;
     verifyKey: string;
 }
 export interface JSONApplicationCommand extends JSONBase {
@@ -265,7 +265,7 @@ export interface JSONGuild extends JSONBase {
     mfaLevel: MFALevels;
     name: string;
     nsfwLevel: GuildNSFWLevels;
-    ownerID: string;
+    ownerID: string | null;
     preferredLocale: string;
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
@@ -293,7 +293,7 @@ export interface JSONGuildChannel extends JSONChannel {
     guildID: string;
     name: string;
     parentID: string | null;
-    type: GuildChannelTypes;
+    type: GuildChannels;
 }
 export interface JSONGuildPreview extends JSONBase {
     approximateMemberCount: number;
@@ -349,6 +349,7 @@ export interface JSONInvite {
     code: string;
     createdAt?: number;
     expiresAt?: number;
+    guild?: JSONInviteGuild;
     guildID?: string;
     guildScheduledEvent?: JSONScheduledEvent;
     inviter?: string;
@@ -365,6 +366,18 @@ export interface JSONInvite {
     targetUser?: string;
     temporary?: boolean;
     uses?: number;
+}
+export interface JSONInviteGuild extends JSONBase {
+    banner: string | null;
+    description: string | null;
+    features: Array<GuildFeature>;
+    icon: string | null;
+    name: string;
+    nsfwLevel: GuildNSFWLevels;
+    premiumSubscriptionCount?: number;
+    splash: string | null;
+    vanityURLCode: string | null;
+    verificationLevel: VerificationLevels;
 }
 export interface JSONMember extends JSONBase {
     avatar: string | null;
@@ -433,6 +446,39 @@ export interface JSONModalSubmitInteraction extends JSONInteraction {
     type: InteractionTypes.MODAL_SUBMIT;
     user: JSONUser;
 }
+export interface JSONOAuthApplication extends JSONBase {
+    botPublic: boolean;
+    botRequireCodeGrant: boolean;
+    coverImage: string | null;
+    customInstallURL?: string;
+    description: string;
+    flags: number;
+    guildID: string | null;
+    icon: string | null;
+    installParams?: InstallParams;
+    name: string;
+    owner: JSONUser;
+    ownerID: string;
+    primarySKUID?: string;
+    privacyPolicyURL?: string;
+    roleConnectionsVerificationURL?: string;
+    rpcOrigins: Array<string>;
+    slug?: string;
+    tags?: Array<string>;
+    team: JSONTeam | null;
+    termsOfServiceURL?: string;
+    type: number | null;
+    verifyKey: string;
+}
+export interface JSONOAuthGuild extends JSONBase {
+    approximateMemberCount?: number;
+    approximatePresenceCount?: number;
+    features: Array<GuildFeature>;
+    icon: string | null;
+    name: string;
+    owner: boolean;
+    permissions: JSONPermission;
+}
 export interface JSONPartialApplication extends JSONBase {
     botPublic?: boolean;
     botRequireCodeGrant?: boolean;
@@ -496,12 +542,7 @@ export interface JSONScheduledEvent extends JSONBase {
     status: GuildScheduledEventStatuses;
     userCount?: number;
 }
-export interface JSONStageChannel extends JSONGuildChannel {
-    bitrate: number;
-    permissionOverwrites: Array<JSONPermissionOverwrite>;
-    position: number;
-    rtcRegion: string | null;
-    topic: string | null;
+export interface JSONStageChannel extends JSONTextableVoiceChannel {
     type: ChannelTypes.GUILD_STAGE_VOICE;
 }
 export interface JSONStageInstance extends JSONBase {
@@ -519,7 +560,6 @@ export interface JSONTeam extends JSONBase {
     ownerID: string;
 }
 export interface JSONTextableChannel extends JSONGuildChannel {
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     lastMessageID: string | null;
     messages: Array<string>;
     nsfw: boolean;
@@ -527,11 +567,25 @@ export interface JSONTextableChannel extends JSONGuildChannel {
     position: number;
     rateLimitPerUser: number;
     topic: string | null;
-    type: Exclude<TextChannelTypes, PrivateChannelTypes>;
+    type: TextableGuildChannels;
 }
-export interface JSONTextChannel extends JSONTextableChannel {
-    threads: Array<string>;
+
+export interface JSONTextableVoiceChannel extends JSONTextableChannel {
+    bitrate: number;
+    rtcRegion: string | null;
+    type: VoiceChannels;
+    userLimit: number;
+    videoQualityMode: VideoQualityModes;
+    voiceMembers: Array<string>;
+}
+
+export interface JSONTextChannel extends JSONThreadableChannel {
     type: ChannelTypes.GUILD_TEXT;
+}
+export interface JSONThreadableChannel extends JSONTextableChannel {
+    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+    threads: Array<string>;
+    type: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
 }
 export interface JSONThreadChannel extends JSONGuildChannel {
     flags: number;
@@ -543,7 +597,7 @@ export interface JSONThreadChannel extends JSONGuildChannel {
     rateLimitPerUser: number;
     threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     totalMessageSent: number;
-    type: ThreadChannelTypes;
+    type: ThreadChannels;
 }
 export interface JSONUnavailableGuild extends JSONBase {
     unavailable: true;
@@ -559,18 +613,8 @@ export interface JSONUser extends JSONBase {
     system: boolean;
     username: string;
 }
-export interface JSONVoiceChannel extends JSONGuildChannel {
-    bitrate: number;
-    messages: Array<string>;
-    nsfw: boolean;
-    permissionOverwrites: Array<JSONPermissionOverwrite>;
-    position: number;
-    rtcRegion: string | null;
-    topic: string | null;
+export interface JSONVoiceChannel extends JSONTextableVoiceChannel {
     type: ChannelTypes.GUILD_VOICE;
-    userLimit: number;
-    videoQualityMode: VideoQualityModes;
-    voiceMembers: Array<string>;
 }
 export interface JSONVoiceState extends JSONBase {
     channelID: string | null;

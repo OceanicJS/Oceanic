@@ -30,4 +30,4 @@ export interface CreateTemplateOptions {
     name: string;
 }
 
-export type EditGuildTemplateOptions = Partial<CreateTemplateOptions>;
+export interface EditGuildTemplateOptions extends Partial<CreateTemplateOptions> {}

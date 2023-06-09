@@ -1,5 +1,5 @@
 /** @module Client */
-import { GATEWAY_VERSION } from "./Constants";
+import { ApplicationFlags, GATEWAY_VERSION, Intents } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import TypedCollection from "./util/TypedCollection";
 import PrivateChannel from "./structures/PrivateChannel";
@@ -9,7 +9,7 @@ import Guild from "./structures/Guild";
 import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
 import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
 import type { RawUser } from "./types/users";
-import type {  ClientInstanceOptions, ClientOptions } from "./types/client";
+import type {  ClientInstanceOptions, ClientOptions, CollectionLimitsOptions } from "./types/client";
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
@@ -19,6 +19,7 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import type { ClientEvents } from "./types/events";
 import type { JoinVoiceChannelOptions } from "./types/voice";
+import { DependencyError, UncachedError } from "./util/Errors";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";
@@ -42,12 +43,13 @@ try {
 /** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
     private _application?: ClientApplication;
+    private _connected = false;
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
     groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
-    guilds: TypedCollection<string, RawGuild, Guild>;
+    guilds: TypedCollection<string, RawGuild, Guild, [rest?: boolean]>;
     options: ClientInstanceOptions;
     privateChannels: TypedCollection<string, RawPrivateChannel, PrivateChannel>;
     ready: boolean;
@@ -65,6 +67,28 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      */
     constructor(options?: ClientOptions) {
         super();
+        this.util = new Util(this);
+        const disableCache = options?.disableCache === true || options?.disableCache === "no-warning";
+        const colZero = {
+            auditLogEntries:     0,
+            autoModerationRules: 0,
+            channelThreads:      0,
+            channels:            0,
+            groupChannels:       0,
+            guildThreads:        0,
+            guilds:              0,
+            integrations:        0,
+            members:             0,
+            messages:            0,
+            privateChannels:     0,
+            roles:               0,
+            scheduledEvents:     0,
+            stageInstances:      0,
+            unavailableGuilds:   0,
+            users:               0,
+            voiceMembers:        0,
+            voiceStates:         0
+        } satisfies Required<CollectionLimitsOptions>;
         this.options = {
             allowedMentions: options?.allowedMentions ?? {
                 everyone:    false,
@@ -73,39 +97,64 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 roles:       true
             },
             auth:             options?.auth ?? null,
-            collectionLimits: {
-                members: options?.collectionLimits?.members === undefined ?  Infinity : (typeof options.collectionLimits.members === "object" ? {
-                    unknown: Infinity,
-                    ...options.collectionLimits.members
-                } : options.collectionLimits.members),
-                messages: options?.collectionLimits?.messages ?? 100,
-                users:    options?.collectionLimits?.users ?? Infinity
+            collectionLimits: disableCache ? colZero : {
+                auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
+                autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
+                channelThreads:      this.util._setLimit(options?.collectionLimits?.channelThreads, Infinity),
+                channels:            this.util._setLimit(options?.collectionLimits?.channels, Infinity),
+                groupChannels:       options?.collectionLimits?.groupChannels ?? 10,
+                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
+                guilds:              options?.collectionLimits?.guilds ?? Infinity,
+                integrations:        this.util._setLimit(options?.collectionLimits?.integrations, Infinity),
+                members:             this.util._setLimit(options?.collectionLimits?.members, Infinity),
+                messages:            this.util._setLimit(options?.collectionLimits?.messages, 100),
+                privateChannels:     options?.collectionLimits?.privateChannels ?? 25,
+                roles:               this.util._setLimit(options?.collectionLimits?.roles, Infinity),
+                scheduledEvents:     this.util._setLimit(options?.collectionLimits?.scheduledEvents, Infinity),
+                stageInstances:      this.util._setLimit(options?.collectionLimits?.stageInstances, Infinity),
+                unavailableGuilds:   options?.collectionLimits?.unavailableGuilds ?? Infinity,
+                users:               options?.collectionLimits?.users ?? Infinity,
+                voiceMembers:        this.util._setLimit(options?.collectionLimits?.voiceMembers, Infinity),
+                voiceStates:         this.util._setLimit(options?.collectionLimits?.voiceStates, Infinity)
             },
             defaultImageFormat:        options?.defaultImageFormat ?? "png",
             defaultImageSize:          options?.defaultImageSize ?? 4096,
-            disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false
+            disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false,
+            restMode:                  false,
+            disableCache
         };
+        if (options?.disableCache === true) {
+            process.emitWarning("Enabling the disableCache option is not recommended. This will break many aspects of the library, as it is not designed to function without cache.", {
+                code:   "OCEANIC_CACHE_DISABLED",
+                detail: "Set the disableCache option to the literal string \"no-warning\" to disable this warning."
+            });
+        }
+        if (disableCache && options?.collectionLimits !== undefined && JSON.stringify(options.collectionLimits) !== JSON.stringify(colZero)) {
+            process.emitWarning("Providing the collectionsLimit option when the disableCache option has been enabled is redundant. Any provided values will be ignored.", {
+                code:   "OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED",
+                detail: "Remove the collectionsLimit option, or zero out all of the possible options to disable this warning."
+            });
+        }
         this.voiceAdapters = new Map();
         this.channelGuildMap = {};
-        this.groupChannels = new TypedCollection(GroupChannel, this, 10);
-        this.guilds = new TypedCollection(Guild, this);
-        this.privateChannels = new TypedCollection(PrivateChannel, this, 25);
+        this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);
+        this.guilds = new TypedCollection(Guild, this, this.options.collectionLimits.guilds);
+        this.privateChannels = new TypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels);
         this.ready = false;
         this.guildShardMap = {};
         this.rest = new RESTManager(this, options?.rest);
         this.shards = new ShardManager(this, options?.gateway);
         this.threadGuildMap = {};
-        this.unavailableGuilds = new TypedCollection(UnavailableGuild, this);
+        this.unavailableGuilds = new TypedCollection(UnavailableGuild, this, this.options.collectionLimits.unavailableGuilds);
         this.users = new TypedCollection(User, this, this.options.collectionLimits.users);
-        this.util = new Util(this);
     }
 
-    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. */
+    /** The client's partial application. This will throw an error if not using a gateway connection or no shard is READY. If using a client for rest only, consider enabling rest mode. */
     get application(): ClientApplication {
         if (this._application) {
             return this._application;
         } else {
-            throw new Error(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
+            throw new UncachedError(`${this.constructor.name}#application is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client, or enable rest mode.`);
         }
     }
 
@@ -113,19 +162,19 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         return this.startTime ? Date.now() - this.startTime : 0;
     }
 
-    /** The client's user application. This will throw an error if not using a gateway connection or no shard is READY. */
+    /** The client's user. This will throw an error if not using a gateway connection or no shard is READY. If using a client for rest only, consider enabling rest mode. */
     get user(): ExtendedUser {
         if (this._user) {
             return this._user;
         } else {
-            throw new Error(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client.`);
+            throw new UncachedError(`${this.constructor.name}#user is not present if not using a gateway connection or no shard is READY. Consider making sure you have connected your client, or enable rest mode.`);
         }
     }
 
     /** The active voice connections of this client. */
     get voiceConnections(): Map<string, VoiceConnection> {
         if (!DiscordJSVoice) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
+            throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return DiscordJSVoice.getVoiceConnections();
@@ -133,8 +182,12 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
     /** Connect the client to Discord. */
     async connect(): Promise<void> {
+        if (this.options.restMode) {
+            throw new TypeError("Rest mode has been enabled on this client. You cannot connect to the gateway.");
+        }
+
         if (!this.options.auth || !this.options.auth.startsWith("Bot ")) {
-            throw new Error("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
+            throw new TypeError("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
         }
         let url: string, data: GetBotGatewayResponse | undefined;
         try {
@@ -145,7 +198,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 url = (await this.rest.getGateway()).url;
             }
         } catch (err) {
-            throw new Error("Failed to get gateway information.", { cause: err as Error });
+            throw new TypeError("Failed to get gateway information.", { cause: err as Error });
         }
         if (url.includes("?")) {
             url = url.slice(0, url.indexOf("?"));
@@ -153,6 +206,36 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         if (!url.endsWith("/")) {
             url += "/";
         }
+        const includedPresences = (this.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES;
+        const includedGuildMembers = (this.shards.options.intents & Intents.GUILD_MEMBERS) === Intents.GUILD_MEMBERS;
+        const includedMessageContent = (this.shards.options.intents & Intents.MESSAGE_CONTENT) === Intents.MESSAGE_CONTENT;
+        if (this.shards.options.removeDisallowedIntents && (includedPresences || includedGuildMembers || includedMessageContent)) {
+            this.emit("debug", "removeDisallowedIntents is enabled");
+            const { flags } = await this.rest.misc.getApplication();
+            const namedFlags: Array<string> = [];
+            for (let i = 0;; i++) {
+                const flag = 1 << i;
+                if (flag > flags) break;
+                if (flag & flags) namedFlags.push(ApplicationFlags[flag] || `Unknown (${i})`);
+            }
+            this.emit("debug", `Application flags: ${namedFlags.join(", ")}`);
+            const hasPresences = (flags & ApplicationFlags.GATEWAY_PRESENCE) === ApplicationFlags.GATEWAY_PRESENCE || (flags & ApplicationFlags.GATEWAY_PRESENCE_LIMITED) === ApplicationFlags.GATEWAY_PRESENCE_LIMITED;
+            const hasGuildMembers = (flags & ApplicationFlags.GATEWAY_GUILD_MEMBERS) === ApplicationFlags.GATEWAY_GUILD_MEMBERS || (flags & ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED) === ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED;
+            const hasMessageContent = (flags & ApplicationFlags.GATEWAY_MESSAGE_CONTENT) === ApplicationFlags.GATEWAY_MESSAGE_CONTENT || (flags & ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED) === ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED;
+            if (includedPresences && !hasPresences) {
+                this.emit("warn", "removeDisallowedIntents is enabled, and GUILD_PRESENCES was included but not found to be allowed. It has been removed.");
+                this.shards.options.intents &= ~Intents.GUILD_PRESENCES;
+            }
+            if (includedGuildMembers && !hasGuildMembers) {
+                this.emit("warn", "removeDisallowedIntents is enabled, and GUILD_MEMBERS was included but not found to be allowed. It has been removed.");
+                this.shards.options.intents &= ~Intents.GUILD_MEMBERS;
+            }
+            if (includedMessageContent && !hasMessageContent) {
+                this.emit("warn", "removeDisallowedIntents is enabled, and MESSAGE_CONTENT was included but not found to be allowed. It has been removed.");
+                this.shards.options.intents &= ~Intents.MESSAGE_CONTENT;
+            }
+        }
+
         this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
         if (this.shards.options.compress) {
             this.gatewayURL += "&compress=zlib-stream";
@@ -160,7 +243,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
         if (this.shards.options.maxShards === -1) {
             if (!data || !data.shards) {
-                throw new Error("AutoSharding failed, missing required information from Discord.");
+                throw new TypeError("AutoSharding failed, missing required information from Discord.");
             }
             this.shards.options.maxShards = data.shards;
             if (this.shards.options.lastShardID === -1) {
@@ -170,7 +253,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
 
         if (this.shards.options.concurrency === -1) {
             if (!data) {
-                throw new Error("AutoConcurrency failed, missing required information from Discord.");
+                throw new TypeError("AutoConcurrency failed, missing required information from Discord.");
             }
             this.shards.options.concurrency = data.sessionStartLimit.maxConcurrency;
         }
@@ -186,7 +269,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             }
         }
 
-
+        this._connected = true;
         for (const id of this.shards.options.shardIDs) {
             this.shards.spawn(id);
         }
@@ -230,7 +313,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      */
     getVoiceConnection(guildID: string): VoiceConnection | undefined {
         if (!DiscordJSVoice) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
+            throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         return DiscordJSVoice.getVoiceConnection(guildID);
@@ -242,7 +325,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * */
     joinVoiceChannel(options: JoinVoiceChannelOptions): VoiceConnection {
         if (!DiscordJSVoice) {
-            throw new Error("Voice is only supported with @discordjs/voice installed.");
+            throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return DiscordJSVoice.joinVoiceChannel({
@@ -263,5 +346,15 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     leaveVoiceChannel(guildID: string): void {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return this.getVoiceConnection(guildID)?.destroy();
+    }
+
+    /**
+     * Initialize this client for rest only use. Currently, this sets both the `application` and `user` properties, as would happen with a gateway connection.
+     */
+    async restMode(): Promise<this> {
+        this._application = await this.rest.misc.getClientApplication();
+        this._user = await this.rest.oauth.getCurrentUser();
+        this.options.restMode = true;
+        return this;
     }
 }

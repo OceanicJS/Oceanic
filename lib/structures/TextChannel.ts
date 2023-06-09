@@ -1,46 +1,26 @@
 /** @module TextChannel */
-import TextableChannel from "./TextableChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
 import ThreadChannel from "./ThreadChannel";
-import type { ChannelTypes } from "../Constants";
+import ThreadableChannel from "./ThreadableChannel";
+import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type {
-    ArchivedThreads,
-    EditTextChannelOptions,
-    FollowedChannel,
-    GetArchivedThreadsOptions,
-    RawPrivateThreadChannel,
-    RawPublicThreadChannel,
-    RawTextChannel
-} from "../types/channels";
+import type { ArchivedThreads, FollowedChannel, GetArchivedThreadsOptions, RawTextChannel } from "../types/channels";
 import type { JSONTextChannel } from "../types/json";
-import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild text channel. */
-export default class TextChannel extends TextableChannel<TextChannel> {
-    /** The threads in this channel. */
-    threads: TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+export default class TextChannel extends ThreadableChannel<TextChannel, PublicThreadChannel | PrivateThreadChannel>  {
     declare type: ChannelTypes.GUILD_TEXT;
     constructor(data: RawTextChannel, client: Client) {
-        super(data, client);
-        this.threads = new TypedCollection(ThreadChannel, client) as TypedCollection<string, RawPublicThreadChannel | RawPrivateThreadChannel, PublicThreadChannel | PrivateThreadChannel>;
+        super(data, client, ThreadChannel);
     }
 
     /**
      * Convert this text channel to a announcement channel.
      */
-    override async convert(): Promise<AnnouncementChannel> {
-        return super.convert() as Promise<AnnouncementChannel>;
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel
-     */
-    override async edit(options: EditTextChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
+    async convert(): Promise<AnnouncementChannel> {
+        return this.client.rest.channels.edit<AnnouncementChannel>(this.id, { type: ChannelTypes.GUILD_ANNOUNCEMENT });
     }
 
     /**
@@ -70,8 +50,7 @@ export default class TextChannel extends TextableChannel<TextChannel> {
     override toJSON(): JSONTextChannel {
         return {
             ...super.toJSON(),
-            threads: this.threads.map(thread => thread.id),
-            type:    this.type
+            type: this.type
         };
     }
 }

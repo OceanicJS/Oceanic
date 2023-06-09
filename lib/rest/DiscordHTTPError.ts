@@ -1,47 +1,45 @@
 /** @module DiscordHTTPError */
+import DiscordRESTError from "./DiscordRESTError";
 import type { RESTMethod } from "../Constants";
 import type { JSONDiscordHTTPError } from "../types/json";
 import type { Headers, Response } from "undici";
 
 /** An HTTP error received from Discord. */
 export default class DiscordHTTPError extends Error {
-    method: RESTMethod;
+    method!: RESTMethod;
     override name = "DiscordHTTPError";
-    resBody: Record<string, unknown> | null;
-    response: Response;
+    resBody!: Record<string, unknown> | null;
+    response!: Response;
     constructor(res: Response, resBody: unknown | null, method: RESTMethod, stack?: string) {
+        // eslint-disable-next-line unicorn/custom-error-definition
         super();
-        this.method = method;
-        this.response = res;
-        this.resBody = resBody as DiscordHTTPError["resBody"];
+        Object.defineProperties(this, {
+            method: {
+                value:      method,
+                enumerable: false
+            },
+            response: {
+                value:      res,
+                enumerable: false
+            },
+            resBody: {
+                value:      resBody,
+                enumerable: false
+            }
+        });
 
         let message = `${res.status} ${res.statusText} on ${this.method} ${this.path}`;
-        const errors = DiscordHTTPError.flattenErrors(resBody as Record<string, unknown>);
+        const errors = DiscordRESTError.flattenErrors(resBody as Record<string, unknown>);
         if (errors.length !== 0) {
             message += `\n  ${errors.join("\n  ")}`;
         }
-        Object.defineProperty(this, "message", {
-            enumerable: false,
-            value:      message
-        });
+        this.message = message;
+
         if (stack) {
             this.stack = this.name + ": " + this.message + "\n" + stack;
         } else {
             Error.captureStackTrace(this, DiscordHTTPError);
         }
-    }
-
-    static flattenErrors(errors: Record<string, unknown>, keyPrefix = ""): Array<string> {
-        let messages: Array<string> = [];
-        for (const fieldName in errors) {
-            if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") {
-                continue;
-            }
-            if (Array.isArray(errors[fieldName])) {
-                messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${str}`));
-            }
-        }
-        return messages;
     }
 
     get headers(): Headers {

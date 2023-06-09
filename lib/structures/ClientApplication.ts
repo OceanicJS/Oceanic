@@ -2,7 +2,7 @@
 import Base from "./Base";
 import type ApplicationCommand from "./ApplicationCommand";
 import type Client from "../Client";
-import type { RawClientApplication, RoleConnection, RoleConnectionMetadata } from "../types/oauth";
+import type { RawClientApplication, RoleConnection, RoleConnectionMetadata, UpdateUserApplicationRoleConnectionOptions } from "../types/oauth";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
@@ -19,7 +19,7 @@ import type { ApplicationCommandTypes } from "../Constants";
 
 /** A representation of the authorized client's application (typically received via gateway). */
 export default class ClientApplication extends Base {
-    /** This application's [public flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
     flags: number;
     constructor(data: RawClientApplication, client: Client) {
         super(data.id, client);
@@ -170,7 +170,7 @@ export default class ClientApplication extends Base {
      * Get this application's role connection metadata records.
      */
     async getRoleConnectionsMetadata(): Promise<Array<RoleConnectionMetadata>> {
-        return this.client.rest.oauth.getRoleConnectionsMetatdata(this.id);
+        return this.client.rest.oauth.getRoleConnectionsMetadata(this.id);
     }
 
     /**
@@ -191,15 +191,15 @@ export default class ClientApplication extends Base {
      * Update this application's role connections metadata.
      * @param metadata The metadata records.
      */
-    async updateRoleConnectionsMetata(metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
-        return this.client.rest.oauth.updateRoleConnectionsMetata(this.id, metadata);
+    async updateRoleConnectionsMetadata(metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
+        return this.client.rest.oauth.updateRoleConnectionsMetadata(this.id, metadata);
     }
 
     /**
      * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
      * @param data The metadata to update.
      */
-    async updateUserRoleConnection(data: RoleConnection): Promise<RoleConnection> {
+    async updateUserRoleConnection(data: UpdateUserApplicationRoleConnectionOptions): Promise<RoleConnection> {
         return this.client.rest.oauth.updateUserRoleConnection(this.id, data);
     }
 }

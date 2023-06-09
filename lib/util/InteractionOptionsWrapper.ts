@@ -1,11 +1,13 @@
 /** @module InteractionOptionsWrapper */
+import { WrapperError } from "./Errors";
 import { ApplicationCommandOptionTypes, ChannelTypes } from "../Constants";
 import type Member from "../structures/Member";
 import type Role from "../structures/Role";
 import type User from "../structures/User";
-import type { AnyGuildChannel } from "../types/channels";
+import type { AnyImplementedChannel } from "../types/channels";
 import type {
     ApplicationCommandInteractionResolvedData,
+    AutoCompleteFocusedOption,
     InteractionOptions,
     InteractionOptionsAttachment,
     InteractionOptionsBoolean,
@@ -23,7 +25,6 @@ import type {
 } from "../types/interactions";
 import type Attachment from "../structures/Attachment";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type PrivateChannel from "../structures/PrivateChannel";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
@@ -36,33 +37,10 @@ export default class InteractionOptionsWrapper {
         this.resolved = resolved;
     }
 
-    private _getFocusedOption<T extends InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger>(required = false): T | undefined {
-        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
-        const sub = this.getSubCommand(false);
-        if (sub?.length === 1) {
-            baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        } else if (sub?.length === 2) {
-            baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        }
-        const opt = (baseOptions ?? this.raw).find(o => o.focused === true) as T | undefined;
-        if (!opt && required) {
-            throw new Error("Missing required focused option");
-        } else {
-            return opt;
-        }
-    }
-
     private _getOption<T extends InteractionOptionsWithValue = InteractionOptionsWithValue>(name: string, required = false, type: ApplicationCommandOptionTypes): T | undefined {
-        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
-        const sub = this.getSubCommand(false);
-        if (sub?.length === 1) {
-            baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        } else if (sub?.length === 2) {
-            baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
-        }
-        const opt = (baseOptions ?? this.raw).find(o => o.name === name && o.type === type) as T | undefined;
+        const opt = this.getOptions().find(o => o.name === name && o.type === type) as T | undefined;
         if (!opt && required) {
-            throw new Error(`Missing required option: ${name}`);
+            throw new WrapperError(`Missing required option: ${name}`);
         } else {
             return opt;
         }
@@ -77,7 +55,7 @@ export default class InteractionOptionsWrapper {
     getAttachment(name: string, required: true): Attachment;
     getAttachment(name: string, required?: boolean): Attachment | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getAttachment with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
+            throw new TypeError("Attempt to use getAttachment with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getAttachmentOption(name, required as false)?.value)) {
@@ -85,7 +63,7 @@ export default class InteractionOptionsWrapper {
         }
         const a = this.resolved.attachments.get(val);
         if (!a && required) {
-            throw new Error(`Attachment not present for required option: ${name}`);
+            throw new WrapperError(`Attachment not present for required option: ${name}`);
         }
         return a;
     }
@@ -133,7 +111,7 @@ export default class InteractionOptionsWrapper {
     getChannel(name: string, required: true): InteractionResolvedChannel;
     getChannel(name: string, required?: boolean): InteractionResolvedChannel | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getChannel with null resolved. If this is on an autocomplete interaction, use getChannelOption instead.");
+            throw new TypeError("Attempt to use getChannel with null resolved. If this is on an autocomplete interaction, use getChannelOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getChannelOption(name, required as false)?.value)) {
@@ -141,7 +119,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.channels.get(val);
         if (!ch && required) {
-            throw new Error(`Channel not present for required option: ${name}`);
+            throw new WrapperError(`Channel not present for required option: ${name}`);
         }
         return ch;
     }
@@ -162,16 +140,16 @@ export default class InteractionOptionsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present or the channel cannot be found.
      */
-    getCompleteChannel<T extends AnyGuildChannel | PrivateChannel | InteractionResolvedChannel = AnyGuildChannel | PrivateChannel | InteractionResolvedChannel>(name: string, required?: false): T | undefined;
-    getCompleteChannel<T extends AnyGuildChannel | PrivateChannel | InteractionResolvedChannel = AnyGuildChannel | PrivateChannel | InteractionResolvedChannel>(name: string, required: true): T;
-    getCompleteChannel(name: string, required?: boolean): AnyGuildChannel | PrivateChannel | InteractionResolvedChannel | undefined {
+    getCompleteChannel<T extends AnyImplementedChannel | InteractionResolvedChannel = AnyImplementedChannel | InteractionResolvedChannel>(name: string, required?: false): T | undefined;
+    getCompleteChannel<T extends AnyImplementedChannel | InteractionResolvedChannel = AnyImplementedChannel | InteractionResolvedChannel>(name: string, required: true): T;
+    getCompleteChannel(name: string, required?: boolean): AnyImplementedChannel | InteractionResolvedChannel | undefined {
         const resolved = this.getChannel(name, required as false);
         if (!resolved) {
             return undefined; // required will be handled in getChannel
         }
-        const channel = resolved.completeChannel ?? resolved.type === ChannelTypes.DM ? resolved : undefined;
+        const channel = resolved.completeChannel ?? (resolved.type === ChannelTypes.DM ? resolved : undefined);
         if (!channel && required) {
-            throw new Error(`Failed to resolve complete channel for required option: ${name}`);
+            throw new WrapperError(`Failed to resolve complete channel for required option: ${name}`);
         }
         return channel;
     }
@@ -180,10 +158,15 @@ export default class InteractionOptionsWrapper {
      * Get the focused option (in an autocomplete interaction).
      * @param required If true, an error will be thrown if no focused option is present.
      */
-    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required?: false): T | undefined;
-    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required: true): T;
-    getFocused<T extends InteractionOptionsString | InteractionOptionsInteger | InteractionOptionsNumber>(required?: boolean): T | undefined {
-        return this._getFocusedOption<T>(required);
+    getFocused<T extends AutoCompleteFocusedOption = AutoCompleteFocusedOption>(required?: false): T | undefined;
+    getFocused<T extends AutoCompleteFocusedOption = AutoCompleteFocusedOption>(required: true): T;
+    getFocused<T extends AutoCompleteFocusedOption = AutoCompleteFocusedOption>(required?: boolean): T | undefined {
+        const opt = this.getOptions().find(o => o.focused === true) as T | undefined;
+        if (!opt && required) {
+            throw new WrapperError("Missing required focused option");
+        } else {
+            return opt;
+        }
     }
 
     /**
@@ -217,7 +200,7 @@ export default class InteractionOptionsWrapper {
     getMember(name: string, required: true): Member;
     getMember(name: string, required?: boolean): Member | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getMember with null resolved. If this is on an autocomplete interaction, use getUserOption instead.");
+            throw new TypeError("Attempt to use getMember with null resolved. If this is on an autocomplete interaction, use getUserOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) {
@@ -225,7 +208,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.members.get(val);
         if (!ch && required) {
-            throw new Error(`Member not present for required option: ${name}`);
+            throw new WrapperError(`Member not present for required option: ${name}`);
         }
         return ch;
     }
@@ -239,7 +222,7 @@ export default class InteractionOptionsWrapper {
     getMentionable<T extends InteractionResolvedChannel | User | Role = InteractionResolvedChannel | User | Role>(name: string, required: true): T;
     getMentionable(name: string, required?: boolean): InteractionResolvedChannel | User | Role | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getMentionable with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
+            throw new TypeError("Attempt to use getMentionable with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
         let val: string | undefined;
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
@@ -250,7 +233,7 @@ export default class InteractionOptionsWrapper {
         const role = this.resolved.roles.get(val);
         const user = this.resolved.users.get(val);
         if ((!ch && !role && !user) && required) {
-            throw new Error(`Value not present for required option: ${name}`);
+            throw new WrapperError(`Value not present for required option: ${name}`);
         }
         return ch;
     }
@@ -288,6 +271,27 @@ export default class InteractionOptionsWrapper {
         return this._getOption(name, required, ApplicationCommandOptionTypes.NUMBER);
     }
 
+    /** Get the options received in this interaction, excluding subcommands and subcommand groups. */
+    getOptions(): Array<InteractionOptionsWithValue> {
+        let baseOptions: Array<InteractionOptionsWithValue> | undefined;
+        const sub = this.getSubCommand(false) ?? [];
+        switch (sub.length) {
+            case 0: {
+                baseOptions = this.raw as Array<InteractionOptionsWithValue>;
+                break;
+            }
+            case 1: {
+                baseOptions = (this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+                break;
+            }
+            case 2: {
+                baseOptions = ((this.raw.find(o => o.name === sub[0] && o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as InteractionOptionsSubCommandGroup | undefined)?.options?.find(o2 => o2.name === sub[1] && o2.type === ApplicationCommandOptionTypes.SUB_COMMAND) as InteractionOptionsSubCommand | undefined)?.options;
+                break;
+            }
+        }
+        return baseOptions ?? [];
+    }
+
     /**
      * Get a role option value.
      * @param name The name of the option.
@@ -297,7 +301,7 @@ export default class InteractionOptionsWrapper {
     getRole(name: string, required: true): Role;
     getRole(name: string, required?: boolean): Role | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getRole with null resolved. If this is on an autocomplete interaction, use getRoleOption instead.");
+            throw new TypeError("Attempt to use getRole with null resolved. If this is on an autocomplete interaction, use getRoleOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getRoleOption(name, required as false)?.value)) {
@@ -305,7 +309,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.roles.get(val);
         if (!ch && required) {
-            throw new Error(`Role not present for required option: ${name}`);
+            throw new WrapperError(`Role not present for required option: ${name}`);
         }
         return ch;
     }
@@ -361,7 +365,7 @@ export default class InteractionOptionsWrapper {
             }
         } else {
             if (required) {
-                throw new Error("Missing required option: SubCommand/SubCommandGroup.");
+                throw new WrapperError("Missing required option: SubCommand/SubCommandGroup.");
             } else {
                 return undefined;
             }
@@ -377,7 +381,7 @@ export default class InteractionOptionsWrapper {
     getUser(name: string, required: true): User;
     getUser(name: string, required?: boolean): User | undefined {
         if (this.resolved === null) {
-            throw new Error("Attempt to use getUser with null resolved. If this is on an autocomplete interaction, use getUseOption instead.");
+            throw new TypeError("Attempt to use getUser with null resolved. If this is on an autocomplete interaction, use getUseOption instead.");
         }
         let val: string | undefined;
         if (!(val = this.getUserOption(name, required as false)?.value)) {
@@ -385,7 +389,7 @@ export default class InteractionOptionsWrapper {
         }
         const ch = this.resolved.users.get(val);
         if (!ch && required) {
-            throw new Error(`User not present for required option: ${name}`);
+            throw new WrapperError(`User not present for required option: ${name}`);
         }
         return ch;
     }

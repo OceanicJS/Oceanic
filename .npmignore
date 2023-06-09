@@ -15,3 +15,7 @@ favicon.ico
 typedoc.json
 CONTRIBUTING.md
 .npm-deprecaterc.json
+.vscode/
+.idea/
+.gitattributes
+.node-version

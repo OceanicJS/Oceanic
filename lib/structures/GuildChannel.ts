@@ -5,10 +5,11 @@ import type CategoryChannel from "./CategoryChannel";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type ForumChannel from "./ForumChannel";
-import type { GuildChannelTypes } from "../Constants";
+import type { ChannelTypeMap } from "../Constants";
 import type Client from "../Client";
-import type { AnyGuildChannel, EditGuildChannelOptions, RawGuildChannel } from "../types/channels";
+import type { EditChannelOptionsMap, GuildChannels, RawGuildChannel } from "../types/channels";
 import type { JSONGuildChannel } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
@@ -20,7 +21,7 @@ export default class GuildChannel extends Channel {
     name: string;
     /** The ID of the parent of this channel, if applicable. */
     parentID: string | null;
-    declare type: GuildChannelTypes;
+    declare type: GuildChannels;
     constructor(data: RawGuildChannel, client: Client) {
         super(data, client);
         this.guildID = data.guild_id;
@@ -43,12 +44,17 @@ export default class GuildChannel extends Channel {
 
     /** The guild associated with this channel. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
             }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;
@@ -67,8 +73,9 @@ export default class GuildChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGuildChannelOptions): Promise<AnyGuildChannel> {
-        return this.client.rest.channels.edit(this.id, options);
+    async edit(options: EditChannelOptionsMap[this["type"]]): Promise<this> {
+        // edit is called down the chain
+        return this.client.rest.channels.edit<ChannelTypeMap[this["type"]]>(this.id, options) as unknown as Promise<this>;
     }
 
     override toJSON(): JSONGuildChannel {

@@ -3,15 +3,14 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type TextChannel from "./TextChannel";
 import Permission from "./Permission";
 import Channel from "./Channel";
-import type PrivateChannel from "./PrivateChannel";
 import type ForumChannel from "./ForumChannel";
-import type { ChannelTypes, GuildChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata, AnyGuildChannel } from "../types/channels";
+import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata } from "../types/channels";
+import type { AnyImplementedChannel, ImplementedChannels } from "../types";
 
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
-    private _cachedCompleteChannel?: AnyGuildChannel | PrivateChannel;
+    private _cachedCompleteChannel?: AnyImplementedChannel;
     private _cachedParent?: TextChannel | AnnouncementChannel | ForumChannel | null;
     /** The permissions the bot has in the channel. */
     appPermissions: Permission;
@@ -21,7 +20,7 @@ export default class InteractionResolvedChannel extends Channel {
     parentID: string | null;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this channel, if this represents a thread. */
     threadMetadata: ThreadMetadata | PrivateThreadMetadata | null;
-    declare type: GuildChannelTypes | ChannelTypes.DM;
+    declare type: ImplementedChannels;
     constructor(data: RawInteractionResolvedChannel, client: Client) {
         super(data, client);
         this.appPermissions = new Permission(data.permissions);
@@ -38,12 +37,8 @@ export default class InteractionResolvedChannel extends Channel {
     }
 
     /** The complete channel this channel option represents, if it's cached. */
-    get completeChannel(): AnyGuildChannel | PrivateChannel | undefined {
-        if (!this._cachedCompleteChannel) {
-            return (this._cachedCompleteChannel = this.client.getChannel(this.id));
-        }
-
-        return this._cachedCompleteChannel;
+    get completeChannel(): AnyImplementedChannel | undefined {
+        return this._cachedCompleteChannel ??= this.client.getChannel(this.id);
     }
 
     /** The parent of this channel, if this represents a thread. */

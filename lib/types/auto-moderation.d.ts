@@ -16,9 +16,9 @@ export interface RawAutoModerationRule {
 }
 
 export interface RawTriggerMetadata {
-    /** `KEYWORD`, `KEYWORD_PRESET` */
+    /** `KEYWORD`, `KEYWORD_PRESET`, `MEMBER_PROFILE` */
     allow_list?: Array<string>;
-    /** `KEYWORD` */
+    /** `KEYWORD`, `MEMBER_PROFILE` */
     keyword_filter?: Array<string>;
     /** `MENTION_SPAM` */
     mention_raid_protection_enabled?: boolean;
@@ -26,7 +26,7 @@ export interface RawTriggerMetadata {
     mention_total_limit?: number;
     /** `KEYWORD_PRESET` */
     presets?: Array<AutoModerationKeywordPresetTypes>;
-    /** `KEYWORD` */
+    /** `KEYWORD`, `MEMBER_PROFILE` */
     regex_patterns?: Array<string>;
 }
 
@@ -37,15 +37,17 @@ export interface RawAutoModerationAction {
 
 export interface RawActionMetadata {
     /** `SEND_ALERT_MESSAGE` */
-    channel_id: string;
+    channel_id?: string;
+    /** `BLOCK_MESSAGE` */
+    custom_message?: string;
     /** `TIMEOUT` */
-    duration_seconds: number;
+    duration_seconds?: number;
 }
 
 export interface TriggerMetadata {
-    /** The keywords to allow. Valid for `KEYWORD` & `KEYWORD_PRESET`. */
+    /** The keywords to allow. Valid for `KEYWORD`, `KEYWORD_PRESET` & `MEMBER_PROFILE`. `KEYWORD`, `MEMBER_PROFILE`: Max 100 total, 60 characters each. `KEYWORD_PRESET`: Max 1000 total, 60 characters each. */
     allowList?: Array<string>;
-    /** The keywords to filter. Valid for `KEYWORD`. */
+    /** The keywords to filter. Valid for `KEYWORD` & `MEMBER_PROFILE`. Max 1000 total, 60 characters each. */
     keywordFilter?: Array<string>;
     /** Whether to enable mention raid protection. Valid for `MENTION_SPAM`. */
     mentionRaidProtectionEnabled?: boolean;
@@ -53,7 +55,7 @@ export interface TriggerMetadata {
     mentionTotalLimit?: number;
     /** The presets to use. Valid for `KEYWORD_PRESET`. */
     presets?: Array<AutoModerationKeywordPresetTypes>;
-    /** The regular expressions to match the content against and filter. Currently only Rust flavored regex such as `Rustexp` are supported. Valid for `KEYWORD`. */
+    /** The regular expressions to match the content against and filter. Currently only Rust flavored regex such as `Rustexp` are supported. Valid for `KEYWORD`& `MEMBER_PROFILE`. Max 10 total, 260 characters each. */
     regexPatterns?: Array<string>;
 }
 
@@ -66,9 +68,11 @@ export interface AutoModerationAction {
 
 export interface ActionMetadata {
     /** The ID of the channel to send the message to. Valid for `SEND_ALERT_MESSAGE`. */
-    channelID: string;
+    channelID?: string;
+    /** The custom message to send. Valid for `BLOCK_MESSAGE`. */
+    customMessage?: string;
     /** The duration of the timeout in seconds. Valid for `TIMEOUT`. */
-    durationSeconds: number;
+    durationSeconds?: number;
 }
 
 export interface CreateAutoModerationRuleOptions {

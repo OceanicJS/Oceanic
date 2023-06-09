@@ -1,7 +1,14 @@
 /** @module Types/Gateway */
+import type { PartialEmoji } from ".";
 import type { RawUser } from "./users";
 import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
-import type { ActivityTypes, AutoModerationTriggerTypes, ChannelTypes, IntentNames } from "../Constants";
+import type {
+    ActivityTypes,
+    AnimationTypes,
+    AutoModerationTriggerTypes,
+    ChannelTypes,
+    IntentNames
+} from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type { ClientOptions as WSClientOptions } from "ws";
 
@@ -100,6 +107,11 @@ interface GatewayOptions {
      */
     reconnectDelay?: ReconnectDelayFunction;
     /**
+     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link Miscellaneous~Miscellaneous.getApplication | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
+     * @defaultValue false
+     */
+    removeDisallowedIntents?: boolean;
+    /**
      * If existing voice connections should be populated. This will disconnect connections from other sessions.
      * @defaultValue false
      */
@@ -113,7 +125,7 @@ interface GatewayOptions {
     ws?: WSClientOptions;
 }
 
-export interface ShardManagerInstanceOptions extends Required<Pick<GatewayOptions, "autoReconnect" | "compress" | "connectionTimeout" | "firstShardID" | "getAllUsers" | "guildCreateTimeout" | "largeThreshold" | "lastShardID" | "maxReconnectAttempts" | "maxResumeAttempts" | "reconnectDelay" | "seedVoiceConnections" | "shardIDs" | "ws">> {
+export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence">> {
     concurrency: number;
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
     intents: number;
@@ -199,7 +211,7 @@ export interface Activity {
     type: ActivityTypes;
     url?: string | null;
 }
-export type BotActivity = Pick<Activity, "name" | "url"> & { type: BotActivityTypes; };
+export interface BotActivity extends Pick<Activity, "name" | "url"> { type: BotActivityTypes; }
 
 export interface ActivityEmoji {
     animated?: boolean;
@@ -280,4 +292,18 @@ export interface DeletedPrivateChannel {
     id: string;
     lastMessageID: string | null;
     type: ChannelTypes.DM;
+}
+
+export interface RawVoiceChannelEffect {
+    animation_id?: number;
+    animation_type?: AnimationTypes;
+    channel_id: string;
+    emoji?: PartialEmoji | null;
+    guild_id: string;
+    user_id: string;
+}
+
+export interface VoiceChannelEffect {
+    animationID?: number;
+    animationType?: AnimationTypes;
 }

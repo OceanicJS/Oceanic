@@ -7,6 +7,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Dependencies
-      run: npm i
+      run: npm ci
     - name: Build
       run: npm run test:build && npm run test:esm

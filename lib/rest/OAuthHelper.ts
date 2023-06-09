@@ -1,13 +1,13 @@
 /** @module OAuthHelper */
 import type RESTManager from "./RESTManager";
-import Application from "../structures/Application";
+import OAuthApplication from "../structures/OAuthApplication";
 import type {
     AuthorizationInformation,
     Connection,
     OAuthURLOptions,
     RawAuthorizationInformation,
     RawConnection,
-    RESTApplication,
+    RESTOAuthApplication,
     RevokeTokenOptions
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
@@ -17,7 +17,7 @@ import Integration from "../structures/Integration";
 import Member from "../structures/Member";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
-import type { RawOAuthUser } from "../types";
+import type { RawOAuthUser, RawRoleConnection, RoleConnection, UpdateUserApplicationRoleConnectionOptions } from "../types";
 import { BASE_URL } from "../Constants";
 import { FormData } from "undici";
 
@@ -64,12 +64,12 @@ export default class OAuthHelper {
     /**
      * Get the current OAuth2 application's information.
      */
-    async getApplication(): Promise<Application> {
-        return this.#manager.request<RESTApplication>({
+    async getApplication(): Promise<OAuthApplication> {
+        return this.#manager.request<RESTOAuthApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION,
             auth:   this.#token
-        }).then(data => new Application(data, this.#manager.client));
+        }).then(data => new OAuthApplication(data, this.#manager.client));
     }
 
     /**
@@ -165,5 +165,36 @@ export default class OAuthHelper {
             path:   Routes.OAUTH_TOKEN_REVOKE,
             form
         });
+    }
+
+    /**
+     * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     * @param data The metadata to update.
+     */
+    async updateRoleConnection(applicationID: string, data: UpdateUserApplicationRoleConnectionOptions): Promise<RoleConnection> {
+        return this.#manager.request<RawRoleConnection>({
+            method: "PUT",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
+            json:   {
+                metadata:          data.metadata,
+                platform_name:     data.platformName,
+                platform_username: data.platformUsername
+            },
+            auth: this.#token
+        }).then(d => ({
+            metadata: Object.entries(d.metadata).map(([key, value]) => ({
+                [key]: {
+                    description:              value.description,
+                    descriptionLocalizations: value.description_localizations,
+                    key:                      value.key,
+                    name:                     value.name,
+                    nameLocalizations:        value.name_localizations,
+                    type:                     value.type
+                }
+            })).reduce((a, b) => ({ ...a, ...b })),
+            platformName:     d.platform_name,
+            platformUsername: d.platform_username
+        }));
     }
 }

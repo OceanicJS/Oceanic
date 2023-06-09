@@ -4,14 +4,13 @@ import Message from "./Message";
 import type User from "./User";
 import type Member from "./Member";
 import type Permission from "./Permission";
-import { ChannelTypes, type ThreadChannelTypes } from "../Constants";
+import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
     AnyThreadChannel,
     CreateMessageOptions,
     EditMessageOptions,
-    EditThreadChannelOptions,
     GetChannelMessagesOptions,
     GetReactionsOptions,
     PrivateThreadMetadata,
@@ -20,9 +19,11 @@ import type {
     ThreadMember,
     ThreadMetadata,
     PurgeOptions,
-    ThreadParentChannel
+    ThreadParentChannel,
+    ThreadChannels
 } from "../types/channels";
 import type { JSONThreadChannel } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel> extends GuildChannel {
@@ -51,7 +52,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     /** The total number of messages ever sent in the thread. Includes deleted messages. */
     totalMessageSent: number;
-    declare type: ThreadChannelTypes;
+    declare type: ThreadChannels;
     constructor(data: RawThreadChannel, client: Client) {
         super(data, client);
         this.flags = data.flags;
@@ -59,7 +60,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
         this.memberCount = 0;
         this.members = [];
         this.messageCount = 0;
-        this.messages = new TypedCollection(Message<T>, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<T>, client, this.client.util._getLimit("messages", this.id));
         this.ownerID = data.owner_id;
         this.rateLimitPerUser = data.rate_limit_per_user;
         this.threadMetadata = {
@@ -198,14 +199,6 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     }
 
     /**
-     * Edit this thread.
-     * @param options The options for editing the channel.
-     */
-    override async edit(options: EditThreadChannelOptions): Promise<AnyThreadChannel> {
-        return this.client.rest.channels.edit<AnyThreadChannel>(this.id, options);
-    }
-
-    /**
      * Edit a message in this thread.
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
@@ -282,7 +275,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
      */
     permissionsOf(member: string | Member): Permission {
         if (!this.parent) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf without having the parent channel cached.`);
+            throw new UncachedError(`${this.constructor.name}#permisionsOf cannot be used if the parent channel is not cached.`);
         }
         return this.parent.permissionsOf(member);
     }

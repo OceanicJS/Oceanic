@@ -8,6 +8,7 @@ import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPr
 import * as Routes from "../util/Routes";
 import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
 import type { JSONScheduledEvent } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
@@ -102,20 +103,25 @@ export default class GuildScheduledEvent extends Base {
 
     /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
     get channel(): StageChannel | null | undefined {
-        if (this.channelID !== null && this._cachedChannel !== null) {
-            return this._cachedChannel ?? (this._cachedChannel = this.client.getChannel<StageChannel>(this.channelID));
+        if (this.channelID !== null) {
+            return this._cachedChannel ??= this.client.getChannel<StageChannel>(this.channelID);
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
     }
     /** The guild this scheduled event belongs to. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
             }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;

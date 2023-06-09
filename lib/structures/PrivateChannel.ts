@@ -28,7 +28,7 @@ export default class PrivateChannel extends Channel {
     declare type: ChannelTypes.DM;
     constructor(data: RawPrivateChannel, client: Client) {
         super(data, client);
-        this.messages = new TypedCollection(Message<this>, client, client.options.collectionLimits.messages);
+        this.messages = new TypedCollection(Message<this>, client, this.client.util._getLimit("messages", this.id));
         this.lastMessageID = data.last_message_id;
         this.recipient = client.users.update(data.recipients[0]);
     }

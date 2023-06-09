@@ -2,7 +2,7 @@
 import type {
     AddGroupRecipientOptions,
     AnyChannel,
-    AnyTextChannelWithoutGroup,
+    AnyTextableChannel,
     ArchivedThreads,
     CreateInviteOptions,
     CreateMessageOptions,
@@ -13,7 +13,7 @@ import type {
     GetChannelMessagesOptions,
     GetArchivedThreadsOptions,
     GetReactionsOptions,
-    InviteChannel,
+    AnyInviteChannel,
     RawArchivedThreads,
     RawChannel,
     RawFollowedChannel,
@@ -39,7 +39,11 @@ import type {
     PartialInviteChannel,
     RawThreadChannel,
     PurgeOptions,
-    AnyGuildTextChannel
+    AnyTextableGuildChannel,
+    GetThreadMembersOptions,
+    AnyGuildChannel,
+    GetChannelMessagesIteratorOptions,
+    MessagesIterator
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import Message from "../structures/Message";
@@ -130,7 +134,7 @@ export default class Channels {
      * @param channelID The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
      */
-    async createInvite<T extends InviteInfoTypes, CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
+    async createInvite<T extends InviteInfoTypes, CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -156,7 +160,7 @@ export default class Channels {
      * @param channelID The ID of the channel to create the message in.
      * @param options The options for creating the message.
      */
-    async createMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options: CreateMessageOptions): Promise<Message<T>> {
+    async createMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options: CreateMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -253,7 +257,7 @@ export default class Channels {
      * @param code The code of the invite to delete.
      * @param reason The reason for deleting the invite.
      */
-    async deleteInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
+    async deleteInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
         return this.#manager.authRequest<RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),
@@ -283,14 +287,13 @@ export default class Channels {
      */
     async deleteMessages(channelID: string, messageIDs: Array<string>, reason?: string): Promise<number> {
         const chunks: Array<Array<string>> = [];
-        messageIDs = [...messageIDs];
+        messageIDs = Array.from(messageIDs);
         const amountOfMessages = messageIDs.length;
         while (messageIDs.length !== 0) {
             chunks.push(messageIDs.splice(0, 100));
         }
 
         let done = 0;
-        const deleteMessagesPromises: Array<Promise<unknown>> = [];
         for (const chunk of chunks.values()) {
             if (chunks.length > 1) {
                 const left = amountOfMessages - done;
@@ -299,20 +302,18 @@ export default class Channels {
 
             if (chunk.length === 1) {
                 this.#manager.client.emit("debug", "deleteMessages created a chunk with only 1 element, using deleteMessage instead.");
-                deleteMessagesPromises.push(this.deleteMessage(channelID, chunk[0], reason));
+                await this.deleteMessage(channelID, chunk[0], reason);
                 continue;
             }
 
-            deleteMessagesPromises.push(this.#manager.authRequest<null>({
+            await this.#manager.authRequest<null>({
                 method: "POST",
                 path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(channelID),
                 json:   { messages: chunk },
                 reason
-            }));
+            });
             done += chunk.length;
         }
-
-        await Promise.all(deleteMessagesPromises);
 
         return amountOfMessages;
     }
@@ -391,7 +392,7 @@ export default class Channels {
             try {
                 options.icon = this.#manager.client.util.convertImage(options.icon);
             } catch (err) {
-                throw new Error("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
+                throw new TypeError("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
             }
         }
 
@@ -442,7 +443,7 @@ export default class Channels {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
         const files = options.files;
         if (options.files) {
             delete options.files;
@@ -509,8 +510,8 @@ export default class Channels {
 
     /**
      * Follow an announcement channel.
-     * @param channelID The ID of the channel to follow the announcement channel to.
-     * @param webhookChannelID The ID of the channel to follow the announcement channel to.
+     * @param channelID The ID of the channel to follow announcements from.
+     * @param webhookChannelID The ID of the channel crossposted messages should be sent to. The client must have the `MANAGE_WEBHOOKS` permission in this channel.
      */
     async followAnnouncement(channelID: string, webhookChannelID: string): Promise<FollowedChannel> {
         return this.#manager.authRequest<RawFollowedChannel>({
@@ -539,11 +540,11 @@ export default class Channels {
      * @param code The code of the invite to get.
      * @param options The options for getting the invite.
      */
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
-    async getInvite<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
+    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
         const query = new URLSearchParams();
         if (options?.guildScheduledEventID !== undefined) {
             query.set("guild_scheduled_event_id", options.guildScheduledEventID);
@@ -565,7 +566,7 @@ export default class Channels {
      * Get the invites of a channel.
      * @param channelID The ID of the channel to get the invites of.
      */
-    async getInvites<T extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(channelID: string): Promise<Array<Invite<"withMetadata", T>>> {
+    async getInvites<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string): Promise<Array<Invite<"withMetadata", T>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(channelID)
@@ -602,7 +603,7 @@ export default class Channels {
      * @param channelID The ID of the channel the message is in
      * @param messageID The ID of the message to get.
      */
-    async getMessage<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
+    async getMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID)
@@ -614,78 +615,119 @@ export default class Channels {
      * @param channelID The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string, options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        const _getMessages = async (_options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> => {
-            const query = new URLSearchParams();
-            if (_options?.after !== undefined) {
-                query.set("after", _options.after);
+    async getMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
+        const query = new URLSearchParams();
+        let chosenOption: "after" | "around" | "before";
+        if (options?.around !== undefined) {
+            query.set("around", options.around);
+            chosenOption = "around";
+        // eslint-disable-next-line unicorn/no-negated-condition
+        } else if (options?.after !== undefined) {
+            query.set("after", options.after);
+            chosenOption = "after";
+        } else {
+            if (options?.before !== undefined) {
+                query.set("before", options.before);
             }
-            if (_options?.around !== undefined) {
-                query.set("around", _options.around);
+            chosenOption = "before";
+        }
+
+        if (chosenOption === "around" || (options?.limit && options.limit <= 100)) {
+            const filter = options?.filter?.bind(this) ?? ((): true => true);
+            if (options?.limit !== undefined) {
+                query.set("limit", Math.min(options.limit, 100).toString());
             }
-            if (_options?.before !== undefined) {
-                query.set("before", _options.before);
-            }
-            if (_options?.limit !== undefined) {
-                query.set("limit", _options.limit.toString());
-            }
-            return this.#manager.authRequest<Array<RawMessage>>({
+
+            const messages = await this.#manager.authRequest<Array<RawMessage>>({
                 method: "GET",
                 path:   Routes.CHANNEL_MESSAGES(channelID),
                 query
             }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+
+            for (const message of messages) {
+                const f = filter(message);
+
+                if (f === false) {
+                    messages.splice(messages.indexOf(message), 1);
+                }
+
+                if (f === "break") {
+                    messages.splice(messages.indexOf(message));
+                    break;
+                }
+            }
+
+            return messages;
+        }
+
+        const results: Array<Message<T>> = [];
+        const it = await this.getMessagesIterator<T>(channelID, options);
+
+        for await (const messages of it) {
+            const limit = messages.length < 100 ? messages.length : it.limit + 100;
+            this.#manager.client.emit("debug", `Getting ${limit} more message${limit === 1 ? "" : "s"} for ${channelID}: ${it.lastMessage ?? ""}`);
+            results.push(...messages);
+        }
+
+        return results;
+    }
+
+    /**
+     * Get an async iterator for getting messages in a channel.
+     * @param channelID The ID of the channel to get messages from.
+     * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
+     */
+    async getMessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): Promise<MessagesIterator<T>> {
+        const filter = options?.filter?.bind(this) ?? ((): true => true);
+        const chosenOption = options?.after === undefined ? "before" : "after";
+
+        // arrow functions cannot be generator functions
+        // eslint-disable-next-line unicorn/no-this-assignment
+        const self = this;
+        const it = {
+            lastMessage: chosenOption === "after" ? options?.after : options?.before,
+            limit:       options?.limit ?? 100,
+            async *[Symbol.asyncIterator](): AsyncGenerator<Array<Message<T>>> {
+                loop: while (it.limit > 0) {
+                    const messages = await self.getMessages<T>(channelID, {
+                        limit:          it.limit >= 100 ? 100 : it.limit,
+                        [chosenOption]: it.lastMessage
+                    });
+
+                    if (messages.length < 100 || it.limit <= 100) {
+                        yield messages;
+                        break loop;
+                    }
+
+                    it.limit -= messages.length;
+
+                    for (const message of Array.from(messages)) {
+                        const f = filter(message);
+                        if (f === false) {
+                            messages.splice(messages.indexOf(message), 1);
+                        }
+
+                        if (f === "break") {
+                            messages.splice(messages.indexOf(message));
+                            yield messages;
+                            break loop;
+                        }
+                    }
+
+                    it.lastMessage = messages.at(-1)?.id;
+                    yield messages;
+                }
+            }
         };
 
-        const limit = options?.limit ?? 100;
-        let chosenOption: "after" | "around" | "before";
-        if (options?.after) {
-            chosenOption = "after";
-        } else if (options?.around) {
-            chosenOption = "around";
-        } else if (options?.before) {
-            chosenOption = "before";
-        } else {
-            chosenOption = "before";
-        }
-        let optionValue = options?.[chosenOption] ?? undefined;
-
-        let messages: Array<Message<T>> = [];
-        while (messages.length < limit) {
-            const limitLeft = limit - messages.length;
-            const limitToFetch = limitLeft <= 100 ? limitLeft : 100;
-            if (options?.limit && options?.limit > 100) {
-                this.#manager.client.emit("debug", `Getting ${limitLeft} more message${limitLeft === 1 ? "" : "s"} for ${channelID}: ${optionValue ?? ""}`);
-            }
-            const messagesChunk = await _getMessages({
-                limit:          limitToFetch,
-                [chosenOption]: optionValue
-            });
-
-            if (messagesChunk.length === 0) {
-                break;
-            }
-
-            messages = messages.concat(messagesChunk);
-
-            if (chosenOption === "around") {
-                break;
-            } else {
-                optionValue = messages.at(-1)!.id;
-            }
-
-            if (messagesChunk.length < 100) {
-                break;
-            }
-        }
-
-        return messages;
+        return it;
     }
 
     /**
      * Get the pinned messages in a channel.
      * @param channelID The ID of the channel to get the pinned messages from.
      */
-    async getPinnedMessages<T extends AnyTextChannelWithoutGroup | Uncached = AnyTextChannelWithoutGroup | Uncached>(channelID: string): Promise<Array<Message<T>>> {
+    async getPinnedMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string): Promise<Array<Message<T>>> {
         return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(channelID)
@@ -698,13 +740,41 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      */
     async getPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+        const qs = new URLSearchParams();
+        if (options?.before !== undefined) {
+            qs.set("before", options.before);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
-            json:   {
-                before: options?.before,
-                limit:  options?.limit
-            }
+            query:  qs
+        }).then(data => ({
+            hasMore: data.has_more,
+            members: data.members.map(m => ({
+                flags:         m.flags,
+                id:            m.id,
+                joinTimestamp: new Date(m.join_timestamp),
+                userID:        m.user_id
+            }) as ThreadMember),
+            threads: data.threads.map(d => this.#manager.client.util.updateThread(d))
+        }));
+    }
+
+    async getPrivateJoinedArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+        const qs = new URLSearchParams();
+        if (options?.before !== undefined) {
+            qs.set("before", options.before);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
+        return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+            method: "GET",
+            path:   Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
+            query:  qs
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
@@ -723,13 +793,17 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      */
     async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<T>> {
+        const qs = new URLSearchParams();
+        if (options?.before !== undefined) {
+            qs.set("before", options.before);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
         return this.#manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(channelID),
-            json:   {
-                before: options?.before,
-                limit:  options?.limit
-            }
+            query:  qs
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
@@ -828,17 +902,35 @@ export default class Channels {
     /**
      * Get the members of a thread.
      * @param channelID The ID of the thread.
+     * @param options The options for getting the thread members.
      */
-    async getThreadMembers(channelID: string): Promise<Array<ThreadMember>> {
+    async getThreadMembers(channelID: string, options?: GetThreadMembersOptions): Promise<Array<ThreadMember>> {
+        const query = new URLSearchParams();
+        if (options?.after !== undefined) {
+            query.set("after", options.after);
+        }
+        if (options?.limit !== undefined) {
+            query.set("limit", options.limit.toString());
+        }
+        if (options?.withMember !== undefined) {
+            query.set("with_member", options.withMember.toString());
+        }
         return this.#manager.authRequest<Array<RawThreadMember>>({
             method: "GET",
-            path:   Routes.CHANNEL_THREAD_MEMBERS(channelID)
-        }).then(data => data.map(d => ({
-            flags:         d.flags,
-            id:            d.id,
-            joinTimestamp: new Date(d.join_timestamp),
-            userID:        d.user_id
-        })));
+            path:   Routes.CHANNEL_THREAD_MEMBERS(channelID),
+            query
+        }).then(data => data.map(d => {
+            // eslint-disable-next-line @typescript-eslint/dot-notation
+            const guild = this.#manager.client.getChannel<AnyGuildChannel>(channelID)?.["_cachedGuild"];
+            const member = guild && options?.withMember ? guild.members.update(d.member!, guild.id) : undefined;
+            return {
+                flags:         d.flags,
+                id:            d.id,
+                joinTimestamp: new Date(d.join_timestamp),
+                member,
+                userID:        d.user_id
+            };
+        }));
     }
 
     /** @deprecated Get the list of usable voice regions. Moved to `misc`. */
@@ -890,90 +982,54 @@ export default class Channels {
      * @param channelID The ID of the channel to purge.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async purgeMessages<T extends AnyGuildTextChannel | Uncached = AnyGuildTextChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
-        const filter = options.filter?.bind(this) ?? ((): true => true);
+    async purgeMessages<T extends AnyTextableGuildChannel | Uncached = AnyTextableGuildChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
+        const filter = (message: Message<T>): boolean | "break" | PromiseLike<boolean | "break"> => {
+            if (message.timestamp.getTime() < Date.now() - 1209600000) {
+                return "break";
+            }
 
-        const messageIDsToPurge: Array<string> = [];
+            return options?.filter?.(message) ?? true;
+        };
         let chosenOption: "after" | "around" | "before";
         if (options.after) {
             chosenOption = "after";
         } else if (options.around) {
             chosenOption = "around";
-        } else if (options.before) {
-            chosenOption = "before";
         } else {
             chosenOption = "before";
         }
-        let optionValue = options[chosenOption] ?? undefined;
 
-        let finishedFetchingMessages = false;
-        let limitWasReach = false;
-        const addMessageIDsToPurgeBatch = async (): Promise<void> => {
-            const messages = await this.getMessages(channelID, {
-                limit:          100,
-                [chosenOption]: optionValue
+        if (chosenOption === "around" || options.limit <= 100) {
+            const messages = await this.getMessages<T>(channelID, {
+                limit:          options.limit,
+                [chosenOption]: options[chosenOption]
             });
-
-            if (messages.length === 0) {
-                finishedFetchingMessages = true;
-                return;
-            }
-
-            if (chosenOption === "around") {
-                finishedFetchingMessages = true;
-            } else {
-                optionValue = messages.at(-1)!.id;
-            }
-
-            const filterPromises: Array<Promise<unknown>> = [];
-            const resolvers: Array<(() => void) | null> = [];
-            for (const [index, message] of messages.entries()) {
-                if (message.timestamp.getTime() < Date.now() - 1209600000) {
-                    finishedFetchingMessages = true;
-                    break;
+            for (const message of messages) {
+                const f = filter(message);
+                if (f === false) {
+                    messages.splice(messages.indexOf(message), 1);
                 }
 
-                filterPromises.push(new Promise<void>(resolve => {
-                    resolvers.push(resolve);
-
-                    void (async (): Promise<void> => {
-                        let removedResolver: (() => void) | null = null;
-
-                        if (await filter(message as Message<T>) && !limitWasReach) {
-                            messageIDsToPurge.push(message.id);
-                            if (messageIDsToPurge.length === options.limit) {
-                                limitWasReach = true;
-                            }
-                        }
-
-                        removedResolver = resolvers[index];
-                        resolvers[index] = null;
-
-                        if (removedResolver) {
-                            removedResolver();
-                        }
-
-                        if (limitWasReach) {
-                            for (const [resolverIndex, resolver] of resolvers.entries()) {
-                                if (resolver) {
-                                    resolver();
-                                    resolvers[resolverIndex] = null;
-                                }
-                            }
-                        }
-                    })();
-                }));
+                if (f === "break") {
+                    messages.splice(messages.indexOf(message));
+                    break;
+                }
             }
+            return this.deleteMessages(channelID, messages.map(message => message.id), options.reason);
+        }
 
-            await Promise.all(filterPromises);
+        const it = await this.getMessagesIterator<T>(channelID, {
+            after:  options.after,
+            before: options.before,
+            limit:  options.limit,
+            filter
+        });
 
-            if (!finishedFetchingMessages && !limitWasReach) {
-                await addMessageIDsToPurgeBatch();
-            }
-        };
-        await addMessageIDsToPurgeBatch();
-
-        return this.deleteMessages(channelID, messageIDsToPurge, options.reason);
+        let deleted = 0;
+        for await (const messages of it) {
+            deleted += await this.deleteMessages(channelID, messages.map(message => message.id), options.reason);
+        }
+        return deleted;
     }
 
     /**

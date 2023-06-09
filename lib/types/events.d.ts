@@ -1,18 +1,19 @@
 /** @module Events */
 import type {
     AnyGuildChannelWithoutThreads,
-    AnyGuildTextChannel,
-    AnyTextChannelWithoutGroup,
+    AnyTextableGuildChannel,
+    AnyTextableChannel,
     AnyThreadChannel,
     MinimalPossiblyUncachedThread,
     PossiblyUncachedInvite,
     PossiblyUncachedMessage,
     PossiblyUncachedThread,
     ThreadMember,
-    UncachedThreadMember
+    UncachedThreadMember,
+    AnyVoiceChannel
 } from "./channels";
 import type { RawRequest } from "./request-handler";
-import type { AutoModerationActionExecution, DeletedPrivateChannel } from "./gateway";
+import type { AutoModerationActionExecution, DeletedPrivateChannel, VoiceChannelEffect } from "./gateway";
 import type { AnyDispatchPacket } from "./gateway-raw";
 import type { Uncached } from "./shared";
 import type {
@@ -66,25 +67,27 @@ import type Message from "../structures/Message";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type StageInstance from "../structures/StageInstance";
 import type ForumChannel from "../structures/ForumChannel";
+import type AuditLogEntry from "../structures/AuditLogEntry";
+import type GroupChannel from "../structures/GroupChannel";
 
 
 export interface ClientEvents {
     /** @event Emitted when an application command's permissions are updated. */
     applicationCommandPermissionsUpdate: [guild: Guild | Uncached, permissions: GuildApplicationCommandPermissions];
     /** @event Emitted when an auto moderation action is executed. Requires the `AUTO_MODERATION_EXECUTION` intent. */
-    autoModerationActionExecution: [guild: Guild | Uncached, channel: AnyGuildTextChannel | Uncached | null, user: User | Uncached, executionOptions: AutoModerationActionExecution];
+    autoModerationActionExecution: [guild: Guild | Uncached, channel: AnyTextableGuildChannel | Uncached | null, user: User | Uncached, executionOptions: AutoModerationActionExecution];
     /** @event Emitted when an auto moderation rule is created. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleCreate: [rule: AutoModerationRule];
     /** @event Emitted when an auto moderation rule is deleted. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleDelete: [rule: AutoModerationRule];
     /** @event Emitted when an auto moderation rule is updated. Requires the `AUTO_MODERATION_CONFIGURATION` intent. */
     autoModerationRuleUpdate: [rule: AutoModerationRule, oldRule: JSONAutoModerationRule | null];
-    /** @event Emitted when a channel is created. Requires the `GUILDS` intent. */
-    channelCreate: [channel: AnyGuildChannelWithoutThreads];
+    /** @event Emitted when a channel is created. Guild channels require the `GUILDS` intent. */
+    channelCreate: [channel: AnyGuildChannelWithoutThreads | GroupChannel];
     /** @event Emitted when channel is deleted. Requires the `GUILDS` intent. */
     channelDelete: [channel: AnyGuildChannelWithoutThreads | PrivateChannel | DeletedPrivateChannel];
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
-    channelPinsUpdate: [channel: AnyTextChannelWithoutGroup | Uncached, timestamp: Date | null];
+    channelPinsUpdate: [channel: AnyTextableChannel | Uncached, timestamp: Date | null];
     /** @event Emitted when a channel is updated. Requires the `GUILDS` intent. */
     channelUpdate: [channel: TextChannel, oldChannel: JSONTextChannel | null] | [channel: VoiceChannel, oldChannel: JSONVoiceChannel | null] | [channel: CategoryChannel, oldChannel: JSONCategoryChannel | null] | [channel: AnnouncementChannel, oldChannel: JSONAnnouncementChannel | null] | [channel: StageChannel, oldChannel: JSONStageChannel | null] | [channel: ForumChannel, oldChannel: JSONForumChannel | null];
     /** @event Emitted when a shard connects. */
@@ -95,6 +98,8 @@ export interface ClientEvents {
     disconnect: [];
     /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string, shard?: number];
+    /** @event Emitted when an audit log entry is created. Requires both the `GUILD_MODERATION` intent, as well as the `VIEW_AUDIT_LOG` permission. */
+    guildAuditLogEntryCreate: [guild: Guild | Uncached, auditLogEntry: AuditLogEntry];
     /** @event Emitted when a guild becomes available. Requires the `GUILDS` intent. */
     guildAvailable: [guild: Guild];
     /** @event Emitted when a guild ban is created. Requires the `GUILD_BANS` intent. */
@@ -149,9 +154,9 @@ export interface ClientEvents {
     integrationUpdate: [guild: Guild | Uncached, integration: Integration, oldIntegration: JSONIntegration | null];
     /** @event Emitted when an interaction is created. */
     interactionCreate: [interaction: AnyInteractionGateway];
-    /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent. */
+    /** @event Emitted when an invite is created. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` permission on the channel. */
     inviteCreate: [invite: Invite];
-    /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent. */
+    /** @event Emitted when an invite is deleted. Requires the `GUILD_INVITES` intent, and the `MANAGE_CHANNELS` permission on the channel. */
     inviteDelete: [invite: PossiblyUncachedInvite];
     /** @event Emitted when a message is created. Requires the `GUILD_MESSAGES` intent for guild messages, `DIRECT_MESSAGES` for direct messages. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageCreate: [message: Message];
@@ -159,8 +164,8 @@ export interface ClientEvents {
     messageDelete: [message: PossiblyUncachedMessage];
     /** @event Emitted when messages are bulk deleted. Requires the `GUILD_MESSAGES` intent. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageDeleteBulk: [messages: Array<PossiblyUncachedMessage>];
-    /** @event Emitted when a reaction is added to a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
-    messageReactionAdd: [message: PossiblyUncachedMessage, reactor: Member | User | Uncached, reaction: PartialEmoji];
+    /** @event Emitted when a reaction is added to a message. For uncached messages, `author` will not be present if the reaction was added to a webhook message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
+    messageReactionAdd: [message: PossiblyUncachedMessage & { author?: Member | User | Uncached; }, reactor: Member | User | Uncached, reaction: PartialEmoji];
     /** @event Emitted when a reaction is removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
     messageReactionRemove: [message: PossiblyUncachedMessage, reactor: Member | User | Uncached, reaction: PartialEmoji];
     /** @event Emitted when all reactions are removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
@@ -204,11 +209,13 @@ export interface ClientEvents {
     /** @event Emitted when a thread is updated. Requires the `GUILDS` intent. */
     threadUpdate: [thread: AnnouncementThreadChannel, oldThread: JSONAnnouncementThreadChannel | null] | [thread: PublicThreadChannel, oldThread: JSONPublicThreadChannel | null] | [thread: PrivateThreadChannel, oldThread: JSONPrivateThreadChannel | null];
     /** @event Emitted when a user starts typing. Requires the `GUILD_MESSAGE_TYPING` for guilds, and `DIRECT_MESSAGE_TYPING` for direct messages. */
-    typingStart: [channel: PrivateChannel | Uncached, user: User | Uncached, startTimestamp: Date] | [channel: AnyGuildTextChannel | Uncached, member: Member, startTimestamp: Date];
+    typingStart: [channel: PrivateChannel | Uncached, user: User | Uncached, startTimestamp: Date] | [channel: AnyTextableGuildChannel | Uncached, member: Member, startTimestamp: Date];
     /** @event Emitted when a guild is created, but is unavailable. Requires the `GUILDS` intent.*/
     unavailableGuildCreate: [guild: UnavailableGuild];
     /** @event Emitted when a user is updated. */
     userUpdate: [user: User, oldUser: JSONUser | null];
+    /** @event Emitted when a user uses an effect in a voice channel. Requires the `GUILD_VOICE_STATES` event. */
+    voiceChannelEffectSend: [channel: AnyVoiceChannel | (Uncached & { guild: Guild | Uncached; }), user: Member | User | Uncached, effect: VoiceChannelEffect];
     /** @event Emitted when a user joins a voice channel. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelJoin: [member: Member, channel: VoiceChannel | StageChannel | Uncached];
     /** @event Emitted when a user leaves a voice channel. Requires the `GUILD_VOICE_STATES` intent. */

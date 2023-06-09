@@ -1,14 +1,14 @@
 /** @module Types/OAuth */
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
-import type { RawIntegration } from "./guilds";
+import type { RawIntegration, RawOAuthGuild } from "./guilds";
 import type { LocaleMap } from "./application-commands";
 import type {
     ConnectionService,
     PermissionName,
     RoleConnectionMetadataTypes,
     TeamMembershipState,
-    VisibilityTypes
+    ConnectionVisibilityTypes
 } from "../Constants";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
@@ -16,32 +16,41 @@ import type Webhook from "../structures/Webhook";
 import type Integration from "../structures/Integration";
 
 export interface RawApplication {
-    bot_public: boolean;
-    bot_require_code_grant: boolean;
+    approximate_guild_count?: number;
+    bot_public?: boolean;
+    bot_require_code_grant?: boolean;
     cover_image?: string;
     custom_install_url?: string;
     description: string;
     flags?: number;
+    guild?: RawOAuthGuild;
     guild_id?: string;
+    hook: boolean;
     icon: string | null;
     id: string;
     install_params?: InstallParams;
+    interactions_endpoint_url?: string | null;
     name: string;
     owner?: RawUser;
     primary_sku_id?: string;
     privacy_policy_url?: string;
-    role_connections_verification_url?: string;
+    redirect_uris?: Array<string>;
+    role_connections_verification_url?: string | null;
     rpc_origins?: Array<string>;
     slug?: string;
     // summary is deprecated and being removed in v11
     tags?: Array<string>;
-    team: RawTeam | null;
+    team?: RawTeam | null;
     terms_of_service_url?: string;
+    type: number | null;
     verify_key: string;
 }
-export type RawPartialApplication = Pick<RawApplication, "id" | "name" | "icon" | "description"> & Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">>;
-export type RESTApplication = Omit<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins"> & Required<Pick<RawApplication, "cover_image" | "flags" | "install_params" | "owner" | "rpc_origins">>;
-export type RawClientApplication = Required<Pick<RawApplication, "id" | "flags">>;
+
+type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
+export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
+export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
+export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
 
 export interface RawTeam {
     icon: string | null;
@@ -87,7 +96,7 @@ export interface RawConnection {
     two_way_link: boolean;
     type: ConnectionService;
     verified: boolean;
-    visibility: VisibilityTypes;
+    visibility: ConnectionVisibilityTypes;
 }
 
 export interface Connection {
@@ -100,7 +109,7 @@ export interface Connection {
     twoWayLink: boolean;
     type: ConnectionService;
     verified: boolean;
-    visibility: VisibilityTypes;
+    visibility: ConnectionVisibilityTypes;
 }
 
 export interface OAuthURLOptions {
@@ -162,8 +171,8 @@ export interface RefreshTokenOptions {
     refreshToken: string;
 }
 
-export type RawRefreshTokenResponse = Omit<RawExchangeCodeResponse, "webhook">;
-export type RefreshTokenResponse = Omit<ExchangeCodeResponse, "webhook">;
+export interface RawRefreshTokenResponse extends Omit<RawExchangeCodeResponse, "webhook"> {}
+export interface RefreshTokenResponse extends Omit<ExchangeCodeResponse, "webhook"> {}
 
 export interface ClientCredentialsTokenOptions {
     /** The id of the client to perform the authorization with. This can be omitted if the global authorization is the proper (Basic base64(clientID:clientSecret)) already, or if connected to the gateway and ready. */
@@ -174,8 +183,8 @@ export interface ClientCredentialsTokenOptions {
     scopes: Array<string>;
 }
 
-export type RawClientCredentialsTokenResponse = Omit<RawExchangeCodeResponse, "refresh_token">;
-export type ClientCredentialsTokenResponse = Omit<ExchangeCodeResponse, "refreshToken">;
+export interface RawClientCredentialsTokenResponse extends Omit<RawExchangeCodeResponse, "refresh_token"> {}
+export interface ClientCredentialsTokenResponse extends Omit<ExchangeCodeResponse, "refreshToken"> {}
 
 export interface RevokeTokenOptions {
     /** The id of the client the authorization was performed with. */
@@ -240,6 +249,12 @@ export interface RawRoleConnectionMetadata {
 
 export interface RoleConnection {
     metadata: Record<string, RoleConnectionMetadata>;
+    platformName: string | null;
+    platformUsername: string | null;
+}
+
+export interface UpdateUserApplicationRoleConnectionOptions {
+    metadata: Record<string, string>;
     platformName: string | null;
     platformUsername: string | null;
 }

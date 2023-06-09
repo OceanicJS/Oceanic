@@ -88,7 +88,9 @@ export interface AuditLogEntryOptions {
     type?: "0" | "1";
 }
 
-export type RawAuditLogIntegration = Pick<RawIntegration, "id" | "name" | "type" | "account"> & { application_id?: string; };
+export interface RawAuditLogIntegration extends Pick<RawIntegration, "id" | "name" | "type" | "account"> {
+    application_id?: string;
+}
 
 export interface StandardAuditLogChange {
     key: string;

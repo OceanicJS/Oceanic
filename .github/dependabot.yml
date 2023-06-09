@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    assignees:
+      - "DonovanDMC"
+    commit-message:
+      include: "scope"
+      prefix: ""
+    target-branch: "dev"
+    versioning-strategy: "increase"
+    labels:
+      - "dependencies"

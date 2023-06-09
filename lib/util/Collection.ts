@@ -64,7 +64,7 @@ export default class Collection<K, V> extends Map<K, V> {
     last(amount?: number): V | Array<V> | undefined {
         const iterator = Array.from(this.values());
         if (amount === undefined) {
-            return iterator[iterator.length - 1];
+            return iterator.at(-1);
         }
         if (amount < 0) {
             return this.first(amount * -1);

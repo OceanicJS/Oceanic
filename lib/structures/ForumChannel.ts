@@ -11,7 +11,6 @@ import type Client from "../Client";
 import type {
     ArchivedThreads,
     CreateInviteOptions,
-    EditForumChannelOptions,
     EditPermissionOptions,
     ForumEmoji,
     ForumTag,
@@ -31,6 +30,8 @@ import {
     type ChannelTypes,
     type ThreadAutoArchiveDuration
 } from "../Constants";
+import type { CreateWebhookOptions } from "../types";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a forum channel. */
 export default class ForumChannel extends GuildChannel {
@@ -82,7 +83,7 @@ export default class ForumChannel extends GuildChannel {
         this.position = data.position;
         this.rateLimitPerUser = 0;
         this.template = data.template;
-        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client);
+        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
         this.topic = data.topic;
         this.update(data);
     }
@@ -161,20 +162,20 @@ export default class ForumChannel extends GuildChannel {
     }
 
     /**
+     * Create a webhook in this channel.
+     * @param options The options to create the webhook with.
+     */
+    async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+        return this.client.rest.webhooks.create(this.id, options);
+    }
+
+    /**
      * Delete a permission overwrite on this channel.
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      */
     async deletePermission(overwriteID: string, reason?: string): Promise<void> {
         return this.client.rest.channels.deletePermission(this.id, overwriteID, reason);
-    }
-
-    /**
-     * Edit this channel.
-     * @param options The options for editing the channel
-     */
-    override async edit(options: EditForumChannelOptions): Promise<this> {
-        return this.client.rest.channels.edit<this>(this.id, options);
     }
 
     /**
@@ -217,7 +218,7 @@ export default class ForumChannel extends GuildChannel {
             member = this.guild.members.get(member)!;
         }
         if (!member) {
-            throw new Error(`Cannot use ${this.constructor.name}#permissionsOf with an ID without having the member cached.`);
+            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
         }
         let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {

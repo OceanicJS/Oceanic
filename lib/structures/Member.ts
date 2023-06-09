@@ -4,7 +4,7 @@ import type User from "./User";
 import type Guild from "./Guild";
 import type Permission from "./Permission";
 import type VoiceState from "./VoiceState";
-import type { ImageFormat } from "../Constants";
+import { GuildMemberFlags, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type {
@@ -16,6 +16,7 @@ import type {
     Presence
 } from "../types/guilds";
 import type { JSONMember } from "../types/json";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
@@ -26,8 +27,8 @@ export default class Member extends Base {
     communicationDisabledUntil: Date | null;
     /** If this member is server deafened. */
     deaf: boolean;
-    /** Undocumented. */
-    flags?: number;
+    /** The member's [flags](https://discord.com/developers/docs/resources/guild#guild-member-object-flags). */
+    flags: number;
     /** The id of the guild this member is for. */
     guildID: string;
     /** Undocumented. */
@@ -57,12 +58,13 @@ export default class Member extends Base {
             id = (user = client.users.update(data.user)).id;
         }
         if (!user) {
-            throw new Error(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
+            throw new TypeError(`Member received without a user${id === undefined ? " or id." : `: ${id}`}`);
         }
         super(user.id, client);
         this.avatar = null;
         this.communicationDisabledUntil = null;
         this.deaf = !!data.deaf;
+        this.flags = 0;
         this.guildID = guildID;
         this.joinedAt = null;
         this.mute = !!data.mute;
@@ -72,6 +74,10 @@ export default class Member extends Base {
         this.roles = [];
         this.user = user;
         this.update(data);
+    }
+
+    private toggleFlag(flag: GuildMemberFlags, enable: boolean, reason?: string): Promise<Member> {
+        return this.edit({ flags: enable ? this.flags | flag : this.flags & ~flag, reason });
     }
 
     protected override update(data: Partial<RawMember | RESTMember>): void {
@@ -121,46 +127,60 @@ export default class Member extends Base {
     get discriminator(): string {
         return this.user.discriminator;
     }
+
     /** The nick of this member if set, or the username of this member's user. */
     get displayName(): string {
         return this.nick ?? this.username;
     }
+
     /** The guild this member is for. This will throw an error if the guild is not cached. */
     get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
         if (!this._cachedGuild) {
-            this._cachedGuild = this.client.guilds.get(this.guildID);
-
-            if (!this._cachedGuild) {
-                throw new Error(`${this.constructor.name}#guild is not present if you don't have the GUILDS intent.`);
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
             }
+
+            if (!this.client["_connected"]) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
         }
 
         return this._cachedGuild;
     }
+
     /** A string that will mention this member. */
     get mention(): string {
         return this.user.mention;
     }
+
     /** The permissions of this member. */
     get permissions(): Permission {
         return this.guild.permissionsOf(this);
     }
+
     /** The user associated with this member's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     get publicFlags(): number {
         return this.user.publicFlags;
     }
+
     /** If this user associated with this member is an official discord system user. */
     get system(): boolean {
         return this.user.system;
     }
+
     /** A combination of the user associated with this member's username and discriminator. */
     get tag(): string {
         return this.user.tag;
     }
+
     /** The username associated with this member's user. */
     get username(): string {
         return this.user.username;
     }
+
     /** The voice state of this member. */
     get voiceState(): VoiceState | null {
         return this.guild.voiceStates.get(this.id) ?? null;
@@ -192,7 +212,15 @@ export default class Member extends Base {
     }
 
     /**
-     * Edit this member. Use \<Guild\>.editCurrentMember if you wish to update the nick of this client using the CHANGE_NICKNAME permission.
+     * Disable the `BYPASSES_VERIFICATION` flag for this member. Requires the **Manage Guild** permission.
+     * @param reason The reason for disabling the flag.
+     */
+    async disableVerificationBypass(): Promise<void> {
+        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, false);
+    }
+
+    /**
+     * Edit this member. Use {@link Guild~Guild#editCurrentMember | Guild#editCurrentMember} if you wish to update the nick of this client using the `CHANGE_NICKNAME` permission.
      * @param options The options for editing the member.
      */
     async edit(options: EditMemberOptions): Promise<Member> {
@@ -208,6 +236,14 @@ export default class Member extends Base {
     }
 
     /**
+     * Enable the `BYPASSES_VERIFICATION` flag for this member. Requires the **Manage Guild** permission.
+     * @param reason The reason for enabling the flag.
+     */
+    async enableVerificationBypass(): Promise<void> {
+        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, true);
+    }
+
+    /**
      * Remove a member from the guild.
      * @param reason The reason for the kick.
      */
@@ -216,7 +252,7 @@ export default class Member extends Base {
     }
 
     /**
-     * remove a role from this member.
+     * Remove a role from this member.
      * @param roleID The ID of the role to remove.
      * @param reason The reason for removing the role.
      */

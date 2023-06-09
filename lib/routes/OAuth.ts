@@ -6,7 +6,6 @@ import type {
     Connection,
     ExchangeCodeOptions,
     ExchangeCodeResponse,
-    OAuthURLOptions,
     RawAuthorizationInformation,
     RawClientCredentialsTokenResponse,
     RawConnection,
@@ -14,7 +13,7 @@ import type {
     RawRefreshTokenResponse,
     RefreshTokenOptions,
     RefreshTokenResponse,
-    RESTApplication,
+    RESTOAuthApplication,
     RevokeTokenOptions,
     GetCurrentGuildsOptions,
     RawRoleConnectionMetadata,
@@ -24,7 +23,7 @@ import type {
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
-import Application from "../structures/Application";
+import OAuthApplication from "../structures/OAuthApplication";
 import PartialApplication from "../structures/PartialApplication";
 import Member from "../structures/Member";
 import Webhook from "../structures/Webhook";
@@ -33,7 +32,7 @@ import type RESTManager from "../rest/RESTManager";
 import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
-import type { RawOAuthUser } from "../types";
+import type { RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
 import { FormData } from "undici";
 
 /** Various methods for interacting with oauth. */
@@ -41,23 +40,6 @@ export default class OAuth {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
-    }
-
-    /**
-     * Construct an oauth authorization url.
-     * @param options The options to construct the url with.
-     * @deprecated Moved to {@link OAuthHelper~OAuthHelper.constructURL | OAuthHelper#constructURL}. This will be removed in `1.5.0`.
-     */
-    static constructURL(options: OAuthURLOptions): string {
-        return OAuthHelper.constructURL(options);
-    }
-
-    /**
-     * Alias for {@link Routes/OAuth~OAuth.constructURL | OAuth#constructURL}.
-     * @deprecated Moved to {@link OAuthHelper~OAuthHelper.constructURL | OAuthHelper#constructURL}. This will be removed in `1.5.0`.
-     */
-    get constructURL(): typeof OAuthHelper["constructURL"] {
-        return OAuthHelper.constructURL.bind(OAuthHelper);
     }
 
     /**
@@ -110,11 +92,11 @@ export default class OAuth {
     /**
      * Get the current OAuth2 application's information.
      */
-    async getApplication(): Promise<Application> {
-        return this.#manager.authRequest<RESTApplication>({
+    async getApplication(): Promise<OAuthApplication> {
+        return this.#manager.authRequest<RESTOAuthApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION
-        }).then(data => new Application(data, this.#manager.client));
+        }).then(data => new OAuthApplication(data, this.#manager.client));
     }
 
     /**
@@ -216,7 +198,7 @@ export default class OAuth {
      * Get an application's role connection metadata records.
      * @param application The ID of the application.
      */
-    async getRoleConnectionsMetatdata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
+    async getRoleConnectionsMetadata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
             method: "GET",
             path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID)
@@ -298,7 +280,7 @@ export default class OAuth {
      * @param application The ID of the application.
      * @param metadata The metadata records.
      */
-    async updateRoleConnectionsMetata(applicationID: string, metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
+    async updateRoleConnectionsMetadata(applicationID: string, metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
             method: "PUT",
             path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID),
@@ -325,21 +307,12 @@ export default class OAuth {
      * @param applicationID The ID of the application.
      * @param data The metadata to update.
      */
-    async updateUserRoleConnection(applicationID: string, data: RoleConnection): Promise<RoleConnection> {
+    async updateUserRoleConnection(applicationID: string, data: UpdateUserApplicationRoleConnectionOptions): Promise<RoleConnection> {
         return this.#manager.authRequest<RawRoleConnection>({
             method: "PUT",
             path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
             json:   {
-                metadata: Object.entries(data.metadata).map(([key, value]) => ({
-                    [key]: {
-                        description:               value.description,
-                        description_localizations: value.descriptionLocalizations,
-                        key:                       value.key,
-                        name:                      value.name,
-                        name_localizations:        value.nameLocalizations,
-                        type:                      value.type
-                    }
-                })).reduce((a, b) => ({ ...a, ...b })),
+                metadata:          data.metadata,
                 platform_name:     data.platformName,
                 platform_username: data.platformUsername
             }

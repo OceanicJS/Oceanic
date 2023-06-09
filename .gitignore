@@ -5,3 +5,5 @@ docs/
 typedoc.json
 dark.js
 favicon.ico
+.vscode/
+.idea/

@@ -37,18 +37,20 @@ import type {
     GetVanityURLResponse,
     EditUserVoiceStateOptions,
     EditCurrentUserVoiceStateOptions,
-    CreateChannelReturn,
     CreateChannelOptions,
     EditMFALevelOptions,
     RESTMember,
     RawSticker,
     Sticker,
     CreateStickerOptions,
-    EditStickerOptions
+    EditStickerOptions,
+    RawOnboarding,
+    Onboarding,
+    EditOnboardingOptions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { GuildChannelTypesWithoutThreads, MFALevels } from "../Constants";
+import type { ChannelTypeMap, MFALevels } from "../Constants";
 import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Webhook from "../structures/Webhook";
@@ -65,7 +67,8 @@ import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTe
 import GuildPreview from "../structures/GuildPreview";
 import type {
     AnyGuildChannelWithoutThreads,
-    InviteChannel,
+    AnyInviteChannel,
+    GuildChannelsWithoutThreads,
     PartialInviteChannel,
     RawGuildChannel,
     RawInvite,
@@ -181,7 +184,7 @@ export default class Guilds {
                 system_channel_id:             options.systemChannelID,
                 verification_level:            options.verificationLevel
             }
-        }).then(data => new Guild(data, this.#manager.client));
+        }).then(data => new Guild(data, this.#manager.client, true));
     }
 
     /**
@@ -205,6 +208,7 @@ export default class Guilds {
                     },
                     type: a.type
                 })),
+                enabled:          options.enabled,
                 event_type:       options.eventType,
                 exempt_channels:  options.exemptChannels,
                 exempt_roles:     options.exemptRoles,
@@ -224,10 +228,10 @@ export default class Guilds {
     }
 
     /**
-     * Create a bon for a user.
+     * Create a ban for a user.
      * @param guildID The ID of the guild.
      * @param userID The ID of the user to ban.
-     * @param options The options for creating the bon.
+     * @param options The options for creating the ban.
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
         const reason = options?.reason;
@@ -250,7 +254,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for creating the channel.
      */
-    async createChannel<T extends GuildChannelTypesWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<CreateChannelReturn<T>> {
+    async createChannel<T extends GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -332,7 +336,7 @@ export default class Guilds {
                 icon: options.icon,
                 name: options.name
             }
-        }).then(data => new Guild(data, this.#manager.client));
+        }).then(data => new Guild(data, this.#manager.client, true));
     }
 
     /**
@@ -595,13 +599,14 @@ export default class Guilds {
                 public_updates_channel_id:     options.publicUpdatesChannelID,
                 region:                        options.region,
                 rules_channel_id:              options.rulesChannelID,
+                safety_alerts_channel_id:      options.safetyAlertsChannelID,
                 splash:                        options.splash,
                 system_channel_flags:          options.systemChannelFlags,
                 system_channel_id:             options.systemChannelID,
                 verification_level:            options.verificationLevel
             },
             reason
-        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data) : new Guild(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data, true) : new Guild(data, this.#manager.client, true));
     }
 
     /**
@@ -622,10 +627,12 @@ export default class Guilds {
                 actions: options.actions?.map(a => ({
                     metadata: {
                         channel_id:       a.metadata.channelID,
+                        custom_message:   a.metadata.customMessage,
                         duration_seconds: a.metadata.durationSeconds
                     },
                     type: a.type
                 })),
+                enabled:          options.enabled,
                 event_type:       options.eventType,
                 exempt_channels:  options.exemptChannels,
                 exempt_roles:     options.exemptRoles,
@@ -762,6 +769,63 @@ export default class Guilds {
             },
             reason
         }).then(data => this.#manager.client.util.updateMember(guildID, memberID, data));
+    }
+
+    /**
+     * Edit a guild's onboarding configuration.
+     * @param guildID The ID of the guild.
+     * @param options The options for editing the onboarding configuration.
+     */
+    async editOnboarding(guildID: string, options: EditOnboardingOptions): Promise<Onboarding> {
+        const reason = options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
+        return this.#manager.authRequest<RawOnboarding>({
+            method: "PATCH",
+            path:   Routes.GUILD_ONBOARDING(guildID),
+            json:   {
+                enabled:             options.enabled,
+                default_channel_ids: options.defaultChannelIDs,
+                prompts:             options.prompts?.map(p => ({
+                    id:           p.id,
+                    in_oboarding: p.inOnboarding,
+                    options:      p.options.map(o => ({
+                        channel_ids: o.channelIDs,
+                        description: o.description,
+                        emoji:       o.emoji,
+                        id:          o.id,
+                        role_ids:    o.roleIDs,
+                        title:       o.title
+                    })),
+                    required:      p.required,
+                    single_select: p.singleSelect,
+                    title:         p.title
+                })),
+                mode: options.mode
+            },
+            reason
+        }).then(data => ({
+            defaultChannelIDs: data.default_channel_ids,
+            enabled:           data.enabled,
+            guildID:           data.guild_id,
+            mode:              data.mode,
+            prompts:           data.prompts.map(p => ({
+                id:           p.id,
+                inOnboarding: p.in_onboarding,
+                options:      p.options.map(o => ({
+                    channelIDs:  o.channel_ids,
+                    description: o.description,
+                    emoji:       o.emoji,
+                    id:          o.id,
+                    roleIDs:     o.role_ids,
+                    title:       o.title
+                })),
+                required:     p.required,
+                singleSelect: p.single_select,
+                title:        p.title
+            }))
+        }));
     }
 
     /**
@@ -979,7 +1043,7 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD(guildID),
             query
-        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data) : new Guild(data, this.#manager.client));
+        }).then(data => this.#manager.client.guilds.has(guildID) ? this.#manager.client.guilds.update(data, true) : new Guild(data, this.#manager.client));
     }
 
     /**
@@ -1193,7 +1257,7 @@ export default class Guilds {
      * Get the invites of a guild.
      * @param guildID The ID of the guild to get the invites of.
      */
-    async getInvites<CH extends InviteChannel | PartialInviteChannel | Uncached = InviteChannel | PartialInviteChannel | Uncached>(guildID: string): Promise<Array<Invite<"withMetadata", CH>>> {
+    async getInvites<CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(guildID: string): Promise<Array<Invite<"withMetadata", CH>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.GUILD_INVITES(guildID)
@@ -1230,6 +1294,37 @@ export default class Guilds {
             path:   Routes.GUILD_MEMBERS(guildID),
             query
         }).then(data => data.map(d => this.#manager.client.util.updateMember(guildID, d.user.id, d)));
+    }
+
+    /**
+     * Get a guild's onboarding info.
+     * @param guildID The ID of the guild.
+     */
+    async getOnboarding(guildID: string): Promise<Onboarding> {
+        return this.#manager.authRequest<RawOnboarding>({
+            method: "GET",
+            path:   Routes.GUILD_ONBOARDING(guildID)
+        }).then(data => ({
+            defaultChannelIDs: data.default_channel_ids,
+            enabled:           data.enabled,
+            guildID:           data.guild_id,
+            mode:              data.mode,
+            prompts:           data.prompts.map(p => ({
+                id:           p.id,
+                inOnboarding: p.in_onboarding,
+                options:      p.options.map(o => ({
+                    channelIDs:  o.channel_ids,
+                    description: o.description,
+                    emoji:       o.emoji,
+                    id:          o.id,
+                    roleIDs:     o.role_ids,
+                    title:       o.title
+                })),
+                required:     p.required,
+                singleSelect: p.single_select,
+                title:        p.title
+            }))
+        }));
     }
 
     /**
@@ -1527,7 +1622,7 @@ export default class Guilds {
     }
 
     /**
-     * remove a role from a member.
+     * Remove a role from a member.
      * @param guildID The ID of the guild.
      * @param memberID The ID of the member.
      * @param roleID The ID of the role to remove.

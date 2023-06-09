@@ -1,7 +1,8 @@
 /** @module Types/Interactions */
 import type { ExecuteWebhookOptions } from "./webhooks";
 import type {
-    AnyGuildTextChannel,
+    AnyTextableGuildChannel,
+    AnyPrivateChannel,
     ModalActionRow,
     RawAttachment,
     RawInteractionResolvedChannel,
@@ -32,12 +33,12 @@ import type ComponentInteraction from "../structures/ComponentInteraction";
 import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
 import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
-import type PrivateChannel from "../structures/PrivateChannel";
 import type TypedCollection from "../util/TypedCollection";
 import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
 import type SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
 
-export type InteractionContent = Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files">;
+export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files"> {}
+export interface InitialInteractionContent extends Omit<InteractionContent, "attachments" | "files"> {}
 
 export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalInteractionResponse;
 export interface PingInteractionResponse {
@@ -70,6 +71,7 @@ export interface ModalInteractionResponse {
 
 
 export interface ModalData {
+    /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawModalComponents | Util#rawModalComponents}. */
     components: Array<ModalActionRow>;
     /** The custom ID of the modal. */
     customID: string;
@@ -96,11 +98,11 @@ export interface RawInteraction {
 
 export type AnyRawInteraction = RawPingInteraction | AnyRawGatewayInteraction;
 export type AnyRawGatewayInteraction = RawApplicationCommandInteraction | RawMessageComponentInteraction | RawAutocompleteInteraction | RawModalSubmitInteraction;
-export type RawPingInteraction = Pick<RawInteraction, "application_id" | "id" | "token" | "type" | "version">;
-export type RawApplicationCommandInteraction = Omit<RawInteraction, "data" | "message"> & { data: RawApplicationCommandInteractionData; };
-export type RawMessageComponentInteraction = Omit<RawInteraction, "data" | "message"> & { data: RawMessageComponentInteractionData; message: RawMessage; };
-export type RawAutocompleteInteraction = Omit<RawInteraction, "data" | "message"> & { data: RawAutocompleteInteractionData; };
-export type RawModalSubmitInteraction = Omit<RawInteraction, "data" | "message"> & { data: RawModalSubmitInteractionData; };
+export interface RawPingInteraction extends Pick<RawInteraction, "application_id" | "id" | "token" | "type" | "version"> {}
+export interface RawApplicationCommandInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawApplicationCommandInteractionData; }
+export interface RawMessageComponentInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawMessageComponentInteractionData; message: RawMessage; }
+export interface RawAutocompleteInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawAutocompleteInteractionData; }
+export interface RawModalSubmitInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawModalSubmitInteractionData; message?: RawMessage; }
 
 export type RawInteractionData = RawApplicationCommandInteractionData | RawMessageComponentInteractionData | RawAutocompleteInteractionData | RawModalSubmitInteractionData;
 export type InteractionData = ApplicationCommandInteractionData | MessageComponentInteractionData | AutocompleteInteractionData | ModalSubmitInteractionData;
@@ -123,8 +125,8 @@ export interface ApplicationCommandInteractionData {
     targetID?: string;
     type: ApplicationCommandTypes;
 }
-export type RawAutocompleteInteractionData = Omit<RawApplicationCommandInteractionData, "resolved" | "target_id">;
-export type AutocompleteInteractionData = Omit<ApplicationCommandInteractionData, "resolved" | "targetID">;
+export interface RawAutocompleteInteractionData extends Omit<RawApplicationCommandInteractionData, "resolved" | "target_id"> {}
+export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "targetID"> {}
 
 export interface RawMessageComponentInteractionResolvedData {
     channels?: Record<string, RawInteractionResolvedChannel>;
@@ -250,24 +252,60 @@ export interface AutocompleteChoice {
 }
 
 
-export type GuildAutocompleteInteraction = AutocompleteInteraction<AnyGuildTextChannel>;
-export type PrivateAutocompleteInteraction = Omit<AutocompleteInteraction<PrivateChannel | Uncached>, | "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions">;
+export type GuildAutocompleteInteraction = AutocompleteInteraction<AnyTextableGuildChannel>;
+export interface PrivateAutocompleteInteraction extends Omit<AutocompleteInteraction<AnyPrivateChannel | Uncached>, | "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type AnyAutocompleteInteraction = GuildAutocompleteInteraction | PrivateAutocompleteInteraction;
 
-export type GuildCommandInteraction = CommandInteraction<AnyGuildTextChannel>;
-export type PrivateCommandInteraction = Omit<CommandInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions">;
+export type GuildCommandInteraction = CommandInteraction<AnyTextableGuildChannel>;
+export interface PrivateCommandInteraction extends Omit<CommandInteraction<AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
-export type GuildComponentButtonInteraction = Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyGuildTextChannel>, "data"> & { data: MessageComponentButtonInteractionData; };
-export type GuildComponentSelectMenuInteraction = Omit<ComponentInteraction<SelectMenuTypes, AnyGuildTextChannel>, "data"> & { data: MessageComponentSelectMenuInteractionData; };
+export interface GuildComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyTextableGuildChannel>, "data"> { data: MessageComponentButtonInteractionData; }
+export interface GuildComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, AnyTextableGuildChannel>, "data"> { data: MessageComponentSelectMenuInteractionData; }
 export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
-export type PrivateComponentButtonInteraction = Omit<ComponentInteraction<ComponentTypes.BUTTON, PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> & { data: MessageComponentButtonInteractionData; };
-export type PrivateComponentSelectMenuInteraction = Omit<ComponentInteraction<SelectMenuTypes, PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> & { data: MessageComponentSelectMenuInteractionData; };
-export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
-export type AnyComponentInteraction = GuildComponentInteraction | PrivateComponentInteraction;
 
-export type GuildModalSubmitInteraction = ModalSubmitInteraction<AnyGuildTextChannel>;
-export type PrivateModalSubmitInteraction = Omit<ModalSubmitInteraction<PrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions">;
+export interface PrivateComponentButtonInteraction extends Omit<ComponentInteraction<ComponentTypes.BUTTON, AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> {
+    data: MessageComponentButtonInteractionData;
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
+export interface PrivateComponentSelectMenuInteraction extends Omit<ComponentInteraction<SelectMenuTypes, AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions" | "data"> {
+    data: MessageComponentSelectMenuInteractionData;
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
+export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
+export type AnyComponentButtonInteraction = GuildComponentButtonInteraction | PrivateComponentButtonInteraction;
+export type AnyComponentSelectMenuInteraction = GuildComponentSelectMenuInteraction | PrivateComponentSelectMenuInteraction;
+export type AnyComponentInteraction = AnyComponentButtonInteraction | AnyComponentSelectMenuInteraction;
+
+export type GuildModalSubmitInteraction = ModalSubmitInteraction<AnyTextableGuildChannel>;
+export interface PrivateModalSubmitInteraction extends Omit<ModalSubmitInteraction<AnyPrivateChannel | Uncached>, "appPermissions" | "guild" | "guildID" | "guildLocale" | "member" | "memberPermissions"> {
+    guild: null;
+    guildID: null;
+    guildLocale: undefined;
+    member: null;
+    memberPermissions: null;
+}
 export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
 
 export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];
+export type AutoCompleteFocusedOption = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger;
