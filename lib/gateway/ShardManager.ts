@@ -42,10 +42,11 @@ export default class ShardManager extends Collection<number, Shard> {
                 afk:		      options.presence?.afk ?? false,
                 status:		   options.presence?.status ?? "online"
             },
-            reconnectDelay:       options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
-            seedVoiceConnections: options.seedVoiceConnections ?? false,
-            shardIDs:             options.shardIDs ?? [],
-            ws:                   options.ws ?? {}
+            reconnectDelay:          options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
+            removeDisallowedIntents: options.removeDisallowedIntents ?? false,
+            seedVoiceConnections:    options.seedVoiceConnections ?? false,
+            shardIDs:                options.shardIDs ?? [],
+            ws:                      options.ws ?? {}
         };
 
         if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {

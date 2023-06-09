@@ -116,22 +116,32 @@ export enum ApplicationFlags {
     EMBEDDED_IAP                                  = 1 << 3,
     GROUP_DM_CREATE                               = 1 << 4,
     RPC_PRIVATE_BETA                              = 1 << 5,
+    /** Indicates if an app uses the {@link https://discord.com/developers/docs/resources/auto-moderation | Auto Moderation API}. Applications must have at least 100 enabled auto moderation rules to get the badge. */
     APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 1 << 6,
 
     ALLOW_ASSETS                                  = 1 << 8,
     ALLOW_ACTIVITY_ACTION_SPECTATE                = 1 << 9,
     ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 1 << 10,
     RPC_HAS_CONNECTED_ACCOUNT                     = 1 << 11,
+    /** Intent required for bots in **100 or more servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
     GATEWAY_PRESENCE                              = 1 << 12,
+    /** Intent required for bots in **under 100 servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
     GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
+    /** Intent required for bots in **100 or more servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
     GATEWAY_GUILD_MEMBERS                         = 1 << 14,
+    /** Intent required for bots in **under 100 servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
     GATEWAY_GUILD_MEMBERS_LIMITED                 = 1 << 15,
+    /** Indicates unusual growth of an app that prevents verification */
     VERIFICATION_PENDING_GUILD_LIMIT              = 1 << 16,
+    /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
     EMBEDDED                                      = 1 << 17,
+    /** Intent required for bots in **100 or more servers** to receive {@link https://support-dev.discord.com/hc/en-us/articles/4404772028055 | message content}. */
     GATEWAY_MESSAGE_CONTENT                       = 1 << 18,
+    /** Intent required for bots in **under 100 servers** to receive {@link https://support-dev.discord.com/hc/en-us/articles/4404772028055 | message content}. */
     GATEWAY_MESSAGE_CONTENT_LIMITED               = 1 << 19,
     EMBEDDED_FIRST_PARTY                          = 1 << 20,
 
+    /** Indicates if an app has registered global {@link https://discord.com/developers/docs/interactions/application-commands | application commands}. */
     APPLICATION_COMMAND_BADGE                     = 1 << 23,
     ACTIVE                                        = 1 << 24,
 }
@@ -947,27 +957,31 @@ export enum Intents {
 
 export type IntentNames = keyof typeof Intents;
 
-export const AllNonPrivilegedIntents =
-    Intents.GUILDS |
-    Intents.GUILD_MODERATION |
-    Intents.GUILD_EMOJIS_AND_STICKERS |
-    Intents.GUILD_INTEGRATIONS |
-    Intents.GUILD_WEBHOOKS |
-    Intents.GUILD_INVITES |
-    Intents.GUILD_VOICE_STATES |
-    Intents.GUILD_MESSAGES |
-    Intents.GUILD_MESSAGE_REACTIONS |
-    Intents.GUILD_MESSAGE_TYPING |
-    Intents.DIRECT_MESSAGES |
-    Intents.DIRECT_MESSAGE_REACTIONS |
-    Intents.DIRECT_MESSAGE_TYPING |
-    Intents.GUILD_SCHEDULED_EVENTS |
-    Intents.AUTO_MODERATION_CONFIGURATION |
-    Intents.AUTO_MODERATION_EXECUTION;
-export const AllPrivilegedIntents =
-    Intents.GUILD_MEMBERS |
-    Intents.GUILD_PRESENCES |
-    Intents.MESSAGE_CONTENT;
+export const NonPrivilegedIntents = [
+    Intents.GUILDS,
+    Intents.GUILD_MODERATION,
+    Intents.GUILD_EMOJIS_AND_STICKERS,
+    Intents.GUILD_INTEGRATIONS,
+    Intents.GUILD_WEBHOOKS,
+    Intents.GUILD_INVITES,
+    Intents.GUILD_VOICE_STATES,
+    Intents.GUILD_MESSAGES,
+    Intents.GUILD_MESSAGE_REACTIONS,
+    Intents.GUILD_MESSAGE_TYPING,
+    Intents.DIRECT_MESSAGES,
+    Intents.DIRECT_MESSAGE_REACTIONS,
+    Intents.DIRECT_MESSAGE_TYPING,
+    Intents.GUILD_SCHEDULED_EVENTS,
+    Intents.AUTO_MODERATION_CONFIGURATION,
+    Intents.AUTO_MODERATION_EXECUTION
+] as const;
+export const AllNonPrivilegedIntents = NonPrivilegedIntents.reduce((all, p) => all | p, 0);
+export const PrivilegedIntents = [
+    Intents.GUILD_MEMBERS,
+    Intents.GUILD_PRESENCES,
+    Intents.MESSAGE_CONTENT
+] as const;
+export const AllPrivilegedIntents = PrivilegedIntents.reduce((all, p) => all | p, 0);
 export const AllIntents = AllNonPrivilegedIntents | AllPrivilegedIntents;
 
 export enum GatewayOPCodes {

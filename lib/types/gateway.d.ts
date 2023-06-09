@@ -107,6 +107,11 @@ interface GatewayOptions {
      */
     reconnectDelay?: ReconnectDelayFunction;
     /**
+     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link Miscellaneous~Miscellaneous.getApplication | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
+     * @defaultValue false
+     */
+    removeDisallowedIntents?: boolean;
+    /**
      * If existing voice connections should be populated. This will disconnect connections from other sessions.
      * @defaultValue false
      */
@@ -120,7 +125,7 @@ interface GatewayOptions {
     ws?: WSClientOptions;
 }
 
-export interface ShardManagerInstanceOptions extends Required<Pick<GatewayOptions, "autoReconnect" | "compress" | "connectionTimeout" | "firstShardID" | "getAllUsers" | "guildCreateTimeout" | "largeThreshold" | "lastShardID" | "maxReconnectAttempts" | "maxResumeAttempts" | "reconnectDelay" | "seedVoiceConnections" | "shardIDs" | "ws">> {
+export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence">> {
     concurrency: number;
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
     intents: number;

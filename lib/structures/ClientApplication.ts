@@ -19,7 +19,7 @@ import type { ApplicationCommandTypes } from "../Constants";
 
 /** A representation of the authorized client's application (typically received via gateway). */
 export default class ClientApplication extends Base {
-    /** This application's [public flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
     flags: number;
     constructor(data: RawClientApplication, client: Client) {
         super(data.id, client);
