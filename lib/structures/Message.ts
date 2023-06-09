@@ -145,7 +145,8 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
         this.type = data.type;
         this.webhookID = data.webhook_id;
         this.update(data);
-        this.author = data.author.discriminator === "0000" ? new User(data.author, client) : client.users.update(data.author);
+        // don't add webhook users to the cache
+        this.author = data.webhook_id === undefined ? client.users.update(data.author) : new User(data.author, client);
         if (data.application_id === undefined) {
             this.applicationID = null;
         } else {

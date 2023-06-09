@@ -19,8 +19,10 @@ export default class User extends Base {
     banner?: string | null;
     /** If this user is a bot. */
     bot: boolean;
-    /** The 4 digits after the user's username. */
+    /** The 4 digits after this user's username, if they have not been migrated. If migrated, this will be a single "0". */
     discriminator: string;
+    /** The user's display name, if set. */
+    globalName: string | null;
     /** The user's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     publicFlags: number;
     /** If this user is an official discord system user. */
@@ -32,6 +34,7 @@ export default class User extends Base {
         this.avatar = null;
         this.bot = !!data.bot;
         this.discriminator = data.discriminator;
+        this.globalName = data.global_name;
         this.publicFlags = 0;
         this.system = !!data.system;
         this.username = data.username;
@@ -54,6 +57,9 @@ export default class User extends Base {
         if (data.discriminator !== undefined) {
             this.discriminator = data.discriminator;
         }
+        if (data.global_name !== undefined) {
+            this.globalName = data.global_name;
+        }
         if (data.public_flags !== undefined) {
             this.publicFlags = data.public_flags;
         }
@@ -62,8 +68,15 @@ export default class User extends Base {
         }
     }
 
-    /** The default avatar value of this user (discriminator modulo 5). */
+    private get isMigrated(): boolean {
+        return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
+    }
+
+    /** The default avatar value of this user. */
     get defaultAvatar(): number {
+        if (this.isMigrated) {
+            return Number(BigInt(this.id) >> 22n) % 6;
+        }
         return Number(this.discriminator) % 5;
     }
 
@@ -72,8 +85,11 @@ export default class User extends Base {
         return `<@${this.id}>`;
     }
 
-    /** a combination of this user's username and discriminator. */
+    /** This user's display name, if migrated, else a combination of the user's username and discriminator. */
     get tag(): string {
+        if (this.isMigrated) {
+            return this.globalName!;
+        }
         return `${this.username}#${this.discriminator}`;
     }
 
@@ -118,6 +134,7 @@ export default class User extends Base {
             banner:        this.banner,
             bot:           this.bot,
             discriminator: this.discriminator,
+            globalName:    this.globalName,
             publicFlags:   this.publicFlags,
             system:        this.system,
             username:      this.username

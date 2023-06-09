@@ -608,6 +608,7 @@ export interface JSONUser extends JSONBase {
     banner?: string | null;
     bot: boolean;
     discriminator: string;
+    globalName: string | null;
     publicFlags: number;
     system: boolean;
     username: string;

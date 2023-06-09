@@ -123,15 +123,14 @@ export default class Member extends Base {
     get bot(): boolean {
         return this.user.bot;
     }
-
-    /** The 4 digits after the username of the user associated with this member. */
+    /** The Discord-tag of the user associated with this member. */
     get discriminator(): string {
         return this.user.discriminator;
     }
 
-    /** The nick of this member if set, or the username of this member's user. */
+    /** The nick of this member if set, the display name of this member's user if set, or their username. */
     get displayName(): string {
-        return this.nick ?? this.username;
+        return this.nick ?? this.user.globalName ?? this.username;
     }
 
     /** The guild this member is for. This will throw an error if the guild is not cached. */
@@ -172,7 +171,7 @@ export default class Member extends Base {
         return this.user.system;
     }
 
-    /** A combination of the user associated with this member's username and discriminator. */
+    /** The 4 digits after this user's username, if they have not been migrated. If migrated, this will be a single "0". */
     get tag(): string {
         return this.user.tag;
     }
