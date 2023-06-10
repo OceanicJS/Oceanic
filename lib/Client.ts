@@ -206,34 +206,23 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         if (!url.endsWith("/")) {
             url += "/";
         }
-        const includedPresences = (this.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES;
-        const includedGuildMembers = (this.shards.options.intents & Intents.GUILD_MEMBERS) === Intents.GUILD_MEMBERS;
-        const includedMessageContent = (this.shards.options.intents & Intents.MESSAGE_CONTENT) === Intents.MESSAGE_CONTENT;
-        if (this.shards.options.removeDisallowedIntents && (includedPresences || includedGuildMembers || includedMessageContent)) {
-            this.emit("debug", "removeDisallowedIntents is enabled");
+        const privilegedIntentMapping = [
+            [Intents.GUILD_PRESENCES, [ApplicationFlags.GATEWAY_PRESENCE, ApplicationFlags.GATEWAY_PRESENCE_LIMITED]],
+            [Intents.GUILD_MEMBERS, [ApplicationFlags.GATEWAY_GUILD_MEMBERS, ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED]],
+            [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]]
+        ] as Array<[intent: Intents, allowed: Array<ApplicationFlags>]>;
+
+        if (this.shards.options.removeDisallowedIntents && privilegedIntentMapping.some(([intent]) => (this.shards.options.intents & intent) === intent)) {
             const { flags } = await this.rest.misc.getApplication();
-            const namedFlags: Array<string> = [];
-            for (let i = 0;; i++) {
-                const flag = 1 << i;
-                if (flag > flags) break;
-                if (flag & flags) namedFlags.push(ApplicationFlags[flag] || `Unknown (${i})`);
-            }
-            this.emit("debug", `Application flags: ${namedFlags.join(", ")}`);
-            const hasPresences = (flags & ApplicationFlags.GATEWAY_PRESENCE) === ApplicationFlags.GATEWAY_PRESENCE || (flags & ApplicationFlags.GATEWAY_PRESENCE_LIMITED) === ApplicationFlags.GATEWAY_PRESENCE_LIMITED;
-            const hasGuildMembers = (flags & ApplicationFlags.GATEWAY_GUILD_MEMBERS) === ApplicationFlags.GATEWAY_GUILD_MEMBERS || (flags & ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED) === ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED;
-            const hasMessageContent = (flags & ApplicationFlags.GATEWAY_MESSAGE_CONTENT) === ApplicationFlags.GATEWAY_MESSAGE_CONTENT || (flags & ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED) === ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED;
-            if (includedPresences && !hasPresences) {
-                this.emit("warn", "removeDisallowedIntents is enabled, and GUILD_PRESENCES was included but not found to be allowed. It has been removed.");
-                this.shards.options.intents &= ~Intents.GUILD_PRESENCES;
-            }
-            if (includedGuildMembers && !hasGuildMembers) {
-                this.emit("warn", "removeDisallowedIntents is enabled, and GUILD_MEMBERS was included but not found to be allowed. It has been removed.");
-                this.shards.options.intents &= ~Intents.GUILD_MEMBERS;
-            }
-            if (includedMessageContent && !hasMessageContent) {
-                this.emit("warn", "removeDisallowedIntents is enabled, and MESSAGE_CONTENT was included but not found to be allowed. It has been removed.");
-                this.shards.options.intents &= ~Intents.MESSAGE_CONTENT;
-            }
+            const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
+                if ((this.shards.options.intents & intent) === intent && !allowed.some(flag => (flags & flag) === flag)) {
+                    this.emit("warn", `removeDisallowedIntents is enabled, and ${Intents[intent]} was included but not found to be allowed. It has been removed.`);
+                    this.shards.options.intents &= ~intent;
+                }
+            };
+            check(Intents.GUILD_PRESENCES, [ApplicationFlags.GATEWAY_PRESENCE, ApplicationFlags.GATEWAY_PRESENCE_LIMITED]);
+            check(Intents.GUILD_MEMBERS, [ApplicationFlags.GATEWAY_GUILD_MEMBERS, ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED]);
+            check(Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]);
         }
 
         this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
