@@ -220,9 +220,9 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                     this.shards.options.intents &= ~intent;
                 }
             };
-            check(Intents.GUILD_PRESENCES, [ApplicationFlags.GATEWAY_PRESENCE, ApplicationFlags.GATEWAY_PRESENCE_LIMITED]);
-            check(Intents.GUILD_MEMBERS, [ApplicationFlags.GATEWAY_GUILD_MEMBERS, ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED]);
-            check(Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]);
+            for (const [intent, allowed] of privilegedIntentMapping) {
+                check(intent, allowed);
+            }
         }
 
         this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
