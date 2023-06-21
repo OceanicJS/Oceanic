@@ -37,6 +37,7 @@ export { default as InteractionResolvedChannel } from "./structures/InteractionR
 export { default as InteractionOptionsWrapper } from "./util/InteractionOptionsWrapper";
 export { default as Invite } from "./structures/Invite";
 export { default as InviteGuild } from "./structures/InviteGuild";
+export { default as MediaChannel } from "./structures/MediaChannel";
 export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";
 export { default as ModalSubmitInteraction } from "./structures/ModalSubmitInteraction";
@@ -65,6 +66,7 @@ export { default as TextableVoiceChannel } from "./structures/TextableVoiceChann
 export { default as TextChannel } from "./structures/TextChannel";
 export { default as ThreadableChannel } from "./structures/ThreadableChannel";
 export { default as ThreadChannel } from "./structures/ThreadChannel";
+export { default as ThreadOnlyChannel } from "./structures/ThreadOnlyChannel";
 export { default as TypedCollection } from "./util/TypedCollection";
 export { default as TypedEmitter } from "./util/TypedEmitter";
 export { default as UnavailableGuild } from "./structures/UnavailableGuild";

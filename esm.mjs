@@ -34,6 +34,7 @@ const InteractionResolvedChannel = (await import("./dist/lib/structures/Interact
 const InteractionOptionsWrapper = (await import("./dist/lib/util/InteractionOptionsWrapper.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
 const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).default.default;
+const MediaChannel = (await import("./dist/lib/structures/MediaChannel.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
@@ -61,6 +62,7 @@ const TextableChannel = (await import("./dist/lib/structures/TextableChannel.js"
 const TextableVoiceChannel = (await import("./dist/lib/structures/TextableVoiceChannel.js")).default.default;
 const ThreadableChannel = (await import("./dist/lib/structures/ThreadableChannel.js")).default.default;
 const ThreadChannel = (await import("./dist/lib/structures/ThreadChannel.js")).default.default;
+const ThreadOnlyChannel = (await import("./dist/lib/structures/ThreadOnlyChannel.js")).default.default;
 const TextChannel = (await import("./dist/lib/structures/TextChannel.js")).default.default;
 const TypedCollection = (await import("./dist/lib/util/TypedCollection.js")).default.default;
 const TypedEmitter = (await import("./dist/lib/util/TypedEmitter.js")).default.default;
@@ -110,6 +112,7 @@ export {
     InteractionOptionsWrapper,
     Invite,
     InviteGuild,
+    MediaChannel,
     Member,
     Message,
     ModalSubmitInteraction,
@@ -138,6 +141,7 @@ export {
     TextChannel,
     ThreadableChannel,
     ThreadChannel,
+    ThreadOnlyChannel,
     TypedCollection,
     TypedEmitter,
     UnavailableGuild,
