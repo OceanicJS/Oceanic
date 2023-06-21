@@ -21,6 +21,7 @@ writeFileSync(`${dir}/typedoc.json`, JSON.stringify({
 	plugin: [
 		"typedoc-plugin-rename-defaults",
 		"typedoc-plugin-extras",
+        "typedoc-plugin-mdn-links",
 		`${dir}/dark.js`
 	],
 	tsconfig:           "tsconfig.json",

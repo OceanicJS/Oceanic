@@ -26,6 +26,7 @@
     "typedoc": "^0.23.28",
     "typedoc-plugin-extras": "2.3.2",
     "typedoc-plugin-rename-defaults": "^0.6.5",
+    "typedoc-plugin-mdn-links": "^3.0.3",
     "rimraf": "^5.0.1"
   },
   "repository": {
