@@ -24,7 +24,7 @@ import type {
     RawPublicThreadChannel,
     ThreadMember,
     StartThreadFromMessageOptions,
-    StartThreadInForumOptions,
+    StartThreadInThreadOnlyChannelOptions,
     StartThreadWithoutMessageOptions,
     GetInviteOptions,
     GetInviteWithCountsAndExpirationOptions,
@@ -1091,11 +1091,11 @@ export default class Channels {
     }
 
     /**
-     * Create a thread in a forum channel.
+     * Create a thread in a thread only channel (forum & media).
      * @param channelID The ID of the channel to start the thread in.
      * @param options The options for starting the thread.
      */
-    async startThreadInForum(channelID: string, options: StartThreadInForumOptions): Promise<PublicThreadChannel> {
+    async startThreadInThreadOnlyChannl(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;

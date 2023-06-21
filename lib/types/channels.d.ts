@@ -35,7 +35,8 @@ import type {
     VoiceChannelTypes,
     InteractionChannelTypes,
     InviteChannelTypes,
-    ImplementedChannelTypes
+    ImplementedChannelTypes,
+    ThreadOnlyChannelTypes
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -83,7 +84,6 @@ export interface RawChannel {
     rate_limit_per_user?: number;
     recipients?: Array<RawUser>;
     rtc_region?: string | null;
-    template?: string;
     thread_metadata?: RawThreadMetadata;
     topic?: string | null;
     total_message_sent?: number;
@@ -104,7 +104,9 @@ export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadCha
 export interface RawAnnouncementThreadChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> { name: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; }
 export interface RawPublicThreadChannel extends Omit<RawAnnouncementThreadChannel, "type">, Required<Pick<RawChannel, "applied_tags">> { type: ChannelTypes.PUBLIC_THREAD; }
 export interface RawPrivateThreadChannel extends Omit<RawAnnouncementThreadChannel, "type" | "member"> { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; }
-export interface RawForumChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "template" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> { type: ChannelTypes.GUILD_FORUM; }
+export interface RawThreadOnlyChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> { type: ThreadOnlyChannels; }
+export interface RawForumChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_FORUM; }
+export interface RawMediaChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_MEDIA; }
 
 export interface PartialChannel extends Pick<RawChannel, "id" | "name" | "type"> {}
 export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type" | "permissions">>, "name">, Pick<RawChannel, "thread_metadata" | "parent_id"> { name: string | null; }
@@ -253,23 +255,26 @@ export interface EditStageChannelOptions extends EditAnyGuildChannelOptions, Pic
 export interface EditThreadChannelOptions extends EditPublicThreadChannelOptions, EditPrivateThreadChannelOptions {}
 export interface EditPublicThreadChannelOptions extends Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags" | "appliedTags"> {}
 export interface EditPrivateThreadChannelOptions extends EditPublicThreadChannelOptions, Pick<EditGuildChannelOptions, "invitable"> {}
-export interface EditForumChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic"> {}
+export interface EditForumChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic" | "defaultForumLayout"> {}
+export interface EditMediaChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic"> {}
 
+/* eslint-disable @typescript-eslint/member-ordering */
 export interface EditChannelOptionsMap {
-    [ChannelTypes.ANNOUNCEMENT_THREAD]: EditPublicThreadChannelOptions;
+    [ChannelTypes.GUILD_TEXT]: EditTextChannelOptions;
     [ChannelTypes.DM]: never;
+    [ChannelTypes.GUILD_VOICE]: EditVoiceChannelOptions;
     [ChannelTypes.GROUP_DM]: EditGroupDMOptions;
-    [ChannelTypes.GUILD_ANNOUNCEMENT]: EditAnnouncementChannelOptions;
     [ChannelTypes.GUILD_CATEGORY]: EditAnyGuildChannelOptions;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: EditAnnouncementChannelOptions;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: EditPublicThreadChannelOptions;
+    [ChannelTypes.PUBLIC_THREAD]: EditPublicThreadChannelOptions;
+    [ChannelTypes.PRIVATE_THREAD]: EditPrivateThreadChannelOptions;
+    [ChannelTypes.GUILD_STAGE_VOICE]: EditStageChannelOptions;
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: EditForumChannelOptions;
-    [ChannelTypes.GUILD_STAGE_VOICE]: EditStageChannelOptions;
-    [ChannelTypes.GUILD_TEXT]: EditTextChannelOptions;
-    [ChannelTypes.GUILD_VOICE]: EditVoiceChannelOptions;
-    [ChannelTypes.PRIVATE_THREAD]: EditPrivateThreadChannelOptions;
-    [ChannelTypes.PUBLIC_THREAD]: EditPublicThreadChannelOptions;
+    [ChannelTypes.GUILD_MEDIA]: EditMediaChannelOptions;
 }
-
+/* eslint-enable @typescript-eslint/member-ordering */
 
 export interface AddGroupRecipientOptions {
     /** The access token of the user to add. */
@@ -740,6 +745,7 @@ export type TextableGuildChannelsWithoutThreads = typeof TextableGuildChannelTyp
 export type VoiceChannels = typeof VoiceChannelTypes[number];
 export type InviteChannels = typeof InviteChannelTypes[number];
 export type InteractionChannels = typeof InteractionChannelTypes[number];
+export type ThreadOnlyChannels = typeof ThreadOnlyChannelTypes[number];
 
 
 export type AnyChannel = ChannelTypeMap[ChannelTypes];
@@ -757,6 +763,7 @@ export type AnyTextableGuildChannelWithoutThreads = ChannelTypeMap[TextableGuild
 export type AnyVoiceChannel = ChannelTypeMap[VoiceChannels];
 export type AnyInviteChannel = ChannelTypeMap[InviteChannels];
 export type AnyInteractionChannel = ChannelTypeMap[InteractionChannels];
+export type AnyThreadOnlyChannel = ChannelTypeMap[ThreadOnlyChannels];
 
 export interface PartialInviteChannel {
     icon?: string | null;
@@ -920,12 +927,12 @@ export interface StartThreadWithoutMessageOptions extends StartThreadFromMessage
     type: ThreadChannels;
 }
 
-export interface StartThreadInForumOptions extends StartThreadFromMessageOptions {
+export interface StartThreadInThreadOnlyChannelOptions extends StartThreadFromMessageOptions {
     /** The message to start the thread with. */
-    message: ForumThreadStarterMessageOptions;
+    message: ThreadOnlyChannelThreadStarterMessageOptions;
 }
 
-export type ForumThreadStarterMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "stickerIDs" | "attachments" | "flags" | "files">;
+export type ThreadOnlyChannelThreadStarterMessageOptions = Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "stickerIDs" | "attachments" | "flags" | "files">;
 
 export interface GetArchivedThreadsOptions {
     /** A **timestamp** to get threads before. */

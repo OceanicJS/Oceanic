@@ -36,7 +36,8 @@ import type {
     GuildChannels,
     TextableGuildChannels,
     ThreadChannels,
-    VoiceChannels
+    VoiceChannels,
+    ThreadOnlyChannels
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type {
@@ -212,21 +213,8 @@ export interface JSONExtendedUser extends JSONUser {
     mfaEnabled: boolean;
     verified: boolean;
 }
-export interface JSONForumChannel extends JSONGuildChannel {
-    availableTags: Array<ForumTag>;
-    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
-    defaultForumLayout: ForumLayoutTypes;
-    defaultReactionEmoji: ForumEmoji | null;
-    defaultSortOrder: SortOrderTypes | null;
-    defaultThreadRateLimitPerUser: number;
-    flags: number;
-    lastThreadID: string | null;
-    permissionOverwrites: Array<JSONPermissionOverwrite>;
-    position: number;
-    rateLimitPerUser: number;
-    template: string;
-    threads: Array<string>;
-    topic: string | null;
+export interface JSONForumChannel extends JSONThreadOnlyChannel {
+    type: ChannelTypes.GUILD_FORUM;
 }
 export interface JSONGroupChannel extends JSONChannel {
     applicationID: string;
@@ -378,6 +366,9 @@ export interface JSONInviteGuild extends JSONBase {
     splash: string | null;
     vanityURLCode: string | null;
     verificationLevel: VerificationLevels;
+}
+export interface JSONMediaChannel extends JSONThreadOnlyChannel {
+    type: ChannelTypes.GUILD_MEDIA;
 }
 export interface JSONMember extends JSONBase {
     avatar: string | null;
@@ -598,6 +589,22 @@ export interface JSONThreadChannel extends JSONGuildChannel {
     threadMetadata: ThreadMetadata | PrivateThreadMetadata;
     totalMessageSent: number;
     type: ThreadChannels;
+}
+export interface JSONThreadOnlyChannel extends JSONGuildChannel {
+    availableTags: Array<ForumTag>;
+    defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
+    defaultForumLayout: ForumLayoutTypes;
+    defaultReactionEmoji: ForumEmoji | null;
+    defaultSortOrder: SortOrderTypes | null;
+    defaultThreadRateLimitPerUser: number;
+    flags: number;
+    lastThreadID: string | null;
+    permissionOverwrites: Array<JSONPermissionOverwrite>;
+    position: number;
+    rateLimitPerUser: number;
+    threads: Array<string>;
+    topic: string | null;
+    type: ThreadOnlyChannels;
 }
 export interface JSONUnavailableGuild extends JSONBase {
     unavailable: true;

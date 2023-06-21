@@ -14,7 +14,7 @@ import type { JoinVoiceChannelOptions } from "../types/voice";
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";
 
-/** Represents a guild stage channel. */
+/** Represents a textable voice channel. */
 export default class TextableVoiceChannel<T extends AnyVoiceChannel = AnyVoiceChannel> extends TextableChannel<T> {
     /** The bitrate of the stage channel. */
     bitrate: number;

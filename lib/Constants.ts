@@ -18,6 +18,7 @@ import type {
     RawCategoryChannel,
     RawForumChannel,
     RawGroupChannel,
+    RawMediaChannel,
     RawPrivateChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,
@@ -25,6 +26,7 @@ import type {
     RawTextChannel,
     RawVoiceChannel
 } from "./types/channels";
+import type MediaChannel from "./structures/MediaChannel";
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;
@@ -289,6 +291,7 @@ export enum ChannelTypes {
     GUILD_STAGE_VOICE    = 13,
     GUILD_DIRECTORY      = 14,
     GUILD_FORUM          = 15,
+    GUILD_MEDIA          = 16,
 }
 
 function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: ReadonlyArray<T>, excludeTypes: ReadonlyArray<E>): Array<Exclude<T, E>> {
@@ -298,18 +301,19 @@ function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: Reado
 export const AnyChannelTypes = Object.values(ChannelTypes).filter(v => typeof v === "number") as Array<ChannelTypes>;
 export const NotImplementedChannelTypes = [ChannelTypes.GUILD_DIRECTORY] as const;
 export const ImplementedChannelTypes = exclude(AnyChannelTypes, NotImplementedChannelTypes);
-export const GuildChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_ANNOUNCEMENT, ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD, ChannelTypes.GUILD_STAGE_VOICE, ChannelTypes.GUILD_DIRECTORY, ChannelTypes.GUILD_FORUM] as const;
+export const GuildChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_ANNOUNCEMENT, ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD, ChannelTypes.GUILD_STAGE_VOICE, ChannelTypes.GUILD_DIRECTORY, ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA] as const;
 export const ThreadChannelTypes = [ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD] as const;
 export const GuildChannelTypesWithoutThreads = exclude(GuildChannelTypes, ThreadChannelTypes);
 export const PrivateChannelTypes = [ChannelTypes.DM, ChannelTypes.GROUP_DM] as const;
 export const EditableChannelTypes = exclude([ChannelTypes.GROUP_DM, ...GuildChannelTypes], NotImplementedChannelTypes);
-export const TextableChannelTypes = exclude([ChannelTypes.DM, ...GuildChannelTypes], [...NotImplementedChannelTypes, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_FORUM]);
+export const TextableChannelTypes = exclude([ChannelTypes.DM, ...GuildChannelTypes], [...NotImplementedChannelTypes, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA]);
 export const TextableGuildChannelTypes = exclude(TextableChannelTypes, [ChannelTypes.DM]);
 export const TextableChannelTypesWithoutThreads = exclude(TextableChannelTypes, ThreadChannelTypes);
 export const TextableGuildChannelTypesWithoutThreads = exclude(TextableGuildChannelTypes, ThreadChannelTypes);
 export const VoiceChannelTypes = [ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE] as const;
-export const InviteChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_ANNOUNCEMENT, ...VoiceChannelTypes, ChannelTypes.GUILD_FORUM] as const;
+export const InviteChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_ANNOUNCEMENT, ...VoiceChannelTypes, ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA] as const;
 export const InteractionChannelTypes = [...TextableChannelTypes, ChannelTypes.GROUP_DM] as const;
+export const ThreadOnlyChannelTypes = [ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA] as const;
 
 /* eslint-disable @typescript-eslint/member-ordering */
 export interface ChannelTypeMap {
@@ -325,6 +329,7 @@ export interface ChannelTypeMap {
     [ChannelTypes.GUILD_STAGE_VOICE]: StageChannel;
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: ForumChannel;
+    [ChannelTypes.GUILD_MEDIA]: MediaChannel;
 }
 export interface RawChannelTypeMap {
     [ChannelTypes.GUILD_TEXT]: RawTextChannel;
@@ -339,6 +344,7 @@ export interface RawChannelTypeMap {
     [ChannelTypes.GUILD_STAGE_VOICE]: RawStageChannel;
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: RawForumChannel;
+    [ChannelTypes.GUILD_MEDIA]: RawMediaChannel;
 }
 /* eslint-enable @typescript-eslint/member-ordering */
 
@@ -555,9 +561,11 @@ export enum ChannelFlags {
     /** For threads, if this thread is pinned in a forum channel. */
     PINNED                                        = 1 << 1,
     ACTIVE_CHANNELS_REMOVED                       = 1 << 2,
+
     /** For forums, if tags are required when creating threads. */
     REQUIRE_TAG                                   = 1 << 4,
     IS_SPAM                                       = 1 << 5,
+
     IS_GUILD_RESOURCE_CHANNEL                     = 1 << 7,
     CLYDE_AI                                      = 1 << 8,
     IS_SCHEDULED_FOR_DELETION                     = 1 << 9,
@@ -565,6 +573,9 @@ export enum ChannelFlags {
     SUMMARIES_DISABLED                            = 1 << 11,
     APPLICATION_SHELF_CONSENT                     = 1 << 12,
     IS_ROLE_SUBSCRIPTION_TEMPLATE_PREVIEW_CHANNEL = 1 << 13,
+
+    /** For media channls, hides the embedded media download options. */
+    HIDE_MEDIA_DOWNLOAD_OPTIONS                   = 1 << 15,
 }
 
 export enum SortOrderTypes {

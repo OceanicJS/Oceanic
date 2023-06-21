@@ -1,5 +1,6 @@
 /** @module Channel */
 import Base from "./Base";
+import MediaChannel from "./MediaChannel";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type {
@@ -10,6 +11,7 @@ import type {
     RawChannel,
     RawForumChannel,
     RawGroupChannel,
+    RawMediaChannel,
     RawPrivateChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,
@@ -62,6 +64,9 @@ export default class Channel extends Base {
             }
             case ChannelTypes.GUILD_FORUM: {
                 return new ForumChannel(data as RawForumChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_MEDIA: {
+                return new MediaChannel(data as RawMediaChannel, client) as T;
             }
             default: {
                 return new Channel(data, client) as T;
