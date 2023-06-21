@@ -17,6 +17,7 @@ import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
     ComponentTypes,
+    GuildFeature,
     InteractionResponseTypes,
     InteractionTypes,
     MessageComponentTypes,
@@ -84,6 +85,7 @@ export interface RawInteraction {
     application_id: string;
     channel_id?: string;
     data?: RawInteractionData;
+    guild?: InteractionGuild;
     guild_id?: string;
     guild_locale?: string;
     id: string;
@@ -277,3 +279,9 @@ export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateMod
 
 export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];
 export type AutoCompleteFocusedOption = InteractionOptionsString | InteractionOptionsNumber | InteractionOptionsInteger;
+
+export interface InteractionGuild {
+    features: Array<GuildFeature>;
+    id: string;
+    locale: string;
+}

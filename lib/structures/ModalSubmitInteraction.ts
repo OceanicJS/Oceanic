@@ -8,7 +8,13 @@ import Message from "./Message";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
-import type { InitialInteractionContent, InteractionContent, ModalSubmitInteractionData, RawModalSubmitInteraction } from "../types/interactions";
+import type {
+    InitialInteractionContent,
+    InteractionContent,
+    InteractionGuild,
+    ModalSubmitInteractionData,
+    RawModalSubmitInteraction
+} from "../types/interactions";
 import type Client from "../Client";
 import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
@@ -29,6 +35,8 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
     guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
     guildLocale: T extends AnyTextableGuildChannel ? string : string | undefined;
+    /** The partial guild this interaction was sent from, if applicable. */
+    guildPartial?: T extends AnyTextableGuildChannel ? InteractionGuild : InteractionGuild | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
@@ -54,6 +62,7 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
         };
         this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
+        this.guildPartial = data.guild;
         this.locale = data.locale!;
         this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyTextableGuildChannel ? Member : Member | null;
         this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | null;
