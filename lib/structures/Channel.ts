@@ -1,6 +1,5 @@
 /** @module Channel */
 import Base from "./Base";
-import MediaChannel from "./MediaChannel";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type {
@@ -107,4 +106,5 @@ const PrivateThreadChannel = (require("./PrivateThreadChannel") as typeof import
 const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel")).default;
 const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
 const ForumChannel = (require("./ForumChannel") as typeof import("./ForumChannel")).default;
+const MediaChannel = (require("./MediaChannel") as typeof import("./MediaChannel")).default;
 /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
