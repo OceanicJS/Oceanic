@@ -287,8 +287,8 @@ export default class RequestHandler {
                     cb();
                     resolve(resBody as T);
                 } catch (err) {
+                    cb();
                     if (err instanceof Error && err.constructor.name === "DOMException" && err.name === "AbortError") {
-                        cb();
                         reject(new Error(`Request Timed Out (>${this.options.requestTimeout}ms) on ${options.method} ${options.path}`));
                     }
                     this.#manager.client.emit("error", err as Error);
