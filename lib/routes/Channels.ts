@@ -130,7 +130,7 @@ export default class Channels {
     }
 
     /**
-     * Create an invite for a channel.
+     * Create an invite for a channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param channelID The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
      */

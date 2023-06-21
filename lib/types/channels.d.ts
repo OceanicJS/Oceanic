@@ -838,6 +838,7 @@ export interface RawInvite {
     channel_id?: string;
     code: string;
     expires_at?: string;
+    flags?: number;
     guild?: RawInviteGuild;
     guild_scheduled_event?: RawScheduledEvent;
     inviter?: RawUser;

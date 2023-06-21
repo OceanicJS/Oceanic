@@ -490,7 +490,7 @@ export default class Guild extends Base {
             this.icon = data.icon;
         }
         if (data.joined_at !== undefined) {
-            this.joinedAt = new Date(data.joined_at);
+            this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
         }
         if (data.large !== undefined) {
             this.large = data.large;

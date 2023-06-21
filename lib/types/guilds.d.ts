@@ -58,7 +58,7 @@ export interface RawGuild {
     icon: string | null;
     icon_hash?: string | null;
     id: string;
-    joined_at: string;
+    joined_at: string | null;
     large: boolean;
     latest_onboarding_question_id?: string | null;
     max_members?: number;

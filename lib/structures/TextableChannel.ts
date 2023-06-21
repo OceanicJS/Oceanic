@@ -93,7 +93,7 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
     }
 
     /**
-     * Create an invite for this channel.
+     * Create an invite for this channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param options The options for the invite.
      */
     async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", T>> {

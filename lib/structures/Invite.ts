@@ -34,6 +34,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     createdAt!: T extends "withMetadata" ? Date : undefined;
     /** The date at which this invite expires. */
     expiresAt?: T extends "withMetadata" | "withoutExpiration" ? never : Date;
+    /** This invite's [flags](https://discord.com/developers/docs/resources/invite#invite-object-invite-flags). */
+    flags: number;
     /** The guild this invite leads to or `null` if this invite leads to a Group DM. */
     guild: InviteGuild | null;
     /** The ID of the guild this invite leads to or `null` if this invite leads to a Group DM. */
@@ -67,6 +69,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         });
         this.channelID = (data.channel_id ?? data.channel?.id) ?? null;
         this.code = data.code;
+        this.flags = data.flags ?? 0;
         this.guild = null;
         this.guildID = data.guild?.id ?? null;
         this.expiresAt = (data.expires_at ? new Date(data.expires_at) : undefined) as never;
@@ -80,6 +83,9 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         }
         if (data.approximate_presence_count !== undefined) {
             this.approximatePresenceCount = data.approximate_presence_count;
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
         }
 
         let guild: Guild | undefined;

@@ -168,6 +168,7 @@ export const GuildFeatures = [
     "ENABLED_DISCOVERABLE_BEFORE",
     "EXPOSED_TO_ACTIVITIES_WTP_EXPERIMENT",
     "FEATURABLE",
+    "GUESTS_ENABLED",
     "GUILD_HOME_TEST",
     "GUILD_ONBOARDING_EVER_ENABLED",
     "GUILD_ONBOARDING_HAS_PROMPTS",
@@ -1114,6 +1115,10 @@ export enum AnimationTypes {
 export enum OnboardingModes {
     DEFAULT = 0,
     ADVANCED = 1,
+}
+
+export enum InviteFlags {
+    GUEST = 1 << 0,
 }
 
 // entries are intentionally not aligned
