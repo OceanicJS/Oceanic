@@ -89,7 +89,7 @@ export default class User extends Base {
     /** This user's unique username, if migrated, else a combination of the user's username and discriminator. */
     get tag(): string {
         if (this.isMigrated) {
-            return this.username!;
+            return this.username;
         }
         return `${this.username}#${this.discriminator}`;
     }
