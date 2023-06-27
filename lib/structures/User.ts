@@ -68,7 +68,8 @@ export default class User extends Base {
         }
     }
 
-    private get isMigrated(): boolean {
+    /** Whether this user has migrated to the new username system */
+    get isMigrated(): boolean {
         return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
     }
 
@@ -85,10 +86,10 @@ export default class User extends Base {
         return `<@${this.id}>`;
     }
 
-    /** This user's display name, if migrated, else a combination of the user's username and discriminator. */
+    /** This user's unique username, if migrated, else a combination of the user's username and discriminator. */
     get tag(): string {
         if (this.isMigrated) {
-            return this.globalName!;
+            return this.username!;
         }
         return `${this.username}#${this.discriminator}`;
     }
