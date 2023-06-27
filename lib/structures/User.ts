@@ -68,7 +68,7 @@ export default class User extends Base {
         }
     }
 
-    /** Whether this user has migrated to the new username system */
+    /** If this user has migrated to the new username system. */
     get isMigrated(): boolean {
         return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
     }
