@@ -68,10 +68,6 @@ export default class User extends Base {
         }
     }
 
-    private get isMigrated(): boolean {
-        return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
-    }
-
     /** The default avatar value of this user. */
     get defaultAvatar(): number {
         if (this.isMigrated) {
@@ -80,15 +76,20 @@ export default class User extends Base {
         return Number(this.discriminator) % 5;
     }
 
+    /** If this user has migrated to the new username system. */
+    get isMigrated(): boolean {
+        return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
+    }
+
     /** A string that will mention this user. */
     get mention(): string {
         return `<@${this.id}>`;
     }
 
-    /** This user's display name, if migrated, else a combination of the user's username and discriminator. */
+    /** This user's unique username, if migrated, else a combination of the user's username and discriminator. */
     get tag(): string {
         if (this.isMigrated) {
-            return this.globalName!;
+            return this.username;
         }
         return `${this.username}#${this.discriminator}`;
     }
