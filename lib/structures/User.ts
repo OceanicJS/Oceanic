@@ -68,17 +68,17 @@ export default class User extends Base {
         }
     }
 
-    /** If this user has migrated to the new username system. */
-    get isMigrated(): boolean {
-        return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
-    }
-
     /** The default avatar value of this user. */
     get defaultAvatar(): number {
         if (this.isMigrated) {
             return Number(BigInt(this.id) >> 22n) % 6;
         }
         return Number(this.discriminator) % 5;
+    }
+
+    /** If this user has migrated to the new username system. */
+    get isMigrated(): boolean {
+        return this.globalName !== null && (this.discriminator === undefined || this.discriminator === "0");
     }
 
     /** A string that will mention this user. */
