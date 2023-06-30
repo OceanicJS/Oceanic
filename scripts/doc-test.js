@@ -11,8 +11,6 @@ exports.load = function load(app) {\n\
 		JSX.createElement(JSX.Raw, { html: \"localStorage.setItem('tsd-theme', localStorage.getItem('tsd-theme') || 'dark')\" }));\n\
 	});\n\
 }");
-	// note for anyone changing this, this does not affect the docs on https://docs.oceanic.ws
-	// this only effects the test workflow - let Donovan know if something needs to change here
 writeFileSync(`${dir}/typedoc.json`, JSON.stringify({
 	name:        "Oceanic",
 	entryPoints: [
@@ -33,6 +31,7 @@ writeFileSync(`${dir}/typedoc.json`, JSON.stringify({
 	gitRemote:          "origin",
 	readme:             "README.md",
 	out:                "docs",
+    json:               "docs/docs.json",
 	exclude:            [],
 	favicon: "favicon.ico"
 }));
