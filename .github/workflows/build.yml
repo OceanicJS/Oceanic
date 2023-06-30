@@ -5,8 +5,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Dependencies
-      run: npm ci
-    - name: Build
-      run: npm run test:build && npm run test:esm
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile --ignore-scripts
+      - name: Build
+        run: pnpm run test:build && pnpm run test:esm

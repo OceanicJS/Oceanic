@@ -1,13 +1,13 @@
 name: ESLint
 on: [push, pull_request, workflow_call]
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Dependencies
-      run: npm ci
-    - name: Run ESLint
-      run: npm run lint
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile --ignore-scripts
+      - name: Run ESLint
+        run: pnpm run lint

@@ -5,6 +5,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Test Docs
-      run: npm run test:docs
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - name: Test Docs
+        run: pnpm run test:docs

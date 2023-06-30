@@ -1,5 +1,5 @@
 name: Publish Dev Version
-on: 
+on:
   workflow_call:
     secrets:
       NPM_TOKEN:
@@ -14,24 +14,25 @@ jobs:
     runs-on: ubuntu-latest
     needs: [lint]
     steps:
-    - uses: actions/checkout@v3
-    - name: Install Dependencies
-      run: npm ci
-    - name: Set Version
-      run: |
-        git config user.email "<>"
-        git config user.name "GitHub Actions"
-        npm --no-git-tag-version version patch
-        hash=$(git rev-parse --short dev)
-        version=$(jq -r .version package.json)
-        v="$version-dev.$hash"
-        echo "Setting Version: $v"
-        contents=$(jq --arg version "$v" '.version = $version' package.json) && echo -E "${contents}" > package.json
-    - uses: JS-DevTools/npm-publish@v1
-      with:
-        token: ${{ secrets.NPM_TOKEN }}
-        tag: dev
-    - name: Deprecate Old Versions
-      run: npx npm-deprecate
-      env:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - name: Install Dependencies
+        run: pnpm i --frozen-lockfile --ignore-scripts
+      - name: Set Version
+        run: |
+          git config user.email "<>"
+          git config user.name "GitHub Actions"
+          pnpm version --no-git-tag-version patch
+          hash=$(git rev-parse --short dev)
+          version=$(jq -r .version package.json)
+          v="$version-dev.$hash"
+          echo "Setting Version: $v"
+          contents=$(jq --arg version "$v" '.version = $version' package.json) && echo -E "${contents}" > package.json
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          tag: dev
+      - name: Deprecate Old Versions
+        run: npx -y npm-deprecate
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
