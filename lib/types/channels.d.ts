@@ -668,6 +668,7 @@ export interface RawMessage {
     position?: number;
     reactions?: Array<RawMessageReaction>;
     referenced_message?: RawMessage | null;
+    role_subscription_data?: RawRoleSubscriptionData;
     // stickers exists, but is deprecated
     sticker_items?: Array<StickerItem>;
     thread?: RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
@@ -1053,3 +1054,17 @@ export interface PurgeOptions<T extends AnyTextableGuildChannel | Uncached> {
 }
 
 export type ThreadParentChannel = TextChannel | AnnouncementChannel | ForumChannel;
+
+export interface RawRoleSubscriptionData {
+    is_renewal: boolean;
+    role_subscription_listing_id: string;
+    tier_name: string;
+    total_months_subscribed: number;
+}
+
+export interface RoleSubscriptionData {
+    isRenewal: boolean;
+    roleSubscriptionListingID: string;
+    tierName: string;
+    totalMonthsSubscribed: number;
+}

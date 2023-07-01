@@ -32,7 +32,8 @@ import type {
     StickerItem,
     MessageReaction,
     MessageActionRow,
-    AnyThreadChannel
+    AnyThreadChannel,
+    RoleSubscriptionData
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -107,6 +108,8 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     reactions: Record<string, MessageReaction>;
     /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, this will be the message that's referenced. */
     referencedMessage?: Message | null;
+    /** The data of the role subscription purchase or renewal that prompted this message. */
+    roleSubscriptionData?: RoleSubscriptionData;
     // stickers exists, but is deprecated
     /** The sticker items on this message. */
     stickerItems?: Array<StickerItem>;
@@ -264,6 +267,15 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             } else {
                 this.referencedMessage = this.channel ? this.channel.messages?.update(data.referenced_message) : new Message(data.referenced_message, this.client);
             }
+        }
+
+        if (data.role_subscription_data !== undefined) {
+            this.roleSubscriptionData = {
+                isRenewal:                 data.role_subscription_data.is_renewal,
+                roleSubscriptionListingID: data.role_subscription_data.role_subscription_listing_id,
+                tierName:                  data.role_subscription_data.tier_name,
+                totalMonthsSubscribed:     data.role_subscription_data.total_months_subscribed
+            };
         }
 
 
