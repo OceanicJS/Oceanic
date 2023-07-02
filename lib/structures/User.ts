@@ -114,6 +114,15 @@ export default class User extends Base {
     }
 
     /**
+     * The url of this user's banner.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    bannerURL(format?: ImageFormat, size?: number): string | null {
+        return this.banner ? this.client.util.formatImage(Routes.BANNER(this.id, this.banner), format, size) : null;
+    }
+
+    /**
      * Create a direct message with this user.
      */
     async createDM(): Promise<PrivateChannel> {
