@@ -26,12 +26,12 @@ import type {
     NotImplementedChannelTypes,
     GuildChannelTypes,
     ThreadChannelTypes,
-    GuildChannelTypesWithoutThreads,
+    GuildChannelsWithoutThreadsTypes,
     EditableChannelTypes,
     TextableChannelTypes,
     TextableGuildChannelTypes,
-    TextableChannelTypesWithoutThreads,
-    TextableGuildChannelTypesWithoutThreads,
+    TextableChannelsWithoutThreadsTypes,
+    TextableGuildChannelsWithoutThreadsTypes,
     VoiceChannelTypes,
     InteractionChannelTypes,
     InviteChannelTypes,
@@ -736,13 +736,13 @@ export type NotImplementedChannels = typeof NotImplementedChannelTypes[number];
 export type ImplementedChannels = typeof ImplementedChannelTypes[number];
 export type GuildChannels = typeof GuildChannelTypes[number];
 export type ThreadChannels = typeof ThreadChannelTypes[number];
-export type GuildChannelsWithoutThreads = typeof GuildChannelTypesWithoutThreads[number];
+export type GuildChannelsWithoutThreads = typeof GuildChannelsWithoutThreadsTypes[number];
 export type PrivateChannels = typeof PrivateChannelTypes[number];
 export type EditableChannels = typeof EditableChannelTypes[number];
 export type TextableChannels = typeof TextableChannelTypes[number];
 export type TextableGuildChannels = typeof TextableGuildChannelTypes[number];
-export type TextableChannelsWithoutThreads = typeof TextableChannelTypesWithoutThreads[number];
-export type TextableGuildChannelsWithoutThreads = typeof TextableGuildChannelTypesWithoutThreads[number];
+export type TextableChannelsWithoutThreads = typeof TextableChannelsWithoutThreadsTypes[number];
+export type TextableGuildChannelsWithoutThreads = typeof TextableGuildChannelsWithoutThreadsTypes[number];
 export type VoiceChannels = typeof VoiceChannelTypes[number];
 export type InviteChannels = typeof InviteChannelTypes[number];
 export type InteractionChannels = typeof InteractionChannelTypes[number];
