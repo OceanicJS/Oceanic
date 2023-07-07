@@ -127,9 +127,9 @@ export interface Overwrite {
 
 export interface OverwriteOptions {
     /** The permissions to allow. */
-    allow?: string | bigint;
+    allow?: string | bigint | null;
     /** The permissions to deny. */
-    deny?: string | bigint;
+    deny?: string | bigint | null;
     /** The ID of the user or role to apply the permissions to. */
     id: string;
     /** `0` for role, `1` for user. */
@@ -227,7 +227,7 @@ export interface EditGuildChannelOptions {
     /** [Announcement, Forum, Text, Voice] The id of the parent category channel. */
     parentID?: string | null;
     /** Channel or category specific permissions. */
-    permissionOverwrites?: Array<RawOverwrite> | null;
+    permissionOverwrites?: Array<OverwriteOptions> | null;
     /** The position of the channel in the channel list. */
     position?: number | null;
     /** [Forum, Text, Thread] The seconds between sending messages for users. Between 0 and 21600. */
