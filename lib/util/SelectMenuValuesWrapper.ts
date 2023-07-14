@@ -71,23 +71,22 @@ export default class SelectMenuValuesWrapper {
     }
 
     /**
-     * Get the selected mentionables. (channels, users, roles)
+     * Get the selected mentionables. (users, roles)
      *
      * If `ensurePresent` is false, mentionables that aren't in resolved will be ignored.
-     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel, user, or role.
+     * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user, or role.
      */
-    getMentionables(ensurePresent?: boolean): Array<InteractionResolvedChannel | User | Role> {
-        const res: Array<InteractionResolvedChannel | User | Role> = [];
+    getMentionables(ensurePresent?: boolean): Array<User | Role> {
+        const res: Array<User | Role> = [];
         for (const id of this.raw) {
-            const ch = this.resolved.channels.get(id);
             const role = this.resolved.roles.get(id);
             const user = this.resolved.users.get(id);
-            if ((!ch && !role && !user)) {
+            if ((!role && !user)) {
                 if (ensurePresent) {
                     throw new WrapperError(`Failed to find mentionable in resolved data: ${id}`);
                 }
             } else {
-                res.push((ch ?? role ?? user)!);
+                res.push((role ?? user)!);
             }
         }
 
