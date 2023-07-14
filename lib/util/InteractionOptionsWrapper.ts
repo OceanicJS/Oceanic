@@ -234,14 +234,12 @@ export default class InteractionOptionsWrapper {
         if ((!role && !user) && required) {
             throw new WrapperError(`Value not present for required option: ${name}`);
         }
-		
-				if (role) {
-						return role;
-				} else if (user) {
-						return user;
-				} else {
-						return undefined;
-				}
+
+        if (role) {
+            return role;
+        } else if (user) {
+            return user;
+        }
     }
 
     /**
