@@ -633,7 +633,10 @@ export interface RawAttachment {
     width?: number;
 }
 // @TODO verify what can be sent with `attachments` in message creation/deletion, this is an assumption
-export interface MessageAttachment extends Pick<RawAttachment, "id">, Partial<Pick<RawAttachment, "description" | "filename">> {}
+export interface MessageAttachment extends Partial<Pick<RawAttachment, "description" | "filename">> {
+    /** The id of the attachment to edit, or the index of `files` to reference. */
+    id?: string | number;
+}
 
 export interface RawAllowedMentions {
     parse: Array<"everyone" | "roles" | "users">;

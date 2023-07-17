@@ -23,6 +23,8 @@ export interface RequestOptions {
 export interface File {
     /** the contents of the file */
     contents: Buffer;
+    /** The index to use when uploading the file. You can use this to reference this specific file from `attachments`.w */
+    index?: number;
     /** the name of the file */
     name: string;
 }

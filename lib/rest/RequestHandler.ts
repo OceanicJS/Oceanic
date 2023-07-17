@@ -129,7 +129,12 @@ export default class RequestHandler {
                         }
                         if (options.form || (options.files && options.files.length !== 0)) {
                             const data = options.form ?? new FormData();
-                            if (options.files) for (const [index, file] of options.files.entries()) {
+                            let index = 0;
+                            if (options.files) for (const file of options.files.values()) {
+                                index++;
+                                if (file.index !== undefined) {
+                                    index = file.index;
+                                }
                                 if (!file.contents) {
                                     continue;
                                 }
