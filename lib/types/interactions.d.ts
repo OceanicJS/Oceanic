@@ -257,7 +257,7 @@ export interface AutocompleteChoice {
 }
 
 type Guildify<T extends Interaction> = Omit<T, "appPermissions" | "guild" | "guildID" | "guildLocale" | "guildPartial" | "member" | "memberPermissions"> & {
-    appPermisions: Permission;
+    appPermissions: Permission;
     guild: Guild;
     guildID: string;
     guildLocale: string;
@@ -266,7 +266,7 @@ type Guildify<T extends Interaction> = Omit<T, "appPermissions" | "guild" | "gui
     memberPermissions: Permission;
 };
 type Privatify<T extends Interaction> = Omit<T, "appPermissions" | "guild" | "guildID" | "guildLocale" | "guildPartial" | "member" | "memberPermissions"> & {
-    appPermisions: undefined;
+    appPermissions: undefined;
     guild: undefined;
     guildID: undefined;
     guildLocale: undefined;
@@ -306,3 +306,6 @@ export interface InteractionGuild {
     id: string;
     locale: string;
 }
+
+export type AnyGuildInteraction = GuildAutocompleteInteraction | GuildCommandInteraction | GuildComponentInteraction | GuildModalSubmitInteraction;
+export type AnyPrivateInteraction = PrivateAutocompleteInteraction | PrivateCommandInteraction | PrivateComponentInteraction | PrivateModalSubmitInteraction;
