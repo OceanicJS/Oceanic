@@ -1380,7 +1380,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             assert(is<Buffer>(data));
             if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                    // store the current pointer for slicing buffers after pushing.
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                    const currentPointer: number | undefined = this.#sharedZLib.strm?.next_out;
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (this.#sharedZLib.err) {
@@ -1389,8 +1392,28 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         return;
                     }
 
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-                    data = Buffer.from(this.#sharedZLib.result ?? "");
+                    if (currentPointer === undefined){
+                        // decompression support by zlib-sync
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
+                        data = Buffer.from(this.#sharedZLib.result ?? "");
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    } else if (this.#sharedZLib.chunks.length === 0){
+                        // decompression support by pako. The current buffer hasn't been flushed
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                        data = this.#sharedZLib.strm!.output.slice(currentPointer);
+                    } else {
+                        // decompression support by pako. Buffers have been flushed once or more times.
+                        data = Buffer.concat([
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                            this.#sharedZLib.chunks[0].slice(currentPointer),
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                            ...this.#sharedZLib.chunks.slice(1),
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                            this.#sharedZLib.strm.output
+                        ]);
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                        this.#sharedZLib.chunks = [];
+                    }
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(data.toString())) as AnyReceivePacket);
                 } else {
