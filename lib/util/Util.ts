@@ -1,5 +1,6 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
+import type TypedCollection from "./TypedCollection";
 import type Client from "../Client";
 import {
     ButtonStyles,
@@ -7,7 +8,9 @@ import {
     ImageFormats,
     MAX_IMAGE_SIZE,
     MIN_IMAGE_SIZE,
-    type ImageFormat
+    type ImageFormat,
+    ThreadChannelTypes,
+    ChannelTypes
 } from "../Constants";
 import type {
     AllowedMentions,
@@ -35,7 +38,14 @@ import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds
 import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
-import type { CollectionLimitsOptions } from "../types";
+import type {
+    CollectionLimitsOptions,
+    RawAnnouncementThreadChannel,
+    RawGroupChannel,
+    RawPrivateChannel,
+    RawPrivateThreadChannel,
+    RawPublicThreadChannel
+} from "../types";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -427,15 +437,28 @@ export default class Util {
     }
 
     updateChannel<T extends AnyChannel>(channelData: RawChannel): T {
-        if (channelData.guild_id) {
+        guild: if (channelData.guild_id) {
             const guild = this.#client.guilds.get(channelData.guild_id);
             if (guild) {
-                this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
-                const channel = guild.channels.has(channelData.id) ? guild.channels.update(channelData as RawGuildChannel)  : guild.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, this.#client));
-                return channel as T;
+                if (ThreadChannelTypes.includes(channelData.type as typeof ThreadChannelTypes[number])) {
+                    let parent: AnyGuildChannelWithoutThreads | undefined;
+                    if (!channelData.parent_id || (parent = guild.channels.get(channelData.parent_id)) === undefined || !("threads" in parent)) {
+                        break guild;
+                    }
+                    this.#client.threadGuildMap[channelData.id] = channelData.guild_id;
+                    return (parent.threads.has(channelData.id) ? parent.threads.update(channelData as never) : (parent.threads as TypedCollection<string, RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this.#client))) as T;
+                } else {
+                    this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
+                    return guild.channels.update(channelData as RawGuildChannel) as T;
+                }
             }
         }
-        return Channel.from<T>(channelData, this.#client);
+
+        switch (channelData.type) {
+            case ChannelTypes.DM: return this.#client.privateChannels.update(channelData as RawPrivateChannel) as T;
+            case ChannelTypes.GROUP_DM: return this.#client.groupChannels.update(channelData as RawGroupChannel) as T;
+            default: return Channel.from<T>(channelData, this.#client);
+        }
     }
 
     updateMember(guildID: string, memberID: string, member: RawMember | RESTMember): Member {

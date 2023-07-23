@@ -338,6 +338,7 @@
     "unicorn/no-array-callback-reference": "off",
     "unicorn/no-array-method-this-argument": "off",
     "unicorn/custom-error-definition": "error",
+    "unicorn/switch-case-braces": "off",
     "@typescript-eslint/comma-dangle": [
       "error",
       {
