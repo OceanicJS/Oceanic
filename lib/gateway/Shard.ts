@@ -1392,7 +1392,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     if (currentPointer === undefined) {
                         // decompression support by zlib-sync
                         data = Buffer.from(this.#sharedZLib.result ?? "");
-                    } else if (this.#sharedZLib.chunks.length === 0){
+                    } else if (this.#sharedZLib.chunks.length === 0) {
                         // decompression support by pako. The current buffer hasn't been flushed
                         data = this.#sharedZLib.strm!.output.slice(currentPointer);
                     } else {
