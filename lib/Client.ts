@@ -338,12 +338,16 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     }
 
     /**
-     * Initialize this client for rest only use. Currently, this sets both the `application` and `user` properties, as would happen with a gateway connection.
+     * Initialize this client for rest only use. Currently, this sets both the `application` and `user` properties (if not already present), as would happen with a gateway connection.
+     * @param fakeReady If the client should emit a ready event. Defaults to true.
      */
-    async restMode(): Promise<this> {
-        this._application = await this.rest.misc.getClientApplication();
-        this._user = await this.rest.oauth.getCurrentUser();
+    async restMode(fakeReady = true): Promise<this> {
+        this._application ??= await this.rest.misc.getClientApplication();
+        this._user ??= await this.rest.oauth.getCurrentUser();
         this.options.restMode = true;
+        if (fakeReady) {
+            this.emit("ready");
+        }
         return this;
     }
 }
