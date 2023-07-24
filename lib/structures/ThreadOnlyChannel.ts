@@ -1,7 +1,7 @@
 /** @module ThreadOnlyChannel */
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
-import PublicThreadChannel from "./PublicThreadChannel";
+import type PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
@@ -16,7 +16,6 @@ import type {
     ForumTag,
     GetArchivedThreadsOptions,
     RawOverwrite,
-    RawPublicThreadChannel,
     StartThreadInThreadOnlyChannelOptions
 } from "../types/channels";
 import type { JSONThreadOnlyChannel } from "../types/json";
@@ -30,6 +29,7 @@ import {
 } from "../Constants";
 import type { CreateWebhookOptions, RawThreadOnlyChannel, ThreadOnlyChannels } from "../types";
 import { UncachedError } from "../util/Errors";
+import Collection from "../util/Collection";
 
 /** Represents a thread only channel. */
 export default class ThreadOnlyChannel extends GuildChannel {
@@ -59,8 +59,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
     position: number;
     /** The amount of seconds between non-moderators creating threads. */
     rateLimitPerUser: number;
-    /** The threads in this channel. */
-    threads: TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>;
     /** The `guidelines` of this forum channel. */
     topic: string | null;
     declare type: ThreadOnlyChannels;
@@ -78,7 +76,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.rateLimitPerUser = data.rate_limit_per_user;
-        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
         this.topic = data.topic;
         this.update(data);
     }
@@ -143,6 +140,11 @@ export default class ThreadOnlyChannel extends GuildChannel {
 
     override get parent(): CategoryChannel | null | undefined {
         return super.parent as CategoryChannel | null | undefined;
+    }
+
+    /** The threads in this channel. The returned collection is disposable. */
+    get threads(): Collection<string, PublicThreadChannel> {
+        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as PublicThreadChannel]));
     }
 
     /**

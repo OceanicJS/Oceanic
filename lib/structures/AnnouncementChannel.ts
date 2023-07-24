@@ -1,14 +1,13 @@
 /** @module AnnouncementChannel */
 import type TextChannel from "./TextChannel";
 import type CategoryChannel from "./CategoryChannel";
-import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
+import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type Message from "./Message";
 import ThreadableChannel from "./ThreadableChannel";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 import type { FollowedChannel, RawAnnouncementChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
-import TypedCollection from "../util/TypedCollection";
 
 /** Represents a guild announcement channel. */
 export default class AnnouncementChannel extends ThreadableChannel<AnnouncementChannel, AnnouncementThreadChannel> {
@@ -16,9 +15,8 @@ export default class AnnouncementChannel extends ThreadableChannel<AnnouncementC
     declare rateLimitPerUser: 0;
     declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
     constructor(data: RawAnnouncementChannel, client: Client) {
-        super(data, client, AnnouncementThreadChannel);
+        super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.threads = new TypedCollection(AnnouncementThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
     }
 
     override get parent(): CategoryChannel | null | undefined {

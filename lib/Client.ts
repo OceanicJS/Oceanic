@@ -72,7 +72,6 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         const colZero = {
             auditLogEntries:     0,
             autoModerationRules: 0,
-            channelThreads:      0,
             channels:            0,
             groupChannels:       0,
             guildThreads:        0,
@@ -100,7 +99,6 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             collectionLimits: disableCache ? colZero : {
                 auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
                 autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
-                channelThreads:      this.util._setLimit(options?.collectionLimits?.channelThreads, Infinity),
                 channels:            this.util._setLimit(options?.collectionLimits?.channels, Infinity),
                 groupChannels:       options?.collectionLimits?.groupChannels ?? 10,
                 guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),

@@ -323,6 +323,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         this.client.emit("voiceChannelLeave", member, channel);
                     }
                 }
+                delete this.client.channelGuildMap[channel.id];
                 guild?.channels.delete(packet.d.id);
                 this.client.emit("channelDelete", channel);
                 break;
@@ -959,7 +960,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "THREAD_CREATE": {
                 const thread = this.client.util.updateThread(packet.d);
                 const channel = this.client.getChannel<ThreadParentChannel>(packet.d.parent_id!);
-                if (channel?.type === ChannelTypes.GUILD_FORUM) {
+                if (channel && channel.type === ChannelTypes.GUILD_FORUM) {
                     channel.lastThread = thread as PublicThreadChannel;
                     channel.lastThreadID = thread.id;
                 }
@@ -977,13 +978,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     parentID: packet.d.parent_id!,
                     type:     packet.d.type
                 };
-                if (channel) {
-                    channel.threads?.delete(packet.d.id);
-                    if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
-                        channel.lastThread = null;
-                        channel.lastThreadID = null;
-                    }
+                if (channel && channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
+                    channel.lastThread = null;
+                    channel.lastThreadID = null;
                 }
+                this.client.guilds.get(packet.d.guild_id)?.threads.delete(packet.d.id);
                 this.client.emit("threadDelete", thread);
                 break;
             }

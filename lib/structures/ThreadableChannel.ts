@@ -1,12 +1,8 @@
 /** @module TextableChannel */
 import TextableChannel from "./TextableChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
-import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
-import type PublicThreadChannel from "./PublicThreadChannel";
-import type ThreadChannel from "./ThreadChannel";
-import type { ChannelTypes, RawChannelTypeMap, ThreadAutoArchiveDuration } from "../Constants";
+import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
 import type { RawAnnouncementChannel, RawTextChannel } from "../types/channels";
 import type {
     AnyTextableGuildChannel,
@@ -17,18 +13,17 @@ import type {
     StartThreadFromMessageOptions,
     StartThreadWithoutMessageOptions
 } from "../types";
+import Collection from "../util/Collection";
 
 /** Represents a guild textable channel. */
 export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyTextableGuildChannel, TH extends AnyThreadChannel = AnyThreadChannel> extends TextableChannel<TC> {
     /** The default auto archive duration for threads created in this channel. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     /** The threads in this channel. */
-    threads: TypedCollection<string, RawChannelTypeMap[TH["type"]], TH>;
     declare type: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
-    constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client, threadChannel: typeof AnnouncementThreadChannel | typeof PublicThreadChannel | typeof PrivateThreadChannel | typeof ThreadChannel) {
+    constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.threads = new TypedCollection(threadChannel as never, client, this.client.util._getLimit("channelThreads", this.id)) as ThreadableChannel<TC, TH>["threads"];
         this.update(data);
     }
 
@@ -37,6 +32,11 @@ export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyT
         if (data.default_auto_archive_duration !== undefined) {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         }
+    }
+
+    /** The threads in this channel. The returned collection is disposable. */
+    get threads(): Collection<string, TH> {
+        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as TH]));
     }
 
     /**

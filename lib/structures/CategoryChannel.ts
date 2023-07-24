@@ -6,14 +6,13 @@ import Permission from "./Permission";
 import type Client from "../Client";
 import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
-import type { EditPermissionOptions, RawCategoryChannel, RawGuildChannel, RawOverwrite } from "../types/channels";
+import type { EditPermissionOptions, RawCategoryChannel, RawOverwrite } from "../types/channels";
 import type { JSONCategoryChannel } from "../types/json";
 import { UncachedError } from "../util/Errors";
+import Collection from "../util/Collection";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {
-    /** The channels in this category. */
-    channels: TypedCollection<string, RawGuildChannel, GuildChannel>;
     /** The permission overwrites of this channel. */
     permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
@@ -21,7 +20,6 @@ export default class CategoryChannel extends GuildChannel {
     declare type: ChannelTypes.GUILD_CATEGORY;
     constructor(data: RawCategoryChannel, client: Client) {
         super(data, client);
-        this.channels = new TypedCollection(GuildChannel, client);
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.update(data);
@@ -43,6 +41,11 @@ export default class CategoryChannel extends GuildChannel {
                 this.permissionOverwrites.update(overwrite);
             }
         }
+    }
+
+    /** The channels in this category. The returned collection is disposable. */
+    get channels(): Collection<string, GuildChannel> {
+        return new Collection(this.guild.channels.filter(channel => channel.parentID === this.id).map(channel => [channel.id, channel as GuildChannel]));
     }
 
     /**

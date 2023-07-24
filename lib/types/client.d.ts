@@ -119,12 +119,6 @@ export interface CollectionLimitsOptions {
      */
     autoModerationRules?: number | Record<string, number>;
     /**
-     * The maximum number of threads to cache per channel. This does not effect the threads cached at the guild level.
-     * @dictionaryKey channel id
-     * @defaultValue Infinity
-     */
-    channelThreads?: number | Record<string, number>;
-    /**
      * The maximum number of guild channels to cache.
      * @defaultValue Infinity
      */
@@ -135,7 +129,7 @@ export interface CollectionLimitsOptions {
      */
     groupChannels?: number;
     /**
-     * The maximum number of threads to cache per guild. This does not effect the threads cached on each channel.
+     * The maximum number of threads to cache per guild. Setting this too low might cause channels to have missing threads, as they all pull from the guild.
      * @dictionaryKey guild id
      * @defaultValue Infinity
      */
