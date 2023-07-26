@@ -60,11 +60,11 @@
     "typedoc": "^0.24.8",
     "typedoc-plugin-extras": "2.3.3",
     "typedoc-plugin-mdn-links": "^3.0.3",
+    "typedoc-plugin-merge-modules": "^5.0.1",
     "typescript": "^5.1.6"
   },
   "dependencies": {
     "tslib": "^2.6.0",
-    "typedoc-plugin-merge-modules": "^5.0.1",
     "undici": "^5.22.1",
     "ws": "^8.13.0"
   },
