@@ -128,7 +128,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
         this.attachments = new TypedCollection(Attachment, client);
         this.channelID = data.channel_id;
         this.components = [];
-        this.content = data.content;
+        this.content = data.content ?? "";
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
@@ -143,8 +143,9 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
         };
         this.pinned = !!data.pinned;
         this.reactions = {};
-        this.timestamp = new Date(data.timestamp);
-        this.tts = data.tts;
+        // message updates can be missing a timestamp
+        this.timestamp = data.timestamp === undefined ? Base.getCreatedAt(this.id) : new Date(data.timestamp);
+        this.tts = !!data.tts;
         this.type = data.type;
         this.webhookID = data.webhook_id;
         this.update(data);
@@ -162,11 +163,6 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
                 this.application = data.application ? new PartialApplication(data.application, client) : undefined;
             }
             this.applicationID = data.application_id;
-        }
-        if (data.attachments.length !== 0) {
-            for (const attachment of data.attachments) {
-                this.attachments.update(attachment);
-            }
         }
     }
 
@@ -191,9 +187,11 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             this.activity = data.activity;
         }
         if (data.attachments !== undefined) {
-            for (const id of this.attachments.keys()) {
-                if (!data.attachments.some(attachment => attachment.id === id)) {
-                    this.attachments.delete(id);
+            if (this.attachments.size !== 0) {
+                for (const id of this.attachments.keys()) {
+                    if (!data.attachments.some(attachment => attachment.id === id)) {
+                        this.attachments.delete(id);
+                    }
                 }
             }
 
