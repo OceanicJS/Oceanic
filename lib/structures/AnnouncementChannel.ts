@@ -9,7 +9,10 @@ import type Client from "../Client";
 import type { FollowedChannel, RawAnnouncementChannel } from "../types/channels";
 import type { JSONAnnouncementChannel } from "../types/json";
 
-/** Represents a guild announcement channel. */
+/**
+ * Represents a guild announcement channel.
+ * @mergeTarget AnnouncementChannel
+ */
 export default class AnnouncementChannel extends ThreadableChannel<AnnouncementChannel, AnnouncementThreadChannel> {
     /** The amount of seconds between non-moderators sending messages. Always zero in announcement channels. */
     declare rateLimitPerUser: 0;

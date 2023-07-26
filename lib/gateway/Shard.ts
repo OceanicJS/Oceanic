@@ -48,7 +48,6 @@ import Message from "../structures/Message";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import Interaction from "../structures/Interaction";
-import { is } from "../util/Util";
 import Guild from "../structures/Guild";
 import type { ShardEvents } from "../types/events";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
@@ -92,7 +91,7 @@ try {
     } catch {}
 }
 
-/** Represents a gateway connection to Discord. See {@link Events~ShardEvents | Shard Events} for a list of events. */
+/** Represents a gateway connection to Discord. See {@link ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<ShardEvents> {
     client!: Client;
     connectAttempts: number;
@@ -1377,6 +1376,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 data = Buffer.concat(data);
             }
 
+            const is = <T>(input: unknown): input is T => true;
             assert(is<Buffer>(data));
             if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {

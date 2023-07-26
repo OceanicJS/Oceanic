@@ -3,9 +3,9 @@
   "name": "Oceanic",
   "entryPoints": ["../lib"],
   "plugin": [
-    "typedoc-plugin-rename-defaults",
     "typedoc-plugin-extras",
     "typedoc-plugin-mdn-links",
+    "typedoc-plugin-merge-modules",
     "@mxssfd/typedoc-theme",
     "./dark.js"
   ],
@@ -22,5 +22,7 @@
   "exclude": [],
   "favicon": "./static/favicon.ico",
   "customTitleLink": "https://docs.oceanic.ws",
-  "theme": "my-theme"
+  "theme": "my-theme",
+  "mergeModulesMergeMode": "project",
+  "groupOrder": ["*", "Namespaces"]
 }

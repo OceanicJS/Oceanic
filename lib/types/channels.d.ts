@@ -290,11 +290,11 @@ export interface CreateMessageOptions {
     allowedMentions?: AllowedMentions;
     /** An array of [partial attachments](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files. */
     attachments?: Array<MessageAttachment>;
-    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawMessageComponents | Util#rawMessageComponents}. */
+    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawMessageComponents | Util#rawMessageComponents}. */
     components?: Array<MessageActionRow>;
     /** The content of the message. */
     content?: string;
-    /** An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawEmbeds | Util#rawEmbeds}. */
+    /** An array of [embeds](https://discord.com/developers/docs/resources/channel#embed-object) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawEmbeds | Util#rawEmbeds}. */
     embeds?: Array<EmbedOptions>;
     /** The files to send. */
     files?: Array<File>;
@@ -784,11 +784,11 @@ export interface UncachedInvite {
 }
 
 export interface GetChannelMessagesOptions<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> {
-    /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     after?: string;
-    /** Get messages around this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    /** Get messages around this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     around?: string;
-    /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     before?: string;
     /** The maximum amount of messages to get. Defaults to 100. Use Infinity if you wish to get as many messages as possible. */
     limit?: number;
@@ -800,9 +800,9 @@ export interface GetChannelMessagesOptions<T extends AnyTextableChannel | Uncach
 }
 
 export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> {
-    /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     after?: string;
-    /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base~Base.generateID | Base#generateID}. */
+    /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     before?: string;
     /** The maximum amount of messages to get. Defaults to 100. Use Infinity if you wish to get as many messages as possible. */
     limit?: number;

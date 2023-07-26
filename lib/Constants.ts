@@ -125,13 +125,13 @@ export enum ApplicationFlags {
     ALLOW_ACTIVITY_ACTION_SPECTATE                = 1 << 9,
     ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 1 << 10,
     RPC_HAS_CONNECTED_ACCOUNT                     = 1 << 11,
-    /** Intent required for bots in **100 or more servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
+    /** Intent required for bots in **100 or more servers** to receive {@link ClientEvents.presenceUpdate | `presenceUpdate`} events. */
     GATEWAY_PRESENCE                              = 1 << 12,
-    /** Intent required for bots in **under 100 servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
+    /** Intent required for bots in **under 100 servers** to receive {@link ClientEvents.presenceUpdate | `presenceUpdate`} events. */
     GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
-    /** Intent required for bots in **100 or more servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
+    /** Intent required for bots in **100 or more servers** to receive member-related events like {@link ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
     GATEWAY_GUILD_MEMBERS                         = 1 << 14,
-    /** Intent required for bots in **under 100 servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
+    /** Intent required for bots in **under 100 servers** to receive member-related events like {@link ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
     GATEWAY_GUILD_MEMBERS_LIMITED                 = 1 << 15,
     /** Indicates unusual growth of an app that prevents verification */
     VERIFICATION_PENDING_GUILD_LIMIT              = 1 << 16,

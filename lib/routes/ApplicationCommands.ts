@@ -1,4 +1,4 @@
-/** @module Routes/ApplicationCommands */
+/** @module REST/ApplicationCommands */
 import * as Routes from "../util/Routes";
 import type {
     AnyApplicationCommand,
@@ -19,7 +19,7 @@ import ApplicationCommand from "../structures/ApplicationCommand";
 import type { RequestOptions } from "../types/request-handler";
 import type RESTManager from "../rest/RESTManager";
 
-/** Various methods for interacting with application commands. */
+/** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applicationCommands | .applicationCommands}. */
 export default class ApplicationCommands {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

@@ -1,4 +1,4 @@
-/** @module Routes/Interactions */
+/** @module REST/Interactions */
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
 import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
@@ -8,7 +8,7 @@ import type Message from "../structures/Message";
 import type { AnyTextableChannel } from "../types/channels";
 import type { Uncached } from "../types/shared";
 
-/** Various methods for interacting with interactions. */
+/** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
 export default class Interactions {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

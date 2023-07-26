@@ -1,4 +1,4 @@
-/** @module Routes/Guilds */
+/** @module REST/Guilds */
 import type {
     CreateEmojiOptions,
     CreateGuildOptions,
@@ -88,7 +88,7 @@ import type { Uncached } from "../types/shared";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import { File, FormData } from "undici";
 
-/** Various methods for interacting with guilds. */
+/** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
 export default class Guilds {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

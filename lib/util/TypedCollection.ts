@@ -2,8 +2,7 @@
 import Collection from "./Collection";
 import type Client from "../Client";
 import Base from "../structures/Base";
-
-export type AnyClass<T, I, E extends Array<unknown>> = new(data: T, client: Client, ...extra: E) => I;
+import type { AnyClass } from "../types/misc";
 
 /** This is an internal class, you should not use it in your projects. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

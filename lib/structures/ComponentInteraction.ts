@@ -161,8 +161,8 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     }
 
     /**
-     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use  {@link ComponentInteraction~ComponentInteraction#createFollowup | createFollowup}.
-     * @note You cannot attach files in an initial response. Defer the interaction, then use {@link ComponentInteraction~ComponentInteraction#createFollowup | createFollowup}.
+     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use  {@link ComponentInteraction#createFollowup | createFollowup}.
+     * @note You cannot attach files in an initial response. Defer the interaction, then use {@link ComponentInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
     async createMessage(options: InitialInteractionContent): Promise<void> {

@@ -75,7 +75,7 @@ export interface ModalInteractionResponse {
 
 
 export interface ModalData {
-    /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util~Util.rawModalComponents | Util#rawModalComponents}. */
+    /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawModalComponents | Util#rawModalComponents}. */
     components: Array<ModalActionRow>;
     /** The custom ID of the modal. */
     customID: string;

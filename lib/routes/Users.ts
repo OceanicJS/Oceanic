@@ -1,4 +1,4 @@
-/** @module Routes/Users */
+/** @module REST/Users */
 import type Channels from "./Channels";
 import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
 import * as Routes from "../util/Routes";
@@ -6,14 +6,14 @@ import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";
 import type User from "../structures/User";
 
-/** Various methods for interacting with users. */
+/** Various methods for interacting with users. Located at {@link Client#rest | Client#rest}{@link RESTManager#users | .users}. */
 export default class Users {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
     }
 
-    /** Alias for {@link Routes/Channels~Channels#createDM | Channels#createDM}. */
+    /** Alias for {@link REST/Channels#createDM | Channels#createDM}. */
     get createDM(): typeof Channels.prototype.createDM {
         return this.#manager.channels.createDM.bind(this.#manager.channels);
     }

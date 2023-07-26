@@ -495,7 +495,3 @@ export default class Util {
         return Channel.from<T>(threadData, this.#client);
     }
 }
-
-export function is<T>(input: unknown): input is T {
-    return true;
-}

@@ -29,7 +29,7 @@ export class UncachedError extends Error {
     }
 }
 
-/** An error encountered within {@link InteractionOptionsWrapper~InteractionOptionsWrapper | InteractionOptionsWrapper} & {@link SelectMenuValuesWrapper~SelectMenuValuesWrapper | SelectMenuValuesWrapper}. */
+/** An error encountered within {@link InteractionOptionsWrapper | InteractionOptionsWrapper} & {@link SelectMenuValuesWrapper | SelectMenuValuesWrapper}. */
 export class WrapperError extends Error {
     override name = "WrapperError";
     constructor(message: string) {

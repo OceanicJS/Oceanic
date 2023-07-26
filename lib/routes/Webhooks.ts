@@ -1,4 +1,4 @@
-/** @module Routes/Webhooks */
+/** @module REST/Webhooks */
 import type {
     CreateWebhookOptions,
     DeleteWebhookMessageOptions,
@@ -16,7 +16,7 @@ import Message from "../structures/Message";
 import type RESTManager from "../rest/RESTManager";
 import type { Uncached } from "../types/shared";
 
-/** Various methods for interacting with webhooks. */
+/** Various methods for interacting with webhooks. Located at {@link Client#rest | Client#rest}{@link RESTManager#webhooks | .webhooks}. */
 export default class Webhooks {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

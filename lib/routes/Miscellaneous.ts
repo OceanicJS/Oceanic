@@ -1,4 +1,4 @@
-/** @module Routes/Miscellaneous */
+/** @module REST/Miscellaneous */
 import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
 import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
@@ -7,7 +7,7 @@ import type { RESTApplication, RawClientApplication } from "../types";
 import Application from "../structures/Application";
 import ClientApplication from "../structures/ClientApplication";
 
-/** Methods that don't fit anywhere else. */
+/** Methods that don't fit anywhere else. Located at {@link Client#rest | Client#rest}{@link RESTManager#misc | .misc}. */
 export default class Miscellaneous {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
@@ -25,7 +25,7 @@ export default class Miscellaneous {
     }
 
     /**
-     * Get the currently authenticated bot's application info as a bare {@link ClientApplication~ClientApplication | ClientApplication}.
+     * Get the currently authenticated bot's application info as a bare {@link ClientApplication | ClientApplication}.
      */
     async getClientApplication(): Promise<ClientApplication> {
         return this.#manager.authRequest<RawClientApplication>({

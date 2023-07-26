@@ -1,4 +1,4 @@
-/** @module Routes/Channels */
+/** @module REST/Channels */
 import type {
     AddGroupRecipientOptions,
     AnyChannel,
@@ -63,7 +63,7 @@ import type { Uncached } from "../types/shared";
 import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInstance } from "../types/guilds";
 import StageInstance from "../structures/StageInstance";
 
-/** Various methods for interacting with channels. */
+/** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

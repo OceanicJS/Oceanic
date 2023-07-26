@@ -1,4 +1,4 @@
-/** @module Routes/OAuth */
+/** @module REST/OAuth */
 import type {
     AuthorizationInformation,
     ClientCredentialsTokenOptions,
@@ -35,7 +35,7 @@ import ExtendedUser from "../structures/ExtendedUser";
 import type { RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
 import { FormData } from "undici";
 
-/** Various methods for interacting with oauth. */
+/** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {
     #manager: RESTManager;
     constructor(manager: RESTManager) {

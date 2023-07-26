@@ -46,7 +46,7 @@ export default class RESTManager {
         return this.handler.options;
     }
 
-    /** Alias for {@link RequestHandler~RequestHandler#authRequest | RequestHandler#authRequest} */
+    /** Alias for {@link RequestHandler#authRequest | RequestHandler#authRequest} */
     async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T> {
         return this.handler.authRequest<T>(options);
     }
@@ -80,7 +80,7 @@ export default class RESTManager {
         });
     }
 
-    /** Alias for {@link RequestHandler~RequestHandler#request | RequestHandler#request} */
+    /** Alias for {@link RequestHandler#request | RequestHandler#request} */
     async request<T = unknown>(options: RequestOptions): Promise<T> {
         return this.handler.request<T>(options);
     }
