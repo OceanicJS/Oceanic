@@ -6,6 +6,7 @@
     "typedoc-plugin-rename-defaults",
     "typedoc-plugin-extras",
     "typedoc-plugin-mdn-links",
+    "@mxssfd/typedoc-theme",
     "./dark.js"
   ],
   "tsconfig": "../tsconfig.json",
@@ -20,5 +21,6 @@
   "json": "../docs/docs.json",
   "exclude": [],
   "favicon": "./static/favicon.ico",
-  "customTitleLink": "https://docs.oceanic.ws"
+  "customTitleLink": "https://docs.oceanic.ws",
+  "theme": "my-theme"
 }

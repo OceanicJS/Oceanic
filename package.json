@@ -18,7 +18,7 @@
     "prepare": "rimraf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
     "test:build": "pnpm run prepare",
     "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
-    "test:docs": "rimraf docs && npx --yes typedoc",
+    "test:docs": "rimraf docs && npx --yes typedoc --options static/typedoc.json",
     "test": "pnpm run lint && pnpm run test:build && pnpm run test:esm && pnpm run test:docs"
   },
   "repository": {
@@ -42,6 +42,7 @@
   "homepage": "https://github.com/OceanicJS/Oceanic#readme",
   "devDependencies": {
     "@favware/npm-deprecate": "^1.0.7",
+    "@mxssfd/typedoc-theme": "^1.1.2",
     "@types/node": "^20.4.0",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.5",

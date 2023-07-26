@@ -24,6 +24,9 @@ devDependencies:
   '@favware/npm-deprecate':
     specifier: ^1.0.7
     version: 1.0.7
+  '@mxssfd/typedoc-theme':
+    specifier: ^1.1.2
+    version: 1.1.2(typedoc@0.24.8)
   '@types/node':
     specifier: ^20.4.0
     version: 20.4.0
@@ -224,6 +227,15 @@ packages:
       strip-ansi-cjs: /strip-ansi@6.0.1
       wrap-ansi: 8.1.0
       wrap-ansi-cjs: /wrap-ansi@7.0.0
+    dev: true
+
+  /@mxssfd/typedoc-theme@1.1.2(typedoc@0.24.8):
+    resolution: {integrity: sha512-Q/9Z+sff8ey92PaB7bnsGOfyNa85vTjyofO8EOH8KwEdfGnV4lGXwLFt4AUth7CCqYplqI9q4JxHNt869mlEcw==}
+    engines: {node: '>= 14'}
+    peerDependencies:
+      typedoc: ^0.24.8
+    dependencies:
+      typedoc: 0.24.8(typescript@5.1.6)
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:
