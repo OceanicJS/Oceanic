@@ -261,12 +261,12 @@ export default class Guild extends Base {
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
-        this.emojis = new SimpleCollection(rawEmoji => this.client.util.convertEmoji(rawEmoji), Infinity, "merge");
+        this.emojis = new SimpleCollection(rawEmoji => this.client.util.convertEmoji(rawEmoji), client.util._getLimit("emojis", this.id), "merge");
         this.explicitContentFilter = data.explicit_content_filter;
         this.features = [];
         this.icon = null;
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
-        this.invites = new SimpleCollection(rawInvite => new Invite(rawInvite, client), Infinity, "update", "code");
+        this.invites = new SimpleCollection(rawInvite => new Invite(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
         this.latestOnboardingQuestionID = null;
@@ -287,7 +287,7 @@ export default class Guild extends Base {
         this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client, client.util._getLimit("scheduledEvents", this.id));
         this.splash = null;
         this.stageInstances = new TypedCollection(StageInstance, client, client.util._getLimit("stageInstances", this.id));
-        this.stickers = new SimpleCollection(rawSticker => client.util.convertSticker(rawSticker), Infinity, "merge");
+        this.stickers = new SimpleCollection(rawSticker => client.util.convertSticker(rawSticker), client.util._getLimit("stickers", this.id), "merge");
         this.systemChannelID = null;
         this.systemChannelFlags = data.system_channel_flags;
         this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), (d, ...extra) => new {
