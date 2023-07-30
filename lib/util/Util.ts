@@ -40,8 +40,10 @@ import Channel from "../structures/Channel";
 import type {
     AnyTextableChannel,
     CollectionLimitsOptions,
+    GuildEmoji,
     RawAnnouncementThreadChannel,
     RawGroupChannel,
+    RawGuildEmoji,
     RawMessage,
     RawPrivateChannel,
     RawPrivateThreadChannel,
@@ -228,6 +230,19 @@ export default class Util {
             type:       row.type,
             components: row.components.map(component => this.componentToRaw(component))
         })) as never;
+    }
+
+    convertEmoji(raw: RawGuildEmoji): GuildEmoji {
+        return {
+            animated:      raw.animated,
+            available:     raw.available,
+            id:            raw.id,
+            managed:       raw.managed,
+            name:          raw.name,
+            requireColons: raw.require_colons,
+            roles:         raw.roles,
+            user:          raw.user ? this.#client.users.update(raw.user) : undefined
+        };
     }
 
     convertImage(img: Buffer | string): string {
@@ -447,10 +462,8 @@ export default class Util {
                     if (!channelData.parent_id) {
                         break guild;
                     }
-                    this.#client.threadGuildMap[channelData.id] = channelData.guild_id;
-                    return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<string, RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this.#client))) as T;
+                    return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this.#client))) as T;
                 } else {
-                    this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
                     return guild.channels.update(channelData as RawGuildChannel) as T;
                 }
             }
@@ -488,9 +501,7 @@ export default class Util {
     updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {
         const guild = this.#client.guilds.get(threadData.guild_id);
         if (guild) {
-            this.#client.threadGuildMap[threadData.id] = threadData.guild_id;
-            const thread = guild.threads.has(threadData.id) ? guild.threads.update(threadData) as T : guild.threads.add(Channel.from<T>(threadData, this.#client));
-            return thread;
+            return guild.threads.update(threadData) as T;
         }
         return Channel.from<T>(threadData, this.#client);
     }

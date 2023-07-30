@@ -50,7 +50,6 @@ import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChan
 import Interaction from "../structures/Interaction";
 import Guild from "../structures/Guild";
 import type { ShardEvents } from "../types/events";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
@@ -322,7 +321,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         this.client.emit("voiceChannelLeave", member, channel);
                     }
                 }
-                delete this.client.channelGuildMap[channel.id];
                 guild?.channels.delete(packet.d.id);
                 this.client.emit("channelDelete", channel);
                 break;
@@ -385,9 +383,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.voiceAdapters.get(packet.d.id)?.destroy();
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
-                if (guild?.channels) {
-                    for (const [,channel] of guild.channels) delete this.client.channelGuildMap[channel.id];
-                }
+                guild?.channels.clear();
+                guild?.threads.clear();
                 this.client.guilds.delete(packet.d.id);
                 if (packet.d.unavailable) {
                     this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
@@ -399,22 +396,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_EMOJIS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldEmojis = guild?.emojis ? [...guild.emojis] : null;
+                const oldEmojis = guild?.emojis ? guild.emojis.toArray() : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ emojis: packet.d.emojis });
                 this.client.emit(
                     "guildEmojisUpdate",
                     guild ?? { id: packet.d.guild_id },
-                    guild?.emojis ?? packet.d.emojis.map(emoji => ({
-                        animated:      emoji.animated,
-                        available:     emoji.available,
-                        id:            emoji.id,
-                        managed:       emoji.managed,
-                        name:          emoji.name,
-                        requireColons: emoji.require_colons,
-                        roles:         emoji.roles,
-                        user:          emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
-                    })),
+                    guild?.emojis?.toArray() ?? packet.d.emojis.map(emoji => this.client.util.convertEmoji(emoji)),
                     oldEmojis
                 );
                 break;
@@ -593,10 +581,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_STICKERS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldStickers = guild?.stickers ? [...guild.stickers] : null;
+                const oldStickers = guild?.stickers ? guild.stickers.toArray() : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ stickers: packet.d.stickers });
-                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
+                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers?.toArray() ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
                 break;
             }
 
@@ -960,7 +948,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const thread = this.client.util.updateThread(packet.d);
                 const channel = this.client.getChannel<ThreadParentChannel>(packet.d.parent_id!);
                 if (channel && channel.type === ChannelTypes.GUILD_FORUM) {
-                    channel.lastThread = thread as PublicThreadChannel;
                     channel.lastThreadID = thread.id;
                 }
                 this.client.emit("threadCreate", thread);
@@ -978,7 +965,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     type:     packet.d.type
                 };
                 if (channel && channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
-                    channel.lastThread = null;
                     channel.lastThreadID = null;
                 }
                 this.client.guilds.get(packet.d.guild_id)?.threads.delete(packet.d.id);

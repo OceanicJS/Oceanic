@@ -141,10 +141,10 @@ export interface RawMessageComponentInteractionResolvedData {
 }
 
 export interface MessageComponentInteractionResolvedData {
-    channels: TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>;
-    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
-    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
-    users: TypedCollection<string, RawUser, User>;
+    channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<RawMember, Member, [guildID: string]>;
+    roles: TypedCollection<RawRole, Role, [guildID: string]>;
+    users: TypedCollection<RawUser, User>;
 }
 
 export interface RawMessageComponentInteractionData {
@@ -187,12 +187,12 @@ export interface RawApplicationCommandInteractionResolvedData {
 }
 
 export interface ApplicationCommandInteractionResolvedData {
-    attachments: TypedCollection<string, RawAttachment, Attachment>;
-    channels: TypedCollection<string, RawInteractionResolvedChannel, InteractionResolvedChannel>;
-    members: TypedCollection<string, RawMember, Member, [guildID: string]>;
-    messages: TypedCollection<string, RawMessage, Message>;
-    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
-    users: TypedCollection<string, RawUser, User>;
+    attachments: TypedCollection<RawAttachment, Attachment>;
+    channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<RawMember, Member, [guildID: string]>;
+    messages: TypedCollection<RawMessage, Message>;
+    roles: TypedCollection<RawRole, Role, [guildID: string]>;
+    users: TypedCollection<RawUser, User>;
 }
 
 export type InteractionOptions = InteractionOptionsWithOptions | InteractionOptionsWithValue;

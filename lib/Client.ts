@@ -47,18 +47,18 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
-    groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
+    groupChannels: TypedCollection<RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
-    guilds: TypedCollection<string, RawGuild, Guild, [rest?: boolean]>;
+    guilds: TypedCollection<RawGuild, Guild, [rest?: boolean]>;
     options: ClientInstanceOptions;
-    privateChannels: TypedCollection<string, RawPrivateChannel, PrivateChannel>;
+    privateChannels: TypedCollection<RawPrivateChannel, PrivateChannel>;
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
     startTime = 0;
     threadGuildMap: Record<string, string>;
-    unavailableGuilds: TypedCollection<string, RawUnavailableGuild, UnavailableGuild>;
-    users: TypedCollection<string, RawUser, User>;
+    unavailableGuilds: TypedCollection<RawUnavailableGuild, UnavailableGuild>;
+    users: TypedCollection<RawUser, User>;
     util: Util;
     voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
     /**
@@ -73,16 +73,19 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             auditLogEntries:     0,
             autoModerationRules: 0,
             channels:            0,
+            emojis:              0,
             groupChannels:       0,
-            guildThreads:        0,
             guilds:              0,
+            guildThreads:        0,
             integrations:        0,
+            invites:             0,
             members:             0,
             messages:            0,
             privateChannels:     0,
             roles:               0,
             scheduledEvents:     0,
             stageInstances:      0,
+            stickers:            0,
             unavailableGuilds:   0,
             users:               0,
             voiceMembers:        0,
@@ -100,16 +103,19 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
                 autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
                 channels:            this.util._setLimit(options?.collectionLimits?.channels, Infinity),
+                emojis:              this.util._setLimit(options?.collectionLimits?.emojis, Infinity),
                 groupChannels:       options?.collectionLimits?.groupChannels ?? 10,
-                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
                 guilds:              options?.collectionLimits?.guilds ?? Infinity,
+                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
                 integrations:        this.util._setLimit(options?.collectionLimits?.integrations, Infinity),
+                invites:             this.util._setLimit(options?.collectionLimits?.invites, Infinity),
                 members:             this.util._setLimit(options?.collectionLimits?.members, Infinity),
                 messages:            this.util._setLimit(options?.collectionLimits?.messages, 100),
                 privateChannels:     options?.collectionLimits?.privateChannels ?? 25,
                 roles:               this.util._setLimit(options?.collectionLimits?.roles, Infinity),
                 scheduledEvents:     this.util._setLimit(options?.collectionLimits?.scheduledEvents, Infinity),
                 stageInstances:      this.util._setLimit(options?.collectionLimits?.stageInstances, Infinity),
+                stickers:            this.util._setLimit(options?.collectionLimits?.stickers, Infinity),
                 unavailableGuilds:   options?.collectionLimits?.unavailableGuilds ?? Infinity,
                 users:               options?.collectionLimits?.users ?? Infinity,
                 voiceMembers:        this.util._setLimit(options?.collectionLimits?.voiceMembers, Infinity),

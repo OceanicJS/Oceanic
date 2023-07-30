@@ -47,14 +47,12 @@ export default class ThreadOnlyChannel extends GuildChannel {
     defaultThreadRateLimitPerUser: number;
     /** The flags for this channel, see {@link Constants.ChannelFlags | ChannelFlags}. */
     flags: number;
-    /** The most recently created thread. */
-    lastThread?: PublicThreadChannel | null;
     /** The ID of most recently created thread. */
     lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators creating threads. */
@@ -109,7 +107,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
             this.flags = data.flags;
         }
         if (data.last_message_id !== undefined) {
-            this.lastThread = data.last_message_id === null ? null : this.threads.get(data.last_message_id);
             this.lastThreadID = data.last_message_id;
         }
 
@@ -136,6 +133,11 @@ export default class ThreadOnlyChannel extends GuildChannel {
         if (data.topic !== undefined && data.topic !== null) {
             this.topic = data.topic;
         }
+    }
+
+    /** The most recently created thread. */
+    get lastThread(): PublicThreadChannel | null {
+        return this.lastThreadID === null ? null : this.guild.threads.get(this.lastThreadID) as PublicThreadChannel;
     }
 
     override get parent(): CategoryChannel | null | undefined {

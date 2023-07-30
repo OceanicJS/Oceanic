@@ -35,11 +35,11 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message<T>>;
+    messages: TypedCollection<RawMessage, Message<T>>;
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators sending messages. */

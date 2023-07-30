@@ -56,6 +56,7 @@ export { default as Role } from "./structures/Role";
 export * as Routes from "./util/Routes";
 export { default as SelectMenuValuesWrapper } from "./util/SelectMenuValuesWrapper";
 export { default as SequentialBucket } from "./rest/SequentialBucket";
+export { default as SimpleCollection } from "./util/SimpleCollection";
 export { default as Shard } from "./gateway/Shard";
 export { default as ShardManager } from "./gateway/ShardManager";
 export { default as StageChannel } from "./structures/StageChannel";
