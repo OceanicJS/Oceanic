@@ -610,9 +610,11 @@ export interface WidgetUser {
     };
     avatar: null;
     avatarURL: string;
+    /** Always "0000" */
     discriminator: string;
     id: string;
     status: "online" | "idle" | "dnd";
+    /** @deprecated Use `username` */
     tag: string;
     username: string;
 }

@@ -1059,7 +1059,7 @@ export default class Guilds {
                 discriminator: m.discriminator,
                 id:            m.id,
                 status:        m.status,
-                tag:           `${m.username}#${m.discriminator}`,
+                tag:           m.username,
                 username:      m.username
             })),
             name:          data.name,
@@ -1636,7 +1636,7 @@ export default class Guilds {
                 discriminator: m.discriminator,
                 id:            m.id,
                 status:        m.status,
-                tag:           `${m.username}#${m.discriminator}`,
+                tag:           m.username,
                 username:      m.username
             })),
             name:          data.name,
