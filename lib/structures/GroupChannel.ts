@@ -43,8 +43,10 @@ export default class GroupChannel extends Channel {
         this.nicks = [];
         this.owner = this.client.users.get(data.owner_id);
         this.ownerID = data.owner_id;
-        this.recipients = new TypedCollection(User, client);
-        for (const r of data.recipients) this.recipients.add(client.users.update(r));
+        this.recipients = new TypedCollection(User, client, Infinity, {
+            construct: (user): User => client.users.update(user)
+        });
+        for (const r of data.recipients) this.recipients.update(r);
         this.update(data);
     }
 
@@ -77,17 +79,9 @@ export default class GroupChannel extends Channel {
             this.type = data.type;
         }
         if (data.recipients !== undefined) {
-            for (const id of this.recipients.keys()) {
-                if (!data.recipients.some(r => r.id === id)) {
-                    this.recipients.delete(id);
-                }
-            }
-
-
+            this.recipients.clear();
             for (const r of data.recipients) {
-                if (!this.recipients.has(r.id)) {
-                    this.recipients.add(this.client.users.update(r));
-                }
+                this.recipients.update(r);
             }
 
         }

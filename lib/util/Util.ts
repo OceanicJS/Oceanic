@@ -462,10 +462,8 @@ export default class Util {
                     if (!channelData.parent_id) {
                         break guild;
                     }
-                    this.#client.threadGuildMap[channelData.id] = channelData.guild_id;
                     return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this.#client))) as T;
                 } else {
-                    this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
                     return guild.channels.update(channelData as RawGuildChannel) as T;
                 }
             }
@@ -503,9 +501,7 @@ export default class Util {
     updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {
         const guild = this.#client.guilds.get(threadData.guild_id);
         if (guild) {
-            this.#client.threadGuildMap[threadData.id] = threadData.guild_id;
-            const thread = guild.threads.has(threadData.id) ? guild.threads.update(threadData) as T : guild.threads.add(Channel.from<T>(threadData, this.#client));
-            return thread;
+            return guild.threads.update(threadData) as T;
         }
         return Channel.from<T>(threadData, this.#client);
     }

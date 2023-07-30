@@ -50,7 +50,6 @@ import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChan
 import Interaction from "../structures/Interaction";
 import Guild from "../structures/Guild";
 import type { ShardEvents } from "../types/events";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
@@ -322,7 +321,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         this.client.emit("voiceChannelLeave", member, channel);
                     }
                 }
-                delete this.client.channelGuildMap[channel.id];
                 guild?.channels.delete(packet.d.id);
                 this.client.emit("channelDelete", channel);
                 break;
@@ -385,9 +383,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.voiceAdapters.get(packet.d.id)?.destroy();
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
-                if (guild?.channels) {
-                    for (const [,channel] of guild.channels) delete this.client.channelGuildMap[channel.id];
-                }
+                guild?.channels.clear();
                 this.client.guilds.delete(packet.d.id);
                 if (packet.d.unavailable) {
                     this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
@@ -951,7 +947,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const thread = this.client.util.updateThread(packet.d);
                 const channel = this.client.getChannel<ThreadParentChannel>(packet.d.parent_id!);
                 if (channel && channel.type === ChannelTypes.GUILD_FORUM) {
-                    channel.lastThread = thread as PublicThreadChannel;
                     channel.lastThreadID = thread.id;
                 }
                 this.client.emit("threadCreate", thread);
@@ -969,7 +964,6 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     type:     packet.d.type
                 };
                 if (channel && channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
-                    channel.lastThread = null;
                     channel.lastThreadID = null;
                 }
                 this.client.guilds.get(packet.d.guild_id)?.threads.delete(packet.d.id);

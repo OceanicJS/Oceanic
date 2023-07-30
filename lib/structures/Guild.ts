@@ -22,9 +22,6 @@ import type GuildPreview from "./GuildPreview";
 import Invite from "./Invite";
 import type Webhook from "./Webhook";
 import AuditLogEntry from "./AuditLogEntry";
-import AnnouncementThreadChannel from "./AnnouncementThreadChannel";
-import PublicThreadChannel from "./PublicThreadChannel";
-import PrivateThreadChannel from "./PrivateThreadChannel";
 import {
     AllPermissions,
     Permissions,
@@ -38,8 +35,7 @@ import {
     type VerificationLevels,
     type GatewayOPCodes,
     type MutableGuildFeatures,
-    type ChannelTypeMap,
-    ChannelTypes
+    type ChannelTypeMap
 } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -257,7 +253,15 @@ export default class Guild extends Base {
         this.auditLogEntries = new TypedCollection(AuditLogEntry, client, client.util._getLimit("auditLogEntries", this.id));
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client, client.util._getLimit("autoModerationRules", this.id));
         this.banner = null;
-        this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id)) as TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
+        this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
+            construct: (channel): GuildChannel => {
+                client.channelGuildMap[channel.id] = this.id;
+                return Channel.from<AnyGuildChannelWithoutThreads>(channel, client);
+            },
+            delete: (id): void => {
+                delete client.channelGuildMap[id];
+            }
+        }) as TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
@@ -290,11 +294,15 @@ export default class Guild extends Base {
         this.stickers = new SimpleCollection(rawSticker => client.util.convertSticker(rawSticker), client.util._getLimit("stickers", this.id), "merge");
         this.systemChannelID = null;
         this.systemChannelFlags = data.system_channel_flags;
-        this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), (d, ...extra) => new {
-            [ChannelTypes.ANNOUNCEMENT_THREAD]: AnnouncementThreadChannel,
-            [ChannelTypes.PUBLIC_THREAD]:       PublicThreadChannel,
-            [ChannelTypes.PRIVATE_THREAD]:      PrivateThreadChannel
-        }[d.type](d as never, client, ...extra)) as TypedCollection<RawThreadChannel, AnyThreadChannel>;
+        this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
+            construct: (thread): ThreadChannel => {
+                client.threadGuildMap[thread.id] = this.id;
+                return Channel.from<AnyThreadChannel>(thread, client);
+            },
+            delete: (id): void => {
+                delete client.threadGuildMap[id];
+            }
+        }) as TypedCollection<RawThreadChannel, AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
@@ -310,7 +318,7 @@ export default class Guild extends Base {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
+                this.channels.update(channelData);
             }
         }
 
@@ -318,8 +326,7 @@ export default class Guild extends Base {
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
-                client.threadGuildMap[threadData.id] = this.id;
-                this.threads.add(Channel.from<AnyThreadChannel>(threadData, client));
+                this.threads.update(threadData);
             }
         }
 
