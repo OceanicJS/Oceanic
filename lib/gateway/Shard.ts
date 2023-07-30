@@ -399,22 +399,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_EMOJIS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldEmojis = guild?.emojis ? [...guild.emojis] : null;
+                const oldEmojis = guild?.emojis ? guild.emojis.toArray() : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ emojis: packet.d.emojis });
                 this.client.emit(
                     "guildEmojisUpdate",
                     guild ?? { id: packet.d.guild_id },
-                    guild?.emojis ?? packet.d.emojis.map(emoji => ({
-                        animated:      emoji.animated,
-                        available:     emoji.available,
-                        id:            emoji.id,
-                        managed:       emoji.managed,
-                        name:          emoji.name,
-                        requireColons: emoji.require_colons,
-                        roles:         emoji.roles,
-                        user:          emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
-                    })),
+                    guild?.emojis?.toArray() ?? packet.d.emojis.map(emoji => this.client.util.convertEmoji(emoji)),
                     oldEmojis
                 );
                 break;
@@ -593,10 +584,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_STICKERS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldStickers = guild?.stickers ? [...guild.stickers] : null;
+                const oldStickers = guild?.stickers ? guild.stickers.toArray() : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ stickers: packet.d.stickers });
-                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
+                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers?.toArray() ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
                 break;
             }
 

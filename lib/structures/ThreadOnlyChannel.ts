@@ -54,7 +54,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators creating threads. */

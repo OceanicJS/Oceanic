@@ -14,7 +14,7 @@ import Collection from "../util/Collection";
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     declare type: ChannelTypes.GUILD_CATEGORY;

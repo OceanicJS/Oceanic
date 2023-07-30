@@ -27,6 +27,7 @@ export default class Webhooks {
      * Create a channel webhook.
      * @param channelID The ID of the channel to create the webhook in.
      * @param options The options to create the webhook with.
+     * @caching This method **does not** cache its result.
      */
     async create(channelID: string, options: CreateWebhookOptions): Promise<Webhook> {
         const reason = options.reason;
@@ -51,6 +52,7 @@ export default class Webhooks {
      * Delete a webhook.
      * @param webhookID The ID of the webhook.
      * @param reason The reason for deleting the webhook.
+     * @caching This method **does not** cache its result.
      */
     async delete(webhookID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -66,6 +68,7 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param messageID The ID of the message.
      * @param options The options for deleting the message.
+     * @caching This method **does not** cache its result.
      */
     async deleteMessage(webhookID: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions): Promise<void> {
         const query = new URLSearchParams();
@@ -82,6 +85,7 @@ export default class Webhooks {
      * Delete a webhook via its token.
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
+     * @caching This method **does not** cache its result.
      */
     async deleteToken(webhookID: string, token: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -94,6 +98,7 @@ export default class Webhooks {
      * Edit a webhook.
      * @param webhookID The ID of the webhook.
      * @param options The options for editing the webhook.
+     * @caching This method **does not** cache its result.
      */
     async edit(webhookID: string, options: EditWebhookOptions): Promise<Webhook> {
         const reason = options.reason;
@@ -121,6 +126,7 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
+     * @caching This method **does not** cache its result.
      */
     async editMessage<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
         const files = options.files;
@@ -150,6 +156,7 @@ export default class Webhooks {
      * Edit a webhook via its token.
      * @param webhookID The ID of the webhook.
      * @param options The options for editing the webhook.
+     * @caching This method **does not** cache its result.
      */
     async editToken(webhookID: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {
         if (options.avatar) {
@@ -170,6 +177,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options for executing the webhook.
+     * @caching This method **does not** cache its result.
      */
     async execute<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
     async execute(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
@@ -202,11 +210,7 @@ export default class Webhooks {
                 username:         options.username
             },
             files
-        }).then(res => {
-            if (res !== null) {
-                return new Message(res, this.#manager.client);
-            }
-        });
+        }).then(res => res === null ? undefined : new Message(res, this.#manager.client));
     }
 
     /**
@@ -214,6 +218,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options to send. See GitHub's documentation for more information.
+     * @caching This method **does not** cache its result.
      */
     async executeGithub(webhookID: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
     async executeGithub<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
@@ -227,11 +232,7 @@ export default class Webhooks {
             path:   Routes.WEBHOOK_PLATFORM(webhookID, token, "github"),
             query,
             json:   options
-        }).then(res => {
-            if (res !== null) {
-                return new Message(res, this.#manager.client);
-            }
-        });
+        }).then(res => res === null ? undefined : new Message(res, this.#manager.client));
     }
 
     /**
@@ -239,6 +240,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
+     * @caching This method **does not** cache its result.
      */
     async executeSlack(webhookID: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
     async executeSlack<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
@@ -252,17 +254,14 @@ export default class Webhooks {
             path:   Routes.WEBHOOK_PLATFORM(webhookID, token, "slack"),
             query,
             json:   options
-        }).then(res => {
-            if (res !== null) {
-                return new Message(res, this.#manager.client);
-            }
-        });
+        }).then(res => res === null ? undefined : new Message(res, this.#manager.client));
     }
 
     /**
      * Get a webhook by ID (and optionally token).
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
+     * @caching This method **does not** cache its result.
      */
     async get(webhookID: string, token?: string): Promise<Webhook> {
         return this.#manager.authRequest<RawWebhook>({
@@ -274,6 +273,7 @@ export default class Webhooks {
     /**
      * Get the webhooks in the specified channel.
      * @param channelID The ID of the channel to get the webhooks of.
+     * @caching This method **does not** cache its result.
      */
     async getForChannel(channelID: string): Promise<Array<Webhook>> {
         return this.#manager.authRequest<Array<RawWebhook>>({
@@ -285,6 +285,7 @@ export default class Webhooks {
     /**
      * Get the webhooks in the specified guild.
      * @param guildID The ID of the guild to get the webhooks of.
+     * @caching This method **does not** cache its result.
      */
     async getForGuild(guildID: string): Promise<Array<Webhook>> {
         return this.#manager.authRequest<Array<RawWebhook>>({
@@ -299,6 +300,7 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param messageID The ID of the message.
      * @param threadID The ID of the thread the message is in.
+     * @caching This method **does not** cache its result.
      */
     async getMessage<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
         const query = new URLSearchParams();

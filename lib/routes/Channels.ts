@@ -46,7 +46,7 @@ import type {
     MessagesIterator
 } from "../types/channels";
 import * as Routes from "../util/Routes";
-import Message from "../structures/Message";
+import type Message from "../structures/Message";
 import type { CreateGroupChannelOptions, RawUser } from "../types/users";
 import Invite from "../structures/Invite";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
@@ -54,7 +54,6 @@ import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type { VoiceRegion } from "../types/voice";
-import Channel from "../structures/Channel";
 import type RESTManager from "../rest/RESTManager";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type GroupChannel from "../structures/GroupChannel";
@@ -74,6 +73,7 @@ export default class Channels {
      * Add a user to a group channel.
      * @param groupID The ID of the group to add the user to.
      * @param options The options for adding the recipient.
+     * @caching This method **does not** cache its result.
      */
     async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -90,6 +90,7 @@ export default class Channels {
      * Add a member to a thread.
      * @param channelID The ID of the thread to add them to.
      * @param userID The ID of the user to add to the thread.
+     * @caching This method **does not** cache its result.
      */
     async addThreadMember(channelID: string, userID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -100,6 +101,8 @@ export default class Channels {
     /**
      * Create a direct message. This will not create a new channel if you have already started a dm with the user.
      * @param recipient The ID of the recipient of the direct message.
+     * @caching This method **does** cache its result.
+     * @caches {@link Client#privateChannels | Client#privateChannels}
      */
     async createDM(recipient: string): Promise<PrivateChannel> {
         let cache: PrivateChannel | undefined;
@@ -117,6 +120,8 @@ export default class Channels {
     /**
      * Create a group dm.
      * @param options The options for creating the group dm.
+     * @caching This method **does** cache its result.
+     * @caches {@link Client#groupChannels | Client#groupChannels}
      */
     async createGroupDM(options: CreateGroupChannelOptions): Promise<GroupChannel> {
         return this.#manager.authRequest<RawGroupChannel>({
@@ -133,6 +138,7 @@ export default class Channels {
      * Create an invite for a channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param channelID The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
+     * @caching This method **does not** cache its result.
      */
     async createInvite<T extends InviteInfoTypes, CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
         const reason = options.reason;
@@ -159,6 +165,8 @@ export default class Channels {
      * Create a message in a channel.
      * @param channelID The ID of the channel to create the message in.
      * @param options The options for creating the message.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async createMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options: CreateMessageOptions): Promise<Message<T>> {
         const files = options.files;
@@ -185,7 +193,7 @@ export default class Channels {
                 tts: options.tts
             },
             files
-        }).then(data => new Message<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateMessage<T>(data));
     }
 
     /**
@@ -193,6 +201,7 @@ export default class Channels {
      * @param channelID The ID of the channel the message is in.
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
+     * @caching This method **does not** cache its result.
      */
     async createReaction(channelID: string, messageID: string, emoji: string): Promise<void> {
         if (emoji === decodeURIComponent(emoji)) {
@@ -208,6 +217,7 @@ export default class Channels {
      * Create a stage instance.
      * @param channelID The ID of the channel to create the stage instance on.
      * @param options The options for creating the stage instance.
+     * @caching This method **does not** cache its result.
      */
     async createStageInstance(channelID: string, options: CreateStageInstanceOptions): Promise<StageInstance> {
         const reason = options.reason;
@@ -231,18 +241,21 @@ export default class Channels {
      * Crosspost a message in an announcement channel.
      * @param channelID The ID of the channel to crosspost the message in.
      * @param messageID The ID of the message to crosspost.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async crosspostMessage<T extends AnnouncementChannel | Uncached = AnnouncementChannel | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this.#manager.authRequest<RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES_CROSSPOST(channelID, messageID)
-        }).then(data => new Message<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateMessage<T>(data));
     }
 
     /**
      * Delete or close a channel.
      * @param channelID The ID of the channel to delete or close.
      * @param reason The reason to be displayed in the audit log.
+     * @caching This method **does not** cache its result.
      */
     async delete(channelID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<RawChannel>({
@@ -256,6 +269,7 @@ export default class Channels {
      * Delete an invite.
      * @param code The code of the invite to delete.
      * @param reason The reason for deleting the invite.
+     * @caching This method **does not** cache its result.
      */
     async deleteInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
         return this.#manager.authRequest<RawInvite>({
@@ -270,6 +284,7 @@ export default class Channels {
      * @param channelID The ID of the channel to delete the message in.
      * @param messageID The ID of the message to delete.
      * @param reason The reason for deleting the message.
+     * @caching This method **does not** cache its result.
      */
     async deleteMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<RawMessage>({
@@ -284,6 +299,7 @@ export default class Channels {
      * @param channelID The ID of the channel to delete the messages in.
      * @param messageIDs The IDs of the messages to delete. Any duplicates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
+     * @caching This method **does not** cache its result.
      */
     async deleteMessages(channelID: string, messageIDs: Array<string>, reason?: string): Promise<number> {
         const chunks: Array<Array<string>> = [];
@@ -323,6 +339,7 @@ export default class Channels {
      * @param channelID The ID of the channel to delete the permission overwrite in.
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
+     * @caching This method **does not** cache its result.
      */
     async deletePermission(channelID: string, overwriteID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -338,6 +355,7 @@ export default class Channels {
      * @param messageID The ID of the message to remove a reaction from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param user The user to remove the reaction from, `@me` for the current user (default).
+     * @caching This method **does not** cache its result.
      */
     async deleteReaction(channelID: string, messageID: string, emoji: string, user = "@me"): Promise<void> {
         if (emoji === decodeURIComponent(emoji)) {
@@ -354,6 +372,7 @@ export default class Channels {
      * @param channelID The ID of the channel the message is in.
      * @param messageID The ID of the message to remove reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
+     * @caching This method **does not** cache its result.
      */
     async deleteReactions(channelID: string, messageID: string, emoji?: string): Promise<void> {
         if (emoji && emoji === decodeURIComponent(emoji)) {
@@ -369,6 +388,7 @@ export default class Channels {
      * Delete a stage instance.
      * @param channelID The ID of the channel to delete the stage instance on.
      * @param reason The reason for deleting the stage instance.
+     * @caching This method **does not** cache its result.
      */
     async deleteStageInstance(channelID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -382,6 +402,8 @@ export default class Channels {
      * Edit a channel.
      * @param channelID The ID of the channel to edit.
      * @param options The options for editing the channel.
+     * @caching This method **may** cache its result. If a guild channel, the result will not be cached if the guild is not cached.
+     * @caches {@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#groupChannels | Client#groupChannels}
      */
     async edit<T extends AnyEditableChannel = AnyEditableChannel>(channelID: string, options: EditChannelOptions): Promise<T> {
         const reason = options.reason;
@@ -434,7 +456,7 @@ export default class Channels {
                 video_quality_mode:                 options.videoQualityMode
             },
             reason
-        }).then(data => Channel.from<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateChannel<T>(data));
     }
 
     /**
@@ -442,6 +464,8 @@ export default class Channels {
      * @param channelID The ID of the channel the message is in.
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async editMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
         const files = options.files;
@@ -460,7 +484,7 @@ export default class Channels {
                 flags:            options.flags
             },
             files
-        }).then(data => new Message<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateMessage<T>(data));
     }
 
     /**
@@ -468,6 +492,7 @@ export default class Channels {
      * @param channelID The ID of the channel to edit the permission overwrite for.
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
+     * @caching This method **does not** cache its result.
      */
     async editPermission(channelID: string, overwriteID: string, options: EditPermissionOptions): Promise<void> {
         const reason = options.reason;
@@ -490,6 +515,7 @@ export default class Channels {
      * Edit a stage instance.
      * @param channelID The ID of the channel to edit the stage instance on.
      * @param options The options for editing the stage instance.
+     * @caching This method **does not** cache its result.
      */
     async editStageInstance(channelID: string, options: EditStageInstanceOptions): Promise<StageInstance> {
         const reason = options.reason;
@@ -512,6 +538,7 @@ export default class Channels {
      * Follow an announcement channel.
      * @param channelID The ID of the channel to follow announcements from.
      * @param webhookChannelID The ID of the channel crossposted messages should be sent to. The client must have the `MANAGE_WEBHOOKS` permission in this channel.
+     * @caching This method **does not** cache its result.
      */
     async followAnnouncement(channelID: string, webhookChannelID: string): Promise<FollowedChannel> {
         return this.#manager.authRequest<RawFollowedChannel>({
@@ -527,6 +554,8 @@ export default class Channels {
     /**
      * Get a channel.
      * @param channelID The ID of the channel to get.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#privateChannels | Client#privateChannels}<br>{@link Client#groupChannels | Client#groupChannels}
      */
     async get<T extends AnyChannel = AnyChannel>(channelID: string): Promise<T> {
         return this.#manager.authRequest<RawChannel>({
@@ -539,6 +568,7 @@ export default class Channels {
      * Get an invite.
      * @param code The code of the invite to get.
      * @param options The options for getting the invite.
+     * @caching This method **does not** cache its result.
      */
     async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
     async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
@@ -565,6 +595,7 @@ export default class Channels {
     /**
      * Get the invites of a channel.
      * @param channelID The ID of the channel to get the invites of.
+     * @caching This method **does not** cache its result.
      */
     async getInvites<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string): Promise<Array<Invite<"withMetadata", T>>> {
         return this.#manager.authRequest<Array<RawInvite>>({
@@ -577,6 +608,7 @@ export default class Channels {
      * Get the private archived threads the current user has joined in a channel.
      * @param channelID The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
+     * @caching This method **does not** cache its result.
      */
     async getJoinedPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
         return this.#manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
@@ -602,18 +634,22 @@ export default class Channels {
      * Get a message in a channel.
      * @param channelID The ID of the channel the message is in
      * @param messageID The ID of the message to get.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async getMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this.#manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID)
-        }).then(data => new Message<T>(data, this.#manager.client));
+        }).then(data => this.#manager.client.util.updateMessage<T>(data));
     }
 
     /**
      * Get messages in a channel.
      * @param channelID The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async getMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
         const query = new URLSearchParams();
@@ -642,7 +678,7 @@ export default class Channels {
                 method: "GET",
                 path:   Routes.CHANNEL_MESSAGES(channelID),
                 query
-            }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+            }).then(data => data.map(d => this.#manager.client.util.updateMessage<T>(d)));
 
             for (const message of messages) {
                 const f = filter(message);
@@ -676,6 +712,8 @@ export default class Channels {
      * Get an async iterator for getting messages in a channel.
      * @param channelID The ID of the channel to get messages from.
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async getMessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): Promise<MessagesIterator<T>> {
         const filter = options?.filter?.bind(this) ?? ((): true => true);
@@ -726,18 +764,22 @@ export default class Channels {
     /**
      * Get the pinned messages in a channel.
      * @param channelID The ID of the channel to get the pinned messages from.
+     * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
     async getPinnedMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string): Promise<Array<Message<T>>> {
         return this.#manager.authRequest<Array<RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(channelID)
-        }).then(data => data.map(d => new Message<T>(d, this.#manager.client)));
+        }).then(data => data.map(d => this.#manager.client.util.updateMessage<T>(d)));
     }
 
     /**
      * Get the private archived threads in a channel.
      * @param channelID The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
      */
     async getPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
         const qs = new URLSearchParams();
@@ -763,6 +805,13 @@ export default class Channels {
         }));
     }
 
+    /**
+     * Get the private joined archived threads in a channel.
+     * @param channelID The ID of the channel to get the archived threads from.
+     * @param options The options for getting the archived threads.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
+     */
     async getPrivateJoinedArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
         const qs = new URLSearchParams();
         if (options?.before !== undefined) {
@@ -791,6 +840,8 @@ export default class Channels {
      * Get the public archived threads in a channel.
      * @param channelID The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
      */
     async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<T>> {
         const qs = new URLSearchParams();
@@ -822,6 +873,7 @@ export default class Channels {
      * @param messageID The ID of the message to get reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
+     * @caching This method **does not** cache its result.
      */
     async getReactions(channelID: string, messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
         if (emoji === decodeURIComponent(emoji)) {
@@ -874,6 +926,7 @@ export default class Channels {
     /**
      * Get the stage instance associated with a channel.
      * @param channelID The ID of the channel to get the stage instance on.
+     * @caching This method **does not** cache its result.
      */
     async getStageInstance(channelID: string): Promise<StageInstance> {
         return this.#manager.authRequest<RawStageInstance>({
@@ -886,6 +939,7 @@ export default class Channels {
      * Get a thread member.
      * @param channelID The ID of the thread.
      * @param userID The ID of the user to get the thread member of.
+     * @caching This method **does not** cache its result.
      */
     async getThreadMember(channelID: string, userID: string): Promise<ThreadMember> {
         return this.#manager.authRequest<RawThreadMember>({
@@ -903,6 +957,7 @@ export default class Channels {
      * Get the members of a thread.
      * @param channelID The ID of the thread.
      * @param options The options for getting the thread members.
+     * @caching This method **does not** cache its result.
      */
     async getThreadMembers(channelID: string, options?: GetThreadMembersOptions): Promise<Array<ThreadMember>> {
         const query = new URLSearchParams();
@@ -944,6 +999,7 @@ export default class Channels {
     /**
      * Join a thread.
      * @param channelID The ID of the thread to join.
+     * @caching This method **does not** cache its result.
      */
     async joinThread(channelID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -955,6 +1011,7 @@ export default class Channels {
     /**
      * Leave a thread.
      * @param channelID The ID of the thread to leave.
+     * @caching This method **does not** cache its result.
      */
     async leaveThread(channelID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -968,6 +1025,7 @@ export default class Channels {
      * @param channelID The ID of the channel to pin the message in.
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
+     * @caching This method **does not** cache its result.
      */
     async pinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -981,6 +1039,7 @@ export default class Channels {
      * Purge an amount of messages from a channel.
      * @param channelID The ID of the channel to purge.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
+     * @caching This method **does not** cache its result.
      */
     async purgeMessages<T extends AnyTextableGuildChannel | Uncached = AnyTextableGuildChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
         const filter = (message: Message<T>): boolean | "break" | PromiseLike<boolean | "break"> => {
@@ -1036,6 +1095,7 @@ export default class Channels {
      * Remove a user from the group channel.
      * @param groupID The ID of the group to remove the user from.
      * @param userID The ID of the user to remove.
+     * @caching This method **does not** cache its result.
      */
     async removeGroupRecipient(groupID: string, userID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -1048,6 +1108,7 @@ export default class Channels {
      * Remove a member from a thread.
      * @param channelID The ID of the thread to remove them from.
      * @param userID The ID of the user to remove from the thread.
+     * @caching This method **does not** cache its result.
      */
     async removeThreadMember(channelID: string, userID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -1059,6 +1120,7 @@ export default class Channels {
     /**
      * Show a typing indicator in a channel. How long users see this varies from client to client.
      * @param channelID The ID of the channel to show the typing indicator in.
+     * @caching This method **does not** cache its result.
      */
     async sendTyping(channelID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -1072,6 +1134,8 @@ export default class Channels {
      * @param channelID The ID of the channel to create the thread in.
      * @param messageID The ID of the message to create the thread from.
      * @param options The options for starting the thread.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
         const reason = options.reason;
@@ -1094,6 +1158,8 @@ export default class Channels {
      * Create a thread in a thread only channel (forum & media).
      * @param channelID The ID of the channel to start the thread in.
      * @param options The options for starting the thread.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
      */
     async startThreadInThreadOnlyChannl(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         const reason = options.reason;
@@ -1130,6 +1196,8 @@ export default class Channels {
      * Create a thread without an existing message.
      * @param channelID The ID of the channel to start the thread in.
      * @param options The options for starting the thread.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
      */
     async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(channelID: string, options: StartThreadWithoutMessageOptions): Promise<T> {
         const reason = options.reason;
@@ -1155,6 +1223,7 @@ export default class Channels {
      * @param channelID The ID of the channel to unpin the message in.
      * @param messageID The ID of the message to unpin.
      * @param reason The reason for unpinning the message.
+     * @caching This method **does not** cache its result.
      */
     async unpinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this.#manager.authRequest<null>({

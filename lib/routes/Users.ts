@@ -20,9 +20,8 @@ export default class Users {
 
     /**
      * Edit the currently authenticated user.
-     *
-     * Note: This does not touch the client's cache in any way.
      * @param options The options to edit with.
+     * @caching This method **does not** cache its result.
      */
     async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
         if (options.avatar) {
@@ -38,6 +37,8 @@ export default class Users {
     /**
      * Get a user.
      * @param userID the ID of the user
+     * @caching This method **does** cache its result.
+     * @caches {@link Client#users | Client#users}
      */
     async get(userID: string): Promise<User> {
         return this.#manager.authRequest<RawUser>({
@@ -49,6 +50,7 @@ export default class Users {
     /**
      * Leave a guild.
      * @param guildID The ID of the guild to leave.
+     * @caching This method **does not** cache its result.
      */
     async leaveGuild(guildID: string): Promise<void> {
         await this.#manager.authRequest<null>({

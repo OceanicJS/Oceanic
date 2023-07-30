@@ -40,7 +40,7 @@ export default class ThreadChannel<T extends AnyThreadChannel = AnyThreadChannel
     /** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
     messageCount: number;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message<T>>;
+    messages: TypedCollection<RawMessage, Message<T>>;
     /** The owner of this thread. */
     owner?: User;
     /** The ID of the owner of this thread. */

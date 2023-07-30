@@ -47,18 +47,18 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
-    groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
+    groupChannels: TypedCollection<RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
-    guilds: TypedCollection<string, RawGuild, Guild, [rest?: boolean]>;
+    guilds: TypedCollection<RawGuild, Guild, [rest?: boolean]>;
     options: ClientInstanceOptions;
-    privateChannels: TypedCollection<string, RawPrivateChannel, PrivateChannel>;
+    privateChannels: TypedCollection<RawPrivateChannel, PrivateChannel>;
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
     startTime = 0;
     threadGuildMap: Record<string, string>;
-    unavailableGuilds: TypedCollection<string, RawUnavailableGuild, UnavailableGuild>;
-    users: TypedCollection<string, RawUser, User>;
+    unavailableGuilds: TypedCollection<RawUnavailableGuild, UnavailableGuild>;
+    users: TypedCollection<RawUser, User>;
     util: Util;
     voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
     /**

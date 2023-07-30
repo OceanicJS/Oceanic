@@ -22,7 +22,7 @@ export default class PrivateChannel extends Channel {
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<string, RawMessage, Message<this>>;
+    messages: TypedCollection<RawMessage, Message<this>>;
     /** The other user in this direct message. */
     recipient: User;
     declare type: ChannelTypes.DM;

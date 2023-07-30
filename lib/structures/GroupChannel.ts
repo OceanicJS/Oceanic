@@ -31,7 +31,7 @@ export default class GroupChannel extends Channel {
     /** The ID of the owner of this group channel. */
     ownerID: string;
     /** The other recipients in this group channel. */
-    recipients: TypedCollection<string, RawUser, User>;
+    recipients: TypedCollection<RawUser, User>;
     declare type: ChannelTypes.GROUP_DM;
     constructor(data: RawGroupChannel, client: Client) {
         super(data, client);

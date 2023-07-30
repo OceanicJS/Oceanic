@@ -60,7 +60,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      */
     applicationID: string | null;
     /** The attachments on this message. */
-    attachments: TypedCollection<string, RawAttachment, Attachment>;
+    attachments: TypedCollection<RawAttachment, Attachment>;
     /** The author of this message. */
     author: User;
     /** The ID of the channel this message was created in. */
