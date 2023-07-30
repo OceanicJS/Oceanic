@@ -384,6 +384,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
                 guild?.channels.clear();
+                guild?.threads.clear();
                 this.client.guilds.delete(packet.d.id);
                 if (packet.d.unavailable) {
                     this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
