@@ -963,8 +963,8 @@ export enum Intents {
     DIRECT_MESSAGE_TYPING         = 1 << 14,
     MESSAGE_CONTENT               = 1 << 15,
     GUILD_SCHEDULED_EVENTS        = 1 << 16,
-    AUTO_MODERATION_CONFIGURATION = 1 << 17,
-    AUTO_MODERATION_EXECUTION     = 1 << 18,
+    AUTO_MODERATION_CONFIGURATION = 1 << 20,
+    AUTO_MODERATION_EXECUTION     = 1 << 21,
 }
 
 export type IntentNames = keyof typeof Intents;
