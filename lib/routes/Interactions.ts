@@ -34,7 +34,7 @@ export default class Interactions {
      * @caching This method **does not** cache its result.
      */
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse): Promise<void> {
-        let data: unknown | undefined;
+        let data: unknown;
         switch (options.type) {
             case InteractionResponseTypes.PONG: {
                 break;

@@ -20,25 +20,23 @@ import Util from "./util/Util";
 import type { ClientEvents } from "./types/events";
 import type { JoinVoiceChannelOptions } from "./types/voice";
 import { DependencyError, UncachedError } from "./util/Errors";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+// @ts-ignore
+import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
+
 // @ts-ignore
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     DiscordJSVoice = require("@discordjs/voice");
 } catch {}
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     Erlpack = require("erlpack");
 } catch {}
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
 /** The primary class for interfacing with Discord. See {@link ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
@@ -216,6 +214,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]]
         ] as Array<[intent: Intents, allowed: Array<ApplicationFlags>]>;
 
+        /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
         if (this.shards.options.removeDisallowedIntents && privilegedIntentMapping.some(([intent]) => (this.shards.options.intents & intent) === intent)) {
             const { flags } = await this.rest.misc.getApplication();
             const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
@@ -228,6 +227,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 check(intent, allowed);
             }
         }
+        /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
 
         this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
         if (this.shards.options.compress) {

@@ -66,29 +66,24 @@ import { randomBytes } from "node:crypto";
 import { inspect } from "node:util";
 import assert from "node:assert";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access */
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     Erlpack = require("erlpack");
 } catch {}
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let ZlibSync: typeof import("pako") | typeof import("zlib-sync") | undefined, zlibConstants: typeof import("pako").constants | typeof import("zlib-sync") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     ZlibSync = require("zlib-sync");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     zlibConstants = require("zlib-sync");
 } catch {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
         ZlibSync = require("pako");
-        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, unicorn/prefer-module
         zlibConstants = require("pako").constants;
     } catch {}
 }
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
 /** Represents a gateway connection to Discord. See {@link ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<ShardEvents> {
@@ -115,6 +110,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     resumeURL: string | null;
     sequence: number;
     sessionID: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     #sharedZLib!: Pako.Inflate | Inflate;
     status: ShardStatus;
     ws!: WebSocket | null;
@@ -183,6 +179,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.client.guildShardMap[data.id] = this.id;
         const guild = this.client.guilds.update(data);
         if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
             void this.requestGuildMembers(guild.id, { presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES });
         }
 
@@ -1389,7 +1386,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         ]);
                         this.#sharedZLib.chunks = [];
                     }
-                    return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(data.toString())) as AnyReceivePacket);
+                    return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(String(data))) as AnyReceivePacket);
                 } else {
                     this.#sharedZLib.push(data, false);
                 }

@@ -30,7 +30,7 @@ import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;
 export interface RawPacket {
-    d: unknown | null;
+    d: unknown;
     op: GatewayOPCodes;
     s: number | null;
     t: string | null;
