@@ -624,12 +624,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INVITE_CREATE": {
-                const invite = new Invite(packet.d, this.client);
+                let invite: Invite | undefined;
                 if (packet.d.guild_id) {
                     const guild = this.client.guilds.get(packet.d.guild_id);
-                    guild?.invites.set(invite.code, invite);
+                    invite = guild?.invites.update(packet.d);
                 }
-                this.client.emit("inviteCreate", new Invite(packet.d, this.client));
+                this.client.emit("inviteCreate", invite ?? new Invite(packet.d, this.client));
                 break;
             }
 
