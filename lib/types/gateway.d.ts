@@ -211,7 +211,8 @@ export interface Activity {
     type: ActivityTypes;
     url?: string | null;
 }
-export interface BotActivity extends Pick<Activity, "name" | "url" | "state"> {}
+
+export interface BotActivity extends Pick<Activity, "name" | "url" | "state" | "type"> {}
 
 export interface ActivityEmoji {
     animated?: boolean;
