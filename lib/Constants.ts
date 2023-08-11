@@ -441,8 +441,6 @@ export namespace Permissions {
     export const MANAGE_ROLES                        = 268435456n;      // 1 << 28
     export const MANAGE_WEBHOOKS                     = 536870912n;      // 1 << 29
     export const MANAGE_GUILD_EXPRESSIONS            = 1073741824n;     // 1 << 30
-    /** @deprecated Use {@link Constants~Permissions | MANAGE_GUILD_EXPRESSIONS}. This will be removed in `1.8.0`.  */
-    export const MANAGE_EMOJIS_AND_STICKERS          = 1073741824n;     // 1 << 30
     export const USE_APPLICATION_COMMANDS            = 2147483648n;     // 1 << 31
     export const REQUEST_TO_SPEAK                    = 4294967296n;     // 1 << 32
     export const MANAGE_EVENTS                       = 8589934592n;     // 1 << 33
