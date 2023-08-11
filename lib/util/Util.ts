@@ -1,5 +1,6 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
+import type TypedCollection from "./TypedCollection";
 import type Client from "../Client";
 import {
     ButtonStyles,
@@ -7,12 +8,13 @@ import {
     ImageFormats,
     MAX_IMAGE_SIZE,
     MIN_IMAGE_SIZE,
-    type ImageFormat
+    type ImageFormat,
+    ThreadChannelTypes,
+    ChannelTypes
 } from "../Constants";
 import type {
     AllowedMentions,
     AnyChannel,
-    AnyGuildChannelWithoutThreads,
     AnyThreadChannel,
     Component,
     Embed,
@@ -35,7 +37,20 @@ import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds
 import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
-import type { CollectionLimitsOptions } from "../types";
+import type {
+    AnyTextableChannel,
+    CollectionLimitsOptions,
+    GuildEmoji,
+    RawAnnouncementThreadChannel,
+    RawGroupChannel,
+    RawGuildEmoji,
+    RawMessage,
+    RawPrivateChannel,
+    RawPrivateThreadChannel,
+    RawPublicThreadChannel,
+    Uncached
+} from "../types";
+import Message from "../structures/Message";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -215,6 +230,19 @@ export default class Util {
             type:       row.type,
             components: row.components.map(component => this.componentToRaw(component))
         })) as never;
+    }
+
+    convertEmoji(raw: RawGuildEmoji): GuildEmoji {
+        return {
+            animated:      raw.animated,
+            available:     raw.available,
+            id:            raw.id,
+            managed:       raw.managed,
+            name:          raw.name,
+            requireColons: raw.require_colons,
+            roles:         raw.roles,
+            user:          raw.user ? this.#client.users.update(raw.user) : undefined
+        };
     }
 
     convertImage(img: Buffer | string): string {
@@ -427,15 +455,25 @@ export default class Util {
     }
 
     updateChannel<T extends AnyChannel>(channelData: RawChannel): T {
-        if (channelData.guild_id) {
+        guild: if (channelData.guild_id) {
             const guild = this.#client.guilds.get(channelData.guild_id);
             if (guild) {
-                this.#client.channelGuildMap[channelData.id] = channelData.guild_id;
-                const channel = guild.channels.has(channelData.id) ? guild.channels.update(channelData as RawGuildChannel)  : guild.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, this.#client));
-                return channel as T;
+                if (ThreadChannelTypes.includes(channelData.type as typeof ThreadChannelTypes[number])) {
+                    if (!channelData.parent_id) {
+                        break guild;
+                    }
+                    return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this.#client))) as T;
+                } else {
+                    return guild.channels.update(channelData as RawGuildChannel) as T;
+                }
             }
         }
-        return Channel.from<T>(channelData, this.#client);
+
+        switch (channelData.type) {
+            case ChannelTypes.DM: return this.#client.privateChannels.update(channelData as RawPrivateChannel) as T;
+            case ChannelTypes.GROUP_DM: return this.#client.groupChannels.update(channelData as RawGroupChannel) as T;
+            default: return Channel.from<T>(channelData, this.#client);
+        }
     }
 
     updateMember(guildID: string, memberID: string, member: RawMember | RESTMember): Member {
@@ -451,21 +489,20 @@ export default class Util {
         return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member({ ...member, id: memberID }, this.#client, guildID);
     }
 
+    updateMessage<T extends AnyTextableChannel | Uncached>(data: RawMessage): Message<T> {
+        const channel = this.#client.getChannel(data.channel_id) as T | undefined;
+        if (channel && "messages" in channel) {
+            return channel.messages.update(data) as Message<T>;
+        }
+
+        return new Message<T>(data, this.#client);
+    }
+
     updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {
         const guild = this.#client.guilds.get(threadData.guild_id);
         if (guild) {
-            this.#client.threadGuildMap[threadData.id] = threadData.guild_id;
-            const thread = guild.threads.has(threadData.id) ? guild.threads.update(threadData) as T : guild.threads.add(Channel.from<T>(threadData, this.#client));
-            const channel = guild.channels.get(threadData.parent_id!);
-            if (channel && "threads" in channel) {
-                channel.threads.update(thread as never);
-            }
-            return thread;
+            return guild.threads.update(threadData) as T;
         }
         return Channel.from<T>(threadData, this.#client);
     }
-}
-
-export function is<T>(input: unknown): input is T {
-    return true;
 }

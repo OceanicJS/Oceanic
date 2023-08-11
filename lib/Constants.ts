@@ -125,13 +125,13 @@ export enum ApplicationFlags {
     ALLOW_ACTIVITY_ACTION_SPECTATE                = 1 << 9,
     ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 1 << 10,
     RPC_HAS_CONNECTED_ACCOUNT                     = 1 << 11,
-    /** Intent required for bots in **100 or more servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
+    /** Intent required for bots in **100 or more servers** to receive {@link ClientEvents.presenceUpdate | `presenceUpdate`} events. */
     GATEWAY_PRESENCE                              = 1 << 12,
-    /** Intent required for bots in **under 100 servers** to receive {@link Events~ClientEvents.presenceUpdate | `presenceUpdate`} events. */
+    /** Intent required for bots in **under 100 servers** to receive {@link ClientEvents.presenceUpdate | `presenceUpdate`} events. */
     GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
-    /** Intent required for bots in **100 or more servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
+    /** Intent required for bots in **100 or more servers** to receive member-related events like {@link ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
     GATEWAY_GUILD_MEMBERS                         = 1 << 14,
-    /** Intent required for bots in **under 100 servers** to receive member-related events like {@link Events~ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
+    /** Intent required for bots in **under 100 servers** to receive member-related events like {@link ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
     GATEWAY_GUILD_MEMBERS_LIMITED                 = 1 << 15,
     /** Indicates unusual growth of an app that prevents verification */
     VERIFICATION_PENDING_GUILD_LIMIT              = 1 << 16,
@@ -441,8 +441,6 @@ export namespace Permissions {
     export const MANAGE_ROLES                        = 268435456n;      // 1 << 28
     export const MANAGE_WEBHOOKS                     = 536870912n;      // 1 << 29
     export const MANAGE_GUILD_EXPRESSIONS            = 1073741824n;     // 1 << 30
-    /** @deprecated Use {@link Constants~Permissions | MANAGE_GUILD_EXPRESSIONS}. This will be removed in `1.8.0`.  */
-    export const MANAGE_EMOJIS_AND_STICKERS          = 1073741824n;     // 1 << 30
     export const USE_APPLICATION_COMMANDS            = 2147483648n;     // 1 << 31
     export const REQUEST_TO_SPEAK                    = 4294967296n;     // 1 << 32
     export const MANAGE_EVENTS                       = 8589934592n;     // 1 << 33
@@ -963,8 +961,8 @@ export enum Intents {
     DIRECT_MESSAGE_TYPING         = 1 << 14,
     MESSAGE_CONTENT               = 1 << 15,
     GUILD_SCHEDULED_EVENTS        = 1 << 16,
-    AUTO_MODERATION_CONFIGURATION = 1 << 17,
-    AUTO_MODERATION_EXECUTION     = 1 << 18,
+    AUTO_MODERATION_CONFIGURATION = 1 << 20,
+    AUTO_MODERATION_EXECUTION     = 1 << 21,
 }
 
 export type IntentNames = keyof typeof Intents;
@@ -1300,7 +1298,7 @@ export enum JSONErrorCodes {
     VOICE_MESSAGES_CANNOT_BE_EDITED = 50162,
     CANNOT_DELETE_GUILD_SUBSCRIPTION_INTEGRATION = 50163,
     CANNOT_SEND_VOICE_MESSAGES_IN_CHANNEL = 50173,
-    USER_MUST_FIRST_BE_VERIFIED = 50600,
+    USER_MUST_FIRST_BE_VERIFIED = 50178,
     NO_PERMISSION_TO_SEND_STICKER = 50600,
     TWO_FACTOR_REQUIRED = 60003,
     NO_USERS_WITH_DISCORDTAG_EXIST = 80004,

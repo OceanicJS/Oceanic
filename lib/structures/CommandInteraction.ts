@@ -166,8 +166,8 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     }
 
     /**
-     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
-     * @note You cannot attach files in an initial response. Defer the interaction, then use {@link CommandInteraction~CommandInteraction#createFollowup | createFollowup}.
+     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link CommandInteraction#createFollowup | createFollowup}.
+     * @note You cannot attach files in an initial response. Defer the interaction, then use {@link CommandInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
     async createMessage(options: InitialInteractionContent): Promise<void> {

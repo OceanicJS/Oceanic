@@ -1,4 +1,4 @@
-/** @module Routes/Interactions */
+/** @module REST/Interactions */
 import type { InteractionContent, InteractionResponse } from "../types/interactions";
 import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
 import * as Routes from "../util/Routes";
@@ -8,7 +8,7 @@ import type Message from "../structures/Message";
 import type { AnyTextableChannel } from "../types/channels";
 import type { Uncached } from "../types/shared";
 
-/** Various methods for interacting with interactions. */
+/** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
 export default class Interactions {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
@@ -20,6 +20,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @param options The options for creating the followup message.
+     * @caching This method **does not** cache its result.
      */
     async createFollowupMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
         return this.#manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
@@ -30,9 +31,10 @@ export default class Interactions {
      * @param interactionID The ID of the interaction.
      * @param interactionToken The token of the interaction.
      * @param options The options for creating the interaction response.
+     * @caching This method **does not** cache its result.
      */
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse): Promise<void> {
-        let data: unknown | undefined;
+        let data: unknown;
         switch (options.type) {
             case InteractionResponseTypes.PONG: {
                 break;
@@ -91,6 +93,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.
+     * @caching This method **does not** cache its result.
      */
     async deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string): Promise<void> {
         await this.#manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
@@ -100,6 +103,7 @@ export default class Interactions {
      * Delete the original interaction response.
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
+     * @caching This method **does not** cache its result.
      */
     async deleteOriginalMessage(applicationID: string, interactionToken: string): Promise<void> {
         await this.deleteFollowupMessage(applicationID, interactionToken, "@original");
@@ -111,6 +115,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
+     * @caching This method **does not** cache its result.
      */
     async editFollowupMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, messageID: string, options: InteractionContent): Promise<Message<T>> {
         return this.#manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
@@ -121,6 +126,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @param options The options for editing the original message.
+     * @caching This method **does not** cache its result.
      */
     async editOriginalMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
         return this.editFollowupMessage<T>(applicationID, interactionToken, "@original", options);
@@ -131,6 +137,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.
+     * @caching This method **does not** cache its result.
      */
     async getFollowupMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>> {
         return this.#manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
@@ -140,6 +147,7 @@ export default class Interactions {
      * Get an original interaction response.
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
+     * @caching This method **does not** cache its result.
      */
     async getOriginalMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string): Promise<Message<T>> {
         return this.getFollowupMessage(applicationID, interactionToken, "@original");

@@ -1,0 +1,26 @@
+diff --git a/dist/merger/project_merger.js b/dist/merger/project_merger.js
+index bf66c8ba53fdf558d6fc775f32241e9ca285d9be..a1d1938bba9997f53506cf2d94dd09fdb36eebc0 100644
+--- a/dist/merger/project_merger.js
++++ b/dist/merger/project_merger.js
+@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.ProjectMerger = void 0;
+ /** @module merger */
+ const typedoc_1 = require("typedoc");
++
+ /**
+  * Merger that moves the content of all modules into the project root.
+  */
+@@ -23,8 +24,13 @@ class ProjectMerger {
+         if (modules.length > 0) {
+             this.project.children = [];
+             for (const mod of modules) {
++            	if(["Constants", "Routes"].includes(mod.name) || mod.name.startsWith("Types/")) {
++            		this.project.children.push(mod);
++            		continue;
++            	}
+                 const reflections = (_b = mod.children) !== null && _b !== void 0 ? _b : [];
+                 for (const ref of reflections) {
++                if(mod.name.startsWith("REST/")) ref.name = `REST/${ref.name}`;
+                     // Drop aliases
+                     if (!ref.kindOf(typedoc_1.ReflectionKind.Reference)) {
+                         ref.parent = this.project;

@@ -10,7 +10,7 @@ export default class DiscordHTTPError extends Error {
     override name = "DiscordHTTPError";
     resBody!: Record<string, unknown> | null;
     response!: Response;
-    constructor(res: Response, resBody: unknown | null, method: RESTMethod, stack?: string) {
+    constructor(res: Response, resBody: unknown, method: RESTMethod, stack?: string) {
         // eslint-disable-next-line unicorn/custom-error-definition
         super();
         Object.defineProperties(this, {

@@ -1,4 +1,4 @@
-/** @module Routes/ApplicationCommands */
+/** @module REST/ApplicationCommands */
 import * as Routes from "../util/Routes";
 import type {
     AnyApplicationCommand,
@@ -19,7 +19,7 @@ import ApplicationCommand from "../structures/ApplicationCommand";
 import type { RequestOptions } from "../types/request-handler";
 import type RESTManager from "../rest/RESTManager";
 
-/** Various methods for interacting with application commands. */
+/** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applicationCommands | .applicationCommands}. */
 export default class ApplicationCommands {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
@@ -30,6 +30,7 @@ export default class ApplicationCommands {
      * Overwrite all existing global application commands.
      * @param applicationID The ID of the application.
      * @param options The commands.
+     * @caching This method **does not** cache its result.
      */
     async bulkEditGlobalCommands(applicationID: string, options: Array<CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
@@ -55,6 +56,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @param options The commands.
+     * @caching This method **does not** cache its result.
      */
     async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
         const opts = options as Array<CreateChatInputApplicationCommandOptions>;
@@ -80,6 +82,7 @@ export default class ApplicationCommands {
      * Create a global application command.
      * @param applicationID The ID of the application.
      * @param options The options for the command.
+     * @caching This method **does not** cache its result.
      */
     async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
         const opt = options as CreateChatInputApplicationCommandOptions;
@@ -105,6 +108,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @param options The options for the command.
+     * @caching This method **does not** cache its result.
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
         const opt = options as CreateChatInputApplicationCommandOptions;
@@ -129,6 +133,7 @@ export default class ApplicationCommands {
      * Delete a global application command.
      * @param applicationID The ID of the application.
      * @param commandID The ID the command to delete.
+     * @caching This method **does not** cache its result.
      */
     async deleteGlobalCommand(applicationID: string, commandID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -142,6 +147,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command to delete.
+     * @caching This method **does not** cache its result.
      */
     async deleteGuildCommand(applicationID: string, guildID: string, commandID: string): Promise<void> {
         await this.#manager.authRequest<null>({
@@ -155,6 +161,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param commandID The ID of the command to edit.
      * @param options The options for editing the command.
+     * @caching This method **does not** cache its result.
      */
     async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
         const opt = options as EditChatInputApplicationCommandOptions;
@@ -180,6 +187,7 @@ export default class ApplicationCommands {
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command to edit.
      * @param options The options for editing the command.
+     * @caching This method **does not** cache its result.
      */
     async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
         const opt = options as EditChatInputApplicationCommandOptions;
@@ -205,6 +213,7 @@ export default class ApplicationCommands {
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command.
      * @param options The options for editing the permissions.
+     * @caching This method **does not** cache its result.
      */
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
         return (options.accessToken ? this.#manager.request.bind(this.#manager) : this.#manager.authRequest.bind(this.#manager))({
@@ -228,6 +237,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param commandID The ID of the command.
      * @param options The options for getting the command.
+     * @caching This method **does not** cache its result.
      */
     async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         const query = new URLSearchParams();
@@ -246,6 +256,7 @@ export default class ApplicationCommands {
      * Get an application's global commands.
      * @param applicationID The ID of the application.
      * @param options The options for getting the command.
+     * @caching This method **does not** cache its result.
      */
     async getGlobalCommands(applicationID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
@@ -266,6 +277,7 @@ export default class ApplicationCommands {
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command.
      * @param options The options for getting the command.
+     * @caching This method **does not** cache its result.
      */
     async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         const query = new URLSearchParams();
@@ -285,6 +297,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @param options The options for getting the command.
+     * @caching This method **does not** cache its result.
      */
     async getGuildCommands(applicationID: string, guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         const query = new URLSearchParams();
@@ -304,6 +317,7 @@ export default class ApplicationCommands {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command.
+     * @caching This method **does not** cache its result.
      */
     async getGuildPermission(applicationID: string, guildID: string, commandID: string): Promise<RESTGuildApplicationCommandPermissions> {
         return this.#manager.authRequest<RawGuildApplicationCommandPermissions>({
@@ -321,6 +335,7 @@ export default class ApplicationCommands {
      * Get the permissions for all application commands in a guild.
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
+     * @caching This method **does not** cache its result.
      */
     async getGuildPermissions(applicationID: string, guildID: string): Promise<Array<RESTGuildApplicationCommandPermissions>> {
         return this.#manager.authRequest<Array<RawGuildApplicationCommandPermissions>>({

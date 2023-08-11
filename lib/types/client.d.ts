@@ -119,23 +119,24 @@ export interface CollectionLimitsOptions {
      */
     autoModerationRules?: number | Record<string, number>;
     /**
-     * The maximum number of threads to cache per channel. This does not effect the threads cached at the guild level.
-     * @dictionaryKey channel id
-     * @defaultValue Infinity
-     */
-    channelThreads?: number | Record<string, number>;
-    /**
      * The maximum number of guild channels to cache.
+     * @dictionaryKey guild id
      * @defaultValue Infinity
      */
     channels?: number | Record<string, number>;
+    /**
+     * The maximum number of guild emojis to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    emojis?: number | Record<string, number>;
     /**
      * The maximum number of group channels to cache.
      * @defaultValue 10
      */
     groupChannels?: number;
     /**
-     * The maximum number of threads to cache per guild. This does not effect the threads cached on each channel.
+     * The maximum number of threads to cache per guild. Setting this too low might cause channels to have missing threads, as they all pull from the guild.
      * @dictionaryKey guild id
      * @defaultValue Infinity
      */
@@ -153,9 +154,16 @@ export interface CollectionLimitsOptions {
      */
     integrations?: number | Record<string, number>;
     /**
+     * The maximum number of guild invites to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    invites?: number | Record<string, number>;
+    /**
      * The maximum number of members to cache.
      *
      * Note: If you request members from the gateway, this will be increased (on the specific guild) as needed to accommodate those members.
+     * @dictionaryKey guild id
      * @defaultValue Infinity
      */
     members?: number | Record<string, number>;
@@ -188,6 +196,12 @@ export interface CollectionLimitsOptions {
      * @defaultValue Infinity
      */
     stageInstances?: number | Record<string, number>;
+    /**
+     * The maximum number of guild stickers to cache.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    stickers?: number | Record<string, number>;
     /**
      * The maximum number of unavailable guilds to cache.
      * @defaultValue Infinity

@@ -20,45 +20,43 @@ import Util from "./util/Util";
 import type { ClientEvents } from "./types/events";
 import type { JoinVoiceChannelOptions } from "./types/voice";
 import { DependencyError, UncachedError } from "./util/Errors";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import type { DiscordGatewayAdapterLibraryMethods,VoiceConnection } from "@discordjs/voice";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+// @ts-ignore
+import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
+
 // @ts-ignore
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     DiscordJSVoice = require("@discordjs/voice");
 } catch {}
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     Erlpack = require("erlpack");
 } catch {}
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
-/** The primary class for interfacing with Discord. See {@link Events~ClientEvents | Client Events} for a list of events. */
+/** The primary class for interfacing with Discord. See {@link ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
     private _application?: ClientApplication;
     private _connected = false;
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
     gatewayURL!: string;
-    groupChannels: TypedCollection<string, RawGroupChannel, GroupChannel>;
+    groupChannels: TypedCollection<RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
-    guilds: TypedCollection<string, RawGuild, Guild, [rest?: boolean]>;
+    guilds: TypedCollection<RawGuild, Guild, [rest?: boolean]>;
     options: ClientInstanceOptions;
-    privateChannels: TypedCollection<string, RawPrivateChannel, PrivateChannel>;
+    privateChannels: TypedCollection<RawPrivateChannel, PrivateChannel>;
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
     startTime = 0;
     threadGuildMap: Record<string, string>;
-    unavailableGuilds: TypedCollection<string, RawUnavailableGuild, UnavailableGuild>;
-    users: TypedCollection<string, RawUser, User>;
+    unavailableGuilds: TypedCollection<RawUnavailableGuild, UnavailableGuild>;
+    users: TypedCollection<RawUser, User>;
     util: Util;
     voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
     /**
@@ -72,18 +70,20 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         const colZero = {
             auditLogEntries:     0,
             autoModerationRules: 0,
-            channelThreads:      0,
             channels:            0,
+            emojis:              0,
             groupChannels:       0,
-            guildThreads:        0,
             guilds:              0,
+            guildThreads:        0,
             integrations:        0,
+            invites:             0,
             members:             0,
             messages:            0,
             privateChannels:     0,
             roles:               0,
             scheduledEvents:     0,
             stageInstances:      0,
+            stickers:            0,
             unavailableGuilds:   0,
             users:               0,
             voiceMembers:        0,
@@ -100,18 +100,20 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             collectionLimits: disableCache ? colZero : {
                 auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
                 autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
-                channelThreads:      this.util._setLimit(options?.collectionLimits?.channelThreads, Infinity),
                 channels:            this.util._setLimit(options?.collectionLimits?.channels, Infinity),
+                emojis:              this.util._setLimit(options?.collectionLimits?.emojis, Infinity),
                 groupChannels:       options?.collectionLimits?.groupChannels ?? 10,
-                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
                 guilds:              options?.collectionLimits?.guilds ?? Infinity,
+                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
                 integrations:        this.util._setLimit(options?.collectionLimits?.integrations, Infinity),
+                invites:             this.util._setLimit(options?.collectionLimits?.invites, Infinity),
                 members:             this.util._setLimit(options?.collectionLimits?.members, Infinity),
                 messages:            this.util._setLimit(options?.collectionLimits?.messages, 100),
                 privateChannels:     options?.collectionLimits?.privateChannels ?? 25,
                 roles:               this.util._setLimit(options?.collectionLimits?.roles, Infinity),
                 scheduledEvents:     this.util._setLimit(options?.collectionLimits?.scheduledEvents, Infinity),
                 stageInstances:      this.util._setLimit(options?.collectionLimits?.stageInstances, Infinity),
+                stickers:            this.util._setLimit(options?.collectionLimits?.stickers, Infinity),
                 unavailableGuilds:   options?.collectionLimits?.unavailableGuilds ?? Infinity,
                 users:               options?.collectionLimits?.users ?? Infinity,
                 voiceMembers:        this.util._setLimit(options?.collectionLimits?.voiceMembers, Infinity),
@@ -212,6 +214,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]]
         ] as Array<[intent: Intents, allowed: Array<ApplicationFlags>]>;
 
+        /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
         if (this.shards.options.removeDisallowedIntents && privilegedIntentMapping.some(([intent]) => (this.shards.options.intents & intent) === intent)) {
             const { flags } = await this.rest.misc.getApplication();
             const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
@@ -224,6 +227,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 check(intent, allowed);
             }
         }
+        /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
 
         this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
         if (this.shards.options.compress) {
@@ -338,12 +342,16 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     }
 
     /**
-     * Initialize this client for rest only use. Currently, this sets both the `application` and `user` properties, as would happen with a gateway connection.
+     * Initialize this client for rest only use. Currently, this sets both the `application` and `user` properties (if not already present), as would happen with a gateway connection.
+     * @param fakeReady If the client should emit a ready event. Defaults to true.
      */
-    async restMode(): Promise<this> {
-        this._application = await this.rest.misc.getClientApplication();
-        this._user = await this.rest.oauth.getCurrentUser();
+    async restMode(fakeReady = true): Promise<this> {
+        this._application ??= await this.rest.misc.getClientApplication();
+        this._user ??= await this.rest.oauth.getCurrentUser();
         this.options.restMode = true;
+        if (fakeReady) {
+            this.emit("ready");
+        }
         return this;
     }
 }

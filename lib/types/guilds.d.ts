@@ -58,6 +58,7 @@ export interface RawGuild {
     icon: string | null;
     icon_hash?: string | null;
     id: string;
+    inventory_settings: RawInventorySettings | null;
     joined_at: string | null;
     large: boolean;
     latest_onboarding_question_id?: string | null;
@@ -610,9 +611,11 @@ export interface WidgetUser {
     };
     avatar: null;
     avatarURL: string;
+    /** Always "0000" */
     discriminator: string;
     id: string;
     status: "online" | "idle" | "dnd";
+    /** @deprecated Use `username` */
     tag: string;
     username: string;
 }
@@ -798,4 +801,12 @@ export interface Onboarding {
     guildID: string;
     mode: OnboardingModes;
     prompts: Array<OnboardingPrompt>;
+}
+
+export interface RawInventorySettings {
+    is_emoji_pack_collectible: boolean;
+}
+
+export interface InventorySettings {
+    isEmojiPackCollectible: boolean;
 }

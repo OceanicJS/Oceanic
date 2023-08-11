@@ -2,7 +2,6 @@
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
-import ThreadChannel from "./ThreadChannel";
 import ThreadableChannel from "./ThreadableChannel";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
@@ -13,7 +12,7 @@ import type { JSONTextChannel } from "../types/json";
 export default class TextChannel extends ThreadableChannel<TextChannel, PublicThreadChannel | PrivateThreadChannel>  {
     declare type: ChannelTypes.GUILD_TEXT;
     constructor(data: RawTextChannel, client: Client) {
-        super(data, client, ThreadChannel);
+        super(data, client);
     }
 
     /**

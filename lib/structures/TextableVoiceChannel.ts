@@ -25,7 +25,7 @@ export default class TextableVoiceChannel<T extends AnyVoiceChannel = AnyVoiceCh
     userLimit: number;
     /** The [video quality mode](https://discord.com/developers/docs/resources/channel#channel-object-video-quality-modes) of this channel. */
     videoQualityMode: VideoQualityModes;
-    voiceMembers: TypedCollection<string, RawMember, Member, [guildID: string]>;
+    voiceMembers: TypedCollection<RawMember, Member, [guildID: string]>;
     constructor(data: RawVoiceChannel | RawStageChannel, client: Client) {
         super(data, client);
         this.bitrate = data.bitrate;

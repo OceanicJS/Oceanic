@@ -1,4 +1,4 @@
-/** @module Routes/Users */
+/** @module REST/Users */
 import type Channels from "./Channels";
 import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
 import * as Routes from "../util/Routes";
@@ -6,23 +6,22 @@ import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";
 import type User from "../structures/User";
 
-/** Various methods for interacting with users. */
+/** Various methods for interacting with users. Located at {@link Client#rest | Client#rest}{@link RESTManager#users | .users}. */
 export default class Users {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
     }
 
-    /** Alias for {@link Routes/Channels~Channels#createDM | Channels#createDM}. */
+    /** Alias for {@link REST/Channels#createDM | Channels#createDM}. */
     get createDM(): typeof Channels.prototype.createDM {
         return this.#manager.channels.createDM.bind(this.#manager.channels);
     }
 
     /**
      * Edit the currently authenticated user.
-     *
-     * Note: This does not touch the client's cache in any way.
      * @param options The options to edit with.
+     * @caching This method **does not** cache its result.
      */
     async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
         if (options.avatar) {
@@ -38,6 +37,8 @@ export default class Users {
     /**
      * Get a user.
      * @param userID the ID of the user
+     * @caching This method **does** cache its result.
+     * @caches {@link Client#users | Client#users}
      */
     async get(userID: string): Promise<User> {
         return this.#manager.authRequest<RawUser>({
@@ -49,6 +50,7 @@ export default class Users {
     /**
      * Leave a guild.
      * @param guildID The ID of the guild to leave.
+     * @caching This method **does not** cache its result.
      */
     async leaveGuild(guildID: string): Promise<void> {
         await this.#manager.authRequest<null>({

@@ -53,6 +53,7 @@ const Role = (await import("./dist/lib/structures/Role.js")).default.default;
 const Routes = (await import("./dist/lib/util/Routes.js")).default;
 const SelectMenuValuesWrapper = (await import ("./dist/lib/util/SelectMenuValuesWrapper.js")).default.default;
 const SequentialBucket = (await import("./dist/lib/rest/SequentialBucket.js")).default.default;
+const SimpleCollection = (await import("./dist/lib/util/SimpleCollection.js")).default.default;
 const Shard = (await import("./dist/lib/gateway/Shard.js")).default.default;
 const ShardManager = (await import("./dist/lib/gateway/ShardManager.js")).default.default;
 const StageChannel = (await import("./dist/lib/structures/StageChannel.js")).default.default;
@@ -131,6 +132,7 @@ export {
     Routes,
     SelectMenuValuesWrapper,
     SequentialBucket,
+    SimpleCollection,
     Shard,
     ShardManager,
     StageChannel,

@@ -107,7 +107,7 @@ interface GatewayOptions {
      */
     reconnectDelay?: ReconnectDelayFunction;
     /**
-     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link Miscellaneous~Miscellaneous.getApplication | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
+     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link REST/Miscellaneous.getApplication | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
      * @defaultValue false
      */
     removeDisallowedIntents?: boolean;
@@ -211,7 +211,7 @@ export interface Activity {
     type: ActivityTypes;
     url?: string | null;
 }
-export interface BotActivity extends Pick<Activity, "name" | "url"> { type: BotActivityTypes; }
+export interface BotActivity extends Pick<Activity, "name" | "url" | "state"> {}
 
 export interface ActivityEmoji {
     animated?: boolean;
@@ -228,8 +228,6 @@ export interface ActivityButton {
     label: string;
     url: string;
 }
-
-export type BotActivityTypes = ActivityTypes.GAME | ActivityTypes.STREAMING | ActivityTypes.LISTENING | ActivityTypes.WATCHING | ActivityTypes.COMPETING;
 
 export interface PresenceUpdate {
     activities?: Array<Activity>;

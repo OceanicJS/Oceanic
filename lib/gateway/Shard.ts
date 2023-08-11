@@ -48,10 +48,8 @@ import Message from "../structures/Message";
 import StageInstance from "../structures/StageInstance";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import Interaction from "../structures/Interaction";
-import { is } from "../util/Util";
 import Guild from "../structures/Guild";
 import type { ShardEvents } from "../types/events";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import Role from "../structures/Role";
 import Integration from "../structures/Integration";
 import VoiceState from "../structures/VoiceState";
@@ -68,31 +66,26 @@ import { randomBytes } from "node:crypto";
 import { inspect } from "node:util";
 import assert from "node:assert";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access */
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     Erlpack = require("erlpack");
 } catch {}
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 let ZlibSync: typeof import("pako") | typeof import("zlib-sync") | undefined, zlibConstants: typeof import("pako").constants | typeof import("zlib-sync") | undefined;
 try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     ZlibSync = require("zlib-sync");
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
     zlibConstants = require("zlib-sync");
 } catch {
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module
         ZlibSync = require("pako");
-        // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, unicorn/prefer-module
         zlibConstants = require("pako").constants;
     } catch {}
 }
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
-/** Represents a gateway connection to Discord. See {@link Events~ShardEvents | Shard Events} for a list of events. */
+/** Represents a gateway connection to Discord. See {@link ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<ShardEvents> {
     client!: Client;
     connectAttempts: number;
@@ -117,6 +110,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     resumeURL: string | null;
     sequence: number;
     sessionID: string | null;
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     #sharedZLib!: Pako.Inflate | Inflate;
     status: ShardStatus;
     ws!: WebSocket | null;
@@ -185,6 +179,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.client.guildShardMap[data.id] = this.id;
         const guild = this.client.guilds.update(data);
         if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
             void this.requestGuildMembers(guild.id, { presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES });
         }
 
@@ -385,9 +380,8 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 this.client.voiceAdapters.get(packet.d.id)?.destroy();
                 delete this.client.guildShardMap[packet.d.id];
                 const guild = this.client.guilds.get(packet.d.id);
-                if (guild?.channels) {
-                    for (const [,channel] of guild.channels) delete this.client.channelGuildMap[channel.id];
-                }
+                guild?.channels.clear();
+                guild?.threads.clear();
                 this.client.guilds.delete(packet.d.id);
                 if (packet.d.unavailable) {
                     this.client.emit("guildUnavailable", this.client.unavailableGuilds.update(packet.d));
@@ -399,22 +393,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_EMOJIS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldEmojis = guild?.emojis ? [...guild.emojis] : null;
+                const oldEmojis = guild?.emojis ? guild.emojis.toArray() : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ emojis: packet.d.emojis });
                 this.client.emit(
                     "guildEmojisUpdate",
                     guild ?? { id: packet.d.guild_id },
-                    guild?.emojis ?? packet.d.emojis.map(emoji => ({
-                        animated:      emoji.animated,
-                        available:     emoji.available,
-                        id:            emoji.id,
-                        managed:       emoji.managed,
-                        name:          emoji.name,
-                        requireColons: emoji.require_colons,
-                        roles:         emoji.roles,
-                        user:          emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
-                    })),
+                    guild?.emojis?.toArray() ?? packet.d.emojis.map(emoji => this.client.util.convertEmoji(emoji)),
                     oldEmojis
                 );
                 break;
@@ -593,10 +578,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
             case "GUILD_STICKERS_UPDATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
-                const oldStickers = guild?.stickers ? [...guild.stickers] : null;
+                const oldStickers = guild?.stickers ? guild.stickers.toArray() : null;
                 // eslint-disable-next-line @typescript-eslint/dot-notation
                 guild?.["update"]({ stickers: packet.d.stickers });
-                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
+                this.client.emit("guildStickersUpdate", guild ?? { id: packet.d.guild_id }, guild?.stickers?.toArray() ?? packet.d.stickers.map(sticker => this.client.util.convertSticker(sticker)), oldStickers);
                 break;
             }
 
@@ -636,12 +621,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INVITE_CREATE": {
-                const invite = new Invite(packet.d, this.client);
+                let invite: Invite | undefined;
                 if (packet.d.guild_id) {
                     const guild = this.client.guilds.get(packet.d.guild_id);
-                    guild?.invites.set(invite.code, invite);
+                    invite = guild?.invites.update(packet.d);
                 }
-                this.client.emit("inviteCreate", new Invite(packet.d, this.client));
+                this.client.emit("inviteCreate", invite ?? new Invite(packet.d, this.client));
                 break;
             }
 
@@ -959,8 +944,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             case "THREAD_CREATE": {
                 const thread = this.client.util.updateThread(packet.d);
                 const channel = this.client.getChannel<ThreadParentChannel>(packet.d.parent_id!);
-                if (channel?.type === ChannelTypes.GUILD_FORUM) {
-                    channel.lastThread = thread as PublicThreadChannel;
+                if (channel && channel.type === ChannelTypes.GUILD_FORUM) {
                     channel.lastThreadID = thread.id;
                 }
                 this.client.emit("threadCreate", thread);
@@ -977,13 +961,10 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     parentID: packet.d.parent_id!,
                     type:     packet.d.type
                 };
-                if (channel) {
-                    channel.threads?.delete(packet.d.id);
-                    if (channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
-                        channel.lastThread = null;
-                        channel.lastThreadID = null;
-                    }
+                if (channel && channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === packet.d.id) {
+                    channel.lastThreadID = null;
                 }
+                this.client.guilds.get(packet.d.guild_id)?.threads.delete(packet.d.id);
                 this.client.emit("threadDelete", thread);
                 break;
             }
@@ -1363,6 +1344,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.client.emit("error", err, this.id);
     }
 
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
     private onWSMessage(data: Data): void {
         if (typeof data === "string") {
             data = Buffer.from(data);
@@ -1377,37 +1359,47 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 data = Buffer.concat(data);
             }
 
+            const is = <T>(input: unknown): input is T => true;
             assert(is<Buffer>(data));
             if (this.client.shards.options.compress) {
                 if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                    // store the current pointer for slicing buffers after pushing.
+                    const currentPointer: number | undefined = this.#sharedZLib.strm?.next_out;
                     this.#sharedZLib.push(data, zlibConstants!.Z_SYNC_FLUSH);
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (this.#sharedZLib.err) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                         this.client.emit("error", new GatewayError(`zlib error ${this.#sharedZLib.err}: ${this.#sharedZLib.msg ?? ""}`, 0));
                         return;
                     }
 
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-                    data = Buffer.from(this.#sharedZLib.result ?? "");
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                    return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(data.toString())) as AnyReceivePacket);
+                    if (currentPointer === undefined) {
+                        // decompression support by zlib-sync
+                        data = Buffer.from(this.#sharedZLib.result ?? "");
+                    } else if (this.#sharedZLib.chunks.length === 0) {
+                        // decompression support by pako. The current buffer hasn't been flushed
+                        data = this.#sharedZLib.strm!.output.slice(currentPointer);
+                    } else {
+                        // decompression support by pako. Buffers have been flushed once or more times.
+                        data = Buffer.concat([
+                            this.#sharedZLib.chunks[0].slice(currentPointer),
+                            ...this.#sharedZLib.chunks.slice(1),
+                            this.#sharedZLib.strm.output
+                        ]);
+                        this.#sharedZLib.chunks = [];
+                    }
+                    return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(String(data))) as AnyReceivePacket);
                 } else {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                     this.#sharedZLib.push(data, false);
                 }
             } else if (Erlpack) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 return this.onPacket(Erlpack.unpack(data) as AnyReceivePacket);
             } else {
                 return this.onPacket(JSON.parse(data.toString()) as AnyReceivePacket);
             }
-
         } catch (err) {
             this.client.emit("error", err as Error, this.id);
         }
     }
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
 
     private onWSOpen(): void {
         this.status = "handshaking";

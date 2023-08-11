@@ -1,0 +1,28 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Oceanic",
+  "entryPoints": ["../lib"],
+  "plugin": [
+    "typedoc-plugin-extras",
+    "typedoc-plugin-mdn-links",
+    "typedoc-plugin-merge-modules",
+    "@mxssfd/typedoc-theme",
+    "./dark.js"
+  ],
+  "tsconfig": "../tsconfig.json",
+  "entryPointStrategy": "expand",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "githubPages": false,
+  "hideGenerator": true,
+  "gitRemote": "origin",
+  "readme": "../README.md",
+  "out": "../docs",
+  "json": "../docs/docs.json",
+  "exclude": [],
+  "favicon": "./static/favicon.ico",
+  "customTitleLink": "https://docs.oceanic.ws",
+  "theme": "my-theme",
+  "mergeModulesMergeMode": "project",
+  "groupOrder": ["*", "Namespaces"]
+}

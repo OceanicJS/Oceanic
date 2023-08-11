@@ -19,7 +19,7 @@ import Channel from "./Channel";
 import type StageChannel from "./StageChannel";
 import type GuildTemplate from "./GuildTemplate";
 import type GuildPreview from "./GuildPreview";
-import type Invite from "./Invite";
+import Invite from "./Invite";
 import type Webhook from "./Webhook";
 import AuditLogEntry from "./AuditLogEntry";
 import {
@@ -48,7 +48,8 @@ import type {
     AnyInviteChannel,
     RawGuildChannel,
     RawThreadChannel,
-    GuildChannelsWithoutThreads
+    GuildChannelsWithoutThreads,
+    RawInvite
 } from "../types/channels";
 import type {
     AddMemberOptions,
@@ -91,7 +92,10 @@ import type {
     Sticker,
     EditStickerOptions,
     Onboarding,
-    EditOnboardingOptions
+    EditOnboardingOptions,
+    RawGuildEmoji,
+    RawSticker,
+    InventorySettings
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -107,10 +111,10 @@ import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../typ
 import type { JSONGuild } from "../types/json";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 import type Shard from "../gateway/Shard";
-import Collection from "../util/Collection";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
 import { UncachedError } from "../util/Errors";
+import SimpleCollection from "../util/SimpleCollection";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
@@ -134,13 +138,13 @@ export default class Guild extends Base {
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
     approximatePresenceCount?: number;
     /** The cached audit log entries. This requires both the {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION} intent, as well as the {@link Constants~Permissions | VIEW_AUDIT_LOG } permission. */
-    auditLogEntries: TypedCollection<string, RawAuditLogEntry, AuditLogEntry>;
+    auditLogEntries: TypedCollection<RawAuditLogEntry, AuditLogEntry>;
     /** The auto moderation rules in this guild. */
-    autoModerationRules: TypedCollection<string, RawAutoModerationRule, AutoModerationRule>;
+    autoModerationRules: TypedCollection<RawAutoModerationRule, AutoModerationRule>;
     /** The hash of this guild's banner. */
     banner: string | null;
     /** The channels in this guild. */
-    channels: TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
+    channels: TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
     /** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
     defaultMessageNotifications: DefaultMessageNotificationLevels;
     /** The description of this guild. */
@@ -148,7 +152,7 @@ export default class Guild extends Base {
     /** The discovery splash of this guild. Only present if the guild has the `DISCOVERABLE` feature. */
     discoverySplash: string | null;
     /** The custom emojis of this guild. */
-    emojis: Array<GuildEmoji>;
+    emojis: SimpleCollection<string, RawGuildEmoji, GuildEmoji>;
     /** The [explicit content filter](https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level) of this guild. */
     explicitContentFilter: ExplicitContentFilterLevels;
     /** The [features](https://discord.com/developers/docs/resources/guild#guild-object-guild-features) this guild has. */
@@ -156,9 +160,11 @@ export default class Guild extends Base {
     /** The icon hash of this guild. */
     icon: string | null;
     /** The integrations in this guild. */
-    integrations: TypedCollection<string, RawIntegration, Integration, [guildID?: string]>;
+    integrations: TypedCollection<RawIntegration, Integration, [guildID?: string]>;
+    /** The guild's inventory settings. */
+    inventorySettings: InventorySettings | null;
     /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
-    invites: Collection<string, Invite>;
+    invites: SimpleCollection<string, RawInvite, Invite, "code">;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -175,7 +181,7 @@ export default class Guild extends Base {
     /** The number of members in this guild. */
     memberCount: number;
     /** The cached members in this guild. */
-    members: TypedCollection<string, RawMember | RESTMember, Member, [guildID: string]>;
+    members: TypedCollection<RawMember | RESTMember, Member, [guildID: string]>;
     /** The required [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) for moderators of this guild. */
     mfaLevel: MFALevels;
     /** The name of this guild. */
@@ -201,7 +207,7 @@ export default class Guild extends Base {
     /** @deprecated The region of this guild.*/
     region?: string | null;
     /** The roles in this guild. */
-    roles: TypedCollection<string, RawRole, Role, [guildID: string]>;
+    roles: TypedCollection<RawRole, Role, [guildID: string]>;
     /** The channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
     rulesChannel?: TextChannel | null;
     /** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
@@ -211,13 +217,13 @@ export default class Guild extends Base {
     /** The ID if the channel where safety related notices are posted. */
     safetyAlertsChannelID: string | null;
     /** The scheduled events in this guild. */
-    scheduledEvents: TypedCollection<string, RawScheduledEvent, GuildScheduledEvent>;
+    scheduledEvents: TypedCollection<RawScheduledEvent, GuildScheduledEvent>;
     /** The invite splash hash of this guild. */
     splash: string | null;
     /** The stage instances in this guild. */
-    stageInstances: TypedCollection<string, RawStageInstance, StageInstance>;
+    stageInstances: TypedCollection<RawStageInstance, StageInstance>;
     /** The custom stickers of this guild. */
-    stickers: Array<Sticker>;
+    stickers: SimpleCollection<string, RawSticker, Sticker>;
     /** The channel where welcome messages and boosts notices are posted. */
     systemChannel?: TextChannel | null;
     /** The [flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags) for the system channel. */
@@ -225,7 +231,7 @@ export default class Guild extends Base {
     /** The ID of the channel where welcome messages and boosts notices are posted. */
     systemChannelID: string | null;
     /** The threads in this guild. */
-    threads: TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
+    threads: TypedCollection<RawThreadChannel, AnyThreadChannel>;
     /** If this guild is unavailable. */
     unavailable: boolean;
     /** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
@@ -233,7 +239,7 @@ export default class Guild extends Base {
     /** The [verification level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
     /** The voice states of members in voice channels. */
-    voiceStates: TypedCollection<string, RawVoiceState, VoiceState>;
+    voiceStates: TypedCollection<RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
     welcomeScreen?: WelcomeScreen;
     /** The channel the widget will generate an invite to, or `null` if set to no invite. */
@@ -250,16 +256,25 @@ export default class Guild extends Base {
         this.auditLogEntries = new TypedCollection(AuditLogEntry, client, client.util._getLimit("auditLogEntries", this.id));
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client, client.util._getLimit("autoModerationRules", this.id));
         this.banner = null;
-        this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id)) as TypedCollection<string, RawGuildChannel, AnyGuildChannelWithoutThreads>;
+        this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
+            construct: (channel): GuildChannel => {
+                client.channelGuildMap[channel.id] = this.id;
+                return Channel.from<AnyGuildChannelWithoutThreads>(channel, client);
+            },
+            delete: (id): void => {
+                delete client.channelGuildMap[id];
+            }
+        }) as TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
-        this.emojis = [];
+        this.emojis = new SimpleCollection(rawEmoji => this.client.util.convertEmoji(rawEmoji), client.util._getLimit("emojis", this.id), "merge");
         this.explicitContentFilter = data.explicit_content_filter;
         this.features = [];
         this.icon = null;
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
-        this.invites = new Collection();
+        this.inventorySettings = null;
+        this.invites = new SimpleCollection(rawInvite => new Invite(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
         this.latestOnboardingQuestionID = null;
@@ -280,10 +295,18 @@ export default class Guild extends Base {
         this.scheduledEvents = new TypedCollection(GuildScheduledEvent, client, client.util._getLimit("scheduledEvents", this.id));
         this.splash = null;
         this.stageInstances = new TypedCollection(StageInstance, client, client.util._getLimit("stageInstances", this.id));
-        this.stickers = [];
+        this.stickers = new SimpleCollection(rawSticker => client.util.convertSticker(rawSticker), client.util._getLimit("stickers", this.id), "merge");
         this.systemChannelID = null;
         this.systemChannelFlags = data.system_channel_flags;
-        this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id)) as TypedCollection<string, RawThreadChannel, AnyThreadChannel>;
+        this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
+            construct: (thread): ThreadChannel => {
+                client.threadGuildMap[thread.id] = this.id;
+                return Channel.from<AnyThreadChannel>(thread, client);
+            },
+            delete: (id): void => {
+                delete client.threadGuildMap[id];
+            }
+        }) as TypedCollection<RawThreadChannel, AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
@@ -299,11 +322,7 @@ export default class Guild extends Base {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
                 client.channelGuildMap[channelData.id] = this.id;
-                const channel = this.channels.add(Channel.from<AnyGuildChannelWithoutThreads>(channelData, client));
-                const parent = channel.parentID === null ? null : this.channels.get(channel.parentID);
-                if (parent && "channels" in parent) {
-                    parent.channels.add(channel);
-                }
+                this.channels.update(channelData);
             }
         }
 
@@ -311,12 +330,7 @@ export default class Guild extends Base {
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
-                client.threadGuildMap[threadData.id] = this.id;
-                const thread = this.threads.add(Channel.from<AnyThreadChannel>(threadData, client));
-                const channel = this.channels.get(thread.parentID);
-                if (channel && "threads" in channel) {
-                    (channel.threads as TypedCollection<string, RawThreadChannel, ThreadChannel>).add(thread);
-                }
+                this.threads.update(threadData);
             }
         }
 
@@ -469,16 +483,10 @@ export default class Guild extends Base {
             this.discoverySplash = data.discovery_splash;
         }
         if (data.emojis !== undefined) {
-            this.emojis = data.emojis.map(emoji => ({
-                animated:      emoji.animated,
-                available:     emoji.available,
-                id:            emoji.id,
-                managed:       emoji.managed,
-                name:          emoji.name,
-                requireColons: emoji.require_colons,
-                roles:         emoji.roles,
-                user:          emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
-            }));
+            this.emojis.clear();
+            for (const emoji of data.emojis) {
+                this.emojis.update(emoji);
+            }
         }
         if (data.explicit_content_filter !== undefined) {
             this.explicitContentFilter = data.explicit_content_filter;
@@ -488,6 +496,11 @@ export default class Guild extends Base {
         }
         if (data.icon !== undefined) {
             this.icon = data.icon;
+        }
+        if (data.inventory_settings !== undefined) {
+            this.inventorySettings = data.inventory_settings === null ? null : {
+                isEmojiPackCollectible: data.inventory_settings.is_emoji_pack_collectible
+            };
         }
         if (data.joined_at !== undefined) {
             this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
@@ -557,7 +570,8 @@ export default class Guild extends Base {
             this.splash = data.splash;
         }
         if (data.stickers !== undefined) {
-            this.stickers = data.stickers.map(sticker => this.client.util.convertSticker(sticker));
+            this.stickers.clear();
+            for (const sticker of data.stickers) this.stickers.update(sticker);
         }
         if (data.system_channel_flags !== undefined) {
             this.systemChannelFlags = data.system_channel_flags;
@@ -1413,7 +1427,7 @@ export default class Guild extends Base {
             defaultMessageNotifications: this.defaultMessageNotifications,
             description:                 this.description,
             discoverySplash:             this.discoverySplash,
-            emojis:                      this.emojis,
+            emojis:                      this.emojis.toArray(),
             explicitContentFilter:       this.explicitContentFilter,
             features:                    this.features,
             icon:                        this.icon,
@@ -1440,7 +1454,7 @@ export default class Guild extends Base {
             scheduledEvents:             this.scheduledEvents.map(event => event.toJSON()),
             splash:                      this.splash,
             stageInstances:              this.stageInstances.map(instance => instance.toJSON()),
-            stickers:                    this.stickers,
+            stickers:                    this.stickers.toArray(),
             systemChannelID:             this.systemChannelID,
             systemChannelFlags:          this.systemChannelFlags,
             threads:                     this.threads.map(thread => thread.id),

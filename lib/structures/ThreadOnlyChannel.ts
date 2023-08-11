@@ -1,7 +1,7 @@
 /** @module ThreadOnlyChannel */
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
-import PublicThreadChannel from "./PublicThreadChannel";
+import type PublicThreadChannel from "./PublicThreadChannel";
 import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
@@ -16,7 +16,6 @@ import type {
     ForumTag,
     GetArchivedThreadsOptions,
     RawOverwrite,
-    RawPublicThreadChannel,
     StartThreadInThreadOnlyChannelOptions
 } from "../types/channels";
 import type { JSONThreadOnlyChannel } from "../types/json";
@@ -30,6 +29,7 @@ import {
 } from "../Constants";
 import type { CreateWebhookOptions, RawThreadOnlyChannel, ThreadOnlyChannels } from "../types";
 import { UncachedError } from "../util/Errors";
+import Collection from "../util/Collection";
 
 /** Represents a thread only channel. */
 export default class ThreadOnlyChannel extends GuildChannel {
@@ -47,20 +47,16 @@ export default class ThreadOnlyChannel extends GuildChannel {
     defaultThreadRateLimitPerUser: number;
     /** The flags for this channel, see {@link Constants.ChannelFlags | ChannelFlags}. */
     flags: number;
-    /** The most recently created thread. */
-    lastThread?: PublicThreadChannel | null;
     /** The ID of most recently created thread. */
     lastThreadID: string | null;
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<string, RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators creating threads. */
     rateLimitPerUser: number;
-    /** The threads in this channel. */
-    threads: TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>;
     /** The `guidelines` of this forum channel. */
     topic: string | null;
     declare type: ThreadOnlyChannels;
@@ -78,7 +74,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.rateLimitPerUser = data.rate_limit_per_user;
-        this.threads = new TypedCollection<string, RawPublicThreadChannel, PublicThreadChannel>(PublicThreadChannel, client, this.client.util._getLimit("channelThreads", this.id));
         this.topic = data.topic;
         this.update(data);
     }
@@ -112,7 +107,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
             this.flags = data.flags;
         }
         if (data.last_message_id !== undefined) {
-            this.lastThread = data.last_message_id === null ? null : this.threads.get(data.last_message_id);
             this.lastThreadID = data.last_message_id;
         }
 
@@ -141,8 +135,18 @@ export default class ThreadOnlyChannel extends GuildChannel {
         }
     }
 
+    /** The most recently created thread. */
+    get lastThread(): PublicThreadChannel | null {
+        return this.lastThreadID === null ? null : this.guild.threads.get(this.lastThreadID) as PublicThreadChannel;
+    }
+
     override get parent(): CategoryChannel | null | undefined {
         return super.parent as CategoryChannel | null | undefined;
+    }
+
+    /** The threads in this channel. The returned collection is disposable. */
+    get threads(): Collection<string, PublicThreadChannel> {
+        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as PublicThreadChannel]));
     }
 
     /**

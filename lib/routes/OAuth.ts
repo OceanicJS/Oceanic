@@ -1,4 +1,4 @@
-/** @module Routes/OAuth */
+/** @module REST/OAuth */
 import type {
     AuthorizationInformation,
     ClientCredentialsTokenOptions,
@@ -35,7 +35,7 @@ import ExtendedUser from "../structures/ExtendedUser";
 import type { RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
 import { FormData } from "undici";
 
-/** Various methods for interacting with oauth. */
+/** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
@@ -45,6 +45,7 @@ export default class OAuth {
     /**
      * Get an access token for the application owner. If the application is owned by a team, this is restricted to `identify` & `applications.commands.update`.
      * @param options The options to for the client credentials grant.
+     * @caching This method **does not** cache its result.
      */
     async clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse> {
         const form = new FormData();
@@ -67,6 +68,7 @@ export default class OAuth {
     /**
      * Exchange a code for an access token.
      * @param options The options for exchanging the code.
+     * @caching This method **does not** cache its result.
      */
     async exchangeCode(options: ExchangeCodeOptions): Promise<ExchangeCodeResponse> {
         const form = new FormData();
@@ -91,6 +93,7 @@ export default class OAuth {
 
     /**
      * Get the current OAuth2 application's information.
+     * @caching This method **does not** cache its result.
      */
     async getApplication(): Promise<OAuthApplication> {
         return this.#manager.authRequest<RESTOAuthApplication>({
@@ -103,6 +106,8 @@ export default class OAuth {
      * Get information about the current authorization.
      *
      * Note: OAuth only. Bots cannot use this.
+     * @caching This method **does** cache part its result.
+     * @caches {@link Client#users | Client#users}
      */
     async getCurrentAuthorizationInformation(): Promise<AuthorizationInformation> {
         return this.#manager.authRequest<RawAuthorizationInformation>({
@@ -120,6 +125,7 @@ export default class OAuth {
      * Get the connections of the currently authenticated user.
      *
      * Note: Requires the `connections` scope when using oauth.
+     * @caching This method **does not** cache its result.
      */
     async getCurrentConnections(): Promise<Array<Connection>> {
         return this.#manager.authRequest<Array<RawConnection>>({
@@ -144,6 +150,7 @@ export default class OAuth {
      *
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
      * @param guild the ID of the guild
+     * @caching This method **does not** cache its result.
      */
     async getCurrentGuildMember(guild: string): Promise<Member> {
         return this.#manager.authRequest<RESTMember>({
@@ -155,6 +162,7 @@ export default class OAuth {
     /**
      * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
      * @param options The options for getting the current user's guilds.
+     * @caching This method **does not** cache its result.
      */
     async getCurrentGuilds(options?: GetCurrentGuildsOptions): Promise<Array<OAuthGuild>> {
         const query = new URLSearchParams();
@@ -179,8 +187,7 @@ export default class OAuth {
 
     /**
      * Get the currently authenticated user's information.
-     *
-     * Note: This does not touch the client's cache in any way.
+     * @caching This method **does not** cache its result.
      */
     async getCurrentUser(): Promise<ExtendedUser> {
         return this.#manager.authRequest<RawOAuthUser>({
@@ -197,6 +204,7 @@ export default class OAuth {
     /**
      * Get an application's role connection metadata records.
      * @param application The ID of the application.
+     * @caching This method **does not** cache its result.
      */
     async getRoleConnectionsMetadata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
@@ -215,6 +223,7 @@ export default class OAuth {
     /**
      * Get the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
      * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
      */
     async getUserRoleConnection(applicationID: string): Promise<RoleConnection> {
         return this.#manager.authRequest<RawRoleConnection>({
@@ -238,6 +247,7 @@ export default class OAuth {
     /**
      * Refresh an existing access token.
      * @param options The options for refreshing the token.
+     * @caching This method **does not** cache its result.
      */
     async refreshToken(options: RefreshTokenOptions): Promise<RefreshTokenResponse> {
         const form = new FormData();
@@ -262,6 +272,7 @@ export default class OAuth {
     /**
      * Revoke an access token.
      * @param options The options for revoking the token.
+     * @caching This method **does not** cache its result.
      */
     async revokeToken(options: RevokeTokenOptions): Promise<void> {
         const form = new FormData();
@@ -279,6 +290,7 @@ export default class OAuth {
      * Update an application's role connections metadata.
      * @param application The ID of the application.
      * @param metadata The metadata records.
+     * @caching This method **does not** cache its result.
      */
     async updateRoleConnectionsMetadata(applicationID: string, metadata: Array<RoleConnectionMetadata>): Promise<Array<RoleConnectionMetadata>> {
         return this.#manager.authRequest<Array<RawRoleConnectionMetadata>>({
@@ -306,6 +318,7 @@ export default class OAuth {
      * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
      * @param applicationID The ID of the application.
      * @param data The metadata to update.
+     * @caching This method **does not** cache its result.
      */
     async updateUserRoleConnection(applicationID: string, data: UpdateUserApplicationRoleConnectionOptions): Promise<RoleConnection> {
         return this.#manager.authRequest<RawRoleConnection>({
