@@ -94,7 +94,8 @@ import type {
     Onboarding,
     EditOnboardingOptions,
     RawGuildEmoji,
-    RawSticker
+    RawSticker,
+    InventorySettings
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -160,6 +161,8 @@ export default class Guild extends Base {
     icon: string | null;
     /** The integrations in this guild. */
     integrations: TypedCollection<RawIntegration, Integration, [guildID?: string]>;
+    /** The guild's inventory settings. */
+    inventorySettings: InventorySettings | null;
     /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
     invites: SimpleCollection<string, RawInvite, Invite, "code">;
     /** The date at which this guild was joined. */
@@ -270,6 +273,7 @@ export default class Guild extends Base {
         this.features = [];
         this.icon = null;
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
+        this.inventorySettings = null;
         this.invites = new SimpleCollection(rawInvite => new Invite(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
@@ -492,6 +496,11 @@ export default class Guild extends Base {
         }
         if (data.icon !== undefined) {
             this.icon = data.icon;
+        }
+        if (data.inventory_settings !== undefined) {
+            this.inventorySettings = data.inventory_settings === null ? null : {
+                isEmojiPackCollectible: data.inventory_settings.is_emoji_pack_collectible
+            };
         }
         if (data.joined_at !== undefined) {
             this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
