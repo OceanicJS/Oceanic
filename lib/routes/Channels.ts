@@ -697,7 +697,7 @@ export default class Channels {
         }
 
         const results: Array<Message<T>> = [];
-        const it = await this.getMessagesIterator<T>(channelID, options);
+        const it = this.getMessagesIterator<T>(channelID, options);
 
         for await (const messages of it) {
             const limit = messages.length < 100 ? messages.length : it.limit + 100;
@@ -715,7 +715,7 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async getMessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): Promise<MessagesIterator<T>> {
+    getMessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): MessagesIterator<T> {
         const filter = options?.filter?.bind(this) ?? ((): true => true);
         const chosenOption = options?.after === undefined ? "before" : "after";
 
@@ -1077,7 +1077,7 @@ export default class Channels {
             return this.deleteMessages(channelID, messages.map(message => message.id), options.reason);
         }
 
-        const it = await this.getMessagesIterator<T>(channelID, {
+        const it = this.getMessagesIterator<T>(channelID, {
             after:  options.after,
             before: options.before,
             limit:  options.limit,
