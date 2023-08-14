@@ -457,6 +457,7 @@ export namespace Permissions {
     export const CREATE_EVENTS                       = 17592186044416n; // 1 << 44
     export const USE_EXTERNAL_SOUNDS                 = 35184372088832n; // 1 << 45
     export const SEND_VOICE_MESSAGES                 = 70368744177664n; // 1 << 46
+    export const USE_CLYDE_AI                        = 140737488355328n;// 1 << 47
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
