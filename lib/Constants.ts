@@ -149,6 +149,9 @@ export enum ApplicationFlags {
 }
 
 export const GuildFeatures = [
+    "ACTIVITIES_ALPHA",
+    "ACTIVITIES_EMPLOYEE",
+    "ACTIVITIES_INTERNAL_DEV",
     "ANIMATED_BANNER",
     "ANIMATED_ICON",
     "APPLICATION_COMMAND_PERMISSIONS_V2",
@@ -156,6 +159,8 @@ export const GuildFeatures = [
     "BANNER",
     "BOT_DEVELOPER_EARLY_ACCESS",
     "CLYDE_ENABLED",
+    "CLYDE_EXPERIMENT_ENABLED",
+    "COMMUNITY_CANARY",
     "COMMUNITY_EXP_LARGE_GATED",
     "COMMUNITY_EXP_LARGE_UNGATED",
     "COMMUNITY_EXP_MEDIUM",
@@ -175,6 +180,7 @@ export const GuildFeatures = [
     "GUILD_ONBOARDING_EVER_ENABLED",
     "GUILD_ONBOARDING_HAS_PROMPTS",
     "GUILD_ONBOARDING",
+    "GUILD_ROLE_SUBSCRIPTION_TIER_TEMPLATE",
     "GUILD_WEB_PAGE_VANITY_URL",
     "HAD_EARLY_ACTIVITIES_ACCESS",
     "HAS_DIRECTORY_ENTRY",
@@ -186,6 +192,7 @@ export const GuildFeatures = [
     "LINKED_TO_HUB",
     "MARKETPLACES_CONNECTION_ROLES",
     "MEMBER_PROFILES",
+    "MEMBER_SAFETY_PAGE_ROLLOUT",
     "MEMBER_VERIFICATION_GATE_ENABLED",
     "MONETIZATION_ENABLED",
     "MORE_EMOJI",
@@ -203,6 +210,8 @@ export const GuildFeatures = [
     "ROLE_SUBSCRIPTIONS_ENABLED",
     "SEVEN_DAY_THREAD_ARCHIVE",
     "SOUNDBOARD",
+    "SUMMARIES_ENABLED_GA",
+    "SUMMARIES_ENABLED",
     "TEXT_IN_VOICE_ENABLED",
     "THREADS_ENABLED_TESTING",
     "THREADS_ENABLED",
@@ -211,6 +220,7 @@ export const GuildFeatures = [
     "VANITY_URL",
     "VERIFIED",
     "VIP_REGIONS",
+    "VOICE_IN_THREADS",
     "WELCOME_SCREEN_ENABLED"
 ] as const;
 export type GuildFeature = typeof GuildFeatures[number];
@@ -485,7 +495,8 @@ export const TextPermissions = [
     Permissions.CREATE_PRIVATE_THREADS,
     Permissions.USE_EXTERNAL_STICKERS,
     Permissions.SEND_MESSAGES_IN_THREADS,
-    Permissions.SEND_VOICE_MESSAGES
+    Permissions.SEND_VOICE_MESSAGES,
+    Permissions.USE_CLYDE_AI
 ] as const;
 export const AllTextPermissions = TextPermissions.reduce((all, p) => all | p, 0n);
 export const AllTextPermissionNames = TextPermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -519,7 +530,8 @@ export const VoicePermissions = [
     Permissions.USE_EMBEDDED_ACTIVITIES,
     Permissions.USE_SOUNDBOARD,
     Permissions.USE_EXTERNAL_SOUNDS,
-    Permissions.SEND_VOICE_MESSAGES
+    Permissions.SEND_VOICE_MESSAGES,
+    Permissions.USE_CLYDE_AI
 ] as const;
 export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
 export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -547,7 +559,8 @@ export const StagePermissions = [
     Permissions.REQUEST_TO_SPEAK,
     Permissions.MANAGE_EVENTS,
     Permissions.USE_EXTERNAL_STICKERS,
-    Permissions.SEND_VOICE_MESSAGES
+    Permissions.SEND_VOICE_MESSAGES,
+    Permissions.USE_CLYDE_AI
 ] as const;
 export const AllStagePermissions = StagePermissions.reduce((all, p) => all | p, 0n);
 export const AllStagePermissionNames = StagePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
