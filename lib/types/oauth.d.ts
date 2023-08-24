@@ -51,6 +51,7 @@ export interface RawPartialApplication extends Pick<RawApplication, "id" | "name
 export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
 export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
 export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
+export type TeamMemberRoleTypes = "owner" | "admin" | "developer" | "read-only";
 
 export interface RawTeam {
     icon: string | null;
@@ -62,7 +63,7 @@ export interface RawTeam {
 
 export interface RawTeamMember {
     membership_state: TeamMembershipState;
-    permissions: ["*"];
+    role: TeamMemberRoleTypes;
     team_id: string;
     user: RawUser;
 }
@@ -198,8 +199,8 @@ export interface RevokeTokenOptions {
 export interface TeamMember {
     /** This member's [membership state](https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum) on this team. */
     membershipState: TeamMembershipState;
-    /** An array of permissions this member has for this team. Currently, always only has one entry: `*`.  */
-    permissions: ["*"];
+    /** The [role](https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types) of the team member. */
+    role: TeamMemberRoleTypes;
     /** The id of the team this member is associated with. */
     teamID: string;
     /** The user associated with this team member. */

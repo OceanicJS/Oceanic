@@ -166,6 +166,7 @@ export const GuildFeatures = [
     "COMMUNITY_EXP_LARGE_UNGATED",
     "COMMUNITY_EXP_MEDIUM",
     "COMMUNITY",
+    "CREATOR_ACCEPTED_NEW_TERMS",
     "CREATOR_MONETIZABLE_DISABLED",
     "CREATOR_MONETIZABLE_PROVISIONAL",
     "CREATOR_MONETIZABLE",
@@ -595,16 +596,16 @@ export enum SortOrderTypes {
     /** Sort forum threads by activity. */
     LATEST_ACTIVITY = 0,
     /** Sort forum threads by creation time (from most recent to oldest). */
-    CREATION_DATE = 1,
+    CREATION_DATE   = 1,
 }
 
 export enum ForumLayoutTypes {
     /** A preferred forum layout hasn't been set by a server admin. */
     DEFAULT = 0,
     /** List View: display forum posts in a text-focused list. */
-    LIST = 1,
+    LIST    = 1,
     /** Gallery View: display forum posts in a media-focused gallery. */
-    GRID = 2,
+    GRID    = 2,
 }
 
 export enum TeamMembershipState {

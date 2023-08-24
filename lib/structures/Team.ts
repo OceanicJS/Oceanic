@@ -49,7 +49,7 @@ export default class Team extends Base {
                 if (!this.members.some(m => m.user.id === member.user.id)) {
                     this.members.push({
                         membershipState: member.membership_state,
-                        permissions:     member.permissions,
+                        role:            member.role,
                         teamID:          member.team_id,
                         user:            this.client.users.update(member.user)
                     });
