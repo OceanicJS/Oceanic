@@ -11,7 +11,6 @@ export default class Collection<K, V> extends Map<K, V> {
     every<ThisArg = Collection<K, V>>(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg): boolean;
     every(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown): boolean {
         return this.toArray().every(predicate, thisArg);
-
     }
 
 

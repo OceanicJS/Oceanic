@@ -627,7 +627,7 @@ export default class Guild extends Base {
             throw new TypeError(`${this.constructor.name}#shard will not be present with rest mode enabled.`);
         }
 
-        if (!this.client["_connected"]) {
+        if (!this.client.shards.connected) {
             throw new TypeError(`${this.constructor.name}#shard will not be present without a gateway connection.`);
         }
 
@@ -644,7 +644,7 @@ export default class Guild extends Base {
             throw new TypeError(`${this.constructor.name}#voiceAdapterCreator cannot be used with rest mode enabled.`);
         }
 
-        if (!this.client["_connected"]) {
+        if (!this.client.shards.connected) {
             throw new TypeError(`${this.constructor.name}#shard cannot be used without a gateway connection.`);
         }
 

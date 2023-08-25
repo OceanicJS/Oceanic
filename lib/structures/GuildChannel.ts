@@ -50,7 +50,7 @@ export default class GuildChannel extends Channel {
                 throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
             }
 
-            if (!this.client["_connected"]) {
+            if (!this.client.shards.connected) {
                 throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
             }
 

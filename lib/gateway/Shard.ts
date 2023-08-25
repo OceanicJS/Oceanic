@@ -187,7 +187,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         return guild;
     }
 
-    private initialize(): void {
+    private async initialize(): Promise<void> {
         if (!this._token) {
             return this.disconnect(false, new TypeError("Invalid Token."));
         }
@@ -200,14 +200,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             this.#sharedZLib = new ZlibSync.Inflate({ chunkSize: 128 * 1024 });
         }
-        if (this.sessionID) {
+        if (!this.client.shards.options.gatewayOverride.gatewayURLIsResumeURL && this.sessionID) {
             if (this.resumeURL === null) {
                 this.client.emit("warn", "Resume url is not currently present. Discord may disconnect you quicker.", this.id);
             }
 
-            this.ws = new WebSocket(this.resumeURL ?? this.client.gatewayURL, this.client.shards.options.ws);
+            this.ws = new WebSocket(this.resumeURL ?? await this.client.shards["_gatewayURLForShard"](this), this.client.shards.options.ws);
         } else {
-            this.ws = new WebSocket(this.client.gatewayURL, this.client.shards.options.ws);
+            this.ws = new WebSocket(await this.client.shards["_gatewayURLForShard"](this), this.client.shards.options.ws);
         }
 
 
@@ -1435,14 +1435,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     /** Connect this shard. */
-    connect(): void {
+    async connect(): Promise<void> {
         if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
             this.client.emit("error", new Error("Shard#connect called while existing connection is established."), this.id);
             return;
         }
         ++this.connectAttempts;
         this.connecting = true;
-        this.initialize();
+        await this.initialize();
     }
 
     disconnect(reconnect = this.client.shards.options.autoReconnect, error?: Error): void {
@@ -1496,11 +1496,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         if (reconnect) {
             if (this.sessionID) {
                 this.client.emit("debug", `Immediately reconnecting for potential resume | Attempt ${this.connectAttempts}`, this.id);
-                this.client.shards.connect(this);
+                void this.client.shards["_connect"](this);
             } else {
                 this.client.emit("debug", `Queueing reconnect in ${this.reconnectInterval}ms | Attempt ${this.connectAttempts}`, this.id);
                 setTimeout(() => {
-                    this.client.shards.connect(this);
+                    void this.client.shards["_connect"](this);
                 }, this.reconnectInterval);
                 this.reconnectInterval = Math.min(Math.round(this.reconnectInterval * (Math.random() * 2 + 1)), 30000);
             }

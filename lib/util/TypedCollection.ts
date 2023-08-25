@@ -5,7 +5,7 @@ import Base from "../structures/Base";
 import type { AnyClass } from "../types/misc";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface ExtraOptions<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> {
+export interface ExtraOptions<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> {
     construct?(this: void, data: M, ...extra: E): C;
     delete?(this: void, key: string): void;
 }

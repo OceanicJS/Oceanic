@@ -1,5 +1,4 @@
 /** @module Client */
-import { ApplicationFlags, GATEWAY_VERSION, Intents } from "./Constants";
 import RESTManager from "./rest/RESTManager";
 import TypedCollection from "./util/TypedCollection";
 import PrivateChannel from "./structures/PrivateChannel";
@@ -13,7 +12,7 @@ import type {  ClientInstanceOptions, ClientOptions, CollectionLimitsOptions } f
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
-import type { BotActivity, GetBotGatewayResponse, SendStatuses } from "./types/gateway";
+import type { BotActivity, SendStatuses } from "./types/gateway";
 import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
@@ -30,21 +29,13 @@ let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
     DiscordJSVoice = require("@discordjs/voice");
 } catch {}
-
-// @ts-ignore
-let Erlpack: typeof import("erlpack") | undefined;
-try {
-    Erlpack = require("erlpack");
-} catch {}
 /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
 /** The primary class for interfacing with Discord. See {@link ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
     private _application?: ClientApplication;
-    private _connected = false;
     private _user?: ExtendedUser;
     channelGuildMap: Record<string, string>;
-    gatewayURL!: string;
     groupChannels: TypedCollection<RawGroupChannel, GroupChannel>;
     guildShardMap: Record<string, number>;
     guilds: TypedCollection<RawGuild, Guild, [rest?: boolean]>;
@@ -191,81 +182,8 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
         if (!this.options.auth || !this.options.auth.startsWith("Bot ")) {
             throw new TypeError("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
         }
-        let url: string, data: GetBotGatewayResponse | undefined;
-        try {
-            if (this.shards.options.maxShards === -1 || this.shards.options.concurrency === -1) {
-                data = await this.rest.getBotGateway();
-                url = data.url;
-            } else {
-                url = (await this.rest.getGateway()).url;
-            }
-        } catch (err) {
-            throw new TypeError("Failed to get gateway information.", { cause: err as Error });
-        }
-        if (url.includes("?")) {
-            url = url.slice(0, url.indexOf("?"));
-        }
-        if (!url.endsWith("/")) {
-            url += "/";
-        }
-        const privilegedIntentMapping = [
-            [Intents.GUILD_PRESENCES, [ApplicationFlags.GATEWAY_PRESENCE, ApplicationFlags.GATEWAY_PRESENCE_LIMITED]],
-            [Intents.GUILD_MEMBERS, [ApplicationFlags.GATEWAY_GUILD_MEMBERS, ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED]],
-            [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]]
-        ] as Array<[intent: Intents, allowed: Array<ApplicationFlags>]>;
 
-        /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
-        if (this.shards.options.removeDisallowedIntents && privilegedIntentMapping.some(([intent]) => (this.shards.options.intents & intent) === intent)) {
-            const { flags } = await this.rest.misc.getApplication();
-            const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
-                if ((this.shards.options.intents & intent) === intent && !allowed.some(flag => (flags & flag) === flag)) {
-                    this.emit("warn", `removeDisallowedIntents is enabled, and ${Intents[intent]} was included but not found to be allowed. It has been removed.`);
-                    this.shards.options.intents &= ~intent;
-                }
-            };
-            for (const [intent, allowed] of privilegedIntentMapping) {
-                check(intent, allowed);
-            }
-        }
-        /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
-
-        this.gatewayURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
-        if (this.shards.options.compress) {
-            this.gatewayURL += "&compress=zlib-stream";
-        }
-
-        if (this.shards.options.maxShards === -1) {
-            if (!data || !data.shards) {
-                throw new TypeError("AutoSharding failed, missing required information from Discord.");
-            }
-            this.shards.options.maxShards = data.shards;
-            if (this.shards.options.lastShardID === -1) {
-                this.shards.options.lastShardID = data.shards - 1;
-            }
-        }
-
-        if (this.shards.options.concurrency === -1) {
-            if (!data) {
-                throw new TypeError("AutoConcurrency failed, missing required information from Discord.");
-            }
-            this.shards.options.concurrency = data.sessionStartLimit.maxConcurrency;
-        }
-
-
-        if (!Array.isArray(this.shards.options.shardIDs)) {
-            this.shards.options.shardIDs = [];
-        }
-
-        if (this.shards.options.shardIDs.length === 0 && this.shards.options.firstShardID !== undefined && this.shards.options.lastShardID !== undefined) {
-            for (let i = this.shards.options.firstShardID; i <= this.shards.options.lastShardID; i++) {
-                this.shards.options.shardIDs.push(i);
-            }
-        }
-
-        this._connected = true;
-        for (const id of this.shards.options.shardIDs) {
-            this.shards.spawn(id);
-        }
+        await this.shards.connect();
     }
 
     /**
@@ -273,9 +191,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * @param reconnect If shards should be reconnected. Defaults to {@link Types/Gateway~GatewayOptions#autoReconnect | GatewayOptions#autoReconnect}
      */
     disconnect(reconnect = this.shards.options.autoReconnect): void {
-        this.ready = false;
-        for (const [,shard] of this.shards) shard.disconnect(reconnect);
-        this.shards["_resetConnectQueue"]();
+        return this.shards.disconnect(reconnect);
     }
 
     /**

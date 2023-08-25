@@ -1,16 +1,33 @@
 /** @module ShardManager */
 import Shard from "./Shard";
 import type Client from "../Client";
-import { AllIntents, AllNonPrivilegedIntents, Intents } from "../Constants";
-import type { GatewayOptions, ShardManagerInstanceOptions } from "../types/gateway";
+import {
+    AllIntents,
+    AllNonPrivilegedIntents,
+    ApplicationFlags,
+    GATEWAY_VERSION,
+    Intents
+} from "../Constants";
+import type { GatewayOptions, GetBotGatewayResponse, ShardManagerInstanceOptions } from "../types/gateway";
 import Collection from "../util/Collection";
+
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+// @ts-ignore
+let Erlpack: typeof import("erlpack") | undefined;
+try {
+    Erlpack = require("erlpack");
+} catch {}
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+
 
 /** A manager for all the client's shards. */
 export default class ShardManager extends Collection<number, Shard> {
+    private _gatewayURL?: string;
     #buckets: Record<number, number>;
     #client: Client;
     #connectQueue: Array<Shard>;
     #connectTimeout: NodeJS.Timeout | null;
+    connected = false;
     options: ShardManagerInstanceOptions;
     constructor(client: Client, options: GatewayOptions = {}) {
         super();
@@ -26,10 +43,15 @@ export default class ShardManager extends Collection<number, Shard> {
                 device:  options.connectionProperties?.device ?? "Oceanic",
                 os:      options.connectionProperties?.os ?? process.platform
             },
-            concurrency:          options.concurrency === "auto" || options.concurrency && options.concurrency < 1 ? -1 : options.concurrency ?? -1,
-            connectionTimeout:    options.connectionTimeout ?? 30000,
-            firstShardID:         options.firstShardID && options.firstShardID < 0 ? 0 : options.firstShardID ?? 0,
-            getAllUsers:          options.getAllUsers ?? false,
+            concurrency:       options.concurrency === "auto" || options.concurrency && options.concurrency < 1 ? -1 : options.concurrency ?? -1,
+            connectionTimeout: options.connectionTimeout ?? 30000,
+            firstShardID:      options.firstShardID && options.firstShardID < 0 ? 0 : options.firstShardID ?? 0,
+            getAllUsers:       options.getAllUsers ?? false,
+            gatewayOverride:   options.gatewayOverride as ShardManagerInstanceOptions["gatewayOverride"] ?? {
+                appendQuery:              true,
+                gatewayURLIsResumeURL:    false,
+                timeBetweenShardConnects: 5000
+            },
             guildCreateTimeout:   options.guildCreateTimeout ?? 2000,
             intents:              typeof options.intents === "number" ? options.intents : 0,
             largeThreshold:       options.largeThreshold ?? 250,
@@ -48,11 +70,16 @@ export default class ShardManager extends Collection<number, Shard> {
             shardIDs:                options.shardIDs ?? [],
             ws:                      options.ws ?? {}
         };
-
+        this.options.gatewayOverride.appendQuery ??= (this.options.gatewayOverride.getBot === undefined && this.options.gatewayOverride.url === undefined);
+        this.options.gatewayOverride.gatewayURLIsResumeURL ??= (this.options.gatewayOverride.getBot !== undefined || this.options.gatewayOverride.url !== undefined);
+        this.options.gatewayOverride.timeBetweenShardConnects ??= 5000;
         if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {
             this.options.lastShardID = this.options.maxShards - 1;
         }
 
+        if (!Array.isArray(this.options.shardIDs)) {
+            this.options.shardIDs = [];
+        }
 
         if (Object.hasOwn(options, "intents")) {
             if (Array.isArray(options.intents)) {
@@ -65,6 +92,9 @@ export default class ShardManager extends Collection<number, Shard> {
                     } else {
                         if (intent === "ALL") {
                             bitmask = AllIntents;
+                            break;
+                        } else if (intent === "ALL_NON_PRIVILEGED") {
+                            bitmask = AllNonPrivilegedIntents;
                             break;
                         }
                         this.#client.emit("warn", `Unknown intent: ${intent}`);
@@ -83,11 +113,29 @@ export default class ShardManager extends Collection<number, Shard> {
 
     }
 
+    private _connect(shard: Shard): void {
+        this.#connectQueue.push(shard);
+        this.tryConnect();
+    }
+
     private _forGuild(guild: string): Shard | undefined {
         if (this.options.maxShards === -1) {
             return undefined;
         }
         return this.get((this.#client.guildShardMap[guild] ??= Number((BigInt(guild) >> 22n) % BigInt(this.options.maxShards))));
+    }
+
+    private async _gatewayURLForShard(shard: Shard): Promise<string> {
+        if (this.options.gatewayOverride.url !== undefined) {
+            return this.options.gatewayOverride.url(shard, this.options.shardIDs.length);
+        }
+
+        if (this._gatewayURL) {
+            return this._gatewayURL;
+        }
+
+        // how did we manage to get all the way to connecting without gatewayURL being set?
+        return (this._gatewayURL = (await (this.options.gatewayOverride.getBot?.() ?? this.#client.rest.getBotGateway())).url);
     }
 
     private _ready(id: number): void {
@@ -101,9 +149,101 @@ export default class ShardManager extends Collection<number, Shard> {
         this.#connectQueue = [];
     }
 
-    connect(shard: Shard): void {
-        this.#connectQueue.push(shard);
-        this.tryConnect();
+    async connect(): Promise<void> {
+        if (this.connected) {
+            throw new Error("Already connected.");
+        }
+
+        let url: string | null, data: GetBotGatewayResponse | undefined;
+        const overrideURL = (this.options.gatewayOverride.getBot || this.options.gatewayOverride.url) !== undefined;
+        try {
+            if (this.options.maxShards === -1 || this.options.concurrency === -1) {
+                data = await (this.options.gatewayOverride.getBot?.() ?? this.#client.rest.getBotGateway());
+                url = data.url;
+            } else {
+                url = overrideURL ? null : (await this.#client.rest.getGateway()).url;
+            }
+        } catch (err) {
+            throw new TypeError("Failed to get gateway information.", { cause: err as Error });
+        }
+        if (url && this.options.gatewayOverride.appendQuery) {
+            if (url.includes("?")) {
+                url = url.slice(0, url.indexOf("?"));
+            }
+            if (!url.endsWith("/")) {
+                url += "/";
+            }
+        }
+        const privilegedIntentMapping = [
+            [Intents.GUILD_PRESENCES, [ApplicationFlags.GATEWAY_PRESENCE, ApplicationFlags.GATEWAY_PRESENCE_LIMITED]],
+            [Intents.GUILD_MEMBERS, [ApplicationFlags.GATEWAY_GUILD_MEMBERS, ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED]],
+            [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]]
+        ] as Array<[intent: Intents, allowed: Array<ApplicationFlags>]>;
+
+        /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+        if (this.options.removeDisallowedIntents && privilegedIntentMapping.some(([intent]) => (this.options.intents & intent) === intent)) {
+            const { flags } = await this.#client.rest.misc.getApplication();
+            const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
+                if ((this.options.intents & intent) === intent && !allowed.some(flag => (flags & flag) === flag)) {
+                    this.#client.emit("warn", `removeDisallowedIntents is enabled, and ${Intents[intent]} was included but not found to be allowed. It has been removed.`);
+                    this.options.intents &= ~intent;
+                }
+            };
+            for (const [intent, allowed] of privilegedIntentMapping) {
+                check(intent, allowed);
+            }
+        }
+        /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
+
+        if (url && this.options.gatewayOverride.appendQuery) {
+            url += `?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
+            if (this.options.compress) {
+                url += "&compress=zlib-stream";
+            }
+            this._gatewayURL = url;
+        }
+
+        if (this.options.maxShards === -1) {
+            if (!data || !data.shards) {
+                throw new TypeError("AutoSharding failed, missing required information from Discord.");
+            }
+            this.options.maxShards = data.shards;
+            if (this.options.lastShardID === -1) {
+                this.options.lastShardID = data.shards - 1;
+            }
+        }
+
+        if (this.options.concurrency === -1) {
+            if (!data) {
+                throw new TypeError("AutoConcurrency failed, missing required information from Discord.");
+            }
+            this.options.concurrency = data.sessionStartLimit.maxConcurrency;
+        }
+
+        if (this.options.shardIDs.length === 0 && this.options.firstShardID !== undefined && this.options.lastShardID !== undefined) {
+            for (let i = this.options.firstShardID; i <= this.options.lastShardID; i++) {
+                this.options.shardIDs.push(i);
+            }
+        }
+
+        this.connected = true;
+        for (const id of this.options.shardIDs) {
+            this.spawn(id);
+        }
+    }
+
+    /**
+     * Disconnect all shards.
+     * @param reconnect If shards should be reconnected. Defaults to {@link Types/Gateway~GatewayOptions#autoReconnect | GatewayOptions#autoReconnect}
+     */
+    disconnect(reconnect = this.options.autoReconnect): void {
+        if (!reconnect) {
+            this.connected = false;
+        }
+
+        this.#client.ready = false;
+        for (const [,shard] of this) shard.disconnect(reconnect);
+        this._resetConnectQueue();
     }
 
     spawn(id: number): void {
@@ -160,7 +300,7 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         if (shard.status === "disconnected") {
-            return this.connect(shard);
+            this._connect(shard);
         }
     }
 
@@ -172,14 +312,14 @@ export default class ShardManager extends Collection<number, Shard> {
         for (const shard of this.#connectQueue) {
             const rateLimitKey = (shard.id % this.options.concurrency) ?? 0;
             const lastConnect = this.#buckets[rateLimitKey] ?? 0;
-            if (!shard.sessionID && Date.now() - lastConnect < 5000) {
+            if (!shard.sessionID && Date.now() - lastConnect < this.options.gatewayOverride.timeBetweenShardConnects) {
                 continue;
             }
 
             if (this.some(s => s.connecting && ((s.id % this.options.concurrency) || 0) === rateLimitKey)) {
                 continue;
             }
-            shard.connect();
+            void shard.connect();
             this.#buckets[rateLimitKey] = Date.now();
             this.#connectQueue.splice(this.#connectQueue.findIndex(s => s.id === shard.id), 1);
         }

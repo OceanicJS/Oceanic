@@ -10,9 +10,13 @@ import type {
     IntentNames
 } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
+import type Shard from "../gateway/Shard";
 import type { ClientOptions as WSClientOptions } from "ws";
 
 export type ReconnectDelayFunction = (lastDelay: number, attempts: number) => number;
+export type GetGatewayOverrideFunction = () => GetGatewayResponse;
+export type GetBotGatewayOverrideFunction = (response: GetBotGatewayResponse) => GetBotGatewayResponse;
+export type GetBotGatewayFullOverrideFunction = () => GetBotGatewayResponse;
 interface GatewayOptions {
     /**
      * If dropped connections should be automatically reconnected.
@@ -34,7 +38,7 @@ interface GatewayOptions {
      */
     connectionProperties?: {
         /**
-         * The browser of the client.
+         * The browser of the client. For example, "Discord Android" or "Discord iOS" to show as mobile.
          * @defaultValue Oceanic
          */
         browser?: string;
@@ -59,6 +63,8 @@ interface GatewayOptions {
      * @defaultValue 0
      */
     firstShardID?: number;
+    /** Options for overriding default gateway behavior. */
+    gatewayOverride?: GatewayOverrideOptions;
     /**
      * If the members of all guilds should be requested. Requires the `GUILD_MEMBERS` intent.
      * @defaultValue false
@@ -70,10 +76,10 @@ interface GatewayOptions {
      */
     guildCreateTimeout?: number;
     /**
-     * The [intents](https://discord.com/developers/docs/topics/gateway#list-of-intents) to use. Either a number, array of intent names, array of numbers, or "ALL". All non privileged intents are used by default.
+     * The [intents](https://discord.com/developers/docs/topics/gateway#list-of-intents) to use. Either a number, array of intent names, array of numbers, or "ALL"/"ALL_NON_PRIVILEGED". All non privileged intents are used by default.
      * @defaultValue {@link Constants~AllNonPrivilegedIntents | All Non Privileged Intents}
      */
-    intents?: number | Array<IntentNames | "ALL" | number>;
+    intents?: number | Array<IntentNames | "ALL" | "ALL_NON_PRIVILEGED" | number>;
     /**
      * The threshold at which guilds are considered "large" (after which offline members will not be loaded).
      * @defaultValue 250
@@ -125,9 +131,34 @@ interface GatewayOptions {
     ws?: WSClientOptions;
 }
 
-export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence">> {
+export interface GatewayOverrideOptions {
+    /**
+     * If the compression/version information should be appended to the query.
+     * @defaultValue true if `getBot` and `url` are undefined, false otherwise
+     */
+    appendQuery?: boolean;
+    /**
+     * If the gateway url should be used for resuming.
+     * @defaultValue false if `getBot` or `url` are present, true otherwise
+     */
+    gatewayURLIsResumeURL?: boolean;
+    /**
+     * The amount time in milliseconds to wait between shard connects. Discord only allows one connection per 5 seconds.
+     * @defaultValue 5000
+     */
+    timeBetweenShardConnects?: number;
+    /** Replaces the response normally recieved from `GET /gateway/bot`. The `url` function below will override the value returned here. */
+    getBot?(): Promise<GetBotGatewayResponse>;
+    /** Replaces the `resume_url` recieved from Discord. */
+    resumeURL?(shard: Shard, totalShards: number): Promise<string>;
+    /** Replaces the gateway url shards connect to. This WILL be called multiple times if you have more than one shard, be sure to cache its results if you do anythng that isn't quickly repeatable. */
+    url?(shard: Shard, totalShards: number): Promise<string>;
+}
+
+export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence" | "gatewayOverride">> {
     concurrency: number;
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
+    gatewayOverride: Omit<GatewayOverrideOptions, "appendQuery" | "gatewayURLIsResumeURL" | "timeBetweenShardConnects"> & Required<Pick<GatewayOverrideOptions, "appendQuery" | "gatewayURLIsResumeURL" | "timeBetweenShardConnects">>;
     intents: number;
     maxShards: number;
     presence: Required<UpdatePresenceOptions>;
