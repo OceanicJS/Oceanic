@@ -47,7 +47,7 @@ export default class ShardManager extends Collection<number, Shard> {
             connectionTimeout: options.connectionTimeout ?? 30000,
             firstShardID:      options.firstShardID && options.firstShardID < 0 ? 0 : options.firstShardID ?? 0,
             getAllUsers:       options.getAllUsers ?? false,
-            gatewayOverride:   options.gatewayOverride as ShardManagerInstanceOptions["gatewayOverride"] ?? {
+            override:          options.override as ShardManagerInstanceOptions["override"] ?? {
                 appendQuery:              true,
                 gatewayURLIsResumeURL:    false,
                 timeBetweenShardConnects: 5000
@@ -70,9 +70,9 @@ export default class ShardManager extends Collection<number, Shard> {
             shardIDs:                options.shardIDs ?? [],
             ws:                      options.ws ?? {}
         };
-        this.options.gatewayOverride.appendQuery ??= (this.options.gatewayOverride.getBot === undefined && this.options.gatewayOverride.url === undefined);
-        this.options.gatewayOverride.gatewayURLIsResumeURL ??= (this.options.gatewayOverride.getBot !== undefined || this.options.gatewayOverride.url !== undefined);
-        this.options.gatewayOverride.timeBetweenShardConnects ??= 5000;
+        this.options.override.appendQuery ??= (this.options.override.getBot === undefined && this.options.override.url === undefined);
+        this.options.override.gatewayURLIsResumeURL ??= (this.options.override.getBot !== undefined || this.options.override.url !== undefined);
+        this.options.override.timeBetweenShardConnects ??= 5000;
         if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {
             this.options.lastShardID = this.options.maxShards - 1;
         }
@@ -126,8 +126,8 @@ export default class ShardManager extends Collection<number, Shard> {
     }
 
     private async _gatewayURLForShard(shard: Shard): Promise<string> {
-        if (this.options.gatewayOverride.url !== undefined) {
-            return this.options.gatewayOverride.url(shard, this.options.shardIDs.length);
+        if (this.options.override.url !== undefined) {
+            return this.options.override.url(shard, this.options.shardIDs.length);
         }
 
         if (this._gatewayURL) {
@@ -135,7 +135,7 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         // how did we manage to get all the way to connecting without gatewayURL being set?
-        return (this._gatewayURL = (await (this.options.gatewayOverride.getBot?.() ?? this.#client.rest.getBotGateway())).url);
+        return (this._gatewayURL = (await (this.options.override.getBot?.() ?? this.#client.rest.getBotGateway())).url);
     }
 
     private _ready(id: number): void {
@@ -155,10 +155,10 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         let url: string | null, data: GetBotGatewayResponse | undefined;
-        const overrideURL = (this.options.gatewayOverride.getBot || this.options.gatewayOverride.url) !== undefined;
+        const overrideURL = (this.options.override.getBot || this.options.override.url) !== undefined;
         try {
             if (this.options.maxShards === -1 || this.options.concurrency === -1) {
-                data = await (this.options.gatewayOverride.getBot?.() ?? this.#client.rest.getBotGateway());
+                data = await (this.options.override.getBot?.() ?? this.#client.rest.getBotGateway());
                 url = data.url;
             } else {
                 url = overrideURL ? null : (await this.#client.rest.getGateway()).url;
@@ -166,7 +166,7 @@ export default class ShardManager extends Collection<number, Shard> {
         } catch (err) {
             throw new TypeError("Failed to get gateway information.", { cause: err as Error });
         }
-        if (url && this.options.gatewayOverride.appendQuery) {
+        if (url && this.options.override.appendQuery) {
             if (url.includes("?")) {
                 url = url.slice(0, url.indexOf("?"));
             }
@@ -195,7 +195,7 @@ export default class ShardManager extends Collection<number, Shard> {
         }
         /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
 
-        if (url && this.options.gatewayOverride.appendQuery) {
+        if (url && this.options.override.appendQuery) {
             url += `?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
             if (this.options.compress) {
                 url += "&compress=zlib-stream";
@@ -312,7 +312,7 @@ export default class ShardManager extends Collection<number, Shard> {
         for (const shard of this.#connectQueue) {
             const rateLimitKey = (shard.id % this.options.concurrency) ?? 0;
             const lastConnect = this.#buckets[rateLimitKey] ?? 0;
-            if (!shard.sessionID && Date.now() - lastConnect < this.options.gatewayOverride.timeBetweenShardConnects) {
+            if (!shard.sessionID && Date.now() - lastConnect < this.options.override.timeBetweenShardConnects) {
                 continue;
             }
 

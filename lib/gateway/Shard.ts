@@ -200,7 +200,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
             this.#sharedZLib = new ZlibSync.Inflate({ chunkSize: 128 * 1024 });
         }
-        if (!this.client.shards.options.gatewayOverride.gatewayURLIsResumeURL && this.sessionID) {
+        if (!this.client.shards.options.override.gatewayURLIsResumeURL && this.sessionID) {
             if (this.resumeURL === null) {
                 this.client.emit("warn", "Resume url is not currently present. Discord may disconnect you quicker.", this.id);
             }

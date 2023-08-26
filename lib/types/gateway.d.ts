@@ -63,8 +63,6 @@ interface GatewayOptions {
      * @defaultValue 0
      */
     firstShardID?: number;
-    /** Options for overriding default gateway behavior. */
-    gatewayOverride?: GatewayOverrideOptions;
     /**
      * If the members of all guilds should be requested. Requires the `GUILD_MEMBERS` intent.
      * @defaultValue false
@@ -105,6 +103,8 @@ interface GatewayOptions {
      * @defaultValue 1
      */
     maxShards?: number | "auto";
+    /** Options for overriding default gateway behavior. */
+    override?: OverrideOptions;
     /** The initial presence to use when connecting. */
     presence?: UpdatePresenceOptions;
     /**
@@ -131,7 +131,7 @@ interface GatewayOptions {
     ws?: WSClientOptions;
 }
 
-export interface GatewayOverrideOptions {
+export interface OverrideOptions {
     /**
      * If the compression/version information should be appended to the query.
      * @defaultValue true if `getBot` and `url` are undefined, false otherwise
@@ -155,12 +155,12 @@ export interface GatewayOverrideOptions {
     url?(shard: Shard, totalShards: number): Promise<string>;
 }
 
-export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence" | "gatewayOverride">> {
+export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence" | "override">> {
     concurrency: number;
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
-    gatewayOverride: Omit<GatewayOverrideOptions, "appendQuery" | "gatewayURLIsResumeURL" | "timeBetweenShardConnects"> & Required<Pick<GatewayOverrideOptions, "appendQuery" | "gatewayURLIsResumeURL" | "timeBetweenShardConnects">>;
     intents: number;
     maxShards: number;
+    override: Omit<OverrideOptions, "appendQuery" | "gatewayURLIsResumeURL" | "timeBetweenShardConnects"> & Required<Pick<OverrideOptions, "appendQuery" | "gatewayURLIsResumeURL" | "timeBetweenShardConnects">>;
     presence: Required<UpdatePresenceOptions>;
 }
 
