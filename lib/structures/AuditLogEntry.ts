@@ -32,9 +32,11 @@ export default class AuditLogEntry extends Base {
             count:                         data.options?.count,
             deleteMemberDays:              data.options?.delete_member_days,
             id:                            data.options?.id,
+            integrationType:               data.options?.integration_type,
             membersRemoved:                data.options?.members_removed,
             messageID:                     data.options?.message_id,
             roleName:                      data.options?.role_name,
+            status:                        data.options?.status,
             type:                          data.options?.type
         };
         this.reason = data.reason;
