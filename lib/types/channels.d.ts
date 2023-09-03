@@ -36,7 +36,8 @@ import type {
     InteractionChannelTypes,
     InviteChannelTypes,
     ImplementedChannelTypes,
-    ThreadOnlyChannelTypes
+    ThreadOnlyChannelTypes,
+    ReactionType
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -838,6 +839,8 @@ export interface GetReactionsOptions {
     after?: string;
     /** The maximum amount of reactions to get. Defaults to 100. Use Infinity if you wish to get as many reactions as possible. */
     limit?: number;
+    /** The type of reactions to get. Defaults to normal. */
+    type?: ReactionType;
 }
 
 export interface EditMessageOptions extends Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags"> {}

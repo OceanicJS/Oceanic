@@ -758,6 +758,7 @@ export default class Guilds {
      * Edit the incident actions for a guild.
      * @param guildID The ID of the guild.
      * @param options The options for editing the incident actions.
+     * @caching This method **does not** cache its result.
      */
     async editIncidentActions(guildID: string, options: EditIncidentActionsOptions): Promise<IncidentActions> {
         const reason = options.reason;

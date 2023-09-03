@@ -1157,6 +1157,11 @@ export enum InviteFlags {
     GUEST = 1 << 0,
 }
 
+export enum ReactionType {
+    NORMAL = 0,
+    SUPER  = 1,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
@@ -1330,6 +1335,7 @@ export enum JSONErrorCodes {
     TWO_FACTOR_REQUIRED = 60003,
     NO_USERS_WITH_DISCORDTAG_EXIST = 80004,
     REACTION_BLOCKED = 90001,
+    USER_CANNOT_USE_BURST_REACTIONS = 90002,
     INELIGIBLE_FOR_SUBSCRIPTION = 100053,
     APPLICATION_NOT_AVAILABLE = 110001,
     API_RESOURCE_IS_CURRENTLY_OVERLOADED = 130000,
