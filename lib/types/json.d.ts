@@ -621,6 +621,7 @@ export interface JSONUser extends JSONBase {
     username: string;
 }
 export interface JSONVoiceChannel extends JSONTextableVoiceChannel {
+    status: string | null;
     type: ChannelTypes.GUILD_VOICE;
 }
 export interface JSONVoiceState extends JSONBase {

@@ -1152,6 +1152,11 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 break;
             }
 
+            case "VOICE_CHANNEL_STATUS_UPDATE": {
+                this.client.emit("voiceChannelStatusUpdate", this.client.getChannel<VoiceChannel>(packet.d.id) ?? { id: packet.d.id }, packet.d.status);
+                break;
+            }
+
             case "VOICE_SERVER_UPDATE": {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 this.client.voiceAdapters.get(packet.d.guild_id)?.onVoiceServerUpdate(packet.d);

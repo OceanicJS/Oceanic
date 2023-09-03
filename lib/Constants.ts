@@ -470,6 +470,7 @@ export namespace Permissions {
     export const USE_EXTERNAL_SOUNDS                 = 35184372088832n; // 1 << 45
     export const SEND_VOICE_MESSAGES                 = 70368744177664n; // 1 << 46
     export const USE_CLYDE_AI                        = 140737488355328n;// 1 << 47
+    export const SET_VOICE_CHANNEL_STATUS            = 281474976710656n;// 1 << 48
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
@@ -533,7 +534,8 @@ export const VoicePermissions = [
     Permissions.USE_SOUNDBOARD,
     Permissions.USE_EXTERNAL_SOUNDS,
     Permissions.SEND_VOICE_MESSAGES,
-    Permissions.USE_CLYDE_AI
+    Permissions.USE_CLYDE_AI,
+    Permissions.SET_VOICE_CHANNEL_STATUS
 ] as const;
 export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
 export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -919,8 +921,10 @@ export enum AuditLogActionTypes {
 
     HARMFUL_LINKS_BLOCKED_MESSAGE = 180,
 
-    HOME_SETTINGS_CREATE = 190,
-    HOME_SETTINGS_UPDATE = 191,
+    HOME_SETTINGS_CREATE        = 190,
+    HOME_SETTINGS_UPDATE        = 191,
+    VOICE_CHANNEL_STATUS_CREATE = 192,
+    VOICE_CHANNEL_STATUS_DELETE = 193,
 }
 
 export enum ApplicationCommandTypes {
