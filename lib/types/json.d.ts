@@ -417,7 +417,7 @@ export interface JSONMessage extends JSONBase {
     nonce?: number | string;
     pinned: boolean;
     position?: number;
-    reactions: Record<string, MessageReaction>;
+    reactions: Array<MessageReaction>;
     referencedMessage?: JSONMessage | null;
     stickerItems?: Array<StickerItem>;
     thread?: JSONAnnouncementThreadChannel | JSONPublicThreadChannel | JSONPrivateThreadChannel;

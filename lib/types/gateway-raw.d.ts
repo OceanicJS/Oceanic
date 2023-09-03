@@ -407,6 +407,8 @@ export interface MessageUpdatePacket extends BaseDispatchPacket {
 
 export interface MessageReactionAddPacket extends BaseDispatchPacket {
     d: {
+        burst: boolean;
+        burst_colors: Array<string>;
         channel_id: string;
         emoji: PartialEmoji;
         guild_id?: string;
@@ -420,6 +422,8 @@ export interface MessageReactionAddPacket extends BaseDispatchPacket {
 
 export interface MessageReactionRemovePacket extends BaseDispatchPacket {
     d: {
+        burst: boolean;
+        burst_colors: Array<string>;
         channel_id: string;
         emoji: PartialEmoji;
         guild_id?: string;

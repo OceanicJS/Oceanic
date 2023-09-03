@@ -702,17 +702,29 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     : this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
 
                 if (message) {
-                    const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-                    if (message.reactions[name]) {
-                        message.reactions[name].count++;
-                        if (packet.d.user_id === this.client.user.id) {
-                            message.reactions[name].me = true;
-                        }
+                    const index = message.reactions.findIndex(r => r.emoji.id === packet.d.emoji.id && r.emoji.name === packet.d.emoji.name);
+                    if (index === -1) {
+                        message.reactions.push({
+                            burstColors:  packet.d.burst_colors,
+                            count:        1,
+                            countDetails: {
+                                burst:  packet.d.burst ? 1 : 0,
+                                normal: packet.d.burst ? 0 : 1
+                            },
+                            emoji:   packet.d.emoji,
+                            me:      packet.d.user_id === this.client.user.id,
+                            meBurst: packet.d.user_id === this.client.user.id && packet.d.burst
+                        });
                     } else {
-                        message.reactions[name] = {
-                            count: 1,
-                            me:    packet.d.user_id === this.client.user.id
-                        };
+                        if (packet.d.burst) {
+                            message.reactions[index].countDetails.burst++;
+                        } else {
+                            message.reactions[index].countDetails.normal++;
+                        }
+                        message.reactions[index].count++;
+                        if (packet.d.user_id === this.client.user.id) {
+                            message.reactions[index].me = true;
+                        }
                     }
 
                 }
@@ -724,7 +736,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     guildID:   packet.d.guild_id,
                     id:        packet.d.message_id ,
                     author:    packet.d.message_author_id === undefined ? undefined : guild?.members.get(packet.d.user_id) ?? this.client.users.get(packet.d.user_id) ?? { id: packet.d.message_author_id }
-                }, reactor, packet.d.emoji);
+                }, reactor, packet.d.emoji, packet.d.burst);
                 break;
             }
 
@@ -734,14 +746,23 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const reactor = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
 
                 if (message) {
-                    const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-                    if (message.reactions[name]) {
-                        message.reactions[name].count--;
-                        if (packet.d.user_id === this.client.user.id) {
-                            message.reactions[name].me = false;
+                    const index = message.reactions.findIndex(r => r.emoji.id === packet.d.emoji.id && r.emoji.name === packet.d.emoji.name);
+                    if (index !== -1) {
+                        if (packet.d.burst) {
+                            message.reactions[index].countDetails.burst--;
+                        } else {
+                            message.reactions[index].countDetails.normal--;
                         }
-                        if (message.reactions[name].count === 0) {
-                            delete message.reactions[name];
+                        message.reactions[index].count--;
+                        if (packet.d.user_id === this.client.user.id) {
+                            if (packet.d.burst) {
+                                message.reactions[index].meBurst = false;
+                            } else {
+                                message.reactions[index].me = false;
+                            }
+                        }
+                        if (message.reactions[index].count === 0) {
+                            message.reactions.splice(index, 1);
                         }
                     }
                 }
@@ -752,7 +773,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     guild:     packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined,
                     guildID:   packet.d.guild_id,
                     id:        packet.d.message_id
-                }, reactor, packet.d.emoji);
+                }, reactor, packet.d.emoji, packet.d.burst);
                 break;
             }
 
@@ -761,7 +782,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const message = channel?.messages?.get(packet.d.message_id);
 
                 if (message) {
-                    message.reactions = {};
+                    message.reactions = [];
                 }
 
                 this.client.emit("messageReactionRemoveAll", message ?? {
@@ -779,9 +800,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const message = channel?.messages?.get(packet.d.message_id);
 
                 if (message) {
-                    const name = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-                    if (message.reactions[name]) {
-                        delete message.reactions[name];
+                    const index = message.reactions.findIndex(r => r.emoji.id === packet.d.emoji.id && r.emoji.name === packet.d.emoji.name);
+                    if (index !== -1) {
+                        message.reactions.splice(index, 1);
                     }
                 }
 

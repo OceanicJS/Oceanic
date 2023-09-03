@@ -689,15 +689,27 @@ export interface ChannelMention {
     type: ChannelTypes;
 }
 
+export interface MessageReactionCountDetails {
+    burst: number;
+    normal: number;
+}
+
 export interface RawMessageReaction {
+    burst_colors: Array<string>;
     count: number;
+    count_details: MessageReactionCountDetails;
     emoji: PartialEmoji;
     me: boolean;
+    me_burst: boolean;
 }
 
 export interface MessageReaction {
+    burstColors: Array<string>;
     count: number;
+    countDetails: MessageReactionCountDetails;
+    emoji: PartialEmoji;
     me: boolean;
+    meBurst: boolean;
 }
 
 export interface MessageActivity {
