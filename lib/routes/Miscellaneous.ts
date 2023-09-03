@@ -38,21 +38,11 @@ export default class Miscellaneous {
 
     /**
      * Get the nitro sticker packs.
+     * @deprecated Use {@link REST/Miscellaneous#getStickerPacks | getStickerPacks}. This will be removed in `1.9.0`.
      * @caching This method **does not** cache its result.
      */
     async getNitroStickerPacks(): Promise<Array<StickerPack>> {
-        return this.#manager.authRequest<{ sticker_packs: Array<RawStickerPack>; }>({
-            method: "GET",
-            path:   Routes.NITRO_STICKER_PACKS
-        }).then(data => data.sticker_packs.map(pack => ({
-            bannerAssetID:  pack.banner_asset_id,
-            coverStickerID: pack.cover_sticker_id,
-            description:    pack.description,
-            id:             pack.id,
-            name:           pack.name,
-            skuID:          pack.sku_id,
-            stickers:       pack.stickers.map(sticker => this.#manager.client.util.convertSticker(sticker))
-        })));
+        return this.getStickerPacks();
     }
 
     /**
@@ -66,6 +56,25 @@ export default class Miscellaneous {
             method: "GET",
             path:   Routes.STICKER(stickerID)
         }).then(data => data.guild_id === undefined ? this.#manager.client.util.convertSticker(data) : this.#manager.client.guilds.get(data.guild_id)?.stickers.update(data) ?? this.#manager.client.util.convertSticker(data));
+    }
+
+    /**
+     * Get the default sticker packs.
+     * @caching This method **does not** cache its result.
+     */
+    async getStickerPacks(): Promise<Array<StickerPack>> {
+        return this.#manager.authRequest<{ sticker_packs: Array<RawStickerPack>; }>({
+            method: "GET",
+            path:   Routes.STICKER_PACKS
+        }).then(data => data.sticker_packs.map(pack => ({
+            bannerAssetID:  pack.banner_asset_id,
+            coverStickerID: pack.cover_sticker_id,
+            description:    pack.description,
+            id:             pack.id,
+            name:           pack.name,
+            skuID:          pack.sku_id,
+            stickers:       pack.stickers.map(sticker => this.#manager.client.util.convertSticker(sticker))
+        })));
     }
 
     /**
