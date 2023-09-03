@@ -95,7 +95,9 @@ import type {
     EditOnboardingOptions,
     RawGuildEmoji,
     RawSticker,
-    InventorySettings
+    InventorySettings,
+    EditIncidentActionsOptions,
+    IncidentActions
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -159,6 +161,7 @@ export default class Guild extends Base {
     features: Array<GuildFeature>;
     /** The icon hash of this guild. */
     icon: string | null;
+    incidentActions: IncidentActions | null;
     /** The integrations in this guild. */
     integrations: TypedCollection<RawIntegration, Integration, [guildID?: string]>;
     /** The guild's inventory settings. */
@@ -272,6 +275,7 @@ export default class Guild extends Base {
         this.explicitContentFilter = data.explicit_content_filter;
         this.features = [];
         this.icon = null;
+        this.incidentActions = null;
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
         this.inventorySettings = null;
         this.invites = new SimpleCollection(rawInvite => new Invite(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
@@ -496,6 +500,12 @@ export default class Guild extends Base {
         }
         if (data.icon !== undefined) {
             this.icon = data.icon;
+        }
+        if (data.incident_actions !== undefined) {
+            this.incidentActions = {
+                dmsDisabledUntil:     data.incident_actions!.dms_disabled_until,
+                invitesDisabledUntil: data.incident_actions!.invites_disabled_until
+            };
         }
         if (data.inventory_settings !== undefined) {
             this.inventorySettings = data.inventory_settings === null ? null : {
@@ -925,6 +935,14 @@ export default class Guild extends Base {
      */
     async editEmoji(emojiID: string, options: EditEmojiOptions): Promise<GuildEmoji> {
         return this.client.rest.guilds.editEmoji(this.id, emojiID, options);
+    }
+
+    /**
+     * Edit the incident actions for this guild.
+     * @param options The options for editing the incident actions.
+     */
+    async editIncidentActions(options: EditIncidentActionsOptions): Promise<IncidentActions> {
+        return this.client.rest.guilds.editIncidentActions(this.id, options);
     }
 
     /**
@@ -1431,6 +1449,7 @@ export default class Guild extends Base {
             explicitContentFilter:       this.explicitContentFilter,
             features:                    this.features,
             icon:                        this.icon,
+            incidentActions:             this.incidentActions,
             joinedAt:                    this.joinedAt?.getTime() ?? null,
             large:                       this.large,
             maxMembers:                  this.maxMembers,

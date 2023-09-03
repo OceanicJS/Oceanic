@@ -46,7 +46,10 @@ import type {
     EditStickerOptions,
     RawOnboarding,
     Onboarding,
-    EditOnboardingOptions
+    EditOnboardingOptions,
+    EditIncidentActionsOptions,
+    IncidentActions,
+    RawIncidentActions
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -749,6 +752,30 @@ export default class Guilds {
             },
             reason
         }).then(data => this.#manager.client.guilds.get(guildID)?.emojis.update(data) ?? this.#manager.client.util.convertEmoji(data));
+    }
+
+    /**
+     * Edit the incident actions for a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options for editing the incident actions.
+     */
+    async editIncidentActions(guildID: string, options: EditIncidentActionsOptions): Promise<IncidentActions> {
+        const reason = options.reason;
+        if (options.reason) {
+            delete options.reason;
+        }
+        return this.#manager.authRequest<RawIncidentActions>({
+            method: "PUT",
+            path:   Routes.GUILD_INCIDENT_ACTIONS(guildID),
+            json:   {
+                dmsDisabledUntil:     options.dmsDisabledUntil,
+                invitesDisabledUntil: options.invitesDisabledUntil
+            },
+            reason
+        }).then(data => ({
+            dmsDisabledUntil:     data.dms_disabled_until,
+            invitesDisabledUntil: data.invites_disabled_until
+        }));
     }
 
     /**

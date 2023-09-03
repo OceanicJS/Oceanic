@@ -759,6 +759,12 @@ export enum MessageTypes {
     PRIVATE_CHANNEL_INTEGRATION_ADDED            = 33,
     PRIVATE_CHANNEL_INTEGRATION_REMOVED          = 34,
     PREMIUM_REFERRAL                             = 35,
+    GUILD_INCIDENT_ALERT_MODE_ENABLED            = 36,
+    GUILD_INCIDENT_ALERT_MODE_DISABLED           = 37,
+    GUILD_INCIDENT_REPORT_RAID                   = 38,
+    GUILD_INCIDENT_REPORT_FALSE_ALARM            = 39,
+    GUILD_DEADCHAT_REVIVE_PROMPT                 = 40,
+    CUSTOM_GIFT                                  = 41,
 }
 
 export enum MessageActivityTypes {

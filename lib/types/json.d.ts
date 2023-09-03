@@ -18,7 +18,8 @@ import type {
     RawSticker,
     WelcomeScreen,
     Sticker,
-    Presence
+    Presence,
+    IncidentActions
 } from "./guilds";
 import type {
     ChannelMention,
@@ -242,6 +243,7 @@ export interface JSONGuild extends JSONBase {
     explicitContentFilter: ExplicitContentFilterLevels;
     features: Array<GuildFeature>;
     icon: string | null;
+    incidentActions: IncidentActions | null;
     joinedAt: number | null;
     large: boolean;
     maxMembers?: number;
