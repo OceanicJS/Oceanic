@@ -385,6 +385,7 @@ export enum ConnectionVisibilityTypes {
 
 export const ConnectionServices = [
     "battlenet",
+    "domain",
     "ebay",
     "epicgames",
     "facebook",
@@ -395,8 +396,8 @@ export const ConnectionServices = [
     "playstation",
     "reddit",
     "riotgames",
-    "spotify",
     "skype",
+    "spotify",
     "steam",
     "tiktok",
     "twitch",
@@ -470,6 +471,7 @@ export namespace Permissions {
     export const USE_EXTERNAL_SOUNDS                 = 35184372088832n; // 1 << 45
     export const SEND_VOICE_MESSAGES                 = 70368744177664n; // 1 << 46
     export const USE_CLYDE_AI                        = 140737488355328n;// 1 << 47
+    export const SET_VOICE_CHANNEL_STATUS            = 281474976710656n;// 1 << 48
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
@@ -533,7 +535,8 @@ export const VoicePermissions = [
     Permissions.USE_SOUNDBOARD,
     Permissions.USE_EXTERNAL_SOUNDS,
     Permissions.SEND_VOICE_MESSAGES,
-    Permissions.USE_CLYDE_AI
+    Permissions.USE_CLYDE_AI,
+    Permissions.SET_VOICE_CHANNEL_STATUS
 ] as const;
 export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
 export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -756,6 +759,12 @@ export enum MessageTypes {
     PRIVATE_CHANNEL_INTEGRATION_ADDED            = 33,
     PRIVATE_CHANNEL_INTEGRATION_REMOVED          = 34,
     PREMIUM_REFERRAL                             = 35,
+    GUILD_INCIDENT_ALERT_MODE_ENABLED            = 36,
+    GUILD_INCIDENT_ALERT_MODE_DISABLED           = 37,
+    GUILD_INCIDENT_REPORT_RAID                   = 38,
+    GUILD_INCIDENT_REPORT_FALSE_ALARM            = 39,
+    GUILD_DEADCHAT_REVIVE_PROMPT                 = 40,
+    CUSTOM_GIFT                                  = 41,
 }
 
 export enum MessageActivityTypes {
@@ -919,8 +928,10 @@ export enum AuditLogActionTypes {
 
     HARMFUL_LINKS_BLOCKED_MESSAGE = 180,
 
-    HOME_SETTINGS_CREATE = 190,
-    HOME_SETTINGS_UPDATE = 191,
+    HOME_SETTINGS_CREATE        = 190,
+    HOME_SETTINGS_UPDATE        = 191,
+    VOICE_CHANNEL_STATUS_CREATE = 192,
+    VOICE_CHANNEL_STATUS_DELETE = 193,
 }
 
 export enum ApplicationCommandTypes {
@@ -1146,6 +1157,11 @@ export enum InviteFlags {
     GUEST = 1 << 0,
 }
 
+export enum ReactionType {
+    NORMAL = 0,
+    SUPER  = 1,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
@@ -1319,6 +1335,7 @@ export enum JSONErrorCodes {
     TWO_FACTOR_REQUIRED = 60003,
     NO_USERS_WITH_DISCORDTAG_EXIST = 80004,
     REACTION_BLOCKED = 90001,
+    USER_CANNOT_USE_BURST_REACTIONS = 90002,
     INELIGIBLE_FOR_SUBSCRIPTION = 100053,
     APPLICATION_NOT_AVAILABLE = 110001,
     API_RESOURCE_IS_CURRENTLY_OVERLOADED = 130000,

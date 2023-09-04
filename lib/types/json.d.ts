@@ -18,7 +18,8 @@ import type {
     RawSticker,
     WelcomeScreen,
     Sticker,
-    Presence
+    Presence,
+    IncidentActions
 } from "./guilds";
 import type {
     ChannelMention,
@@ -242,6 +243,7 @@ export interface JSONGuild extends JSONBase {
     explicitContentFilter: ExplicitContentFilterLevels;
     features: Array<GuildFeature>;
     icon: string | null;
+    incidentActions: IncidentActions | null;
     joinedAt: number | null;
     large: boolean;
     maxMembers?: number;
@@ -417,7 +419,7 @@ export interface JSONMessage extends JSONBase {
     nonce?: number | string;
     pinned: boolean;
     position?: number;
-    reactions: Record<string, MessageReaction>;
+    reactions: Array<MessageReaction>;
     referencedMessage?: JSONMessage | null;
     stickerItems?: Array<StickerItem>;
     thread?: JSONAnnouncementThreadChannel | JSONPublicThreadChannel | JSONPrivateThreadChannel;
@@ -621,6 +623,7 @@ export interface JSONUser extends JSONBase {
     username: string;
 }
 export interface JSONVoiceChannel extends JSONTextableVoiceChannel {
+    status: string | null;
     type: ChannelTypes.GUILD_VOICE;
 }
 export interface JSONVoiceState extends JSONBase {

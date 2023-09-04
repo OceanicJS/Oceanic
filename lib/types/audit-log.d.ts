@@ -58,9 +58,11 @@ export interface RawAuditLogEntryOptions {
     count?: number;
     delete_member_days?: number;
     id?: string;
+    integration_type?: string;
     members_removed?: number;
     message_id?: string;
     role_name?: string;
+    status?: string;
     type?: "0" | "1";
 }
 export interface AuditLogEntryOptions {
@@ -78,12 +80,16 @@ export interface AuditLogEntryOptions {
     deleteMemberDays?: number;
     /** ID of the overwritten entity - valid for: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE` */
     id?: string;
+    /** The type of interaction - valid for: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE` */
+    integrationType?: string;
     /** Number of members removed by the prune - valid for: `MEMBER_PRUNE` */
     membersRemoved?: number;
     /** ID of the message that was targeted - valid for: `MESSAGE_PIN`, `MESSAGE_UNPIN` */
     messageID?: string;
     /** Name of the role if type is "0" (not present if type is "1") - valid for: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE` */
     roleName?: string;
+    /** The status set in a voice channel - valid for: `VOICE_CHANNEL_STATUS_CREATE` */
+    status?: string;
     /** Type of overwritten entity - role ("0") or member ("1") - valid for: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE` */
     type?: "0" | "1";
 }

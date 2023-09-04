@@ -48,6 +48,7 @@ export const GUILD_VOICE_STATE           = (guildID: string, userID: string) => 
 export const GUILD_STICKER			     = (guildID: string, stickerID: string) => `/guilds/${guildID}/stickers/${stickerID}` as const;
 export const GUILD_STICKERS			     = (guildID: string) => `/guilds/${guildID}/stickers` as const;
 export const GUILD_ONBOARDING            = (guildID: string) => `/guilds/${guildID}/onboarding` as const;
+export const GUILD_INCIDENT_ACTIONS      = (guildID: string) => `/guilds/${guildID}/incident-actions` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;
@@ -125,7 +126,9 @@ export const GATEWAY                   = "/gateway" as const;
 export const GATEWAY_BOT               = "/gateway/bot" as const;
 export const USER                      = (userID: string) => `/users/${userID}` as const;
 export const MESSAGE_LINK              = (guildID: string, channelID: string, messageID: string) => `/channels/${guildID}/${channelID}/${messageID}` as const;
-export const NITRO_STICKER_PACKS       = "/sticker-packs" as const;
+export const STICKER_PACKS             = "/sticker-packs" as const;
+/** @deprecated Use {@link Routes~STICKER_PACKS | STICKER_PACKS}. This will be removed in `1.9.0`. */
+export const NITRO_STICKER_PATHS       = STICKER_PACKS;
 export const INVITE                    = (code: string) => `/invites/${code}` as const;
 export const STAGE_INSTANCES           = "/stage-instances" as const;
 export const STAGE_INSTANCE            = (channelID: string) => `/stage-instances/${channelID}` as const;
