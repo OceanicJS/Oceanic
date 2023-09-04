@@ -105,7 +105,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     /** This message's relative position, if in a thread. */
     position?: number;
     /** The reactions on this message. */
-    reactions: Record<string, MessageReaction>;
+    reactions: Array<MessageReaction>;
     /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, this will be the message that's referenced. */
     referencedMessage?: Message | null;
     /** The data of the role subscription purchase or renewal that prompted this message. */
@@ -142,7 +142,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             users:    []
         };
         this.pinned = !!data.pinned;
-        this.reactions = {};
+        this.reactions = [];
         // message updates can be missing a timestamp
         this.timestamp = data.timestamp === undefined ? Base.getCreatedAt(this.id) : new Date(data.timestamp);
         this.tts = !!data.tts;
@@ -250,13 +250,14 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             this.position = data.position;
         }
         if (data.reactions) {
-            for (const reaction of data.reactions) {
-                const name = reaction.emoji.id ? `${reaction.emoji.name}:${reaction.emoji.id}` : reaction.emoji.name;
-                this.reactions[name] = {
-                    count: reaction.count,
-                    me:    reaction.me
-                };
-            }
+            this.reactions = data.reactions.map(r => ({
+                burstColors:  r.burst_colors,
+                count:        r.count,
+                countDetails: r.count_details,
+                emoji:        r.emoji,
+                me:           r.me,
+                meBurst:      r.me_burst
+            }));
         }
 
         if (data.referenced_message !== undefined) {
