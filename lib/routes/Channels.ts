@@ -888,6 +888,9 @@ export default class Channels {
             if (_options?.limit !== undefined) {
                 query.set("limit", _options.limit.toString());
             }
+            if (options?.type !== undefined) {
+                query.set("type", String(options.type));
+            }
             return this.#manager.authRequest<Array<RawUser>>({
                 method: "GET",
                 path:   Routes.CHANNEL_REACTION(channelID, messageID, emoji),

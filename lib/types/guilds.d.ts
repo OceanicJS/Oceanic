@@ -58,6 +58,7 @@ export interface RawGuild {
     icon: string | null;
     icon_hash?: string | null;
     id: string;
+    incident_actions: RawIncidentActions | null;
     inventory_settings: RawInventorySettings | null;
     joined_at: string | null;
     large: boolean;
@@ -809,4 +810,25 @@ export interface RawInventorySettings {
 
 export interface InventorySettings {
     isEmojiPackCollectible: boolean;
+}
+
+export interface EditIncidentActionsOptions {
+    /** When disabled direct messages will expire (up to 24 hours in the future) */
+    dmsDisabledUntil?: string | null;
+    /** When disabled invites will expire (up to 24 hours in the future). */
+    invitesDisabledUntil?: string | null;
+    /** The reason for editing the incident actions. */
+    reason?: string;
+}
+
+export interface RawIncidentActions {
+    dms_disabled_until: string | null;
+    invites_disabled_until: string | null;
+}
+
+export interface IncidentActions {
+    /** When disabled direct messages will expire (up to 24 hours in the future) */
+    dmsDisabledUntil: string | null;
+    /** When disabled invites will expire (up to 24 hours in the future). */
+    invitesDisabledUntil: string | null;
 }

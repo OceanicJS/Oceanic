@@ -51,7 +51,7 @@ export interface RawPartialApplication extends Pick<RawApplication, "id" | "name
 export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
 export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
 export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
-export type TeamMemberRoleTypes = "owner" | "admin" | "developer" | "read-only";
+export type TeamMemberRoleTypes = "admin" | "developer" | "read-only";
 
 export interface RawTeam {
     icon: string | null;
