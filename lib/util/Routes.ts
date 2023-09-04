@@ -76,6 +76,7 @@ export const CHANNEL_TYPING                          = (channelID: string) => `/
 export const GROUP_RECIPIENT                         = (channelID: string, userID: string) => `/channels/${channelID}/recipients/${userID}` as const;
 export const VOICE_REGIONS                           = "/voice/regions" as const;
 export const GUILD_VOICE_REGIONS                     = (guildID: string) => `/guilds/${guildID}/regions` as const;
+export const VOICE_STATUS                            = (channelID: string) => `/channels/${channelID}/voice-status` as const;
 
 // OAuth
 export const OAUTH_APPLICATION     = "/oauth2/applications/@me" as const;

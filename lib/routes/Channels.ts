@@ -1133,6 +1133,19 @@ export default class Channels {
     }
 
     /**
+     * Set a voice status in a channel.
+     * @param channelID The ID of the channel to set the voice status in.
+     * @param status The voice status to set.
+     */
+    async setVoiceStatus(channelID: string, status: string | null): Promise<void> {
+        await this.#manager.authRequest<null>({
+            method: "PUT",
+            path:   Routes.VOICE_STATUS(channelID),
+            json:   { status }
+        });
+    }
+
+    /**
      * Create a thread from an existing message.
      * @param channelID The ID of the channel to create the thread in.
      * @param messageID The ID of the message to create the thread from.
