@@ -1,8 +1,8 @@
 /** @module ForumChannel */
-import ThreadOnlyChannel from "./ThreadOnlyChannel";
-import type Client from "../Client";
-import type { ChannelTypes } from "../Constants";
-import type { JSONForumChannel, RawForumChannel } from "../types";
+import ThreadOnlyChannel from "./ThreadOnlyChannel.js";
+import type Client from "../Client.js";
+import type { ChannelTypes } from "../Constants.js";
+import type { JSONForumChannel, RawForumChannel } from "../types/index.js";
 
 /** Represents a thread forum channel. */
 export default class ForumChannel extends ThreadOnlyChannel {

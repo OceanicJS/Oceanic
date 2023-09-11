@@ -1,14 +1,14 @@
 /** @module Integration */
-import Base from "./Base";
-import PartialApplication from "./PartialApplication";
-import type User from "./User";
-import type Guild from "./Guild";
-import type Role from "./Role";
-import type { IntegrationAccount, RawIntegration } from "../types/guilds";
-import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
-import type Client from "../Client";
-import type { JSONIntegration } from "../types/json";
-import { UncachedError } from "../util/Errors";
+import Base from "./Base.js";
+import PartialApplication from "./PartialApplication.js";
+import type User from "./User.js";
+import type Guild from "./Guild.js";
+import type Role from "./Role.js";
+import type { IntegrationAccount, RawIntegration } from "../types/guilds.js";
+import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants.js";
+import type Client from "../Client.js";
+import type { JSONIntegration } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {

@@ -1,9 +1,9 @@
 /** @module AnnouncementThreadChannel */
-import ThreadChannel from "./ThreadChannel";
-import type { ChannelTypes } from "../Constants";
-import type Client from "../Client";
-import type { GetThreadMembersOptions, RawAnnouncementThreadChannel, ThreadMember, ThreadMetadata } from "../types/channels";
-import type { JSONAnnouncementThreadChannel } from "../types/json";
+import ThreadChannel from "./ThreadChannel.js";
+import type { ChannelTypes } from "../Constants.js";
+import type Client from "../Client.js";
+import type { GetThreadMembersOptions, RawAnnouncementThreadChannel, ThreadMember, ThreadMetadata } from "../types/channels.js";
+import type { JSONAnnouncementThreadChannel } from "../types/json.js";
 
 /** Represents a public thread channel in an announcement channel. */
 export default class AnnouncementThreadChannel extends ThreadChannel<AnnouncementThreadChannel> {

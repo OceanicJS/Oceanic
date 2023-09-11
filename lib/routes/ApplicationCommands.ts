@@ -1,5 +1,5 @@
 /** @module REST/ApplicationCommands */
-import * as Routes from "../util/Routes";
+import * as Routes from "../util/Routes.js";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
@@ -14,10 +14,10 @@ import type {
     CreateGuildApplicationCommandOptions,
     EditGuildApplicationCommandOptions,
     GetApplicationCommandOptions
-} from "../types/application-commands";
-import ApplicationCommand from "../structures/ApplicationCommand";
-import type { RequestOptions } from "../types/request-handler";
-import type RESTManager from "../rest/RESTManager";
+} from "../types/application-commands.js";
+import ApplicationCommand from "../structures/ApplicationCommand.js";
+import type { RequestOptions } from "../types/request-handler.js";
+import type RESTManager from "../rest/RESTManager.js";
 
 /** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applicationCommands | .applicationCommands}. */
 export default class ApplicationCommands {

@@ -8,13 +8,13 @@ import type {
     ExecuteWebhookOptions,
     ExecuteWebhookWaitOptions,
     RawWebhook
-} from "../types/webhooks";
-import type { AnyTextableChannel, RawMessage } from "../types/channels";
-import * as Routes from "../util/Routes";
-import Webhook from "../structures/Webhook";
-import Message from "../structures/Message";
-import type RESTManager from "../rest/RESTManager";
-import type { Uncached } from "../types/shared";
+} from "../types/webhooks.js";
+import type { AnyTextableChannel, RawMessage } from "../types/channels.js";
+import * as Routes from "../util/Routes.js";
+import Webhook from "../structures/Webhook.js";
+import Message from "../structures/Message.js";
+import type RESTManager from "../rest/RESTManager.js";
+import type { Uncached } from "../types/shared.js";
 
 /** Various methods for interacting with webhooks. Located at {@link Client#rest | Client#rest}{@link RESTManager#webhooks | .webhooks}. */
 export default class Webhooks {

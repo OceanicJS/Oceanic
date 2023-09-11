@@ -1,6 +1,6 @@
 /** @module Types/GuildTemplate */
-import type { RawGuild } from "./guilds";
-import type { RawUser } from "./users";
+import type { RawGuild } from "./guilds.js";
+import type { RawUser } from "./users.js";
 
 export interface RawGuildTemplate {
     code: string;

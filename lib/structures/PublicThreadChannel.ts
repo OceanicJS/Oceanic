@@ -1,9 +1,9 @@
 /** @module PublicThreadChannel */
-import ThreadChannel from "./ThreadChannel";
-import type { ChannelTypes } from "../Constants";
-import type Client from "../Client";
-import type { GetThreadMembersOptions, RawPublicThreadChannel, ThreadMember, ThreadMetadata } from "../types/channels";
-import type { JSONPublicThreadChannel } from "../types/json";
+import ThreadChannel from "./ThreadChannel.js";
+import type { ChannelTypes } from "../Constants.js";
+import type Client from "../Client.js";
+import type { GetThreadMembersOptions, RawPublicThreadChannel, ThreadMember, ThreadMetadata } from "../types/channels.js";
+import type { JSONPublicThreadChannel } from "../types/json.js";
 
 /** Represents a public thread channel. */
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {

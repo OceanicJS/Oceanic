@@ -1,5 +1,5 @@
 /** @module Types/AutoModeration */
-import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants";
+import type { AutoModerationActionTypes, AutoModerationEventTypes, AutoModerationKeywordPresetTypes, AutoModerationTriggerTypes } from "../Constants.js";
 
 export interface RawAutoModerationRule {
     actions: Array<RawAutoModerationAction>;

@@ -1,11 +1,11 @@
 /** @module GuildTemplate */
-import type Guild from "./Guild";
-import type User from "./User";
-import type Client from "../Client";
-import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
-import type { RawGuild } from "../types/guilds";
-import type { JSONGuildTemplate } from "../types/json";
-import { UncachedError } from "../util/Errors";
+import type Guild from "./Guild.js";
+import type User from "./User.js";
+import type Client from "../Client.js";
+import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template.js";
+import type { RawGuild } from "../types/guilds.js";
+import type { JSONGuildTemplate } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a guild template. */
 export default class GuildTemplate {

@@ -1,25 +1,25 @@
 /** @module ModalSubmitInteraction */
-import Interaction from "./Interaction";
-import type Member from "./Member";
-import type User from "./User";
-import type Guild from "./Guild";
-import Permission from "./Permission";
-import Message from "./Message";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
+import Interaction from "./Interaction.js";
+import type Member from "./Member.js";
+import type User from "./User.js";
+import type Guild from "./Guild.js";
+import Permission from "./Permission.js";
+import Message from "./Message.js";
+import GuildChannel from "./GuildChannel.js";
+import type PrivateChannel from "./PrivateChannel.js";
+import { InteractionResponseTypes, type InteractionTypes } from "../Constants.js";
 import type {
     InitialInteractionContent,
     InteractionContent,
     InteractionGuild,
     ModalSubmitInteractionData,
     RawModalSubmitInteraction
-} from "../types/interactions";
-import type Client from "../Client";
-import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
-import type { JSONModalSubmitInteraction } from "../types/json";
-import type { Uncached } from "../types/shared";
-import { UncachedError } from "../util/Errors";
+} from "../types/interactions.js";
+import type Client from "../Client.js";
+import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels.js";
+import type { JSONModalSubmitInteraction } from "../types/json.js";
+import type { Uncached } from "../types/shared.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a modal submit interaction. */
 export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {

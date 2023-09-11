@@ -1,11 +1,11 @@
 /** @module REST/Miscellaneous */
-import * as Routes from "../util/Routes";
-import type RESTManager from "../rest/RESTManager";
-import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
-import type { VoiceRegion } from "../types/voice";
-import type { RESTApplication, RawClientApplication } from "../types";
-import Application from "../structures/Application";
-import ClientApplication from "../structures/ClientApplication";
+import * as Routes from "../util/Routes.js";
+import type RESTManager from "../rest/RESTManager.js";
+import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds.js";
+import type { VoiceRegion } from "../types/voice.js";
+import type { RESTApplication, RawClientApplication } from "../types/index.js";
+import Application from "../structures/Application.js";
+import ClientApplication from "../structures/ClientApplication.js";
 
 /** Methods that don't fit anywhere else. Located at {@link Client#rest | Client#rest}{@link RESTManager#misc | .misc}. */
 export default class Miscellaneous {

@@ -1,17 +1,17 @@
 /* eslint-disable unicorn/prefer-math-trunc */
 /** @module Constants */
-import type PrivateChannel from "./structures/PrivateChannel";
-import type TextChannel from "./structures/TextChannel";
-import type VoiceChannel from "./structures/VoiceChannel";
-import type GroupChannel from "./structures/GroupChannel";
-import type CategoryChannel from "./structures/CategoryChannel";
-import type AnnouncementChannel from "./structures/AnnouncementChannel";
-import type AnnouncementThreadChannel from "./structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "./structures/PublicThreadChannel";
-import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
-import type StageChannel from "./structures/StageChannel";
-import type ForumChannel from "./structures/ForumChannel";
-import type { ReverseMap, StringMap } from "./types/misc";
+import type PrivateChannel from "./structures/PrivateChannel.js";
+import type TextChannel from "./structures/TextChannel.js";
+import type VoiceChannel from "./structures/VoiceChannel.js";
+import type GroupChannel from "./structures/GroupChannel.js";
+import type CategoryChannel from "./structures/CategoryChannel.js";
+import type AnnouncementChannel from "./structures/AnnouncementChannel.js";
+import type AnnouncementThreadChannel from "./structures/AnnouncementThreadChannel.js";
+import type PublicThreadChannel from "./structures/PublicThreadChannel.js";
+import type PrivateThreadChannel from "./structures/PrivateThreadChannel.js";
+import type StageChannel from "./structures/StageChannel.js";
+import type ForumChannel from "./structures/ForumChannel.js";
+import type { ReverseMap, StringMap } from "./types/misc.js";
 import type {
     RawAnnouncementChannel,
     RawAnnouncementThreadChannel,
@@ -25,9 +25,9 @@ import type {
     RawStageChannel,
     RawTextChannel,
     RawVoiceChannel
-} from "./types/channels";
-import type MediaChannel from "./structures/MediaChannel";
-import pkg from "../package.json";
+} from "./types/channels.js";
+import type MediaChannel from "./structures/MediaChannel.js";
+import pkg from "../package.json" assert { type: "json" };
 
 export const GATEWAY_VERSION = 10;
 export const REST_VERSION    = 10;

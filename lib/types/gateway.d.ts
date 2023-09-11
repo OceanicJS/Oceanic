@@ -1,16 +1,16 @@
 /** @module Types/Gateway */
-import type { PartialEmoji } from ".";
-import type { RawUser } from "./users";
-import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
+import type { PartialEmoji } from "./guilds.js";
+import type { RawUser } from "./users.js";
+import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation.js";
 import type {
     ActivityTypes,
     AnimationTypes,
     AutoModerationTriggerTypes,
     ChannelTypes,
     IntentNames
-} from "../Constants";
-import type AutoModerationRule from "../structures/AutoModerationRule";
-import type Shard from "../gateway/Shard";
+} from "../Constants.js";
+import type AutoModerationRule from "../structures/AutoModerationRule.js";
+import type Shard from "../gateway/Shard.js";
 import type { ClientOptions as WSClientOptions } from "ws";
 
 export type ReconnectDelayFunction = (lastDelay: number, attempts: number) => number;

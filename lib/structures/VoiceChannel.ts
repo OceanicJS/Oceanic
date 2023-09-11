@@ -1,9 +1,9 @@
 /** @module VoiceChannel */
-import TextableVoiceChannel from "./TextableVoiceChannel";
-import type { ChannelTypes } from "../Constants";
-import type Client from "../Client";
-import type { RawVoiceChannel } from "../types/channels";
-import type { JSONVoiceChannel } from "../types/json";
+import TextableVoiceChannel from "./TextableVoiceChannel.js";
+import type { ChannelTypes } from "../Constants.js";
+import type Client from "../Client.js";
+import type { RawVoiceChannel } from "../types/channels.js";
+import type { JSONVoiceChannel } from "../types/json.js";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends TextableVoiceChannel<VoiceChannel> {

@@ -1,6 +1,6 @@
 /** @module OAuthHelper */
-import type RESTManager from "./RESTManager";
-import OAuthApplication from "../structures/OAuthApplication";
+import type RESTManager from "./RESTManager.js";
+import OAuthApplication from "../structures/OAuthApplication.js";
 import type {
     AuthorizationInformation,
     Connection,
@@ -9,16 +9,16 @@ import type {
     RawConnection,
     RESTOAuthApplication,
     RevokeTokenOptions
-} from "../types/oauth";
-import type { RawOAuthGuild, RESTMember } from "../types/guilds";
-import * as Routes from "../util/Routes";
-import PartialApplication from "../structures/PartialApplication";
-import Integration from "../structures/Integration";
-import Member from "../structures/Member";
-import OAuthGuild from "../structures/OAuthGuild";
-import ExtendedUser from "../structures/ExtendedUser";
-import type { RawOAuthUser, RawRoleConnection, RoleConnection, UpdateUserApplicationRoleConnectionOptions } from "../types";
-import { BASE_URL } from "../Constants";
+} from "../types/oauth.js";
+import type { RawOAuthGuild, RESTMember } from "../types/guilds.js";
+import * as Routes from "../util/Routes.js";
+import PartialApplication from "../structures/PartialApplication.js";
+import Integration from "../structures/Integration.js";
+import Member from "../structures/Member.js";
+import OAuthGuild from "../structures/OAuthGuild.js";
+import ExtendedUser from "../structures/ExtendedUser.js";
+import type { RawOAuthUser, RawRoleConnection, RoleConnection, UpdateUserApplicationRoleConnectionOptions } from "../types/index.js";
+import { BASE_URL } from "../Constants.js";
 import { FormData } from "undici";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */

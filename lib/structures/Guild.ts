@@ -1,27 +1,27 @@
 /** @module Guild */
-import Role from "./Role";
-import Base from "./Base";
-import GuildChannel from "./GuildChannel";
-import Member from "./Member";
-import GuildScheduledEvent from "./GuildScheduledEvent";
-import ThreadChannel from "./ThreadChannel";
-import type User from "./User";
-import type VoiceChannel from "./VoiceChannel";
-import type ClientApplication from "./ClientApplication";
-import type TextChannel from "./TextChannel";
-import type CategoryChannel from "./CategoryChannel";
-import Integration from "./Integration";
-import AutoModerationRule from "./AutoModerationRule";
-import Permission from "./Permission";
-import VoiceState from "./VoiceState";
-import StageInstance from "./StageInstance";
-import Channel from "./Channel";
-import type StageChannel from "./StageChannel";
-import type GuildTemplate from "./GuildTemplate";
-import type GuildPreview from "./GuildPreview";
-import Invite from "./Invite";
-import type Webhook from "./Webhook";
-import AuditLogEntry from "./AuditLogEntry";
+import Role from "./Role.js";
+import Base from "./Base.js";
+import GuildChannel from "./GuildChannel.js";
+import Member from "./Member.js";
+import GuildScheduledEvent from "./GuildScheduledEvent.js";
+import ThreadChannel from "./ThreadChannel.js";
+import type User from "./User.js";
+import type VoiceChannel from "./VoiceChannel.js";
+import type ClientApplication from "./ClientApplication.js";
+import type TextChannel from "./TextChannel.js";
+import type CategoryChannel from "./CategoryChannel.js";
+import Integration from "./Integration.js";
+import AutoModerationRule from "./AutoModerationRule.js";
+import Permission from "./Permission.js";
+import VoiceState from "./VoiceState.js";
+import StageInstance from "./StageInstance.js";
+import Channel from "./Channel.js";
+import type StageChannel from "./StageChannel.js";
+import type GuildTemplate from "./GuildTemplate.js";
+import type GuildPreview from "./GuildPreview.js";
+import Invite from "./Invite.js";
+import type Webhook from "./Webhook.js";
+import AuditLogEntry from "./AuditLogEntry.js";
 import {
     AllPermissions,
     Permissions,
@@ -36,10 +36,10 @@ import {
     type GatewayOPCodes,
     type MutableGuildFeatures,
     type ChannelTypeMap
-} from "../Constants";
-import * as Routes from "../util/Routes";
-import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
+} from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type Client from "../Client.js";
+import TypedCollection from "../util/TypedCollection.js";
 import type {
     AnyGuildChannel,
     AnyGuildChannelWithoutThreads,
@@ -50,7 +50,7 @@ import type {
     RawThreadChannel,
     GuildChannelsWithoutThreads,
     RawInvite
-} from "../types/channels";
+} from "../types/channels.js";
 import type {
     AddMemberOptions,
     BeginPruneOptions,
@@ -98,25 +98,25 @@ import type {
     InventorySettings,
     EditIncidentActionsOptions,
     IncidentActions
-} from "../types/guilds";
+} from "../types/guilds.js";
 import type {
     CreateScheduledEventOptions,
     EditScheduledEventOptions,
     GetScheduledEventUsersOptions,
     RawScheduledEvent,
     ScheduledEventUser
-} from "../types/scheduled-events";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { AuditLog, GetAuditLogOptions, RawAuditLogEntry } from "../types/audit-log";
-import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
-import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
-import type { JSONGuild } from "../types/json";
-import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
-import type Shard from "../gateway/Shard";
+} from "../types/scheduled-events.js";
+import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation.js";
+import type { AuditLog, GetAuditLogOptions, RawAuditLogEntry } from "../types/audit-log.js";
+import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template.js";
+import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice.js";
+import type { JSONGuild } from "../types/json.js";
+import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway.js";
+import type Shard from "../gateway/Shard.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
-import { UncachedError } from "../util/Errors";
-import SimpleCollection from "../util/SimpleCollection";
+import { UncachedError } from "../util/Errors.js";
+import SimpleCollection from "../util/SimpleCollection.js";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */

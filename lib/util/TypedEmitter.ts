@@ -1,5 +1,5 @@
 /** @module TypedEmitter */
-import { UncaughtError } from "./Errors";
+import { UncaughtError } from "./Errors.js";
 import EventEmitter from "node:events";
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument */
 

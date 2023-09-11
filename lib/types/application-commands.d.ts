@@ -1,9 +1,9 @@
 /** @module Types/ApplicationCommands */
-import type { ImplementedChannels } from ".";
-import type { ExclusifyUnion } from "./shared";
-import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes } from "../Constants";
-import type ApplicationCommand from "../structures/ApplicationCommand";
-import type ClientApplication from "../structures/ClientApplication";
+import type { ImplementedChannels } from "./channels.js";
+import type { ExclusifyUnion } from "./shared.js";
+import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes } from "../Constants.js";
+import type ApplicationCommand from "../structures/ApplicationCommand.js";
+import type ClientApplication from "../structures/ClientApplication.js";
 
 export interface RawApplicationCommand {
     application_id: string;

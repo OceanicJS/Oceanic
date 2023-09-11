@@ -1,9 +1,9 @@
 /** @module PingInteraction */
-import Interaction from "./Interaction";
-import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
-import type { RawPingInteraction } from "../types/interactions";
-import type Client from "../Client";
-import type { JSONPingInteraction } from "../types/json";
+import Interaction from "./Interaction.js";
+import { InteractionResponseTypes, type InteractionTypes } from "../Constants.js";
+import type { RawPingInteraction } from "../types/interactions.js";
+import type Client from "../Client.js";
+import type { JSONPingInteraction } from "../types/json.js";
 
 /** Represents a PING interaction. This will not be received over a gateway connection. */
 export default class PingInteraction extends Interaction {

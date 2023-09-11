@@ -1,6 +1,6 @@
 /** @module Types/Users */
-import type { RawMember } from "./guilds";
-import type { PremiumTypes } from "../Constants";
+import type { RawMember } from "./guilds.js";
+import type { PremiumTypes } from "../Constants.js";
 
 // avatar_decoration, (self) bio
 export interface RESTUser {

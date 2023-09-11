@@ -1,10 +1,10 @@
 /** @module GuildPreview */
-import Base from "./Base";
-import type Client from "../Client";
-import type { GuildFeature, ImageFormat } from "../Constants";
-import type { GuildEmoji, RawGuildPreview, RawSticker } from "../types/guilds";
-import type { JSONGuildPreview } from "../types/json";
-import * as Routes from "../util/Routes";
+import Base from "./Base.js";
+import type Client from "../Client.js";
+import type { GuildFeature, ImageFormat } from "../Constants.js";
+import type { GuildEmoji, RawGuildPreview, RawSticker } from "../types/guilds.js";
+import type { JSONGuildPreview } from "../types/json.js";
+import * as Routes from "../util/Routes.js";
 
 /** Represents a preview of a guild. */
 export default class GuildPreview extends Base {

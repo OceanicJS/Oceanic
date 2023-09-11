@@ -1,5 +1,5 @@
 /** @module SimpleCollection */
-import Collection from "./Collection";
+import Collection from "./Collection.js";
 
 /** This is an internal class, you should not use it in your projects. If you want a collection type for your own projects, look at {@link Collection}. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

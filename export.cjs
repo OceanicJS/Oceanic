@@ -74,10 +74,7 @@ const VoiceChannel = (await import("./dist/lib/structures/VoiceChannel.js")).def
 const VoiceState = (await import("./dist/lib/structures/VoiceState.js")).default.default;
 const Webhook = (await import("./dist/lib/structures/Webhook.js")).default.default;
 
-export * from "./dist/lib/Constants.js";
-export * from "./dist/lib/util/Errors.js";
-
-export {
+module.exports = Object.assign({
     Channel,
     Interaction,
     AnnouncementChannel,
@@ -152,4 +149,4 @@ export {
     VoiceChannel,
     VoiceState,
     Webhook
-};
+}, (await import("./dist/lib/Constants.js")).default, (await import("./dist/lib/util/Errors.js")).default);

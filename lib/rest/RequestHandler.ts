@@ -1,12 +1,12 @@
 /** @module RequestHandler */
-import SequentialBucket from "./SequentialBucket";
-import DiscordRESTError from "./DiscordRESTError";
-import DiscordHTTPError from "./DiscordHTTPError";
-import type RESTManager from "./RESTManager";
-import { API_URL, RESTMethods, USER_AGENT, type RESTMethod } from "../Constants";
-import Base from "../structures/Base";
-import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
-import type { RESTOptions } from "../types/client";
+import SequentialBucket from "./SequentialBucket.js";
+import DiscordRESTError from "./DiscordRESTError.js";
+import DiscordHTTPError from "./DiscordHTTPError.js";
+import type RESTManager from "./RESTManager.js";
+import { API_URL, RESTMethods, USER_AGENT, type RESTMethod } from "../Constants.js";
+import Base from "../structures/Base.js";
+import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler.js";
+import type { RESTOptions } from "../types/client.js";
 import { FormData, fetch, File as UFile } from "undici";
 
 /**

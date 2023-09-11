@@ -1,19 +1,19 @@
 /** @module Types/OAuth */
-import type { RawUser } from "./users";
-import type { OAuthWebhook } from "./webhooks";
-import type { RawIntegration, RawOAuthGuild } from "./guilds";
-import type { LocaleMap } from "./application-commands";
+import type { RawUser } from "./users.js";
+import type { OAuthWebhook } from "./webhooks.js";
+import type { RawIntegration, RawOAuthGuild } from "./guilds.js";
+import type { LocaleMap } from "./application-commands.js";
 import type {
     ConnectionService,
     PermissionName,
     RoleConnectionMetadataTypes,
     TeamMembershipState,
     ConnectionVisibilityTypes
-} from "../Constants";
-import type PartialApplication from "../structures/PartialApplication";
-import type User from "../structures/User";
-import type Webhook from "../structures/Webhook";
-import type Integration from "../structures/Integration";
+} from "../Constants.js";
+import type PartialApplication from "../structures/PartialApplication.js";
+import type User from "../structures/User.js";
+import type Webhook from "../structures/Webhook.js";
+import type Integration from "../structures/Integration.js";
 
 export interface RawApplication {
     approximate_guild_count?: number;

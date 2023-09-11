@@ -4,12 +4,12 @@
   "description": "A NodeJS library for interfacing with Discord.",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
-  "module": "./esm.mjs",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/lib/index.d.ts",
-      "require": "./dist/lib/index.js",
-      "import": "./esm.mjs"
+      "import": "./dist/lib/index.js",
+      "require": "./export.cjs"
     }
   },
   "scripts": {
@@ -17,7 +17,7 @@
     "lint:fix": "eslint lib --ext .ts --fix",
     "prepare": "rimraf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
     "test:build": "pnpm run prepare",
-    "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
+    "test:cjs": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node export.cjs",
     "test:docs": "rimraf docs && npx --yes typedoc --options static/typedoc.json",
     "test": "pnpm run lint && pnpm run test:build && pnpm run test:esm && pnpm run test:docs"
   },

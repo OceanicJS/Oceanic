@@ -1,9 +1,9 @@
 /** @module TextableChannel */
-import TextableChannel from "./TextableChannel";
-import type PrivateThreadChannel from "./PrivateThreadChannel";
-import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
-import type Client from "../Client";
-import type { RawAnnouncementChannel, RawTextChannel } from "../types/channels";
+import TextableChannel from "./TextableChannel.js";
+import type PrivateThreadChannel from "./PrivateThreadChannel.js";
+import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants.js";
+import type Client from "../Client.js";
+import type { RawAnnouncementChannel, RawTextChannel } from "../types/channels.js";
 import type {
     AnyTextableGuildChannel,
     AnyThreadChannel,
@@ -12,8 +12,8 @@ import type {
     JSONThreadableChannel,
     StartThreadFromMessageOptions,
     StartThreadWithoutMessageOptions
-} from "../types";
-import Collection from "../util/Collection";
+} from "../types/index.js";
+import Collection from "../util/Collection.js";
 
 /** Represents a guild textable channel. */
 export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyTextableGuildChannel, TH extends AnyThreadChannel = AnyThreadChannel> extends TextableChannel<TC> {

@@ -1,15 +1,15 @@
 /** @module Types/JSON */
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import type { InstallParams, TeamMember } from "./oauth";
-import type { ApplicationCommandOptions, LocaleMap } from "./application-commands";
+import type { InstallParams, TeamMember } from "./oauth.js";
+import type { ApplicationCommandOptions, LocaleMap } from "./application-commands.js";
 import type {
     ApplicationCommandInteractionData,
     AutocompleteInteractionData,
     MessageComponentButtonInteractionData,
     MessageComponentSelectMenuInteractionData,
     ModalSubmitInteractionData
-} from "./interactions";
-import type { AutoModerationAction, TriggerMetadata } from "./auto-moderation";
+} from "./interactions.js";
+import type { AutoModerationAction, TriggerMetadata } from "./auto-moderation.js";
 import type {
     GuildEmoji,
     IntegrationAccount,
@@ -20,7 +20,7 @@ import type {
     Sticker,
     Presence,
     IncidentActions
-} from "./guilds";
+} from "./guilds.js";
 import type {
     ChannelMention,
     MessageActivity,
@@ -39,8 +39,8 @@ import type {
     ThreadChannels,
     VoiceChannels,
     ThreadOnlyChannels
-} from "./channels";
-import type { ScheduledEventEntityMetadata } from "./scheduled-events";
+} from "./channels.js";
+import type { ScheduledEventEntityMetadata } from "./scheduled-events.js";
 import type {
     ApplicationCommandTypes,
     AutoModerationEventTypes,
@@ -69,7 +69,7 @@ import type {
     SortOrderTypes,
     StageInstancePrivacyLevels,
     ForumLayoutTypes
-} from "../Constants";
+} from "../Constants.js";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
     rateLimitPerUser: 0;

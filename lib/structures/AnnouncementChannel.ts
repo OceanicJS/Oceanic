@@ -1,13 +1,13 @@
 /** @module AnnouncementChannel */
-import type TextChannel from "./TextChannel";
-import type CategoryChannel from "./CategoryChannel";
-import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
-import type Message from "./Message";
-import ThreadableChannel from "./ThreadableChannel";
-import { ChannelTypes } from "../Constants";
-import type Client from "../Client";
-import type { FollowedChannel, RawAnnouncementChannel } from "../types/channels";
-import type { JSONAnnouncementChannel } from "../types/json";
+import type TextChannel from "./TextChannel.js";
+import type CategoryChannel from "./CategoryChannel.js";
+import type AnnouncementThreadChannel from "./AnnouncementThreadChannel.js";
+import type Message from "./Message.js";
+import ThreadableChannel from "./ThreadableChannel.js";
+import { ChannelTypes } from "../Constants.js";
+import type Client from "../Client.js";
+import type { FollowedChannel, RawAnnouncementChannel } from "../types/channels.js";
+import type { JSONAnnouncementChannel } from "../types/json.js";
 
 /**
  * Represents a guild announcement channel.

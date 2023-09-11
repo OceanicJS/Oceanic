@@ -1,9 +1,9 @@
 /** @module AuditLogEntry */
-import Base from "./Base";
-import type User from "./User";
-import type { AuditLogActionTypes } from "../Constants";
-import type { AuditLogEntryOptions, RawAuditLogEntry, RoleAuditLogChange, StandardAuditLogChange } from "../types/audit-log";
-import type Client from "../Client";
+import Base from "./Base.js";
+import type User from "./User.js";
+import type { AuditLogActionTypes } from "../Constants.js";
+import type { AuditLogEntryOptions, RawAuditLogEntry, RoleAuditLogChange, StandardAuditLogChange } from "../types/audit-log.js";
+import type Client from "../Client.js";
 
 /** Represents a guild audit log entry. */
 export default class AuditLogEntry extends Base {

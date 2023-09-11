@@ -1,9 +1,9 @@
 /** @module Team */
-import Base from "./Base";
-import type User from "./User";
-import type Client from "../Client";
-import type { RawTeam, TeamMember } from "../types/oauth";
-import type { JSONTeam } from "../types/json";
+import Base from "./Base.js";
+import type User from "./User.js";
+import type Client from "../Client.js";
+import type { RawTeam, TeamMember } from "../types/oauth.js";
+import type { JSONTeam } from "../types/json.js";
 
 /** Represents an OAuth team. */
 export default class Team extends Base {

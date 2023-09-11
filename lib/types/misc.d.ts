@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /** @module Types/Miscellaneous */
 
-import type Client from "../Client";
+import type Client from "../Client.js";
 
 export type StringMap<T extends Record<string, any>> = { [K in keyof T]: `${T[K]}` };
 export type ReverseMap<T extends Record<keyof T, keyof any>> = {

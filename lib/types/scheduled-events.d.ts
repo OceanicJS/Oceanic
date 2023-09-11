@@ -1,10 +1,10 @@
 /** @module Types/ScheduledEvents */
-import type { RawUser } from "./users";
-import type { RawMember } from "./guilds";
-import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
-import type Member from "../structures/Member";
-import type User from "../structures/User";
-import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
+import type { RawUser } from "./users.js";
+import type { RawMember } from "./guilds.js";
+import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants.js";
+import type Member from "../structures/Member.js";
+import type User from "../structures/User.js";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent.js";
 
 export interface RawScheduledEvent {
     channel_id: string | null;

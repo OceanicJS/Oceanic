@@ -1,10 +1,10 @@
 /** @module PartialApplication */
-import Base from "./Base";
-import type Client from "../Client";
-import type { ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
-import type { RawPartialApplication } from "../types/oauth";
-import type { JSONPartialApplication } from "../types/json";
+import Base from "./Base.js";
+import type Client from "../Client.js";
+import type { ImageFormat } from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type { RawPartialApplication } from "../types/oauth.js";
+import type { JSONPartialApplication } from "../types/json.js";
 
 /** Represents a partial application. */
 export default class PartialApplication extends Base {

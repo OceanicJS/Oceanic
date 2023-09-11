@@ -1,7 +1,7 @@
 /** @module Errors */
 
-import type Client from "../Client";
-import type { IntentNames } from "../Constants";
+import type Client from "../Client.js";
+import type { IntentNames } from "../Constants.js";
 
 
 /** An error that is thrown when we encounter an error, and no `error` listeners are present. */

@@ -1,8 +1,8 @@
 /** @module Attachment */
-import Base from "./Base";
-import type Client from "../Client";
-import type { RawAttachment } from "../types/channels";
-import type { JSONAttachment } from "../types/json";
+import Base from "./Base.js";
+import type Client from "../Client.js";
+import type { RawAttachment } from "../types/channels.js";
+import type { JSONAttachment } from "../types/json.js";
 
 /** Represents a file attachment. */
 export default class Attachment extends Base {

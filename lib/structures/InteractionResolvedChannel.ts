@@ -1,12 +1,12 @@
 /** @module InteractionResolvedChannel */
-import type AnnouncementChannel from "./AnnouncementChannel";
-import type TextChannel from "./TextChannel";
-import Permission from "./Permission";
-import Channel from "./Channel";
-import type ForumChannel from "./ForumChannel";
-import type Client from "../Client";
-import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata } from "../types/channels";
-import type { AnyImplementedChannel, ImplementedChannels } from "../types";
+import type AnnouncementChannel from "./AnnouncementChannel.js";
+import type TextChannel from "./TextChannel.js";
+import Permission from "./Permission.js";
+import Channel from "./Channel.js";
+import type ForumChannel from "./ForumChannel.js";
+import type Client from "../Client.js";
+import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata } from "../types/channels.js";
+import type { AnyImplementedChannel, ImplementedChannels } from "../types/index.js";
 
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {

@@ -1,14 +1,14 @@
 /** @module Shard */
-import type Client from "../Client";
-import TypedEmitter from "../util/TypedEmitter";
-import Bucket from "../rest/Bucket";
+import type Client from "../Client.js";
+import TypedEmitter from "../util/TypedEmitter.js";
+import Bucket from "../rest/Bucket.js";
 import {
     ChannelTypes,
     GatewayCloseCodes,
     GatewayOPCodes,
     GATEWAY_VERSION,
     Intents
-} from "../Constants";
+} from "../Constants.js";
 import type {
     UpdatePresenceOptions,
     RequestGuildMembersOptions,
@@ -17,15 +17,15 @@ import type {
     SendStatuses,
     BotActivity,
     ShardStatus
-} from "../types/gateway";
-import Member from "../structures/Member";
-import Base from "../structures/Base";
-import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw";
-import type { RawOAuthUser, RawUser } from "../types/users";
-import type { RawGuild } from "../types/guilds";
-import ExtendedUser from "../structures/ExtendedUser";
-import AutoModerationRule from "../structures/AutoModerationRule";
-import Channel from "../structures/Channel";
+} from "../types/gateway.js";
+import Member from "../structures/Member.js";
+import Base from "../structures/Base.js";
+import type { AnyDispatchPacket, AnyReceivePacket } from "../types/gateway-raw.js";
+import type { RawOAuthUser, RawUser } from "../types/users.js";
+import type { RawGuild } from "../types/guilds.js";
+import ExtendedUser from "../structures/ExtendedUser.js";
+import AutoModerationRule from "../structures/AutoModerationRule.js";
+import Channel from "../structures/Channel.js";
 import type {
     AnyGuildChannelWithoutThreads,
     AnyTextableChannel,
@@ -37,26 +37,26 @@ import type {
     ThreadParentChannel,
     UncachedThreadMember,
     AnyVoiceChannel
-} from "../types/channels";
-import type TextChannel from "../structures/TextChannel";
-import type { JSONAnnouncementThreadChannel } from "../types/json";
-import VoiceChannel from "../structures/VoiceChannel";
-import StageChannel from "../structures/StageChannel";
-import GuildScheduledEvent from "../structures/GuildScheduledEvent";
-import Invite from "../structures/Invite";
-import Message from "../structures/Message";
-import StageInstance from "../structures/StageInstance";
-import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import Interaction from "../structures/Interaction";
-import Guild from "../structures/Guild";
-import type { ShardEvents } from "../types/events";
-import Role from "../structures/Role";
-import Integration from "../structures/Integration";
-import VoiceState from "../structures/VoiceState";
-import AuditLogEntry from "../structures/AuditLogEntry";
-import type User from "../structures/User";
-import GatewayError, { DependencyError } from "../util/Errors";
-import ClientApplication from "../structures/ClientApplication";
+} from "../types/channels.js";
+import type TextChannel from "../structures/TextChannel.js";
+import type { JSONAnnouncementThreadChannel } from "../types/json.js";
+import VoiceChannel from "../structures/VoiceChannel.js";
+import StageChannel from "../structures/StageChannel.js";
+import GuildScheduledEvent from "../structures/GuildScheduledEvent.js";
+import Invite from "../structures/Invite.js";
+import Message from "../structures/Message.js";
+import StageInstance from "../structures/StageInstance.js";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
+import Interaction from "../structures/Interaction.js";
+import Guild from "../structures/Guild.js";
+import type { ShardEvents } from "../types/events.js";
+import Role from "../structures/Role.js";
+import Integration from "../structures/Integration.js";
+import VoiceState from "../structures/VoiceState.js";
+import AuditLogEntry from "../structures/AuditLogEntry.js";
+import type User from "../structures/User.js";
+import GatewayError, { DependencyError } from "../util/Errors.js";
+import ClientApplication from "../structures/ClientApplication.js";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

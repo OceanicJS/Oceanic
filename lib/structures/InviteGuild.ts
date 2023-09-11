@@ -1,10 +1,10 @@
 /** @module InviteGuild */
-import Base from "./Base";
-import type Guild from "./Guild";
-import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants";
-import type { JSONInviteGuild, RawInviteGuild } from "../types";
-import type Client from "../Client";
-import * as Routes from "../util/Routes";
+import Base from "./Base.js";
+import type Guild from "./Guild.js";
+import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants.js";
+import type { JSONInviteGuild, RawInviteGuild } from "../types/index.js";
+import type Client from "../Client.js";
+import * as Routes from "../util/Routes.js";
 
 /** Represents a guild received via an invite. */
 export default class InviteGuild extends Base {

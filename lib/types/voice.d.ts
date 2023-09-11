@@ -1,5 +1,5 @@
 /** @module Types/Voice */
-import type { RawMember } from "./guilds";
+import type { RawMember } from "./guilds.js";
 
 export interface RawVoiceState {
     channel_id: string | null;

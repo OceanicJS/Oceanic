@@ -1,11 +1,11 @@
 /** @module User */
-import Base from "./Base";
-import type PrivateChannel from "./PrivateChannel";
-import type { ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
-import type Client from "../Client";
-import type { RawUser } from "../types/users";
-import type { JSONUser } from "../types/json";
+import Base from "./Base.js";
+import type PrivateChannel from "./PrivateChannel.js";
+import type { ImageFormat } from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type Client from "../Client.js";
+import type { RawUser } from "../types/users.js";
+import type { JSONUser } from "../types/json.js";
 
 /** Represents a user. */
 export default class User extends Base {

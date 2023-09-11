@@ -1,14 +1,14 @@
 /** @module OAuthApplication */
-import type User from "./User";
-import Team from "./Team";
-import type Guild from "./Guild";
-import Base from "./Base";
-import type Client from "../Client";
-import type { InstallParams, RESTOAuthApplication } from "../types/oauth";
-import type { ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
-import type { JSONOAuthApplication } from "../types/json";
-import { UncachedError } from "../util/Errors";
+import type User from "./User.js";
+import Team from "./Team.js";
+import type Guild from "./Guild.js";
+import Base from "./Base.js";
+import type Client from "../Client.js";
+import type { InstallParams, RESTOAuthApplication } from "../types/oauth.js";
+import type { ImageFormat } from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type { JSONOAuthApplication } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents an oauth application. */
 export default class OAuthApplication extends Base {

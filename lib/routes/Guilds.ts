@@ -50,13 +50,13 @@ import type {
     EditIncidentActionsOptions,
     IncidentActions,
     RawIncidentActions
-} from "../types/guilds";
-import * as Routes from "../util/Routes";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { ChannelTypeMap, MFALevels } from "../Constants";
-import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
-import GuildScheduledEvent from "../structures/GuildScheduledEvent";
-import Webhook from "../structures/Webhook";
+} from "../types/guilds.js";
+import * as Routes from "../util/Routes.js";
+import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation.js";
+import type { ChannelTypeMap, MFALevels } from "../Constants.js";
+import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log.js";
+import GuildScheduledEvent from "../structures/GuildScheduledEvent.js";
+import Webhook from "../structures/Webhook.js";
 import type {
     CreateScheduledEventOptions,
     EditScheduledEventOptions,
@@ -64,10 +64,10 @@ import type {
     RawScheduledEvent,
     RawScheduledEventUser,
     ScheduledEventUser
-} from "../types/scheduled-events";
-import GuildTemplate from "../structures/GuildTemplate";
-import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
-import GuildPreview from "../structures/GuildPreview";
+} from "../types/scheduled-events.js";
+import GuildTemplate from "../structures/GuildTemplate.js";
+import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template.js";
+import GuildPreview from "../structures/GuildPreview.js";
 import type {
     AnyGuildChannelWithoutThreads,
     AnyInviteChannel,
@@ -77,18 +77,18 @@ import type {
     RawInvite,
     RawThreadChannel,
     RawThreadMember
-} from "../types/channels";
-import Role from "../structures/Role";
-import type { VoiceRegion } from "../types/voice";
-import Invite from "../structures/Invite";
-import Integration from "../structures/Integration";
-import AutoModerationRule from "../structures/AutoModerationRule";
-import AuditLogEntry from "../structures/AuditLogEntry";
-import type RESTManager from "../rest/RESTManager";
-import Guild from "../structures/Guild";
-import type Member from "../structures/Member";
-import type { Uncached } from "../types/shared";
-import ApplicationCommand from "../structures/ApplicationCommand";
+} from "../types/channels.js";
+import Role from "../structures/Role.js";
+import type { VoiceRegion } from "../types/voice.js";
+import Invite from "../structures/Invite.js";
+import Integration from "../structures/Integration.js";
+import AutoModerationRule from "../structures/AutoModerationRule.js";
+import AuditLogEntry from "../structures/AuditLogEntry.js";
+import type RESTManager from "../rest/RESTManager.js";
+import Guild from "../structures/Guild.js";
+import type Member from "../structures/Member.js";
+import type { Uncached } from "../types/shared.js";
+import ApplicationCommand from "../structures/ApplicationCommand.js";
 import { File, FormData } from "undici";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */

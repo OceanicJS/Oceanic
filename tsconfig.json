@@ -11,7 +11,7 @@
       "ES2021",
       "ES2022"
     ],
-    "module": "CommonJS",
+    "module": "nodenext",
     "target": "ES2022",
     "inlineSourceMap": true,
     "importHelpers": true,
@@ -22,7 +22,7 @@
     "esModuleInterop": true,
     "skipLibCheck": false,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "importsNotUsedAsValues": "error",

@@ -9,24 +9,24 @@ import type {
     RawStageInstance,
     RawUnavailableGuild,
     RawSticker
-} from "./guilds";
-import type { RawClientApplication, RawPartialApplication } from "./oauth";
-import type { RawExtendedUser, RawUser } from "./users";
-import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel, RawVoiceChannelEffect } from "./gateway";
-import type { RawGuildApplicationCommandPermissions } from "./application-commands";
-import type { RawAutoModerationRule } from "./auto-moderation";
+} from "./guilds.js";
+import type { RawClientApplication, RawPartialApplication } from "./oauth.js";
+import type { RawExtendedUser, RawUser } from "./users.js";
+import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel, RawVoiceChannelEffect } from "./gateway.js";
+import type { RawGuildApplicationCommandPermissions } from "./application-commands.js";
+import type { RawAutoModerationRule } from "./auto-moderation.js";
 import type {
     RawGroupChannel,
     RawGuildChannel,
     RawMessage,
     RawThreadChannel,
     RawThreadMember
-} from "./channels";
-import type { RawScheduledEvent } from "./scheduled-events";
-import type { RawVoiceState } from "./voice";
-import type { RawInteraction } from "./interactions";
-import type { RawAuditLogEntry } from "./audit-log";
-import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
+} from "./channels.js";
+import type { RawScheduledEvent } from "./scheduled-events.js";
+import type { RawVoiceState } from "./voice.js";
+import type { RawInteraction } from "./interactions.js";
+import type { RawAuditLogEntry } from "./audit-log.js";
+import type { GatewayOPCodes, InviteTargetTypes } from "../Constants.js";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;
 export interface RawPacket {

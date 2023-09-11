@@ -1,24 +1,24 @@
 /** @module Client */
-import RESTManager from "./rest/RESTManager";
-import TypedCollection from "./util/TypedCollection";
-import PrivateChannel from "./structures/PrivateChannel";
-import GroupChannel from "./structures/GroupChannel";
-import User from "./structures/User";
-import Guild from "./structures/Guild";
-import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
-import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
-import type { RawUser } from "./types/users";
-import type {  ClientInstanceOptions, ClientOptions, CollectionLimitsOptions } from "./types/client";
-import TypedEmitter from "./util/TypedEmitter";
-import type ClientApplication from "./structures/ClientApplication";
-import ShardManager from "./gateway/ShardManager";
-import type { BotActivity, SendStatuses } from "./types/gateway";
-import UnavailableGuild from "./structures/UnavailableGuild";
-import type ExtendedUser from "./structures/ExtendedUser";
-import Util from "./util/Util";
-import type { ClientEvents } from "./types/events";
-import type { JoinVoiceChannelOptions } from "./types/voice";
-import { DependencyError, UncachedError } from "./util/Errors";
+import RESTManager from "./rest/RESTManager.js";
+import TypedCollection from "./util/TypedCollection.js";
+import PrivateChannel from "./structures/PrivateChannel.js";
+import GroupChannel from "./structures/GroupChannel.js";
+import User from "./structures/User.js";
+import Guild from "./structures/Guild.js";
+import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels.js";
+import type { RawGuild, RawUnavailableGuild } from "./types/guilds.js";
+import type { RawUser } from "./types/users.js";
+import type {  ClientInstanceOptions, ClientOptions, CollectionLimitsOptions } from "./types/client.js";
+import TypedEmitter from "./util/TypedEmitter.js";
+import type ClientApplication from "./structures/ClientApplication.js";
+import ShardManager from "./gateway/ShardManager.js";
+import type { BotActivity, SendStatuses } from "./types/gateway.js";
+import UnavailableGuild from "./structures/UnavailableGuild.js";
+import type ExtendedUser from "./structures/ExtendedUser.js";
+import Util from "./util/Util.js";
+import type { ClientEvents } from "./types/events.js";
+import type { JoinVoiceChannelOptions } from "./types/voice.js";
+import { DependencyError, UncachedError } from "./util/Errors.js";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore

@@ -1,4 +1,4 @@
-const { execSync } = require("child_process");
+import { execSync } from "child_process";
 const d = Date.now();
 const date = new Date(execSync("npm view oceanic.js time.modified --json").toString().slice(1,-2));
 const latestDev = execSync("npm view oceanic.js dist-tags.dev --json").toString().slice(1,-2).split(".").slice(-1)[0];

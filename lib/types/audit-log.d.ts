@@ -1,22 +1,22 @@
 /** @module Types/AuditLog */
-import type { RawAutoModerationRule } from "./auto-moderation";
-import type { RawAnnouncementThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels";
-import type { RawIntegration } from "./guilds";
-import type { RawScheduledEvent } from "./scheduled-events";
-import type { RawUser } from "./users";
-import type { RawWebhook } from "./webhooks";
-import type { RawApplicationCommand } from "./application-commands";
-import type { AuditLogActionTypes } from "../Constants";
-import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
-import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type User from "../structures/User";
-import type Webhook from "../structures/Webhook";
-import type Integration from "../structures/Integration";
-import type AutoModerationRule from "../structures/AutoModerationRule";
-import type AuditLogEntry from "../structures/AuditLogEntry";
-import type ApplicationCommand from "../structures/ApplicationCommand";
+import type { RawAutoModerationRule } from "./auto-moderation.js";
+import type { RawAnnouncementThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels.js";
+import type { RawIntegration } from "./guilds.js";
+import type { RawScheduledEvent } from "./scheduled-events.js";
+import type { RawUser } from "./users.js";
+import type { RawWebhook } from "./webhooks.js";
+import type { RawApplicationCommand } from "./application-commands.js";
+import type { AuditLogActionTypes } from "../Constants.js";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent.js";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
+import type PublicThreadChannel from "../structures/PublicThreadChannel.js";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel.js";
+import type User from "../structures/User.js";
+import type Webhook from "../structures/Webhook.js";
+import type Integration from "../structures/Integration.js";
+import type AutoModerationRule from "../structures/AutoModerationRule.js";
+import type AuditLogEntry from "../structures/AuditLogEntry.js";
+import type ApplicationCommand from "../structures/ApplicationCommand.js";
 
 export interface RawAuditLog {
     application_commands: Array<RawApplicationCommand>;

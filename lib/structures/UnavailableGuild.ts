@@ -1,8 +1,8 @@
 /** @module UnavailableGuild */
-import Base from "./Base";
-import type Client from "../Client";
-import type { RawUnavailableGuild } from "../types/guilds";
-import type { JSONUnavailableGuild } from "../types/json";
+import Base from "./Base.js";
+import type Client from "../Client.js";
+import type { RawUnavailableGuild } from "../types/guilds.js";
+import type { JSONUnavailableGuild } from "../types/json.js";
 
 /** Represents a guild that is unavailable. */
 export default class UnavailableGuild extends Base {

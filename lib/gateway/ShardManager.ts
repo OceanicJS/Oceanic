@@ -1,15 +1,15 @@
 /** @module ShardManager */
-import Shard from "./Shard";
-import type Client from "../Client";
+import Shard from "./Shard.js";
+import type Client from "../Client.js";
 import {
     AllIntents,
     AllNonPrivilegedIntents,
     ApplicationFlags,
     GATEWAY_VERSION,
     Intents
-} from "../Constants";
-import type { GatewayOptions, GetBotGatewayResponse, ShardManagerInstanceOptions } from "../types/gateway";
-import Collection from "../util/Collection";
+} from "../Constants.js";
+import type { GatewayOptions, GetBotGatewayResponse, ShardManagerInstanceOptions } from "../types/gateway.js";
+import Collection from "../util/Collection.js";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore

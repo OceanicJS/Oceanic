@@ -1,7 +1,7 @@
 /** @module Types/Client */
-import type { AllowedMentions } from "./channels";
-import type { GatewayOptions } from "./gateway";
-import type { ImageFormat } from "../Constants";
+import type { AllowedMentions } from "./channels.js";
+import type { GatewayOptions } from "./gateway.js";
+import type { ImageFormat } from "../Constants.js";
 import type { Agent } from "undici";
 
 export interface ClientOptions {

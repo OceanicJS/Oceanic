@@ -1,5 +1,5 @@
 /** @module Types/Interactions */
-import type { ExecuteWebhookOptions } from "./webhooks";
+import type { ExecuteWebhookOptions } from "./webhooks.js";
 import type {
     AnyTextableGuildChannel,
     AnyPrivateChannel,
@@ -8,11 +8,11 @@ import type {
     RawInteractionResolvedChannel,
     RawMessage,
     RawModalActionRow
-} from "./channels";
-import type { InteractionMember, RawMember, RawRole } from "./guilds";
-import type { RawUser } from "./users";
-import type { Uncached } from "./shared";
-import type { LocaleMap } from "./application-commands";
+} from "./channels.js";
+import type { InteractionMember, RawMember, RawRole } from "./guilds.js";
+import type { RawUser } from "./users.js";
+import type { Uncached } from "./shared.js";
+import type { LocaleMap } from "./application-commands.js";
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
@@ -22,24 +22,24 @@ import type {
     InteractionTypes,
     MessageComponentTypes,
     SelectMenuTypes
-} from "../Constants";
-import type Attachment from "../structures/Attachment";
-import type Member from "../structures/Member";
-import type Message from "../structures/Message";
-import type Role from "../structures/Role";
-import type User from "../structures/User";
-import type PingInteraction from "../structures/PingInteraction";
-import type CommandInteraction from "../structures/CommandInteraction";
-import type ComponentInteraction from "../structures/ComponentInteraction";
-import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
-import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
-import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
-import type TypedCollection from "../util/TypedCollection";
-import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
-import type Interaction from "../structures/Interaction";
-import type Guild from "../structures/Guild";
-import type Permission from "../structures/Permission";
+} from "../Constants.js";
+import type Attachment from "../structures/Attachment.js";
+import type Member from "../structures/Member.js";
+import type Message from "../structures/Message.js";
+import type Role from "../structures/Role.js";
+import type User from "../structures/User.js";
+import type PingInteraction from "../structures/PingInteraction.js";
+import type CommandInteraction from "../structures/CommandInteraction.js";
+import type ComponentInteraction from "../structures/ComponentInteraction.js";
+import type AutocompleteInteraction from "../structures/AutocompleteInteraction.js";
+import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction.js";
+import type InteractionOptionsWrapper from "../util/InteractionOptionsWrapper.js";
+import type TypedCollection from "../util/TypedCollection.js";
+import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel.js";
+import type SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper.js";
+import type Interaction from "../structures/Interaction.js";
+import type Guild from "../structures/Guild.js";
+import type Permission from "../structures/Permission.js";
 
 export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files"> {}
 export interface InitialInteractionContent extends Omit<InteractionContent, "attachments" | "files"> {}

@@ -1,12 +1,12 @@
 /** @module Member */
-import Base from "./Base";
-import type User from "./User";
-import type Guild from "./Guild";
-import type Permission from "./Permission";
-import type VoiceState from "./VoiceState";
-import { GuildMemberFlags, type ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
-import type Client from "../Client";
+import Base from "./Base.js";
+import type User from "./User.js";
+import type Guild from "./Guild.js";
+import type Permission from "./Permission.js";
+import type VoiceState from "./VoiceState.js";
+import { GuildMemberFlags, type ImageFormat } from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type Client from "../Client.js";
 import type {
     CreateBanOptions,
     EditMemberOptions,
@@ -14,9 +14,9 @@ import type {
     RawMember,
     RESTMember,
     Presence
-} from "../types/guilds";
-import type { JSONMember } from "../types/json";
-import { UncachedError } from "../util/Errors";
+} from "../types/guilds.js";
+import type { JSONMember } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {

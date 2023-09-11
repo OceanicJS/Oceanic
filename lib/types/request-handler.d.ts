@@ -1,6 +1,6 @@
 /** @module Types/RequestHandler */
-import type { RESTOptions } from "./client";
-import type { RESTMethod } from "../Constants";
+import type { RESTOptions } from "./client.js";
+import type { RESTMethod } from "../Constants.js";
 import type { FormData } from "undici";
 
 // internal use

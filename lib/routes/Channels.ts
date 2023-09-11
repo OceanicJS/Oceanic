@@ -44,23 +44,23 @@ import type {
     AnyGuildChannel,
     GetChannelMessagesIteratorOptions,
     MessagesIterator
-} from "../types/channels";
-import * as Routes from "../util/Routes";
-import type Message from "../structures/Message";
-import type { CreateGroupChannelOptions, RawUser } from "../types/users";
-import Invite from "../structures/Invite";
-import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type { VoiceRegion } from "../types/voice";
-import type RESTManager from "../rest/RESTManager";
-import type PrivateChannel from "../structures/PrivateChannel";
-import type GroupChannel from "../structures/GroupChannel";
-import type User from "../structures/User";
-import type { Uncached } from "../types/shared";
-import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInstance } from "../types/guilds";
-import StageInstance from "../structures/StageInstance";
+} from "../types/channels.js";
+import * as Routes from "../util/Routes.js";
+import type Message from "../structures/Message.js";
+import type { CreateGroupChannelOptions, RawUser } from "../types/users.js";
+import Invite from "../structures/Invite.js";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
+import type PublicThreadChannel from "../structures/PublicThreadChannel.js";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel.js";
+import type AnnouncementChannel from "../structures/AnnouncementChannel.js";
+import type { VoiceRegion } from "../types/voice.js";
+import type RESTManager from "../rest/RESTManager.js";
+import type PrivateChannel from "../structures/PrivateChannel.js";
+import type GroupChannel from "../structures/GroupChannel.js";
+import type User from "../structures/User.js";
+import type { Uncached } from "../types/shared.js";
+import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInstance } from "../types/guilds.js";
+import StageInstance from "../structures/StageInstance.js";
 
 /** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {

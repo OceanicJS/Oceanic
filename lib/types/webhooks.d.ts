@@ -1,8 +1,8 @@
 /** @module Types/Webhooks */
-import type { CreateMessageOptions, RawChannel } from "./channels";
-import type { RawGuild } from "./guilds";
-import type { RawUser } from "./users";
-import type { WebhookTypes } from "../Constants";
+import type { CreateMessageOptions, RawChannel } from "./channels.js";
+import type { RawGuild } from "./guilds.js";
+import type { RawUser } from "./users.js";
+import type { WebhookTypes } from "../Constants.js";
 
 export interface RawWebhook {
     application_id: string | null;

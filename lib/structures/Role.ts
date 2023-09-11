@@ -1,11 +1,11 @@
 /** @module Role */
-import Base from "./Base";
-import Permission from "./Permission";
-import type Guild from "./Guild";
-import type Client from "../Client";
-import type { RawRole, RoleTags, EditRoleOptions } from "../types/guilds";
-import type { JSONRole } from "../types/json";
-import { UncachedError } from "../util/Errors";
+import Base from "./Base.js";
+import Permission from "./Permission.js";
+import type Guild from "./Guild.js";
+import type Client from "../Client.js";
+import type { RawRole, RoleTags, EditRoleOptions } from "../types/guilds.js";
+import type { JSONRole } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {

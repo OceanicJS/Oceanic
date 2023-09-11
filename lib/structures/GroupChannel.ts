@@ -1,14 +1,14 @@
 /** @module GroupChannel */
-import Channel from "./Channel";
-import User from "./User";
-import type ClientApplication from "./ClientApplication";
-import type { ChannelTypes, ImageFormat } from "../Constants";
-import type Client from "../Client";
-import * as Routes from "../util/Routes";
-import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../types/channels";
-import type { RawUser } from "../types/users";
-import TypedCollection from "../util/TypedCollection";
-import type { JSONGroupChannel } from "../types/json";
+import Channel from "./Channel.js";
+import User from "./User.js";
+import type ClientApplication from "./ClientApplication.js";
+import type { ChannelTypes, ImageFormat } from "../Constants.js";
+import type Client from "../Client.js";
+import * as Routes from "../util/Routes.js";
+import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../types/channels.js";
+import type { RawUser } from "../types/users.js";
+import TypedCollection from "../util/TypedCollection.js";
+import type { JSONGroupChannel } from "../types/json.js";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {

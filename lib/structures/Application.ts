@@ -1,11 +1,11 @@
 /** @module Application */
-import ClientApplication from "./ClientApplication";
-import OAuthGuild from "./OAuthGuild";
-import type Client from "../Client";
-import type { InstallParams, RESTApplication } from "../types/oauth";
-import type { ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
-import type { JSONApplication } from "../types/json";
+import ClientApplication from "./ClientApplication.js";
+import OAuthGuild from "./OAuthGuild.js";
+import type Client from "../Client.js";
+import type { InstallParams, RESTApplication } from "../types/oauth.js";
+import type { ImageFormat } from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type { JSONApplication } from "../types/json.js";
 
 /** Represents an application. */
 export default class Application extends ClientApplication {

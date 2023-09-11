@@ -1,5 +1,5 @@
 /** @module Types/Guilds */
-import type { RawUser } from "./users";
+import type { RawUser } from "./users.js";
 import type {
     AnyThreadChannel,
     OverwriteOptions,
@@ -10,11 +10,11 @@ import type {
     ForumEmoji,
     ForumTag,
     GuildChannelsWithoutThreads
-} from "./channels";
-import type { RawScheduledEvent } from "./scheduled-events";
-import type { ClientStatus, PresenceUpdate, Activity as GatewayActivity } from "./gateway";
-import type { RawVoiceState } from "./voice";
-import { type File } from "./request-handler";
+} from "./channels.js";
+import type { RawScheduledEvent } from "./scheduled-events.js";
+import type { ClientStatus, PresenceUpdate, Activity as GatewayActivity } from "./gateway.js";
+import type { RawVoiceState } from "./voice.js";
+import { type File } from "./request-handler.js";
 import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,
@@ -34,9 +34,9 @@ import type {
     SortOrderTypes,
     ForumLayoutTypes,
     OnboardingModes
-} from "../Constants";
-import type User from "../structures/User";
-import type Integration from "../structures/Integration";
+} from "../Constants.js";
+import type User from "../structures/User.js";
+import type Integration from "../structures/Integration.js";
 
 // channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only

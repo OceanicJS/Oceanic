@@ -1,10 +1,10 @@
 /** @module ApplicationCommand */
-import Base from "./Base";
-import Permission from "./Permission";
-import type Guild from "./Guild";
-import type ClientApplication from "./ClientApplication";
-import type Client from "../Client";
-import { ApplicationCommandTypes } from "../Constants";
+import Base from "./Base.js";
+import Permission from "./Permission.js";
+import type Guild from "./Guild.js";
+import type ClientApplication from "./ClientApplication.js";
+import type Client from "../Client.js";
+import { ApplicationCommandTypes } from "../Constants.js";
 import type {
     ApplicationCommandOptionConversion,
     ApplicationCommandOptions,
@@ -13,9 +13,9 @@ import type {
     RawApplicationCommand,
     RESTGuildApplicationCommandPermissions,
     TypeToEdit
-} from "../types/application-commands";
-import type { JSONApplicationCommand } from "../types/json";
-import { UncachedError } from "../util/Errors";
+} from "../types/application-commands.js";
+import type { JSONApplicationCommand } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {

@@ -1,14 +1,14 @@
 /** @module GuildScheduledEvent */
-import Base from "./Base";
-import type User from "./User";
-import type Guild from "./Guild";
-import type StageChannel from "./StageChannel";
-import type Client from "../Client";
-import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
-import * as Routes from "../util/Routes";
-import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
-import type { JSONScheduledEvent } from "../types/json";
-import { UncachedError } from "../util/Errors";
+import Base from "./Base.js";
+import type User from "./User.js";
+import type Guild from "./Guild.js";
+import type StageChannel from "./StageChannel.js";
+import type Client from "../Client.js";
+import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants.js";
+import * as Routes from "../util/Routes.js";
+import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events.js";
+import type { JSONScheduledEvent } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {

@@ -1,12 +1,12 @@
 /** @module AutoModerationRule */
-import Base from "./Base";
-import type User from "./User";
-import type Guild from "./Guild";
-import type Client from "../Client";
-import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
-import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
-import type { JSONAutoModerationRule } from "../types/json";
-import { UncachedError } from "../util/Errors";
+import Base from "./Base.js";
+import type User from "./User.js";
+import type Guild from "./Guild.js";
+import type Client from "../Client.js";
+import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation.js";
+import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants.js";
+import type { JSONAutoModerationRule } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {

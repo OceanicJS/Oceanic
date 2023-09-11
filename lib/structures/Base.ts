@@ -1,6 +1,6 @@
 /** @module Base */
-import type Client from "../Client";
-import type { JSONBase } from "../types/json";
+import type Client from "../Client.js";
+import type { JSONBase } from "../types/json.js";
 import { inspect } from "node:util";
 
 const DISCORD_EPOCH = 1420070400000;

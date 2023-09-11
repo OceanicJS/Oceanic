@@ -1,12 +1,12 @@
 /** @module REST/Interactions */
-import type { InteractionContent, InteractionResponse } from "../types/interactions";
-import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
-import * as Routes from "../util/Routes";
-import { InteractionResponseTypes } from "../Constants";
-import type RESTManager from "../rest/RESTManager";
-import type Message from "../structures/Message";
-import type { AnyTextableChannel } from "../types/channels";
-import type { Uncached } from "../types/shared";
+import type { InteractionContent, InteractionResponse } from "../types/interactions.js";
+import type { ExecuteWebhookWaitOptions } from "../types/webhooks.js";
+import * as Routes from "../util/Routes.js";
+import { InteractionResponseTypes } from "../Constants.js";
+import type RESTManager from "../rest/RESTManager.js";
+import type Message from "../structures/Message.js";
+import type { AnyTextableChannel } from "../types/channels.js";
+import type { Uncached } from "../types/shared.js";
 
 /** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
 export default class Interactions {

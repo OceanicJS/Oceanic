@@ -11,11 +11,11 @@ import type {
     ThreadMember,
     UncachedThreadMember,
     AnyVoiceChannel
-} from "./channels";
-import type { RawRequest } from "./request-handler";
-import type { AutoModerationActionExecution, DeletedPrivateChannel, VoiceChannelEffect } from "./gateway";
-import type { AnyDispatchPacket } from "./gateway-raw";
-import type { Uncached } from "./shared";
+} from "./channels.js";
+import type { RawRequest } from "./request-handler.js";
+import type { AutoModerationActionExecution, DeletedPrivateChannel, VoiceChannelEffect } from "./gateway.js";
+import type { AnyDispatchPacket } from "./gateway-raw.js";
+import type { Uncached } from "./shared.js";
 import type {
     JSONAnnouncementChannel,
     JSONAnnouncementThreadChannel,
@@ -36,39 +36,39 @@ import type {
     JSONUser,
     JSONVoiceChannel,
     JSONVoiceState
-} from "./json";
-import type { GuildApplicationCommandPermissions } from "./application-commands";
+} from "./json.js";
+import type { GuildApplicationCommandPermissions } from "./application-commands.js";
 import type {
     GuildEmoji,
     PartialEmoji,
     PossiblyUncachedIntegration,
     Sticker,
     Presence
-} from "./guilds";
-import type { AnyInteractionGateway } from "./interactions";
-import type Guild from "../structures/Guild";
-import type UnavailableGuild from "../structures/UnavailableGuild";
-import type AutoModerationRule from "../structures/AutoModerationRule";
-import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type TextChannel from "../structures/TextChannel";
-import type VoiceChannel from "../structures/VoiceChannel";
-import type CategoryChannel from "../structures/CategoryChannel";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type StageChannel from "../structures/StageChannel";
-import type User from "../structures/User";
-import type Member from "../structures/Member";
-import type Role from "../structures/Role";
-import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
-import type Integration from "../structures/Integration";
-import type Invite from "../structures/Invite";
-import type Message from "../structures/Message";
-import type PrivateChannel from "../structures/PrivateChannel";
-import type StageInstance from "../structures/StageInstance";
-import type ForumChannel from "../structures/ForumChannel";
-import type AuditLogEntry from "../structures/AuditLogEntry";
-import type GroupChannel from "../structures/GroupChannel";
+} from "./guilds.js";
+import type { AnyInteractionGateway } from "./interactions.js";
+import type Guild from "../structures/Guild.js";
+import type UnavailableGuild from "../structures/UnavailableGuild.js";
+import type AutoModerationRule from "../structures/AutoModerationRule.js";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
+import type PublicThreadChannel from "../structures/PublicThreadChannel.js";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel.js";
+import type TextChannel from "../structures/TextChannel.js";
+import type VoiceChannel from "../structures/VoiceChannel.js";
+import type CategoryChannel from "../structures/CategoryChannel.js";
+import type AnnouncementChannel from "../structures/AnnouncementChannel.js";
+import type StageChannel from "../structures/StageChannel.js";
+import type User from "../structures/User.js";
+import type Member from "../structures/Member.js";
+import type Role from "../structures/Role.js";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent.js";
+import type Integration from "../structures/Integration.js";
+import type Invite from "../structures/Invite.js";
+import type Message from "../structures/Message.js";
+import type PrivateChannel from "../structures/PrivateChannel.js";
+import type StageInstance from "../structures/StageInstance.js";
+import type ForumChannel from "../structures/ForumChannel.js";
+import type AuditLogEntry from "../structures/AuditLogEntry.js";
+import type GroupChannel from "../structures/GroupChannel.js";
 
 
 export interface ClientEvents {

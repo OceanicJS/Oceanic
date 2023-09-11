@@ -1,19 +1,19 @@
 /** @module AutocompleteInteraction */
-import Interaction from "./Interaction";
-import type Member from "./Member";
-import type User from "./User";
-import type Guild from "./Guild";
-import Permission from "./Permission";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
-import type { AutocompleteChoice, AutocompleteInteractionData, InteractionGuild, RawAutocompleteInteraction } from "../types/interactions";
-import type Client from "../Client";
-import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
-import type { JSONAutocompleteInteraction } from "../types/json";
-import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
-import type { Uncached } from "../types/shared";
-import { UncachedError } from "../util/Errors";
+import Interaction from "./Interaction.js";
+import type Member from "./Member.js";
+import type User from "./User.js";
+import type Guild from "./Guild.js";
+import Permission from "./Permission.js";
+import GuildChannel from "./GuildChannel.js";
+import type PrivateChannel from "./PrivateChannel.js";
+import { InteractionResponseTypes, type InteractionTypes } from "../Constants.js";
+import type { AutocompleteChoice, AutocompleteInteractionData, InteractionGuild, RawAutocompleteInteraction } from "../types/interactions.js";
+import type Client from "../Client.js";
+import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels.js";
+import type { JSONAutocompleteInteraction } from "../types/json.js";
+import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper.js";
+import type { Uncached } from "../types/shared.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents an autocomplete interaction. */
 export default class AutocompleteInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {

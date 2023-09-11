@@ -1,16 +1,16 @@
 /** @module TextableChannel */
-import GuildChannel from "./GuildChannel";
-import PermissionOverwrite from "./PermissionOverwrite";
-import Message from "./Message";
-import type Invite from "./Invite";
-import type CategoryChannel from "./CategoryChannel";
-import type Member from "./Member";
-import Permission from "./Permission";
-import type User from "./User";
-import type Webhook from "./Webhook";
-import { AllPermissions, Permissions } from "../Constants";
-import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
+import GuildChannel from "./GuildChannel.js";
+import PermissionOverwrite from "./PermissionOverwrite.js";
+import Message from "./Message.js";
+import type Invite from "./Invite.js";
+import type CategoryChannel from "./CategoryChannel.js";
+import type Member from "./Member.js";
+import Permission from "./Permission.js";
+import type User from "./User.js";
+import type Webhook from "./Webhook.js";
+import { AllPermissions, Permissions } from "../Constants.js";
+import type Client from "../Client.js";
+import TypedCollection from "../util/TypedCollection.js";
 import type {
     CreateInviteOptions,
     CreateMessageOptions,
@@ -23,10 +23,10 @@ import type {
     RawOverwrite,
     RawTextChannel,
     PurgeOptions
-} from "../types/channels";
-import type { JSONTextableChannel } from "../types/json";
-import type { AnyTextableGuildChannel, CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
-import { UncachedError } from "../util/Errors";
+} from "../types/channels.js";
+import type { JSONTextableChannel } from "../types/json.js";
+import type { AnyTextableGuildChannel, CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types/index.js";
+import { UncachedError } from "../util/Errors.js";
 
 /** Represents a guild textable channel. */
 export default class TextableChannel<T extends AnyTextableGuildChannel = AnyTextableGuildChannel> extends GuildChannel {

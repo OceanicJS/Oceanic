@@ -1,11 +1,11 @@
 /** @module StageChannel */
-import type StageInstance from "./StageInstance";
-import TextableVoiceChannel from "./TextableVoiceChannel";
-import type { ChannelTypes } from "../Constants";
-import type Client from "../Client";
-import type { RawStageChannel } from "../types/channels";
-import type { JSONStageChannel } from "../types/json";
-import type { CreateStageInstanceOptions, EditStageInstanceOptions } from "../types/guilds";
+import type StageInstance from "./StageInstance.js";
+import TextableVoiceChannel from "./TextableVoiceChannel.js";
+import type { ChannelTypes } from "../Constants.js";
+import type Client from "../Client.js";
+import type { RawStageChannel } from "../types/channels.js";
+import type { JSONStageChannel } from "../types/json.js";
+import type { CreateStageInstanceOptions, EditStageInstanceOptions } from "../types/guilds.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 

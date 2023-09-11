@@ -1,10 +1,10 @@
 /** @module Types/Channels */
-import type { NullablePartialEmoji, PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
-import type { RawApplication, RawPartialApplication } from "./oauth";
-import type { RawUser, RawUserWithMember } from "./users";
-import type { File } from "./request-handler";
-import type { RawScheduledEvent } from "./scheduled-events";
-import { type  Uncached } from "./shared";
+import type { NullablePartialEmoji, PartialEmoji, RawInviteGuild, RawMember } from "./guilds.js";
+import type { RawApplication, RawPartialApplication } from "./oauth.js";
+import type { RawUser, RawUserWithMember } from "./users.js";
+import type { File } from "./request-handler.js";
+import type { RawScheduledEvent } from "./scheduled-events.js";
+import { type  Uncached } from "./shared.js";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -38,18 +38,18 @@ import type {
     ImplementedChannelTypes,
     ThreadOnlyChannelTypes,
     ReactionType
-} from "../Constants";
-import type Member from "../structures/Member";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type TextChannel from "../structures/TextChannel";
-import type User from "../structures/User";
-import type ForumChannel from "../structures/ForumChannel";
-import type Message from "../structures/Message";
-import type Guild from "../structures/Guild";
-import type Invite from "../structures/Invite";
+} from "../Constants.js";
+import type Member from "../structures/Member.js";
+import type AnnouncementChannel from "../structures/AnnouncementChannel.js";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel.js";
+import type PublicThreadChannel from "../structures/PublicThreadChannel.js";
+import type TextChannel from "../structures/TextChannel.js";
+import type User from "../structures/User.js";
+import type ForumChannel from "../structures/ForumChannel.js";
+import type Message from "../structures/Message.js";
+import type Guild from "../structures/Guild.js";
+import type Invite from "../structures/Invite.js";
 
 export interface RawChannel {
     application_id?: string;

@@ -1,15 +1,15 @@
 /** @module TextableVoiceChannel */
-import Member from "./Member";
-import type CategoryChannel from "./CategoryChannel";
-import TextableChannel from "./TextableChannel";
-import type VoiceState from "./VoiceState";
-import type { VideoQualityModes } from "../Constants";
-import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
-import type { AnyVoiceChannel, RawStageChannel, RawVoiceChannel, VoiceChannels } from "../types/channels";
-import type { JSONTextableVoiceChannel } from "../types/json";
-import type { RawMember } from "../types/guilds";
-import type { JoinVoiceChannelOptions } from "../types/voice";
+import Member from "./Member.js";
+import type CategoryChannel from "./CategoryChannel.js";
+import TextableChannel from "./TextableChannel.js";
+import type VoiceState from "./VoiceState.js";
+import type { VideoQualityModes } from "../Constants.js";
+import type Client from "../Client.js";
+import TypedCollection from "../util/TypedCollection.js";
+import type { AnyVoiceChannel, RawStageChannel, RawVoiceChannel, VoiceChannels } from "../types/channels.js";
+import type { JSONTextableVoiceChannel } from "../types/json.js";
+import type { RawMember } from "../types/guilds.js";
+import type { JoinVoiceChannelOptions } from "../types/voice.js";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";

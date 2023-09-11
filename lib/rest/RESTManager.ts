@@ -1,18 +1,18 @@
 /** @module RESTManager */
-import RequestHandler from "./RequestHandler";
-import type Client from "../Client";
-import Channels from "../routes/Channels";
-import Guilds from "../routes/Guilds";
-import Users from "../routes/Users";
-import OAuth from "../routes/OAuth";
-import Webhooks from "../routes/Webhooks";
-import type { RESTOptions } from "../types/client";
-import type { RequestOptions } from "../types/request-handler";
-import ApplicationCommands from "../routes/ApplicationCommands";
-import Interactions from "../routes/Interactions";
-import * as Routes from "../util/Routes";
-import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
-import Miscellaneous from "../routes/Miscellaneous";
+import RequestHandler from "./RequestHandler.js";
+import type Client from "../Client.js";
+import Channels from "../routes/Channels.js";
+import Guilds from "../routes/Guilds.js";
+import Users from "../routes/Users.js";
+import OAuth from "../routes/OAuth.js";
+import Webhooks from "../routes/Webhooks.js";
+import type { RESTOptions } from "../types/client.js";
+import type { RequestOptions } from "../types/request-handler.js";
+import ApplicationCommands from "../routes/ApplicationCommands.js";
+import Interactions from "../routes/Interactions.js";
+import * as Routes from "../util/Routes.js";
+import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway.js";
+import Miscellaneous from "../routes/Miscellaneous.js";
 
 /** A manager for all rest actions. */
 export default class RESTManager {

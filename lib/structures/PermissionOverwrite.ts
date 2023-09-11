@@ -1,10 +1,10 @@
 /** @module PermissionOverwrite */
-import Base from "./Base";
-import Permission from "./Permission";
-import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants";
-import type Client from "../Client";
-import type { RawOverwrite } from "../types/channels";
-import type { JSONPermissionOverwrite } from "../types/json";
+import Base from "./Base.js";
+import Permission from "./Permission.js";
+import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants.js";
+import type Client from "../Client.js";
+import type { RawOverwrite } from "../types/channels.js";
+import type { JSONPermissionOverwrite } from "../types/json.js";
 
 /** Represents a permission overwrite. */
 export default class PermissionOverwrite extends Base {

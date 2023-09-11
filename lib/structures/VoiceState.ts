@@ -1,13 +1,13 @@
 /** @module VoiceState */
-import Base from "./Base";
-import type Member from "./Member";
-import type Guild from "./Guild";
-import type User from "./User";
-import type Client from "../Client";
-import type { RawVoiceState } from "../types/voice";
-import type { JSONVoiceState } from "../types/json";
-import { UncachedError } from "../util/Errors";
-import type { AnyVoiceChannel } from "../types";
+import Base from "./Base.js";
+import type Member from "./Member.js";
+import type Guild from "./Guild.js";
+import type User from "./User.js";
+import type Client from "../Client.js";
+import type { RawVoiceState } from "../types/voice.js";
+import type { JSONVoiceState } from "../types/json.js";
+import { UncachedError } from "../util/Errors.js";
+import type { AnyVoiceChannel } from "../types/index.js";
 
 /** Represents a guild member's voice state. */
 export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> extends Base {

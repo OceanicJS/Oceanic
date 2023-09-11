@@ -1,10 +1,10 @@
 /** @module Invite */
-import Channel from "./Channel";
-import type Guild from "./Guild";
-import type GuildScheduledEvent from "./GuildScheduledEvent";
-import type User from "./User";
-import PartialApplication from "./PartialApplication";
-import InviteGuild from "./InviteGuild";
+import Channel from "./Channel.js";
+import type Guild from "./Guild.js";
+import type GuildScheduledEvent from "./GuildScheduledEvent.js";
+import type User from "./User.js";
+import PartialApplication from "./PartialApplication.js";
+import InviteGuild from "./InviteGuild.js";
 import type {
     AnyInviteChannel,
     InviteInfoTypes,
@@ -12,11 +12,11 @@ import type {
     PartialInviteChannel,
     RawInvite,
     RawInviteWithMetadata
-} from "../types/channels";
-import type Client from "../Client";
-import type { InviteTargetTypes } from "../Constants";
-import type { JSONInvite } from "../types/json";
-import type { Uncached } from "../types/shared";
+} from "../types/channels.js";
+import type Client from "../Client.js";
+import type { InviteTargetTypes } from "../Constants.js";
+import type { JSONInvite } from "../types/json.js";
+import type { Uncached } from "../types/shared.js";
 
 /** Represents an invite. */
 export default class Invite<T extends InviteInfoTypes = "withMetadata", CH extends AnyInviteChannel | Uncached = AnyInviteChannel | Uncached> {

@@ -1,13 +1,13 @@
 /** @module ThreadOnlyChannel */
-import GuildChannel from "./GuildChannel";
-import PermissionOverwrite from "./PermissionOverwrite";
-import type PublicThreadChannel from "./PublicThreadChannel";
-import type Invite from "./Invite";
-import type Member from "./Member";
-import Permission from "./Permission";
-import type CategoryChannel from "./CategoryChannel";
-import type Webhook from "./Webhook";
-import type Client from "../Client";
+import GuildChannel from "./GuildChannel.js";
+import PermissionOverwrite from "./PermissionOverwrite.js";
+import type PublicThreadChannel from "./PublicThreadChannel.js";
+import type Invite from "./Invite.js";
+import type Member from "./Member.js";
+import Permission from "./Permission.js";
+import type CategoryChannel from "./CategoryChannel.js";
+import type Webhook from "./Webhook.js";
+import type Client from "../Client.js";
 import type {
     ArchivedThreads,
     CreateInviteOptions,
@@ -17,19 +17,19 @@ import type {
     GetArchivedThreadsOptions,
     RawOverwrite,
     StartThreadInThreadOnlyChannelOptions
-} from "../types/channels";
-import type { JSONThreadOnlyChannel } from "../types/json";
-import TypedCollection from "../util/TypedCollection";
+} from "../types/channels.js";
+import type { JSONThreadOnlyChannel } from "../types/json.js";
+import TypedCollection from "../util/TypedCollection.js";
 import {
     AllPermissions,
     Permissions,
     type SortOrderTypes,
     type ForumLayoutTypes,
     type ThreadAutoArchiveDuration
-} from "../Constants";
-import type { CreateWebhookOptions, RawThreadOnlyChannel, ThreadOnlyChannels } from "../types";
-import { UncachedError } from "../util/Errors";
-import Collection from "../util/Collection";
+} from "../Constants.js";
+import type { CreateWebhookOptions, RawThreadOnlyChannel, ThreadOnlyChannels } from "../types/index.js";
+import { UncachedError } from "../util/Errors.js";
+import Collection from "../util/Collection.js";
 
 /** Represents a thread only channel. */
 export default class ThreadOnlyChannel extends GuildChannel {
