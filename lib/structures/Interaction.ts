@@ -2,9 +2,7 @@
 import Base from "./Base.js";
 import type ClientApplication from "./ClientApplication.js";
 import type Client from "../Client.js";
-import type {
-    AnyRawInteraction
-} from "../types/interactions.js";
+import type { AnyRawInteraction } from "../types/interactions.js";
 import type { InteractionTypes } from "../Constants.js";
 import type { JSONInteraction } from "../types/json.js";
 

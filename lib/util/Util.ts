@@ -67,7 +67,27 @@ import ComponentInteraction from "../structures/ComponentInteraction.js";
 import PingInteraction from "../structures/PingInteraction.js";
 import AutocompleteInteraction from "../structures/AutocompleteInteraction.js";
 import ModalSubmitInteraction from "../structures/ModalSubmitInteraction.js";
-import type { AnyInteraction, AnyTextableChannel, ApplicationCommandOptions, CollectionLimitsOptions, CombinedApplicationCommandOption, GuildEmoji, RESTMember, RawApplicationCommandInteraction, RawApplicationCommandOption, RawAutocompleteInteraction, RawGuildEmoji, RawInteraction, RawMember, RawMessage, RawMessageComponentInteraction, RawModalSubmitInteraction, RawSticker, Sticker, Uncached } from "../index.js";
+import type {
+    AnyInteraction,
+    AnyTextableChannel,
+    ApplicationCommandOptions,
+    CollectionLimitsOptions,
+    CombinedApplicationCommandOption,
+    GuildEmoji,
+    RESTMember,
+    RawApplicationCommandInteraction,
+    RawApplicationCommandOption,
+    RawAutocompleteInteraction,
+    RawGuildEmoji,
+    RawInteraction,
+    RawMember,
+    RawMessage,
+    RawMessageComponentInteraction,
+    RawModalSubmitInteraction,
+    RawSticker,
+    Sticker,
+    Uncached
+} from "../index.js";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
