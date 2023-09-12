@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /** @module RequestHandler */
 import SequentialBucket from "./SequentialBucket.js";
 import DiscordRESTError from "./DiscordRESTError.js";
@@ -27,7 +28,6 @@ export default class RequestHandler {
         }
         this.#manager = manager;
         this.options = {
-            agent:                      options.agent,
             baseURL:                    options.baseURL ?? API_URL,
             disableLatencyCompensation: !!options.disableLatencyCompensation,
             host:                       options.host ?? (options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host),
@@ -163,11 +163,10 @@ export default class RequestHandler {
                         timeout = setTimeout(() => controller.abort(), this.options.requestTimeout);
                     }
                     const res = await fetch(url, {
-                        method:     options.method,
+                        method: options.method,
                         headers,
-                        body:       reqBody,
-                        dispatcher: this.options.agent || undefined,
-                        signal:     controller.signal
+                        body:   reqBody,
+                        signal: controller.signal
                     });
                     if (timeout) {
                         clearTimeout(timeout);

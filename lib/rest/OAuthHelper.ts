@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /** @module OAuthHelper */
 import type RESTManager from "./RESTManager.js";
 import OAuthApplication from "../structures/OAuthApplication.js";

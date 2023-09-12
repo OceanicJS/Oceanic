@@ -1,10 +1,10 @@
+/// <reference lib="dom" />
 /** @module Types/RequestHandler */
 import type { RESTOptions } from "./client.js";
 import type { RESTMethod } from "../Constants.js";
-import type { FormData } from "undici";
 
 // internal use
-export interface RequestHandlerInstanceOptions extends Required<Omit<RESTOptions, "agent">>, Pick<RESTOptions, "agent"> {}
+export interface RequestHandlerInstanceOptions extends Required<RESTOptions> {}
 
 export interface RequestOptions {
     auth?: boolean | string;

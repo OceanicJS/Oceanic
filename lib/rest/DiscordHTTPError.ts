@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /** @module DiscordHTTPError */
 import DiscordRESTError from "./DiscordRESTError.js";
 import type { RESTMethod } from "../Constants.js";

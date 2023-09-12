@@ -1,8 +1,8 @@
+/// <reference lib="dom" />
 /** @module Types/Client */
 import type { AllowedMentions } from "./channels.js";
 import type { GatewayOptions } from "./gateway.js";
 import type { ImageFormat } from "../Constants.js";
-import type { Agent } from "undici";
 
 export interface ClientOptions {
     /**
@@ -47,11 +47,6 @@ export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "res
 }
 
 export interface RESTOptions {
-    /**
-     * The agent to use for requests.
-     * @defaultValue null
-     */
-    agent?: Agent | null;
     /**
      * The base URL to use for requests - must be a fully qualified url.
      * @defaultValue https://discordapp.com/api/v\{REST_VERSION\}
