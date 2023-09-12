@@ -1,7 +1,6 @@
 /** @module DiscordRESTError */
 import type { RESTMethod } from "../Constants.js";
 import type { JSONDiscordRESTError } from "../types/json.js";
-import type { Headers, Response } from "undici";
 
 /** A REST error received from Discord. */
 export default class DiscordRESTError extends Error {

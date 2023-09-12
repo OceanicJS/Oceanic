@@ -89,7 +89,7 @@ import Guild from "../structures/Guild.js";
 import type Member from "../structures/Member.js";
 import type { Uncached } from "../types/shared.js";
 import ApplicationCommand from "../structures/ApplicationCommand.js";
-import { File, FormData } from "undici";
+import { File } from "node:buffer";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
 export default class Guilds {

@@ -19,7 +19,6 @@ import OAuthGuild from "../structures/OAuthGuild.js";
 import ExtendedUser from "../structures/ExtendedUser.js";
 import type { RawOAuthUser, RawRoleConnection, RoleConnection, UpdateUserApplicationRoleConnectionOptions } from "../types/index.js";
 import { BASE_URL } from "../Constants.js";
-import { FormData } from "undici";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */
 export default class OAuthHelper {
