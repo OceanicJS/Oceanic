@@ -1,6 +1,53 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    // Type Checking
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
+    "exactOptionalPropertyTypes": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": false,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+
+    // Modules
+    "allowArbitraryExtensions": false,
+    "allowImportingTsExtensions": false,
+    "allowUmdGlobalAccess": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+
+    // Emit
+    "declaration": true,
+    "downlevelIteration": true,
+    "emitBOM": false,
+    "importHelpers": true,
+    "importsNotUsedAsValues": "error",
+    "inlineSourceMap": true,
+    "newLine": "LF",
+    "noEmitOnError": true,
+    "outDir": "dist/esm",
+
+    // JavaScript Support
+    "allowJs": true,
+    "checkJs": true,
+
+    // Interop Constraints
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Language and Environment
     "lib": [
       "ES2015",
       "ES2016",
@@ -11,29 +58,18 @@
       "ES2021",
       "ES2022"
     ],
-    "module": "nodenext",
+    "moduleDetection": "force",
     "target": "ES2022",
-    "inlineSourceMap": true,
-    "importHelpers": true,
-    "newLine": "LF",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": false,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "nodenext",
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    "importsNotUsedAsValues": "error",
-    "ignoreDeprecations": "5.0",
-    "checkJs": true,
-    "strictPropertyInitialization": true,
-    "strictBindCallApply": true,
-    "declaration": true,
-    "noEmitOnError": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "useDefineForClassFields": true,
+
+    // Output Formatting
+    "noErrorTruncation": true,
+
+    // Completeness
+    "skipLibCheck": true,
+
+    // Misc
+    "ignoreDeprecations": "5.0"
   },
   "include": ["lib/**/*.ts"],
   "exclude": ["node_modules", "dist", "test"]

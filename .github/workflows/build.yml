@@ -12,4 +12,4 @@ jobs:
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile --ignore-scripts
       - name: Build
-        run: pnpm run test:build && pnpm run test:esm
+        run: pnpm run test:build && pnpm run test:code

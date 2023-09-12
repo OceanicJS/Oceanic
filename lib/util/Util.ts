@@ -10,7 +10,8 @@ import {
     MIN_IMAGE_SIZE,
     type ImageFormat,
     ThreadChannelTypes,
-    ChannelTypes
+    ChannelTypes,
+    InteractionTypes
 } from "../Constants.js";
 import type {
     AllowedMentions,
@@ -22,35 +23,51 @@ import type {
     MessageActionRow,
     ModalActionRow,
     RawAllowedMentions,
+    RawAnnouncementChannel,
+    RawAnnouncementThreadChannel,
+    RawCategoryChannel,
     RawChannel,
     RawComponent,
     RawEmbed,
     RawEmbedOptions,
+    RawForumChannel,
+    RawGroupChannel,
     RawGuildChannel,
+    RawMediaChannel,
     RawMessageActionRow,
     RawModalActionRow,
-    RawThreadChannel,
-    ToComponentFromRaw,
-    ToRawFromComponent
-} from "../types/channels.js";
-import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds.js";
-import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands.js";
-import Member from "../structures/Member.js";
-import Channel from "../structures/Channel.js";
-import type {
-    AnyTextableChannel,
-    CollectionLimitsOptions,
-    GuildEmoji,
-    RawAnnouncementThreadChannel,
-    RawGroupChannel,
-    RawGuildEmoji,
-    RawMessage,
     RawPrivateChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,
-    Uncached
-} from "../types/index.js";
+    RawStageChannel,
+    RawTextChannel,
+    RawThreadChannel,
+    RawVoiceChannel,
+    ToComponentFromRaw,
+    ToRawFromComponent
+} from "../types/channels.js";
+import Member from "../structures/Member.js";
+import Channel from "../structures/Channel.js";
 import Message from "../structures/Message.js";
+import TextChannel from "../structures/TextChannel.js";
+import PrivateChannel from "../structures/PrivateChannel.js";
+import VoiceChannel from "../structures/VoiceChannel.js";
+import GroupChannel from "../structures/GroupChannel.js";
+import AnnouncementChannel from "../structures/AnnouncementChannel.js";
+import AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
+import PublicThreadChannel from "../structures/PublicThreadChannel.js";
+import PrivateThreadChannel from "../structures/PrivateThreadChannel.js";
+import CategoryChannel from "../structures/CategoryChannel.js";
+import StageChannel from "../structures/StageChannel.js";
+import ForumChannel from "../structures/ForumChannel.js";
+import MediaChannel from "../structures/MediaChannel.js";
+import Interaction from "../structures/Interaction.js";
+import CommandInteraction from "../structures/CommandInteraction.js";
+import ComponentInteraction from "../structures/ComponentInteraction.js";
+import PingInteraction from "../structures/PingInteraction.js";
+import AutocompleteInteraction from "../structures/AutocompleteInteraction.js";
+import ModalSubmitInteraction from "../structures/ModalSubmitInteraction.js";
+import type { AnyInteraction, AnyTextableChannel, ApplicationCommandOptions, CollectionLimitsOptions, CombinedApplicationCommandOption, GuildEmoji, RESTMember, RawApplicationCommandInteraction, RawApplicationCommandOption, RawAutocompleteInteraction, RawGuildEmoji, RawInteraction, RawMember, RawMessage, RawMessageComponentInteraction, RawModalSubmitInteraction, RawSticker, Sticker, Uncached } from "../index.js";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -59,6 +76,74 @@ export default class Util {
 
     constructor(client: Client) {
         this.#client = client;
+    }
+
+    static channelFromRaw<T extends AnyChannel = AnyChannel>(data: RawChannel, client: Client): T {
+        switch (data.type) {
+            case ChannelTypes.GUILD_TEXT: {
+                return new TextChannel(data as RawTextChannel, client) as T;
+            }
+            case ChannelTypes.DM: {
+                return new PrivateChannel(data as RawPrivateChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_VOICE: {
+                return new VoiceChannel(data as RawVoiceChannel, client) as T;
+            }
+            case ChannelTypes.GROUP_DM: {
+                return new GroupChannel(data as RawGroupChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_CATEGORY: {
+                return new CategoryChannel(data as RawCategoryChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_ANNOUNCEMENT: {
+                return new AnnouncementChannel(data as RawAnnouncementChannel, client) as T;
+            }
+            case ChannelTypes.ANNOUNCEMENT_THREAD: {
+                return new AnnouncementThreadChannel(data as RawAnnouncementThreadChannel, client) as T;
+            }
+            case ChannelTypes.PUBLIC_THREAD: {
+                return new PublicThreadChannel(data as RawPublicThreadChannel, client) as T;
+            }
+            case ChannelTypes.PRIVATE_THREAD: {
+                return new PrivateThreadChannel(data as RawPrivateThreadChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_STAGE_VOICE: {
+                return new StageChannel(data as RawStageChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_FORUM: {
+                return new ForumChannel(data as RawForumChannel, client) as T;
+            }
+            case ChannelTypes.GUILD_MEDIA: {
+                return new MediaChannel(data as RawMediaChannel, client) as T;
+            }
+            default: {
+                return new Channel(data, client) as T;
+            }
+        }
+    }
+
+
+    static interactionFromRaw<T extends AnyInteraction = AnyInteraction>(data: RawInteraction, client: Client): T {
+        switch (data.type) {
+            case InteractionTypes.PING: {
+                return new PingInteraction(data, client) as T;
+            }
+            case InteractionTypes.APPLICATION_COMMAND: {
+                return new CommandInteraction(data as RawApplicationCommandInteraction, client) as T;
+            }
+            case InteractionTypes.MESSAGE_COMPONENT: {
+                return new ComponentInteraction(data as RawMessageComponentInteraction, client) as T;
+            }
+            case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
+                return new AutocompleteInteraction(data as RawAutocompleteInteraction, client) as T;
+            }
+            case InteractionTypes.MODAL_SUBMIT: {
+                return new ModalSubmitInteraction(data as RawModalSubmitInteraction, client) as T;
+            }
+            default: {
+                return new Interaction(data, client) as never;
+            }
+        }
     }
 
     static rawEmbeds(embeds: RawEmbed): Embed;
@@ -462,7 +547,7 @@ export default class Util {
                     if (!channelData.parent_id) {
                         break guild;
                     }
-                    return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this.#client))) as T;
+                    return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Util.channelFromRaw<AnyThreadChannel>(channelData, this.#client))) as T;
                 } else {
                     return guild.channels.update(channelData as RawGuildChannel) as T;
                 }
@@ -472,7 +557,7 @@ export default class Util {
         switch (channelData.type) {
             case ChannelTypes.DM: return this.#client.privateChannels.update(channelData as RawPrivateChannel) as T;
             case ChannelTypes.GROUP_DM: return this.#client.groupChannels.update(channelData as RawGroupChannel) as T;
-            default: return Channel.from<T>(channelData, this.#client);
+            default: return Util.channelFromRaw<T>(channelData, this.#client);
         }
     }
 
@@ -503,6 +588,6 @@ export default class Util {
         if (guild) {
             return guild.threads.update(threadData) as T;
         }
-        return Channel.from<T>(threadData, this.#client);
+        return Util.channelFromRaw<T>(threadData, this.#client);
     }
 }

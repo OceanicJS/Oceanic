@@ -3,15 +3,9 @@ import Base from "./Base.js";
 import type ClientApplication from "./ClientApplication.js";
 import type Client from "../Client.js";
 import type {
-    AnyInteraction,
-    AnyRawInteraction,
-    RawApplicationCommandInteraction,
-    RawAutocompleteInteraction,
-    RawInteraction,
-    RawMessageComponentInteraction,
-    RawModalSubmitInteraction
+    AnyRawInteraction
 } from "../types/interactions.js";
-import { InteractionTypes } from "../Constants.js";
+import type { InteractionTypes } from "../Constants.js";
 import type { JSONInteraction } from "../types/json.js";
 
 /** Represents an interaction. */
@@ -38,30 +32,6 @@ export default class Interaction extends Base {
         this.version = data.version;
     }
 
-
-    static from<T extends AnyInteraction = AnyInteraction>(data: RawInteraction, client: Client): T {
-        switch (data.type) {
-            case InteractionTypes.PING: {
-                return new PingInteraction(data, client) as T;
-            }
-            case InteractionTypes.APPLICATION_COMMAND: {
-                return new CommandInteraction(data as RawApplicationCommandInteraction, client) as T;
-            }
-            case InteractionTypes.MESSAGE_COMPONENT: {
-                return new ComponentInteraction(data as RawMessageComponentInteraction, client) as T;
-            }
-            case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
-                return new AutocompleteInteraction(data as RawAutocompleteInteraction, client) as T;
-            }
-            case InteractionTypes.MODAL_SUBMIT: {
-                return new ModalSubmitInteraction(data as RawModalSubmitInteraction, client) as T;
-            }
-            default: {
-                return new Interaction(data, client) as never;
-            }
-        }
-    }
-
     override toJSON(): JSONInteraction {
         return {
             ...super.toJSON(),
@@ -72,13 +42,3 @@ export default class Interaction extends Base {
         };
     }
 }
-
-
-// Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
-const AutocompleteInteraction = (await import("./AutocompleteInteraction.js")).default;
-const CommandInteraction = (await import("./CommandInteraction.js")).default;
-const ComponentInteraction = (await import("./ComponentInteraction.js")).default;
-const ModalSubmitInteraction = (await import("./ModalSubmitInteraction.js")).default;
-const PingInteraction = (await import("./PingInteraction.js")).default;
-/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

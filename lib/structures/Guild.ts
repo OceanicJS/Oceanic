@@ -15,7 +15,6 @@ import AutoModerationRule from "./AutoModerationRule.js";
 import Permission from "./Permission.js";
 import VoiceState from "./VoiceState.js";
 import StageInstance from "./StageInstance.js";
-import Channel from "./Channel.js";
 import type StageChannel from "./StageChannel.js";
 import type GuildTemplate from "./GuildTemplate.js";
 import type GuildPreview from "./GuildPreview.js";
@@ -113,10 +112,11 @@ import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../typ
 import type { JSONGuild } from "../types/json.js";
 import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway.js";
 import type Shard from "../gateway/Shard.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore-line
 import { UncachedError } from "../util/Errors.js";
 import SimpleCollection from "../util/SimpleCollection.js";
+import { Util } from "../index.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
@@ -262,7 +262,7 @@ export default class Guild extends Base {
         this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
             construct: (channel): GuildChannel => {
                 client.channelGuildMap[channel.id] = this.id;
-                return Channel.from<AnyGuildChannelWithoutThreads>(channel, client);
+                return Util.channelFromRaw<AnyGuildChannelWithoutThreads>(channel, client);
             },
             delete: (id): void => {
                 delete client.channelGuildMap[id];
@@ -305,7 +305,7 @@ export default class Guild extends Base {
         this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
             construct: (thread): ThreadChannel => {
                 client.threadGuildMap[thread.id] = this.id;
-                return Channel.from<AnyThreadChannel>(thread, client);
+                return Util.channelFromRaw<AnyThreadChannel>(thread, client);
             },
             delete: (id): void => {
                 delete client.threadGuildMap[id];
@@ -632,7 +632,7 @@ export default class Guild extends Base {
 
     /** The shard this guild is on. Gateway only. */
     get shard(): Shard {
-        this._shard ??= this.client.shards["_forGuild"](this.id);
+        this._shard ??= this.client.shards.forGuild(this.id);
         if (this.client.options.restMode) {
             throw new TypeError(`${this.constructor.name}#shard will not be present with rest mode enabled.`);
         }
@@ -649,7 +649,7 @@ export default class Guild extends Base {
 
     /** The voice adapter creator for this guild that can be used with [@discordjs/voice](https://discord.js.org/#/docs/voice/main/general/welcome) to play audio in voice and stage channels. */
     get voiceAdapterCreator(): DiscordGatewayAdapterCreator {
-        this._shard ??= this.client.shards["_forGuild"](this.id);
+        this._shard ??= this.client.shards.forGuild(this.id);
         if (this.client.options.restMode) {
             throw new TypeError(`${this.constructor.name}#voiceAdapterCreator cannot be used with rest mode enabled.`);
         }

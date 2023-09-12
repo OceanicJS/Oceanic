@@ -1,7 +1,4 @@
 export type * from "./types/index.js";
-// Channel and Interaction MUST be at the top due to circular imports
-export { default as Channel } from "./structures/Channel.js";
-export { default as Interaction } from "./structures/Interaction.js";
 export { default as AnnouncementChannel } from "./structures/AnnouncementChannel.js";
 export { default as AnnouncementThreadChannel } from "./structures/AnnouncementThreadChannel.js";
 export { default as Application } from "./structures/OAuthApplication.js";
@@ -12,6 +9,7 @@ export { default as AutocompleteInteraction } from "./structures/AutocompleteInt
 export { default as AutoModerationRule } from "./structures/AutoModerationRule.js";
 export { default as Base } from "./structures/Base.js";
 export { default as Bucket } from "./rest/Bucket.js";
+export { default as Channel } from "./structures/Channel.js";
 export { default as CategoryChannel } from "./structures/CategoryChannel.js";
 export { default as Client } from "./Client.js";
 export { default as ClientApplication } from "./structures/ClientApplication.js";
@@ -33,6 +31,7 @@ export { default as GuildPreview } from "./structures/GuildPreview.js";
 export { default as GuildScheduledEvent } from "./structures/GuildScheduledEvent.js";
 export { default as GuildTemplate } from "./structures/GuildTemplate.js";
 export { default as Integration } from "./structures/Integration.js";
+export { default as Interaction } from "./structures/Interaction.js";
 export { default as InteractionResolvedChannel } from "./structures/InteractionResolvedChannel.js";
 export { default as InteractionOptionsWrapper } from "./util/InteractionOptionsWrapper.js";
 export { default as Invite } from "./structures/Invite.js";

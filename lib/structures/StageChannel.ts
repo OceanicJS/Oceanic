@@ -6,8 +6,6 @@ import type Client from "../Client.js";
 import type { RawStageChannel } from "../types/channels.js";
 import type { JSONStageChannel } from "../types/json.js";
 import type { CreateStageInstanceOptions, EditStageInstanceOptions } from "../types/guilds.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 
 /** Represents a guild stage channel. */
 export default class StageChannel extends TextableVoiceChannel<StageChannel> {

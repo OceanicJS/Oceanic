@@ -10,6 +10,7 @@ import {
 } from "../Constants.js";
 import type { GatewayOptions, GetBotGatewayResponse, ShardManagerInstanceOptions } from "../types/gateway.js";
 import Collection from "../util/Collection.js";
+import Guild from "../structures/Guild.js";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore
@@ -116,13 +117,6 @@ export default class ShardManager extends Collection<number, Shard> {
     private _connect(shard: Shard): void {
         this.#connectQueue.push(shard);
         this.tryConnect();
-    }
-
-    private _forGuild(guild: string): Shard | undefined {
-        if (this.options.maxShards === -1) {
-            return undefined;
-        }
-        return this.get((this.#client.guildShardMap[guild] ??= Number((BigInt(guild) >> 22n) % BigInt(this.options.maxShards))));
     }
 
     private async _gatewayURLForShard(shard: Shard): Promise<string> {
@@ -244,6 +238,17 @@ export default class ShardManager extends Collection<number, Shard> {
         this.#client.ready = false;
         for (const [,shard] of this) shard.disconnect(reconnect);
         this._resetConnectQueue();
+    }
+
+    forGuild(guild: string | Guild): Shard | undefined {
+        if (guild instanceof Guild) {
+            guild = guild.id;
+        }
+
+        if (this.options.maxShards === -1) {
+            return undefined;
+        }
+        return this.get((this.#client.guildShardMap[guild] ??= Number((BigInt(guild) >> 22n) % BigInt(this.options.maxShards))));
     }
 
     spawn(id: number): void {

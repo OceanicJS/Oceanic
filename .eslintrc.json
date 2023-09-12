@@ -173,6 +173,8 @@
         ]
       }
     ],
+
+    "import/extensions": ["error", "ignorePackages"],
     "indent": "off",
     "jsdoc/check-alignment": "error",
     "jsdoc/check-indentation": "error",

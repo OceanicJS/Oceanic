@@ -47,7 +47,6 @@ import Invite from "../structures/Invite.js";
 import Message from "../structures/Message.js";
 import StageInstance from "../structures/StageInstance.js";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel.js";
-import Interaction from "../structures/Interaction.js";
 import Guild from "../structures/Guild.js";
 import type { ShardEvents } from "../types/events.js";
 import Role from "../structures/Role.js";
@@ -57,6 +56,7 @@ import AuditLogEntry from "../structures/AuditLogEntry.js";
 import type User from "../structures/User.js";
 import GatewayError, { DependencyError } from "../util/Errors.js";
 import ClientApplication from "../structures/ClientApplication.js";
+import { Util } from "../index.js";
 import WebSocket, { type Data } from "ws";
 import type Pako from "pako";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -616,7 +616,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
             }
 
             case "INTERACTION_CREATE": {
-                this.client.emit("interactionCreate", Interaction.from(packet.d, this.client));
+                this.client.emit("interactionCreate", Util.interactionFromRaw(packet.d, this.client));
                 break;
             }
 

@@ -7,19 +7,21 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/lib/index.d.ts",
-      "import": "./dist/lib/index.js",
-      "require": "./export.cjs"
+      "types": "./dist/esm/lib/index.d.ts",
+      "import": "./dist/esm/lib/index.js",
+      "require": "./dist/cjs/lib/index.js"
     }
   },
   "scripts": {
     "lint": "eslint lib --ext .ts",
     "lint:fix": "eslint lib --ext .ts --fix",
-    "prepare": "rimraf dist && tsc -p tsconfig.json && cp -r lib/types dist/lib/types",
+    "prepare": "rimraf dist && tsc -p tsconfig.json && tsc -p cjs.tsconfig.json && node scripts/after-build.js",
     "test:build": "pnpm run prepare",
-    "test:cjs": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node export.cjs",
+    "test:cjs": "node dist/cjs/index.js",
+    "test:esm": "node dist/esm/index.js",
+    "test:code": "pnpm run test:cjs && pnpm run test:esm",
     "test:docs": "rimraf docs && npx --yes typedoc --options static/typedoc.json",
-    "test": "pnpm run lint && pnpm run test:build && pnpm run test:esm && pnpm run test:docs"
+    "test": "pnpm run lint && pnpm run test:build && pnpm run test:code && pnpm run test:docs"
   },
   "repository": {
     "type": "git",
@@ -43,6 +45,7 @@
   "devDependencies": {
     "@favware/npm-deprecate": "^1.0.7",
     "@mxssfd/typedoc-theme": "^1.1.2",
+    "@swc/cli": "^0.1.62",
     "@types/node": "^20.5.7",
     "@types/pako": "^2.0.0",
     "@types/ws": "^8.5.5",
@@ -57,6 +60,7 @@
     "eslint-plugin-unicorn": "^48.0.1",
     "eslint-plugin-unused-imports": "^3.0.0",
     "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
     "typedoc": "^0.25.0",
     "typedoc-plugin-extras": "2.3.3",
     "typedoc-plugin-mdn-links": "^3.1.0",
@@ -64,7 +68,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "tslib": "^2.6.1",
+    "tslib": "^2.6.2",
     "undici": "^5.23.0",
     "ws": "^8.13.0"
   },
