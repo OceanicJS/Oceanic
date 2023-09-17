@@ -744,7 +744,7 @@ export default class Guilds {
             delete options.reason;
         }
         return this.#manager.authRequest<RawGuildEmoji>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.GUILD_EMOJI(guildID, emojiID),
             json:   {
                 name:  options.name,
