@@ -247,7 +247,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * @param options The options for starting the thread.
      */
     async startThread(options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
-        return this.client.rest.channels.startThreadInThreadOnlyChannl(this.id, options);
+        return this.client.rest.channels.startThreadInThreadOnlyChannel(this.id, options);
     }
 
     override toJSON(): JSONThreadOnlyChannel {

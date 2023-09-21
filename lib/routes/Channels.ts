@@ -680,7 +680,7 @@ export default class Channels {
                 query
             }).then(data => data.map(d => this.#manager.client.util.updateMessage<T>(d)));
 
-            for (const message of messages) {
+            for (const message of Array.from(messages)) {
                 const f = filter(message);
 
                 if (f === false) {
@@ -1177,7 +1177,7 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async startThreadInThreadOnlyChannl(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
+    async startThreadInThreadOnlyChannel(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         const reason = options.reason;
         if (options.reason) {
             delete options.reason;
@@ -1206,6 +1206,18 @@ export default class Channels {
             reason,
             files
         }).then(data => this.#manager.client.util.updateThread<PublicThreadChannel>(data));
+    }
+
+    /**
+     * Create a thread in a thread only channel (forum & media).
+     * @param channelID The ID of the channel to start the thread in.
+     * @param options The options for starting the thread.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
+     * @deprecated Use {@link ChannelManager#startThreadInThreadOnlyChannel}. This will be removed in `1.9.0`.
+     */
+    async startThreadInThreadOnlyChannl(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
+        return this.startThreadInThreadOnlyChannel(channelID, options);
     }
 
     /**
