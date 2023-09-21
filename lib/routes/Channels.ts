@@ -680,7 +680,7 @@ export default class Channels {
                 query
             }).then(data => data.map(d => this.#manager.client.util.updateMessage<T>(d)));
 
-            for (const message of messages) {
+            for (const message of Array.from(messages)) {
                 const f = filter(message);
 
                 if (f === false) {
