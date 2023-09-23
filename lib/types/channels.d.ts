@@ -5,6 +5,7 @@ import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
 import { type  Uncached } from "./shared";
+import type { SelectMenuDefaultValue } from "./interactions";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -559,10 +560,10 @@ export interface RawChannelSelectMenuOptions {
 }
 
 export interface RawStringSelectMenu extends RawSelectMenuBase<ComponentTypes.STRING_SELECT>, RawStringSelectMenuOptions {}
-export interface RawUserSelectMenu extends RawSelectMenuBase<ComponentTypes.USER_SELECT> {}
-export interface RawRoleSelectMenu extends RawSelectMenuBase<ComponentTypes.ROLE_SELECT> {}
-export interface RawMentionableSelectMenu extends RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT> {}
-export interface RawChannelSelectMenu extends RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT>, RawChannelSelectMenuOptions {}
+export interface RawUserSelectMenu extends RawSelectMenuBase<ComponentTypes.USER_SELECT>, DefaultValuesRaw {}
+export interface RawRoleSelectMenu extends RawSelectMenuBase<ComponentTypes.ROLE_SELECT>, DefaultValuesRaw {}
+export interface RawMentionableSelectMenu extends RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>, DefaultValuesRaw {}
+export interface RawChannelSelectMenu extends RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT>, RawChannelSelectMenuOptions, DefaultValuesRaw {}
 
 
 export interface SelectMenuBase<T extends SelectMenuTypes> {
@@ -574,6 +575,14 @@ export interface SelectMenuBase<T extends SelectMenuTypes> {
     type: T;
 }
 
+interface DefaultValuesRaw {
+    default_values?: Array<SelectMenuDefaultValue>;
+}
+
+interface DefaultValues {
+    defaultValues?: Array<SelectMenuDefaultValue>;
+}
+
 export interface StringSelectMenuOptions {
     options: Array<SelectOption>;
 }
@@ -583,10 +592,10 @@ export interface ChannelSelectMenuOptions {
 }
 
 export interface StringSelectMenu extends SelectMenuBase<ComponentTypes.STRING_SELECT>, StringSelectMenuOptions {}
-export interface UserSelectMenu extends SelectMenuBase<ComponentTypes.USER_SELECT> {}
-export interface RoleSelectMenu extends SelectMenuBase<ComponentTypes.ROLE_SELECT> {}
-export interface MentionableSelectMenu extends SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT> {}
-export interface ChannelSelectMenu extends SelectMenuBase<ComponentTypes.CHANNEL_SELECT>, ChannelSelectMenuOptions {}
+export interface UserSelectMenu extends SelectMenuBase<ComponentTypes.USER_SELECT>, DefaultValues {}
+export interface RoleSelectMenu extends SelectMenuBase<ComponentTypes.ROLE_SELECT>, DefaultValues {}
+export interface MentionableSelectMenu extends SelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>, DefaultValues {}
+export interface ChannelSelectMenu extends SelectMenuBase<ComponentTypes.CHANNEL_SELECT>, ChannelSelectMenuOptions, DefaultValues {}
 
 export interface SelectOption {
     default?: boolean;

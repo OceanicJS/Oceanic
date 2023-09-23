@@ -309,3 +309,10 @@ export interface InteractionGuild {
 
 export type AnyGuildInteraction = GuildAutocompleteInteraction | GuildCommandInteraction | GuildComponentInteraction | GuildModalSubmitInteraction;
 export type AnyPrivateInteraction = PrivateAutocompleteInteraction | PrivateCommandInteraction | PrivateComponentInteraction | PrivateModalSubmitInteraction;
+
+
+export type SelectMenuDefaultValueTypes = "user" | "role" | "channel";
+export interface SelectMenuDefaultValue {
+    id: string;
+    type: SelectMenuDefaultValueTypes;
+}

@@ -48,6 +48,10 @@ import type {
     RawPrivateChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,
+    RawSelectMenuComponent,
+    RawStringSelectMenu,
+    SelectMenuComponent,
+    StringSelectMenu,
     Uncached
 } from "../types";
 import Message from "../structures/Message";
@@ -142,7 +146,7 @@ export default class Util {
             case ComponentTypes.ROLE_SELECT:
             case ComponentTypes.MENTIONABLE_SELECT:
             case ComponentTypes.CHANNEL_SELECT: {
-                const parsedComponent = {
+                const parsedComponent  = {
                     customID:    component.custom_id,
                     disabled:    component.disabled,
                     maxValues:   component.max_values,
@@ -150,6 +154,10 @@ export default class Util {
                     placeholder: component.placeholder,
                     type:        component.type
                 };
+
+                if (component.type !== ComponentTypes.STRING_SELECT && component.default_values !== undefined) {
+                    (parsedComponent as Exclude<SelectMenuComponent, StringSelectMenu>).defaultValues = component.default_values;
+                }
 
                 if (component.type === ComponentTypes.STRING_SELECT) {
                     return { ...parsedComponent, options: component.options } as never;
@@ -203,6 +211,10 @@ export default class Util {
                     placeholder: component.placeholder,
                     type:        component.type
                 };
+
+                if (component.type !== ComponentTypes.STRING_SELECT && component.defaultValues !== undefined) {
+                    (rawComponent as Exclude<RawSelectMenuComponent, RawStringSelectMenu>).default_values = component.defaultValues;
+                }
 
                 if (component.type === ComponentTypes.STRING_SELECT) {
                     return { ...rawComponent, options: component.options } as never;
