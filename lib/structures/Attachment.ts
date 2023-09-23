@@ -16,6 +16,8 @@ export default class Attachment extends Base {
     ephemeral?: boolean;
     /** The filename of this attachment. */
     filename: string;
+    /** The {@link Constants~AttachmentFlags | Attachment Flags } of this image. */
+    flags: number;
     /** The height of this attachment, if an image. */
     height?: number;
     /** A proxied url of this attachment. */
@@ -35,6 +37,7 @@ export default class Attachment extends Base {
         this.durationSecs = data.duration_secs;
         this.ephemeral = data.ephemeral;
         this.filename = data.filename;
+        this.flags = data.flags ?? 0;
         this.height = data.height;
         this.proxyURL = data.proxy_url;
         this.size = data.size;
@@ -50,6 +53,7 @@ export default class Attachment extends Base {
             description: this.description,
             ephemeral:   this.ephemeral,
             filename:    this.filename,
+            flags:       this.flags,
             height:      this.height,
             proxyURL:    this.proxyURL,
             size:        this.size,

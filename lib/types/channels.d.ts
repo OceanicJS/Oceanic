@@ -626,6 +626,7 @@ export interface RawAttachment {
     duration_secs?: number;
     ephemeral?: boolean;
     filename: string;
+    flags?: number;
     height?: number;
     id: string;
     proxy_url: string;

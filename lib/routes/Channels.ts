@@ -1214,7 +1214,7 @@ export default class Channels {
      * @param options The options for starting the thread.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
-     * @deprecated Use {@link ChannelManager#startThreadInThreadOnlyChannel}. This will be removed in `1.9.0`.
+     * @deprecated Use {@link REST/Channels#startThreadInThreadOnlyChannel}. This will be removed in `1.9.0`.
      */
     async startThreadInThreadOnlyChannl(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         return this.startThreadInThreadOnlyChannel(channelID, options);
