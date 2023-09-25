@@ -1,0 +1,18 @@
+diff --git a/dist/merger/project_merger.js b/dist/merger/project_merger.js
+index bf66c8ba53fdf558d6fc775f32241e9ca285d9be..6d5862adba2c0ace184de2ff5d36bb5ca365cf2f 100644
+--- a/dist/merger/project_merger.js
++++ b/dist/merger/project_merger.js
+@@ -23,8 +23,13 @@ class ProjectMerger {
+         if (modules.length > 0) {
+             this.project.children = [];
+             for (const mod of modules) {
++                if(["Constants", "Routes"].includes(mod.name) || mod.name.startsWith("Types/")) {
++            		this.project.children.push(mod);
++            		continue;
++            	}
+                 const reflections = (_b = mod.children) !== null && _b !== void 0 ? _b : [];
+                 for (const ref of reflections) {
++                    if(mod.name.startsWith("REST/")) ref.name = `REST/${ref.name}`;
+                     // Drop aliases
+                     if (!ref.kindOf(typedoc_1.ReflectionKind.Reference)) {
+                         ref.parent = this.project;

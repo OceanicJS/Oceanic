@@ -21,7 +21,7 @@
   "json": "../docs/docs.json",
   "exclude": [],
   "favicon": "./static/favicon.ico",
-  "customTitleLink": "https://docs.oceanic.ws",
+  "titleLink": "https://docs.oceanic.ws",
   "theme": "my-theme",
   "mergeModulesMergeMode": "project",
   "groupOrder": ["*", "Namespaces"]
