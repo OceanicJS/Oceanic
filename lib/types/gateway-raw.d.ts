@@ -26,6 +26,7 @@ import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
 import type { RawAuditLogEntry } from "./audit-log";
+import type { RawEntitlement, RawTestEntitlement } from "./misc";
 import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;
@@ -530,6 +531,21 @@ export interface VoiceChannelStatusUpdatePacket extends BaseDispatchPacket {
     t: "VOICE_CHANNEL_STATUS_UPDATE";
 }
 
+export interface EntitlementCreatePacket extends BaseDispatchPacket {
+    d: RawEntitlement | RawTestEntitlement;
+    t: "ENTITLEMENT_CREATE";
+}
+
+export interface EntitlementUpdatePacket extends BaseDispatchPacket {
+    d: RawEntitlement | RawTestEntitlement;
+    t: "ENTITLEMENT_UPDATE";
+}
+
+export interface EntitlementDeletePacket extends BaseDispatchPacket {
+    d: RawEntitlement | RawTestEntitlement;
+    t: "ENTITLEMENT_DELETE";
+}
+
 export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
 GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
@@ -542,4 +558,5 @@ GuildScheduledEventCreatePacket | GuildScheduledEventDeletePacket | GuildSchedul
 IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket |
 InviteCreatePacket | InviteDeletePacket |
 MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
-TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket;
+TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
+EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket;

@@ -13,6 +13,7 @@ import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
 import type { Uncached } from "./shared";
 import type { LocaleMap } from "./application-commands";
+import type { RawEntitlement, RawTestEntitlement } from "./misc";
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
@@ -44,7 +45,7 @@ import type Permission from "../structures/Permission";
 export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files"> {}
 export interface InitialInteractionContent extends Omit<InteractionContent, "attachments" | "files"> {}
 
-export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalInteractionResponse;
+export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalInteractionResponse | PremiumRequiredResponse;
 export interface PingInteractionResponse {
     type: InteractionResponseTypes.PONG;
 }
@@ -73,6 +74,11 @@ export interface ModalInteractionResponse {
     type: InteractionResponseTypes.MODAL;
 }
 
+export interface PremiumRequiredResponse {
+    data: Record<string, never>;
+    type: InteractionResponseTypes.PREMIUM_REQUIRED;
+}
+
 
 export interface ModalData {
     /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawModalComponents | Util#rawModalComponents}. */
@@ -88,6 +94,7 @@ export interface RawInteraction {
     application_id: string;
     channel_id?: string;
     data?: RawInteractionData;
+    entitlements?: Array<RawEntitlement | RawTestEntitlement>;
     guild?: InteractionGuild;
     guild_id?: string;
     guild_locale?: string;

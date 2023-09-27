@@ -35,7 +35,9 @@ import type {
     JSONTextChannel,
     JSONUser,
     JSONVoiceChannel,
-    JSONVoiceState
+    JSONVoiceState,
+    JSONEntitlement,
+    JSONTestEntitlement
 } from "./json";
 import type { GuildApplicationCommandPermissions } from "./application-commands";
 import type {
@@ -69,6 +71,8 @@ import type StageInstance from "../structures/StageInstance";
 import type ForumChannel from "../structures/ForumChannel";
 import type AuditLogEntry from "../structures/AuditLogEntry";
 import type GroupChannel from "../structures/GroupChannel";
+import type Entitlement from "../structures/Entitlement";
+import type TestEntitlement from "../structures/TestEntitlement";
 
 
 export interface ClientEvents {
@@ -96,6 +100,12 @@ export interface ClientEvents {
     debug: [info: string, shard?: number];
     /** @event Emitted when all shards disconnect. */
     disconnect: [];
+    /** @event Emitted when an entitlement is created. */
+    entitlementCreate: [entitlement: Entitlement | TestEntitlement];
+    /** @event Emitted when an entitlement is deleted. Note that expired entitlements are not deleted. */
+    entitlementDelete: [entitlement: Entitlement | TestEntitlement];
+    /** @event Emitted when an entitlement is updated. */
+    entitlementUpdate: [entitlement: Entitlement | TestEntitlement, oldEntitlement: JSONEntitlement | JSONTestEntitlement | null];
     /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string, shard?: number];
     /** @event Emitted when an audit log entry is created. Requires both the `GUILD_MODERATION` intent, as well as the `VIEW_AUDIT_LOG` permission. */

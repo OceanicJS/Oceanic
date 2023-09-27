@@ -215,8 +215,8 @@ export default class Member extends Base {
      * Disable the `BYPASSES_VERIFICATION` flag for this member. Requires the **Manage Guild** permission.
      * @param reason The reason for disabling the flag.
      */
-    async disableVerificationBypass(): Promise<void> {
-        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, false);
+    async disableVerificationBypass(reason?: string): Promise<void> {
+        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, false, reason);
     }
 
     /**
@@ -239,8 +239,8 @@ export default class Member extends Base {
      * Enable the `BYPASSES_VERIFICATION` flag for this member. Requires the **Manage Guild** permission.
      * @param reason The reason for enabling the flag.
      */
-    async enableVerificationBypass(): Promise<void> {
-        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, true);
+    async enableVerificationBypass(reason?: string): Promise<void> {
+        await this.toggleFlag(GuildMemberFlags.BYPASSES_VERIFICATION, true, reason);
     }
 
     /**

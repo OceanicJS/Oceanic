@@ -7,6 +7,8 @@ import Permission from "./Permission";
 import Message from "./Message";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
+import type Entitlement from "./Entitlement";
+import type TestEntitlement from "./TestEntitlement";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
 import type {
     InitialInteractionContent,
@@ -31,6 +33,8 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
     channelID: string;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
+    /** The entitlements for the user that created this interaction, and the guild it was created in. */
+    entitlements: Array<Entitlement | TestEntitlement>;
     /** The id of the guild this interaction was sent from, if applicable. */
     guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
@@ -60,6 +64,7 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
             components: client.util.componentsToParsed(data.data.components),
             customID:   data.data.custom_id
         };
+        this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
         this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
         this.guildPartial = data.guild;
@@ -214,6 +219,16 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
     /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
     inPrivateChannel(): this is ModalSubmitInteraction<PrivateChannel | Uncached> {
         return this.guildID === null;
+    }
+
+    /** Show a "premium required" response to the user. This is an initial response, and more than one initial response cannot be used. */
+    async premiumRequired(): Promise<void> {
+        if (this.acknowledged) {
+            throw new TypeError("Interactions cannot have more than one initial response.");
+        }
+
+        this.acknowledged = true;
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PREMIUM_REQUIRED, data: {} });
     }
 
     override toJSON(): JSONModalSubmitInteraction {

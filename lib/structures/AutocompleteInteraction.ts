@@ -6,6 +6,8 @@ import type Guild from "./Guild";
 import Permission from "./Permission";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
+import type Entitlement from "./Entitlement";
+import type TestEntitlement from "./TestEntitlement";
 import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
 import type { AutocompleteChoice, AutocompleteInteractionData, InteractionGuild, RawAutocompleteInteraction } from "../types/interactions";
 import type Client from "../Client";
@@ -25,6 +27,8 @@ export default class AutocompleteInteraction<T extends AnyInteractionChannel | U
     channelID: string;
     /** The data associated with the interaction. */
     data: AutocompleteInteractionData;
+    /** The entitlements for the user that created this interaction, and the guild it was created in. */
+    entitlements: Array<Entitlement | TestEntitlement>;
     /** The id of the guild this interaction was sent from, if applicable. */
     guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
@@ -51,6 +55,7 @@ export default class AutocompleteInteraction<T extends AnyInteractionChannel | U
             options: new InteractionOptionsWrapper(data.data.options ?? [], null),
             type:    data.data.type
         };
+        this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
         this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
         this.guildPartial = data.guild;

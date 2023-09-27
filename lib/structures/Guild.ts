@@ -22,6 +22,8 @@ import type GuildPreview from "./GuildPreview";
 import Invite from "./Invite";
 import type Webhook from "./Webhook";
 import AuditLogEntry from "./AuditLogEntry";
+import type Entitlement from "./Entitlement";
+import type TestEntitlement from "./TestEntitlement";
 import {
     AllPermissions,
     Permissions,
@@ -35,7 +37,8 @@ import {
     type VerificationLevels,
     type GatewayOPCodes,
     type MutableGuildFeatures,
-    type ChannelTypeMap
+    type ChannelTypeMap,
+    EntitlementOwnerTypes
 } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -117,6 +120,7 @@ import type Shard from "../gateway/Shard";
 // @ts-ignore-line
 import { UncachedError } from "../util/Errors";
 import SimpleCollection from "../util/SimpleCollection";
+import type { SearchEntitlementsOptions } from "../types/misc";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
@@ -780,6 +784,22 @@ export default class Guild extends Base {
     }
 
     /**
+     * Create a test entitlement for this guild.
+     * @param skuID The ID of the SKU to create an entitlement for.
+     * @param applicationID The ID of the application to create the entitlement for. If present, defaults to the logged in client's application id.
+     */
+    async createTestEntitlement(skuID: string, applicationID?: string): Promise<TestEntitlement> {
+        if (applicationID === undefined && this.client["_application"] === undefined) {
+            throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
+        }
+        return this.client.rest.misc.createTestEntitlement(applicationID ?? this.client.application.id, {
+            ownerID:   this.id,
+            ownerType: EntitlementOwnerTypes.GUILD,
+            skuID
+        });
+    }
+
+    /**
      * Delete this guild.
      */
     async delete(): Promise<void> {
@@ -1143,6 +1163,18 @@ export default class Guild extends Base {
      */
     async getEmojis(): Promise<Array<GuildEmoji>> {
         return this.client.rest.guilds.getEmojis(this.id);
+    }
+
+    /**
+     * Get the entitlements for this guild.
+     * @param options The options for getting the entitlements.
+     * @param applicationID The ID of the application to create the entitlement for. If present, defaults to the logged in client's application id.
+     */
+    async getEntitlements(options?: Omit<SearchEntitlementsOptions, "guildID">, applicationID?: string): Promise<Array<Entitlement | TestEntitlement>> {
+        if (applicationID === undefined && this.client["_application"] === undefined) {
+            throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
+        }
+        return this.client.rest.misc.getEntitlements(applicationID ?? this.client.application.id, { guildID: this.id, ...options });
     }
 
     /**

@@ -55,6 +55,9 @@ import type {
     Uncached
 } from "../types";
 import Message from "../structures/Message";
+import type { RawBaseEntitlement, RawEntitlement, RawTestEntitlement } from "../types/misc";
+import Entitlement from "../structures/Entitlement";
+import TestEntitlement from "../structures/TestEntitlement";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -488,6 +491,18 @@ export default class Util {
         }
     }
 
+    /** @internal */
+    updateEntitlement<T extends Entitlement | TestEntitlement = Entitlement | TestEntitlement>(data: RawBaseEntitlement): T {
+        if (this.#client["_application"] === undefined) {
+            return "subscription_id" in data && data.subscription_id ?
+                new Entitlement(data as RawEntitlement, this.#client) as T :
+                new TestEntitlement(data as RawTestEntitlement, this.#client) as T;
+        } else {
+            return this.#client.application.entitlements.update(data) as T;
+        }
+    }
+
+    /** @internal */
     updateMember(guildID: string, memberID: string, member: RawMember | RESTMember): Member {
         const guild = this.#client.guilds.get(guildID);
         if (guild && this.#client["_user"] && this.#client.user.id === memberID) {
@@ -501,6 +516,7 @@ export default class Util {
         return guild ? guild.members.update({ ...member, id: memberID }, guildID) : new Member({ ...member, id: memberID }, this.#client, guildID);
     }
 
+    /** @internal */
     updateMessage<T extends AnyTextableChannel | Uncached>(data: RawMessage): Message<T> {
         const channel = this.#client.getChannel(data.channel_id) as T | undefined;
         if (channel && "messages" in channel) {
@@ -510,6 +526,7 @@ export default class Util {
         return new Message<T>(data, this.#client);
     }
 
+    /** @internal */
     updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {
         const guild = this.#client.guilds.get(threadData.guild_id);
         if (guild) {

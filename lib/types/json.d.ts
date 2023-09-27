@@ -68,7 +68,8 @@ import type {
     WebhookTypes,
     SortOrderTypes,
     StageInstancePrivacyLevels,
-    ForumLayoutTypes
+    ForumLayoutTypes,
+    EntitlementTypes
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
@@ -153,6 +154,17 @@ export interface JSONBase {
     createdAt: number;
     id: string;
 }
+export interface JSONBaseEntitlement extends JSONBase {
+    applicationID: string;
+    consumed: boolean;
+    deleted: boolean;
+    giftCodeFlags: number;
+    guildID: string | null;
+    promotionID: string | null;
+    skuID: string;
+    type: EntitlementTypes;
+    userID: string | null;
+}
 export interface JSONCategoryChannel extends JSONGuildChannel {
     channels: Array<string>;
     permissionOverwrites: Array<JSONPermissionOverwrite>;
@@ -193,6 +205,11 @@ export interface JSONComponentInteraction extends JSONInteraction {
     member?: JSONMember;
     type: InteractionTypes.MESSAGE_COMPONENT;
     user: JSONUser;
+}
+export interface JSONEntitlement extends JSONBaseEntitlement {
+    endsAt: number;
+    startsAt: number;
+    subscriptionID: string;
 }
 export interface JSONDiscordHTTPError {
     message: string;
@@ -553,6 +570,7 @@ export interface JSONTeam extends JSONBase {
     name: string;
     ownerID: string;
 }
+export interface JSONTestEntitlement extends JSONBaseEntitlement {}
 export interface JSONTextableChannel extends JSONGuildChannel {
     lastMessageID: string | null;
     messages: Array<string>;

@@ -1,11 +1,15 @@
 /** @module User */
 import Base from "./Base";
 import type PrivateChannel from "./PrivateChannel";
-import type { ImageFormat } from "../Constants";
+import type Entitlement from "./Entitlement";
+import type TestEntitlement from "./TestEntitlement";
+import { EntitlementOwnerTypes, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type { RawUser } from "../types/users";
 import type { JSONUser } from "../types/json";
+import type { SearchEntitlementsOptions } from "../types/misc";
+import { UncachedError } from "../util/Errors";
 
 /** Represents a user. */
 export default class User extends Base {
@@ -130,10 +134,37 @@ export default class User extends Base {
     }
 
     /**
+     * Create a test entitlement for this user.
+     * @param skuID The ID of the SKU to create an entitlement for.
+     * @param applicationID The ID of the application to create the entitlement for. If present, defaults to the logged in client's application id.
+     */
+    async createTestEntitlement(skuID: string, applicationID?: string): Promise<TestEntitlement> {
+        if (applicationID === undefined && this.client["_application"] === undefined) {
+            throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
+        }
+        return this.client.rest.misc.createTestEntitlement(applicationID ?? this.client.application.id, {
+            ownerID:   this.id,
+            ownerType: EntitlementOwnerTypes.USER,
+            skuID
+        });
+    }
+
+    /**
      * The url of this user's default avatar.
      */
     defaultAvatarURL(): string {
         return this.client.util.formatImage(Routes.EMBED_AVATAR(this.defaultAvatar), "png");
+    }
+
+    /**
+     * Get the entitlements for this guild.
+     * @param options The options for getting the entitlements.
+     */
+    async getEntitlements(options?: Omit<SearchEntitlementsOptions, "userID">, applicationID?: string): Promise<Array<Entitlement | TestEntitlement>> {
+        if (applicationID === undefined && this.client["_application"] === undefined) {
+            throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
+        }
+        return this.client.rest.misc.getEntitlements(applicationID ?? this.client.application.id, { userID: this.id, ...options });
     }
 
     override toJSON(): JSONUser {

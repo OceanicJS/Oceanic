@@ -9,6 +9,8 @@ import type PrivateChannel from "./PrivateChannel";
 import Role from "./Role";
 import User from "./User";
 import InteractionResolvedChannel from "./InteractionResolvedChannel";
+import type Entitlement from "./Entitlement";
+import type TestEntitlement from "./TestEntitlement";
 import type Client from "../Client";
 import type {
     InitialInteractionContent,
@@ -40,6 +42,8 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     channelID: string;
     /** The data associated with the interaction. */
     data: V extends ComponentTypes.BUTTON ? MessageComponentButtonInteractionData : MessageComponentSelectMenuInteractionData;
+    /** The entitlements for the user that created this interaction, and the guild it was created in. */
+    entitlements: Array<Entitlement | TestEntitlement>;
     /** The id of the guild this interaction was sent from, if applicable. */
     guildID: T extends AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
@@ -65,6 +69,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
 
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
+        this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
         this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
         this.guildPartial = data.guild;
@@ -293,6 +298,16 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             || this.data.componentType === ComponentTypes.ROLE_SELECT
             || this.data.componentType === ComponentTypes.MENTIONABLE_SELECT
             || this.data.componentType === ComponentTypes.USER_SELECT;
+    }
+
+    /** Show a "premium required" response to the user. This is an initial response, and more than one initial response cannot be used. */
+    async premiumRequired(): Promise<void> {
+        if (this.acknowledged) {
+            throw new TypeError("Interactions cannot have more than one initial response.");
+        }
+
+        this.acknowledged = true;
+        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PREMIUM_REQUIRED, data: {} });
     }
 
     override toJSON(): JSONComponentInteraction {

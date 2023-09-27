@@ -336,6 +336,26 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 break;
             }
 
+            case "ENTITLEMENT_CREATE": {
+                const entitlement = this.client.util.updateEntitlement(packet.d);
+                this.client.emit("entitlementCreate", entitlement);
+                break;
+            }
+
+            case "ENTITLEMENT_DELETE": {
+                const entitlement = this.client.util.updateEntitlement(packet.d);
+                this.client["_application"]?.entitlements.delete(packet.d.id);
+                this.client.emit("entitlementDelete", entitlement);
+                break;
+            }
+
+            case "ENTITLEMENT_UPDATE": {
+                const oldEntitlement = this.client["_application"]?.entitlements.get(packet.d.id)?.toJSON() ?? null;
+                const entitlement = this.client.util.updateEntitlement(packet.d);
+                this.client.emit("entitlementUpdate", entitlement, oldEntitlement);
+                break;
+            }
+
             case "GUILD_AUDIT_LOG_ENTRY_CREATE": {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 this.client.emit("guildAuditLogEntryCreate", guild ?? { id: packet.d.guild_id }, guild?.auditLogEntries.update(packet.d) ?? new AuditLogEntry(packet.d, this.client));

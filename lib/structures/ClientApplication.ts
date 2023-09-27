@@ -1,6 +1,9 @@
 /** @module ClientApplication */
 import Base from "./Base";
 import type ApplicationCommand from "./ApplicationCommand";
+import TestEntitlement from "./TestEntitlement";
+import Entitlement from "./Entitlement";
+import BaseEntitlement from "./BaseEntitlement";
 import type Client from "../Client";
 import type { RawClientApplication, RoleConnection, RoleConnectionMetadata, UpdateUserApplicationRoleConnectionOptions } from "../types/oauth";
 import type {
@@ -16,13 +19,32 @@ import type {
 } from "../types/application-commands";
 import type { JSONClientApplication } from "../types/json";
 import type { ApplicationCommandTypes } from "../Constants";
+import type {
+    CreateTestEntitlementOptions,
+    RawEntitlement,
+    RawTestEntitlement,
+    SKU,
+    SearchEntitlementsOptions
+} from "../types/misc";
+import TypedCollection from "../util/TypedCollection";
 
 /** A representation of the authorized client's application (typically received via gateway). */
 export default class ClientApplication extends Base {
+    /** The entitlements for this application. This will almost certainly be empty unless you fetch entitlements, or recieve new/updated entitlements. */
+    entitlements: TypedCollection<RawEntitlement | RawTestEntitlement, Entitlement | TestEntitlement>;
     /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
     flags: number;
     constructor(data: RawClientApplication, client: Client) {
         super(data.id, client);
+        this.entitlements = new TypedCollection(BaseEntitlement, client, Infinity, {
+            construct: (entitlement): BaseEntitlement => {
+                if ("subscription_id" in entitlement && entitlement.subscription_id) {
+                    return new Entitlement(entitlement as RawEntitlement, client);
+                }
+
+                return new TestEntitlement(entitlement as RawTestEntitlement, client);
+            }
+        }) as TypedCollection<RawEntitlement | RawTestEntitlement, Entitlement | TestEntitlement>;
         this.flags = data.flags;
         this.update(data);
     }
@@ -65,6 +87,22 @@ export default class ClientApplication extends Base {
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
         return this.client.rest.applicationCommands.createGuildCommand<T>(this.id, guildID, options);
+    }
+
+    /**
+     * Create a test entitlement.
+     * @param options The options for creating the test entitlement.
+     */
+    async createTestEntitlement(options: CreateTestEntitlementOptions): Promise<TestEntitlement> {
+        return this.client.rest.misc.createTestEntitlement(this.id, options);
+    }
+
+    /**
+     * Delete an entitlement.
+     * @param entitlementID The ID of the entitlement to delete.
+     */
+    async deleteEntitlement(entitlementID: string): Promise<void> {
+        return this.client.rest.misc.deleteEntitlement(this.id, entitlementID);
     }
 
     /**
@@ -111,6 +149,14 @@ export default class ClientApplication extends Base {
      */
     async editGuildCommandPermissions(guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
         return this.client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
+    }
+
+    /**
+     * Get the entitlements for this application.
+     * @param options The options for getting the entitlements.
+     */
+    async getEntitlements(options: SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
+        return this.client.rest.misc.getEntitlements(this.id, options);
     }
 
     /**
@@ -171,6 +217,13 @@ export default class ClientApplication extends Base {
      */
     async getRoleConnectionsMetadata(): Promise<Array<RoleConnectionMetadata>> {
         return this.client.rest.oauth.getRoleConnectionsMetadata(this.id);
+    }
+
+    /**
+     * Get the SKUs for this application.
+     */
+    async getSKUs(): Promise<Array<SKU>> {
+        return this.client.rest.misc.getSKUs(this.id);
     }
 
     /**

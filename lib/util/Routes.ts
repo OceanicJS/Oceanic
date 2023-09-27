@@ -134,4 +134,7 @@ export const INVITE                    = (code: string) => `/invites/${code}` as
 export const STAGE_INSTANCES           = "/stage-instances" as const;
 export const STAGE_INSTANCE            = (channelID: string) => `/stage-instances/${channelID}` as const;
 export const ROLE_CONNECTIONS_METADATA = (applicationID: string) => `/applications/${applicationID}/role-connections/metadata` as const;
-export const APPLICATION           = "/applications/@me" as const;
+export const APPLICATION               = "/applications/@me" as const;
+export const ENTITLEMENTS              = (applicationID: string) => `/applications/${applicationID}/entitlements` as const;
+export const ENTITLEMENT               = (applicationID: string, entitlementID: string) => `/applications/${applicationID}/entitlements/${entitlementID}` as const;
+export const SKUS                      = (applicationID: string) => `/applications/${applicationID}/skus` as const;

@@ -996,6 +996,7 @@ export enum InteractionResponseTypes {
     UPDATE_MESSAGE                          = 7,
     APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
     MODAL                                   = 9,
+    PREMIUM_REQUIRED                        = 10,
 }
 
 export enum Intents {
@@ -1196,6 +1197,29 @@ export enum AttachmentFlags {
     IS_REMIX                = 1 << 2,
     IS_SPOILER              = 1 << 3,
     CONTAINS_EXPLICIT_MEDIA = 1 << 4,
+}
+
+export enum SKUTypes {
+    SUBSCRIPTION       = 5,
+    SUBSCRIPTION_GROUP = 6,
+}
+
+export enum SKUFlags {
+    GUILD_SUBSCRIPTION = 1 << 7,
+    USER_SUBSCRIPTION  = 1 << 8,
+}
+
+export enum EntitlementTypes {
+    APPLICATION_SUBSCRIPTION = 8,
+}
+
+export enum EntitlementOwnerTypes {
+    GUILD = 1,
+    USER  = 2,
+}
+
+export enum SKUAccessTypes {
+    PUBLIC = 1,
 }
 
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */

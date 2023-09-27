@@ -10,6 +10,7 @@ const AuditLogEntry = (await import("./dist/lib/structures/AuditLogEntry.js")).d
 const AutocompleteInteraction = (await import("./dist/lib/structures/AutocompleteInteraction.js")).default.default;
 const AutoModerationRule = (await import("./dist/lib/structures/AutoModerationRule.js")).default.default;
 const Base = (await import("./dist/lib/structures/Base.js")).default.default;
+const BaseEntitlement = (await import("./dist/lib/structures/BaseEntitlement.js")).default.default;
 const Bucket = (await import("./dist/lib/rest/Bucket.js")).default.default;
 const CategoryChannel = (await import("./dist/lib/structures/CategoryChannel.js")).default.default;
 const Client = (await import("./dist/lib/Client.js")).default.default;
@@ -21,6 +22,7 @@ const ComponentInteraction = (await import("./dist/lib/structures/ComponentInter
 const DiscordHTTPError = (await import("./dist/lib/rest/DiscordHTTPError.js")).default.default;
 const DiscordRESTError = (await import("./dist/lib/rest/DiscordRESTError.js")).default.default;
 const Errors = (await import("./dist/lib/util/Errors.js")).default;
+const Entitlement = (await import("./dist/lib/structures/Entitlement.js")).default.default;
 const ExtendedUser = (await import("./dist/lib/structures/ExtendedUser.js")).default.default;
 const ForumChannel = (await import("./dist/lib/structures/ForumChannel.js")).default.default;
 const GroupChannel = (await import("./dist/lib/structures/GroupChannel.js")).default.default;
@@ -48,6 +50,7 @@ const PingInteraction = (await import("./dist/lib/structures/PingInteraction.js"
 const PrivateChannel = (await import("./dist/lib/structures/PrivateChannel.js")).default.default;
 const PrivateThreadChannel = (await import("./dist/lib/structures/PrivateThreadChannel.js")).default.default;
 const PublicThreadChannel = (await import("./dist/lib/structures/PublicThreadChannel.js")).default.default;
+const RequestHandler = (await import("./dist/lib/rest/RequestHandler.js")).default.default;
 const RESTManager = (await import("./dist/lib/rest/RESTManager.js")).default.default;
 const Role = (await import("./dist/lib/structures/Role.js")).default.default;
 const Routes = (await import("./dist/lib/util/Routes.js")).default;
@@ -59,6 +62,7 @@ const ShardManager = (await import("./dist/lib/gateway/ShardManager.js")).defaul
 const StageChannel = (await import("./dist/lib/structures/StageChannel.js")).default.default;
 const StageInstance = (await import("./dist/lib/structures/StageInstance.js")).default.default;
 const Team = (await import("./dist/lib/structures/Team.js")).default.default;
+const TestEntitlement = (await import("./dist/lib/structures/TestEntitlement.js")).default.default;
 const TextableChannel = (await import("./dist/lib/structures/TextableChannel.js")).default.default;
 const TextableVoiceChannel = (await import("./dist/lib/structures/TextableVoiceChannel.js")).default.default;
 const ThreadableChannel = (await import("./dist/lib/structures/ThreadableChannel.js")).default.default;
@@ -89,6 +93,7 @@ export {
     AutocompleteInteraction,
     AutoModerationRule,
     Base,
+    BaseEntitlement,
     Bucket,
     CategoryChannel,
     Client,
@@ -100,6 +105,7 @@ export {
     DiscordHTTPError,
     DiscordRESTError,
     Errors,
+    Entitlement,
     ExtendedUser,
     ForumChannel,
     GroupChannel,
@@ -127,6 +133,7 @@ export {
     PrivateChannel,
     PrivateThreadChannel,
     PublicThreadChannel,
+    RequestHandler,
     RESTManager,
     Role,
     Routes,
@@ -138,6 +145,7 @@ export {
     StageChannel,
     StageInstance,
     Team,
+    TestEntitlement,
     TextableChannel,
     TextableVoiceChannel,
     TextChannel,
