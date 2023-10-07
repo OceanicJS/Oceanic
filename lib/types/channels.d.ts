@@ -958,6 +958,8 @@ export interface StartThreadWithoutMessageOptions extends StartThreadFromMessage
 }
 
 export interface StartThreadInThreadOnlyChannelOptions extends StartThreadFromMessageOptions {
+    /** [Forum Channel Only] The IDs of up to 5 tags from the forum to apply to the thread. */
+    appliedTags?: Array<string>;
     /** The message to start the thread with. */
     message: ThreadOnlyChannelThreadStarterMessageOptions;
 }

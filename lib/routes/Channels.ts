@@ -1201,7 +1201,8 @@ export default class Channels {
                     sticker_ids:      options.message.stickerIDs
                 },
                 name:                options.name,
-                rate_limit_per_user: options.rateLimitPerUser
+                rate_limit_per_user: options.rateLimitPerUser,
+                applied_tags:        options.appliedTags
             },
             reason,
             files
