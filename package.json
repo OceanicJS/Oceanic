@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "tslib": "^2.6.2",
-    "undici": "^5.25.3",
+    "undici": "^5.27.0",
     "ws": "^8.14.2"
   },
   "engines": {
