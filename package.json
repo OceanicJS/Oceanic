@@ -57,7 +57,7 @@
     "eslint-plugin-unicorn": "^48.0.1",
     "eslint-plugin-unused-imports": "^3.0.0",
     "rimraf": "^5.0.5",
-    "typedoc": "^0.25.1",
+    "typedoc": "^0.25.4",
     "typedoc-plugin-extras": "3.0.0",
     "typedoc-plugin-mdn-links": "^3.1.0",
     "typedoc-plugin-merge-modules": "^5.1.0",
