@@ -72,7 +72,7 @@
     "node": ">=16.16.0"
   },
   "optionalDependencies": {
-    "@discordjs/voice": "^0.16.0"
+    "@discordjs/voice": "^0.16.1"
   },
   "pnpm": {
     "patchedDependencies": {
