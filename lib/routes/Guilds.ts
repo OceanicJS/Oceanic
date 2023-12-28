@@ -89,7 +89,6 @@ import Guild from "../structures/Guild";
 import type Member from "../structures/Member";
 import type { Uncached } from "../types/shared";
 import ApplicationCommand from "../structures/ApplicationCommand";
-import { File, FormData } from "undici";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
 export default class Guilds {
@@ -436,7 +435,7 @@ export default class Guilds {
         form.append("description", options.description);
         form.append("name", options.name);
         form.append("tags", options.tags);
-        form.append("file", new File([options.file.contents], options.file.name, { type: mime }));
+        form.append("file", new Blob([options.file.contents], { type: mime }), options.file.name);
 
         return this.#manager.authRequest<RawSticker>({
             method: "POST",

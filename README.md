@@ -26,7 +26,7 @@ For more examples, see the [examples](https://github.com/OceanicJS/Oceanic/tree/
 <hr>
 
 ## Installation
-NodeJS **16.16.0** or higher is required.
+NodeJS **18.13.0** or higher is required.
 
 **See [Development Builds](#development-builds) if you wish to install in-dev versions.**
 
