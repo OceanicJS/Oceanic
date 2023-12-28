@@ -8,6 +8,7 @@
   "exports": {
     ".": {
       "types": "./dist/lib/index.d.ts",
+      "bun": "./dist/lib/index.js",
       "require": "./dist/lib/index.js",
       "import": "./esm.mjs"
     }
