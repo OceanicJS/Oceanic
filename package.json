@@ -60,7 +60,7 @@
     "rimraf": "^5.0.5",
     "typedoc": "^0.25.4",
     "typedoc-plugin-extras": "3.0.0",
-    "typedoc-plugin-mdn-links": "^3.1.0",
+    "typedoc-plugin-mdn-links": "^3.1.10",
     "typedoc-plugin-merge-modules": "^5.1.0",
     "typescript": "^5.2.2"
   },
