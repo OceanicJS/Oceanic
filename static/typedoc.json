@@ -22,7 +22,6 @@
   "exclude": [],
   "favicon": "./static/favicon.ico",
   "titleLink": "https://docs.oceanic.ws",
-  "theme": "my-theme",
   "mergeModulesMergeMode": "project",
   "groupOrder": ["*", "Namespaces"]
 }
