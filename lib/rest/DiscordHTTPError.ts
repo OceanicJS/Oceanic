@@ -2,7 +2,6 @@
 import DiscordRESTError from "./DiscordRESTError";
 import type { RESTMethod } from "../Constants";
 import type { JSONDiscordHTTPError } from "../types/json";
-import type { Headers, Response } from "undici";
 
 /** An HTTP error received from Discord. */
 export default class DiscordHTTPError extends Error {

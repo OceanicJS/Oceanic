@@ -2,7 +2,7 @@
 import type { AllowedMentions } from "./channels";
 import type { GatewayOptions } from "./gateway";
 import type { ImageFormat } from "../Constants";
-import type { Agent } from "undici";
+import type { Agent } from "undici-types";
 
 export interface ClientOptions {
     /**

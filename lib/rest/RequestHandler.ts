@@ -7,7 +7,6 @@ import { API_URL, RESTMethods, USER_AGENT, type RESTMethod } from "../Constants"
 import Base from "../structures/Base";
 import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
 import type { RESTOptions } from "../types/client";
-import { FormData, fetch, File as UFile } from "undici";
 
 /**
  * Latency & ratelimit related things lovingly borrowed from eris
@@ -138,7 +137,7 @@ export default class RequestHandler {
                                 if (!file.contents) {
                                     continue;
                                 }
-                                data.set(`files[${index}]`, new UFile([file.contents], file.name));
+                                data.set(`files[${index}]`, new Blob([file.contents]), file.name);
                             }
                             if (stringBody) {
                                 data.set("payload_json", stringBody);

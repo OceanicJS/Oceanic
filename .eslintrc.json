@@ -345,6 +345,7 @@
       }
     ],
     "unicorn/prefer-event-target": "off",
-    "@typescript-eslint/no-unsafe-declaration-merging": "off"
+    "@typescript-eslint/no-unsafe-declaration-merging": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off"
   }
 }
