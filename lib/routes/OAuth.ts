@@ -33,7 +33,6 @@ import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
 import type { RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
-import { FormData } from "undici";
 
 /** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {

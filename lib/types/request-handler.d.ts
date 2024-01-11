@@ -1,7 +1,6 @@
 /** @module Types/RequestHandler */
 import type { RESTOptions } from "./client";
 import type { RESTMethod } from "../Constants";
-import type { FormData } from "undici";
 
 // internal use
 export interface RequestHandlerInstanceOptions extends Required<Omit<RESTOptions, "agent">>, Pick<RESTOptions, "agent"> {}
