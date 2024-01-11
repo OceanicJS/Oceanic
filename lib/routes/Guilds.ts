@@ -208,6 +208,7 @@ export default class Guilds {
                 actions: options.actions.map(a => ({
                     metadata: {
                         channel_id:       a.metadata.channelID,
+                        custom_message:   a.metadata.customMessage,
                         duration_seconds: a.metadata.durationSeconds
                     },
                     type: a.type
