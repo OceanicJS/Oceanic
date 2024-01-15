@@ -22,6 +22,7 @@ import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/ch
 import type { JSONModalSubmitInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 import { UncachedError } from "../util/Errors";
+import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
 
 /** Represents a modal submit interaction. */
 export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
@@ -105,27 +106,31 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
     }
 
     /**
-     * Create a followup message.
+     * Create a followup message. Note that the returned class is not a message. The message is located in the property {@link MessageInteractionResponse#message | message}.
      * @param options The options for creating the followup message.
      */
-    async createFollowup(options: InteractionContent): Promise<Message<T>> {
-        return this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
+    async createFollowup(options: InteractionContent): Promise<FollowupMessageInteractionResponse<this>> {
+        const message = await this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
+        return new MessageInteractionResponse<ModalSubmitInteraction<T>>(this, message, "followup") as FollowupMessageInteractionResponse<this>;
     }
 
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link ModalSubmitInteraction#createFollowup | createFollowup}.
+     * Note that the returned class is not a message. This initial response does not return a message. You will need to call {@link MessageInteractionResponse#getMessage | MessageInteractionResponse#getMessage} on the returned class,
+     * or {@link ModalSubmitInteraction#getOriginal | getOriginal}.
      * @note You cannot attach files in an initial response. Defer the interaction, then use {@link ModalSubmitInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: InitialInteractionContent): Promise<void> {
-        if ("files" in options && (options.files as []).length !== 0) {
-            this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
-        }
+    async createMessage(options: InitialInteractionContent): Promise<InitialMessagedInteractionResponse<this>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
+        if ("files" in options && (options.files as []).length !== 0) {
+            this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
+        }
         this.acknowledged = true;
-        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
+        await this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
+        return new MessageInteractionResponse<this>(this, null, "initial") as InitialMessagedInteractionResponse<this>;
     }
 
     /**
@@ -229,6 +234,22 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
 
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PREMIUM_REQUIRED, data: {} });
+    }
+
+    /**
+     * Reply to this interaction. If the interaction hasn't been acknowledged, {@link ModalSubmitInteraction#createMessage | createMessage} is used. Else, {@link ModalSubmitInteraction#createFollowup | createFollowup} is used.
+     * Note the returned class is not a message. Depending on which method was used, the returned class may or may not have the sent message. {@link MessageInteractionResponse#hasMessage | hasMessage} can be used for type narrowing
+     * to check if {@link MessageInteractionResponse#message | message} is present. If it is not, the {@link MessageInteractionResponse#getMessage | getMessage} can be used.
+     * @note Due to atachments not being able to be sent in initial responses, attachments will cause a deferred response, if the interaction has not been acknowledged.
+     * @param options The options for the message.
+     */
+    async reply(options: InteractionContent): Promise<MessageInteractionResponse<this>> {
+        let useFollowup = this.acknowledged;
+        if (!useFollowup && options.files && options.files.length !== 0) {
+            await this.defer(options.flags);
+            useFollowup = true;
+        }
+        return useFollowup ? this.createFollowup(options) : this.createMessage(options);
     }
 
     override toJSON(): JSONModalSubmitInteraction {

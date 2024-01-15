@@ -13,7 +13,7 @@ import type { AutocompleteChoice, AutocompleteInteractionData, InteractionGuild,
 import type Client from "../Client";
 import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
 import type { JSONAutocompleteInteraction } from "../types/json";
-import InteractionOptionsWrapper from "../util/InteractionOptionsWrapper";
+import InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
 import type { Uncached } from "../types/shared";
 import { UncachedError } from "../util/Errors";
 

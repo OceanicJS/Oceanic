@@ -1,12 +1,12 @@
 /** @module SelectMenuValuesWrapper */
-import { WrapperError } from "./Errors";
-import { ChannelTypes } from "../Constants";
-import type Member from "../structures/Member";
-import type Role from "../structures/Role";
-import type User from "../structures/User";
-import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type { AnyImplementedChannel } from "../types/channels";
-import type { MessageComponentInteractionResolvedData } from "../types/interactions";
+import { WrapperError } from "../Errors";
+import { ChannelTypes } from "../../Constants";
+import type Member from "../../structures/Member";
+import type Role from "../../structures/Role";
+import type User from "../../structures/User";
+import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
+import type { AnyImplementedChannel } from "../../types/channels";
+import type { MessageComponentInteractionResolvedData } from "../../types/interactions";
 
 /** A wrapper for select menu data. */
 export default class SelectMenuValuesWrapper {

@@ -28,9 +28,10 @@ import type { Uncached } from "../types/shared";
 import type { RawUser } from "../types/users";
 import type { RawMember } from "../types/guilds";
 import { ComponentTypes, InteractionResponseTypes, type SelectMenuTypes, type InteractionTypes } from "../Constants";
-import SelectMenuValuesWrapper from "../util/SelectMenuValuesWrapper";
+import SelectMenuValuesWrapper from "../util/interactions/SelectMenuValuesWrapper";
 import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
+import MessageInteractionResponse, { type InitialMessagedInteractionResponse, type FollowupMessageInteractionResponse } from "../util/interactions/MessageInteractionResponse";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<V extends ComponentTypes.BUTTON | SelectMenuTypes = ComponentTypes.BUTTON | SelectMenuTypes, T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
@@ -158,19 +159,22 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     }
 
     /**
-     * Create a followup message.
+     * Create a followup message. Note that the returned class is not a message. The message is located in the property {@link MessageInteractionResponse#message | message}.
      * @param options The options for creating the followup message.
      */
-    async createFollowup(options: InteractionContent): Promise<Message<T>> {
-        return this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
+    async createFollowup(options: InteractionContent): Promise<FollowupMessageInteractionResponse<this>> {
+        const message = await this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
+        return new MessageInteractionResponse<ComponentInteraction<V, T>>(this, message, "followup") as FollowupMessageInteractionResponse<this>;
     }
 
     /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use  {@link ComponentInteraction#createFollowup | createFollowup}.
+     * Note that the returned class is not a message. This initial response does not return a message. You will need to call {@link MessageInteractionResponse#getMessage | MessageInteractionResponse#getMessage} on the returned class,
+     * or {@link ComponentInteraction#getOriginal | getOriginal}.
      * @note You cannot attach files in an initial response. Defer the interaction, then use {@link ComponentInteraction#createFollowup | createFollowup}.
      * @param options The options for the message.
      */
-    async createMessage(options: InitialInteractionContent): Promise<void> {
+    async createMessage(options: InitialInteractionContent): Promise<InitialMessagedInteractionResponse<this>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -178,7 +182,8 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             this.client.emit("warn", "You cannot attach files in an initial response. Defer the interaction, then use createFollowup.");
         }
         this.acknowledged = true;
-        return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
+        await this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.CHANNEL_MESSAGE_WITH_SOURCE, data: options });
+        return new MessageInteractionResponse<this>(this, null, "initial") as InitialMessagedInteractionResponse<this>;
     }
 
     /**
@@ -308,6 +313,22 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
 
         this.acknowledged = true;
         return this.client.rest.interactions.createInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.PREMIUM_REQUIRED, data: {} });
+    }
+
+    /**
+     * Reply to this interaction. If the interaction hasn't been acknowledged, {@link ComponentInteraction#createMessage | createMessage} is used. Else, {@link ComponentInteraction#createFollowup | createFollowup} is used.
+     * Note the returned class is not a message. Depending on which method was used, the returned class may or may not have the sent message. {@link MessageInteractionResponse#hasMessage | hasMessage} can be used for type narrowing
+     * to check if {@link MessageInteractionResponse#message | message} is present. If it is not, the {@link MessageInteractionResponse#getMessage | getMessage} can be used.
+     * @note Due to atachments not being able to be sent in initial responses, attachments will cause a deferred response, if the interaction has not been acknowledged.
+     * @param options The options for the message.
+     */
+    async reply(options: InteractionContent): Promise<MessageInteractionResponse<this>> {
+        let useFollowup = this.acknowledged;
+        if (!useFollowup && options.files && options.files.length !== 0) {
+            await this.defer(options.flags);
+            useFollowup = true;
+        }
+        return useFollowup ? this.createFollowup(options) : this.createMessage(options);
     }
 
     override toJSON(): JSONComponentInteraction {

@@ -1,10 +1,10 @@
 /** @module InteractionOptionsWrapper */
-import { WrapperError } from "./Errors";
-import { ApplicationCommandOptionTypes, ChannelTypes } from "../Constants";
-import type Member from "../structures/Member";
-import type Role from "../structures/Role";
-import type User from "../structures/User";
-import type { AnyImplementedChannel } from "../types/channels";
+import { WrapperError } from "../Errors";
+import { ApplicationCommandOptionTypes, ChannelTypes } from "../../Constants";
+import type Member from "../../structures/Member";
+import type Role from "../../structures/Role";
+import type User from "../../structures/User";
+import type { AnyImplementedChannel } from "../../types/channels";
 import type {
     ApplicationCommandInteractionResolvedData,
     AutoCompleteFocusedOption,
@@ -22,9 +22,9 @@ import type {
     InteractionOptionsUser,
     InteractionOptionsWithValue,
     SubCommandArray
-} from "../types/interactions";
-import type Attachment from "../structures/Attachment";
-import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
+} from "../../types/interactions";
+import type Attachment from "../../structures/Attachment";
+import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
