@@ -33,12 +33,13 @@ const GuildScheduledEvent = (await import("./dist/lib/structures/GuildScheduledE
 const GuildTemplate = (await import("./dist/lib/structures/GuildTemplate.js")).default.default;
 const Integration = (await import("./dist/lib/structures/Integration.js")).default.default;
 const InteractionResolvedChannel = (await import("./dist/lib/structures/InteractionResolvedChannel.js")).default.default;
-const InteractionOptionsWrapper = (await import("./dist/lib/util/InteractionOptionsWrapper.js")).default.default;
+const InteractionOptionsWrapper = (await import("./dist/lib/util/interactions/InteractionOptionsWrapper.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
 const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).default.default;
 const MediaChannel = (await import("./dist/lib/structures/MediaChannel.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
+const MessageInteractionResponse = (await import("./dist/lib/util/interactions/MessageInteractionResponse.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
 const OAuthApplication = (await import("./dist/lib/structures/OAuthApplication.js")).default.default;
 const OAuthGuild = (await import ("./dist/lib/structures/OAuthGuild.js")).default.default;
@@ -54,7 +55,7 @@ const RequestHandler = (await import("./dist/lib/rest/RequestHandler.js")).defau
 const RESTManager = (await import("./dist/lib/rest/RESTManager.js")).default.default;
 const Role = (await import("./dist/lib/structures/Role.js")).default.default;
 const Routes = (await import("./dist/lib/util/Routes.js")).default;
-const SelectMenuValuesWrapper = (await import ("./dist/lib/util/SelectMenuValuesWrapper.js")).default.default;
+const SelectMenuValuesWrapper = (await import ("./dist/lib/util/interactions/SelectMenuValuesWrapper.js")).default.default;
 const SequentialBucket = (await import("./dist/lib/rest/SequentialBucket.js")).default.default;
 const SimpleCollection = (await import("./dist/lib/util/SimpleCollection.js")).default.default;
 const Shard = (await import("./dist/lib/gateway/Shard.js")).default.default;
@@ -122,6 +123,7 @@ export {
     MediaChannel,
     Member,
     Message,
+    MessageInteractionResponse,
     ModalSubmitInteraction,
     OAuthApplication,
     OAuthGuild,
