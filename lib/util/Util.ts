@@ -41,10 +41,13 @@ import type {
     AnyTextableChannel,
     CollectionLimitsOptions,
     GuildEmoji,
+    ModalSubmitComponentsActionRow,
     RawAnnouncementThreadChannel,
     RawGroupChannel,
     RawGuildEmoji,
     RawMessage,
+    RawModalSubmitComponents,
+    RawModalSubmitComponentsActionRow,
     RawPrivateChannel,
     RawPrivateThreadChannel,
     RawPublicThreadChannel,
@@ -52,6 +55,7 @@ import type {
     RawStringSelectMenu,
     SelectMenuComponent,
     StringSelectMenu,
+    ToModalSubmitComponentFromRaw,
     Uncached
 } from "../types";
 import Message from "../structures/Message";
@@ -426,6 +430,28 @@ export default class Util {
 
     getMagic(file: Buffer, len = 4): string {
         return [...new Uint8Array(file.subarray(0, len))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+
+    modalSubmitComponentToParsed<T extends RawModalSubmitComponents>(component: T): ToModalSubmitComponentFromRaw<T> {
+        switch (component.type) {
+            case ComponentTypes.TEXT_INPUT: {
+                return {
+                    customID: component.custom_id,
+                    type:     component.type,
+                    value:    component.value
+                } as never;
+            }
+            default: {
+                return component as never;
+            }
+        }
+    }
+
+    modalSubmitComponentsToParsed<T extends RawModalSubmitComponentsActionRow>(components: Array<T>): Array<ModalSubmitComponentsActionRow> {
+        return components.map(row => ({
+            type:       row.type,
+            components: row.components.map(component => this.modalSubmitComponentToParsed(component))
+        })) as never;
     }
 
     optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions {

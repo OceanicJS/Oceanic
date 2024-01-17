@@ -41,6 +41,7 @@ const Member = (await import("./dist/lib/structures/Member.js")).default.default
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
 const MessageInteractionResponse = (await import("./dist/lib/util/interactions/MessageInteractionResponse.js")).default.default;
 const ModalSubmitInteraction = (await import("./dist/lib/structures/ModalSubmitInteraction.js")).default.default;
+const ModalSubmitInteractionComponentsWrapper = (await import("./dist/lib/util/interactions/ModalSubmitInteractionComponentsWrapper.js")).default.default;
 const OAuthApplication = (await import("./dist/lib/structures/OAuthApplication.js")).default.default;
 const OAuthGuild = (await import ("./dist/lib/structures/OAuthGuild.js")).default.default;
 const OAuthHelper = (await import ("./dist/lib/rest/OAuthHelper.js")).default.default;
@@ -125,6 +126,7 @@ export {
     Message,
     MessageInteractionResponse,
     ModalSubmitInteraction,
+    ModalSubmitInteractionComponentsWrapper,
     OAuthApplication,
     OAuthGuild,
     OAuthHelper,

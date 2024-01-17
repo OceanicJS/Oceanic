@@ -23,6 +23,7 @@ import type { JSONModalSubmitInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
 import { UncachedError } from "../util/Errors";
 import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
+import ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
 
 /** Represents a modal submit interaction. */
 export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
@@ -62,7 +63,7 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
         this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
         this.channelID = data.channel_id!;
         this.data = {
-            components: client.util.componentsToParsed(data.data.components),
+            components: new ModalSubmitInteractionComponentsWrapper(client.util.modalSubmitComponentsToParsed(data.data.components)),
             customID:   data.data.custom_id
         };
         this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];

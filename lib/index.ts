@@ -44,6 +44,7 @@ export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";
 export { default as MessageInteractionResponse } from "./util/interactions/MessageInteractionResponse";
 export { default as ModalSubmitInteraction } from "./structures/ModalSubmitInteraction";
+export { default as ModalSubmitInteractionComponentsWrapper } from "./util/interactions/ModalSubmitInteractionComponentsWrapper";
 export { default as OAuthApplication } from "./structures/OAuthApplication";
 export { default as OAuthGuild } from "./structures/OAuthGuild";
 export { default as OAuthHelper } from "./rest/OAuthHelper";

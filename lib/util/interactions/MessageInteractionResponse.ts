@@ -1,19 +1,20 @@
+/** @module MessageInteractionResponse */
 import type CommandInteraction from "../../structures/CommandInteraction";
 import type Message from "../../structures/Message";
 import type ComponentInteraction from "../../structures/ComponentInteraction";
 import type ModalSubmitInteraction from "../../structures/ModalSubmitInteraction";
 
-type AnyResponseInteraction = CommandInteraction | ComponentInteraction | ModalSubmitInteraction;
-type ChannelType<I extends AnyResponseInteraction> =
+export type AnyResponseInteraction = CommandInteraction | ComponentInteraction | ModalSubmitInteraction;
+export type ResponseInteractionChannelType<I extends AnyResponseInteraction> =
 I extends CommandInteraction<infer T> ? T :
     I extends ModalSubmitInteraction<infer T> ? T :
         I extends ComponentInteraction<never, infer T> ? T :
             never;
 export default class MessageInteractionResponse<I extends AnyResponseInteraction> {
     declare interaction: I;
-    message: Message<ChannelType<I>> | null;
+    message: Message<ResponseInteractionChannelType<I>> | null;
     type: "initial" | "followup";
-    constructor(interaction: I, message: Message<ChannelType<I>> | null, type: "initial" | "followup") {
+    constructor(interaction: I, message: Message<ResponseInteractionChannelType<I>> | null, type: "initial" | "followup") {
         this.interaction = interaction;
         this.message = message;
         this.type = type;
@@ -27,12 +28,12 @@ export default class MessageInteractionResponse<I extends AnyResponseInteraction
         return this.interaction.deleteOriginal();
     }
 
-    async getMessage(): Promise<Message<ChannelType<I>>> {
+    async getMessage(): Promise<Message<ResponseInteractionChannelType<I>>> {
         if (this.hasMessage()) {
             return this.message;
         }
 
-        return this.interaction.getOriginal() as Promise<Message<ChannelType<I>>>;
+        return this.interaction.getOriginal() as Promise<Message<ResponseInteractionChannelType<I>>>;
     }
 
     hasMessage(): this is FollowupMessageInteractionResponse<I> {
@@ -46,6 +47,6 @@ export interface InitialMessagedInteractionResponse<I extends AnyResponseInterac
 }
 
 export interface FollowupMessageInteractionResponse<I extends AnyResponseInteraction> extends MessageInteractionResponse<I> {
-    message: Message<ChannelType<I>>;
+    message: Message<ResponseInteractionChannelType<I>>;
     type: "followup";
 }

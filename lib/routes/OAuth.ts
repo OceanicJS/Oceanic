@@ -202,7 +202,7 @@ export default class OAuth {
 
     /**
      * Get an application's role connection metadata records.
-     * @param application The ID of the application.
+     * @param applicationID The ID of the application.
      * @caching This method **does not** cache its result.
      */
     async getRoleConnectionsMetadata(applicationID: string): Promise<Array<RoleConnectionMetadata>> {
@@ -287,7 +287,7 @@ export default class OAuth {
 
     /**
      * Update an application's role connections metadata.
-     * @param application The ID of the application.
+     * @param applicationID The ID of the application.
      * @param metadata The metadata records.
      * @caching This method **does not** cache its result.
      */

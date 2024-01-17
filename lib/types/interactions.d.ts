@@ -6,8 +6,7 @@ import type {
     ModalActionRow,
     RawAttachment,
     RawInteractionResolvedChannel,
-    RawMessage,
-    RawModalActionRow
+    RawMessage
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -22,6 +21,7 @@ import type {
     InteractionResponseTypes,
     InteractionTypes,
     MessageComponentTypes,
+    ModalComponentTypes,
     SelectMenuTypes
 } from "../Constants";
 import type Attachment from "../structures/Attachment";
@@ -41,11 +41,12 @@ import type SelectMenuValuesWrapper from "../util/interactions/SelectMenuValuesW
 import type Interaction from "../structures/Interaction";
 import type Guild from "../structures/Guild";
 import type Permission from "../structures/Permission";
+import type ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
 
 export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files"> {}
 export interface InitialInteractionContent extends Omit<InteractionContent, "attachments" | "files"> {}
 
-export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalInteractionResponse | PremiumRequiredResponse;
+export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalSubmitInteractionResponse | PremiumRequiredResponse;
 export interface PingInteractionResponse {
     type: InteractionResponseTypes.PONG;
 }
@@ -68,11 +69,14 @@ export interface AutocompleteInteractionResponse {
     type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT;
 }
 
-export interface ModalInteractionResponse {
+export interface ModalSubmitInteractionResponse {
     /** The [response data](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-modal). Convert any `snake_case` keys to `camelCase`. */
     data: ModalData;
     type: InteractionResponseTypes.MODAL;
 }
+
+/** @deprecated Use {@link Types/Interactions~ModalSubmitInteractionResponse | ModalSubmitInteractionResponse} instead. This will be removed in `1.10.0` */
+export type ModalInteractionResponse = ModalSubmitInteractionResponse;
 
 export interface PremiumRequiredResponse {
     data: Record<string, never>;
@@ -175,12 +179,12 @@ export interface MessageComponentSelectMenuInteractionData {
 }
 
 export interface RawModalSubmitInteractionData {
-    components: Array<RawModalActionRow>;
+    components: Array<RawModalSubmitComponentsActionRow>;
     custom_id: string;
 }
 
 export interface ModalSubmitInteractionData {
-    components: Array<ModalActionRow>;
+    components: ModalSubmitInteractionComponentsWrapper;
     customID: string;
 }
 
@@ -323,3 +327,47 @@ export interface SelectMenuDefaultValue {
     id: string;
     type: SelectMenuDefaultValueTypes;
 }
+
+interface RawModalSubmitComponentsBase {
+    custom_id: string;
+}
+
+export interface RawModalSubmitComponentsStringValue<T extends ModalComponentTypes = ModalComponentTypes> extends RawModalSubmitComponentsBase {
+    type: T;
+    value: string;
+}
+
+interface RawModalComponentsActionRow<T extends RawModalSubmitComponents> {
+    components: Array<T>;
+    type: ComponentTypes.ACTION_ROW;
+}
+
+interface ModalComponentsActionRow<T extends ModalSubmitComponents> {
+    components: Array<T>;
+    type: ComponentTypes.ACTION_ROW;
+}
+
+export type ToModalSubmitComponentFromRaw<T extends RawModalSubmitComponents> =
+T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
+    never;
+
+export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
+export type RawModalSubmitComponents = RawModalSubmitTextInputComponent;
+export interface RawModalSubmitTextInputComponent extends RawModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
+
+interface ModalSubmitComponentsBase {
+    customID: string;
+}
+
+export interface ModalSubmitComponentsStringValue<T extends ModalComponentTypes = ModalComponentTypes> extends ModalSubmitComponentsBase {
+    type: T;
+    value: string;
+}
+
+export type ToRawFromoModalSubmitComponent<T extends ModalSubmitComponents> =
+T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
+    never;
+
+export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
+export type ModalSubmitComponents = ModalSubmitTextInputComponent;
+export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
