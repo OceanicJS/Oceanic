@@ -52,12 +52,14 @@ export default class DiscordRESTError extends Error {
             if (!Object.hasOwn(errors, fieldName) || fieldName === "message" || fieldName === "code") {
                 continue;
             }
-            if ("_errors" in (errors[fieldName] as object)) {
-                messages = messages.concat((errors[fieldName] as { _errors: Array<{ message: string; }>; })._errors.map((err: { message: string; }) => `${`${keyPrefix}${fieldName}`}: ${err.message}`));
-            } else if (Array.isArray(errors[fieldName])) {
-                messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${typeof str === "object" && "message" in str ? (str as { message: string; }).message : str}`));
-            } else if (typeof errors[fieldName] === "object") {
-                messages = messages.concat(DiscordRESTError.flattenErrors(errors[fieldName] as Record<string, unknown>, `${keyPrefix}${fieldName}.`));
+            if (typeof errors[fieldName] === "object" && errors[fieldName] !== null) {
+                if ("_errors" in (errors[fieldName] as object)) {
+                    messages = messages.concat((errors[fieldName] as { _errors: Array<{ message: string; }>; })._errors.map((err: { message: string; }) => `${`${keyPrefix}${fieldName}`}: ${err.message}`));
+                } else if (Array.isArray(errors[fieldName])) {
+                    messages = messages.concat((errors[fieldName] as Array<string>).map(str => `${`${keyPrefix}${fieldName}`}: ${typeof str === "object" && "message" in str ? (str as { message: string; }).message : str}`));
+                } else {
+                    messages = messages.concat(DiscordRESTError.flattenErrors(errors[fieldName] as Record<string, unknown>, `${keyPrefix}${fieldName}.`));
+                }
             }
         }
         return messages;
