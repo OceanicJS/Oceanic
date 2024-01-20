@@ -1210,18 +1210,6 @@ export default class Channels {
     }
 
     /**
-     * Create a thread in a thread only channel (forum & media).
-     * @param channelID The ID of the channel to start the thread in.
-     * @param options The options for starting the thread.
-     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
-     * @caches {@link Guild#threads | Guild#threads}
-     * @deprecated Use {@link REST/Channels#startThreadInThreadOnlyChannel}. This will be removed in `1.9.0`.
-     */
-    async startThreadInThreadOnlyChannl(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
-        return this.startThreadInThreadOnlyChannel(channelID, options);
-    }
-
-    /**
      * Create a thread without an existing message.
      * @param channelID The ID of the channel to start the thread in.
      * @param options The options for starting the thread.

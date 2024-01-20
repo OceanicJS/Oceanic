@@ -97,15 +97,6 @@ export default class Miscellaneous {
     }
 
     /**
-     * Get the nitro sticker packs.
-     * @deprecated Use {@link REST/Miscellaneous#getStickerPacks | getStickerPacks}. This will be removed in `1.9.0`.
-     * @caching This method **does not** cache its result.
-     */
-    async getNitroStickerPacks(): Promise<Array<StickerPack>> {
-        return this.getStickerPacks();
-    }
-
-    /**
      * Get the SKUs for an application.
      * @param applicationID The ID of the application to get the SKUs of.
      */
