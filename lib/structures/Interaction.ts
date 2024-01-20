@@ -1,6 +1,11 @@
 /** @module Interaction */
 import Base from "./Base";
 import type ClientApplication from "./ClientApplication";
+import type ICommandInteraction from "./CommandInteraction";
+import type IModalSubmitInteraction from "./ModalSubmitInteraction";
+import type IPingInteraction from "./PingInteraction";
+import type IComponentInteraction from "./ComponentInteraction";
+import type IAutocompleteInteraction from "./AutocompleteInteraction";
 import type Client from "../Client";
 import type {
     AnyInteraction,
@@ -13,6 +18,7 @@ import type {
 } from "../types/interactions";
 import { InteractionTypes } from "../Constants";
 import type { JSONInteraction } from "../types/json";
+
 
 /** Represents an interaction. */
 export default class Interaction extends Base {
@@ -60,6 +66,31 @@ export default class Interaction extends Base {
                 return new Interaction(data, client) as never;
             }
         }
+    }
+
+    /** A type guard, checking if this interaction is an {@link AutocompleteInteraction | Autocomplete Interaction}. */
+    isAutocompleteInteraction(): this is IAutocompleteInteraction {
+        return this.type === InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE;
+    }
+
+    /** A type guard, checking if this interaction is a {@link CommandInteraction | Command Interaction}. */
+    isCommandInteraction(): this is ICommandInteraction {
+        return this.type === InteractionTypes.APPLICATION_COMMAND;
+    }
+
+    /** A type guard, checking if this interaction is a {@link ComponentInteraction | Component Interaction}. */
+    isComponentInteraction(): this is IComponentInteraction {
+        return this.type === InteractionTypes.MESSAGE_COMPONENT;
+    }
+
+    /** A type guard, checking if this interaction is a {@link ModalSubmitInteraction | Modal Submit Interaction}. */
+    isModelSubmitInteraction(): this is IModalSubmitInteraction {
+        return this.type === InteractionTypes.MODAL_SUBMIT;
+    }
+
+    /** A type guard, checking if this interaction is a {@link PingInteraction | Ping Interaction}. */
+    isPingInteraction(): this is IPingInteraction {
+        return this.type === InteractionTypes.PING;
     }
 
     override toJSON(): JSONInteraction {

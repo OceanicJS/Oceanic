@@ -6,7 +6,8 @@ import type {
     ModalActionRow,
     RawAttachment,
     RawInteractionResolvedChannel,
-    RawMessage
+    RawMessage,
+    AnyInteractionChannel
 } from "./channels";
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
@@ -131,18 +132,18 @@ export interface RawApplicationCommandInteractionData {
     target_id?: string;
     type: ApplicationCommandTypes;
 }
-export interface ApplicationCommandInteractionData {
+export interface ApplicationCommandInteractionData<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> {
     guildID?: string;
     id: string;
     name: string;
     options: InteractionOptionsWrapper;
     resolved: ApplicationCommandInteractionResolvedData;
-    target?: User | Message;
-    targetID?: string;
-    type: ApplicationCommandTypes;
+    target: C extends ApplicationCommandTypes.CHAT_INPUT ? null : C extends ApplicationCommandTypes.USER ? User : C extends ApplicationCommandTypes.MESSAGE ? Message<T> : User | Message<T> | null;
+    targetID: C extends ApplicationCommandTypes.CHAT_INPUT ? null : C extends ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE ? string : string | null;
+    type: C;
 }
 export interface RawAutocompleteInteractionData extends Omit<RawApplicationCommandInteractionData, "resolved" | "target_id"> {}
-export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "targetID"> {}
+export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "target" | "targetID"> {}
 
 export interface RawMessageComponentInteractionResolvedData {
     channels?: Record<string, RawInteractionResolvedChannel>;
@@ -371,3 +372,5 @@ T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
 export type ModalSubmitComponents = ModalSubmitTextInputComponent;
 export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
+
+export type ApplicationCommandTypesWithTarget = ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE;

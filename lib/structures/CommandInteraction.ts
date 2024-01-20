@@ -34,7 +34,7 @@ import { UncachedError } from "../util/Errors";
 import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
 
 /** Represents a command interaction. */
-export default class CommandInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
+export default class CommandInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> extends Interaction {
     private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
     private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
@@ -42,7 +42,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The data associated with the interaction. */
-    data: ApplicationCommandInteractionData;
+    data: ApplicationCommandInteractionData<T, C>;
     /** The entitlements for the user that created this interaction, and the guild it was created in. */
     entitlements: Array<Entitlement | TestEntitlement>;
     /** The id of the guild this interaction was sent from, if applicable. */
@@ -130,16 +130,16 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
             name:     data.data.name,
             options:  new InteractionOptionsWrapper(data.data.options ?? [], resolved ?? null),
             resolved,
-            target:   undefined,
-            targetID: data.data.target_id,
-            type:     data.data.type
+            target:   null as never,
+            targetID: data.data.target_id as never,
+            type:     data.data.type as C
         };
 
         if (this.data.targetID) {
             if (this.data.type === ApplicationCommandTypes.USER) {
-                this.data.target = resolved.users.get(this.data.targetID);
+                this.data.target = resolved.users.get(this.data.targetID) as never;
             } else if (this.data.type === ApplicationCommandTypes.MESSAGE) {
-                this.data.target = resolved.messages.get(this.data.targetID);
+                this.data.target = resolved.messages.get(this.data.targetID) as never;
             }
         }
     }
@@ -270,6 +270,21 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
     inPrivateChannel(): this is CommandInteraction<PrivateChannel | Uncached> {
         return this.guildID === null;
+    }
+
+    /** A type guard, checking if this command interaction is a {@link Constants~ApplicationCommandTypes.CHAT_INPUT | Chat Input} command. */
+    isChatInputCommand(): this is CommandInteraction<T, ApplicationCommandTypes.CHAT_INPUT> {
+        return this.data.type === ApplicationCommandTypes.CHAT_INPUT;
+    }
+
+    /** A type guard, checking if this command interaction is a {@link Constants~ApplicationCommandTypes.MESSAGE | Message} command. */
+    isMessageCommand(): this is CommandInteraction<T, ApplicationCommandTypes.MESSAGE> {
+        return this.data.type === ApplicationCommandTypes.MESSAGE;
+    }
+
+    /** A type guard, checking if this command interaction is a {@link Constants~ApplicationCommandTypes.USER | User} command. */
+    isUserCommand(): this is CommandInteraction<T, ApplicationCommandTypes.USER> {
+        return this.data.type === ApplicationCommandTypes.USER;
     }
 
     /** Show a "premium required" response to the user. This is an initial response, and more than one initial response cannot be used. */
