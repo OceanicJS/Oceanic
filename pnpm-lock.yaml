@@ -72,7 +72,7 @@ devDependencies:
     specifier: ^5.0.5
     version: 5.0.5
   typedoc:
-    specifier: ^0.25.7
+    specifier: 0.25.7
     version: 0.25.7(typescript@5.3.3)
   typedoc-plugin-extras:
     specifier: 3.0.0

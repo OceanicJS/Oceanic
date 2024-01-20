@@ -23,5 +23,5 @@
   "favicon": "./static/favicon.ico",
   "titleLink": "https://docs.oceanic.ws",
   "mergeModulesMergeMode": "project",
-  "groupOrder": ["*", "Namespaces"]
+  "kindSortOrder": ["Class", "Namespace"]
 }
