@@ -7,7 +7,6 @@ import type {
     OAuthURLOptions,
     RawAuthorizationInformation,
     RawConnection,
-    RESTOAuthApplication,
     RevokeTokenOptions
 } from "../types/oauth";
 import type { RawOAuthGuild, RESTMember } from "../types/guilds";
@@ -17,7 +16,13 @@ import Integration from "../structures/Integration";
 import Member from "../structures/Member";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
-import type { RawOAuthUser, RawRoleConnection, RoleConnection, UpdateUserApplicationRoleConnectionOptions } from "../types";
+import type {
+    RESTOAuthApplication,
+    RawOAuthUser,
+    RawRoleConnection,
+    RoleConnection,
+    UpdateUserApplicationRoleConnectionOptions
+} from "../types";
 import { BASE_URL } from "../Constants";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */

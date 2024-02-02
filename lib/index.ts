@@ -4,7 +4,7 @@ export { default as Channel } from "./structures/Channel";
 export { default as Interaction } from "./structures/Interaction";
 export { default as AnnouncementChannel } from "./structures/AnnouncementChannel";
 export { default as AnnouncementThreadChannel } from "./structures/AnnouncementThreadChannel";
-export { default as Application } from "./structures/OAuthApplication";
+export { default as Application } from "./structures/Application";
 export { default as ApplicationCommand } from "./structures/ApplicationCommand";
 export { default as Attachment } from "./structures/Attachment";
 export { default as AuditLogEntry } from "./structures/AuditLogEntry";

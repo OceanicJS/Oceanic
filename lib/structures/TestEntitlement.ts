@@ -1,7 +1,6 @@
 import BaseEntitlement from "./BaseEntitlement";
-import type { RawTestEntitlement } from "../types/misc";
 import type Client from "../Client";
-import type { JSONTestEntitlement } from "../types";
+import type { JSONTestEntitlement, RawTestEntitlement } from "../types";
 
 /** Represents a test entitlement. */
 export default class TestEntitlement extends BaseEntitlement {
@@ -11,7 +10,7 @@ export default class TestEntitlement extends BaseEntitlement {
 
     /** Delete this entitlement. */
     async delete(): Promise<void> {
-        return this.client.rest.misc.deleteEntitlement(this.applicationID, this.id);
+        return this.client.rest.applications.deleteTestEntitlement(this.applicationID, this.id);
     }
 
     override toJSON(): JSONTestEntitlement {

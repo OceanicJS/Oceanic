@@ -1,6 +1,6 @@
 import Base from "./Base";
 import type { EntitlementTypes } from "../Constants";
-import type { RawBaseEntitlement } from "../types/misc";
+import type { RawBaseEntitlement } from "../types/applications";
 import type Client from "../Client";
 import type { JSONBaseEntitlement } from "../types";
 

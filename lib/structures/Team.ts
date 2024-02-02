@@ -2,7 +2,7 @@
 import Base from "./Base";
 import type User from "./User";
 import type Client from "../Client";
-import type { RawTeam, TeamMember } from "../types/oauth";
+import type { RawTeam, TeamMember } from "../types/applications";
 import type { JSONTeam } from "../types/json";
 
 /** Represents an OAuth team. */

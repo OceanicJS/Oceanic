@@ -12,8 +12,7 @@ import type {
 import type { InteractionMember, RawMember, RawRole } from "./guilds";
 import type { RawUser } from "./users";
 import type { Uncached } from "./shared";
-import type { LocaleMap } from "./application-commands";
-import type { RawEntitlement, RawTestEntitlement } from "./misc";
+import type { LocaleMap, RawEntitlement, RawTestEntitlement } from "./applications";
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,

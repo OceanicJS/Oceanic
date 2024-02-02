@@ -4,8 +4,10 @@ import type ApplicationCommand from "./ApplicationCommand";
 import TestEntitlement from "./TestEntitlement";
 import Entitlement from "./Entitlement";
 import BaseEntitlement from "./BaseEntitlement";
+import type SKU from "./SKU";
+import type Application from "./Application";
 import type Client from "../Client";
-import type { RawClientApplication, RoleConnection, RoleConnectionMetadata, UpdateUserApplicationRoleConnectionOptions } from "../types/oauth";
+import type { RoleConnection, RoleConnectionMetadata, UpdateUserApplicationRoleConnectionOptions } from "../types/oauth";
 import type {
     AnyApplicationCommand,
     ApplicationCommandOptionConversion,
@@ -15,17 +17,16 @@ import type {
     EditApplicationCommandPermissionsOptions,
     EditGuildApplicationCommandOptions,
     GetApplicationCommandOptions,
-    RESTGuildApplicationCommandPermissions
-} from "../types/application-commands";
-import type { JSONClientApplication } from "../types/json";
-import type { ApplicationCommandTypes } from "../Constants";
-import type {
+    RESTGuildApplicationCommandPermissions,
     CreateTestEntitlementOptions,
     RawEntitlement,
     RawTestEntitlement,
-    SKU,
-    SearchEntitlementsOptions
-} from "../types/misc";
+    SearchEntitlementsOptions,
+    RawClientApplication,
+    EditApplicationOptions
+} from "../types/applications";
+import type { JSONClientApplication } from "../types/json";
+import type { ApplicationCommandTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
 
 /** A representation of the authorized client's application (typically received via gateway). */
@@ -55,12 +56,17 @@ export default class ClientApplication extends Base {
         }
     }
 
+    /** @deprecated Use {@link ClientApplication#deleteTestEntitlement | ClientApplication#deleteTestEntitlement} instead. This will be removed in `1.10.0`. */
+    get deleteEntitlement(): ClientApplication["deleteTestEntitlement"] {
+        return this.deleteTestEntitlement.bind(this);
+    }
+
     /**
      * Overwrite all existing global application commands.
      * @param options The commands.
      */
     async bulkEditGlobalCommands(options: Array<CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand<ApplicationCommandTypes>>> {
-        return this.client.rest.applicationCommands.bulkEditGlobalCommands(this.id, options);
+        return this.client.rest.applications.bulkEditGlobalCommands(this.id, options);
     }
 
     /**
@@ -69,7 +75,7 @@ export default class ClientApplication extends Base {
      * @param options The commands.
      */
     async bulkEditGuildCommands(guildID: string, options: Array<CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand<ApplicationCommandTypes>>> {
-        return this.client.rest.applicationCommands.bulkEditGuildCommands(this.id, guildID, options);
+        return this.client.rest.applications.bulkEditGuildCommands(this.id, guildID, options);
     }
 
     /**
@@ -77,7 +83,7 @@ export default class ClientApplication extends Base {
      * @param options The options for creating the command.
      */
     async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        return this.client.rest.applicationCommands.createGlobalCommand<T>(this.id, options);
+        return this.client.rest.applications.createGlobalCommand<T>(this.id, options);
     }
 
     /**
@@ -86,7 +92,7 @@ export default class ClientApplication extends Base {
      * @param options The options for creating the command.
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        return this.client.rest.applicationCommands.createGuildCommand<T>(this.id, guildID, options);
+        return this.client.rest.applications.createGuildCommand<T>(this.id, guildID, options);
     }
 
     /**
@@ -94,15 +100,7 @@ export default class ClientApplication extends Base {
      * @param options The options for creating the test entitlement.
      */
     async createTestEntitlement(options: CreateTestEntitlementOptions): Promise<TestEntitlement> {
-        return this.client.rest.misc.createTestEntitlement(this.id, options);
-    }
-
-    /**
-     * Delete an entitlement.
-     * @param entitlementID The ID of the entitlement to delete.
-     */
-    async deleteEntitlement(entitlementID: string): Promise<void> {
-        return this.client.rest.misc.deleteEntitlement(this.id, entitlementID);
+        return this.client.rest.applications.createTestEntitlement(this.id, options);
     }
 
     /**
@@ -110,7 +108,7 @@ export default class ClientApplication extends Base {
      * @param commandID The ID of the command.
      */
     async deleteGlobalCommand(commandID: string): Promise<void> {
-        return this.client.rest.applicationCommands.deleteGlobalCommand(this.id, commandID);
+        return this.client.rest.applications.deleteGlobalCommand(this.id, commandID);
     }
 
     /**
@@ -119,7 +117,23 @@ export default class ClientApplication extends Base {
      * @param commandID The ID of the command.
      */
     async deleteGuildCommand(guildID: string, commandID: string): Promise<void> {
-        return this.client.rest.applicationCommands.deleteGuildCommand(this.id, guildID, commandID);
+        return this.client.rest.applications.deleteGuildCommand(this.id, guildID, commandID);
+    }
+
+    /**
+     * Delete a test entitlement.
+     * @param entitlementID The ID of the entitlement to delete.
+     */
+    async deleteTestEntitlement(entitlementID: string): Promise<void> {
+        return this.client.rest.applications.deleteTestEntitlement(this.id, entitlementID);
+    }
+
+    /**
+     * Edit this application.
+     * @param options The options for editing the application.
+     */
+    async edit(options: EditApplicationOptions): Promise<Application> {
+        return this.client.rest.applications.editCurrent(options);
     }
 
     /**
@@ -128,7 +142,7 @@ export default class ClientApplication extends Base {
      * @param options The options for editing the command.
      */
     async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        return this.client.rest.applicationCommands.editGlobalCommand<T>(this.id, commandID, options);
+        return this.client.rest.applications.editGlobalCommand<T>(this.id, commandID, options);
     }
 
     /**
@@ -138,7 +152,7 @@ export default class ClientApplication extends Base {
      * @param options The options for editing the command.
      */
     async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(guildID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        return this.client.rest.applicationCommands.editGuildCommand<T>(this.id, guildID, commandID, options);
+        return this.client.rest.applications.editGuildCommand<T>(this.id, guildID, commandID, options);
     }
 
     /**
@@ -148,7 +162,7 @@ export default class ClientApplication extends Base {
      * @param options The options for editing the permissions.
      */
     async editGuildCommandPermissions(guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
-        return this.client.rest.applicationCommands.editGuildCommandPermissions(this.id, guildID, commandID, options);
+        return this.client.rest.applications.editGuildCommandPermissions(this.id, guildID, commandID, options);
     }
 
     /**
@@ -156,7 +170,7 @@ export default class ClientApplication extends Base {
      * @param options The options for getting the entitlements.
      */
     async getEntitlements(options: SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
-        return this.client.rest.misc.getEntitlements(this.id, options);
+        return this.client.rest.applications.getEntitlements(this.id, options);
     }
 
     /**
@@ -165,7 +179,7 @@ export default class ClientApplication extends Base {
      * @param options The options for getting the command.
      */
     async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
-        return this.client.rest.applicationCommands.getGlobalCommand<T>(this.id, commandID, options);
+        return this.client.rest.applications.getGlobalCommand<T>(this.id, commandID, options);
     }
 
     /**
@@ -173,7 +187,7 @@ export default class ClientApplication extends Base {
      * @param options The options for getting the command.
      */
     async getGlobalCommands(options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
-        return this.client.rest.applicationCommands.getGlobalCommands(this.id, options);
+        return this.client.rest.applications.getGlobalCommands(this.id, options);
     }
 
     /**
@@ -183,7 +197,7 @@ export default class ClientApplication extends Base {
      * @param options The options for getting the command.
      */
     async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
-        return this.client.rest.applicationCommands.getGuildCommand<T>(this.id, guildID, commandID, options);
+        return this.client.rest.applications.getGuildCommand<T>(this.id, guildID, commandID, options);
     }
 
     /**
@@ -192,7 +206,7 @@ export default class ClientApplication extends Base {
      * @param options The options for getting the command.
      */
     async getGuildCommands(guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
-        return this.client.rest.applicationCommands.getGuildCommands(this.id, guildID, options);
+        return this.client.rest.applications.getGuildCommands(this.id, guildID, options);
     }
 
     /**
@@ -201,7 +215,7 @@ export default class ClientApplication extends Base {
      * @param commandID The ID of the command.
      */
     async getGuildPermission(guildID: string, commandID: string): Promise<RESTGuildApplicationCommandPermissions> {
-        return this.client.rest.applicationCommands.getGuildPermission(this.id, guildID, commandID);
+        return this.client.rest.applications.getGuildPermission(this.id, guildID, commandID);
     }
 
     /**
@@ -209,7 +223,7 @@ export default class ClientApplication extends Base {
      * @param guildID The ID of the guild.
      */
     async getGuildPermissions(guildID: string): Promise<Array<RESTGuildApplicationCommandPermissions>> {
-        return this.client.rest.applicationCommands.getGuildPermissions(this.id, guildID);
+        return this.client.rest.applications.getGuildPermissions(this.id, guildID);
     }
 
     /**
@@ -223,7 +237,7 @@ export default class ClientApplication extends Base {
      * Get the SKUs for this application.
      */
     async getSKUs(): Promise<Array<SKU>> {
-        return this.client.rest.misc.getSKUs(this.id);
+        return this.client.rest.applications.getSKUs(this.id);
     }
 
     /**

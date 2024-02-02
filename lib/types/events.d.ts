@@ -39,7 +39,7 @@ import type {
     JSONEntitlement,
     JSONTestEntitlement
 } from "./json";
-import type { GuildApplicationCommandPermissions } from "./application-commands";
+import type { GuildApplicationCommandPermissions } from "./applications";
 import type {
     GuildEmoji,
     PartialEmoji,

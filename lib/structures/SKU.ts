@@ -3,10 +3,10 @@ import type TestEntitlement from "./TestEntitlement";
 import type Entitlement from "./Entitlement";
 import type Client from "../Client";
 import type { EntitlementOwnerTypes, SKUAccessTypes, SKUTypes } from "../Constants";
-import type { RawSKU, SearchEntitlementsOptions } from "../types/misc";
+import type { RawSKU, SearchEntitlementsOptions } from "../types/applications";
 
 export default class SKU extends Base {
-    accessType: SKUAccessTypes;
+    accessType: SKUAccessTypes; // undocumented
     applicationID: string;
     dependentSKUID: string | null;
     features: []; // undocumented
@@ -39,7 +39,7 @@ export default class SKU extends Base {
      * @param ownerID The ID of the owner to create the entitlement for.
      */
     async createTestEntitlement(ownerType: EntitlementOwnerTypes, ownerID: string): Promise<TestEntitlement> {
-        return this.client.rest.misc.createTestEntitlement(this.applicationID, {
+        return this.client.rest.applications.createTestEntitlement(this.applicationID, {
             ownerID,
             ownerType,
             skuID: this.id
@@ -51,6 +51,6 @@ export default class SKU extends Base {
      * @param options The options for getting the entitlements.
      */
     async getEntitlements(options?: Omit<SearchEntitlementsOptions, "skuIDs">): Promise<Array<Entitlement | TestEntitlement>> {
-        return this.client.rest.misc.getEntitlements(this.applicationID, { skuIDs: [this.id], ...options });
+        return this.client.rest.applications.getEntitlements(this.applicationID, { skuIDs: [this.id], ...options });
     }
 }

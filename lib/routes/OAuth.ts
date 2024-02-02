@@ -13,7 +13,6 @@ import type {
     RawRefreshTokenResponse,
     RefreshTokenOptions,
     RefreshTokenResponse,
-    RESTOAuthApplication,
     RevokeTokenOptions,
     GetCurrentGuildsOptions,
     RawRoleConnectionMetadata,
@@ -32,7 +31,7 @@ import type RESTManager from "../rest/RESTManager";
 import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
-import type { RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
+import type { RESTOAuthApplication, RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
 
 /** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {

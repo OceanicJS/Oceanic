@@ -1,72 +1,14 @@
 /** @module Types/OAuth */
 import type { RawUser } from "./users";
 import type { OAuthWebhook } from "./webhooks";
-import type { RawIntegration, RawOAuthGuild } from "./guilds";
-import type { LocaleMap } from "./application-commands";
-import type {
-    ConnectionService,
-    PermissionName,
-    RoleConnectionMetadataTypes,
-    TeamMembershipState,
-    ConnectionVisibilityTypes
-} from "../Constants";
+import type { RawIntegration } from "./guilds";
+import type { LocaleMap, RawPartialApplication } from "./applications";
+import type { ConnectionService, PermissionName, RoleConnectionMetadataTypes, ConnectionVisibilityTypes } from "../Constants";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
 import type Integration from "../structures/Integration";
 
-export interface RawApplication {
-    approximate_guild_count?: number;
-    bot_public?: boolean;
-    bot_require_code_grant?: boolean;
-    cover_image?: string;
-    custom_install_url?: string;
-    description: string;
-    flags?: number;
-    guild?: RawOAuthGuild;
-    guild_id?: string;
-    hook: boolean;
-    icon: string | null;
-    id: string;
-    install_params?: InstallParams;
-    interactions_endpoint_url?: string | null;
-    name: string;
-    owner?: RawUser;
-    primary_sku_id?: string;
-    privacy_policy_url?: string;
-    redirect_uris?: Array<string>;
-    role_connections_verification_url?: string | null;
-    rpc_origins?: Array<string>;
-    slug?: string;
-    // summary is deprecated and being removed in v11
-    tags?: Array<string>;
-    team?: RawTeam | null;
-    terms_of_service_url?: string;
-    type: number | null;
-    verify_key: string;
-}
-
-type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
-export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
-export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
-export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
-export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
-export type TeamMemberRoleTypes = "admin" | "developer" | "read-only";
-
-export interface RawTeam {
-    icon: string | null;
-    id: string;
-    members: Array<RawTeamMember>;
-    name: string;
-    owner_user_id: string;
-}
-
-export interface RawTeamMember {
-    membership_state: TeamMembershipState;
-    role: TeamMemberRoleTypes;
-    team_id: string;
-    user: RawUser;
-}
 
 export interface InstallParams {
     permissions: Array<PermissionName>;
@@ -194,17 +136,6 @@ export interface RevokeTokenOptions {
     clientSecret: string;
     /** The access token to revoke. */
     token: string;
-}
-
-export interface TeamMember {
-    /** This member's [membership state](https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum) on this team. */
-    membershipState: TeamMembershipState;
-    /** The [role](https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types) of the team member. */
-    role: TeamMemberRoleTypes;
-    /** The id of the team this member is associated with. */
-    teamID: string;
-    /** The user associated with this team member. */
-    user: User;
 }
 
 export interface GetCurrentGuildsOptions {

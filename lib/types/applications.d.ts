@@ -1,9 +1,83 @@
-/** @module Types/ApplicationCommands */
-import type { ImplementedChannels } from ".";
+/** @module Types/Applications */
+import type { ImplementedChannels, InstallParams, RawOAuthGuild, RawUser } from ".";
 import type { ExclusifyUnion } from "./shared";
-import type { ApplicationCommandOptionTypes, ApplicationCommandPermissionTypes, ApplicationCommandTypes } from "../Constants";
+import type { WithRequired } from "./misc";
+import type {
+    ApplicationCommandOptionTypes,
+    ApplicationCommandPermissionTypes,
+    ApplicationCommandTypes,
+    EntitlementOwnerTypes,
+    EntitlementTypes,
+    SKUAccessTypes,
+    SKUTypes,
+    TeamMembershipState
+} from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
+import type User from "../structures/User";
+
+export interface RawApplication {
+    approximate_guild_count?: number;
+    bot_public?: boolean;
+    bot_require_code_grant?: boolean;
+    cover_image?: string;
+    custom_install_url?: string;
+    description: string;
+    flags?: number;
+    guild?: RawOAuthGuild;
+    guild_id?: string;
+    hook: boolean;
+    icon: string | null;
+    id: string;
+    install_params?: InstallParams;
+    interactions_endpoint_url?: string | null;
+    name: string;
+    owner?: RawUser;
+    primary_sku_id?: string;
+    privacy_policy_url?: string;
+    redirect_uris?: Array<string>;
+    role_connections_verification_url?: string | null;
+    rpc_origins?: Array<string>;
+    slug?: string;
+    // summary is deprecated and being removed in v11
+    tags?: Array<string>;
+    team?: RawTeam | null;
+    terms_of_service_url?: string;
+    type: number | null;
+    verify_key: string;
+}
+
+export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
+export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
+export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
+export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
+export type TeamMemberRoleTypes = "admin" | "developer" | "read-only";
+
+export interface RawTeam {
+    icon: string | null;
+    id: string;
+    members: Array<RawTeamMember>;
+    name: string;
+    owner_user_id: string;
+}
+
+export interface RawTeamMember {
+    membership_state: TeamMembershipState;
+    role: TeamMemberRoleTypes;
+    team_id: string;
+    user: RawUser;
+}
+
+export interface TeamMember {
+    /** This member's [membership state](https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum) on this team. */
+    membershipState: TeamMembershipState;
+    /** The [role](https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types) of the team member. */
+    role: TeamMemberRoleTypes;
+    /** The id of the team this member is associated with. */
+    teamID: string;
+    /** The user associated with this team member. */
+    user: User;
+}
 
 export interface RawApplicationCommand {
     application_id: string;
@@ -273,3 +347,79 @@ export type Locale =
     "zh-CN" |
     "zh-TW";
 export type LocaleMap = Partial<Record<Locale, string>>;
+
+export interface CreateTestEntitlementOptions {
+    /** The ID of the owner of the test entitlement, a user or guild.*/
+    ownerID: string;
+    /** The type of the owner of the entitlement. */
+    ownerType: EntitlementOwnerTypes;
+    /** The ID of the SKU to create an entitlement for. */
+    skuID: string;
+}
+
+export interface RawBaseEntitlement {
+    application_id: string;
+    consumed: boolean;
+    deleted: boolean;
+    gift_code_flags: number;
+    guild_id: string | null;
+    id: string;
+    promotion_id: string | null;
+    sku_id: string;
+    type: EntitlementTypes;
+    user_id: string | null;
+}
+
+export interface RawEntitlement extends RawBaseEntitlement {
+    ends_at: string;
+    starts_at: string;
+    subscription_id: string;
+}
+
+export interface RawTestEntitlement extends RawBaseEntitlement {}
+
+export interface SearchEntitlementsOptions {
+    after?: string;
+    before?: string;
+    excludeEnded?: boolean;
+    guildID?: string;
+    limit?: number;
+    skuIDs?: Array<string>;
+    userID?: string;
+}
+
+export interface RawSKU {
+    access_type: SKUAccessTypes; // undocumented, guessed
+    application_id: string;
+    dependent_sku_id: string | null;
+    features: []; // undocumented
+    flags: number;
+    id: string;
+    manifest_labels: null; // undocumented
+    name: string;
+    release_date: null; // undocumented
+    show_age_gate: boolean;
+    slug: string;
+    type: SKUTypes;
+}
+
+export interface EditApplicationOptions {
+    /** The cover image for the application. */
+    coverImage?: string | Buffer | null;
+    /** The default authorization url shown in Discord. */
+    customInstallURL?: string;
+    /** The description of the application. */
+    description?: string;
+    /** The [public flags](https://discord.com/developers/docs/resources/application#application-object-application-flags) of the application. */
+    flags?: number;
+    /** The icon for the application. */
+    icon?: string | Buffer | null;
+    /** The install parameters of the application. */
+    installParams?: InstallParams;
+    /** The url where the application receives interactions. Must be valid according to Discord's [Receiving an interaction](https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction) documentation. */
+    interactionsEndpointURL?: string;
+    /** The role connection verification url for the application. */
+    roleConnectionsVerificationURL?: string;
+    /** The tags for the application. Max 5 per application, 20 characters each. */
+    tags?: Array<string>;
+}

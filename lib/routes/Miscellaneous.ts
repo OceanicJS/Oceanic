@@ -1,21 +1,9 @@
 /** @module REST/Miscellaneous */
+import type Applications from "./Applications";
 import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
 import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
 import type { VoiceRegion } from "../types/voice";
-import type { RESTApplication, RawClientApplication } from "../types";
-import Application from "../structures/Application";
-import ClientApplication from "../structures/ClientApplication";
-import type {
-    CreateTestEntitlementOptions,
-    RawEntitlement,
-    RawSKU,
-    RawTestEntitlement,
-    SKU,
-    SearchEntitlementsOptions
-} from "../types/misc";
-import TestEntitlement from "../structures/TestEntitlement";
-import Entitlement from "../structures/Entitlement";
 
 /** Methods that don't fit anywhere else. Located at {@link Client#rest | Client#rest}{@link RESTManager#misc | .misc}. */
 export default class Miscellaneous {
@@ -24,100 +12,34 @@ export default class Miscellaneous {
         this.#manager = manager;
     }
 
-    /**
-     * Create a test entitlement.
-     * @param applicationID The ID of the application to create the entitlement for.
-     * @param options The options for creating the test entitlement.
-     */
-    async createTestEntitlement(applicationID: string, options: CreateTestEntitlementOptions): Promise<TestEntitlement> {
-        return this.#manager.authRequest<RawTestEntitlement>({
-            method: "POST",
-            path:   Routes.ENTITLEMENTS(applicationID),
-            json:   {
-                owner_id:   options.ownerID,
-                owner_type: options.ownerType,
-                sku_id:     options.skuID
-            }
-        }).then(data => new TestEntitlement(data, this.#manager.client));
+    /** @deprecated Use {@link REST/Applications#createTestEntitlement | Application#createTestEntitlement} instead. This will be removed in `1.10.0`. */
+    get createTestEntitlement(): Applications["createTestEntitlement"] {
+        return this.#manager.applications.createTestEntitlement.bind(this.#manager.applications);
     }
 
-    /**
-     * Delete an entitlement.
-     * @param applicationID The ID of the application to delete the entitlement from.
-     * @param entitlementID The ID of the entitlement to delete.
-     */
-    async deleteEntitlement(applicationID: string, entitlementID: string): Promise<void> {
-        await this.#manager.authRequest<null>({
-            method: "DELETE",
-            path:   Routes.ENTITLEMENT(applicationID, entitlementID)
-        });
+    /** @deprecated Use {@link REST/Applications#deleteTestEntitlement | Application#deleteTestEntitlement} instead. This will be removed in `1.10.0`. */
+    get deleteEntitlement(): Applications["deleteTestEntitlement"] {
+        return this.#manager.applications.deleteTestEntitlement.bind(this.#manager.applications);
     }
 
-    /**
-     * Get the currently authenticated bot's application info.
-     * @caching This method **does not** cache its result.
-     */
-    async getApplication(): Promise<Application> {
-        return this.#manager.authRequest<RESTApplication>({
-            method: "GET",
-            path:   Routes.APPLICATION
-        }).then(data => new Application(data, this.#manager.client));
+    /** @deprecated Use {@link REST/Applications#getCurrent | Application#getCurrent} instead. This will be removed in `1.10.0`. */
+    get getApplication(): Applications["getCurrent"] {
+        return this.#manager.applications.getCurrent.bind(this.#manager.applications);
     }
 
-    /**
-     * Get the currently authenticated bot's application info as a bare {@link ClientApplication | ClientApplication}.
-     * @caching This method **does not** cache its result.
-     */
-    async getClientApplication(): Promise<ClientApplication> {
-        return this.#manager.authRequest<RawClientApplication>({
-            method: "GET",
-            path:   Routes.APPLICATION
-        }).then(data => new ClientApplication(data, this.#manager.client));
+    /** @deprecated Use {@link REST/Applications#getClient | Application#getClient} instead. This will be removed in `1.10.0`. */
+    get getClientApplication(): Applications["getClient"] {
+        return this.#manager.applications.getClient.bind(this.#manager.applications);
     }
 
-    /**
-     * Get the entitlements for an application.
-     * @param applicationID The ID of the application to get the entitlements of.
-     * @param options The options for getting the entitlements.
-     */
-    async getEntitlements(applicationID: string, options: SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
-        const query = new URLSearchParams();
-        if (options.after !== undefined) query.set("after", options.after);
-        if (options.before !== undefined) query.set("before", options.before);
-        if (options.excludeEnded !== undefined) query.set("exclude_ended", String(options.excludeEnded));
-        if (options.guildID !== undefined) query.set("guild_id", options.guildID);
-        if (options.limit !== undefined) query.set("limit", String(options.limit));
-        if (options.skuIDs !== undefined) query.set("sku_ids", options.skuIDs.join(","));
-        if (options.userID !== undefined) query.set("subscription_id", options.userID);
-        return this.#manager.authRequest<Array<RawEntitlement | RawTestEntitlement>>({
-            method: "GET",
-            path:   Routes.ENTITLEMENTS(applicationID),
-            query
-        }).then(data => data.map(d => "subscription_id" in d && d.subscription_id ? new Entitlement(d, this.#manager.client) : new TestEntitlement(d, this.#manager.client)));
+    /** @deprecated Use {@link REST/Applications#getEntitlements | Application#getEntitlements} instead. This will be removed in `1.10.0`. */
+    get getEntitlements(): Applications["getEntitlements"] {
+        return this.#manager.applications.getEntitlements.bind(this.#manager.applications);
     }
 
-    /**
-     * Get the SKUs for an application.
-     * @param applicationID The ID of the application to get the SKUs of.
-     */
-    async getSKUs(applicationID: string): Promise<Array<SKU>> {
-        return this.#manager.authRequest<Array<RawSKU>>({
-            method: "GET",
-            path:   Routes.SKUS(applicationID)
-        }).then(data => data.map(d => ({
-            accessType:     d.access_type,
-            applicationID:  d.application_id,
-            dependentSKUID: d.dependent_sku_id,
-            features:       d.features,
-            flags:          d.flags,
-            id:             d.id,
-            manifestLabels: d.manifest_labels,
-            name:           d.name,
-            releaseDate:    d.release_date,
-            showAgeGate:    d.show_age_gate,
-            slug:           d.slug,
-            type:           d.type
-        })));
+    /** @deprecated Use {@link REST/Applications#getSKUs | Application#getSKUs} instead. This will be removed in `1.10.0`. */
+    get getSKUs(): Applications["getSKUs"] {
+        return this.#manager.applications.getSKUs.bind(this.#manager.applications);
     }
 
     /**

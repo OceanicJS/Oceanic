@@ -4,7 +4,8 @@ import Team from "./Team";
 import type Guild from "./Guild";
 import Base from "./Base";
 import type Client from "../Client";
-import type { InstallParams, RESTOAuthApplication } from "../types/oauth";
+import type { InstallParams } from "../types/oauth";
+import type { RESTOAuthApplication } from "../types/applications";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { JSONOAuthApplication } from "../types/json";
@@ -168,6 +169,15 @@ export default class OAuthApplication extends Base {
      */
     coverImageURL(format?: ImageFormat, size?: number): string | null {
         return this.coverImage === null ? null : this.client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
+    }
+
+    /**
+     * The url of this application's icon.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    iconURL(format?: ImageFormat, size?: number): string | null {
+        return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.id, this.icon), format, size);
     }
 
     override toJSON(): JSONOAuthApplication {

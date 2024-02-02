@@ -1,6 +1,6 @@
 /** @module Types/Channels */
 import type { NullablePartialEmoji, PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
-import type { RawApplication, RawPartialApplication } from "./oauth";
+import type { RawApplication, RawPartialApplication } from "./applications";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";

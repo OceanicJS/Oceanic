@@ -48,7 +48,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     maxAge!: T extends "withMetadata" ? number : never;
     /** The maximum number of times this invite can be used, */
     maxUses!: T extends "withMetadata" ? number : never;
-    /** @deprecated The stage instance in the invite this channel is for (deprecated). */
+    /** @deprecated The stage instance in the invite this channel is for. */
     stageInstance?: InviteStageInstance;
     /** The embedded application this invite will open. */
     targetApplication?: PartialApplication;

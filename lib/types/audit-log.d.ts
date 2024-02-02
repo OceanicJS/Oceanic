@@ -5,7 +5,7 @@ import type { RawIntegration } from "./guilds";
 import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawUser } from "./users";
 import type { RawWebhook } from "./webhooks";
-import type { RawApplicationCommand } from "./application-commands";
+import type { RawApplicationCommand } from "./applications";
 import type { AuditLogActionTypes } from "../Constants";
 import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";

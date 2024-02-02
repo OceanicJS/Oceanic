@@ -2,10 +2,11 @@
 import ClientApplication from "./ClientApplication";
 import OAuthGuild from "./OAuthGuild";
 import type Client from "../Client";
-import type { InstallParams, RESTApplication } from "../types/oauth";
+import type { InstallParams } from "../types/oauth";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { JSONApplication } from "../types/json";
+import type { RESTApplication } from "../types";
 
 /** Represents an application. */
 export default class Application extends ClientApplication {
@@ -130,6 +131,15 @@ export default class Application extends ClientApplication {
      */
     coverImageURL(format?: ImageFormat, size?: number): string | null {
         return this.coverImage === null ? null : this.client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.coverImage), format, size);
+    }
+
+    /**
+     * The url of this application's icon.
+     * @param format The format the url should be.
+     * @param size The dimensions of the image.
+     */
+    iconURL(format?: ImageFormat, size?: number): string | null {
+        return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.id, this.icon), format, size);
     }
 
     override toJSON(): JSONApplication {

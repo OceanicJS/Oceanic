@@ -1,5 +1,5 @@
 import BaseEntitlement from "./BaseEntitlement";
-import type { RawEntitlement } from "../types/misc";
+import type { RawEntitlement } from "../types/applications";
 import type Client from "../Client";
 import type { JSONEntitlement } from "../types";
 

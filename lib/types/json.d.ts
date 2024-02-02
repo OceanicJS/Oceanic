@@ -1,7 +1,7 @@
 /** @module Types/JSON */
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import type { InstallParams, TeamMember } from "./oauth";
-import type { ApplicationCommandOptions, LocaleMap } from "./application-commands";
+import type { InstallParams } from "./oauth";
+import type { ApplicationCommandOptions, LocaleMap, TeamMember } from "./applications";
 import type {
     ApplicationCommandInteractionData,
     AutocompleteInteractionData,

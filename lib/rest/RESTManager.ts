@@ -8,7 +8,7 @@ import OAuth from "../routes/OAuth";
 import Webhooks from "../routes/Webhooks";
 import type { RESTOptions } from "../types/client";
 import type { RequestOptions } from "../types/request-handler";
-import ApplicationCommands from "../routes/ApplicationCommands";
+import Applications from "../routes/Applications";
 import Interactions from "../routes/Interactions";
 import * as Routes from "../util/Routes";
 import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
@@ -16,7 +16,7 @@ import Miscellaneous from "../routes/Miscellaneous";
 
 /** A manager for all rest actions. */
 export default class RESTManager {
-    applicationCommands: ApplicationCommands;
+    applications: Applications;
     channels: Channels;
     #client: Client;
     guilds: Guilds;
@@ -27,7 +27,7 @@ export default class RESTManager {
     users: Users;
     webhooks: Webhooks;
     constructor(client: Client, options?: RESTOptions) {
-        this.applicationCommands = new ApplicationCommands(this);
+        this.applications = new Applications(this);
         this.channels = new Channels(this);
         this.#client = client;
         this.guilds = new Guilds(this);
@@ -37,6 +37,11 @@ export default class RESTManager {
         this.oauth = new OAuth(this);
         this.users = new Users(this);
         this.webhooks = new Webhooks(this);
+    }
+
+    /** @deprecated Use {@link RESTManager#applications | RESTManager#applications} instead. This will be removed in `1.10.0`. */
+    get applicationCommands(): RESTManager["applications"] {
+        return this.applications;
     }
 
     get client(): Client {

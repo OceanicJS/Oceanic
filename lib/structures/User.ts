@@ -8,7 +8,7 @@ import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type { RawUser } from "../types/users";
 import type { JSONUser } from "../types/json";
-import type { SearchEntitlementsOptions } from "../types/misc";
+import type { SearchEntitlementsOptions } from "../types/applications";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a user. */
@@ -142,7 +142,7 @@ export default class User extends Base {
         if (applicationID === undefined && this.client["_application"] === undefined) {
             throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
         }
-        return this.client.rest.misc.createTestEntitlement(applicationID ?? this.client.application.id, {
+        return this.client.rest.applications.createTestEntitlement(applicationID ?? this.client.application.id, {
             ownerID:   this.id,
             ownerType: EntitlementOwnerTypes.USER,
             skuID
@@ -164,7 +164,7 @@ export default class User extends Base {
         if (applicationID === undefined && this.client["_application"] === undefined) {
             throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
         }
-        return this.client.rest.misc.getEntitlements(applicationID ?? this.client.application.id, { userID: this.id, ...options });
+        return this.client.rest.applications.getEntitlements(applicationID ?? this.client.application.id, { userID: this.id, ...options });
     }
 
     override toJSON(): JSONUser {

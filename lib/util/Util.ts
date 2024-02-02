@@ -34,7 +34,7 @@ import type {
     ToRawFromComponent
 } from "../types/channels";
 import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds";
-import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/application-commands";
+import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/applications";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
 import type {
@@ -56,10 +56,12 @@ import type {
     SelectMenuComponent,
     StringSelectMenu,
     ToModalSubmitComponentFromRaw,
-    Uncached
+    Uncached,
+    RawBaseEntitlement,
+    RawEntitlement,
+    RawTestEntitlement
 } from "../types";
 import Message from "../structures/Message";
-import type { RawBaseEntitlement, RawEntitlement, RawTestEntitlement } from "../types/misc";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 

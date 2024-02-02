@@ -3,7 +3,7 @@ import Base from "./Base";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { RawPartialApplication } from "../types/oauth";
+import type { RawPartialApplication } from "../types/applications";
 import type { JSONPartialApplication } from "../types/json";
 
 /** Represents a partial application. */

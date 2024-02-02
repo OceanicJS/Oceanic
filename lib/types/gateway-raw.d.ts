@@ -10,10 +10,15 @@ import type {
     RawUnavailableGuild,
     RawSticker
 } from "./guilds";
-import type { RawClientApplication, RawPartialApplication } from "./oauth";
 import type { RawExtendedUser, RawUser } from "./users";
 import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel, RawVoiceChannelEffect } from "./gateway";
-import type { RawGuildApplicationCommandPermissions } from "./application-commands";
+import type {
+    RawGuildApplicationCommandPermissions,
+    RawEntitlement,
+    RawTestEntitlement,
+    RawClientApplication,
+    RawPartialApplication
+} from "./applications";
 import type { RawAutoModerationRule } from "./auto-moderation";
 import type {
     RawGroupChannel,
@@ -26,7 +31,6 @@ import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
 import type { RawAuditLogEntry } from "./audit-log";
-import type { RawEntitlement, RawTestEntitlement } from "./misc";
 import type { GatewayOPCodes, InviteTargetTypes } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;

@@ -16,7 +16,7 @@ export default class StageInstance extends Base {
     private _cachedScheduledEvent?: GuildScheduledEvent | null;
     /** The ID of the associated stage channel. */
     channelID: string;
-    /** @deprecated If the stage channel is discoverable */
+    /** @deprecated If the stage channel is not discoverable. */
     discoverableDisabled: boolean;
     /** The id of the guild associated with this stage instance's stage channel. */
     guildID: string;

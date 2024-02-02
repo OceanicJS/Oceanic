@@ -1,5 +1,5 @@
 /** @module Types/Index */
-export * from "./application-commands";
+export * from "./applications";
 export * from "./audit-log";
 export * from "./auto-moderation";
 export * from "./channels";
