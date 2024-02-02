@@ -49,7 +49,7 @@ client.on("messageCreate", async (msg) => {
 						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"
 					},
-					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedThumbnailOptions.html
+					// https://docs.oceanic.ws/latest/interfaces/Types_Channels.EmbedImageOptions.html
 					thumbnail: {
 						// An image url, or attachment://filename.ext
 						url: "https://i.furry.cool/DonPride.png"

@@ -14,7 +14,7 @@ client.on("ready", async() => {
 
 client.on("interactionCreate", async(interaction) => {
     switch(interaction.type) {
-        // https://docs.oceanic.ws/latest/classes/CommandInteraction.CommandInteraction.html
+        // https://docs.oceanic.ws/latest/classes/CommandInteraction.html
         case InteractionTypes.APPLICATION_COMMAND: {
             // defer interactions as soon as possible, you have three seconds to send any initial response
             // if you wait too long, the interaction may be invalidated
@@ -29,7 +29,7 @@ client.on("interactionCreate", async(interaction) => {
                     if(interaction.data.name === "greet") {
                         // assume we have two options, user (called user) then string (called greeting) - first is required, second is not
 
-                        // Get an option named `user` with the type USER - https://docs.oceanic.ws/dev/classes/InteractionOptionsWrapper.InteractionOptionsWrapper.html#getUser
+                        // Get an option named `user` with the type USER - https://docs.oceanic.ws/latest/classes/InteractionOptionsWrapper.html#getUser
                         // Setting the second parameter to true will throw an error if the option is not present
                         const user = interaction.data.options.getUser("user", true);
                         const greeting = interaction.data.options.getString("greeting", false) || "Hello, ";
@@ -83,7 +83,7 @@ client.on("interactionCreate", async(interaction) => {
             break;
         }
 
-        // https://docs.oceanic.ws/latest/classes/ComponentInteraction.ComponentInteraction.html
+        // https://docs.oceanic.ws/latest/classes/ComponentInteraction.html
         case InteractionTypes.MESSAGE_COMPONENT: {
             // same spiel as above
             await interaction.defer();
@@ -111,7 +111,7 @@ client.on("interactionCreate", async(interaction) => {
             break;
         }
 
-        // https://docs.oceanic.ws/latest/classes/AutocompleteInteraction.AutocompleteInteraction.html
+        // https://docs.oceanic.ws/latest/classes/AutocompleteInteraction.html
         case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
             // Autocomplete Interactions cannot be deferred
             switch(interaction.data.name) {
@@ -146,7 +146,7 @@ client.on("interactionCreate", async(interaction) => {
             break;
         }
 
-        // https://docs.oceanic.ws/latest/classes/ModalSubmitInteraction.ModalSubmitInteraction.html
+        // https://docs.oceanic.ws/latest/classes/ModalSubmitInteraction.html
         case InteractionTypes.MODAL_SUBMIT: {
             // this will correspond with the customID you provided when creating the modal
             switch(interaction.data.customID) {

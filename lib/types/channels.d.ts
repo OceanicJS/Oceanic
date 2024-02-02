@@ -516,8 +516,8 @@ export interface ActionRowBase<T extends Component> {
     type: ComponentTypes.ACTION_ROW;
 }
 
-export type MessageActionRow = ActionRowBase<MessageComponent>;
-export type ModalActionRow = ActionRowBase<ModalComponent>;
+export interface MessageActionRow extends ActionRowBase<MessageComponent> {}
+export interface ModalActionRow extends ActionRowBase<ModalComponent> {}
 
 export interface ButtonBase {
     disabled?: boolean;
