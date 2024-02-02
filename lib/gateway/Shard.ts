@@ -1163,7 +1163,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 const guild = this.client.guilds.get(packet.d.guild_id);
                 const member = this.client.util.updateMember(packet.d.guild_id, packet.d.user_id, packet.d.member);
 
-                const oldState = member.voiceState?.toJSON() ?? null;
+                const oldState = guild?.voiceStates.get(member.id)?.toJSON() ?? null;
                 const state = guild?.voiceStates.update({ ...packet.d, id: member.id }) ?? new VoiceState(packet.d, this.client);
                 member["update"]({ deaf: state.deaf, mute: state.mute });
 
