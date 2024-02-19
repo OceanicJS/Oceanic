@@ -23,7 +23,7 @@ export default class InteractionResolvedChannel extends Channel {
     declare type: ImplementedChannels;
     constructor(data: RawInteractionResolvedChannel, client: Client) {
         super(data, client);
-        this.appPermissions = new Permission(data.permissions);
+        this.appPermissions = new Permission(data.permissions ?? "0");
         this.name = data.name;
         this.parentID = data.parent_id ?? null;
         this.threadMetadata = data.thread_metadata ? {
