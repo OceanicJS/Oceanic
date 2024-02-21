@@ -818,6 +818,7 @@ export default class Guilds {
                 channel_id:                   options.channelID,
                 communication_disabled_until: options.communicationDisabledUntil,
                 deaf:                         options.deaf,
+                flags:                        options.flags,
                 mute:                         options.mute,
                 nick:                         options.nick,
                 roles:                        options.roles
