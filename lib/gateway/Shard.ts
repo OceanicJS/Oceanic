@@ -1181,7 +1181,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         this.client.emit("voiceChannelSwitch", member, newChannel, oldChannel);
                     } else if (newChannel) {
                         this.client.emit("voiceChannelJoin", member, newChannel);
-                    } else if (oldChannel) {
+                    } else if (state.channelID === null) {
                         this.client.emit("voiceChannelLeave", member, oldChannel);
                     }
                 }
