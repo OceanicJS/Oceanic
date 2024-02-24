@@ -38,9 +38,9 @@ import type {
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
 import type { JSONMessage } from "../types/json";
+import type { CreateMessageOptions } from "../types/channels";
 import * as Routes from "../util/Routes";
 import { UncachedError } from "../util/Errors";
-import type { CreateMessageOptions } from "oceanic.js";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> extends Base {
