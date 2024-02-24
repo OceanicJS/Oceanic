@@ -40,6 +40,7 @@ import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../
 import type { JSONMessage } from "../types/json";
 import * as Routes from "../util/Routes";
 import { UncachedError } from "../util/Errors";
+import type { CreateMessageOptions } from "oceanic.js";
 
 /** Represents a message. */
 export default class Message<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> extends Base {
@@ -418,6 +419,13 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
         return this.client.rest.channels.pinMessage(this.channelID, this.id, reason);
     }
 
+    /**
+     * Replies to this message
+     * @param options The message options.
+     */
+    async reply(options?: CreateMessageOptions): Promise<Message> {
+      return this.client.rest.channels.createMessage(this.channelID, {...options, messageReference: {messageID: this.id}})
+    }
 
     /**
      * Create a thread from this message.
