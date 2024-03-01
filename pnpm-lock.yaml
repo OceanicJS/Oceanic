@@ -87,8 +87,8 @@ devDependencies:
     specifier: ^5.3.3
     version: 5.3.3
   undici-types:
-    specifier: ^6.4.0
-    version: 6.4.0
+    specifier: ^6.6.2
+    version: 6.6.2
 
 packages:
 
@@ -2810,8 +2810,8 @@ packages:
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  /undici-types@6.4.0:
-    resolution: {integrity: sha512-hF4VKFUTypcLYImmZ13xVhjDaFhRlNULLUCOpm2ADKjuoqWpBFL1oXJXe2+hPq7aBv4v/FagI+MEDUNb8H9vHA==}
+  /undici-types@6.6.2:
+    resolution: {integrity: sha512-acoBcoBobgsg3YUEO/Oht8JJCuFYpzWLFKbqEbcEZcXdkQrTzkF/yWj9JoLaFDa6ArI31dFEmNZkCjQZ7mlf7w==}
     dev: true
 
   /unique-filename@3.0.0:
