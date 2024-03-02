@@ -1422,7 +1422,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         data = Buffer.from(this.#sharedZLib.result ?? "");
                     } else if (this.#sharedZLib.chunks.length === 0) {
                         // decompression support by pako. The current buffer hasn't been flushed
-                        data = this.#sharedZLib.strm!.output.slice(currentPointer);
+                        data = Buffer.from(this.#sharedZLib.strm!.output.slice(currentPointer));
                     } else {
                         // decompression support by pako. Buffers have been flushed once or more times.
                         data = Buffer.concat([
@@ -1432,7 +1432,20 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         ]);
                         this.#sharedZLib.chunks = [];
                     }
-                    return this.onPacket((Erlpack ? Erlpack.unpack(data as Buffer) : JSON.parse(String(data))) as AnyReceivePacket);
+
+                    assert(is<Buffer>(data));
+
+                    if (Erlpack){
+                        return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
+                    } else {
+                        // After the valid data, all the remaining octets are filled with zero, so remove them.
+                        let last = data.length - 1;
+                        if (data[last] === 0){
+                            while (data[last - 1] === 0 && last > 0) last--;
+                            data = data.subarray(0, last);
+                        }
+                        return this.onPacket(JSON.parse(String(data)) as AnyReceivePacket);
+                    }
                 } else {
                     this.#sharedZLib.push(data, false);
                 }
