@@ -1435,12 +1435,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
                     assert(is<Buffer>(data));
 
-                    if (Erlpack){
+                    if (Erlpack) {
                         return this.onPacket(Erlpack.unpack(data as Buffer) as AnyReceivePacket);
                     } else {
                         // After the valid data, all the remaining octets are filled with zero, so remove them.
                         let last = data.length - 1;
-                        if (data[last] === 0){
+                        if (data[last] === 0) {
                             while (data[last - 1] === 0 && last > 0) last--;
                             data = data.subarray(0, last);
                         }
