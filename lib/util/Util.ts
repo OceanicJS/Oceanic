@@ -67,7 +67,6 @@ import TestEntitlement from "../structures/TestEntitlement";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
-    static BASE64URL_REGEX = /^data:image\/(?:jpeg|png|gif);base64,(?:[\d+/A-Za-z]{4})*(?:[\d+/A-Za-z]{2}(==)?|[\d+/A-Za-z]{3}=?)?$/;
     #client: Client;
 
     constructor(client: Client) {
@@ -292,9 +291,6 @@ export default class Util {
                 throw new TypeError(`Failed to determine image format. (magic: ${this.getMagic(img, 16)})`);
             }
             img = `data:${mime};base64,${b64}`;
-        }
-        if (!Util.BASE64URL_REGEX.test(img)) {
-            throw new TypeError("Invalid image provided. Ensure you are providing a valid, fully-qualified base64 url.");
         }
         return img;
     }

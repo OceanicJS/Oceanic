@@ -1222,11 +1222,13 @@ export default class Shard extends TypedEmitter<ShardEvents> {
 
         switch (packet.op) {
             case GatewayOPCodes.DISPATCH: {
-                void this.onDispatch(packet); break;
+                void this.onDispatch(packet);
+                break;
             }
 
             case GatewayOPCodes.HEARTBEAT: {
-                this.heartbeat(true); break;
+                this.heartbeat(true);
+                break;
             }
 
             case GatewayOPCodes.INVALID_SESSION: {
