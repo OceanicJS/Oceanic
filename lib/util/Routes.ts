@@ -49,6 +49,7 @@ export const GUILD_STICKER			     = (guildID: string, stickerID: string) => `/gu
 export const GUILD_STICKERS			     = (guildID: string) => `/guilds/${guildID}/stickers` as const;
 export const GUILD_ONBOARDING            = (guildID: string) => `/guilds/${guildID}/onboarding` as const;
 export const GUILD_INCIDENT_ACTIONS      = (guildID: string) => `/guilds/${guildID}/incident-actions` as const;
+export const GUILD_BULK_BAN              = (guildID: string) => `/guilds/${guildID}/bulk-ban` as const;
 
 // Channels
 export const CHANNEL                                 = (channelID: string) => `/channels/${channelID}` as const;

@@ -832,3 +832,23 @@ export interface IncidentActions {
     /** When disabled invites will expire (up to 24 hours in the future). */
     invitesDisabledUntil: string | null;
 }
+
+export interface BulkBanOptions {
+    /** Number of seconds to deleted messages for, between 0 and 604800 (7 days). */
+    deleteMessageSeconds?: number;
+    reason?: string;
+    /** list of user ids to ban (max 200) */
+    userIDs: Array<string>;
+}
+
+export interface RawBulkBanResponse {
+    banned_users: Array<string>;
+    failed_users: Array<string>;
+}
+
+export interface BulkBanResponse {
+    /** The users that were successfully banned. */
+    bannedUsers: Array<string>;
+    /** The users that could not be banned. */
+    failedUsers: Array<string>;
+}

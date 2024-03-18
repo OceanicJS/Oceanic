@@ -100,7 +100,9 @@ import type {
     RawSticker,
     InventorySettings,
     EditIncidentActionsOptions,
-    IncidentActions
+    IncidentActions,
+    BulkBanOptions,
+    BulkBanResponse
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -716,6 +718,16 @@ export default class Guild extends Base {
      */
     async beginPrune(options?: BeginPruneOptions): Promise<number | null> {
         return this.client.rest.guilds.beginPrune(this.id, options);
+    }
+
+    /**
+     * Ban up to 200 members from this guild. This requires both the `BAN_MEMBERS` and `MANAGE_GUILD` permissions.
+     * If no members were banned, a {@link Constants~JSONErrorCodes.FAILED_TO_BAN_USERS | FAILED_TO_BAN_USERS } will be returned.
+     * The bot user is ignored.
+     * @param options The options for banning.
+     */
+    async bulkBan(options: BulkBanOptions): Promise<BulkBanResponse> {
+        return this.client.rest.guilds.bulkBan(this.id, options);
     }
 
     /**

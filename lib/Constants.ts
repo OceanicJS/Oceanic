@@ -1498,6 +1498,7 @@ export enum JSONErrorCodes {
     GUILD_JOIN_INVITE_LIMITED_ACCESS = 400002,
     GUILD_GO_LIVE_LIMITED_ACCESS = 400003,
     GUILD_LIMITED_ACCESS_MAX = 409999,
+    FAILED_TO_BAN_USERS = 500000,
 
 
     /** @deprecated Use {@link Constants~JSONErrorCodes.SLOWMODE_RATE_LIMITED | SLOWMODE_RATE_LIMITED } instead. This will be removed in `1.10.0`. */

@@ -49,7 +49,10 @@ import type {
     EditOnboardingOptions,
     EditIncidentActionsOptions,
     IncidentActions,
-    RawIncidentActions
+    RawIncidentActions,
+    BulkBanOptions,
+    BulkBanResponse,
+    RawBulkBanResponse
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
@@ -158,6 +161,32 @@ export default class Guilds {
             },
             reason
         }).then(data => data.pruned);
+    }
+
+    /**
+     * Ban up to 200 members from a guild. This requires both the `BAN_MEMBERS` and `MANAGE_GUILD` permissions.
+     * If no members were banned, a {@link Constants~JSONErrorCodes.FAILED_TO_BAN_USERS | FAILED_TO_BAN_USERS } will be returned.
+     * The bot user is ignored.
+     * @param guildID The ID of the guild.
+     * @param options The options for banning.
+     */
+    async bulkBan(guildID: string, options: BulkBanOptions): Promise<BulkBanResponse> {
+        const reason = options?.reason;
+        if (options?.reason) {
+            delete options.reason;
+        }
+        return this.#manager.authRequest<RawBulkBanResponse>({
+            method: "POST",
+            path:   Routes.GUILD_BULK_BAN(guildID),
+            json:   {
+                delete_message_seconds: options.deleteMessageSeconds,
+                users_ids:              options.userIDs
+            },
+            reason
+        }).then(data => ({
+            bannedUsers: data.banned_users,
+            failedUsers: data.failed_users
+        }));
     }
 
     /**
