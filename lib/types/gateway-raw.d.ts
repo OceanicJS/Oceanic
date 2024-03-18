@@ -255,6 +255,7 @@ export interface GuildMemberUpdatePacket extends BaseDispatchPacket {
         avatar: string | null;
         communication_disabled_until?: string | null;
         deaf?: boolean;
+        flags?: number;
         guild_id: string;
         joined_at: string | null;
         mute?: boolean;
