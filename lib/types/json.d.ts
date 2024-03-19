@@ -443,6 +443,7 @@ export interface JSONMessage extends JSONBase {
         authorizingIntegrationOwners: AuthorizingIntegrationOwners;
         id: string;
         interactedMessageID?: string;
+        name?: string;
         originalResponseMessageID?: string;
         triggeringInteractionMetadata?: {
             authorizingIntegrationOwners: AuthorizingIntegrationOwners;

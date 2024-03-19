@@ -759,6 +759,7 @@ export interface RawMessageInteractionMetadata {
     authorizing_integration_owners: AuthorizingIntegrationOwners;
     id: string;
     interacted_message_id?: string;
+    name?: string;
     original_response_message_id?: string;
     triggering_interaction_metadata?: Omit<RawMessageInteractionMetadata, "triggering_interaction_metadata">;
     type: InteractionTypes;
@@ -766,11 +767,17 @@ export interface RawMessageInteractionMetadata {
 }
 
 export interface MessageInteractionMetadata {
+    /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     id: string;
+    /** The ID of the message that contained interactive component, present only on messages created from component interactions */
     interactedMessageID?: string;
+    /** Name of the command, including subcommands and subcommand groups, present only on application command interactions. */
+    name?: string;
+    /** The ID of the original response message, present only on follow-up messages. */
     originalResponseMessageID?: string;
-    triggeringInteractionMetadata?: Omit<MessageInteractionMetadata, "triggeringInteractionMetadata">;
+    /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions. */
+    triggeringInteractionMetadata?: Omit<MessageInteractionMetadata, "triggeringInteractionMetadata" | "name">;
     type: InteractionTypes;
     user: User | Uncached;
 }

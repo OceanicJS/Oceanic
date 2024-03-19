@@ -113,7 +113,7 @@ interface GatewayOptions {
      */
     reconnectDelay?: ReconnectDelayFunction;
     /**
-     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link REST/Miscellaneous.getApplication | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
+     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link REST/MApplications.getCurrent | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
      * @defaultValue false
      */
     removeDisallowedIntents?: boolean;

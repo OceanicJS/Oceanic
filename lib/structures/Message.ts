@@ -242,6 +242,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
                 authorizingIntegrationOwners:  data.interaction_metadata.authorizing_integration_owners,
                 id:                            data.interaction_metadata.id,
                 interactedMessageID:           data.interaction_metadata.interacted_message_id,
+                name:                          data.interaction_metadata.name,
                 originalResponseMessageID:     data.interaction_metadata.original_response_message_id,
                 type:                          data.interaction_metadata.type,
                 user:                          this.client.users.get(data.interaction_metadata.user_id) || { id: data.interaction_metadata.user_id },
@@ -474,6 +475,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             interactionMetadata: this.interactionMetadata === undefined ? undefined : {
                 id:                            this.interactionMetadata.id,
                 interactedMessageID:           this.interactionMetadata.interactedMessageID,
+                name:                          this.interactionMetadata.name,
                 originalResponseMessageID:     this.interactionMetadata.originalResponseMessageID,
                 type:                          this.interactionMetadata.type,
                 user:                          this.interactionMetadata.user instanceof User ? this.interactionMetadata.user.toJSON() : this.interactionMetadata.user,

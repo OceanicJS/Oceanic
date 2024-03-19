@@ -18,7 +18,7 @@ export default class Application extends ClientApplication {
     customInstallURL?: string;
     /** The description of the application. */
     description: string;
-    /** If this application is a game sold on Discord, the guild to which it has been linked. This will only be present if recieved via `/applications/@me` {@link REST/Miscellaneous.getApplication | Miscellaneous#getApplication}). */
+    /** If this application is a game sold on Discord, the guild to which it has been linked. This will only be present if recieved via {@link REST/Applications.getCurrent | `/applications/@me`}. */
     guild: OAuthGuild | null;
     /** If this application is a game sold on Discord, the ID of the guild to which it has been linked. */
     guildID: string | null;
