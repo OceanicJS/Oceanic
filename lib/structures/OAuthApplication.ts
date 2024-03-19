@@ -5,8 +5,8 @@ import type Guild from "./Guild";
 import Base from "./Base";
 import type Client from "../Client";
 import type { InstallParams } from "../types/oauth";
-import type { RESTOAuthApplication } from "../types/applications";
-import type { ImageFormat } from "../Constants";
+import type { IntegrationTypesConfig, RESTOAuthApplication } from "../types/applications";
+import type { ApplicationIntegrationTypes, ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { JSONOAuthApplication } from "../types/json";
 import { UncachedError } from "../util/Errors";
@@ -32,6 +32,10 @@ export default class OAuthApplication extends Base {
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */
     installParams?: InstallParams;
+    /** The install types available for this application. */
+    integrationTypes: Array<ApplicationIntegrationTypes>;
+    /** The configs for the install types available for this application. */
+    integrationTypesConfig: IntegrationTypesConfig;
     /** The name of the application. */
     name: string;
     /** The owner of this application. */
@@ -67,6 +71,8 @@ export default class OAuthApplication extends Base {
         this.flags = data.flags;
         this.guildID = data.guild_id ?? null;
         this.icon = null;
+        this.integrationTypes = [];
+        this.integrationTypesConfig = {};
         this.name = data.name;
         this.owner = client.users.update(data.owner);
         this.ownerID = data.owner.id;
@@ -103,6 +109,12 @@ export default class OAuthApplication extends Base {
         }
         if (data.install_params !== undefined) {
             this.installParams = data.install_params;
+        }
+        if (data.integration_types !== undefined) {
+            this.integrationTypes = data.integration_types;
+        }
+        if (data.integration_types_config !== undefined) {
+            this.integrationTypesConfig = Object.fromEntries(Object.entries(data.integration_types_config).map(([key, value]) => [key, { oauth2InstallParams: value.oauth2_install_params }]));
         }
         if (data.name !== undefined) {
             this.name = data.name;
@@ -183,27 +195,29 @@ export default class OAuthApplication extends Base {
     override toJSON(): JSONOAuthApplication {
         return {
             ...super.toJSON(),
-            botPublic:           this.botPublic,
-            botRequireCodeGrant: this.botRequireCodeGrant,
-            coverImage:          this.coverImage,
-            customInstallURL:    this.customInstallURL,
-            description:         this.description,
-            flags:               this.flags,
-            guildID:             this.guildID,
-            icon:                this.icon,
-            installParams:       this.installParams,
-            name:                this.name,
-            owner:               this.owner.toJSON(),
-            ownerID:             this.ownerID,
-            primarySKUID:        this.primarySKUID,
-            privacyPolicyURL:    this.privacyPolicyURL,
-            rpcOrigins:          this.rpcOrigins,
-            slug:                this.slug,
-            tags:                this.tags,
-            team:                this.team?.toJSON() ?? null,
-            termsOfServiceURL:   this.termsOfServiceURL,
-            type:                this.type,
-            verifyKey:           this.verifyKey
+            botPublic:              this.botPublic,
+            botRequireCodeGrant:    this.botRequireCodeGrant,
+            coverImage:             this.coverImage,
+            customInstallURL:       this.customInstallURL,
+            description:            this.description,
+            flags:                  this.flags,
+            guildID:                this.guildID,
+            icon:                   this.icon,
+            installParams:          this.installParams,
+            integrationTypes:       this.integrationTypes,
+            integrationTypesConfig: this.integrationTypesConfig,
+            name:                   this.name,
+            owner:                  this.owner.toJSON(),
+            ownerID:                this.ownerID,
+            primarySKUID:           this.primarySKUID,
+            privacyPolicyURL:       this.privacyPolicyURL,
+            rpcOrigins:             this.rpcOrigins,
+            slug:                   this.slug,
+            tags:                   this.tags,
+            team:                   this.team?.toJSON() ?? null,
+            termsOfServiceURL:      this.termsOfServiceURL,
+            type:                   this.type,
+            verifyKey:              this.verifyKey
 
         };
     }

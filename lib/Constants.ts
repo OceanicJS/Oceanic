@@ -112,6 +112,17 @@ export enum UserFlags {
     RESTRICTED_COLLABORATOR = 2 ** 51,
 }
 
+export enum ApplicationIntegrationTypes {
+    GUILD_INSTALL = 0,
+    USER_INSTALL  = 1,
+}
+
+export enum InteractionContextTypes {
+    GUILD           = 0,
+    BOT_DM          = 1,
+    PRIVATE_CHANNEL = 2,
+}
+
 export enum ApplicationFlags {
     EMBEDDED_RELEASED                             = 1 << 1,
     MANAGED_EMOJI                                 = 1 << 2,

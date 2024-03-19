@@ -6,8 +6,10 @@ import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandPermissionTypes,
     ApplicationCommandTypes,
+    ApplicationIntegrationTypes,
     EntitlementOwnerTypes,
     EntitlementTypes,
+    InteractionContextTypes,
     SKUAccessTypes,
     SKUTypes,
     TeamMembershipState
@@ -30,6 +32,8 @@ export interface RawApplication {
     icon: string | null;
     id: string;
     install_params?: InstallParams;
+    integration_types?: Array<ApplicationIntegrationTypes>;
+    integration_types_config?: Partial<Record<`${ApplicationIntegrationTypes}`, RawApplicationIntegrationConfig>>;
     interactions_endpoint_url?: string | null;
     name: string;
     owner?: RawUser;
@@ -39,7 +43,6 @@ export interface RawApplication {
     role_connections_verification_url?: string | null;
     rpc_origins?: Array<string>;
     slug?: string;
-    // summary is deprecated and being removed in v11
     tags?: Array<string>;
     team?: RawTeam | null;
     terms_of_service_url?: string;
@@ -48,10 +51,20 @@ export interface RawApplication {
 }
 
 export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
-export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
-export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params"> {}
+export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RESTApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
 export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
 export type TeamMemberRoleTypes = "admin" | "developer" | "read-only";
+
+export interface IntegrationTypesConfig extends Partial<Record<`${ApplicationIntegrationTypes}`, ApplicationIntegrationConfig>> {}
+
+export interface RawApplicationIntegrationConfig {
+    oauth2_install_params?: InstallParams;
+}
+
+export interface ApplicationIntegrationConfig {
+    oauth2InstallParams?: InstallParams;
+}
 
 export interface RawTeam {
     icon: string | null;
@@ -81,6 +94,7 @@ export interface TeamMember {
 
 export interface RawApplicationCommand {
     application_id: string;
+    contexts: Array<InteractionContextTypes>;
     default_member_permissions: string | null;
     description: string;
     description_localizations?: LocaleMap | null;
@@ -88,6 +102,7 @@ export interface RawApplicationCommand {
     dm_permission?: boolean;
     guild_id?: string;
     id: string;
+    integration_types: Array<ApplicationIntegrationTypes>;
     name: string;
     name_localizations?: LocaleMap | null;
     name_localized?: string;
@@ -221,12 +236,19 @@ export interface ApplicationCommandOptionsUser extends ApplicationCommandOptionB
 
 // desc, options
 export interface CreateApplicationCommandOptionsBase<T extends ApplicationCommandTypes = ApplicationCommandTypes> {
+    /** The interaction contexts where the command can be used. Defaults to all interaction context types for new commands. */
+    contexts?: Array<InteractionContextTypes>;
     /** The default member permissions for the command. */
     defaultMemberPermissions?: string | null;
-    /** If the command can be used in a DM. */
+    /**
+     * If the command can be used in a DM.
+     * @deprecated Use contexts instead.
+     */
     dmPermission?: boolean | null;
     /** The ID of the command, if known. (Only usable when bulkEditing guild commands.) */
     id?: string;
+    /** The install contexts where the command is available. Defaults to {@link Constants~ApplicationIntegrationTypes.GUILD_INSTALL | GUILD_INSTALL}. */
+    integrationTypes?: Array<ApplicationIntegrationTypes>;
     /** The name of the command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
@@ -238,9 +260,9 @@ export interface CreateApplicationCommandOptionsBase<T extends ApplicationComman
 }
 
 export type CreateApplicationCommandOptions = CreateChatInputApplicationCommandOptions | CreateUserApplicationCommandOptions | CreateMessageApplicationCommandOptions;
-export interface CreateGuildChatInputApplicationCommandOptions extends Omit<CreateChatInputApplicationCommandOptions, "dmPermission"> {}
-export interface CreateGuildUserApplicationCommandOptions extends Omit<CreateUserApplicationCommandOptions, "dmPermission"> {}
-export interface CreateGuildMessageApplicationCommandOptions extends Omit<CreateMessageApplicationCommandOptions, "dmPermission"> {}
+export interface CreateGuildChatInputApplicationCommandOptions extends Omit<CreateChatInputApplicationCommandOptions, "dmPermission" | "integrationTypes" | "contexts"> {}
+export interface CreateGuildUserApplicationCommandOptions extends Omit<CreateUserApplicationCommandOptions, "dmPermission" | "integrationTypes" | "contexts"> {}
+export interface CreateGuildMessageApplicationCommandOptions extends Omit<CreateMessageApplicationCommandOptions, "dmPermission" | "integrationTypes" | "contexts"> {}
 export type CreateGuildApplicationCommandOptions = CreateGuildChatInputApplicationCommandOptions | CreateGuildUserApplicationCommandOptions | CreateGuildMessageApplicationCommandOptions;
 export interface CreateChatInputApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.CHAT_INPUT> {
     /** The description of the command. */
@@ -260,9 +282,9 @@ export interface EditUserApplicationCommandOptions extends Partial<Omit<CreateUs
 export interface EditMessageApplicationCommandOptions extends Partial<Omit<CreateMessageApplicationCommandOptions, "type">> {}
 
 export type EditGuildApplicationCommandOptions = EditGuildChatInputApplicationCommandOptions | EditGuildUserApplicationCommandOptions | EditGuildMessageApplicationCommandOptions;
-export interface EditGuildChatInputApplicationCommandOptions extends Partial<Omit<CreateChatInputApplicationCommandOptions, "type" | "dmPermission">> {}
-export interface EditGuildUserApplicationCommandOptions extends Partial<Omit<CreateUserApplicationCommandOptions, "type" | "dmPermission">> {}
-export interface EditGuildMessageApplicationCommandOptions extends Partial<Omit<CreateMessageApplicationCommandOptions, "type" | "dmPermission">> {}
+export interface EditGuildChatInputApplicationCommandOptions extends Partial<Omit<CreateChatInputApplicationCommandOptions, "type" | "dmPermission" | "integrationTypes" | "contexts">> {}
+export interface EditGuildUserApplicationCommandOptions extends Partial<Omit<CreateUserApplicationCommandOptions, "type" | "dmPermission" | "integrationTypes" | "contexts">> {}
+export interface EditGuildMessageApplicationCommandOptions extends Partial<Omit<CreateMessageApplicationCommandOptions, "type" | "dmPermission" | "integrationTypes" | "contexts">> {}
 
 export interface RawGuildApplicationCommandPermissions {
     application_id: string;
@@ -416,6 +438,7 @@ export interface EditApplicationOptions {
     icon?: string | Buffer | null;
     /** The install parameters of the application. */
     installParams?: InstallParams;
+    integrationTypesConfig?: IntegrationTypesConfig;
     /** The url where the application receives interactions. Must be valid according to Discord's [Receiving an interaction](https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction) documentation. */
     interactionsEndpointURL?: string;
     /** The role connection verification url for the application. */

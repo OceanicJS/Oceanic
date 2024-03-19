@@ -5,7 +5,7 @@ import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
 import type { RawScheduledEvent } from "./scheduled-events";
 import { type  Uncached } from "./shared";
-import type { SelectMenuDefaultValue } from "./interactions";
+import type { AuthorizingIntegrationOwners, SelectMenuDefaultValue } from "./interactions";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -671,7 +671,9 @@ export interface RawMessage {
     flags?: number;
     guild_id?: string;
     id: string;
+    /** @deprecated */
     interaction?: RawMessageInteraction;
+    interaction_metadata?: RawMessageInteractionMetadata;
     member?: RawMember;
     mention_channels?: Array<ChannelMention>;
     mention_everyone: boolean;
@@ -744,12 +746,33 @@ export interface RawMessageInteraction {
     user: RawUser;
 }
 
+/** @deprecated */
 export interface MessageInteraction {
     id: string;
     member?: Member;
     name: string;
     type: InteractionTypes;
     user: User;
+}
+
+export interface RawMessageInteractionMetadata {
+    authorizing_integration_owners: AuthorizingIntegrationOwners;
+    id: string;
+    interacted_message_id?: string;
+    original_response_message_id?: string;
+    triggering_interaction_metadata?: Omit<RawMessageInteractionMetadata, "triggering_interaction_metadata">;
+    type: InteractionTypes;
+    user_id: string;
+}
+
+export interface MessageInteractionMetadata {
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    id: string;
+    interactedMessageID?: string;
+    originalResponseMessageID?: string;
+    triggeringInteractionMetadata?: Omit<MessageInteractionMetadata, "triggeringInteractionMetadata">;
+    type: InteractionTypes;
+    user: User | Uncached;
 }
 
 

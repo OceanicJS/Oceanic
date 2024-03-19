@@ -13,7 +13,7 @@ import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
 import TypedCollection from "../util/TypedCollection";
-import { ApplicationCommandTypes, InteractionResponseTypes, type InteractionTypes } from "../Constants";
+import { ApplicationCommandTypes, InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
 import type {
     ApplicationCommandInteractionData,
     InteractionContent,
@@ -21,7 +21,8 @@ import type {
     RawApplicationCommandInteraction,
     ApplicationCommandInteractionResolvedData,
     InitialInteractionContent,
-    InteractionGuild
+    InteractionGuild,
+    AuthorizingIntegrationOwners
 } from "../types/interactions";
 import type Client from "../Client";
 import type { RawMember } from "../types/guilds";
@@ -37,10 +38,14 @@ import MessageInteractionResponse, { type FollowupMessageInteractionResponse, ty
 export default class CommandInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> extends Interaction {
     private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
     private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
-    /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
-    appPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
+    /** The permissions the bot has in the channel this interaction was sent from. If in a dm/group dm, this will contain `ATTACH_FILES`, `EMBED_LINKS`, and `MENTION_EVERYONE`. In addition, `USE_EXTERNAL_EMOJIS` will be included for DMs with the app's bot user. */
+    appPermissions: Permission;
+    /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
+    /** The context this interaction was sent from. */
+    context?: InteractionContextTypes;
     /** The data associated with the interaction. */
     data: ApplicationCommandInteractionData<T, C>;
     /** The entitlements for the user that created this interaction, and the guild it was created in. */
@@ -62,8 +67,10 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     user: User;
     constructor(data: RawApplicationCommandInteraction, client: Client) {
         super(data, client);
-        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
+        this.appPermissions = new Permission(data.app_permissions ?? "0");
+        this.authorizingIntegrationOwners = data.authorizing_integration_owners;
         this.channelID = data.channel_id!;
+        this.context = data.context;
         const resolved: ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
             channels:    new TypedCollection(InteractionResolvedChannel, client),
@@ -316,15 +323,17 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     override toJSON(): JSONCommandInteraction {
         return {
             ...super.toJSON(),
-            appPermissions: this.appPermissions?.toJSON(),
-            channelID:      this.channelID,
-            data:           this.data,
-            guildID:        this.guildID ?? undefined,
-            guildLocale:    this.guildLocale,
-            locale:         this.locale,
-            member:         this.member?.toJSON(),
-            type:           this.type,
-            user:           this.user.toJSON()
+            appPermissions:               this.appPermissions.toJSON(),
+            authorizingIntegrationOwners: this.authorizingIntegrationOwners,
+            channelID:                    this.channelID,
+            context:                      this.context,
+            data:                         this.data,
+            guildID:                      this.guildID ?? undefined,
+            guildLocale:                  this.guildLocale,
+            locale:                       this.locale,
+            member:                       this.member?.toJSON(),
+            type:                         this.type,
+            user:                         this.user.toJSON()
         };
     }
 }

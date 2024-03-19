@@ -16,8 +16,10 @@ import type { LocaleMap, RawEntitlement, RawTestEntitlement } from "./applicatio
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
+    ApplicationIntegrationTypes,
     ComponentTypes,
     GuildFeature,
+    InteractionContextTypes,
     InteractionResponseTypes,
     InteractionTypes,
     MessageComponentTypes,
@@ -94,9 +96,11 @@ export interface ModalData {
 }
 
 export interface RawInteraction {
-    app_permissions?: string;
+    app_permissions: string;
     application_id: string;
+    authorizing_integration_owners: AuthorizingIntegrationOwners;
     channel_id?: string;
+    context?: InteractionContextTypes;
     data?: RawInteractionData;
     entitlements?: Array<RawEntitlement | RawTestEntitlement>;
     guild?: InteractionGuild;
@@ -111,6 +115,8 @@ export interface RawInteraction {
     user?: RawUser;
     version: 1;
 }
+
+export interface AuthorizingIntegrationOwners extends Partial<Record<`${ApplicationIntegrationTypes}`, string>> {}
 
 export type AnyRawInteraction = RawPingInteraction | AnyRawGatewayInteraction;
 export type AnyRawGatewayInteraction = RawApplicationCommandInteraction | RawMessageComponentInteraction | RawAutocompleteInteraction | RawModalSubmitInteraction;
@@ -267,8 +273,7 @@ export interface AutocompleteChoice {
     value: string;
 }
 
-type Guildify<T extends Interaction> = Omit<T, "appPermissions" | "guild" | "guildID" | "guildLocale" | "guildPartial" | "member" | "memberPermissions"> & {
-    appPermissions: Permission;
+type Guildify<T extends Interaction> = Omit<T, "guild" | "guildID" | "guildLocale" | "guildPartial" | "member" | "memberPermissions"> & {
     guild: Guild;
     guildID: string;
     guildLocale: string;
@@ -276,8 +281,7 @@ type Guildify<T extends Interaction> = Omit<T, "appPermissions" | "guild" | "gui
     member: Member;
     memberPermissions: Permission;
 };
-type Privatify<T extends Interaction> = Omit<T, "appPermissions" | "guild" | "guildID" | "guildLocale" | "guildPartial" | "member" | "memberPermissions"> & {
-    appPermissions: undefined;
+type Privatify<T extends Interaction> = Omit<T, "guild" | "guildID" | "guildLocale" | "guildPartial" | "member" | "memberPermissions"> & {
     guild: undefined;
     guildID: undefined;
     guildLocale: undefined;

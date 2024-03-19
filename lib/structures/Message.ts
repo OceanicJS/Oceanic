@@ -33,7 +33,8 @@ import type {
     MessageReaction,
     MessageActionRow,
     AnyThreadChannel,
-    RoleSubscriptionData
+    RoleSubscriptionData,
+    MessageInteractionMetadata
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -77,8 +78,13 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     flags: number;
     /** The ID of the guild this message is in. */
     guildID: T extends AnyTextableGuildChannel ? string : string | null;
-    /** The interaction info, if this message was the result of an interaction. */
+    /**
+     * The interaction info, if this message was the result of an interaction.
+     * @deprecated Use {@link Message#interactionMetadata | Message#interactionMetadata } instead.
+     */
     interaction?: MessageInteraction;
+    /** The interaction info, if this message was the result of an interaction. */
+    interactionMetadata?: MessageInteractionMetadata;
     /** The member that created this message, if this message is in a guild. */
     member: T extends AnyTextableGuildChannel ? Member : Member | undefined;
     /** Channels mentioned in a `CROSSPOSTED` channel follower message. See [Discord's docs](https://discord.com/developers/docs/resources/channel#channel-mention-object) for more information. */
@@ -229,6 +235,24 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
                 name:   data.interaction.name,
                 type:   data.interaction.type,
                 user:   this.client.users.update(data.interaction.user)
+            };
+        }
+        if (data.interaction_metadata !== undefined) {
+            this.interactionMetadata = {
+                authorizingIntegrationOwners:  data.interaction_metadata.authorizing_integration_owners,
+                id:                            data.interaction_metadata.id,
+                interactedMessageID:           data.interaction_metadata.interacted_message_id,
+                originalResponseMessageID:     data.interaction_metadata.original_response_message_id,
+                type:                          data.interaction_metadata.type,
+                user:                          this.client.users.get(data.interaction_metadata.user_id) || { id: data.interaction_metadata.user_id },
+                triggeringInteractionMetadata: data.interaction_metadata.triggering_interaction_metadata === undefined ? undefined : {
+                    authorizingIntegrationOwners: data.interaction_metadata.triggering_interaction_metadata.authorizing_integration_owners,
+                    id:                           data.interaction_metadata.triggering_interaction_metadata.id,
+                    interactedMessageID:          data.interaction_metadata.triggering_interaction_metadata.interacted_message_id,
+                    originalResponseMessageID:    data.interaction_metadata.triggering_interaction_metadata.original_response_message_id,
+                    type:                         data.interaction_metadata.triggering_interaction_metadata.type,
+                    user:                         this.client.users.get(data.interaction_metadata.triggering_interaction_metadata.user_id) || { id: data.interaction_metadata.triggering_interaction_metadata.user_id }
+                }
             };
         }
         if (data.message_reference) {
@@ -440,13 +464,29 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             embeds:          this.embeds,
             flags:           this.flags,
             guildID:         this.guildID ?? undefined,
-            interaction:     this.interaction ? {
+            interaction:     this.interaction === undefined ? undefined : {
                 id:     this.interaction.id,
                 member: this.interaction.member?.toJSON(),
                 name:   this.interaction.name,
                 type:   this.interaction.type,
                 user:   this.interaction.user.toJSON()
-            } : undefined,
+            },
+            interactionMetadata: this.interactionMetadata === undefined ? undefined : {
+                id:                            this.interactionMetadata.id,
+                interactedMessageID:           this.interactionMetadata.interactedMessageID,
+                originalResponseMessageID:     this.interactionMetadata.originalResponseMessageID,
+                type:                          this.interactionMetadata.type,
+                user:                          this.interactionMetadata.user instanceof User ? this.interactionMetadata.user.toJSON() : this.interactionMetadata.user,
+                authorizingIntegrationOwners:  this.interactionMetadata.authorizingIntegrationOwners,
+                triggeringInteractionMetadata: this.interactionMetadata.triggeringInteractionMetadata === undefined ? undefined : {
+                    id:                           this.interactionMetadata.triggeringInteractionMetadata.id,
+                    interactedMessageID:          this.interactionMetadata.triggeringInteractionMetadata.interactedMessageID,
+                    originalResponseMessageID:    this.interactionMetadata.triggeringInteractionMetadata.originalResponseMessageID,
+                    type:                         this.interactionMetadata.triggeringInteractionMetadata.type,
+                    user:                         this.interactionMetadata.triggeringInteractionMetadata.user instanceof User ? this.interactionMetadata.triggeringInteractionMetadata.user.toJSON() : this.interactionMetadata.triggeringInteractionMetadata.user,
+                    authorizingIntegrationOwners: this.interactionMetadata.triggeringInteractionMetadata.authorizingIntegrationOwners
+                }
+            },
             mentionChannels: this.mentionChannels,
             mentions:        {
                 channels: this.mentions.channels,

@@ -149,9 +149,8 @@ export default class Webhook extends Base {
 
     /**
      * Edit a webhook message.
-     * @param id The ID of the webhook.
-     * @param token The token of the webhook.
      * @param messageID The ID of the message to edit.
+     * @param token The token of the webhook.
      * @param options The options for editing the message.
      */
     async editMessage<T extends AnyTextableGuildChannel = AnyTextableGuildChannel>(messageID: string, options: EditWebhookMessageOptions, token?: string): Promise<Message<T>> {

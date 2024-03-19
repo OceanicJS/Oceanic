@@ -4,7 +4,7 @@ import Permission from "./Permission";
 import type Guild from "./Guild";
 import type ClientApplication from "./ClientApplication";
 import type Client from "../Client";
-import { ApplicationCommandTypes } from "../Constants";
+import { ApplicationCommandTypes, type InteractionContextTypes, type ApplicationIntegrationTypes } from "../Constants";
 import type {
     ApplicationCommandOptionConversion,
     ApplicationCommandOptions,
@@ -24,6 +24,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     application?: ClientApplication;
     /** The ID of application this command is for. */
     applicationID: string;
+    /** The contexts in which this application command can be used in. */
+    contexts: Array<InteractionContextTypes>;
     /** The default permissions for this command. */
     defaultMemberPermissions: Permission | null;
     /** The description of this command. Empty string for non `CHAT_INPUT` commands. */
@@ -36,6 +38,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     dmPermission?: boolean;
     /** The id of the guild this command is in (guild commands only). */
     guildID: string | null;
+    /** The installation contexts in which this command is available. */
+    integrationTypes: Array<ApplicationIntegrationTypes>;
     /** The name of this command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
@@ -54,12 +58,14 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         super(data.id, client);
         this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
         this.applicationID = data.application_id;
+        this.contexts = data.contexts;
         this.defaultMemberPermissions = data.default_member_permissions ? new Permission(data.default_member_permissions) : null;
         this.description = data.description as never;
         this.descriptionLocalizations = data.description_localizations;
         this.descriptionLocalized = data.description_localized;
         this.dmPermission = data.dm_permission;
         this.guildID = data.guild_id ?? null;
+        this.integrationTypes = data.integration_types;
         this.name = data.name;
         this.nameLocalizations = data.name_localizations;
         this.nameLocalized = data.name_localized;
@@ -135,11 +141,13 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         return {
             ...super.toJSON(),
             applicationID:            this.applicationID,
+            contexts:                 this.contexts,
             defaultMemberPermissions: this.defaultMemberPermissions?.toJSON(),
             description:              this.description,
             descriptionLocalizations: this.descriptionLocalizations,
             dmPermission:             this.dmPermission,
             guildID:                  this.guildID ?? undefined,
+            integrationTypes:         this.integrationTypes,
             name:                     this.name,
             nameLocalizations:        this.nameLocalizations,
             nsfw:                     this.nsfw,

@@ -1,9 +1,10 @@
 /** @module Types/JSON */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { InstallParams } from "./oauth";
-import type { ApplicationCommandOptions, LocaleMap, TeamMember } from "./applications";
+import type { ApplicationCommandOptions, IntegrationTypesConfig, LocaleMap, TeamMember } from "./applications";
 import type {
     ApplicationCommandInteractionData,
+    AuthorizingIntegrationOwners,
     AutocompleteInteractionData,
     MessageComponentButtonInteractionData,
     MessageComponentSelectMenuInteractionData,
@@ -41,6 +42,7 @@ import type {
     ThreadOnlyChannels
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
+import type { Uncached } from "./shared";
 import type {
     ApplicationCommandTypes,
     AutoModerationEventTypes,
@@ -69,7 +71,9 @@ import type {
     SortOrderTypes,
     StageInstancePrivacyLevels,
     ForumLayoutTypes,
-    EntitlementTypes
+    EntitlementTypes,
+    ApplicationIntegrationTypes,
+    InteractionContextTypes
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
@@ -89,6 +93,8 @@ export interface JSONApplication extends JSONClientApplication {
     guildID: string | null;
     icon: string | null;
     installParams?: InstallParams;
+    integrationTypes: Array<ApplicationIntegrationTypes>;
+    integrationTypesConfig?: IntegrationTypesConfig;
     interactionsEndpointURL: string | null;
     name: string;
     primarySKUID?: string;
@@ -103,11 +109,13 @@ export interface JSONApplication extends JSONClientApplication {
 }
 export interface JSONApplicationCommand extends JSONBase {
     applicationID: string;
+    contexts: Array<InteractionContextTypes>;
     defaultMemberPermissions?: JSONPermission;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
     dmPermission?: boolean;
     guildID?: string;
+    integrationTypes: Array<ApplicationIntegrationTypes>;
     name: string;
     nameLocalizations?: LocaleMap | null;
     nsfw?: boolean;
@@ -128,8 +136,12 @@ export interface JSONAttachment extends JSONBase {
     width?: number;
 }
 export interface JSONAutocompleteInteraction extends JSONInteraction {
-    appPermissions?: JSONPermission;
+    appPermissions: JSONPermission;
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    /** @deprecated Use {@link JSONAutocompleteInteraction#channelID | channelID}. This will be removed in `1.10.0`. */
     channel: string;
+    channelID: string;
+    context?: InteractionContextTypes;
     data: AutocompleteInteractionData;
     guildID?: string;
     guildLocale?: string;
@@ -185,8 +197,10 @@ export interface JSONClientUser extends JSONUser {
     verified: boolean;
 }
 export interface JSONCommandInteraction extends JSONInteraction {
-    appPermissions?: JSONPermission;
+    appPermissions: JSONPermission;
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
+    context?: InteractionContextTypes;
     data: ApplicationCommandInteractionData;
     guildID?: string;
     guildLocale?: string;
@@ -196,8 +210,10 @@ export interface JSONCommandInteraction extends JSONInteraction {
     user: JSONUser;
 }
 export interface JSONComponentInteraction extends JSONInteraction {
-    appPermissions?: JSONPermission;
+    appPermissions: JSONPermission;
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
+    context?: InteractionContextTypes;
     data: MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
     guildID?: string;
     guildLocale?: string;
@@ -425,6 +441,22 @@ export interface JSONMessage extends JSONBase {
         type: InteractionTypes;
         user: JSONUser;
     };
+    interactionMetadata?: {
+        authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+        id: string;
+        interactedMessageID?: string;
+        originalResponseMessageID?: string;
+        triggeringInteractionMetadata?: {
+            authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+            id: string;
+            interactedMessageID?: string;
+            originalResponseMessageID?: string;
+            type: InteractionTypes;
+            user: JSONUser | Uncached;
+        };
+        type: InteractionTypes;
+        user: JSONUser | Uncached;
+    };
     mentionChannels?: Array<ChannelMention>;
     mentions: {
         channels: Array<string>;
@@ -447,8 +479,10 @@ export interface JSONMessage extends JSONBase {
     webhook?: string;
 }
 export interface JSONModalSubmitInteraction extends JSONInteraction {
-    appPermissions?: JSONPermission;
+    appPermissions: JSONPermission;
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
+    context?: InteractionContextTypes;
     data: ModalSubmitInteractionData;
     guildID?: string;
     guildLocale?: string;
@@ -467,6 +501,8 @@ export interface JSONOAuthApplication extends JSONBase {
     guildID: string | null;
     icon: string | null;
     installParams?: InstallParams;
+    integrationTypes: Array<ApplicationIntegrationTypes>;
+    integrationTypesConfig?: IntegrationTypesConfig;
     name: string;
     owner: JSONUser;
     ownerID: string;

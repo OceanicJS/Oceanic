@@ -3,10 +3,10 @@ import ClientApplication from "./ClientApplication";
 import OAuthGuild from "./OAuthGuild";
 import type Client from "../Client";
 import type { InstallParams } from "../types/oauth";
-import type { ImageFormat } from "../Constants";
+import type { ApplicationIntegrationTypes, ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type { JSONApplication } from "../types/json";
-import type { RESTApplication } from "../types";
+import type { IntegrationTypesConfig, RESTApplication } from "../types";
 
 /** Represents an application. */
 export default class Application extends ClientApplication {
@@ -26,6 +26,10 @@ export default class Application extends ClientApplication {
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */
     installParams?: InstallParams;
+    /** The install types available for this application. */
+    integrationTypes: Array<ApplicationIntegrationTypes>;
+    /** The configs for the install types available for this application. */
+    integrationTypesConfig: IntegrationTypesConfig;
     /** This applications interaction endpoint url, if any. */
     interactionsEndpointURL: string | null;
     /** The name of the application. */
@@ -56,6 +60,8 @@ export default class Application extends ClientApplication {
         this.guild = null;
         this.guildID = data.guild_id ?? null;
         this.icon = null;
+        this.integrationTypes = [];
+        this.integrationTypesConfig = {};
         this.interactionsEndpointURL = null;
         this.name = data.name;
         this.roleConnectionsVerificationURL = null;
@@ -88,6 +94,12 @@ export default class Application extends ClientApplication {
         }
         if (data.install_params !== undefined) {
             this.installParams = data.install_params;
+        }
+        if (data.integration_types !== undefined) {
+            this.integrationTypes = data.integration_types;
+        }
+        if (data.integration_types_config !== undefined) {
+            this.integrationTypesConfig = Object.fromEntries(Object.entries(data.integration_types_config).map(([key, value]) => [key, { oauth2InstallParams: value.oauth2_install_params }]));
         }
         if (data.interactions_endpoint_url !== undefined) {
             this.interactionsEndpointURL = data.interactions_endpoint_url;
@@ -153,6 +165,8 @@ export default class Application extends ClientApplication {
             guildID:                        this.guildID,
             icon:                           this.icon,
             installParams:                  this.installParams,
+            integrationTypes:               this.integrationTypes,
+            integrationTypesConfig:         this.integrationTypesConfig,
             interactionsEndpointURL:        this.interactionsEndpointURL,
             name:                           this.name,
             primarySKUID:                   this.primarySKUID,

@@ -9,8 +9,9 @@ import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
-import { InteractionResponseTypes, type InteractionTypes } from "../Constants";
+import { InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
 import type {
+    AuthorizingIntegrationOwners,
     InitialInteractionContent,
     InteractionContent,
     InteractionGuild,
@@ -29,10 +30,14 @@ import ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalS
 export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
     private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
     private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
-    /** The permissions the bot has in the channel this interaction was sent from, if this interaction is sent from a guild. */
-    appPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
+    /** The permissions the bot has in the channel this interaction was sent from. If in a dm/group dm, this will contain `ATTACH_FILES`, `EMBED_LINKS`, and `MENTION_EVERYONE`. In addition, `USE_EXTERNAL_EMOJIS` will be included for DMs with the app's bot user. */
+    appPermissions: Permission;
+    /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
+    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
+    /** The context this interaction was sent from. */
+    context?: InteractionContextTypes;
     /** The data associated with the interaction. */
     data: ModalSubmitInteractionData;
     /** The entitlements for the user that created this interaction, and the guild it was created in. */
@@ -60,8 +65,10 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
             data.message.guild_id = data.guild_id;
         }
 
-        this.appPermissions = (data.app_permissions === undefined ? undefined : new Permission(data.app_permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | undefined;
+        this.appPermissions = new Permission(data.app_permissions ?? "0");
+        this.authorizingIntegrationOwners = data.authorizing_integration_owners;
         this.channelID = data.channel_id!;
+        this.context = data.context;
         this.data = {
             components: new ModalSubmitInteractionComponentsWrapper(client.util.modalSubmitComponentsToParsed(data.data.components)),
             customID:   data.data.custom_id
@@ -256,15 +263,17 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
     override toJSON(): JSONModalSubmitInteraction {
         return {
             ...super.toJSON(),
-            appPermissions: this.appPermissions?.toJSON(),
-            channelID:      this.channelID,
-            data:           this.data,
-            guildID:        this.guildID ?? undefined,
-            guildLocale:    this.guildLocale,
-            locale:         this.locale,
-            member:         this.member?.toJSON(),
-            type:           this.type,
-            user:           this.user.toJSON()
+            appPermissions:               this.appPermissions.toJSON(),
+            authorizingIntegrationOwners: this.authorizingIntegrationOwners,
+            channelID:                    this.channelID,
+            context:                      this.context,
+            data:                         this.data,
+            guildID:                      this.guildID ?? undefined,
+            guildLocale:                  this.guildLocale,
+            locale:                       this.locale,
+            member:                       this.member?.toJSON(),
+            type:                         this.type,
+            user:                         this.user.toJSON()
         };
     }
 }
