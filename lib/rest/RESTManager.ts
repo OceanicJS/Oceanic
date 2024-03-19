@@ -39,11 +39,6 @@ export default class RESTManager {
         this.webhooks = new Webhooks(this);
     }
 
-    /** @deprecated Use {@link RESTManager#applications | RESTManager#applications} instead. This will be removed in `1.10.0`. */
-    get applicationCommands(): RESTManager["applications"] {
-        return this.applications;
-    }
-
     get client(): Client {
         return this.#client;
     }

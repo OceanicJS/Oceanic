@@ -1,5 +1,4 @@
 /** @module REST/Miscellaneous */
-import type Applications from "./Applications";
 import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
 import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
@@ -10,36 +9,6 @@ export default class Miscellaneous {
     #manager: RESTManager;
     constructor(manager: RESTManager) {
         this.#manager = manager;
-    }
-
-    /** @deprecated Use {@link REST/Applications#createTestEntitlement | Application#createTestEntitlement} instead. This will be removed in `1.10.0`. */
-    get createTestEntitlement(): Applications["createTestEntitlement"] {
-        return this.#manager.applications.createTestEntitlement.bind(this.#manager.applications);
-    }
-
-    /** @deprecated Use {@link REST/Applications#deleteTestEntitlement | Application#deleteTestEntitlement} instead. This will be removed in `1.10.0`. */
-    get deleteEntitlement(): Applications["deleteTestEntitlement"] {
-        return this.#manager.applications.deleteTestEntitlement.bind(this.#manager.applications);
-    }
-
-    /** @deprecated Use {@link REST/Applications#getCurrent | Application#getCurrent} instead. This will be removed in `1.10.0`. */
-    get getApplication(): Applications["getCurrent"] {
-        return this.#manager.applications.getCurrent.bind(this.#manager.applications);
-    }
-
-    /** @deprecated Use {@link REST/Applications#getClient | Application#getClient} instead. This will be removed in `1.10.0`. */
-    get getClientApplication(): Applications["getClient"] {
-        return this.#manager.applications.getClient.bind(this.#manager.applications);
-    }
-
-    /** @deprecated Use {@link REST/Applications#getEntitlements | Application#getEntitlements} instead. This will be removed in `1.10.0`. */
-    get getEntitlements(): Applications["getEntitlements"] {
-        return this.#manager.applications.getEntitlements.bind(this.#manager.applications);
-    }
-
-    /** @deprecated Use {@link REST/Applications#getSKUs | Application#getSKUs} instead. This will be removed in `1.10.0`. */
-    get getSKUs(): Applications["getSKUs"] {
-        return this.#manager.applications.getSKUs.bind(this.#manager.applications);
     }
 
     /**

@@ -123,7 +123,6 @@ export default class AutocompleteInteraction<T extends AnyInteractionChannel | U
             ...super.toJSON(),
             appPermissions:               this.appPermissions.toJSON(),
             authorizingIntegrationOwners: this.authorizingIntegrationOwners,
-            channel:                      this.channelID, // TODO: remove in 1.10.0
             channelID:                    this.channelID,
             context:                      this.context,
             data:                         this.data,

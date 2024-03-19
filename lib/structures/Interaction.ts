@@ -88,14 +88,6 @@ export default class Interaction extends Base {
         return this.type === InteractionTypes.MODAL_SUBMIT;
     }
 
-    /**
-     * A type guard, checking if this interaction is a {@link ModalSubmitInteraction | Modal Submit Interaction}.
-     * @deprecated Use {@link Interaction#isModalSubmitInteraction | isModalSubmitInteraction}. This will be removed in `1.10.0`.
-     */
-    isModelSubmitInteraction(): this is IModalSubmitInteraction {
-        return this.isModalSubmitInteraction();
-    }
-
     /** A type guard, checking if this interaction is a {@link PingInteraction | Ping Interaction}. */
     isPingInteraction(): this is IPingInteraction {
         return this.type === InteractionTypes.PING;

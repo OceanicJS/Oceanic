@@ -77,9 +77,6 @@ export interface ModalSubmitInteractionResponse {
     type: InteractionResponseTypes.MODAL;
 }
 
-/** @deprecated Use {@link Types/Interactions~ModalSubmitInteractionResponse | ModalSubmitInteractionResponse} instead. This will be removed in `1.10.0` */
-export type ModalInteractionResponse = ModalSubmitInteractionResponse;
-
 export interface PremiumRequiredResponse {
     data: Record<string, never>;
     type: InteractionResponseTypes.PREMIUM_REQUIRED;

@@ -56,11 +56,6 @@ export default class ClientApplication extends Base {
         }
     }
 
-    /** @deprecated Use {@link ClientApplication#deleteTestEntitlement | ClientApplication#deleteTestEntitlement} instead. This will be removed in `1.10.0`. */
-    get deleteEntitlement(): ClientApplication["deleteTestEntitlement"] {
-        return this.deleteTestEntitlement.bind(this);
-    }
-
     /**
      * Overwrite all existing global application commands.
      * @param options The commands.

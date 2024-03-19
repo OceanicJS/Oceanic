@@ -138,8 +138,6 @@ export interface JSONAttachment extends JSONBase {
 export interface JSONAutocompleteInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
-    /** @deprecated Use {@link JSONAutocompleteInteraction#channelID | channelID}. This will be removed in `1.10.0`. */
-    channel: string;
     channelID: string;
     context?: InteractionContextTypes;
     data: AutocompleteInteractionData;
