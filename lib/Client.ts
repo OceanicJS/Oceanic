@@ -262,7 +262,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * @param fakeReady If the client should emit a ready event. Defaults to true.
      */
     async restMode(fakeReady = true): Promise<this> {
-        this._application ??= await this.rest.misc.getClientApplication();
+        this._application ??= await this.rest.applications.getCurrent();
         this._user ??= await this.rest.oauth.getCurrentUser();
         this.options.restMode = true;
         if (fakeReady) {

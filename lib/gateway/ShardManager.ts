@@ -182,7 +182,7 @@ export default class ShardManager extends Collection<number, Shard> {
 
         /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
         if (this.options.removeDisallowedIntents && privilegedIntentMapping.some(([intent]) => (this.options.intents & intent) === intent)) {
-            const { flags } = await this.#client.rest.misc.getApplication();
+            const { flags } = await this.#client.rest.applications.getCurrent();
             const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
                 if ((this.options.intents & intent) === intent && !allowed.some(flag => (flags & flag) === flag)) {
                     this.#client.emit("warn", `removeDisallowedIntents is enabled, and ${Intents[intent]} was included but not found to be allowed. It has been removed.`);

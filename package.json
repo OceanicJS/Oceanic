@@ -1,6 +1,6 @@
 {
   "name": "oceanic.js",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "A NodeJS library for interfacing with Discord.",
   "main": "./dist/lib/index.js",
   "types": "./dist/lib/index.d.ts",
