@@ -31,6 +31,8 @@ export interface RawExtendedUser extends Pick<RawOAuthUser, "avatar" | "avatar_d
 export interface EditSelfUserOptions {
     /** The new avatar (buffer, or full data url). `null` to reset. */
     avatar?: Buffer | string | null;
+    /** The new banner (buffer, or full data url). `null` to reset. */
+    banner?: Buffer | string | null;
     /** The new username. */
     username?: string;
 }

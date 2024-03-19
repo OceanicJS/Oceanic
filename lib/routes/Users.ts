@@ -27,6 +27,11 @@ export default class Users {
         if (options.avatar) {
             options.avatar = this.#manager.client.util._convertImage(options.avatar, "avatar");
         }
+
+        if (options.banner) {
+            options.banner = this.#manager.client.util._convertImage(options.banner, "banner");
+        }
+
         return this.#manager.authRequest<RawOAuthUser>({
             method: "PATCH",
             path:   Routes.USER("@me"),
