@@ -52,6 +52,7 @@ export { default as PartialApplication } from "./structures/PartialApplication";
 export { default as Permission } from "./structures/Permission";
 export { default as PermissionOverwrite } from "./structures/PermissionOverwrite";
 export { default as PingInteraction } from "./structures/PingInteraction";
+export { default as Poll } from "./structures/Poll";
 export { default as PrivateChannel } from "./structures/PrivateChannel";
 export { default as PrivateThreadChannel } from "./structures/PrivateThreadChannel";
 export { default as PublicThreadChannel } from "./structures/PublicThreadChannel";

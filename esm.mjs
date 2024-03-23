@@ -49,6 +49,7 @@ const PartialApplication = (await import("./dist/lib/structures/PartialApplicati
 const Permission = (await import("./dist/lib/structures/Permission.js")).default.default;
 const PermissionOverwrite = (await import("./dist/lib/structures/PermissionOverwrite.js")).default.default;
 const PingInteraction = (await import("./dist/lib/structures/PingInteraction.js")).default.default;
+const Poll = (await import("./dist/lib/structures/Poll.js")).default.default;
 const PrivateChannel = (await import("./dist/lib/structures/PrivateChannel.js")).default.default;
 const PrivateThreadChannel = (await import("./dist/lib/structures/PrivateThreadChannel.js")).default.default;
 const PublicThreadChannel = (await import("./dist/lib/structures/PublicThreadChannel.js")).default.default;
@@ -134,6 +135,7 @@ export {
     Permission,
     PermissionOverwrite,
     PingInteraction,
+    Poll,
     PrivateChannel,
     PrivateThreadChannel,
     PublicThreadChannel,

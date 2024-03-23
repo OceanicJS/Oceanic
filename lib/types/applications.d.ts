@@ -371,7 +371,7 @@ export type Locale =
 export type LocaleMap = Partial<Record<Locale, string>>;
 
 export interface CreateTestEntitlementOptions {
-    /** The ID of the owner of the test entitlement, a user or guild.*/
+    /** The ID of the owner of the test entitlement, a user or guild. */
     ownerID: string;
     /** The type of the owner of the entitlement. */
     ownerType: EntitlementOwnerTypes;

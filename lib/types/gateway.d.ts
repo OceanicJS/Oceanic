@@ -113,7 +113,7 @@ interface GatewayOptions {
      */
     reconnectDelay?: ReconnectDelayFunction;
     /**
-     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link REST/MApplications.getCurrent | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
+     * If a check should be made before connecting, which will remove any disallowed intents. This requires making a request to {@link REST/Applications.getCurrent | `/applications/@me`}. Any removed intents will be emitted via the `warn` event.
      * @defaultValue false
      */
     removeDisallowedIntents?: boolean;
@@ -335,4 +335,12 @@ export interface RawVoiceChannelEffect {
 export interface VoiceChannelEffect {
     animationID?: number;
     animationType?: AnimationTypes;
+}
+
+export interface RawMessagePollVote {
+    answer_id: number;
+    channel_id: string;
+    guild_id?: string;
+    message_id: string;
+    user_id: string;
 }

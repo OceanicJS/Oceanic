@@ -43,7 +43,8 @@ import type {
     GetThreadMembersOptions,
     AnyGuildChannel,
     GetChannelMessagesIteratorOptions,
-    MessagesIterator
+    MessagesIterator,
+    GetPollAnswerUsersOptions
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import type Message from "../structures/Message";
@@ -177,7 +178,10 @@ export default class Channels {
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(channelID),
             json:   {
-                allowed_mentions:  this.#manager.client.util.formatAllowedMentions(options.allowedMentions),
+                // HACK: currently, allowed_mentions cannot be sent along with a poll. Due to how this previously worked, allowed mentions was ALWAYS sent.
+                // We check if poll is not present (or if allowedMentions IS present, for future proofing), and don't send allowed_mentions
+                // ^ If fixed make sure to remove the note from the "poll" property in the CreateMessageOptions interface
+                allowed_mentions:  options.poll === undefined || options.allowedMentions ? this.#manager.client.util.formatAllowedMentions(options.allowedMentions) : undefined,
                 attachments:       options.attachments,
                 components:        options.components ? this.#manager.client.util.componentsToRaw(options.components) : undefined,
                 content:           options.content,
@@ -189,6 +193,15 @@ export default class Channels {
                     fail_if_not_exists: options.messageReference.failIfNotExists,
                     guild_id:           options.messageReference.guildID,
                     message_id:         options.messageReference.messageID
+                } : undefined,
+                poll: options.poll ? {
+                    allow_multiselect: options.poll.allowMultiselect,
+                    answers:           options.poll.answers.map(a => ({
+                        poll_media: a.pollMedia
+                    })),
+                    duration:    options.poll.duration,
+                    layout_type: options.poll.layoutType,
+                    question:    options.poll.question
                 } : undefined,
                 tts: options.tts
             },
@@ -535,6 +548,19 @@ export default class Channels {
     }
 
     /**
+     * End a poll now.
+     * @param channelID The ID of the channel the poll is in.
+     * @param messageID The ID of the message the poll is on.
+     * @caching This method **does not** cache its result.
+     */
+    async expirePoll(channelID: string, messageID: string): Promise<void> {
+        await this.#manager.authRequest<null>({
+            method: "POST",
+            path:   Routes.POLL_EXPIRE(channelID, messageID)
+        });
+    }
+
+    /**
      * Follow an announcement channel.
      * @param channelID The ID of the channel to follow announcements from.
      * @param webhookChannelID The ID of the channel crossposted messages should be sent to. The client must have the `MANAGE_WEBHOOKS` permission in this channel.
@@ -772,6 +798,37 @@ export default class Channels {
             method: "GET",
             path:   Routes.CHANNEL_PINS(channelID)
         }).then(data => data.map(d => this.#manager.client.util.updateMessage<T>(d)));
+    }
+
+    /**
+     * Get the users that voted on a poll answer.
+     * @param channelID The ID of the channel the poll is in.
+     * @param messageID The ID of the message the poll is on.
+     * @param answerID The ID of the poll answer to get voters for.
+     * @param options The options for getting the voters.
+     * @caching This method **does** cache its result.
+     * @caches {@link Client#users | Client#users}
+     */
+    async getPollAnswerUsers(channelID: string, messageID: string, answerID: number, options?: GetPollAnswerUsersOptions): Promise<Array<User>> {
+        const qs = new URLSearchParams();
+        if (options?.after !== undefined) {
+            qs.set("before", options.after);
+        }
+        if (options?.limit !== undefined) {
+            qs.set("limit", options.limit.toString());
+        }
+        return this.#manager.authRequest<Array<RawUser>>({
+            method: "GET",
+            path:   Routes.POLL_ANSWER_USERS(channelID, messageID, answerID),
+            query:  qs
+        }).then(data => {
+            const users = data.map(user => this.#manager.client.users.update(user));
+            const message = this.#manager.client.getChannel<AnyTextableChannel>(channelID)?.messages.get(messageID);
+            if (message?.poll) {
+                this.#manager.client.util.replacePollAnswer(message.poll, answerID, users.length, users.map(u => u.id));
+            }
+            return users;
+        });
     }
 
     /**

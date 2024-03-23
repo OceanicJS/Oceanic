@@ -104,7 +104,7 @@ export default class OAuth {
      * Get information about the current authorization.
      *
      * Note: OAuth only. Bots cannot use this.
-     * @caching This method **does** cache part its result.
+     * @caching This method **does** cache part of its result.
      * @caches {@link Client#users | Client#users}
      */
     async getCurrentAuthorizationInformation(): Promise<AuthorizationInformation> {

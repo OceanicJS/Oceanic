@@ -39,7 +39,10 @@ import type {
     TextableGuildChannels,
     ThreadChannels,
     VoiceChannels,
-    ThreadOnlyChannels
+    ThreadOnlyChannels,
+    PollQuestion,
+    PollResults,
+    PollAnswer
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
 import type { Uncached } from "./shared";
@@ -73,7 +76,8 @@ import type {
     ForumLayoutTypes,
     EntitlementTypes,
     ApplicationIntegrationTypes,
-    InteractionContextTypes
+    InteractionContextTypes,
+    PollLayoutType
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
@@ -360,7 +364,6 @@ export interface JSONIntegration extends JSONBase {
 }
 export interface JSONInteraction extends JSONBase {
     applicationID: string;
-    token: string;
     type: InteractionTypes;
     version: 1;
 }
@@ -543,6 +546,14 @@ export interface JSONPermissionOverwrite extends JSONBase {
 }
 export interface JSONPingInteraction extends JSONInteraction {
     type: InteractionTypes.PING;
+}
+export interface JSONPoll {
+    allowMultiselect: boolean;
+    answers: Array<PollAnswer>;
+    expiry: string;
+    layoutType: PollLayoutType;
+    question: PollQuestion;
+    results: PollResults;
 }
 export interface JSONPrivateChannel extends JSONChannel {
     lastMessageID: string | null;
