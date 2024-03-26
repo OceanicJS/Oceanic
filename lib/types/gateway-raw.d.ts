@@ -11,7 +11,13 @@ import type {
     RawSticker
 } from "./guilds";
 import type { RawExtendedUser, RawUser } from "./users";
-import type { PresenceUpdate, RawAutoModerationActionExecution, RawDeletedPrivateChannel, RawVoiceChannelEffect } from "./gateway";
+import type {
+    PresenceUpdate,
+    RawAutoModerationActionExecution,
+    RawDeletedPrivateChannel,
+    RawMessagePollVote,
+    RawVoiceChannelEffect
+} from "./gateway";
 import type {
     RawGuildApplicationCommandPermissions,
     RawEntitlement,
@@ -551,6 +557,16 @@ export interface EntitlementDeletePacket extends BaseDispatchPacket {
     t: "ENTITLEMENT_DELETE";
 }
 
+export interface MessagePollVoteAdd extends BaseDispatchPacket {
+    d: RawMessagePollVote;
+    t: "MESSAGE_POLL_VOTE_ADD";
+}
+
+export interface MessagePollVoteRemove extends BaseDispatchPacket {
+    d: RawMessagePollVote;
+    t: "MESSAGE_POLL_VOTE_REMOVE";
+}
+
 export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
 GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
@@ -564,4 +580,5 @@ IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket |
 InviteCreatePacket | InviteDeletePacket |
 MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
 TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
-EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket;
+EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket |
+MessagePollVoteAdd | MessagePollVoteRemove;

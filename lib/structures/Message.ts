@@ -12,6 +12,7 @@ import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
+import Poll from "./Poll";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, type MessageTypes } from "../Constants";
@@ -34,7 +35,8 @@ import type {
     MessageActionRow,
     AnyThreadChannel,
     RoleSubscriptionData,
-    MessageInteractionMetadata
+    MessageInteractionMetadata,
+    GetPollAnswerUsersOptions
 } from "../types/channels";
 import type { RawMember } from "../types/guilds";
 import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
@@ -108,6 +110,8 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     nonce?: number | string;
     /** If this message is pinned. */
     pinned: boolean;
+    /** The poll on this message, if any. */
+    poll?: Poll;
     /** This message's relative position, if in a thread. */
     position?: number;
     /** The reactions on this message. */
@@ -148,6 +152,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             users:    []
         };
         this.pinned = !!data.pinned;
+        this.poll = data.poll ? new Poll(data.poll, client, this) : undefined;
         this.reactions = [];
         // message updates can be missing a timestamp
         this.timestamp = data.timestamp === undefined ? Base.getCreatedAt(this.id) : new Date(data.timestamp);
@@ -414,6 +419,28 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             throw new TypeError("This message is not a webhook message.");
         }
         return this.client.rest.webhooks.editMessage<never>(this.webhookID, token, this.id, options);
+    }
+
+    /** End this The poll on this message now. */
+    async expire(): Promise<void> {
+        if (this.poll === undefined) {
+            throw new TypeError("Message does not have a poll.");
+        }
+
+        await this.poll.expire();
+    }
+
+    /**
+     * Get the users that voted on a poll answer.
+     * @param answerID The ID of the poll answer to get voters for.
+     * @param options The options for getting the voters.
+     */
+    async getPollAnswerUsers(answerID: number, options?: GetPollAnswerUsersOptions): Promise<Array<User>> {
+        if (this.poll === undefined) {
+            throw new TypeError("Message does not have a poll.");
+        }
+
+        return this.poll.getAnswerUsers(answerID, options);
     }
 
     /**

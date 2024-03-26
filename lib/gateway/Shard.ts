@@ -36,7 +36,8 @@ import type {
     ThreadMember,
     ThreadParentChannel,
     UncachedThreadMember,
-    AnyVoiceChannel
+    AnyVoiceChannel,
+    PollAnswer
 } from "../types/channels";
 import type TextChannel from "../structures/TextChannel";
 import type { JSONAnnouncementThreadChannel } from "../types/json";
@@ -713,6 +714,42 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 break;
             }
 
+            case "MESSAGE_POLL_VOTE_ADD": {
+                const user = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
+                const message = (channel instanceof Channel ? channel.messages.get(packet.d.message_id) : undefined) ?? { channel, channelID: channel.id, guild, guildID: guild?.id, id: packet.d.message_id };
+                let answer: PollAnswer | { answerID: number; } = { answerID: packet.d.answer_id };
+                if (message instanceof Message && message.poll !== undefined) {
+                    const pollAnswer = message.poll.answers.find(a => a.answerID === packet.d.answer_id);
+                    if (pollAnswer) {
+                        answer = pollAnswer;
+                    }
+
+                    this.client.util.updatePollAnswer(message.poll, packet.d.answer_id, 1, packet.d.user_id);
+                }
+                this.client.emit("messagePollVoteAdd", message, user, answer);
+                break;
+            }
+
+            case "MESSAGE_POLL_VOTE_REMOVE": {
+                const user = this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id };
+                const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id) ?? { id: packet.d.channel_id };
+                const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
+                const message = (channel instanceof Channel ? channel.messages.get(packet.d.message_id) : undefined) ?? { channel, channelID: channel.id, guild, guildID: guild?.id, id: packet.d.message_id };
+                let answer: PollAnswer | { answerID: number; } = { answerID: packet.d.answer_id };
+                if (message instanceof Message && message.poll !== undefined) {
+                    const pollAnswer = message.poll.answers.find(a => a.answerID === packet.d.answer_id);
+                    if (pollAnswer) {
+                        answer = pollAnswer;
+                    }
+
+                    this.client.util.updatePollAnswer(message.poll, packet.d.answer_id, -1, packet.d.user_id);
+                }
+                this.client.emit("messagePollVoteRemove", message, user, answer);
+                break;
+            }
+
             case "MESSAGE_REACTION_ADD": {
                 const channel = this.client.getChannel<AnyTextableChannel>(packet.d.channel_id);
                 const guild = packet.d.guild_id ? this.client.guilds.get(packet.d.guild_id) : undefined;
@@ -755,6 +792,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                     guild,
                     guildID:   packet.d.guild_id,
                     id:        packet.d.message_id ,
+                    // @TODO (1.11.0): Convert this to only be User, and add a member field
                     author:    packet.d.message_author_id === undefined ? undefined : guild?.members.get(packet.d.user_id) ?? this.client.users.get(packet.d.user_id) ?? { id: packet.d.message_author_id }
                 }, reactor, packet.d.emoji, packet.d.burst);
                 break;

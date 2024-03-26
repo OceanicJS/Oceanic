@@ -29,7 +29,7 @@ export default class Interaction extends Base {
     /** The ID of the application this interaction is for. */
     applicationID: string;
     /** The token of this interaction. */
-    token: string;
+    token!: string;
     /** The [type](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-type) of this interaction. */
     type: InteractionTypes;
     /** Read-only property, always `1` */
@@ -39,7 +39,7 @@ export default class Interaction extends Base {
         this.acknowledged = false;
         this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
         this.applicationID = data.application_id;
-        this.token = data.token;
+        Object.defineProperty(this, "token", { value: data.token, enumerable: false });
         this.type = data.type;
         this.version = data.version;
     }
@@ -97,7 +97,6 @@ export default class Interaction extends Base {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
-            token:         this.token,
             type:          this.type,
             version:       this.version
         };

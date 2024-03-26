@@ -78,20 +78,23 @@ export const GROUP_RECIPIENT                         = (channelID: string, userI
 export const VOICE_REGIONS                           = "/voice/regions" as const;
 export const GUILD_VOICE_REGIONS                     = (guildID: string) => `/guilds/${guildID}/regions` as const;
 export const VOICE_STATUS                            = (channelID: string) => `/channels/${channelID}/voice-status` as const;
+export const POLL_ANSWER_USERS                       = (channelID: string, pollID: string, answerID: number) => `/channels/${channelID}/polls/${pollID}/answers/${answerID}` as const;
+export const POLL_EXPIRE                             = (channelID: string, pollID: string) => `/channels/${channelID}/polls/${pollID}/expire` as const;
 
 // OAuth
-export const OAUTH_APPLICATION     = "/oauth2/applications/@me" as const;
-export const OAUTH_AUTHORIZE       = "/oauth2/authorize" as const;
-export const OAUTH_INFO            = "/oauth2/@me" as const;
-export const OAUTH_CURRENT_USER    = "/users/@me" as const;
-export const OAUTH_CHANNELS        = "/users/@me/channels" as const;
-export const OAUTH_CONNECTIONS     = "/users/@me/connections" as const;
-export const OAUTH_GUILD           = (guildID: string) => `/users/@me/guilds/${guildID}` as const;
-export const OAUTH_GUILD_MEMBER    = (guildID: string) => `${OAUTH_GUILD(guildID)}/member` as const;
-export const OAUTH_GUILDS          = "/users/@me/guilds" as const;
-export const OAUTH_TOKEN           = "/oauth2/token" as const;
-export const OAUTH_TOKEN_REVOKE    = "/oauth2/token/revoke" as const;
-export const OAUTH_ROLE_CONNECTION = (applicationID: string) => `/users/@me/applications/${applicationID}/role-connection` as const;
+export const OAUTH_APPLICATION         = "/oauth2/applications/@me" as const;
+export const OAUTH_AUTHORIZE           = "/oauth2/authorize" as const;
+export const OAUTH_INFO                = "/oauth2/@me" as const;
+export const OAUTH_CURRENT_USER        = "/users/@me" as const;
+export const OAUTH_CHANNELS            = "/users/@me/channels" as const;
+export const OAUTH_CONNECTIONS         = "/users/@me/connections" as const;
+export const OAUTH_GUILD               = (guildID: string) => `/users/@me/guilds/${guildID}` as const;
+export const OAUTH_GUILD_MEMBER        = (guildID: string) => `${OAUTH_GUILD(guildID)}/member` as const;
+export const OAUTH_GUILDS              = "/users/@me/guilds" as const;
+export const OAUTH_TOKEN               = "/oauth2/token" as const;
+export const OAUTH_TOKEN_REVOKE        = "/oauth2/token/revoke" as const;
+export const OAUTH_ROLE_CONNECTION     = (applicationID: string) => `/users/@me/applications/${applicationID}/role-connection` as const;
+export const ROLE_CONNECTIONS_METADATA = (applicationID: string) => `/applications/${applicationID}/role-connections/metadata` as const;
 
 // Images
 export const ACHIEVEMENT_ICON            = (applicationID: string, achievementID: string, hash: string) => `/app-assets/${applicationID}/achievements/${achievementID}/icons/${hash}` as const;
@@ -114,7 +117,7 @@ export const TEAM_ICON                   = (teamID: string, hash: string) => `/t
 export const USER_AVATAR                 = (userID: string, hash: string) => `/avatars/${userID}/${hash}` as const;
 export const USER_AVATAR_DECORATION      = (userID: string, hash: string) => `/avatar-decorations/${userID}/${hash}` as const;
 
-// Application Commands
+// Applications
 export const APPLICATION_COMMAND                   = (applicationID: string, commandID: string) => `/applications/${applicationID}/commands/${commandID}` as const;
 export const APPLICATION_COMMANDS                  = (applicationID: string) => `/applications/${applicationID}/commands` as const;
 export const GUILD_APPLICATION_COMMAND             = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}` as const;
@@ -122,6 +125,10 @@ export const GUILD_APPLICATION_COMMANDS            = (applicationID: string, gui
 export const GUILD_APPLICATION_COMMAND_PERMISSION  = (applicationID: string, guildID: string, commandID: string) => `/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions` as const;
 export const GUILD_APPLICATION_COMMAND_PERMISSIONS = (applicationID: string, guildID: string) => `/applications/${applicationID}/guilds/${guildID}commands/permissions` as const;
 export const INTERACTION_CALLBACK                  = (interactionID: string, interactionToken: string) => `/interactions/${interactionID}/${interactionToken}/callback` as const;
+export const APPLICATION                           = "/applications/@me" as const;
+export const ENTITLEMENTS                          = (applicationID: string) => `/applications/${applicationID}/entitlements` as const;
+export const ENTITLEMENT                           = (applicationID: string, entitlementID: string) => `/applications/${applicationID}/entitlements/${entitlementID}` as const;
+export const SKUS                                  = (applicationID: string) => `/applications/${applicationID}/skus` as const;
 
 // Misc
 export const GATEWAY                   = "/gateway" as const;
@@ -132,8 +139,3 @@ export const STICKER_PACKS             = "/sticker-packs" as const;
 export const INVITE                    = (code: string) => `/invites/${code}` as const;
 export const STAGE_INSTANCES           = "/stage-instances" as const;
 export const STAGE_INSTANCE            = (channelID: string) => `/stage-instances/${channelID}` as const;
-export const ROLE_CONNECTIONS_METADATA = (applicationID: string) => `/applications/${applicationID}/role-connections/metadata` as const;
-export const APPLICATION               = "/applications/@me" as const;
-export const ENTITLEMENTS              = (applicationID: string) => `/applications/${applicationID}/entitlements` as const;
-export const ENTITLEMENT               = (applicationID: string, entitlementID: string) => `/applications/${applicationID}/entitlements/${entitlementID}` as const;
-export const SKUS                      = (applicationID: string) => `/applications/${applicationID}/skus` as const;

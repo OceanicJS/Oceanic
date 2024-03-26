@@ -10,7 +10,8 @@ import type {
     PossiblyUncachedThread,
     ThreadMember,
     UncachedThreadMember,
-    AnyVoiceChannel
+    AnyVoiceChannel,
+    PollAnswer
 } from "./channels";
 import type { RawRequest } from "./request-handler";
 import type { AutoModerationActionExecution, DeletedPrivateChannel, VoiceChannelEffect } from "./gateway";
@@ -130,7 +131,7 @@ export interface ClientEvents {
     guildMemberChunk: [members: Array<Member>];
     /** @event Emitted when a member leaves a guild. Requires the `GUILD_MEMBERS` intent. If the member is uncached, the first parameter will be a user. If the guild is uncached, the first parameter will be a user, and the second will be an object with only an `id`. */
     guildMemberRemove: [member: Member | User, guild: Guild | Uncached];
-    /** @event Emitted when a guild member is updates. Requires the `GUILD_MEMBERS` intent.*/
+    /** @event Emitted when a guild member is updates. Requires the `GUILD_MEMBERS` intent. */
     guildMemberUpdate: [member: Member, oldMember: JSONMember | null];
     /** @event Emitted when a role is created. Requires the `GUILDS` intent. */
     guildRoleCreate: [role: Role];
@@ -174,6 +175,10 @@ export interface ClientEvents {
     messageDelete: [message: PossiblyUncachedMessage];
     /** @event Emitted when messages are bulk deleted. Requires the `GUILD_MESSAGES` intent. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageDeleteBulk: [messages: Array<PossiblyUncachedMessage>];
+    /** @event Emitted when a vote is added to a poll. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. This will have its own intent [at some point](https://github.com/discord/discord-api-docs/pull/6746). */
+    messagePollVoteAdd: [message: PossiblyUncachedMessage, user: User | Uncached, answer: PollAnswer | { answerID: number; }];
+    /** @event Emitted when a vote is added to a poll. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. This will have its own intent [at some point](https://github.com/discord/discord-api-docs/pull/6746). */
+    messagePollVoteRemove: [message: PossiblyUncachedMessage, user: User | Uncached, answer: PollAnswer | { answerID: number; }];
     /** @event Emitted when a reaction is added to a message. For uncached messages, `author` will not be present if the reaction was added to a webhook message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
     messageReactionAdd: [message: PossiblyUncachedMessage & { author?: Member | User | Uncached; }, reactor: Member | User | Uncached, reaction: PartialEmoji, burst: boolean];
     /** @event Emitted when a reaction is removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
@@ -192,7 +197,7 @@ export interface ClientEvents {
     ready: [];
     /** @event Emitted when a request is made. */
     request: [rawRequest: RawRequest];
-    /** @event Emitted when this shard disconnects.*/
+    /** @event Emitted when this shard disconnects. */
     shardDisconnect: [err: Error | undefined, id: number];
     /** @event Emitted when this shard has processed the READY packet from Discord. */
     shardPreReady: [id: number];
@@ -220,7 +225,7 @@ export interface ClientEvents {
     threadUpdate: [thread: AnnouncementThreadChannel, oldThread: JSONAnnouncementThreadChannel | null] | [thread: PublicThreadChannel, oldThread: JSONPublicThreadChannel | null] | [thread: PrivateThreadChannel, oldThread: JSONPrivateThreadChannel | null];
     /** @event Emitted when a user starts typing. Requires the `GUILD_MESSAGE_TYPING` for guilds, and `DIRECT_MESSAGE_TYPING` for direct messages. */
     typingStart: [channel: PrivateChannel | Uncached, user: User | Uncached, startTimestamp: Date] | [channel: AnyTextableGuildChannel | Uncached, member: Member, startTimestamp: Date];
-    /** @event Emitted when a guild is created, but is unavailable. Requires the `GUILDS` intent.*/
+    /** @event Emitted when a guild is created, but is unavailable. Requires the `GUILDS` intent. */
     unavailableGuildCreate: [guild: UnavailableGuild];
     /** @event Emitted when a user is updated. */
     userUpdate: [user: User, oldUser: JSONUser | null];
@@ -245,7 +250,7 @@ export interface ClientEvents {
 export interface ShardEvents {
     /** @event Emitted with various information for debugging. */
     debug: [info: string];
-    /** @event Emitted when this shard disconnects.*/
+    /** @event Emitted when this shard disconnects. */
     disconnect: [err?: Error];
     /** @event Emitted when an error happens. If an error is emitted and no handlers are present, the error will be thrown. */
     error: [info: Error | string];

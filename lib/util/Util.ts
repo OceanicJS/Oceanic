@@ -63,6 +63,7 @@ import type {
 import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
+import type Poll from "../structures/Poll";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -492,6 +493,25 @@ export default class Util {
         } as RawApplicationCommandOption;
     }
 
+    /** @internal */
+    replacePollAnswer(poll: Poll, answerID: number, count: number, users?: Array<string>): void {
+        let answerCount = poll.results.answerCounts.find(a => a.id === answerID);
+        if (!answerCount) {
+            answerCount = {
+                count,
+                id:      answerID,
+                users:   [],
+                meVoted: false
+            };
+        }
+
+        answerCount.count = count;
+        if (users) {
+            answerCount.users = users;
+            answerCount.meVoted = (this.#client["_user"] && users.includes(this.#client["_user"]?.id)) ?? false;
+        }
+    }
+
     updateChannel<T extends AnyChannel>(channelData: RawChannel): T {
         guild: if (channelData.guild_id) {
             const guild = this.#client.guilds.get(channelData.guild_id);
@@ -547,6 +567,38 @@ export default class Util {
         }
 
         return new Message<T>(data, this.#client);
+    }
+
+    /** @internal */
+    updatePollAnswer(poll: Poll, answerID: number, count: number, user?: string): void {
+        let answerCount = poll.results.answerCounts.find(a => a.id === answerID);
+        if (!answerCount) {
+            if (count === -1) {
+                return;
+            }
+
+            answerCount = {
+                count,
+                id:      answerID,
+                users:   user ? [user] : [],
+                meVoted: user === this.#client["_user"]?.id
+            };
+            poll.results.answerCounts.push(answerCount);
+            return;
+        }
+
+        answerCount.count += count;
+        if (user) {
+            if (count === 1 && !answerCount.users.includes(user)) {
+                answerCount.users.push(user);
+                answerCount.meVoted = user === this.#client["_user"]?.id;
+            } else if (count === -1 && answerCount.users.includes(user)) {
+                answerCount.users.splice(answerCount.users.indexOf(user), 1);
+                if (user === this.#client["_user"]?.id) {
+                    answerCount.meVoted = false;
+                }
+            }
+        }
     }
 
     /** @internal */

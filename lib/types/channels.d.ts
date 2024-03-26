@@ -38,7 +38,8 @@ import type {
     InviteChannelTypes,
     ImplementedChannelTypes,
     ThreadOnlyChannelTypes,
-    ReactionType
+    ReactionType,
+    PollLayoutType
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -169,7 +170,7 @@ export interface ThreadMember extends UncachedThreadMember {
 export interface GetThreadMembersOptions {
     /** Get members after this member id. */
     after?: string;
-    /** The maximum number of thread members returned, defaults to 100.*/
+    /** The maximum number of thread members returned, defaults to 100. */
     limit?: number;
     /** If the results should include a `member` object. This also enables pagination. */
     withMember?: boolean;
@@ -305,6 +306,14 @@ export interface CreateMessageOptions {
     flags?: number;
     /** Reply to a message. */
     messageReference?: MessageReference;
+    /**
+     * A poll to send.
+     * @note As of [3/22/24](https://github.com/discord/discord-api-docs/pull/6746):
+     * * content, components, and many other fields cannot be sent alongside a poll.
+     * * * This means we cannot set `allowedMentions`. If in the future `content` can be sent alongside a poll, allowedMentions will not be set automatically, and must be set manually.
+     * * Messages with a poll cannot be edited.
+     */
+    poll?: MessagePollOptions;
     /** The IDs of up to 3 stickers from the current guild to send. */
     stickerIDs?: Array<string>;
     /** If the message should be spoken aloud. */
@@ -682,6 +691,7 @@ export interface RawMessage {
     message_reference?: RawMessageReference;
     nonce?: number | string;
     pinned: boolean;
+    poll?: RawPoll;
     position?: number;
     reactions?: Array<RawMessageReaction>;
     referenced_message?: RawMessage | null;
@@ -1147,4 +1157,85 @@ export interface RoleSubscriptionData {
     roleSubscriptionListingID: string;
     tierName: string;
     totalMonthsSubscribed: number;
+}
+
+export interface MessagePollOptions {
+    /** If multiple votes can be selected. */
+    allowMultiselect: boolean;
+    /** The answers for this poll. Up to 10 can be specified. */
+    answers: Array<PollAnswerOption>;
+    /** The duration of this poll in hours. Up to 7 days (168 hours) */
+    duration: number;
+    layoutType?: PollLayoutType;
+    /** The question for the poll. */
+    question: PollQuestion;
+}
+
+export interface GetPollAnswerUsersOptions {
+    /** Get members after this member id. */
+    after?: string;
+    /** The maximum number of users returned, defaults to 100. */
+    limit?: number;
+}
+
+export interface RawPoll {
+    allow_multiselect: boolean;
+    answers: Array<RawPollAnswer>;
+    expiry: string;
+    layout_type: PollLayoutType;
+    question: PollQuestion;
+    results: RawPollResults | null;
+}
+
+export interface RawPollAnswer {
+    answer_id: number;
+    poll_media: PollMedia;
+}
+
+export interface RawPollResults {
+    answer_counts: Array<RawPollAnswerCount>;
+    is_finalized: boolean;
+}
+
+export interface PollMedia {
+    /** The emoji to dispaly. */
+    emoji?: NullablePartialEmoji;
+    // @FIXME: Discord has said this is currently always nonnull, but not to depend on that in the future (https://github.com/discord/discord-api-docs/pull/6746)
+    /** The text. */
+    text: string;
+}
+
+export interface PollQuestion extends Pick<PollMedia, "text"> {}
+
+export interface PollAnswer {
+    /** The id of this answer in relation to `results.answerCounts.id`. */
+    answerID: number;
+    /** The media object for this answer. */
+    pollMedia: PollMedia;
+}
+
+export interface PollAnswerOption extends Pick<PollAnswer, "pollMedia"> {}
+
+export interface RawPollAnswerCount {
+    count: number;
+    id: number;
+    me_voted: boolean;
+}
+
+export interface PollResults {
+    /** The counts for each answer. */
+    answerCounts: Array<PollAnswerCount>;
+    /** If the poll has been finalized. */
+    isFinalized: boolean;
+}
+
+export interface PollAnswerCount {
+    /** The count for this answer. */
+    count: number;
+    /** The id of this answer in relation to `answers.answerID`. */
+    id: number;
+    /** If the current user has voted for this answer. */
+    meVoted: boolean;
+    /** The IDs of the users that voted. This will always be out of sync unless you either {@link Poll#getAnswerUsers|fetch the answer voters over REST}, or if the poll was created after the bot started, and stays in the cache. */
+    users: Array<string>;
 }

@@ -213,7 +213,7 @@ export default class Guild extends Base {
     publicUpdatesChannel?: AnyTextableGuildChannel | null;
     /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannelID: string | null;
-    /** @deprecated The region of this guild.*/
+    /** @deprecated The region of this guild. */
     region?: string | null;
     /** The roles in this guild. */
     roles: TypedCollection<RawRole, Role, [guildID: string]>;
@@ -622,7 +622,7 @@ export default class Guild extends Base {
         }
     }
 
-    /** The client's member for this guild. This will throw an error if the member is not cached.*/
+    /** The client's member for this guild. This will throw an error if the member is not cached. */
     get clientMember(): Member {
         this._clientMember ??= this.client["_user"] === undefined ? undefined : this.members.get(this.client["_user"].id);
         if (!this._clientMember) {
