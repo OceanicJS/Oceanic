@@ -109,6 +109,7 @@ export default class Util {
         }
     }
 
+    /** @hidden intended for internal use only */
     _convertSound(sound: Buffer | string, name: string): string {
         try {
             return this.convertSound(sound);
