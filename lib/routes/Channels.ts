@@ -63,6 +63,7 @@ import type User from "../structures/User";
 import type { Uncached } from "../types/shared";
 import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInstance } from "../types/guilds";
 import StageInstance from "../structures/StageInstance";
+import { MessageFlags } from "../Constants";
 
 /** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {
@@ -480,12 +481,14 @@ export default class Channels {
             method: "PATCH",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID),
             json:   {
-                allowed_mentions: options.content || options.allowedMentions ? this._manager.client.util.formatAllowedMentions(options.allowedMentions) : undefined,
-                attachments:      options.attachments,
-                components:       options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
-                content:          options.content,
-                embeds:           options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
-                flags:            options.flags
+                allowed_mentions: options.content !== undefined || options.allowedMentions || ((options.flags ?? 0) & MessageFlags.IS_COMPONENTS_V2) !== 0
+                    ? this._manager.client.util.formatAllowedMentions(options.allowedMentions)
+                    : undefined,
+                attachments: options.attachments,
+                components:  options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
+                content:     options.content,
+                embeds:      options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
+                flags:       options.flags
             },
             files
         }).then(data => this._manager.client.util.updateMessage<T>(data));
