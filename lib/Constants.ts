@@ -1247,6 +1247,7 @@ export enum VoiceOPCodes {
     RESUME              = 7,
     HELLO               = 8,
     RESUMED             = 9,
+    CLIENTS_CONNECT     = 11,
     CLIENT_DISCONNECT   = 13,
 }
 

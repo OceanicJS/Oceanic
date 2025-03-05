@@ -298,7 +298,7 @@ export interface CreateMessageOptions {
     allowedMentions?: AllowedMentions;
     /** An array of [partial attachments](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files. */
     attachments?: Array<MessageAttachment>;
-    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawMessageComponents | Util#rawMessageComponents}. */
+    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawMessageComponents | Util#rawMessageComponents}. Note that the {@link Contents~MessageFlags.IS_COMPONENTS_V2 | IS_COMPONENTS_V2} flag must be provided to use any of the v2 components, and with this enabled `content`, `embeds`, and `stickerIDs` cannot be used. */
     components?: Array<MessageComponent>;
     /** The content of the message. */
     content?: string;
@@ -415,14 +415,14 @@ export interface EmbedFooterOptions extends EmbedFooterBase {
 }
 
 export interface RawEmbedFooter extends EmbedFooterBase {
-    /** The {@link Constants.EmbedMediaFlags | Embed Media Flags} for the media. */
+    /** The {@link Constants~EmbedMediaFlags | Embed Media Flags} for the media. */
     flags?: number;
     icon_url?: string;
     proxy_icon_url?: string;
 }
 
 export interface EmbedFooter extends EmbedFooterOptions {
-    /** The {@link Constants.EmbedMediaFlags | Embed Media Flags} for the media. */
+    /** The {@link Constants~EmbedMediaFlags | Embed Media Flags} for the media. */
     flags?: number;
     iconURL?: string;
     proxyIconURL?: string;
@@ -434,13 +434,13 @@ export interface EmbedImageBase {
 }
 
 export interface RawEmbedImage extends EmbedImageBase, EmbedImageOptions {
-    /** The {@link Constants.EmbedMediaFlags | Embed Media Flags} for the media. */
+    /** The {@link Constants~EmbedMediaFlags | Embed Media Flags} for the media. */
     flags?: number;
     proxy_url?: string;
 }
 
 export interface EmbedImage extends EmbedImageBase, EmbedImageOptions {
-    /** The {@link Constants.EmbedMediaFlags | Embed Media Flags} for the media. */
+    /** The {@link Constants~EmbedMediaFlags | Embed Media Flags} for the media. */
     flags?: number;
     proxyURL?: string;
 }
