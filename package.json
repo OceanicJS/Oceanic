@@ -47,7 +47,7 @@
     "@mxssfd/typedoc-theme": "^1.1.3",
     "@types/node": "^18.19.69",
     "@types/pako": "^2.0.3",
-    "@types/ws": "^8.5.14",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "erlpack": "^0.1.4",
