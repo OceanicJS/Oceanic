@@ -934,6 +934,12 @@ export enum InteractionTypes {
     MODAL_SUBMIT                     = 5,
 }
 
+export enum InviteTypes {
+    GUILD =     0,
+    GROUP_DM =  1,
+    FRIEND =    2,
+}
+
 export enum InviteTargetTypes {
     STREAM                      = 1,
     EMBEDDED_APPLICATION        = 2,

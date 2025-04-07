@@ -41,7 +41,8 @@ import type {
     ThreadOnlyChannelTypes,
     ReactionType,
     PollLayoutType,
-    SeparatorSpacingSize
+    SeparatorSpacingSize,
+    InviteTypes
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -838,6 +839,7 @@ export interface RawInvite {
     target_application?: RawPartialApplication;
     target_type?: InviteTargetTypes;
     target_user?: RawUser;
+    type: InviteTypes;
 }
 
 export interface RawInviteWithMetadata extends RawInvite {
