@@ -98,6 +98,7 @@ export interface ModalData {
 export interface RawInteraction {
     app_permissions: string;
     application_id: string;
+    attachment_size_limit: number;
     authorizing_integration_owners: AuthorizingIntegrationOwners;
     channel_id?: string;
     context?: InteractionContextTypes;

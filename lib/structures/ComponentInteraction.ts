@@ -47,6 +47,8 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from. If in a dm/group dm, this will contain `ATTACH_FILES`, `EMBED_LINKS`, and `MENTION_EVERYONE`. In addition, `USE_EXTERNAL_EMOJIS` will be included for DMs with the app's bot user. */
     appPermissions: Permission;
+    /** The maximum size limit per attachment. This will be 10MiB by default, unless the user that created this interaction has a Nitro subscription or the guild it was sent from has been boosted to level 2 or above. */
+    attachmentSizeLimit: number;
     /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     /** The ID of the channel this interaction was sent from. */
@@ -81,6 +83,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         }
 
         this.appPermissions = new Permission(data.app_permissions ?? "0");
+        this.attachmentSizeLimit = data.attachment_size_limit;
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
         this.channelID = data.channel_id!;
         this.context = data.context;
@@ -353,6 +356,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         return {
             ...super.toJSON(),
             appPermissions:               this.appPermissions.toJSON(),
+            attachmentSizeLimit:          this.attachmentSizeLimit,
             authorizingIntegrationOwners: this.authorizingIntegrationOwners,
             channelID:                    this.channelID,
             context:                      this.context,
