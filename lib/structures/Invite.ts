@@ -14,7 +14,7 @@ import type {
     RawInviteWithMetadata
 } from "../types/channels";
 import type Client from "../Client";
-import type { InviteTargetTypes } from "../Constants";
+import type { InviteTargetTypes, InviteTypes } from "../Constants";
 import type { JSONInvite } from "../types/json";
 import type { Uncached } from "../types/shared";
 
@@ -58,6 +58,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     targetUser?: User;
     /** If this invite only grants temporary membership. */
     temporary!: T extends "withMetadata" ? boolean : never;
+    /** The [type](https://discord.com/developers/docs/resources/invite#invite-object-invite-types) of this invite. */
+    type: InviteTypes;
     /** The number of times this invite has been used. */
     uses!: T extends "withMetadata" ? number : never;
     constructor(data: RawInvite | RawInviteWithMetadata, client: Client) {
@@ -74,6 +76,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         this.guildID = data.guild?.id ?? null;
         this.expiresAt = (data.expires_at ? new Date(data.expires_at) : undefined) as never;
         this.targetType = data.target_type;
+        this.type = data.type;
         this.update(data);
     }
 

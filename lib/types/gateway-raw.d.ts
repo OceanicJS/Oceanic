@@ -38,7 +38,7 @@ import type { RawScheduledEvent } from "./scheduled-events";
 import type { RawVoiceState } from "./voice";
 import type { RawInteraction } from "./interactions";
 import type { RawAuditLogEntry } from "./audit-log";
-import type { GatewayOPCodes, InviteTargetTypes, ReactionType } from "../Constants";
+import type { GatewayOPCodes, InviteTargetTypes, InviteTypes, ReactionType } from "../Constants";
 
 export type AnyReceivePacket = AnyDispatchPacket | HeartbeatPacket | ReconnectPacket | InvalidSessionPacket | HelloPacket | HeartbeatAckPacket;
 export interface RawPacket {
@@ -404,6 +404,7 @@ export interface InviteCreatePacket extends BaseDispatchPacket {
         target_type?: InviteTargetTypes;
         target_user?: RawUser;
         temporary: boolean;
+        type: InviteTypes;
         uses: number;
     };
     t: "INVITE_CREATE";
