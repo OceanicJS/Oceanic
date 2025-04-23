@@ -168,6 +168,7 @@ export interface JSONAttachment extends JSONBase {
 }
 export interface JSONAutocompleteInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
+    attachmentSizeLimit: number;
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
@@ -233,6 +234,7 @@ export interface JSONClientUser extends JSONUser {
 }
 export interface JSONCommandInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
+    attachmentSizeLimit: number;
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
@@ -246,6 +248,7 @@ export interface JSONCommandInteraction extends JSONInteraction {
 }
 export interface JSONComponentInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
+    attachmentSizeLimit: number;
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
@@ -540,6 +543,7 @@ export interface JSONMessage extends JSONBase {
 }
 export interface JSONModalSubmitInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
+    attachmentSizeLimit: number;
     authorizingIntegrationOwners: AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
