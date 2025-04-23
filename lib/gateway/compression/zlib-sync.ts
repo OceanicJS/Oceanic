@@ -19,7 +19,7 @@ export default class ZlibSyncCompression extends Compression {
                 return null;
             }
 
-            data = Buffer.from(this._sharedZLib.result ?? "");
+            data = Buffer.isBuffer(this._sharedZLib.result) ? this._sharedZLib.result : Buffer.from(this._sharedZLib.result ?? "");
 
             return data;
         } else {
