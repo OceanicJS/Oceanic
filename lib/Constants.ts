@@ -992,9 +992,6 @@ export enum AutoModerationActionTypes {
     BLOCK_MESSAGE            = 1,
     SEND_ALERT_MESSAGE       = 2,
     TIMEOUT                  = 3,
-    /** @deprecated Use {@link AutoModerationActionTypes.BLOCK_MEMBER_INTERACTION | BLOCK_MEMBER_INTERACTION}. This will be removed in 1.12.0. */
-    QUARANTINE_USER          = 4,
-    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
     BLOCK_MEMBER_INTERACTION = 4,
 }
 

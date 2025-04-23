@@ -34,7 +34,7 @@ export default class RequestHandler {
             followRedirects:            !!options.followRedirects,
             host:                       options.host ?? (options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host),
             latencyThreshold:           options.latencyThreshold ?? 30000,
-            maxRatelimitRetryWindow:    options.maxRatelimitRetryWindow ?? Infinity,
+            maxRatelimitRetryWindow:    options.maxRatelimitRetryWindow ?? 30000,
             ratelimiterOffset:          options.ratelimiterOffset ?? 0,
             requestTimeout:             options.requestTimeout ?? 15000,
             superProperties:            options.superProperties ?? null,

@@ -18,11 +18,6 @@ export default class User extends Base {
     accentColor?: number | null;
     /** The user's avatar hash. */
     avatar: string | null;
-    /**
-     * The hash of this user's avatar decoration.
-     * @deprecated Use {@link Types/Users~AvatarDecorationData#asset | User#avatarDecorationData.asset} instead. This will be removed in 1.12.0.
-     */
-    avatarDecoration?: string | null;
     /** The data for this user's avatar decoration. */
     avatarDecorationData: AvatarDecorationData | null;
     /** The user's banner hash. If this member was received via the gateway, this will never be present. */
@@ -67,7 +62,6 @@ export default class User extends Base {
                 asset: data.avatar_decoration_data.asset,
                 skuID: data.avatar_decoration_data.sku_id
             } : null;
-            this.avatarDecoration = data.avatar_decoration_data?.asset;
         }
         if (data.banner !== undefined) {
             this.banner = data.banner;

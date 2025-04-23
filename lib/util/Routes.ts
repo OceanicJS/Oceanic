@@ -137,8 +137,6 @@ export const STICKER_PACK_BANNER         = (assetID: string) => APPLICATION_ASSE
 export const TEAM_ICON                   = (teamID: string, hash: string) => encode`/team-icons/${teamID}/${hash}`;
 export const USER_AVATAR                 = (userID: string, hash: string) => encode`/avatars/${userID}/${hash}`;
 export const AVATAR_DECORATION           = (hash: string) => encode`/avatar-decoration-presets/${hash}`;
-/** @deprecated Use {@link Routes~AVATAR_DECORATION | AVATAR_DECORATION} instead. This will be removed in 1.12.0. */
-export const USER_AVATAR_DECORATION      = (_userID: string, hash: string) => AVATAR_DECORATION(hash);
 
 // Applications
 export const APPLICATION_COMMAND                   = (applicationID: string, commandID: string) => encode`/applications/${applicationID}/commands/${commandID}`;
