@@ -3,7 +3,7 @@ import type Client from "../Client";
 import type { JSONBase } from "../types/json";
 import { inspect } from "node:util";
 
-const DISCORD_EPOCH = 1420070400000;
+const DISCORD_EPOCH = 1420070400000n;
 /** A base class which most other classes extend. */
 export default abstract class Base {
     client!: Client;
@@ -22,11 +22,12 @@ export default abstract class Base {
         if (timestamp instanceof Date) {
             timestamp = timestamp.getTime();
         }
-        return ((timestamp - DISCORD_EPOCH) << 22).toString();
+        const ms = BigInt(timestamp);
+        return ((ms - DISCORD_EPOCH) << 22n).toString();
     }
 
     static getCreatedAt(id: string): Date {
-        return new Date(Base.getDiscordEpoch(id) + DISCORD_EPOCH);
+        return new Date(Base.getDiscordEpoch(id) + Number(DISCORD_EPOCH));
     }
 
     static getDiscordEpoch(id: string): number {
