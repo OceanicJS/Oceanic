@@ -1,6 +1,5 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
-import type TypedCollection from "./TypedCollection";
 import type Client from "../Client";
 import {
     ButtonStyles,
@@ -43,15 +42,12 @@ import type {
     CollectionLimitsOptions,
     GuildEmoji,
     ModalSubmitComponentsActionRow,
-    RawAnnouncementThreadChannel,
     RawGroupChannel,
     RawGuildEmoji,
     RawMessage,
     RawModalSubmitComponents,
     RawModalSubmitComponentsActionRow,
     RawPrivateChannel,
-    RawPrivateThreadChannel,
-    RawPublicThreadChannel,
     RawSelectMenuComponent,
     RawStringSelectMenu,
     SelectMenuComponent,
