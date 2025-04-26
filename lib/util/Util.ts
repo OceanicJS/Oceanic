@@ -682,7 +682,7 @@ export default class Util {
                     if (!channelData.parent_id) {
                         break guild;
                     }
-                    return (guild.threads.has(channelData.id) ? guild.threads.update(channelData as never) : (guild.threads as TypedCollection<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel, AnyThreadChannel, []>).add(Channel.from<AnyThreadChannel>(channelData, this._client))) as T;
+                    return guild.threads.update(channelData as RawThreadChannel) as T;
                 } else {
                     return guild.channels.update(channelData as RawGuildChannel) as T;
                 }
