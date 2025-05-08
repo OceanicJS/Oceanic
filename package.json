@@ -67,7 +67,7 @@
     "typedoc-plugin-merge-modules": "5.1.0",
     "typescript": "~5.4.5",
     "undici-types": "^5.28.4",
-    "zlib-sync": "^0.1.9"
+    "zlib-sync": "^0.1.10"
   },
   "dependencies": {
     "tslib": "^2.8.1",
