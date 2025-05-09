@@ -136,6 +136,7 @@ export default class Webhooks {
                 components:       options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
                 content:          options.content,
                 embeds:           options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
+                flags:            options.flags,
                 poll:             options.poll ? {
                     allow_multiselect: options.poll.allowMultiselect,
                     answers:           options.poll.answers.map(a => ({
