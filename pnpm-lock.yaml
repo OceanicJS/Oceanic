@@ -94,7 +94,7 @@ importers:
         specifier: ~5.4.5
         version: 5.4.5
       undici-types:
-        specifier: ^5.28.4
+        specifier: ~5.28.4
         version: 5.28.4
       zlib-sync:
         specifier: ^0.1.10
