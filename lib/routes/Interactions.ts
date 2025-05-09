@@ -13,7 +13,6 @@ import type RESTManager from "../rest/RESTManager";
 import type Message from "../structures/Message";
 import type { AnyInteractionChannel, AnyTextableChannel } from "../types/channels";
 import type { Uncached } from "../types/shared";
-import type { File } from "../types";
 
 /** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
 export default class Interactions {
@@ -44,12 +43,6 @@ export default class Interactions {
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse?: false): Promise<null>;
     async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse: true): Promise<InteractionCallbackResponse<CH>>;
     async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse = false): Promise<InteractionCallbackResponse<CH> | null> {
-        let files: Array<File> | undefined;
-        if ("data" in options && options.data && "files" in options.data) {
-            files = options.data.files;
-            delete options.data.files;
-        }
-
         let data: unknown;
         switch (options.type) {
             case InteractionResponseTypes.PONG:
@@ -115,7 +108,7 @@ export default class Interactions {
                 type: options.type
             },
             query,
-            files
+            files: ("data" in options && options.data && "files" in options.data && options.data.files) || undefined
         }).then(d => {
             if (withResponse) {
                 return {

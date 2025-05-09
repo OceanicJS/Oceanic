@@ -24,18 +24,23 @@ export default class Users {
      * @caching This method **does not** cache its result.
      */
     async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
+        let avatar: string | undefined, banner: string | undefined;
         if (options.avatar) {
-            options.avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
+            avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
         }
 
         if (options.banner) {
-            options.banner = this._manager.client.util._convertImage(options.banner, "banner");
+            banner = this._manager.client.util._convertImage(options.banner, "banner");
         }
 
         return this._manager.authRequest<RawOAuthUser>({
             method: "PATCH",
             path:   Routes.USER("@me"),
-            json:   options
+            json:   {
+                avatar,
+                banner,
+                username: options.username
+            }
         }).then(data => new ExtendedUser(data, this._manager.client));
     }
 

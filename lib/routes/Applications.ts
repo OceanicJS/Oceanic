@@ -127,16 +127,17 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async createEmoji(applicationID: string, options: CreateApplicationEmojiOptions): Promise<ApplicationEmoji> {
+        let image: string | undefined;
         if (options.image) {
-            options.image = this._manager.client.util._convertImage(options.image, "image");
+            image = this._manager.client.util._convertImage(options.image, "image");
         }
 
         return this._manager.authRequest<RawApplicationEmoji>({
             method: "POST",
             path:   Routes.APPLICATION_EMOJIS(applicationID),
             json:   {
-                name:  options.name,
-                image: options.image
+                name: options.name,
+                image
             }
         }).then(emoji => this._manager.client.util.convertApplicationEmoji(emoji));
     }
@@ -270,26 +271,27 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async editCurrent(options: EditApplicationOptions): Promise<Application> {
+        let coverImage: string | undefined, icon: string | undefined;
         if (options.coverImage) {
-            options.coverImage = this._manager.client.util._convertImage(options.coverImage, "cover image");
+            coverImage = this._manager.client.util._convertImage(options.coverImage, "cover image");
         }
 
         if (options.icon) {
-            options.icon = this._manager.client.util._convertImage(options.icon, "cover image");
+            icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
 
         return this._manager.authRequest<RESTApplication>({
             method: "PATCH",
             path:   Routes.APPLICATION,
             json:   {
-                cover_image:                       options.coverImage,
+                cover_image:                       coverImage,
                 custom_install_url:                options.customInstallURL,
                 description:                       options.description,
                 event_webhooks_status:             options.eventWebhooksStatus,
                 event_webhooks_types:              options.eventWebhooksTypes,
                 event_webhooks_url:                options.eventWebhooksURL,
                 flags:                             options.flags,
-                icon:                              options.icon,
+                icon,
                 install_params:                    options.installParams,
                 integration_types_config:          options.integrationTypesConfig,
                 interactions_endpoint_url:         options.interactionsEndpointURL,

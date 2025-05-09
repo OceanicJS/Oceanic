@@ -163,10 +163,6 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async beginPrune(guildID: string, options?: BeginPruneOptions): Promise<number | null> {
-        const reason = options?.reason;
-        if (options?.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<{ pruned: number | null; }>({
             method: "POST",
             path:   Routes.GUILD_PRUNE(guildID),
@@ -175,7 +171,7 @@ export default class Guilds {
                 compute_prune_count: options?.computePruneCount,
                 include_roles:       options?.includeRoles
             },
-            reason
+            reason: options?.reason
         }).then(data => data.pruned);
     }
 
@@ -187,10 +183,6 @@ export default class Guilds {
      * @param options The options for banning.
      */
     async bulkBan(guildID: string, options: BulkBanOptions): Promise<BulkBanResponse> {
-        const reason = options?.reason;
-        if (options?.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawBulkBanResponse>({
             method: "POST",
             path:   Routes.GUILD_BULK_BAN(guildID),
@@ -198,7 +190,7 @@ export default class Guilds {
                 delete_message_seconds: options.deleteMessageSeconds,
                 user_ids:               options.userIDs
             },
-            reason
+            reason: options.reason
         }).then(data => ({
             bannedUsers: data.banned_users,
             failedUsers: data.failed_users
@@ -211,8 +203,9 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async create(options: CreateGuildOptions): Promise<Guild> {
+        let icon: string | undefined;
         if (options.icon) {
-            options.icon = this._manager.client.util._convertImage(options.icon, "icon");
+            icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
         return this._manager.authRequest<RawGuild>({
             method: "POST",
@@ -223,7 +216,7 @@ export default class Guilds {
                 channels:                      options.channels,
                 default_message_notifications: options.defaultMessageNotifications,
                 explicit_content_filter:       options.explicitContentFilter,
-                icon:                          options.icon,
+                icon,
                 name:                          options.name,
                 region:                        options.region,
                 roles:                         options.roles,
@@ -242,10 +235,6 @@ export default class Guilds {
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
     async createAutoModerationRule(guildID: string, options: CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawAutoModerationRule>({
             method: "POST",
             path:   Routes.GUILD_AUTOMOD_RULES(guildID),
@@ -273,7 +262,7 @@ export default class Guilds {
                 } : undefined,
                 trigger_type: options.triggerType
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
     }
 
@@ -285,18 +274,15 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
-        const reason = options?.reason;
-        if (options?.reason) {
-            delete options.reason;
-        }
+        let deleteMessageSeconds: number | undefined;
         if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) {
-            options.deleteMessageSeconds = options.deleteMessageDays * 86400;
+            deleteMessageSeconds = options.deleteMessageDays! * 86400;
         }
         await this._manager.authRequest<null>({
             method: "PUT",
             path:   Routes.GUILD_BAN(guildID, userID),
-            json:   { delete_message_seconds: options?.deleteMessageSeconds },
-            reason
+            json:   { delete_message_seconds: deleteMessageSeconds },
+            reason: options?.reason
         });
     }
 
@@ -308,10 +294,6 @@ export default class Guilds {
      * @caches {@link Guild#channels | Guild#channels}
      */
     async createChannel<T extends GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawGuildChannel>({
             method: "POST",
             path:   Routes.GUILD_CHANNELS(guildID),
@@ -339,7 +321,7 @@ export default class Guilds {
                 user_limit:                    options.userLimit,
                 video_quality_mode:            options.videoQualityMode
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.util.updateChannel(data)) as never;
     }
 
@@ -351,22 +333,19 @@ export default class Guilds {
      * @caches {@link Guild#emojis | Guild#emojis}<br>{@link Client#users | Client#users} (creator, if applicable)
      */
     async createEmoji(guildID: string, options: CreateGuildEmojiOptions): Promise<GuildEmoji> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let image: string | undefined;
         if (options.image) {
-            options.image = this._manager.client.util._convertImage(options.image, "image");
+            image = this._manager.client.util._convertImage(options.image, "image");
         }
         return this._manager.authRequest<RawGuildEmoji>({
             method: "POST",
             path:   Routes.GUILD_EMOJIS(guildID),
             json:   {
-                image: options.image,
+                image,
                 name:  options.name,
                 roles: options.roles
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
     }
 
@@ -379,14 +358,15 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions): Promise<Guild> {
+        let icon: string | undefined;
         if (options.icon) {
-            options.icon = this._manager.client.util._convertImage(options.icon, "icon");
+            icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
         return this._manager.authRequest<RawGuild>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATE_CODE(code),
             json:   {
-                icon: options.icon,
+                icon,
                 name: options.name
             }
         }).then(data => new Guild(data, this._manager.client, true));
@@ -400,12 +380,9 @@ export default class Guilds {
      * @caches {@link Guild#roles | Guild#roles}
      */
     async createRole(guildID: string, options?: CreateRoleOptions): Promise<Role> {
-        const reason = options?.reason;
-        if (options?.reason) {
-            delete options.reason;
-        }
+        let icon: string | undefined;
         if (options?.icon) {
-            options.icon = this._manager.client.util._convertImage(options.icon, "icon");
+            icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
         return this._manager.authRequest<RawRole>({
             method: "POST",
@@ -413,13 +390,13 @@ export default class Guilds {
             json:   {
                 color:         options?.color,
                 hoist:         options?.hoist,
-                icon:          options?.icon,
+                icon,
                 mentionable:   options?.mentionable,
                 name:          options?.name,
                 permissions:   options?.permissions,
                 unicode_emoji: options?.unicodeEmoji
             },
-            reason
+            reason: options?.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.roles.update(data, guildID) ?? new Role(data, this._manager.client, guildID));
     }
 
@@ -431,12 +408,9 @@ export default class Guilds {
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
     async createScheduledEvent(guildID: string, options: CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let image: string | undefined;
         if (options.image) {
-            options.image = this._manager.client.util._convertImage(options.image, "image");
+            image = this._manager.client.util._convertImage(options.image, "image");
         }
         return this._manager.authRequest<RawScheduledEvent>({
             method: "POST",
@@ -446,13 +420,13 @@ export default class Guilds {
                 description:          options.description,
                 entity_metadata:      options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
                 entity_type:          options.entityType,
-                image:                options.image,
+                image,
                 name:                 options.name,
                 privacy_level:        options.privacyLevel,
                 scheduled_end_time:   options.scheduledEndTime,
                 scheduled_start_time: options.scheduledStartTime
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this._manager.client));
     }
 
@@ -464,9 +438,9 @@ export default class Guilds {
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
      */
     async createSoundboardSound(guildID: string, options: CreateSoundboardSoundOptions): Promise<Soundboard> {
-        const reason = options.reason;
+        let sound: string | undefined;
         if (options.sound) {
-            options.sound = this._manager.client.util._convertSound(options.sound, "sound");
+            sound = this._manager.client.util._convertSound(options.sound, "sound");
         }
         return this._manager.authRequest<RawSoundboard>({
             method: "POST",
@@ -475,10 +449,10 @@ export default class Guilds {
                 emoji_id:   options.emojiID,
                 emoji_name: options.emojiName,
                 name:       options.name,
-                sound:      options.sound,
+                sound,
                 volume:     options.volume
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.soundboardSounds.update(data) ?? new Soundboard(data, this._manager.client));
     }
 
@@ -671,21 +645,18 @@ export default class Guilds {
      * @caches {@link Client#guilds | Client#guilds}
      */
     async edit(guildID: string, options: EditGuildOptions): Promise<Guild> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let banner: string | undefined, discoverySplash: string | undefined, icon: string | undefined, splash: string | undefined;
         if (options.banner) {
-            options.banner = this._manager.client.util._convertImage(options.banner, "banner");
+            banner = this._manager.client.util._convertImage(options.banner, "banner");
         }
         if (options.discoverySplash) {
-            options.discoverySplash = this._manager.client.util._convertImage(options.discoverySplash, "discovery splash");
+            discoverySplash = this._manager.client.util._convertImage(options.discoverySplash, "discovery splash");
         }
         if (options.icon) {
-            options.icon = this._manager.client.util._convertImage(options.icon, "icon");
+            icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
         if (options.splash) {
-            options.splash = this._manager.client.util._convertImage(options.splash, "splash");
+            splash = this._manager.client.util._convertImage(options.splash, "splash");
         }
         return this._manager.authRequest<RawGuild>({
             method: "PATCH",
@@ -693,13 +664,13 @@ export default class Guilds {
             json:   {
                 afk_channel_id:                options.afkChannelID,
                 afk_timeout:                   options.afkTimeout,
-                banner:                        options.banner,
+                banner,
                 default_message_notifications: options.defaultMessageNotifications,
                 description:                   options.description,
-                discovery_splash:              options.discoverySplash,
+                discovery_splash:              discoverySplash,
                 explicit_content_filter:       options.explicitContentFilter,
                 features:                      options.features,
-                icon:                          options.icon,
+                icon,
                 name:                          options.name,
                 owner_id:                      options.ownerID,
                 preferred_locale:              options.preferredLocale,
@@ -708,12 +679,12 @@ export default class Guilds {
                 region:                        options.region,
                 rules_channel_id:              options.rulesChannelID,
                 safety_alerts_channel_id:      options.safetyAlertsChannelID,
-                splash:                        options.splash,
+                splash,
                 system_channel_flags:          options.systemChannelFlags,
                 system_channel_id:             options.systemChannelID,
                 verification_level:            options.verificationLevel
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.has(guildID) ? this._manager.client.guilds.update(data, true) : new Guild(data, this._manager.client, true));
     }
 
@@ -726,10 +697,6 @@ export default class Guilds {
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
     async editAutoModerationRule(guildID: string, ruleID: string, options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawAutoModerationRule>({
             method: "PATCH",
             path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
@@ -756,7 +723,7 @@ export default class Guilds {
                     regex_patterns:                  options.triggerMetadata.regexPatterns
                 } : undefined
             },
-            reason
+            reason: options.reason
         }).then(data =>  this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
     }
 
@@ -787,15 +754,11 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}<br>{@link Guild#clientMember | Guild#clientMember}
      */
     async editCurrentMember(guildID: string, options: EditCurrentMemberOptions): Promise<Member> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, "@me"),
             json:   { nick: options.nick },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.util.updateMember(guildID, data.user.id, data));
     }
 
@@ -825,10 +788,6 @@ export default class Guilds {
      * @caches {@link Guild#emojis | Guild#emojis}
      */
     async editEmoji(guildID: string, emojiID: string, options: EditGuildEmojiOptions): Promise<GuildEmoji> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawGuildEmoji>({
             method: "PATCH",
             path:   Routes.GUILD_EMOJI(guildID, emojiID),
@@ -836,7 +795,7 @@ export default class Guilds {
                 name:  options.name,
                 roles: options.roles
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
     }
 
@@ -847,10 +806,6 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editIncidentActions(guildID: string, options: EditIncidentActionsOptions): Promise<IncidentActions> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawIncidentActions>({
             method: "PUT",
             path:   Routes.GUILD_INCIDENT_ACTIONS(guildID),
@@ -858,7 +813,7 @@ export default class Guilds {
                 dmsDisabledUntil:     options.dmsDisabledUntil,
                 invitesDisabledUntil: options.invitesDisabledUntil
             },
-            reason
+            reason: options.reason
         }).then(data => ({
             dmsDisabledUntil:     data.dms_disabled_until,
             invitesDisabledUntil: data.invites_disabled_until
@@ -872,15 +827,11 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editMFALevel(guildID: string, options: EditMFALevelOptions): Promise<MFALevels> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<MFALevels>({
             method: "POST",
             path:   Routes.GUILD_MFA(guildID),
             json:   { level: options.level },
-            reason
+            reason: options.reason
         });
     }
 
@@ -893,10 +844,6 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async editMember(guildID: string, memberID: string, options: EditMemberOptions): Promise<Member> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, memberID),
@@ -909,7 +856,7 @@ export default class Guilds {
                 nick:                         options.nick,
                 roles:                        options.roles
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.util.updateMember(guildID, memberID, data));
     }
 
@@ -920,10 +867,6 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editOnboarding(guildID: string, options: EditOnboardingOptions): Promise<Onboarding> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawOnboarding>({
             method: "PATCH",
             path:   Routes.GUILD_ONBOARDING(guildID),
@@ -947,7 +890,7 @@ export default class Guilds {
                 })),
                 mode: options.mode
             },
-            reason
+            reason: options.reason
         }).then(data => ({
             defaultChannelIDs: data.default_channel_ids,
             enabled:           data.enabled,
@@ -979,12 +922,9 @@ export default class Guilds {
      * @caches {@link Guild#roles | Guild#roles}
      */
     async editRole(guildID: string, roleID: string, options: EditRoleOptions): Promise<Role> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let icon: string | undefined;
         if (options.icon) {
-            options.icon = this._manager.client.util._convertImage(options.icon, "icon");
+            icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
         return this._manager.authRequest<RawRole>({
             method: "PATCH",
@@ -992,13 +932,13 @@ export default class Guilds {
             json:   {
                 color:         options.color,
                 hoist:         options.hoist,
-                icon:          options.icon,
+                icon,
                 mentionable:   options.mentionable,
                 name:          options.name,
                 permissions:   options.permissions,
                 unicode_emoji: options.unicodeEmoji
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.roles.update(data, guildID) ?? new Role(data, this._manager.client, guildID));
     }
 
@@ -1030,12 +970,9 @@ export default class Guilds {
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
     async editScheduledEvent(guildID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let image: string | undefined;
         if (options.image) {
-            options.image = this._manager.client.util._convertImage(options.image, "image");
+            image = this._manager.client.util._convertImage(options.image, "image");
         }
         return this._manager.authRequest<RawScheduledEvent>({
             method: "POST",
@@ -1045,14 +982,14 @@ export default class Guilds {
                 description:          options.description,
                 entity_metadata:      options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
                 entity_type:          options.entityType,
-                image:                options.image,
+                image,
                 name:                 options.name,
                 privacy_level:        options.privacyLevel,
                 status:               options.status,
                 scheduled_end_time:   options.scheduledEndTime,
                 scheduled_start_time: options.scheduledStartTime
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this._manager.client));
     }
 
@@ -1065,7 +1002,6 @@ export default class Guilds {
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
      */
     async editSoundboardSound(guildID: string, soundID: string, options: EditSoundboardSoundOptions): Promise<Soundboard> {
-        const reason = options.reason;
         return this._manager.authRequest<RawSoundboard>({
             method: "PATCH",
             path:   Routes.SOUNDBOARD_SOUND(guildID, soundID),
@@ -1075,7 +1011,7 @@ export default class Guilds {
                 name:       options.name,
                 volume:     options.volume
             },
-            reason
+            reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.soundboardSounds.update(data) ?? new Soundboard(data, this._manager.client));
     }
 
@@ -1143,10 +1079,6 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editWelcomeScreen(guildID: string, options: EditWelcomeScreenOptions): Promise<WelcomeScreen> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
         return this._manager.authRequest<RawWelcomeScreen>({
             method: "PATCH",
             path:   Routes.GUILD_WELCOME_SCREEN(guildID),
@@ -1160,7 +1092,7 @@ export default class Guilds {
                     emoji_name:  ch.emojiName
                 }))
             },
-            reason
+            reason: options.reason
         }).then(data => ({
             description:     data.description,
             welcomeChannels: data.welcome_channels.map(channel => ({

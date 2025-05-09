@@ -30,21 +30,18 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async create(channelID: string, options: CreateWebhookOptions): Promise<Webhook> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let avatar: string | undefined;
         if (options.avatar) {
-            options.avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
+            avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
         }
         return this._manager.authRequest<RawWebhook>({
             method: "POST",
             path:   Routes.CHANNEL_WEBHOOKS(channelID),
             json:   {
-                avatar: options.avatar,
-                name:   options.name
+                avatar,
+                name: options.name
             },
-            reason
+            reason: options.reason
         }).then(data => new Webhook(data, this._manager.client));
     }
 
@@ -101,22 +98,19 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async edit(webhookID: string, options: EditWebhookOptions): Promise<Webhook> {
-        const reason = options.reason;
-        if (options.reason) {
-            delete options.reason;
-        }
+        let avatar: string | undefined;
         if (options.avatar) {
-            options.avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
+            avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
         }
         return this._manager.authRequest<RawWebhook>({
             method: "PATCH",
             path:   Routes.WEBHOOK(webhookID),
             json:   {
-                avatar:     options.avatar,
+                avatar,
                 channel_id: options.channelID,
                 name:       options.name
             },
-            reason
+            reason: options.reason
         }).then(data => new Webhook(data, this._manager.client));
     }
 
@@ -129,10 +123,6 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async editMessage<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
-        const files = options.files ?? undefined;
-        if (options.files) {
-            delete options.files;
-        }
         const query = new URLSearchParams();
         if (options.threadID) {
             query.set("thread_id", options.threadID);
@@ -157,7 +147,7 @@ export default class Webhooks {
                 } : undefined
             },
             query,
-            files
+            files: options.files ?? undefined
         }).then(data => new Message<T>(data, this._manager.client));
     }
 
@@ -168,15 +158,16 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async editToken(webhookID: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {
+        let avatar: string | undefined;
         if (options.avatar) {
-            options.avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
+            avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
         }
         return this._manager.authRequest<RawWebhook>({
             method: "PATCH",
             path:   Routes.WEBHOOK(webhookID, token),
             json:   {
-                avatar: options.avatar,
-                name:   options.name
+                avatar,
+                name: options.name
             }
         }).then(data => new Webhook(data, this._manager.client));
     }
@@ -191,10 +182,6 @@ export default class Webhooks {
     async execute<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
     async execute(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
     async execute<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
-        const files = options.files;
-        if (options.files) {
-            delete options.files;
-        }
         const query = new URLSearchParams();
         if (options.wait !== undefined) {
             query.set("wait", options.wait.toString());
@@ -230,7 +217,7 @@ export default class Webhooks {
                 tts:         options.tts,
                 username:    options.username
             },
-            files
+            files: options.files
         }).then(res => res === null ? undefined : new Message(res, this._manager.client));
     }
 
