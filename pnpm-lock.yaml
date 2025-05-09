@@ -94,8 +94,8 @@ importers:
         specifier: ~5.4.5
         version: 5.4.5
       undici-types:
-        specifier: ^5.28.4
-        version: 5.28.4
+        specifier: ~7.8.0
+        version: 7.8.0
       zlib-sync:
         specifier: ^0.1.10
         version: 0.1.10
@@ -1602,8 +1602,8 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici-types@5.28.4:
-    resolution: {integrity: sha512-3OeMF5Lyowe8VW0skf5qaIE7Or3yS9LS7fvMUI0gg4YxpIBVg0L8BxCmROw2CcYhSkpR68Epz7CGc8MPj94Uww==}
+  undici-types@7.8.0:
+    resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
   unique-filename@4.0.0:
     resolution: {integrity: sha512-XSnEewXmQ+veP7xX2dS5Q4yZAvO40cBN2MWkJ7D/6sW4Dg6wYBNwM1Vrnz1FhH5AdeLIlUXRI9e28z1YZi71NQ==}
@@ -3396,7 +3396,7 @@ snapshots:
 
   undici-types@5.26.5: {}
 
-  undici-types@5.28.4: {}
+  undici-types@7.8.0: {}
 
   unique-filename@4.0.0:
     dependencies:
