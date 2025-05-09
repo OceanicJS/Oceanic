@@ -40,10 +40,10 @@ export default class Role extends Base {
         super(data.id, client);
         this.color = data.color;
         this.colors = {
-            primaryColor: data.colors.primary_color,
+            primaryColor:   data.colors.primary_color,
             secondaryColor: data.colors.secondary_color,
-            tertiaryColor: data.colors.tertiary_color
-        }
+            tertiaryColor:  data.colors.tertiary_color
+        };
         this.flags = data.flags;
         this.guildID = guildID;
         this.hoist = !!data.hoist;

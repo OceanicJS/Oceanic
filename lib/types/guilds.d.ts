@@ -140,15 +140,15 @@ export interface RoleTags {
 }
 
 export interface RawRoleColors {
-    primary_color: number
-    secondary_color: number | null
-    tertiary_color: number | null
+    primary_color: number;
+    secondary_color: number | null;
+    tertiary_color: number | null;
 }
 
 export interface RoleColors {
     primaryColor: number;
     secondaryColor: number | null;
-    tertiaryColor: number | null
+    tertiaryColor: number | null;
 }
 
 export interface RawGuildEmoji extends Required<Omit<Emoji, "user" | "id">>  { id: string; user?: RawUser; }
