@@ -77,7 +77,7 @@ export interface RawNameplate {
     sku_id: string;
 }
 
-export interface Nameplate{
+export interface Nameplate {
     asset: string;
     label: string;
     palette: string;
