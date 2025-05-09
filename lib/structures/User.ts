@@ -7,7 +7,7 @@ import Clan from "./Clan";
 import { EntitlementOwnerTypes, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import type { AvatarDecorationData, RawUser } from "../types/users";
+import type { AvatarDecorationData, Collectibles, RawUser } from "../types/users";
 import type { JSONUser } from "../types/json";
 import type { SearchEntitlementsOptions } from "../types/applications";
 import { UncachedError } from "../util/Errors";
@@ -26,6 +26,8 @@ export default class User extends Base {
     bot: boolean;
     /** The primary clan this user is in. */
     clan: Clan | null;
+    /** The user's collectibles. */
+    collectibles: Collectibles | null;
     /** The 4 digits after this user's username, if they have not been migrated. If migrated, this will be a single "0". */
     discriminator: string;
     /** The user's display name, if set. */
@@ -42,6 +44,7 @@ export default class User extends Base {
         this.avatarDecorationData = null;
         this.bot = !!data.bot;
         this.clan = null;
+        this.collectibles = null;
         this.discriminator = data.discriminator;
         this.globalName = data.global_name;
         this.publicFlags = 0;
@@ -65,6 +68,16 @@ export default class User extends Base {
         }
         if (data.banner !== undefined) {
             this.banner = data.banner;
+        }
+        if (data.collectibles !== undefined) {
+            this.collectibles = data.collectibles ? {
+                nameplate: data.collectibles.nameplate ? {
+                    asset:   data.collectibles.nameplate.asset,
+                    label:   data.collectibles.nameplate.label,
+                    palette: data.collectibles.nameplate.palette,
+                    skuID:   data.collectibles.nameplate.sku_id
+                } : undefined
+            } : null;
         }
         if (data.discriminator !== undefined) {
             this.discriminator = data.discriminator;
@@ -185,6 +198,7 @@ export default class User extends Base {
             avatarDecorationData: this.avatarDecorationData,
             banner:               this.banner,
             bot:                  this.bot,
+            collectibles:         this.collectibles,
             discriminator:        this.discriminator,
             globalName:           this.globalName,
             publicFlags:          this.publicFlags,
