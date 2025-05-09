@@ -20,7 +20,8 @@ import type {
     WelcomeScreen,
     Sticker,
     Presence,
-    IncidentActions
+    IncidentActions,
+    RoleColors
 } from "./guilds";
 import type {
     ChannelMention,
@@ -635,6 +636,7 @@ export interface JSONPublicThreadChannel extends JSONThreadChannel {
 }
 export interface JSONRole extends JSONBase {
     color: number;
+    colors: RoleColors;
     guildID: string;
     hoist: boolean;
     icon: string | null;

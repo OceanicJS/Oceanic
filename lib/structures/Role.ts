@@ -3,7 +3,7 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
 import type Client from "../Client";
-import type { RawRole, RoleTags, EditRoleOptions } from "../types/guilds";
+import type { RawRole, RoleTags, EditRoleOptions, RoleColors } from "../types/guilds";
 import type { JSONRole } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
@@ -12,6 +12,8 @@ export default class Role extends Base {
     private _cachedGuild?: Guild;
     /** The color of this role. */
     color: number;
+    /** The colors of this role. */
+    colors: RoleColors;
     /** The {@link Constants~RoleFlags | flags } for this role. */
     flags: number;
     /** The id of the guild this role is in. */
@@ -37,6 +39,11 @@ export default class Role extends Base {
     constructor(data: RawRole, client: Client, guildID: string) {
         super(data.id, client);
         this.color = data.color;
+        this.colors = {
+            primaryColor: data.colors.primary_color,
+            secondaryColor: data.colors.secondary_color,
+            tertiaryColor: data.colors.tertiary_color
+        }
         this.flags = data.flags;
         this.guildID = guildID;
         this.hoist = !!data.hoist;
@@ -56,6 +63,13 @@ export default class Role extends Base {
         }
         if (data.color !== undefined) {
             this.color = data.color;
+        }
+        if (data.colors !== undefined) {
+            this.colors = {
+                primaryColor:   data.colors.primary_color,
+                secondaryColor: data.colors.secondary_color,
+                tertiaryColor:  data.colors.tertiary_color
+            };
         }
         if (data.hoist !== undefined) {
             this.hoist = data.hoist;
@@ -132,6 +146,7 @@ export default class Role extends Base {
         return {
             ...super.toJSON(),
             color:        this.color,
+            colors:       this.colors,
             guildID:      this.guildID,
             hoist:        this.hoist,
             icon:         this.icon,
