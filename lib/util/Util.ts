@@ -1,5 +1,6 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
+import { FrozenModificationError } from "./Errors";
 import type Client from "../Client";
 import {
     ButtonStyles,
@@ -68,6 +69,7 @@ import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 import type Poll from "../structures/Poll";
+import { types } from "node:util";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -114,6 +116,23 @@ export default class Util {
         } catch (err) {
             throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
         }
+    }
+
+    /** @internal */
+    _freeze<T>(obj: T, detail?: string): T {
+        let message = "This is an error in the library and should be reported.";
+        if (detail) {
+            message += `Detail: ${detail}`;
+        }
+        if (typeof obj !== "object" || obj === null || types.isProxy(obj)) {
+            return obj;
+        }
+        return new Proxy(obj, {
+            set: (target, prop, value, receiver): boolean => {
+                this._client.emit("error", new FrozenModificationError(message, prop));
+                return Reflect.set(target, prop, value, receiver);
+            }
+        });
     }
 
     /** @hidden intended for internal use only */

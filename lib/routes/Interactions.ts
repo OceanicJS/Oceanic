@@ -43,6 +43,7 @@ export default class Interactions {
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse?: false): Promise<null>;
     async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse: true): Promise<InteractionCallbackResponse<CH>>;
     async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse = false): Promise<InteractionCallbackResponse<CH> | null> {
+        options = this._manager.client.util._freeze(options);
         let data: unknown;
         switch (options.type) {
             case InteractionResponseTypes.PONG:

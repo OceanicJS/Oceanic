@@ -89,7 +89,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
-        const opts = options as Array<CreateChatInputApplicationCommandOptions>;
+        const opts = this._manager.client.util._freeze(options) as Array<CreateChatInputApplicationCommandOptions>;
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method: "PUT",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
@@ -127,6 +127,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async createEmoji(applicationID: string, options: CreateApplicationEmojiOptions): Promise<ApplicationEmoji> {
+        options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
@@ -149,7 +150,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = options as CreateChatInputApplicationCommandOptions;
+        const opt = this._manager.client.util._freeze(options) as CreateChatInputApplicationCommandOptions;
         return this._manager.authRequest<RawApplicationCommand>({
             method: "POST",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
@@ -178,7 +179,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = options as CreateChatInputApplicationCommandOptions;
+        const opt = this._manager.client.util._freeze(options) as CreateChatInputApplicationCommandOptions;
         return this._manager.authRequest<RawApplicationCommand>({
             method: "POST",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
@@ -202,6 +203,7 @@ export default class Applications {
      * @param options The options for creating the test entitlement.
      */
     async createTestEntitlement(applicationID: string, options: CreateTestEntitlementOptions): Promise<TestEntitlement> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawTestEntitlement>({
             method: "POST",
             path:   Routes.ENTITLEMENTS(applicationID),
@@ -271,6 +273,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async editCurrent(options: EditApplicationOptions): Promise<Application> {
+        options = this._manager.client.util._freeze(options);
         let coverImage: string | undefined, icon: string | undefined;
         if (options.coverImage) {
             coverImage = this._manager.client.util._convertImage(options.coverImage, "cover image");
@@ -309,6 +312,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async editEmoji(applicationID: string, emojiID: string, options: EditApplicationEmojiOptions): Promise<ApplicationEmoji> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawApplicationEmoji>({
             method: "PATCH",
             path:   Routes.APPLICATION_EMOJI(applicationID, emojiID),
@@ -324,7 +328,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = options as EditChatInputApplicationCommandOptions;
+        const opt = this._manager.client.util._freeze(options) as EditChatInputApplicationCommandOptions;
         return this._manager.authRequest<RawApplicationCommand>({
             method: "PATCH",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
@@ -352,7 +356,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = options as EditChatInputApplicationCommandOptions;
+        const opt = this._manager.client.util._freeze(options) as EditChatInputApplicationCommandOptions;
         return this._manager.authRequest<RawApplicationCommand>({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
@@ -378,6 +382,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
+        options = this._manager.client.util._freeze(options);
         return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
@@ -472,6 +477,7 @@ export default class Applications {
      * @param options The options for getting the entitlements.
      */
     async getEntitlements(applicationID: string, options: SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options.after !== undefined) query.set("after", options.after);
         if (options.before !== undefined) query.set("before", options.before);
@@ -496,6 +502,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options?.withLocalizations !== undefined) {
             query.set("with_localizations", options.withLocalizations.toString());
@@ -515,6 +522,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getGlobalCommands(applicationID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options?.withLocalizations !== undefined) {
             query.set("with_localizations", options.withLocalizations.toString());
@@ -536,6 +544,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options?.withLocalizations !== undefined) {
             query.set("with_localizations", options.withLocalizations.toString());
@@ -556,6 +565,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getGuildCommands(applicationID: string, guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options?.withLocalizations !== undefined) {
             query.set("with_localizations", options.withLocalizations.toString());
@@ -623,6 +633,7 @@ export default class Applications {
      * @param options The options for getting the subscriptions.
      */
     async getSKUSubscriptions(skuID: string, options: SearchSKUSubscriptions): Promise<Array<Subscription>> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options.after !== undefined) query.set("after", options.after);
         if (options.before !== undefined) query.set("before", options.before);

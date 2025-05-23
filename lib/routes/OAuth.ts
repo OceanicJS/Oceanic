@@ -46,6 +46,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("grant_type", "client_credentials");
         form.append("scope", options.scopes.join(" "));
@@ -69,6 +70,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async exchangeCode(options: ExchangeCodeOptions): Promise<ExchangeCodeResponse> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
@@ -251,6 +253,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async refreshToken(options: RefreshTokenOptions): Promise<RefreshTokenResponse> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
@@ -276,6 +279,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async revokeToken(options: RevokeTokenOptions): Promise<void> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);

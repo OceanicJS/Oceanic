@@ -71,3 +71,16 @@ export class NotImplementedError extends Error {
         super(message);
     }
 }
+
+export class FrozenModificationError extends Error {
+    override name = "FrozenModificationError";
+    property: string | symbol;
+    constructor(detail: string | undefined, prop: string | symbol) {
+        let message = "An attempt was made to modify a frozen object";
+        if (detail) {
+            message += `: ${detail}`;
+        }
+        super(message);
+        this.property = prop;
+    }
+}

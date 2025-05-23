@@ -30,6 +30,7 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async create(channelID: string, options: CreateWebhookOptions): Promise<Webhook> {
+        options = this._manager.client.util._freeze(options);
         let avatar: string | undefined;
         if (options.avatar) {
             avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
@@ -98,6 +99,7 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async edit(webhookID: string, options: EditWebhookOptions): Promise<Webhook> {
+        options = this._manager.client.util._freeze(options);
         let avatar: string | undefined;
         if (options.avatar) {
             avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
@@ -123,6 +125,7 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async editMessage<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options.threadID) {
             query.set("thread_id", options.threadID);
@@ -158,6 +161,7 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async editToken(webhookID: string, token: string, options: EditWebhookTokenOptions): Promise<Webhook> {
+        options = this._manager.client.util._freeze(options);
         let avatar: string | undefined;
         if (options.avatar) {
             avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
@@ -182,6 +186,7 @@ export default class Webhooks {
     async execute<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: ExecuteWebhookWaitOptions): Promise<Message<T>>;
     async execute(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
     async execute<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options.wait !== undefined) {
             query.set("wait", options.wait.toString());
@@ -231,6 +236,7 @@ export default class Webhooks {
     async executeGithub(webhookID: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
     async executeGithub<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
     async executeGithub<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options.wait !== undefined) {
             query.set("wait", options.wait.toString());
@@ -253,6 +259,7 @@ export default class Webhooks {
     async executeSlack(webhookID: string, token: string, options: Record<string, unknown> & { wait: false; }): Promise<void>;
     async executeSlack<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
     async executeSlack<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         if (options.wait !== undefined) {
             query.set("wait", options.wait.toString());

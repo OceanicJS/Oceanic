@@ -127,6 +127,7 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async addMember(guildID: string, userID: string, options: AddMemberOptions): Promise<Member | undefined> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RESTMember | null>({
             method: "PUT",
             path:   Routes.GUILD_MEMBER(guildID, userID),
@@ -163,6 +164,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async beginPrune(guildID: string, options?: BeginPruneOptions): Promise<number | null> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<{ pruned: number | null; }>({
             method: "POST",
             path:   Routes.GUILD_PRUNE(guildID),
@@ -183,6 +185,7 @@ export default class Guilds {
      * @param options The options for banning.
      */
     async bulkBan(guildID: string, options: BulkBanOptions): Promise<BulkBanResponse> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawBulkBanResponse>({
             method: "POST",
             path:   Routes.GUILD_BULK_BAN(guildID),
@@ -203,6 +206,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async create(options: CreateGuildOptions): Promise<Guild> {
+        options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options.icon) {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
@@ -235,6 +239,7 @@ export default class Guilds {
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
     async createAutoModerationRule(guildID: string, options: CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawAutoModerationRule>({
             method: "POST",
             path:   Routes.GUILD_AUTOMOD_RULES(guildID),
@@ -274,6 +279,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
+        options = this._manager.client.util._freeze(options);
         let deleteMessageSeconds: number | undefined;
         if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) {
             deleteMessageSeconds = options.deleteMessageDays! * 86400;
@@ -294,6 +300,7 @@ export default class Guilds {
      * @caches {@link Guild#channels | Guild#channels}
      */
     async createChannel<T extends GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawGuildChannel>({
             method: "POST",
             path:   Routes.GUILD_CHANNELS(guildID),
@@ -333,6 +340,7 @@ export default class Guilds {
      * @caches {@link Guild#emojis | Guild#emojis}<br>{@link Client#users | Client#users} (creator, if applicable)
      */
     async createEmoji(guildID: string, options: CreateGuildEmojiOptions): Promise<GuildEmoji> {
+        options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
@@ -358,6 +366,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions): Promise<Guild> {
+        options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options.icon) {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
@@ -380,6 +389,7 @@ export default class Guilds {
      * @caches {@link Guild#roles | Guild#roles}
      */
     async createRole(guildID: string, options?: CreateRoleOptions): Promise<Role> {
+        options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options?.icon) {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
@@ -408,6 +418,7 @@ export default class Guilds {
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
     async createScheduledEvent(guildID: string, options: CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
+        options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
@@ -438,6 +449,7 @@ export default class Guilds {
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
      */
     async createSoundboardSound(guildID: string, options: CreateSoundboardSoundOptions): Promise<Soundboard> {
+        options = this._manager.client.util._freeze(options);
         let sound: string | undefined;
         if (options.sound) {
             sound = this._manager.client.util._convertSound(options.sound, "sound");
@@ -464,6 +476,7 @@ export default class Guilds {
      * @caches {@link Guild#stickers | Guild#stickers}<br>{@link Client#users | Client#users} (creator, if applicable)
      */
     async createSticker(guildID: string, options: CreateStickerOptions): Promise<Sticker> {
+        options = this._manager.client.util._freeze(options);
         const magic = this._manager.client.util.getMagic(options.file.contents);
         let mime: string | undefined;
         switch (magic) {
@@ -497,6 +510,7 @@ export default class Guilds {
      * @param options The options for creating the template.
      */
     async createTemplate(guildID: string, options: CreateTemplateOptions): Promise<GuildTemplate> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawGuildTemplate>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATES(guildID),
@@ -645,6 +659,7 @@ export default class Guilds {
      * @caches {@link Client#guilds | Client#guilds}
      */
     async edit(guildID: string, options: EditGuildOptions): Promise<Guild> {
+        options = this._manager.client.util._freeze(options);
         let banner: string | undefined, discoverySplash: string | undefined, icon: string | undefined, splash: string | undefined;
         if (options.banner) {
             banner = this._manager.client.util._convertImage(options.banner, "banner");
@@ -697,6 +712,7 @@ export default class Guilds {
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
     async editAutoModerationRule(guildID: string, ruleID: string, options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawAutoModerationRule>({
             method: "PATCH",
             path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
@@ -734,6 +750,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editChannelPositions(guildID: string, options: Array<ModifyChannelPositionsEntry>): Promise<void> {
+        options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
             path:   Routes.GUILD_CHANNELS(guildID),
@@ -769,6 +786,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editCurrentUserVoiceState(guildID: string, options: EditCurrentUserVoiceStateOptions): Promise<void> {
+        options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
             path:   Routes.GUILD_VOICE_STATE(guildID, "@me"),
@@ -788,6 +806,7 @@ export default class Guilds {
      * @caches {@link Guild#emojis | Guild#emojis}
      */
     async editEmoji(guildID: string, emojiID: string, options: EditGuildEmojiOptions): Promise<GuildEmoji> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawGuildEmoji>({
             method: "PATCH",
             path:   Routes.GUILD_EMOJI(guildID, emojiID),
@@ -806,6 +825,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editIncidentActions(guildID: string, options: EditIncidentActionsOptions): Promise<IncidentActions> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawIncidentActions>({
             method: "PUT",
             path:   Routes.GUILD_INCIDENT_ACTIONS(guildID),
@@ -827,6 +847,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editMFALevel(guildID: string, options: EditMFALevelOptions): Promise<MFALevels> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<MFALevels>({
             method: "POST",
             path:   Routes.GUILD_MFA(guildID),
@@ -844,6 +865,7 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async editMember(guildID: string, memberID: string, options: EditMemberOptions): Promise<Member> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, memberID),
@@ -867,6 +889,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editOnboarding(guildID: string, options: EditOnboardingOptions): Promise<Onboarding> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawOnboarding>({
             method: "PATCH",
             path:   Routes.GUILD_ONBOARDING(guildID),
@@ -922,6 +945,7 @@ export default class Guilds {
      * @caches {@link Guild#roles | Guild#roles}
      */
     async editRole(guildID: string, roleID: string, options: EditRoleOptions): Promise<Role> {
+        options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options.icon) {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
@@ -950,6 +974,7 @@ export default class Guilds {
      * @caches {@link Guild#roles | Guild#roles}
      */
     async editRolePositions(guildID: string, options: Array<EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
+        options = this._manager.client.util._freeze(options);
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<RawRole>>({
             method: "PATCH",
@@ -970,6 +995,7 @@ export default class Guilds {
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
     async editScheduledEvent(guildID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
+        options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
@@ -1002,6 +1028,7 @@ export default class Guilds {
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
      */
     async editSoundboardSound(guildID: string, soundID: string, options: EditSoundboardSoundOptions): Promise<Soundboard> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawSoundboard>({
             method: "PATCH",
             path:   Routes.SOUNDBOARD_SOUND(guildID, soundID),
@@ -1023,6 +1050,7 @@ export default class Guilds {
      * @caches {@link Guild#stickers | Guild#stickers}
      */
     async editSticker(guildID: string, stickerID: string, options: EditStickerOptions): Promise<Sticker> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawSticker>({
             method: "PATCH",
             path:   Routes.GUILD_STICKER(guildID, stickerID),
@@ -1043,6 +1071,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editTemplate(guildID: string, code: string, options: EditGuildTemplateOptions): Promise<GuildTemplate> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawGuildTemplate>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATE(guildID, code),
@@ -1062,6 +1091,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editUserVoiceState(guildID: string, memberID: string, options: EditUserVoiceStateOptions): Promise<void> {
+        options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
             path:   Routes.GUILD_VOICE_STATE(guildID, memberID),
@@ -1079,6 +1109,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editWelcomeScreen(guildID: string, options: EditWelcomeScreenOptions): Promise<WelcomeScreen> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawWelcomeScreen>({
             method: "PATCH",
             path:   Routes.GUILD_WELCOME_SCREEN(guildID),
@@ -1111,6 +1142,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async editWidget(guildID: string, options: WidgetSettings): Promise<Widget> {
+        options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawWidget>({
             method: "POST",
             path:   Routes.GUILD_WIDGET(guildID),
@@ -1963,6 +1995,7 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async searchMembers(guildID: string, options: SearchMembersOptions): Promise<Array<Member>> {
+        options = this._manager.client.util._freeze(options);
         const query = new URLSearchParams();
         query.set("query", options.query);
         if (options.limit !== undefined) {
