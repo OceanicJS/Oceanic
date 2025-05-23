@@ -193,7 +193,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     }
 
     private createGuild(data: RawGuild): Guild {
-        this.client.guildShardMap[data.id] = this.id;
+        this.client.guildShardMap.set(data.id, this.id);
         const guild = this.client.guilds.update(data);
         if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
