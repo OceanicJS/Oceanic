@@ -45,6 +45,7 @@ import type {
 } from "../types";
 import Application from "../structures/Application";
 import Subscription from "../structures/Subscription";
+import QueryBuilder from "../util/QueryBuilder";
 
 /** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applications | .applications}. */
 export default class Applications {
@@ -478,15 +479,15 @@ export default class Applications {
      */
     async getEntitlements(applicationID: string, options: SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options.after !== undefined) query.set("after", options.after);
-        if (options.before !== undefined) query.set("before", options.before);
-        if (options.excludeDeleted !== undefined) query.set("exclude_deleted", String(options.excludeDeleted));
-        if (options.excludeEnded !== undefined) query.set("exclude_ended", String(options.excludeEnded));
-        if (options.guildID !== undefined) query.set("guild_id", options.guildID);
-        if (options.limit !== undefined) query.set("limit", String(options.limit));
-        if (options.skuIDs !== undefined) query.set("sku_ids", options.skuIDs.join(","));
-        if (options.userID !== undefined) query.set("user_id", options.userID);
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options.after);
+        query.setIfPresent("before", options.before);
+        query.setIfPresent("exclude_deleted", options.excludeDeleted);
+        query.setIfPresent("exclude_ended", options.excludeEnded);
+        query.setIfPresent("guild_id", options.guildID);
+        query.setIfPresent("limit", options.limit);
+        query.setIfPresent("sku_ids", options.skuIDs?.join(","));
+        query.setIfPresent("user_id", options.userID);
         return this._manager.authRequest<Array<RawEntitlement | RawTestEntitlement>>({
             method: "GET",
             path:   Routes.ENTITLEMENTS(applicationID),
@@ -503,10 +504,8 @@ export default class Applications {
      */
     async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options?.withLocalizations !== undefined) {
-            query.set("with_localizations", options.withLocalizations.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<RawApplicationCommand>({
             method:  "GET",
             path:    Routes.APPLICATION_COMMAND(applicationID, commandID),
@@ -523,10 +522,8 @@ export default class Applications {
      */
     async getGlobalCommands(applicationID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options?.withLocalizations !== undefined) {
-            query.set("with_localizations", options.withLocalizations.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method:  "GET",
             path:    Routes.APPLICATION_COMMANDS(applicationID),
@@ -545,10 +542,8 @@ export default class Applications {
      */
     async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options?.withLocalizations !== undefined) {
-            query.set("with_localizations", options.withLocalizations.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<RawApplicationCommand>({
             method:  "GET",
             path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
@@ -566,10 +561,8 @@ export default class Applications {
      */
     async getGuildCommands(applicationID: string, guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options?.withLocalizations !== undefined) {
-            query.set("with_localizations", options.withLocalizations.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Array<RawApplicationCommand>>({
             method:  "GET",
             path:    Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
@@ -634,11 +627,11 @@ export default class Applications {
      */
     async getSKUSubscriptions(skuID: string, options: SearchSKUSubscriptions): Promise<Array<Subscription>> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options.after !== undefined) query.set("after", options.after);
-        if (options.before !== undefined) query.set("before", options.before);
-        if (options.limit !== undefined) query.set("limit", String(options.limit));
-        if (options.userID !== undefined) query.set("user_id", options.userID);
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options.after);
+        query.setIfPresent("before", options.before);
+        query.setIfPresent("limit", options.limit);
+        query.setIfPresent("user_id", options.userID);
         return this._manager.authRequest<Array<RawSubscription>>({
             method: "GET",
             path:   Routes.SKU_SUBSCRIPTIONS(skuID),

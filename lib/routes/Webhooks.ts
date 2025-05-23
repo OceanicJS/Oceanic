@@ -15,6 +15,7 @@ import Webhook from "../structures/Webhook";
 import Message from "../structures/Message";
 import type RESTManager from "../rest/RESTManager";
 import type { Uncached } from "../types/shared";
+import QueryBuilder from "../util/QueryBuilder";
 
 /** Various methods for interacting with webhooks. Located at {@link Client#rest | Client#rest}{@link RESTManager#webhooks | .webhooks}. */
 export default class Webhooks {
@@ -69,10 +70,8 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async deleteMessage(webhookID: string, token: string, messageID: string, options?: DeleteWebhookMessageOptions): Promise<void> {
-        const query = new URLSearchParams();
-        if (options?.threadID !== undefined) {
-            query.set("thread_id", options.threadID);
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("thread_id", options?.threadID);
         await this._manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID)
@@ -126,10 +125,8 @@ export default class Webhooks {
      */
     async editMessage<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, messageID: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options.threadID) {
-            query.set("thread_id", options.threadID);
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("thread_id", options?.threadID);
         return this._manager.authRequest<RawMessage>({
             method: "PATCH",
             path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID),
@@ -187,16 +184,10 @@ export default class Webhooks {
     async execute(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<void>;
     async execute<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: ExecuteWebhookOptions): Promise<Message<T> | void> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options.wait !== undefined) {
-            query.set("wait", options.wait.toString());
-        }
-        if (options.withComponents !== undefined) {
-            query.set("with_components", options.withComponents.toString());
-        }
-        if (options.threadID !== undefined) {
-            query.set("thread_id", options.threadID);
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("wait", options.wait);
+        query.setIfPresent("with_components", options.withComponents);
+        query.setIfPresent("thread_id", options.threadID);
         return this._manager.authRequest<RawMessage | null>({
             method: "POST",
             path:   Routes.WEBHOOK(webhookID, token),
@@ -237,10 +228,8 @@ export default class Webhooks {
     async executeGithub<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
     async executeGithub<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options.wait !== undefined) {
-            query.set("wait", options.wait.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("wait", options?.wait);
         return this._manager.authRequest<RawMessage | null>({
             method: "POST",
             path:   Routes.WEBHOOK_PLATFORM(webhookID, token, "github"),
@@ -260,10 +249,8 @@ export default class Webhooks {
     async executeSlack<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true; }): Promise<Message<T>>;
     async executeSlack<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: boolean; }): Promise<Message<T> | void> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
-        if (options.wait !== undefined) {
-            query.set("wait", options.wait.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("wait", options?.wait);
         return this._manager.authRequest<RawMessage | null>({
             method: "POST",
             path:   Routes.WEBHOOK_PLATFORM(webhookID, token, "slack"),
@@ -318,10 +305,8 @@ export default class Webhooks {
      * @caching This method **does not** cache its result.
      */
     async getMessage<T extends AnyTextableChannel | Uncached>(webhookID: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
-        const query = new URLSearchParams();
-        if (threadID !== undefined) {
-            query.set("thread_id", threadID);
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("thread_id", threadID);
         return this._manager.authRequest<RawMessage>({
             method: "GET",
             path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID)

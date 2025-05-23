@@ -107,6 +107,7 @@ import type { Uncached } from "../types/shared";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import VoiceState from "../structures/VoiceState";
 import Soundboard from "../structures/Soundboard";
+import QueryBuilder from "../util/QueryBuilder";
 import { setTimeout } from "node:timers/promises";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
@@ -1177,10 +1178,8 @@ export default class Guilds {
      * @caches {@link Client#guilds | Client#guilds}
      */
     async get(guildID: string, withCounts?: boolean): Promise<Guild> {
-        const query = new URLSearchParams();
-        if (withCounts !== undefined) {
-            query.set("with_counts", withCounts.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_counts", withCounts);
         return this._manager.authRequest<RawGuild>({
             method: "GET",
             path:   Routes.GUILD(guildID),
@@ -1218,19 +1217,11 @@ export default class Guilds {
      */
     async getAuditLog(guildID: string, options?: GetAuditLogOptions): Promise<AuditLog> {
         const guild = this._manager.client.guilds.get(guildID);
-        const query = new URLSearchParams();
-        if (options?.actionType !== undefined) {
-            query.set("action_type", options.actionType.toString());
-        }
-        if (options?.before !== undefined) {
-            query.set("before", options.before);
-        }
-        if (options?.limit !== undefined) {
-            query.set("limit", options.limit.toString());
-        }
-        if (options?.userID !== undefined) {
-            query.set("user_id", options.userID);
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("action_type", options?.actionType);
+        query.setIfPresent("before", options?.before);
+        query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("user_id", options?.userID);
         return this._manager.authRequest<RawAuditLog>({
             method: "GET",
             path:   Routes.GUILD_AUDIT_LOG(guildID),
@@ -1301,16 +1292,10 @@ export default class Guilds {
      */
     async getBans(guildID: string, options?: GetBansOptions): Promise<Array<Ban>> {
         const _getBans = async (_options?: GetBansOptions): Promise<Array<Ban>> => {
-            const query = new URLSearchParams();
-            if (_options?.after !== undefined) {
-                query.set("after", _options.after);
-            }
-            if (_options?.before !== undefined) {
-                query.set("before", _options.before);
-            }
-            if (_options?.limit !== undefined) {
-                query.set("limit", _options.limit.toString());
-            }
+            const query = new QueryBuilder();
+            query.setIfPresent("after", _options?.after);
+            query.setIfPresent("before", _options?.before);
+            query.setIfPresent("limit", _options?.limit);
             return this._manager.authRequest<Array<RawBan>>({
                 method: "GET",
                 path:   Routes.GUILD_BANS(guildID),
@@ -1451,13 +1436,9 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}}
      */
     async getMembers(guildID: string, options?: GetMembersOptions): Promise<Array<Member>> {
-        const query = new URLSearchParams();
-        if (options?.after !== undefined) {
-            query.set("after", options.after);
-        }
-        if (options?.limit !== undefined) {
-            query.set("limit", options.limit.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options?.after);
+        query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<Array<RESTMember>>({
             method: "GET",
             path:   Routes.GUILD_MEMBERS(guildID),
@@ -1516,13 +1497,9 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async getPruneCount(guildID: string, options?: GetPruneCountOptions): Promise<number> {
-        const query = new URLSearchParams();
-        if (options?.days !== undefined) {
-            query.set("days", options.days.toString());
-        }
-        if (options?.includeRoles !== undefined) {
-            query.set("include_roles", options.includeRoles.join(","));
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("days", options?.days);
+        query.setIfPresent("include_roles", options?.includeRoles?.join(","));
         return this._manager.authRequest<{ pruned: number; }>({
             method: "GET",
             path:   Routes.GUILD_PRUNE(guildID),
@@ -1569,10 +1546,8 @@ export default class Guilds {
      */
     async getScheduledEvent(guildID: string, eventID: string, withUserCount?: number): Promise<GuildScheduledEvent> {
         const guild = this._manager.client.guilds.get(guildID);
-        const query = new URLSearchParams();
-        if (withUserCount !== undefined) {
-            query.set("with_user_count", withUserCount.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_user_count", withUserCount);
         return this._manager.authRequest<RawScheduledEvent>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
@@ -1590,19 +1565,11 @@ export default class Guilds {
      */
     async getScheduledEventUsers(guildID: string, eventID: string, options?: GetScheduledEventUsersOptions): Promise<Array<ScheduledEventUser>> {
         const guild = this._manager.client.guilds.get(guildID);
-        const query = new URLSearchParams();
-        if (options?.after !== undefined) {
-            query.set("after", options.after);
-        }
-        if (options?.before !== undefined) {
-            query.set("before", options.before);
-        }
-        if (options?.limit !== undefined) {
-            query.set("limit", options.limit.toString());
-        }
-        if (options?.withMember !== undefined) {
-            query.set("with_member", options.withMember.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options?.after);
+        query.setIfPresent("before", options?.before);
+        query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("with_member", options?.withMember);
         return this._manager.authRequest<Array<RawScheduledEventUser>>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID)
@@ -1623,10 +1590,8 @@ export default class Guilds {
      */
     async getScheduledEvents(guildID: string, withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
         const guild = this._manager.client.guilds.get(guildID);
-        const query = new URLSearchParams();
-        if (withUserCount !== undefined) {
-            query.set("with_user_count", withUserCount.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("with_user_count", withUserCount);
         return this._manager.authRequest<Array<RawScheduledEvent>>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENTS(guildID),
@@ -1811,10 +1776,8 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async getWidgetImage(guildID: string, style?: WidgetImageStyle): Promise<Buffer> {
-        const query = new URLSearchParams();
-        if (style !== undefined) {
-            query.set("style", style);
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("style", style);
         return this._manager.request<Buffer>({
             method: "GET",
             path:   Routes.GUILD_WIDGET_IMAGE(guildID),
@@ -1996,11 +1959,9 @@ export default class Guilds {
      */
     async searchMembers(guildID: string, options: SearchMembersOptions): Promise<Array<Member>> {
         options = this._manager.client.util._freeze(options);
-        const query = new URLSearchParams();
+        const query = new QueryBuilder();
         query.set("query", options.query);
-        if (options.limit !== undefined) {
-            query.set("limit", options.limit.toString());
-        }
+        query.setIfPresent("limit", options.limit);
         return this._manager.authRequest<Array<RESTMember>>({
             method: "GET",
             path:   Routes.GUILD_SEARCH_MEMBERS(guildID),
