@@ -810,8 +810,8 @@ export default class Guilds {
             method: "PUT",
             path:   Routes.GUILD_INCIDENT_ACTIONS(guildID),
             json:   {
-                dmsDisabledUntil:     options.dmsDisabledUntil,
-                invitesDisabledUntil: options.invitesDisabledUntil
+                dms_disabled_until:     options.dmsDisabledUntil,
+                invites_disabled_until: options.invitesDisabledUntil
             },
             reason: options.reason
         }).then(data => ({
