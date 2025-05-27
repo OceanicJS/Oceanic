@@ -133,8 +133,8 @@ export async function CHANNEL_UPDATE(data: DispatchEventMap["CHANNEL_UPDATE"], s
     const oldChannel = shard.client.getChannel<AnyGuildChannel>(data.id)?.toJSON() ?? null;
     let channel: AnyGuildChannel;
     if (oldChannel && oldChannel.type !== data.type) {
-        if (shard.client.channelGuildMap[data.id]) {
-            shard.client.guilds.get(shard.client.channelGuildMap[data.id])!.channels.delete(data.id);
+        if (shard.client.channelGuildMap.has(data.id)) {
+            shard.client.guilds.get(shard.client.channelGuildMap.get(data.id)!)!.channels.delete(data.id);
         }
 
         channel = shard.client.util.updateChannel(data);
@@ -200,7 +200,7 @@ export async function GUILD_CREATE(data: DispatchEventMap["GUILD_CREATE"], shard
 export async function GUILD_DELETE(data: DispatchEventMap["GUILD_DELETE"], shard: Shard): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     shard.client.voiceAdapters.get(data.id)?.destroy();
-    delete shard.client.guildShardMap[data.id];
+    shard.client.guildShardMap.delete(data.id);
     const guild = shard.client.guilds.get(data.id);
     guild?.channels.clear();
     guild?.threads.clear();

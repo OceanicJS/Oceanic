@@ -149,7 +149,7 @@ export default class ShardManager extends Collection<number, Shard> {
         if (this.options.maxShards === -1) {
             return undefined;
         }
-        return this.get((this.client.guildShardMap[guild] ??= Number((BigInt(guild) >> 22n) % BigInt(this.options.maxShards))));
+        return this.get((this.client.guildShardMap.get(guild) ?? Number((BigInt(guild) >> 22n) % BigInt(this.options.maxShards))));
     }
 
     private async _gatewayURLForShard(shard: Shard): Promise<string> {

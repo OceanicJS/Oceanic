@@ -67,7 +67,7 @@ export interface GetWebhookMessageOptions {
     threadID?: string;
 }
 
-export interface EditWebhookMessageOptions extends Nullable<Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID" | "files">> {
+export interface EditWebhookMessageOptions extends Nullable<Pick<ExecuteWebhookOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "threadID" | "files" | "flags">> {
     /** Polls can only be added when editing a deferred interaction response. */
     poll?: MessagePollOptions;
 }

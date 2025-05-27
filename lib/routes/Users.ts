@@ -24,6 +24,7 @@ export default class Users {
      * @caching This method **does not** cache its result.
      */
     async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
+        options = this._manager.client.util._freeze(options);
         let avatar: string | undefined, banner: string | undefined;
         if (options.avatar) {
             avatar = this._manager.client.util._convertImage(options.avatar, "avatar");

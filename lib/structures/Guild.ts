@@ -275,11 +275,11 @@ export default class Guild extends Base {
         this.banner = null;
         this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
             construct: (channel): GuildChannel => {
-                client.channelGuildMap[channel.id] = this.id;
+                client.channelGuildMap.set(channel.id, this.id);
                 return Channel.from<AnyGuildChannelWithoutThreads>(channel, client);
             },
             delete: (id): void => {
-                delete client.channelGuildMap[id];
+                client.channelGuildMap.delete(id);
             }
         }) as TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
@@ -319,11 +319,11 @@ export default class Guild extends Base {
         this.systemChannelFlags = data.system_channel_flags;
         this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
             construct: (thread): ThreadChannel => {
-                client.threadGuildMap[thread.id] = this.id;
+                client.threadGuildMap.set(thread.id, this.id);
                 return Channel.from<AnyThreadChannel>(thread, client);
             },
             delete: (id): void => {
-                delete client.threadGuildMap[id];
+                client.threadGuildMap.delete(id);
             }
         }) as TypedCollection<RawThreadChannel, AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
@@ -340,7 +340,7 @@ export default class Guild extends Base {
         if (data.channels) {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
-                client.channelGuildMap[channelData.id] = this.id;
+                client.channelGuildMap.set(channelData.id, this.id); // @TODO this seems redundant
                 this.channels.update(channelData);
             }
         }

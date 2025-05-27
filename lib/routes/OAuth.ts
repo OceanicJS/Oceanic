@@ -32,6 +32,7 @@ import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
 import type { RESTOAuthApplication, RawOAuthUser, UpdateUserApplicationRoleConnectionOptions } from "../types";
+import QueryBuilder from "../util/QueryBuilder";
 
 /** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {
@@ -46,6 +47,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async clientCredentialsGrant(options: ClientCredentialsTokenOptions): Promise<ClientCredentialsTokenResponse> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("grant_type", "client_credentials");
         form.append("scope", options.scopes.join(" "));
@@ -69,6 +71,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async exchangeCode(options: ExchangeCodeOptions): Promise<ExchangeCodeResponse> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
@@ -163,19 +166,11 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async getCurrentGuilds(options?: GetCurrentGuildsOptions): Promise<Array<OAuthGuild>> {
-        const query = new URLSearchParams();
-        if (options?.after !== undefined) {
-            query.set("after", options.after);
-        }
-        if (options?.before !== undefined) {
-            query.set("before", options.before);
-        }
-        if (options?.limit !== undefined) {
-            query.set("limit", options.limit.toString());
-        }
-        if (options?.withCounts !== undefined) {
-            query.set("with_counts", options?.withCounts.toString());
-        }
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options?.after);
+        query.setIfPresent("before", options?.before);
+        query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("with_counts", options?.withCounts);
         return this._manager.authRequest<Array<RawOAuthGuild>>({
             method: "GET",
             path:   Routes.OAUTH_GUILDS,
@@ -251,6 +246,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async refreshToken(options: RefreshTokenOptions): Promise<RefreshTokenResponse> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
@@ -276,6 +272,7 @@ export default class OAuth {
      * @caching This method **does not** cache its result.
      */
     async revokeToken(options: RevokeTokenOptions): Promise<void> {
+        options = this._manager.client.util._freeze(options);
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);

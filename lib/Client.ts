@@ -37,9 +37,9 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     private _application?: ClientApplication;
     private _user?: ExtendedUser;
     /** A key-value mapping of channel IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#channels | channels collection}. */
-    channelGuildMap: Record<string, string>;
+    channelGuildMap = new Map<string, string>();
     groupChannels: TypedCollection<RawGroupChannel, GroupChannel>;
-    guildShardMap: Record<string, number>;
+    guildShardMap = new Map<string, number>();
     guilds: TypedCollection<RawGuild, Guild, [rest?: boolean]>;
     options: ClientInstanceOptions;
     privateChannels: TypedCollection<RawPrivateChannel, PrivateChannel>;
@@ -48,11 +48,11 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
     shards: ShardManager;
     startTime = 0;
     /** A key-value mapping of thread IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#threads | threads collection}. */
-    threadGuildMap: Record<string, string>;
+    threadGuildMap = new Map<string, string>();
     unavailableGuilds: TypedCollection<RawUnavailableGuild, UnavailableGuild>;
     users: TypedCollection<RawUser, User>;
     util: Util;
-    voiceAdapters: Map<string, DiscordGatewayAdapterLibraryMethods>;
+    voiceAdapters = new Map<string, DiscordGatewayAdapterLibraryMethods>();
     /**
      * @constructor
      * @param options The options to create the client with.
@@ -133,16 +133,12 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 detail: "Remove the collectionsLimit option, or zero out all of the possible options to disable this warning."
             });
         }
-        this.voiceAdapters = new Map();
-        this.channelGuildMap = {};
         this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);
         this.guilds = new TypedCollection(Guild, this, this.options.collectionLimits.guilds);
         this.privateChannels = new TypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels);
         this.ready = false;
-        this.guildShardMap = {};
         this.rest = new RESTManager(this, options?.rest);
         this.shards = new ShardManager(this, options?.gateway);
-        this.threadGuildMap = {};
         this.unavailableGuilds = new TypedCollection(UnavailableGuild, this, this.options.collectionLimits.unavailableGuilds);
         this.users = new TypedCollection(User, this, this.options.collectionLimits.users);
     }
@@ -213,10 +209,10 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * @param channelID The id of the channel.
      */
     getChannel<T extends AnyChannel = AnyChannel>(channelID: string): T | undefined {
-        if (this.channelGuildMap[channelID]) {
-            return this.guilds.get(this.channelGuildMap[channelID])?.channels.get(channelID) as T;
-        } else if (this.threadGuildMap[channelID]) {
-            return this.guilds.get(this.threadGuildMap[channelID])?.threads.get(channelID) as T;
+        if (this.channelGuildMap.has(channelID)) {
+            return this.guilds.get(this.channelGuildMap.get(channelID)!)?.channels.get(channelID) as T;
+        } else if (this.threadGuildMap.has(channelID)) {
+            return this.guilds.get(this.threadGuildMap.get(channelID)!)?.threads.get(channelID) as T;
         }
         return (this.privateChannels.get(channelID) ?? this.groupChannels.get(channelID)) as T;
     }

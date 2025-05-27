@@ -13,6 +13,7 @@ import type RESTManager from "../rest/RESTManager";
 import type Message from "../structures/Message";
 import type { AnyInteractionChannel, AnyTextableChannel } from "../types/channels";
 import type { Uncached } from "../types/shared";
+import QueryBuilder from "../util/QueryBuilder";
 
 /** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
 export default class Interactions {
@@ -43,6 +44,7 @@ export default class Interactions {
     async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse?: false): Promise<null>;
     async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse: true): Promise<InteractionCallbackResponse<CH>>;
     async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse = false): Promise<InteractionCallbackResponse<CH> | null> {
+        options = this._manager.client.util._freeze(options);
         let data: unknown;
         switch (options.type) {
             case InteractionResponseTypes.PONG:
@@ -97,7 +99,7 @@ export default class Interactions {
                 break;
             }
         }
-        const query = new URLSearchParams();
+        const query = new QueryBuilder();
         if (withResponse) query.set("with_response", "true");
         return this._manager.authRequest<RawInteractionCallbackResponse>({
             method: "POST",
