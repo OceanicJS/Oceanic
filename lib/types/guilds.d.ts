@@ -427,6 +427,8 @@ export interface CreateStageChannelOptions extends Omit<CreateChannelOptions<Cha
 export interface CreateRoleOptions {
     /** The color of the role. */
     color?: number;
+    /** The colors of the role. */
+    colors?: Partial<RoleColors>;
     /** If the role should be hoisted. */
     hoist?: boolean;
     /** The icon for the role (buffer, or full data url). Requires the `ROLE_ICONS` feature. */
