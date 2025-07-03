@@ -635,6 +635,9 @@ export interface JSONPublicThreadChannel extends JSONThreadChannel {
     type: ChannelTypes.PUBLIC_THREAD;
 }
 export interface JSONRole extends JSONBase {
+    /**
+     * @deprecated
+     */
     color: number;
     colors: RoleColors;
     guildID: string;

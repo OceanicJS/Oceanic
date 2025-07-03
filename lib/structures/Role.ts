@@ -10,7 +10,10 @@ import { UncachedError } from "../util/Errors";
 /** Represents a role in a guild. */
 export default class Role extends Base {
     private _cachedGuild?: Guild;
-    /** The color of this role. */
+    /**
+     * The color of this role.
+     * @deprecated Use {@link Role#colors | Role#colors.primaryColor} instead.
+     */
     color: number;
     /** The colors of this role. */
     colors: RoleColors;

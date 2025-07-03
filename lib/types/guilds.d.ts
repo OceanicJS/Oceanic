@@ -108,6 +108,9 @@ export interface RawGuild {
 export interface RawInviteGuild extends Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level"> {}
 
 export interface RawRole {
+    /**
+     * @deprecated
+     */
     color: number;
     colors: RawRoleColors;
     flags: number;
@@ -425,7 +428,10 @@ export interface CreateAnnouncementChannelOptions extends Omit<CreateChannelOpti
 export interface CreateStageChannelOptions extends Omit<CreateChannelOptions<ChannelTypes.GUILD_STAGE_VOICE>, "defaultAutoArchiveDuration" | "nsfw" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode"> {}
 
 export interface CreateRoleOptions {
-    /** The color of the role. */
+    /**
+     * The color of the role.
+     * @deprecated Use {@link CreateRoleOptions#colors | CreateRoleOptions#colors.primaryColor} instead.
+     */
     color?: number;
     /** The colors of the role. */
     colors?: Partial<RoleColors>;
