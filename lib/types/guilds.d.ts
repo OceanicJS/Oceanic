@@ -108,9 +108,7 @@ export interface RawGuild {
 export interface RawInviteGuild extends Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level"> {}
 
 export interface RawRole {
-    /**
-     * @deprecated
-     */
+    /** @deprecated */
     color: number;
     colors: RawRoleColors;
     flags: number;
