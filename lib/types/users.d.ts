@@ -9,6 +9,7 @@ export interface RESTUser {
     banner?: string | null;
     bot?: boolean;
     clan?: RawClan | null;
+    collectibles?: RawCollectibles | null;
     discriminator: string;
     email?: string | null;
     flags?: number;
@@ -23,7 +24,7 @@ export interface RESTUser {
     username: string;
     verified?: boolean;
 }
-export interface RawUser extends Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration_data" | "bot" | "system" | "banner" | "accent_color" | "clan">, Required<Pick<RESTUser, "public_flags" | "global_name">> {}
+export interface RawUser extends Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration_data" | "bot" | "system" | "banner" | "accent_color" | "clan" | "collectibles">, Required<Pick<RESTUser, "public_flags" | "global_name">> {}
 export interface RawUserWithMember extends RawUser, Pick<RESTUser, "member"> {}
 export interface RawOAuthUser extends Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration_data" | "bot" | "system" | "global_name">, Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags" | "clan">> {}
 export interface RawExtendedUser extends Pick<RawOAuthUser, "avatar" | "avatar_decoration_data" | "bot" | "discriminator" | "email" | "flags" | "id" | "mfa_enabled" | "username" | "verified" | "global_name" | "clan"> {}
@@ -60,3 +61,27 @@ export interface AvatarDecorationData {
     asset: string;
     skuID: string;
 }
+
+export interface RawCollectibles {
+    nameplate?: RawNameplate;
+}
+
+export interface Collectibles {
+    nameplate?: Nameplate;
+}
+
+export interface RawNameplate {
+    asset: string;
+    label: string;
+    palette: NameplatePalette;
+    sku_id: string;
+}
+
+export interface Nameplate {
+    asset: string;
+    label: string;
+    palette: NameplatePalette;
+    skuID: string;
+}
+
+export type NameplatePalette = "crimson" | "berry" | "sky" | "teal" | "forest" | "bubble_gum" | "violet" | "cobalt" | "clover" | "lemon" | "white";

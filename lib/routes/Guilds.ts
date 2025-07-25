@@ -399,7 +399,12 @@ export default class Guilds {
             method: "POST",
             path:   Routes.GUILD_ROLES(guildID),
             json:   {
-                color:         options?.color,
+                color:  options?.color,
+                colors: {
+                    primary_color:   options?.colors?.primaryColor,
+                    secondary_color: options?.colors?.secondaryColor,
+                    tertiary_color:  options?.colors?.tertiaryColor
+                },
                 hoist:         options?.hoist,
                 icon,
                 mentionable:   options?.mentionable,
@@ -955,7 +960,12 @@ export default class Guilds {
             method: "PATCH",
             path:   Routes.GUILD_ROLE(guildID, roleID),
             json:   {
-                color:         options.color,
+                color:  options.color,
+                colors: {
+                    primary_color:   options.colors?.primaryColor,
+                    secondary_color: options.colors?.secondaryColor,
+                    tertiary_color:  options.colors?.tertiaryColor
+                },
                 hoist:         options.hoist,
                 icon,
                 mentionable:   options.mentionable,

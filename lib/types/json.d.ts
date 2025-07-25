@@ -20,7 +20,8 @@ import type {
     WelcomeScreen,
     Sticker,
     Presence,
-    IncidentActions
+    IncidentActions,
+    RoleColors
 } from "./guilds";
 import type {
     ChannelMention,
@@ -46,7 +47,7 @@ import type {
     MessageComponent
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
-import type { AvatarDecorationData } from "./users";
+import type { AvatarDecorationData, Collectibles } from "./users";
 import type {
     ApplicationCommandTypes,
     AutoModerationEventTypes,
@@ -634,7 +635,9 @@ export interface JSONPublicThreadChannel extends JSONThreadChannel {
     type: ChannelTypes.PUBLIC_THREAD;
 }
 export interface JSONRole extends JSONBase {
+    /** @deprecated */
     color: number;
+    colors: RoleColors;
     guildID: string;
     hoist: boolean;
     icon: string | null;
@@ -755,6 +758,7 @@ export interface JSONUser extends JSONBase {
     avatarDecorationData: AvatarDecorationData | null;
     banner?: string | null;
     bot: boolean;
+    collectibles: Collectibles | null;
     discriminator: string;
     globalName: string | null;
     publicFlags: number;

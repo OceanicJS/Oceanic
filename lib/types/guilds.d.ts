@@ -108,7 +108,9 @@ export interface RawGuild {
 export interface RawInviteGuild extends Pick<RawGuild, "id" | "name" | "splash" | "banner" | "description" | "icon" | "features" | "verification_level" | "vanity_url_code" | "premium_subscription_count" | "nsfw_level"> {}
 
 export interface RawRole {
+    /** @deprecated */
     color: number;
+    colors: RawRoleColors;
     flags: number;
     hoist: boolean;
     icon?: string | null;
@@ -137,6 +139,19 @@ export interface RoleTags {
     premiumSubscriber: boolean;
     subscriptionListingID?: string;
 }
+
+export interface RawRoleColors {
+    primary_color: number;
+    secondary_color: number | null;
+    tertiary_color: number | null;
+}
+
+export interface RoleColors {
+    primaryColor: number;
+    secondaryColor: number | null;
+    tertiaryColor: number | null;
+}
+
 export interface RawGuildEmoji extends Required<Omit<Emoji, "user" | "id">>  { id: string; user?: RawUser; }
 export interface GuildEmoji extends Omit<RawGuildEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User; }
 export interface RawWelcomeScreen {
@@ -411,8 +426,13 @@ export interface CreateAnnouncementChannelOptions extends Omit<CreateChannelOpti
 export interface CreateStageChannelOptions extends Omit<CreateChannelOptions<ChannelTypes.GUILD_STAGE_VOICE>, "defaultAutoArchiveDuration" | "nsfw" | "rtcRegion" | "topic" | "userLimit" | "videoQualityMode"> {}
 
 export interface CreateRoleOptions {
-    /** The color of the role. */
+    /**
+     * The color of the role.
+     * @deprecated Use {@link CreateRoleOptions#colors | CreateRoleOptions#colors.primaryColor} instead.
+     */
     color?: number;
+    /** The colors of the role. */
+    colors?: Partial<RoleColors>;
     /** If the role should be hoisted. */
     hoist?: boolean;
     /** The icon for the role (buffer, or full data url). Requires the `ROLE_ICONS` feature. */
