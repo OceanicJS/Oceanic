@@ -73,13 +73,15 @@ export interface Collectibles {
 export interface RawNameplate {
     asset: string;
     label: string;
-    palette: string;
+    palette: NameplatePalette;
     sku_id: string;
 }
 
 export interface Nameplate {
     asset: string;
     label: string;
-    palette: string;
+    palette: NameplatePalette;
     skuID: string;
 }
+
+export type NameplatePalette = "crimson" | "berry" | "sky" | "teal" | "forest" | "bubble_gum" | "violet" | "cobalt" | "clover" | "lemon" | "white";
