@@ -1535,6 +1535,7 @@ export enum ApplicationEventWebhookStatus {
 
 export const ApplicationEventWebhookEventTypes = [
     "APPLICATION_AUTHORIZED",
+    "APPLICATION_DEAUTHORIZED",
     "ENTITLEMENT_CREATE",
     "QUEST_USER_ENROLLMENT"
 ] as const;
