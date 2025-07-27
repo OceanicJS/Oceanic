@@ -1046,10 +1046,11 @@ export default class Guild extends Base {
 
     /**
      * Edit an existing scheduled event in this guild.
+     * @param scheduledEventID The ID of the scheduled event.
      * @param options The options for editing the scheduled event.
      */
-    async editScheduledEvent(options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
-        return this.client.rest.guilds.editScheduledEvent(this.id, options);
+    async editScheduledEvent(scheduledEventID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
+        return this.client.rest.guilds.editScheduledEvent(this.id, scheduledEventID, options);
     }
 
     /**

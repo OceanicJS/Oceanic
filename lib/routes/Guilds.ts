@@ -1001,19 +1001,20 @@ export default class Guilds {
     /**
      * Edit an existing scheduled event in a guild.
      * @param guildID The ID of the guild.
+     * @param scheduledEventID The ID of the scheduled event.
      * @param options The options for editing the scheduled event.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
-    async editScheduledEvent(guildID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
+    async editScheduledEvent(guildID: string, scheduledEventID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
         }
         return this._manager.authRequest<RawScheduledEvent>({
-            method: "POST",
-            path:   Routes.GUILD_SCHEDULED_EVENTS(guildID),
+            method: "PATCH",
+            path:   Routes.GUILD_SCHEDULED_EVENT(guildID, scheduledEventID),
             json:   {
                 channel_id:           options.channelID,
                 description:          options.description,
