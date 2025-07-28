@@ -327,8 +327,6 @@ export interface EditGuildOptions {
     icon?: Buffer | string | null;
     /** The name of the guild. */
     name?: string;
-    /** The ID of the member to transfer guild ownership to. */
-    ownerID?: string;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild. `null` to reset. */
     preferredLocale?: string | null;
     /** If the premium progress bar is enabled. */

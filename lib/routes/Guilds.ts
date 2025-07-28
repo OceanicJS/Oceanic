@@ -661,7 +661,6 @@ export default class Guilds {
                 features:                      options.features,
                 icon,
                 name:                          options.name,
-                owner_id:                      options.ownerID,
                 preferred_locale:              options.preferredLocale,
                 premium_progress_bar_enabled:  options.premiumProgressBarEnabled,
                 public_updates_channel_id:     options.publicUpdatesChannelID,
