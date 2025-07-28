@@ -1,7 +1,6 @@
 /** @module REST/Guilds */
 import type {
     CreateGuildEmojiOptions,
-    CreateGuildOptions,
     EditGuildEmojiOptions,
     EditGuildOptions,
     GuildEmoji,
@@ -199,37 +198,6 @@ export default class Guilds {
             bannedUsers: data.banned_users,
             failedUsers: data.failed_users
         }));
-    }
-
-    /**
-     * Create a guild. This can only be used by bots in under 10 guilds.
-     * @param options The options for creating the guild.
-     * @caching This method **does not** cache its result.
-     */
-    async create(options: CreateGuildOptions): Promise<Guild> {
-        options = this._manager.client.util._freeze(options);
-        let icon: string | undefined;
-        if (options.icon) {
-            icon = this._manager.client.util._convertImage(options.icon, "icon");
-        }
-        return this._manager.authRequest<RawGuild>({
-            method: "POST",
-            path:   Routes.GUILDS,
-            json:   {
-                afk_channel_id:                options.afkChannelID,
-                afk_timeout:                   options.afkTimeout,
-                channels:                      options.channels,
-                default_message_notifications: options.defaultMessageNotifications,
-                explicit_content_filter:       options.explicitContentFilter,
-                icon,
-                name:                          options.name,
-                region:                        options.region,
-                roles:                         options.roles,
-                system_channel_flags:          options.systemChannelFlags,
-                system_channel_id:             options.systemChannelID,
-                verification_level:            options.verificationLevel
-            }
-        }).then(data => new Guild(data, this._manager.client, true));
     }
 
     /**

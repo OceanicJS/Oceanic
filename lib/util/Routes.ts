@@ -27,7 +27,6 @@ export const WEBHOOK_PLATFORM = (webhookID: string, webhookToken: string, platfo
 
 // Guilds
 export const GUILD                       = (userID: string) => encode`/guilds/${userID}`;
-export const GUILDS                      = "/guilds";
 export const GUILD_BANS                  = (guildID: string) => encode`/guilds/${guildID}/bans`;
 export const GUILD_BAN                   = (guildID: string, userID: string) => encode`/guilds/${guildID}/bans/${userID}`;
 export const GUILD_AUTOMOD_RULE          = (guildID: string, autoModerationRuleID: string) => encode`/guilds/${guildID}/auto-moderation/rules/${autoModerationRuleID}`;
