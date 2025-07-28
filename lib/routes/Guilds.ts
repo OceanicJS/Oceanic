@@ -80,7 +80,7 @@ import type {
     ScheduledEventUser
 } from "../types/scheduled-events";
 import GuildTemplate from "../structures/GuildTemplate";
-import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
+import type { CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import GuildPreview from "../structures/GuildPreview";
 import type {
     AnyGuildChannelWithoutThreads,
@@ -324,30 +324,6 @@ export default class Guilds {
             },
             reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
-    }
-
-    /**
-     * Create a guild from a template. This can only be used by bots in less than 10 guilds.
-     *
-     * Note: This does NOT add the guild to the client's cache.
-     * @param code The code of the template to use.
-     * @param options The options for creating the guild.
-     * @caching This method **does not** cache its result.
-     */
-    async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions): Promise<Guild> {
-        options = this._manager.client.util._freeze(options);
-        let icon: string | undefined;
-        if (options.icon) {
-            icon = this._manager.client.util._convertImage(options.icon, "icon");
-        }
-        return this._manager.authRequest<RawGuild>({
-            method: "POST",
-            path:   Routes.GUILD_TEMPLATE_CODE(code),
-            json:   {
-                icon,
-                name: options.name
-            }
-        }).then(data => new Guild(data, this._manager.client, true));
     }
 
     /**
