@@ -91,7 +91,6 @@ import type {
     GetVanityURLResponse,
     RawWidget,
     RawStageInstance,
-    EditMFALevelOptions,
     RESTMember,
     CreateStickerOptions,
     Sticker,
@@ -829,13 +828,6 @@ export default class Guild extends Base {
     }
 
     /**
-     * Delete this guild.
-     */
-    async delete(): Promise<void> {
-        return this.client.rest.guilds.delete(this.id);
-    }
-
-    /**
      * Delete an auto moderation rule in this guild.
      * @param ruleID The ID of the rule to delete.
      * @param reason The reason for deleting the rule.
@@ -1001,14 +993,6 @@ export default class Guild extends Base {
      */
     async editIncidentActions(options: EditIncidentActionsOptions): Promise<IncidentActions> {
         return this.client.rest.guilds.editIncidentActions(this.id, options);
-    }
-
-    /**
-     * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of this guild. This can only be used by the guild owner.
-     * @param options The options for editing the MFA level.
-     */
-    async editMFALevel(options: EditMFALevelOptions): Promise<MFALevels> {
-        return this.client.rest.guilds.editMFALevel(this.id, options);
     }
 
     /**

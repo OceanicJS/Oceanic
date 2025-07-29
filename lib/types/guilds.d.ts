@@ -667,13 +667,6 @@ export interface EditStageInstanceOptions extends Pick<CreateStageInstanceOption
     reason?: string;
 }
 
-export interface EditMFALevelOptions {
-    /** The new MFA level. */
-    level: MFALevels;
-    /** The reason for editing the MFA level. */
-    reason?: string;
-}
-
 export interface CreateSoundboardSoundOptions {
     /** The ID of the emoji of the soundboard sound. */
     emojiID?: string;
