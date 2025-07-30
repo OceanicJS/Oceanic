@@ -306,33 +306,6 @@ export interface RawGuildPreview {
     stickers: Array<RawSticker>;
 }
 
-export interface CreateGuildOptions {
-    /** The ID of the AFK voice channel. */
-    afkChannelID?: string;
-    /** The AFK timeout in seconds. */
-    afkTimeout?: number;
-    /** The initial channels of the guild. */
-    channels?: Array<CreateChannelOptions>;
-    /** The default message notification level. */
-    defaultMessageNotifications?: DefaultMessageNotificationLevels;
-    /** The explicit content filter level. */
-    explicitContentFilter?: ExplicitContentFilterLevels;
-    /** The icon of the guild. */
-    icon?: Buffer | string;
-    /** The name of the guild. */
-    name: string;
-    /** @deprecated The region of the guild. */
-    region?: string | null;
-    /** The initial roles of the guild. */
-    roles?: Array<Omit<CreateRoleOptions, "reason">>;
-    /** The system channel flags. */
-    systemChannelFlags?: number;
-    /** The ID of the system channel. */
-    systemChannelID?: string;
-    /** The verification level of the guild. */
-    verificationLevel?: VerificationLevels;
-}
-
 export interface EditGuildOptions {
     /** The ID of the AFK voice channel. `null` to reset. */
     afkChannelID?: string | null;
@@ -354,8 +327,6 @@ export interface EditGuildOptions {
     icon?: Buffer | string | null;
     /** The name of the guild. */
     name?: string;
-    /** The ID of the member to transfer guild ownership to. */
-    ownerID?: string;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild. `null` to reset. */
     preferredLocale?: string | null;
     /** If the premium progress bar is enabled. */
@@ -693,13 +664,6 @@ export interface CreateStageInstanceOptions {
 
 export interface EditStageInstanceOptions extends Pick<CreateStageInstanceOptions, "topic" | "privacyLevel"> {
     /** The reason for editing the stage instance. */
-    reason?: string;
-}
-
-export interface EditMFALevelOptions {
-    /** The new MFA level. */
-    level: MFALevels;
-    /** The reason for editing the MFA level. */
     reason?: string;
 }
 

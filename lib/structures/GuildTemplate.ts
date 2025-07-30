@@ -2,7 +2,7 @@
 import type Guild from "./Guild";
 import type User from "./User";
 import type Client from "../Client";
-import type { CreateGuildFromTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
+import type { EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import type { RawGuild } from "../types/guilds";
 import type { JSONGuildTemplate } from "../types/json";
 import { UncachedError } from "../util/Errors";
@@ -91,14 +91,6 @@ export default class GuildTemplate {
         }
 
         return this._cachedSourceGuild;
-    }
-
-    /**
-     * Create a guild from this template. This can only be used by bots in less than 10 guilds.
-     * @param options The options for creating the guild.
-     */
-    async createGuild(options: CreateGuildFromTemplateOptions): Promise<Guild> {
-        return this.client.rest.guilds.createFromTemplate(this.code, options);
     }
 
     /**
