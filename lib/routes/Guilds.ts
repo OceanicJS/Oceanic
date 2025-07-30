@@ -1,7 +1,6 @@
 /** @module REST/Guilds */
 import type {
     CreateGuildEmojiOptions,
-    CreateGuildOptions,
     EditGuildEmojiOptions,
     EditGuildOptions,
     GuildEmoji,
@@ -38,7 +37,6 @@ import type {
     EditUserVoiceStateOptions,
     EditCurrentUserVoiceStateOptions,
     CreateChannelOptions,
-    EditMFALevelOptions,
     RESTMember,
     RawSticker,
     Sticker,
@@ -68,7 +66,7 @@ import type {
 } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { ChannelTypeMap, MFALevels } from "../Constants";
+import type { ChannelTypeMap } from "../Constants";
 import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import Webhook from "../structures/Webhook";
@@ -81,7 +79,7 @@ import type {
     ScheduledEventUser
 } from "../types/scheduled-events";
 import GuildTemplate from "../structures/GuildTemplate";
-import type { CreateGuildFromTemplateOptions, CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
+import type { CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
 import GuildPreview from "../structures/GuildPreview";
 import type {
     AnyGuildChannelWithoutThreads,
@@ -199,37 +197,6 @@ export default class Guilds {
             bannedUsers: data.banned_users,
             failedUsers: data.failed_users
         }));
-    }
-
-    /**
-     * Create a guild. This can only be used by bots in under 10 guilds.
-     * @param options The options for creating the guild.
-     * @caching This method **does not** cache its result.
-     */
-    async create(options: CreateGuildOptions): Promise<Guild> {
-        options = this._manager.client.util._freeze(options);
-        let icon: string | undefined;
-        if (options.icon) {
-            icon = this._manager.client.util._convertImage(options.icon, "icon");
-        }
-        return this._manager.authRequest<RawGuild>({
-            method: "POST",
-            path:   Routes.GUILDS,
-            json:   {
-                afk_channel_id:                options.afkChannelID,
-                afk_timeout:                   options.afkTimeout,
-                channels:                      options.channels,
-                default_message_notifications: options.defaultMessageNotifications,
-                explicit_content_filter:       options.explicitContentFilter,
-                icon,
-                name:                          options.name,
-                region:                        options.region,
-                roles:                         options.roles,
-                system_channel_flags:          options.systemChannelFlags,
-                system_channel_id:             options.systemChannelID,
-                verification_level:            options.verificationLevel
-            }
-        }).then(data => new Guild(data, this._manager.client, true));
     }
 
     /**
@@ -356,30 +323,6 @@ export default class Guilds {
             },
             reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
-    }
-
-    /**
-     * Create a guild from a template. This can only be used by bots in less than 10 guilds.
-     *
-     * Note: This does NOT add the guild to the client's cache.
-     * @param code The code of the template to use.
-     * @param options The options for creating the guild.
-     * @caching This method **does not** cache its result.
-     */
-    async createFromTemplate(code: string, options: CreateGuildFromTemplateOptions): Promise<Guild> {
-        options = this._manager.client.util._freeze(options);
-        let icon: string | undefined;
-        if (options.icon) {
-            icon = this._manager.client.util._convertImage(options.icon, "icon");
-        }
-        return this._manager.authRequest<RawGuild>({
-            method: "POST",
-            path:   Routes.GUILD_TEMPLATE_CODE(code),
-            json:   {
-                icon,
-                name: options.name
-            }
-        }).then(data => new Guild(data, this._manager.client, true));
     }
 
     /**
@@ -525,18 +468,6 @@ export default class Guilds {
                 name:        options.name
             }
         }).then(data => new GuildTemplate(data, this._manager.client));
-    }
-
-    /**
-     * Delete a guild.
-     * @param guildID The ID of the guild.
-     * @caching This method **does not** cache its result.
-     */
-    async delete(guildID: string): Promise<void> {
-        await this._manager.authRequest<null>({
-            method: "DELETE",
-            path:   Routes.GUILD(guildID)
-        });
     }
 
     /**
@@ -693,7 +624,6 @@ export default class Guilds {
                 features:                      options.features,
                 icon,
                 name:                          options.name,
-                owner_id:                      options.ownerID,
                 preferred_locale:              options.preferredLocale,
                 premium_progress_bar_enabled:  options.premiumProgressBarEnabled,
                 public_updates_channel_id:     options.publicUpdatesChannelID,
@@ -844,22 +774,6 @@ export default class Guilds {
             dmsDisabledUntil:     data.dms_disabled_until,
             invitesDisabledUntil: data.invites_disabled_until
         }));
-    }
-
-    /**
-     * Edit the [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) of a guild. This can only be used by the guild owner.
-     * @param guildID The ID of the guild.
-     * @param options The options for editing the MFA level.
-     * @caching This method **does not** cache its result.
-     */
-    async editMFALevel(guildID: string, options: EditMFALevelOptions): Promise<MFALevels> {
-        options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<MFALevels>({
-            method: "POST",
-            path:   Routes.GUILD_MFA(guildID),
-            json:   { level: options.level },
-            reason: options.reason
-        });
     }
 
     /**
