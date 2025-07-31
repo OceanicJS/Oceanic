@@ -24,6 +24,7 @@ import { DependencyError, UncachedError } from "./util/Errors";
 // @ts-ignore
 import type OAuthHelper from "./rest/OAuthHelper";
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
+import { isDeepStrictEqual } from "node:util";
 
 // @ts-ignore
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
@@ -127,7 +128,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
                 detail: "Set the disableCache option to the literal string \"no-warning\" to disable this warning."
             });
         }
-        if (disableCache && options?.collectionLimits !== undefined && JSON.stringify(options.collectionLimits) !== JSON.stringify(colZero)) {
+        if (disableCache && options?.collectionLimits !== undefined && !isDeepStrictEqual(options.collectionLimits, colZero)) {
             process.emitWarning("Providing the collectionsLimit option when the disableCache option has been enabled is redundant. Any provided values will be ignored.", {
                 code:   "OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED",
                 detail: "Remove the collectionsLimit option, or zero out all of the possible options to disable this warning."

@@ -35,6 +35,7 @@ import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type User from "../structures/User";
 import Soundboard from "../structures/Soundboard";
+import { isDeepStrictEqual } from "node:util";
 
 export async function APPLICATION_COMMAND_PERMISSIONS_UPDATE(data: DispatchEventMap["APPLICATION_COMMAND_PERMISSIONS_UPDATE"], shard: Shard): Promise<void> {
     shard.client.emit("applicationCommandPermissionsUpdate", shard.client.guilds.get(data.guild_id) ?? { id: data.guild_id }, {
@@ -696,7 +697,7 @@ export async function PRESENCE_UPDATE(data: DispatchEventMap["PRESENCE_UPDATE"],
     if (user) {
         const oldUser = user.toJSON();
         user["update"](data.user);
-        if (JSON.stringify(oldUser) !== JSON.stringify(user.toJSON())) {
+        if (!isDeepStrictEqual(oldUser, user.toJSON())) {
             shard.client.emit("userUpdate", user, oldUser);
         }
     }
@@ -981,7 +982,7 @@ export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPD
         }
     }
 
-    if (JSON.stringify(oldState) !== JSON.stringify(state.toJSON())) {
+    if (!isDeepStrictEqual(oldState, state.toJSON())) {
         shard.client.emit("voiceStateUpdate", member, oldState);
     }
 }
