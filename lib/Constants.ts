@@ -815,6 +815,7 @@ export enum ComponentTypes {
 
     CONTENT_INVENTORY_ENTRY = 16,
     CONTAINER               = 17,
+    LABEL                   = 18,
 }
 
 export type SelectMenuNonResolvedTypes = ComponentTypes.STRING_SELECT;
@@ -822,7 +823,7 @@ export type SelectMenuResolvedTypes = ComponentTypes.USER_SELECT | ComponentType
 export type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
 
 export type MessageComponentTypes = ComponentTypes.BUTTON | SelectMenuTypes;
-export type ModalComponentTypes = ComponentTypes.TEXT_INPUT;
+export type ModalComponentTypes = ComponentTypes.TEXT_INPUT | ComponentTypes.STRING_SELECT;
 
 export enum ButtonStyles {
     PRIMARY   = 1,

@@ -1,13 +1,13 @@
 /** @module ModalSubmitInteractionComponentsWrapper */
 import { WrapperError } from "../Errors";
 import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
-import type { ModalSubmitComponents, ModalSubmitComponentsActionRow, ModalSubmitTextInputComponent } from "../../types/interactions";
+import type { ModalSubmitComponents, ModalSubmitComponentsActionRow, ModalSubmitComponentsLabel, ModalSubmitTextInputComponent } from "../../types/interactions";
 
 /** A wrapper for interaction components. */
 export default class ModalSubmitInteractionComponentsWrapper {
     /** The raw components from Discord.  */
-    raw: Array<ModalSubmitComponentsActionRow>;
-    constructor(data: Array<ModalSubmitComponentsActionRow>) {
+    raw: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>;
+    constructor(data: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>) {
         this.raw = data;
     }
 
@@ -22,7 +22,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
 
     /** Get the components in this interaction. */
     getComponents(): Array<ModalSubmitComponents> {
-        return this.raw.reduce((a, b) => a.concat(...b.components), [] as Array<ModalSubmitComponents>);
+        return this.raw.reduce((a, b) => a.concat(...(b.type === ComponentTypes.ACTION_ROW ? b.components : [b.component])), [] as Array<ModalSubmitComponents>);
     }
 
     /**

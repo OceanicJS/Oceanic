@@ -22,14 +22,12 @@ import type {
     Component,
     Embed,
     EmbedOptions,
-    ModalActionRow,
     RawAllowedMentions,
     RawChannel,
     RawComponent,
     RawEmbed,
     RawEmbedOptions,
     RawGuildChannel,
-    RawModalActionRow,
     RawThreadChannel,
     ToComponentFromRaw,
     ToRawFromComponent
@@ -63,7 +61,9 @@ import type {
     MessageComponent,
     ModalComponent,
     RawMessageComponent,
-    RawModalComponent
+    RawModalComponent,
+    RawModalSubmitComponentsLabel,
+    ModalSubmitComponentsLabel
 } from "../types";
 import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
@@ -93,9 +93,9 @@ export default class Util {
         return Array.isArray(components) ? data : data[0];
     }
 
-    static rawModalComponents(components: RawModalActionRow): ModalActionRow;
-    static rawModalComponents(components: Array<RawModalActionRow>): Array<ModalActionRow>;
-    static rawModalComponents(components: RawModalActionRow | Array<RawModalActionRow>): ModalActionRow | Array<ModalActionRow> {
+    static rawModalComponents(components: RawModalComponent): ModalComponent;
+    static rawModalComponents(components: Array<RawModalComponent>): Array<ModalComponent>;
+    static rawModalComponents(components: RawModalComponent | Array<RawModalComponent>): ModalComponent | Array<ModalComponent> {
         const data = Util.prototype.componentsToParsed(Array.isArray(components) ? components : [components]);
         return Array.isArray(components) ? data : data[0];
     }
@@ -260,6 +260,15 @@ export default class Util {
                     components: component.components.map(c => this.componentToParsed(c))
                 } as never;
             }
+
+            case ComponentTypes.LABEL: {
+                return {
+                    type:        component.type,
+                    label:       component.label,
+                    description: component.description,
+                    component:   this.componentToParsed(component.component)
+                } as never;
+            }
             default: {
                 return component as never;
             }
@@ -358,6 +367,15 @@ export default class Util {
                     type:       component.type,
                     accessory:  component.accessory ? this.componentToRaw(component.accessory) : undefined,
                     components: component.components.map(c => this.componentToRaw(c))
+                } as never;
+            }
+
+            case ComponentTypes.LABEL: {
+                return {
+                    type:        component.type,
+                    label:       component.label,
+                    description: component.description,
+                    component:   this.componentToRaw(component.component)
                 } as never;
             }
             default: {
@@ -612,17 +630,33 @@ export default class Util {
                     value:    component.value
                 } as never;
             }
+            case ComponentTypes.STRING_SELECT: {
+                return {
+                    customID: component.custom_id,
+                    type:     component.type,
+                    values:   component.values
+                } as never;
+            }
             default: {
                 return component as never;
             }
         }
     }
 
-    modalSubmitComponentsToParsed<T extends RawModalSubmitComponentsActionRow>(components: Array<T>): Array<ModalSubmitComponentsActionRow> {
-        return components.map(row => ({
-            type:       row.type,
-            components: row.components.map(component => this.modalSubmitComponentToParsed(component))
-        })) as never;
+    modalSubmitComponentsToParsed<T extends RawModalSubmitComponentsActionRow | RawModalSubmitComponentsLabel>(components: Array<T>): Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel> {
+        return components.map(row => {
+            if (row.type === ComponentTypes.ACTION_ROW) {
+                return {
+                    type:       row.type,
+                    components: row.components ? row.components.map(component => this.modalSubmitComponentToParsed(component)) : undefined
+                };
+            } else {
+                return {
+                    type:      row.type,
+                    component: row.component ? this.modalSubmitComponentToParsed(row.component) : undefined
+                };
+            }
+        }) as never;
     }
 
     optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions {

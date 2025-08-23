@@ -1219,11 +1219,13 @@ export interface RawSectionComponent extends BaseComponent {
 
 export type RawComponent = AnyRawMessageComponent | AnyRawModalComponent;
 export type AnyRawMessageComponent = RawMessageComponent | RawMessageActionRowComponent | RawThumbnailComponent;
-export type AnyRawModalComponent = RawModalComponent | RawModalActionRowComponent;
+export type AnyRawModalComponent = RawModalComponent | RawModalActionRowComponent | RawModalLabelComponent;
 export type RawMessageActionRowComponent = RawButtonComponent | RawSelectMenuComponent;
 export type RawMessageComponent = RawMessageActionRow | RawSectionComponent | RawTextDisplayComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent | RawContainerComponent;
+/** @deprecated */
 export type RawModalActionRowComponent = RawTextInput;
-export type RawModalComponent = RawModalActionRow;
+export type RawModalLabelComponent = RawStringSelectMenu | RawTextInput;
+export type RawModalComponent = RawModalActionRow | RawModalLabel;
 export type RawButtonComponent = RawTextButton | URLButton | RawPremiumButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
 
@@ -1245,7 +1247,8 @@ export type ToComponentFromRaw<T extends RawComponent> =
                                                             T extends RawSeparatorComponent ? SeparatorComponent :
                                                                 T extends RawFileComponent ? FileComponent :
                                                                     T extends RawContainerComponent ? ContainerComponent :
-                                                                        never;
+                                                                        T extends RawModalLabel ? ModalLabel :
+                                                                            never;
 export type ToRawFromComponent<T extends Component> =
     T extends MessageActionRow ? RawMessageActionRow :
         T extends ModalActionRow ? RawModalActionRow :
@@ -1264,7 +1267,8 @@ export type ToRawFromComponent<T extends Component> =
                                                             T extends SeparatorComponent ? RawSeparatorComponent :
                                                                 T extends FileComponent ? RawFileComponent :
                                                                     T extends ContainerComponent ? RawContainerComponent :
-                                                                        never;
+                                                                        T extends ModalLabel ? RawModalLabel :
+                                                                            never;
 
 export interface RawActionRowBase<T extends RawComponent> {
     components: Array<T>;
@@ -1272,6 +1276,7 @@ export interface RawActionRowBase<T extends RawComponent> {
 }
 
 export interface RawMessageActionRow extends RawActionRowBase<RawMessageActionRowComponent> {}
+/** @deprecated */
 export interface RawModalActionRow extends RawActionRowBase<RawModalActionRowComponent> {}
 export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow> =
     T extends MessageActionRow ? RawMessageActionRow :
@@ -1279,11 +1284,13 @@ export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow> =
 
 export type Component = AnyMessageComponent | AnyModalComponent;
 export type AnyMessageComponent = MessageComponent | MessageActionRowComponent | ThumbnailComponent;
-export type AnyModalComponent = ModalComponent | ModalActionRowComponent;
+export type AnyModalComponent = ModalComponent | ModalActionRowComponent | ModalLabelComponent;
 export type MessageActionRowComponent = ButtonComponent | SelectMenuComponent;
 export type MessageComponent = MessageActionRow | SectionComponent | TextDisplayComponent | MediaGalleryComponent | SeparatorComponent | FileComponent | ContainerComponent;
+/** @deprecated */
 export type ModalActionRowComponent = TextInput;
-export type ModalComponent = ModalActionRow;
+export type ModalLabelComponent = StringSelectMenu | TextInput;
+export type ModalComponent = ModalActionRow | ModalLabel;
 export type ButtonComponent = TextButton | URLButton | PremiumButton;
 export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
 
@@ -1299,6 +1306,7 @@ export interface ActionRowBase<T extends Component> extends BaseComponent {
 }
 
 export interface MessageActionRow extends ActionRowBase<MessageActionRowComponent> {}
+/** @deprecated */
 export interface ModalActionRow extends ActionRowBase<ModalActionRowComponent> {}
 
 export interface ButtonBase extends BaseComponent {
@@ -1345,6 +1353,7 @@ export interface RawSelectMenuBase<T extends SelectMenuTypes> {
 
 export interface RawStringSelectMenuOptions {
     options: Array<SelectOption>;
+    required?: boolean;
 }
 
 export interface RawChannelSelectMenuOptions {
@@ -1377,6 +1386,7 @@ interface DefaultValues {
 
 export interface StringSelectMenuOptions {
     options: Array<SelectOption>;
+    required?: boolean;
 }
 
 export interface ChannelSelectMenuOptions {
@@ -1399,7 +1409,8 @@ export interface SelectOption {
 
 export interface RawTextInput {
     custom_id: string;
-    label: string;
+    /** @deprecated */
+    label?: string;
     max_length?: number;
     min_length?: number;
     placeholder?: string;
@@ -1411,7 +1422,8 @@ export interface RawTextInput {
 
 export interface TextInput extends BaseComponent {
     customID: string;
-    label: string;
+    /** @deprecated */
+    label?: string;
     maxLength?: number;
     minLength?: number;
     placeholder?: string;
@@ -1479,4 +1491,18 @@ export interface RawContainerComponent extends Omit<BaseComponent, "id"> {
     components: Array<RawMessageActionRow | RawTextDisplayComponent | RawSectionComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent>;
     spoiler?: boolean;
     type: ComponentTypes.CONTAINER;
+}
+
+export interface ModalLabel extends BaseComponent {
+    component: StringSelectMenu | TextInput;
+    description?: string;
+    label: string;
+    type: ComponentTypes.LABEL;
+}
+
+export interface RawModalLabel extends Omit<BaseComponent, "id"> {
+    component: RawStringSelectMenu | RawTextInput;
+    description?: string;
+    label: string;
+    type: ComponentTypes.LABEL;
 }
