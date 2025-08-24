@@ -337,7 +337,7 @@ export default class Util {
                 }
 
                 if (component.type === ComponentTypes.STRING_SELECT) {
-                    return { ...rawComponent, options: component.options } as never;
+                    return { ...rawComponent, options: component.options, required: component.required } as never;
                 } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
                     return { ...rawComponent, channel_types: component.channelTypes } as never;
                 } else {
