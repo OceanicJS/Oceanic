@@ -823,7 +823,7 @@ export type SelectMenuResolvedTypes = ComponentTypes.USER_SELECT | ComponentType
 export type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
 
 export type MessageComponentTypes = ComponentTypes.BUTTON | SelectMenuTypes;
-export type ModalComponentTypes = ComponentTypes.TEXT_INPUT | ComponentTypes.STRING_SELECT;
+export type ModalComponentTypes = ComponentTypes.TEXT_INPUT | SelectMenuTypes;
 
 export enum ButtonStyles {
     PRIMARY   = 1,

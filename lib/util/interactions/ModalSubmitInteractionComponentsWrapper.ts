@@ -22,7 +22,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
 
     /** Get the components in this interaction. */
     getComponents(): Array<ModalSubmitComponents> {
-        return this.raw.reduce((a, b) => a.concat(...(b.type === ComponentTypes.ACTION_ROW ? b.components : [b.component])), [] as Array<ModalSubmitComponents>);
+        return this.raw.reduce((a, b) => a.concat(...(b.type === ComponentTypes.ACTION_ROW ? b.components : [b.component])), [] as Array<ModalSubmitComponents>).filter(Boolean);
     }
 
     /**

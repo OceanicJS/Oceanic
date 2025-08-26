@@ -63,7 +63,8 @@ import type {
     RawMessageComponent,
     RawModalComponent,
     RawModalSubmitComponentsLabel,
-    ModalSubmitComponentsLabel
+    ModalSubmitComponentsLabel,
+    AnyRawBaseComponent
 } from "../types";
 import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
@@ -329,6 +330,7 @@ export default class Util {
                     max_values:  component.maxValues,
                     min_values:  component.minValues,
                     placeholder: component.placeholder,
+                    required:    component.required,
                     type:        component.type
                 };
 
@@ -337,7 +339,7 @@ export default class Util {
                 }
 
                 if (component.type === ComponentTypes.STRING_SELECT) {
-                    return { ...rawComponent, options: component.options, required: component.required } as never;
+                    return { ...rawComponent, options: component.options } as never;
                 } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
                     return { ...rawComponent, channel_types: component.channelTypes } as never;
                 } else {
@@ -384,7 +386,7 @@ export default class Util {
         }
     }
 
-    componentsToParsed<T extends RawMessageComponent | RawModalComponent>(components: Array<T>): Array<T extends RawMessageComponent ? MessageComponent : T extends RawModalComponent ? ModalComponent : never> {
+    componentsToParsed<T extends AnyRawBaseComponent>(components: Array<T>): Array<ToComponentFromRaw<T>> {
         return components.map(component => this.componentToParsed(component)) as never;
     }
 
@@ -630,7 +632,12 @@ export default class Util {
                     value:    component.value
                 } as never;
             }
-            case ComponentTypes.STRING_SELECT: {
+
+            case ComponentTypes.STRING_SELECT:
+            case ComponentTypes.USER_SELECT:
+            case ComponentTypes.ROLE_SELECT:
+            case ComponentTypes.MENTIONABLE_SELECT:
+            case ComponentTypes.CHANNEL_SELECT: {
                 return {
                     customID: component.custom_id,
                     type:     component.type,
