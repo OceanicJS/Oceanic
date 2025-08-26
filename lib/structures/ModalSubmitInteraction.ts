@@ -1,7 +1,7 @@
 /** @module ModalSubmitInteraction */
 import Interaction from "./Interaction";
-import type Member from "./Member";
-import type User from "./User";
+import Member from "./Member";
+import User from "./User";
 import type Guild from "./Guild";
 import Permission from "./Permission";
 import Message from "./Message";
@@ -9,6 +9,8 @@ import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
+import InteractionResolvedChannel from "./InteractionResolvedChannel";
+import Role from "./Role";
 import { InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
 import type {
     AuthorizingIntegrationOwners,
@@ -17,15 +19,19 @@ import type {
     InteractionContent,
     InteractionGuild,
     ModalSubmitInteractionData,
+    ModalSubmitInteractionResolvedData,
     RawModalSubmitInteraction
 } from "../types/interactions";
 import type Client from "../Client";
 import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
 import type { JSONModalSubmitInteraction } from "../types/json";
 import type { Uncached } from "../types/shared";
+import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
 import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
 import ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
+import type { RawMember } from "../types/guilds";
+import type { RawUser } from "../types/users";
 
 /** Represents a modal submit interaction. */
 export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> extends Interaction {
@@ -73,10 +79,6 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
         this.channelID = data.channel_id!;
         this.context = data.context;
-        this.data = {
-            components: new ModalSubmitInteractionComponentsWrapper(client.util.modalSubmitComponentsToParsed(data.data.components)),
-            customID:   data.data.custom_id
-        };
         this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
         this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
         this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
@@ -88,6 +90,47 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
             this.message = (this.channel && "messages" in this.channel && (this.channel.messages.update(data.message) as Message<T>)) || new Message<T>(data.message, client);
         }
         this.user = client.users.update(data.user ?? data.member!.user);
+
+        const resolved: ModalSubmitInteractionResolvedData = {
+            channels: new TypedCollection(InteractionResolvedChannel, client),
+            members:  new TypedCollection(Member, client),
+            roles:    new TypedCollection(Role, client),
+            users:    new TypedCollection(User, client)
+        };
+
+        if (data.data.resolved) {
+            if (data.data.resolved.channels) {
+                for (const channel of Object.values(data.data.resolved.channels)) resolved.channels.update(channel);
+            }
+
+            if (data.data.resolved.members) {
+                for (const [id, member] of Object.entries(data.data.resolved.members)) {
+                    const m = member as unknown as RawMember & { user: RawUser; };
+                    m.user = data.data.resolved.users![id];
+                    resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
+                }
+            }
+
+            if (data.data.resolved.roles) {
+                for (const role of Object.values(data.data.resolved.roles)) {
+                    try {
+                        resolved.roles.add(this.guild?.roles.update(role, this.guildID!) ?? new Role(role, client, this.guildID!));
+                    } catch {
+                        resolved.roles.add(new Role(role, client, this.guildID!));
+                    }
+                }
+            }
+
+            if (data.data.resolved.users) {
+                for (const user of Object.values(data.data.resolved.users)) resolved.users.add(client.users.update(user));
+            }
+        }
+
+        this.data = {
+            components: new ModalSubmitInteractionComponentsWrapper(client.util.modalSubmitComponentsToParsed(data.data.components)),
+            customID:   data.data.custom_id,
+            resolved
+        };
     }
 
     /** The channel this interaction was sent from. */

@@ -185,14 +185,30 @@ export interface MessageComponentSelectMenuInteractionData {
     values: SelectMenuValuesWrapper;
 }
 
+export interface RawModalSubmitInteractionResolvedData {
+    channels?: Record<string, RawInteractionResolvedChannel>;
+    members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
+    roles?: Record<string, RawRole>;
+    users?: Record<string, RawUser>;
+}
+
+export interface ModalSubmitInteractionResolvedData {
+    channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<RawMember, Member, [guildID: string]>;
+    roles: TypedCollection<RawRole, Role, [guildID: string]>;
+    users: TypedCollection<RawUser, User>;
+}
+
 export interface RawModalSubmitInteractionData {
     components: Array<RawModalSubmitComponentsActionRow>;
     custom_id: string;
+    resolved?: RawModalSubmitInteractionResolvedData;
 }
 
 export interface ModalSubmitInteractionData {
     components: ModalSubmitInteractionComponentsWrapper;
     customID: string;
+    resolved: ModalSubmitInteractionResolvedData;
 }
 
 export interface RawApplicationCommandInteractionResolvedData {
