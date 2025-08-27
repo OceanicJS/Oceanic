@@ -31,5 +31,3 @@ jobs:
         run: pnpm i --frozen-lockfile --ignore-scripts
       - name: Publish
         run: pnpm publish --provenance --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

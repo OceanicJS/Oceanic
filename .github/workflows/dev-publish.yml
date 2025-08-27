@@ -43,9 +43,7 @@ jobs:
           contents=$(jq --arg version "$v" '.version = $version' package.json) && echo -E "${contents}" > package.json
       - name: Publish
         run: pnpm publish --provenance --no-git-checks --tag dev --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Deprecate Old Versions
         run: npx -y npm-deprecate
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_DEPRECATE_TOKEN }}
