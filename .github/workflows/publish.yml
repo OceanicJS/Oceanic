@@ -1,4 +1,7 @@
 name: Publish Release
+permissions:
+  contents: read
+  id-token: write
 on:
   workflow_dispatch:
   release:
@@ -11,23 +14,24 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: [lint]
-    permissions:
-      contents: read
-      id-token: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install PNPM
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version-file: .node-version
           cache: pnpm
           registry-url: https://registry.npmjs.org/
+
+      - name: Update NPM # Needed for provenance
+        run: npm i -g npm@"^9.5"
+
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile --ignore-scripts
+
       - name: Publish
         run: pnpm publish --provenance --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,13 +1,17 @@
 name: ESLint
+permissions:
+  contents: read
 on: [push, pull_request, workflow_call]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+
       - name: Install Dependencies
         run: pnpm i --frozen-lockfile --ignore-scripts
+
       - name: Run ESLint
         run: pnpm run lint

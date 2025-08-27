@@ -1,4 +1,7 @@
 name: Should Publish Dev
+permissions:
+  contents: read
+  id-token: write
 on:
   push:
     branches:
@@ -12,7 +15,7 @@ jobs:
     outputs:
       check: ${{ steps.check.outputs.should-publish }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: check
         name: Check If Publish Is Needed
         run: |
