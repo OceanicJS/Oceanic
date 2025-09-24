@@ -1220,12 +1220,13 @@ export interface RawSectionComponent extends BaseComponent {
 export type RawComponent = AnyRawMessageComponent | AnyRawModalComponent;
 export type AnyRawMessageComponent = RawMessageComponent | RawMessageActionRowComponent | RawThumbnailComponent;
 export type AnyRawModalComponent = RawModalComponent | RawModalActionRowComponent | RawModalLabelComponent;
+export type AnyRawBaseComponent = RawMessageComponent | RawModalComponent;
 export type RawMessageActionRowComponent = RawButtonComponent | RawSelectMenuComponent;
 export type RawMessageComponent = RawMessageActionRow | RawSectionComponent | RawTextDisplayComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent | RawContainerComponent;
 /** @deprecated */
 export type RawModalActionRowComponent = RawTextInput;
-export type RawModalLabelComponent = RawStringSelectMenu | RawTextInput;
-export type RawModalComponent = RawModalActionRow | RawModalLabel;
+export type RawModalLabelComponent = RawSelectMenuComponent | RawTextInput;
+export type RawModalComponent = RawModalActionRow | RawModalLabel | RawTextDisplayComponent;
 export type RawButtonComponent = RawTextButton | URLButton | RawPremiumButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
 
@@ -1285,12 +1286,13 @@ export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow> =
 export type Component = AnyMessageComponent | AnyModalComponent;
 export type AnyMessageComponent = MessageComponent | MessageActionRowComponent | ThumbnailComponent;
 export type AnyModalComponent = ModalComponent | ModalActionRowComponent | ModalLabelComponent;
+export type AnyBaseComponent = MessageComponent | ModalComponent;
 export type MessageActionRowComponent = ButtonComponent | SelectMenuComponent;
 export type MessageComponent = MessageActionRow | SectionComponent | TextDisplayComponent | MediaGalleryComponent | SeparatorComponent | FileComponent | ContainerComponent;
 /** @deprecated */
 export type ModalActionRowComponent = TextInput;
-export type ModalLabelComponent = StringSelectMenu | TextInput;
-export type ModalComponent = ModalActionRow | ModalLabel;
+export type ModalLabelComponent = SelectMenuComponent | TextInput;
+export type ModalComponent = ModalActionRow | ModalLabel | TextDisplayComponent;
 export type ButtonComponent = TextButton | URLButton | PremiumButton;
 export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
 
@@ -1348,12 +1350,12 @@ export interface RawSelectMenuBase<T extends SelectMenuTypes> {
     max_values?: number;
     min_values?: number;
     placeholder?: string;
+    required?: boolean;
     type: T;
 }
 
 export interface RawStringSelectMenuOptions {
     options: Array<SelectOption>;
-    required?: boolean;
 }
 
 export interface RawChannelSelectMenuOptions {
@@ -1373,6 +1375,7 @@ export interface SelectMenuBase<T extends SelectMenuTypes> extends BaseComponent
     maxValues?: number;
     minValues?: number;
     placeholder?: string;
+    required?: boolean;
     type: T;
 }
 
@@ -1386,7 +1389,6 @@ interface DefaultValues {
 
 export interface StringSelectMenuOptions {
     options: Array<SelectOption>;
-    required?: boolean;
 }
 
 export interface ChannelSelectMenuOptions {
@@ -1494,14 +1496,14 @@ export interface RawContainerComponent extends Omit<BaseComponent, "id"> {
 }
 
 export interface ModalLabel extends BaseComponent {
-    component: StringSelectMenu | TextInput;
+    component: SelectMenuComponent | TextInput;
     description?: string;
     label: string;
     type: ComponentTypes.LABEL;
 }
 
 export interface RawModalLabel extends Omit<BaseComponent, "id"> {
-    component: RawStringSelectMenu | RawTextInput;
+    component: RawSelectMenuComponent | RawTextInput;
     description?: string;
     label: string;
     type: ComponentTypes.LABEL;

@@ -152,7 +152,7 @@ client.on("interactionCreate", async(interaction) => {
             switch(interaction.data.customID) {
                 case "test-modal": {
                     // the `components` property under data contains all the components that were submitted
-                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.ModalActionRow.html
+                    // https://docs.oceanic.ws/latest/interfaces/Types_Channels.ModalComponent.html
                     console.log(interaction.data.components);
                     break;
                 }
