@@ -127,7 +127,7 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
         }
 
         this.data = {
-            components: new ModalSubmitInteractionComponentsWrapper(client.util.modalSubmitComponentsToParsed(data.data.components)),
+            components: new ModalSubmitInteractionComponentsWrapper(resolved, client.util.modalSubmitComponentsToParsed(data.data.components)),
             customID:   data.data.custom_id,
             resolved
         };
