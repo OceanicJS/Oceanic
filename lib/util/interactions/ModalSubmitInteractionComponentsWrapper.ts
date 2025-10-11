@@ -31,14 +31,14 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a channel select option value.
+     * Get the values of a channel select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
     getChannelSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
     getChannelSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
     getChannelSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getChannelSelectComponent(name, required as false)?.value;
+        return this.getChannelSelectComponent(name, required as false)?.values;
     }
 
     /**
@@ -58,14 +58,14 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a mentionable select option value.
+     * Get the values of a mentionable select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
     getMentionableSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
     getMentionableSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
     getMentionableSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getMentionableSelectComponent(name, required as false)?.value;
+        return this.getMentionableSelectComponent(name, required as false)?.values;
     }
 
     /**
@@ -80,14 +80,14 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a role select option value.
+     * Get the values of a role select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
     getRoleSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
     getRoleSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
     getRoleSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getRoleSelectComponent(name, required as false)?.value;
+        return this.getRoleSelectComponent(name, required as false)?.values;
     }
 
     /**
@@ -102,14 +102,14 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a string select option value.
+     * Get the values of a string select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
     getStringSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
     getStringSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
     getStringSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getStringSelectComponent(name, required as false)?.value;
+        return this.getStringSelectComponent(name, required as false)?.values;
     }
 
     /**
@@ -146,14 +146,14 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a user select option value.
+     * Get the values of a user select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
     getUserSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
     getUserSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
     getUserSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getUserSelectComponent(name, required as false)?.value;
+        return this.getUserSelectComponent(name, required as false)?.values;
     }
 
     /**

@@ -417,7 +417,7 @@ export interface ModalSubmitComponentsStringValue<T extends ModalComponentTypes 
 
 export interface ModalSubmitComponentsStringValues<T extends ModalComponentTypes = ModalComponentTypes> extends ModalSubmitComponentsBase {
     type: T;
-    value: Array<string>;
+    values: Array<string>;
 }
 
 export type ToRawFromoModalSubmitComponent<T extends ModalSubmitComponents> =
