@@ -4,14 +4,14 @@ import { WrapperError } from "../Errors";
 /**
  * Maps raw select menu values to resolved objects.
  *
- * If `ensurePresent` is false, values that aren't in resolved will be ignored.
+ * If `ensurePresent` is false, values that aren't in `resolved` will be ignored.
  */
-export function mapRawToResolved<S, R extends Collection<string, S>>(
+export function mapRawToResolved<T, R extends Collection<string, T>>(
     type: string,
     raw: Array<string>,
     resolved: R,
     ensurePresent = false
-): Array<S> {
+): Array<T> {
     return raw
         .map(id => {
             const value = resolved.get(id);
