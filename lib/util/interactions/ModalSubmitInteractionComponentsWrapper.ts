@@ -1,5 +1,5 @@
 /** @module ModalSubmitInteractionComponentsWrapper */
-import { mapRawToTransformed } from "./shared";
+import { mapRawToResolved } from "./shared";
 import { WrapperError } from "../Errors";
 import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
 import type {
@@ -58,12 +58,12 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getChannelSelectValues(name: string, required: true): Array<InteractionResolvedChannel>;
     getChannelSelectValues(name: string, required?: boolean): Array<InteractionResolvedChannel> | undefined {
         const component = this.getChannelSelectComponent(name, required as false);
-        return component?.values && mapRawToTransformed("channel", component.values, this.resolved.channels, false);
+        return component?.values && mapRawToResolved("channel", component.values, this.resolved.channels, false);
     }
 
     /** Get the components in this interaction. */
     getComponents(): Array<ModalSubmitComponents> {
-        return this.raw.reduce((a, b) => a.concat(...(b.type === ComponentTypes.ACTION_ROW ? b.components : [b.component])), [] as Array<ModalSubmitComponents>).filter(Boolean);
+        return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
     }
 
     /**
@@ -86,7 +86,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getMentionableSelectValues(name: string, required: true): Array<User | Role>;
     getMentionableSelectValues(name: string, required?: boolean): Array<User | Role> | undefined {
         const component = this.getMentionableSelectComponent(name, required as false);
-        return component?.values && mapRawToTransformed("mentionable", component.values, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), false);
+        return component?.values && mapRawToResolved("mentionable", component.values, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), false);
     }
 
     /**
@@ -109,7 +109,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getRoleSelectValues(name: string, required: true): Array<Role>;
     getRoleSelectValues(name: string, required?: boolean): Array<Role> | undefined {
         const component = this.getRoleSelectComponent(name, required as false);
-        return component?.values && mapRawToTransformed("role", component.values, this.resolved.roles, false);
+        return component?.values && mapRawToResolved("role", component.values, this.resolved.roles, false);
     }
 
     /**
@@ -176,6 +176,6 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getUserSelectValues(name: string, required: true): Array<User>;
     getUserSelectValues(name: string, required?: boolean): Array<User> | undefined {
         const component = this.getUserSelectComponent(name, required as false);
-        return component?.values && mapRawToTransformed("user", component.values, this.resolved.users, false);
+        return component?.values && mapRawToResolved("user", component.values, this.resolved.users, false);
     }
 }

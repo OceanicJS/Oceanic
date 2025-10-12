@@ -1,7 +1,12 @@
 import type Collection from "../Collection";
 import { WrapperError } from "../Errors";
 
-export function mapRawToTransformed<S, R extends Collection<string, S>>(
+/**
+ * Maps raw select menu values to resolved objects.
+ *
+ * If `ensurePresent` is false, values that aren't in resolved will be ignored.
+ */
+export function mapRawToResolved<S, R extends Collection<string, S>>(
     type: string,
     raw: Array<string>,
     resolved: R,

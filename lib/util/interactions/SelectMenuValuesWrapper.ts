@@ -1,5 +1,5 @@
 /** @module SelectMenuValuesWrapper */
-import { mapRawToTransformed } from "./shared";
+import { mapRawToResolved } from "./shared";
 import { ChannelTypes } from "../../Constants";
 import type Member from "../../structures/Member";
 import type Role from "../../structures/Role";
@@ -27,7 +27,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
     getChannels(ensurePresent?: boolean): Array<InteractionResolvedChannel> {
-        return mapRawToTransformed("channel", this.raw, this.resolved.channels, ensurePresent);
+        return mapRawToResolved("channel", this.raw, this.resolved.channels, ensurePresent);
     }
 
     /**
@@ -47,7 +47,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
      */
     getMembers(ensurePresent?: boolean): Array<Member> {
-        return mapRawToTransformed("member", this.raw, this.resolved.members, ensurePresent);
+        return mapRawToResolved("member", this.raw, this.resolved.members, ensurePresent);
     }
 
     /**
@@ -57,7 +57,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user, or role.
      */
     getMentionables(ensurePresent?: boolean): Array<User | Role> {
-        return mapRawToTransformed("mentionable", this.raw, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), ensurePresent);
+        return mapRawToResolved("mentionable", this.raw, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), ensurePresent);
     }
 
     /**
@@ -67,7 +67,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a role.
      */
     getRoles(ensurePresent?: boolean): Array<Role> {
-        return mapRawToTransformed("role", this.raw, this.resolved.roles, ensurePresent);
+        return mapRawToResolved("role", this.raw, this.resolved.roles, ensurePresent);
     }
 
     /**
@@ -84,6 +84,6 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user.
      */
     getUsers(ensurePresent?: boolean): Array<User> {
-        return mapRawToTransformed("user", this.raw, this.resolved.users, ensurePresent);
+        return mapRawToResolved("user", this.raw, this.resolved.users, ensurePresent);
     }
 }
