@@ -1,7 +1,9 @@
 /** @module ModalSubmitInteractionComponentsWrapper */
+import { mapRawToResolved } from "./shared";
 import { WrapperError } from "../Errors";
 import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
 import type {
+    MessageComponentInteractionResolvedData,
     ModalSubmitChannelSelectComponent,
     ModalSubmitComponents,
     ModalSubmitComponentsActionRow,
@@ -12,13 +14,19 @@ import type {
     ModalSubmitTextInputComponent,
     ModalSubmitUserSelectComponent
 } from "../../types/interactions";
+import type Role from "../../structures/Role";
+import type User from "../../structures/User";
+import Collection from "../Collection";
+import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
 
 /** A wrapper for interaction components. */
 export default class ModalSubmitInteractionComponentsWrapper {
     /** The raw components from Discord.  */
     raw: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>;
-    constructor(data: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>) {
+    resolved: MessageComponentInteractionResolvedData;
+    constructor(resolved: MessageComponentInteractionResolvedData, data: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>) {
         this.raw = data;
+        this.resolved = resolved;
     }
 
     private _getComponent<T extends ModalSubmitComponents = ModalSubmitComponents>(customID: string, required = false, type: ModalComponentTypes): T | undefined {
@@ -28,17 +36,6 @@ export default class ModalSubmitInteractionComponentsWrapper {
         } else {
             return opt;
         }
-    }
-
-    /**
-     * Get a channel select option value.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getChannelSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
-    getChannelSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
-    getChannelSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getChannelSelectComponent(name, required as false)?.value;
     }
 
     /**
@@ -52,20 +49,21 @@ export default class ModalSubmitInteractionComponentsWrapper {
         return this._getComponent(name, required, ComponentTypes.CHANNEL_SELECT);
     }
 
-    /** Get the components in this interaction. */
-    getComponents(): Array<ModalSubmitComponents> {
-        return this.raw.reduce((a, b) => a.concat(...(b.type === ComponentTypes.ACTION_ROW ? b.components : [b.component])), [] as Array<ModalSubmitComponents>).filter(Boolean);
-    }
-
     /**
-     * Get a mentionable select option value.
+     * Get the values of a channel select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getMentionableSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
-    getMentionableSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
-    getMentionableSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getMentionableSelectComponent(name, required as false)?.value;
+    getChannelSelectValues(name: string, required?: false): Array<InteractionResolvedChannel> | undefined;
+    getChannelSelectValues(name: string, required: true): Array<InteractionResolvedChannel>;
+    getChannelSelectValues(name: string, required?: boolean): Array<InteractionResolvedChannel> | undefined {
+        const component = this.getChannelSelectComponent(name, required as false);
+        return component?.values && mapRawToResolved("channel", component.values, this.resolved.channels, false);
+    }
+
+    /** Get the components in this interaction. */
+    getComponents(): Array<ModalSubmitComponents> {
+        return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
     }
 
     /**
@@ -80,14 +78,15 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a role select option value.
+     * Get the values of a mentionable select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getRoleSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
-    getRoleSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
-    getRoleSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getRoleSelectComponent(name, required as false)?.value;
+    getMentionableSelectValues(name: string, required?: false): Array<User | Role> | undefined;
+    getMentionableSelectValues(name: string, required: true): Array<User | Role>;
+    getMentionableSelectValues(name: string, required?: boolean): Array<User | Role> | undefined {
+        const component = this.getMentionableSelectComponent(name, required as false);
+        return component?.values && mapRawToResolved("mentionable", component.values, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), false);
     }
 
     /**
@@ -102,14 +101,15 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a string select option value.
+     * Get the values of a role select option. This always returns an array, since selects can be multi-choice.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getStringSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
-    getStringSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
-    getStringSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getStringSelectComponent(name, required as false)?.value;
+    getRoleSelectValues(name: string, required?: false): Array<Role> | undefined;
+    getRoleSelectValues(name: string, required: true): Array<Role>;
+    getRoleSelectValues(name: string, required?: boolean): Array<Role> | undefined {
+        const component = this.getRoleSelectComponent(name, required as false);
+        return component?.values && mapRawToResolved("role", component.values, this.resolved.roles, false);
     }
 
     /**
@@ -121,6 +121,17 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getStringSelectComponent(name: string, required: true): ModalSubmitStringSelectComponent;
     getStringSelectComponent(name: string, required?: boolean): ModalSubmitStringSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.STRING_SELECT);
+    }
+
+    /**
+     * Get the values of a string select option. This always returns an array, since selects can be multi-choice.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getStringSelectValues<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
+    getStringSelectValues<T extends Array<string> = Array<string>>(name: string, required: true): T;
+    getStringSelectValues(name: string, required?: boolean): Array<string> | undefined {
+        return this.getStringSelectComponent(name, required as false)?.values;
     }
 
     /**
@@ -146,17 +157,6 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /**
-     * Get a user select option value.
-     * @param name The name of the option.
-     * @param required If true, an error will be thrown if the option is not present.
-     */
-    getUserSelect<T extends Array<string> = Array<string>>(name: string, required?: false): T | undefined;
-    getUserSelect<T extends Array<string> = Array<string>>(name: string, required: true): T;
-    getUserSelect(name: string, required?: boolean): Array<string> | undefined {
-        return this.getUserSelectComponent(name, required as false)?.value;
-    }
-
-    /**
      * Get a user select option.
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
@@ -165,5 +165,17 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getUserSelectComponent(name: string, required: true): ModalSubmitUserSelectComponent;
     getUserSelectComponent(name: string, required?: boolean): ModalSubmitUserSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.USER_SELECT);
+    }
+
+    /**
+     * Get the values of a user select option. This always returns an array, since selects can be multi-choice.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getUserSelectValues(name: string, required?: false): Array<User> | undefined;
+    getUserSelectValues(name: string, required: true): Array<User>;
+    getUserSelectValues(name: string, required?: boolean): Array<User> | undefined {
+        const component = this.getUserSelectComponent(name, required as false);
+        return component?.values && mapRawToResolved("user", component.values, this.resolved.users, false);
     }
 }

@@ -1,5 +1,5 @@
 /** @module SelectMenuValuesWrapper */
-import { WrapperError } from "../Errors";
+import { mapRawToResolved } from "./shared";
 import { ChannelTypes } from "../../Constants";
 import type Member from "../../structures/Member";
 import type Role from "../../structures/Role";
@@ -7,6 +7,7 @@ import type User from "../../structures/User";
 import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
 import type { AnyImplementedChannel } from "../../types/channels";
 import type { MessageComponentInteractionResolvedData } from "../../types/interactions";
+import Collection from "../Collection";
 
 /** A wrapper for select menu data. */
 export default class SelectMenuValuesWrapper {
@@ -16,7 +17,7 @@ export default class SelectMenuValuesWrapper {
     resolved: MessageComponentInteractionResolvedData;
     constructor(resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
         this.resolved = resolved;
-        this.raw   = values;
+        this.raw = values;
     }
 
     /**
@@ -26,13 +27,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
     getChannels(ensurePresent?: boolean): Array<InteractionResolvedChannel> {
-        return this.raw.map(id => {
-            const ch = this.resolved.channels.get(id);
-            if (!ch && ensurePresent) {
-                throw new WrapperError(`Failed to find channel in resolved data: ${id}`);
-            }
-            return ch!;
-        }).filter(Boolean);
+        return mapRawToResolved("channel", this.raw, this.resolved.channels, ensurePresent);
     }
 
     /**
@@ -42,16 +37,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
     getCompleteChannels(ensurePresent?: boolean): Array<AnyImplementedChannel | InteractionResolvedChannel> {
-        return this.raw.map(id => {
-            const ch = this.resolved.channels.get(id);
-            if (ch && ch.type === ChannelTypes.DM) {
-                return ch?.completeChannel ?? ch;
-            }
-            if (!ch && ensurePresent) {
-                throw new WrapperError(`Failed to find channel in resolved data: ${id}`);
-            }
-            return ch!;
-        }).filter(Boolean);
+        return this.getChannels(ensurePresent).map(ch => ch.type === ChannelTypes.DM ? ch.completeChannel ?? ch : ch);
     }
 
     /**
@@ -61,13 +47,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a member.
      */
     getMembers(ensurePresent?: boolean): Array<Member> {
-        return this.raw.map(id => {
-            const member = this.resolved.members.get(id);
-            if (!member && ensurePresent) {
-                throw new WrapperError(`Failed to find member in resolved data: ${id}`);
-            }
-            return member!;
-        }).filter(Boolean);
+        return mapRawToResolved("member", this.raw, this.resolved.members, ensurePresent);
     }
 
     /**
@@ -77,20 +57,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user, or role.
      */
     getMentionables(ensurePresent?: boolean): Array<User | Role> {
-        const res: Array<User | Role> = [];
-        for (const id of this.raw) {
-            const role = this.resolved.roles.get(id);
-            const user = this.resolved.users.get(id);
-            if ((!role && !user)) {
-                if (ensurePresent) {
-                    throw new WrapperError(`Failed to find mentionable in resolved data: ${id}`);
-                }
-            } else {
-                res.push((role ?? user)!);
-            }
-        }
-
-        return res;
+        return mapRawToResolved("mentionable", this.raw, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), ensurePresent);
     }
 
     /**
@@ -100,13 +67,7 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a role.
      */
     getRoles(ensurePresent?: boolean): Array<Role> {
-        return this.raw.map(id => {
-            const role = this.resolved.roles.get(id);
-            if (!role && ensurePresent) {
-                throw new WrapperError(`Failed to find role in resolved data: ${id}`);
-            }
-            return role!;
-        }).filter(Boolean);
+        return mapRawToResolved("role", this.raw, this.resolved.roles, ensurePresent);
     }
 
     /**
@@ -123,12 +84,6 @@ export default class SelectMenuValuesWrapper {
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a user.
      */
     getUsers(ensurePresent?: boolean): Array<User> {
-        return this.raw.map(id => {
-            const user = this.resolved.users.get(id);
-            if (!user && ensurePresent) {
-                throw new WrapperError(`Failed to find user in resolved data: ${id}`);
-            }
-            return user!;
-        }).filter(Boolean);
+        return mapRawToResolved("user", this.raw, this.resolved.users, ensurePresent);
     }
 }
