@@ -1,86 +1,22 @@
 /** @module REST/Guilds */
-import type {
-    CreateGuildEmojiOptions,
-    EditGuildEmojiOptions,
-    EditGuildOptions,
-    GuildEmoji,
-    ModifyChannelPositionsEntry,
-    RawGuild,
-    RawGuildEmoji,
-    RawGuildPreview,
-    GetActiveThreadsResponse,
-    GetMembersOptions,
-    SearchMembersOptions,
-    AddMemberOptions,
-    EditMemberOptions,
-    EditCurrentMemberOptions,
-    GetBansOptions,
-    RawBan,
-    Ban,
-    CreateBanOptions,
-    RawRole,
-    CreateRoleOptions,
-    EditRolePositionsEntry,
-    EditRoleOptions,
-    GetPruneCountOptions,
-    BeginPruneOptions,
-    RawIntegration,
-    RawWidgetSettings,
-    WidgetSettings,
-    RawWidget,
-    Widget,
-    WidgetImageStyle,
-    RawWelcomeScreen,
-    WelcomeScreen,
-    EditWelcomeScreenOptions,
-    GetVanityURLResponse,
-    EditUserVoiceStateOptions,
-    EditCurrentUserVoiceStateOptions,
-    CreateChannelOptions,
-    RESTMember,
-    RawSticker,
-    Sticker,
-    CreateStickerOptions,
-    EditStickerOptions,
-    RawOnboarding,
-    Onboarding,
-    EditOnboardingOptions,
-    EditIncidentActionsOptions,
-    IncidentActions,
-    RawIncidentActions,
-    BulkBanOptions,
-    BulkBanResponse,
-    RawBulkBanResponse,
-    MemberSearchOptions,
-    MemberSearchRangeQuery,
-    MemberSearchOrQuery,
-    MemberSearchAndOrQuery,
-    MemberSearchOrQueryRange,
-    MemberSearchFilter,
-    MemberSearchPaginationFilter,
-    RawMemberSearchResults,
-    MemberSearchResults,
-    MemberSearchNotIndexedResult,
-    EditSoundboardSoundOptions,
-    CreateSoundboardSoundOptions
-} from "../types/guilds";
-import * as Routes from "../util/Routes";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
 import type { ChannelTypeMap } from "../Constants";
-import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
-import GuildScheduledEvent from "../structures/GuildScheduledEvent";
-import Webhook from "../structures/Webhook";
-import type {
-    CreateScheduledEventOptions,
-    EditScheduledEventOptions,
-    GetScheduledEventUsersOptions,
-    RawScheduledEvent,
-    RawScheduledEventUser,
-    ScheduledEventUser
-} from "../types/scheduled-events";
-import GuildTemplate from "../structures/GuildTemplate";
-import type { CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
+import type RESTManager from "../rest/RESTManager";
+import ApplicationCommand from "../structures/ApplicationCommand";
+import AuditLogEntry from "../structures/AuditLogEntry";
+import AutoModerationRule from "../structures/AutoModerationRule";
+import Guild from "../structures/Guild";
 import GuildPreview from "../structures/GuildPreview";
+import GuildScheduledEvent from "../structures/GuildScheduledEvent";
+import GuildTemplate from "../structures/GuildTemplate";
+import Integration from "../structures/Integration";
+import Invite from "../structures/Invite";
+import type Member from "../structures/Member";
+import Role from "../structures/Role";
+import Soundboard from "../structures/Soundboard";
+import VoiceState from "../structures/VoiceState";
+import Webhook from "../structures/Webhook";
+import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
+import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
 import type {
     AnyGuildChannelWithoutThreads,
     AnyInviteChannel,
@@ -92,20 +28,84 @@ import type {
     RawThreadChannel,
     RawThreadMember
 } from "../types/channels";
-import Role from "../structures/Role";
-import type { RawVoiceState, VoiceRegion } from "../types/voice";
-import Invite from "../structures/Invite";
-import Integration from "../structures/Integration";
-import AutoModerationRule from "../structures/AutoModerationRule";
-import AuditLogEntry from "../structures/AuditLogEntry";
-import type RESTManager from "../rest/RESTManager";
-import Guild from "../structures/Guild";
-import type Member from "../structures/Member";
+import type { CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
+import type {
+    AddMemberOptions,
+    Ban,
+    BeginPruneOptions,
+    BulkBanOptions,
+    BulkBanResponse,
+    CreateBanOptions,
+    CreateChannelOptions,
+    CreateGuildEmojiOptions,
+    CreateRoleOptions,
+    CreateSoundboardSoundOptions,
+    CreateStickerOptions,
+    EditCurrentMemberOptions,
+    EditCurrentUserVoiceStateOptions,
+    EditGuildEmojiOptions,
+    EditGuildOptions,
+    EditIncidentActionsOptions,
+    EditMemberOptions,
+    EditOnboardingOptions,
+    EditRoleOptions,
+    EditRolePositionsEntry,
+    EditSoundboardSoundOptions,
+    EditStickerOptions,
+    EditUserVoiceStateOptions,
+    EditWelcomeScreenOptions,
+    GetActiveThreadsResponse,
+    GetBansOptions,
+    GetMembersOptions,
+    GetPruneCountOptions,
+    GetVanityURLResponse,
+    GuildEmoji,
+    IncidentActions,
+    MemberSearchAndOrQuery,
+    MemberSearchFilter,
+    MemberSearchNotIndexedResult,
+    MemberSearchOptions,
+    MemberSearchOrQuery,
+    MemberSearchOrQueryRange,
+    MemberSearchPaginationFilter,
+    MemberSearchRangeQuery,
+    MemberSearchResults,
+    ModifyChannelPositionsEntry,
+    Onboarding,
+    RESTMember,
+    RawBan,
+    RawBulkBanResponse,
+    RawGuild,
+    RawGuildEmoji,
+    RawGuildPreview,
+    RawIncidentActions,
+    RawIntegration,
+    RawMemberSearchResults,
+    RawOnboarding,
+    RawRole,
+    RawSticker,
+    RawWelcomeScreen,
+    RawWidget,
+    RawWidgetSettings,
+    SearchMembersOptions,
+    Sticker,
+    WelcomeScreen,
+    Widget,
+    WidgetImageStyle,
+    WidgetSettings
+} from "../types/guilds";
+import type {
+    CreateScheduledEventOptions,
+    EditScheduledEventOptions,
+    GetScheduledEventUsersOptions,
+    RawScheduledEvent,
+    RawScheduledEventUser,
+    ScheduledEventUser
+} from "../types/scheduled-events";
 import type { Uncached } from "../types/shared";
-import ApplicationCommand from "../structures/ApplicationCommand";
-import VoiceState from "../structures/VoiceState";
-import Soundboard from "../structures/Soundboard";
+import type { RawVoiceState, VoiceRegion } from "../types/voice";
 import QueryBuilder from "../util/QueryBuilder";
+import * as Routes from "../util/Routes";
 import { setTimeout } from "node:timers/promises";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
@@ -342,12 +342,11 @@ export default class Guilds {
             method: "POST",
             path:   Routes.GUILD_ROLES(guildID),
             json:   {
-                color:  options?.color,
-                colors: {
-                    primary_color:   options?.colors?.primaryColor,
-                    secondary_color: options?.colors?.secondaryColor,
-                    tertiary_color:  options?.colors?.tertiaryColor
-                },
+                colors: options?.colors || options?.color ? {
+                    primary_color:   options.colors?.primaryColor ?? options.color,
+                    secondary_color: options.colors?.secondaryColor,
+                    tertiary_color:  options.colors?.tertiaryColor
+                } : undefined,
                 hoist:         options?.hoist,
                 icon,
                 mentionable:   options?.mentionable,
@@ -874,12 +873,11 @@ export default class Guilds {
             method: "PATCH",
             path:   Routes.GUILD_ROLE(guildID, roleID),
             json:   {
-                color:  options.color,
-                colors: {
-                    primary_color:   options.colors?.primaryColor,
+                colors: options?.colors || options?.color ? {
+                    primary_color:   options.colors?.primaryColor ?? options.color,
                     secondary_color: options.colors?.secondaryColor,
                     tertiary_color:  options.colors?.tertiaryColor
-                },
+                } : undefined,
                 hoist:         options.hoist,
                 icon,
                 mentionable:   options.mentionable,
