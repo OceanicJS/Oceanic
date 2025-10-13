@@ -45,7 +45,7 @@
   "devDependencies": {
     "@favware/npm-deprecate": "^2.0.0",
     "@mxssfd/typedoc-theme": "^1.1.3",
-    "@types/node": "^18.19.124",
+    "@types/node": "^18.19.129",
     "@types/pako": "^2.0.4",
     "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
