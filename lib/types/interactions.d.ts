@@ -152,7 +152,6 @@ export interface RawAutocompleteInteractionData extends Omit<RawApplicationComma
 export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "target" | "targetID"> { }
 
 export interface RawMessageComponentInteractionResolvedData {
-    attachments?: Record<string, RawAttachment>;
     channels?: Record<string, RawInteractionResolvedChannel>;
     members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
     roles?: Record<string, RawRole>;
@@ -160,7 +159,6 @@ export interface RawMessageComponentInteractionResolvedData {
 }
 
 export interface MessageComponentInteractionResolvedData {
-    attachments: TypedCollection<RawAttachment, Attachment>;
     channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
     members: TypedCollection<RawMember, Member, [guildID: string]>;
     roles: TypedCollection<RawRole, Role, [guildID: string]>;
