@@ -68,12 +68,22 @@ export default class ModalSubmitInteractionComponentsWrapper {
         return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
     }
 
+    /**
+     * Get a file upload option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
     getFileUploadComponent(name: string, required?: false): ModalSubmitFileUploadComponent | undefined;
     getFileUploadComponent(name: string, required: true): ModalSubmitFileUploadComponent;
     getFileUploadComponent(name: string, required?: boolean): ModalSubmitFileUploadComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.FILE_UPLOAD);
     }
 
+    /**
+     * Get the values of a file upload option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
     getFileUploadValues(name: string, required?: false): Array<Attachment> | undefined;
     getFileUploadValues(name: string, required: true): Array<Attachment>;
     getFileUploadValues(name: string, required?: boolean): Array<Attachment> | undefined {
