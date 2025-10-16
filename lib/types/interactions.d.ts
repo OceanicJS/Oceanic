@@ -437,7 +437,7 @@ T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
 /** @deprecated */
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
 export type ModalSubmitComponentsLabel = ModalComponentsLabel<ModalSubmitComponents>;
-export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents;
+export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents | ModalSubmitFileUploadComponent;
 export type ModalSubmitSelectComponents = ModalSubmitStringSelectComponent | ModalSubmitUserSelectComponent | ModalSubmitRoleSelectComponent | ModalSubmitMentionableSelectComponent | ModalSubmitChannelSelectComponent;
 export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
 export interface ModalSubmitStringSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
