@@ -45,8 +45,8 @@ import type Guild from "../structures/Guild";
 import type Permission from "../structures/Permission";
 import type ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
 
-export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> { }
-export interface EditInteractionContent extends Pick<EditWebhookMessageOptions, "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> { }
+export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
+export interface EditInteractionContent extends Pick<EditWebhookMessageOptions, "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
 
 export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalSubmitInteractionResponse | PremiumRequiredResponse | LaunchActivityResponse;
 export interface PingInteractionResponse {
@@ -117,11 +117,11 @@ export interface RawInteraction {
     version: 1;
 }
 
-export interface AuthorizingIntegrationOwners extends Partial<Record<`${ApplicationIntegrationTypes}`, string>> { }
+export interface AuthorizingIntegrationOwners extends Partial<Record<`${ApplicationIntegrationTypes}`, string>> {}
 
 export type AnyRawInteraction = RawPingInteraction | AnyRawGatewayInteraction;
 export type AnyRawGatewayInteraction = RawApplicationCommandInteraction | RawMessageComponentInteraction | RawAutocompleteInteraction | RawModalSubmitInteraction;
-export interface RawPingInteraction extends Pick<RawInteraction, "application_id" | "id" | "token" | "type" | "version"> { }
+export interface RawPingInteraction extends Pick<RawInteraction, "application_id" | "id" | "token" | "type" | "version"> {}
 export interface RawApplicationCommandInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawApplicationCommandInteractionData; }
 export interface RawMessageComponentInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawMessageComponentInteractionData; message: RawMessage; }
 export interface RawAutocompleteInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawAutocompleteInteractionData; }
@@ -148,8 +148,8 @@ export interface ApplicationCommandInteractionData<T extends AnyInteractionChann
     targetID: C extends ApplicationCommandTypes.CHAT_INPUT ? null : C extends ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE ? string : string | null;
     type: C;
 }
-export interface RawAutocompleteInteractionData extends Omit<RawApplicationCommandInteractionData, "resolved" | "target_id"> { }
-export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "target" | "targetID"> { }
+export interface RawAutocompleteInteractionData extends Omit<RawApplicationCommandInteractionData, "resolved" | "target_id"> {}
+export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "target" | "targetID"> {}
 
 export interface RawMessageComponentInteractionResolvedData {
     channels?: Record<string, RawInteractionResolvedChannel>;
@@ -309,27 +309,27 @@ type Privatify<T extends Interaction> = Omit<T, "guild" | "guildID" | "guildLoca
     memberPermissions: undefined;
 };
 
-export interface GuildAutocompleteInteraction extends Guildify<AutocompleteInteraction<AnyTextableGuildChannel>> { }
-export interface PrivateAutocompleteInteraction extends Privatify<AutocompleteInteraction<AnyPrivateChannel | Uncached>> { }
+export interface GuildAutocompleteInteraction extends Guildify<AutocompleteInteraction<AnyTextableGuildChannel>> {}
+export interface PrivateAutocompleteInteraction extends Privatify<AutocompleteInteraction<AnyPrivateChannel | Uncached>> {}
 export type AnyAutocompleteInteraction = GuildAutocompleteInteraction | PrivateAutocompleteInteraction;
 
-export interface GuildCommandInteraction extends Guildify<CommandInteraction<AnyTextableGuildChannel>> { }
-export interface PrivateCommandInteraction extends Privatify<CommandInteraction<AnyPrivateChannel | Uncached>> { }
+export interface GuildCommandInteraction extends Guildify<CommandInteraction<AnyTextableGuildChannel>> {}
+export interface PrivateCommandInteraction extends Privatify<CommandInteraction<AnyPrivateChannel | Uncached>> {}
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
-export interface GuildComponentButtonInteraction extends Guildify<ComponentInteraction<ComponentTypes.BUTTON, AnyTextableGuildChannel>> { }
-export interface GuildComponentSelectMenuInteraction extends Guildify<ComponentInteraction<SelectMenuTypes, AnyTextableGuildChannel>> { }
+export interface GuildComponentButtonInteraction extends Guildify<ComponentInteraction<ComponentTypes.BUTTON, AnyTextableGuildChannel>> {}
+export interface GuildComponentSelectMenuInteraction extends Guildify<ComponentInteraction<SelectMenuTypes, AnyTextableGuildChannel>> {}
 export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
 
-export interface PrivateComponentButtonInteraction extends Privatify<ComponentInteraction<ComponentTypes.BUTTON, AnyPrivateChannel | Uncached>> { }
-export interface PrivateComponentSelectMenuInteraction extends Privatify<ComponentInteraction<SelectMenuTypes, AnyPrivateChannel | Uncached>> { }
+export interface PrivateComponentButtonInteraction extends Privatify<ComponentInteraction<ComponentTypes.BUTTON, AnyPrivateChannel | Uncached>> {}
+export interface PrivateComponentSelectMenuInteraction extends Privatify<ComponentInteraction<SelectMenuTypes, AnyPrivateChannel | Uncached>> {}
 export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentButtonInteraction = GuildComponentButtonInteraction | PrivateComponentButtonInteraction;
 export type AnyComponentSelectMenuInteraction = GuildComponentSelectMenuInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentInteraction = AnyComponentButtonInteraction | AnyComponentSelectMenuInteraction;
 
-export interface GuildModalSubmitInteraction extends Guildify<ModalSubmitInteraction<AnyTextableGuildChannel>> { }
-export interface PrivateModalSubmitInteraction extends Privatify<ModalSubmitInteraction<AnyPrivateChannel | Uncached>> { }
+export interface GuildModalSubmitInteraction extends Guildify<ModalSubmitInteraction<AnyTextableGuildChannel>> {}
+export interface PrivateModalSubmitInteraction extends Privatify<ModalSubmitInteraction<AnyPrivateChannel | Uncached>> {}
 export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
 
 export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];
@@ -388,26 +388,26 @@ interface ModalComponentsLabel<T extends ModalSubmitComponents> {
 }
 
 export type ToModalSubmitComponentFromRaw<T extends RawModalSubmitComponents> =
-    T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
-        T extends RawModalSubmitStringSelectComponent ? ModalSubmitStringSelectComponent :
-            T extends RawModalSubmitUserSelectComponent ? ModalSubmitUserSelectComponent :
-                T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent :
-                    T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
-                        T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
-                            T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
-                                never;
+T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
+    T extends RawModalSubmitStringSelectComponent ? ModalSubmitStringSelectComponent :
+        T extends RawModalSubmitUserSelectComponent ? ModalSubmitUserSelectComponent :
+            T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent :
+                T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
+                    T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
+                        T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
+                            never;
 
 /** @deprecated */
 export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
 export type RawModalSubmitComponentsLabel = RawModalComponentsLabel<RawModalSubmitComponents>;
 export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitFileUploadComponent | RawModalSubmitSelectComponents;
 export type RawModalSubmitSelectComponents = RawModalSubmitStringSelectComponent | RawModalSubmitUserSelectComponent | RawModalSubmitRoleSelectComponent | RawModalSubmitMentionableSelectComponent | RawModalSubmitChannelSelectComponent;
-export interface RawModalSubmitTextInputComponent extends RawModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> { }
-export interface RawModalSubmitStringSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> { }
-export interface RawModalSubmitUserSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.USER_SELECT> { }
-export interface RawModalSubmitRoleSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.ROLE_SELECT> { }
-export interface RawModalSubmitMentionableSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> { }
-export interface RawModalSubmitChannelSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> { }
+export interface RawModalSubmitTextInputComponent extends RawModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
+export interface RawModalSubmitStringSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
+export interface RawModalSubmitUserSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.USER_SELECT> {}
+export interface RawModalSubmitRoleSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.ROLE_SELECT> {}
+export interface RawModalSubmitMentionableSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> {}
+export interface RawModalSubmitChannelSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> {}
 export interface RawModalSubmitFileUploadComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.FILE_UPLOAD> { }
 
 interface ModalSubmitComponentsBase {
@@ -425,25 +425,26 @@ export interface ModalSubmitComponentsStringValues<T extends ModalComponentTypes
 }
 
 export type ToRawFromoModalSubmitComponent<T extends ModalSubmitComponents> =
-    T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
-        T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
-            T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
-                T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent :
-                    T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
-                        T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
+T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
+    T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
+        T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
+            T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent :
+                T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
+                    T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
+                        T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent :
                             never;
 
 /** @deprecated */
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
 export type ModalSubmitComponentsLabel = ModalComponentsLabel<ModalSubmitComponents>;
 export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents;
-export type ModalSubmitSelectComponents = ModalSubmitStringSelectComponent | ModalSubmitUserSelectComponent | ModalSubmitRoleSelectComponent | ModalSubmitMentionableSelectComponent | ModalSubmitChannelSelectComponent | ModalSubmitFileUploadComponent;
-export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> { }
-export interface ModalSubmitStringSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> { }
-export interface ModalSubmitUserSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.USER_SELECT> { }
-export interface ModalSubmitRoleSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.ROLE_SELECT> { }
-export interface ModalSubmitMentionableSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> { }
-export interface ModalSubmitChannelSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> { }
+export type ModalSubmitSelectComponents = ModalSubmitStringSelectComponent | ModalSubmitUserSelectComponent | ModalSubmitRoleSelectComponent | ModalSubmitMentionableSelectComponent | ModalSubmitChannelSelectComponent;
+export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
+export interface ModalSubmitStringSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
+export interface ModalSubmitUserSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.USER_SELECT> {}
+export interface ModalSubmitRoleSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.ROLE_SELECT> {}
+export interface ModalSubmitMentionableSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> {}
+export interface ModalSubmitChannelSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> {}
 export interface ModalSubmitFileUploadComponent extends ModalSubmitComponentsStringValues<ComponentTypes.FILE_UPLOAD> { }
 
 export type ApplicationCommandTypesWithTarget = ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE;
