@@ -11,6 +11,7 @@ import User from "./User";
 import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
+import Attachment from "./Attachment";
 import type Client from "../Client";
 import type {
     AuthorizingIntegrationOwners,
@@ -109,15 +110,21 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             case ComponentTypes.USER_SELECT:
             case ComponentTypes.ROLE_SELECT:
             case ComponentTypes.MENTIONABLE_SELECT:
-            case ComponentTypes.CHANNEL_SELECT: {
+            case ComponentTypes.CHANNEL_SELECT:
+            case ComponentTypes.FILE_UPLOAD: {
                 const resolved: MessageComponentInteractionResolvedData = {
-                    channels: new TypedCollection(InteractionResolvedChannel, client),
-                    members:  new TypedCollection(Member, client),
-                    roles:    new TypedCollection(Role, client),
-                    users:    new TypedCollection(User, client)
+                    channels:    new TypedCollection(InteractionResolvedChannel, client),
+                    members:     new TypedCollection(Member, client),
+                    roles:       new TypedCollection(Role, client),
+                    users:       new TypedCollection(User, client),
+                    attachments: new TypedCollection(Attachment, client)
                 };
 
                 if (data.data.resolved) {
+                    if (data.data.resolved.attachments) {
+                        for (const attachment of Object.values(data.data.resolved.attachments)) resolved.attachments.update(new Attachment(attachment, client));
+                    }
+
                     if (data.data.resolved.channels) {
                         for (const channel of Object.values(data.data.resolved.channels)) resolved.channels.update(channel);
                     }

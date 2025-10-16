@@ -270,6 +270,15 @@ export default class Util {
                     component:   this.componentToParsed(component.component)
                 } as never;
             }
+            case ComponentTypes.FILE_UPLOAD: {
+                return {
+                    customID:  component.custom_id,
+                    maxValues: component.max_values,
+                    minValues: component.min_values,
+                    required:  component.required,
+                    type:      component.type
+                } as never;
+            }
             default: {
                 return component as never;
             }
@@ -380,6 +389,14 @@ export default class Util {
                     component:   this.componentToRaw(component.component)
                 } as never;
             }
+            case ComponentTypes.FILE_UPLOAD:
+                return {
+                    custom_id:  component.customID,
+                    max_values: component.maxValues,
+                    min_values: component.minValues,
+                    required:   component.required,
+                    type:       component.type
+                } as never;
             default: {
                 return component as never;
             }
@@ -637,7 +654,8 @@ export default class Util {
             case ComponentTypes.USER_SELECT:
             case ComponentTypes.ROLE_SELECT:
             case ComponentTypes.MENTIONABLE_SELECT:
-            case ComponentTypes.CHANNEL_SELECT: {
+            case ComponentTypes.CHANNEL_SELECT:
+            case ComponentTypes.FILE_UPLOAD: {
                 return {
                     customID: component.custom_id,
                     type:     component.type,

@@ -8,6 +8,7 @@ import type {
     ModalSubmitComponents,
     ModalSubmitComponentsActionRow,
     ModalSubmitComponentsLabel,
+    ModalSubmitFileUploadComponent,
     ModalSubmitMentionableSelectComponent,
     ModalSubmitRoleSelectComponent,
     ModalSubmitStringSelectComponent,
@@ -18,6 +19,7 @@ import type Role from "../../structures/Role";
 import type User from "../../structures/User";
 import Collection from "../Collection";
 import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
+import type Attachment from "../../structures/Attachment";
 
 /** A wrapper for interaction components. */
 export default class ModalSubmitInteractionComponentsWrapper {
@@ -64,6 +66,19 @@ export default class ModalSubmitInteractionComponentsWrapper {
     /** Get the components in this interaction. */
     getComponents(): Array<ModalSubmitComponents> {
         return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
+    }
+
+    getFileUploadComponent(name: string, required?: false): ModalSubmitFileUploadComponent | undefined;
+    getFileUploadComponent(name: string, required: true): ModalSubmitFileUploadComponent;
+    getFileUploadComponent(name: string, required?: boolean): ModalSubmitFileUploadComponent | undefined {
+        return this._getComponent(name, required, ComponentTypes.FILE_UPLOAD);
+    }
+
+    getFileUploadValues(name: string, required?: false): Array<Attachment> | undefined;
+    getFileUploadValues(name: string, required: true): Array<Attachment>;
+    getFileUploadValues(name: string, required?: boolean): Array<Attachment> | undefined {
+        const component = this.getFileUploadComponent(name, required as false);
+        return component?.values && mapRawToResolved("attachment", component.values, this.resolved.attachments, false);
     }
 
     /**

@@ -816,14 +816,15 @@ export enum ComponentTypes {
     CONTENT_INVENTORY_ENTRY = 16,
     CONTAINER               = 17,
     LABEL                   = 18,
+    FILE_UPLOAD             = 19,
 }
 
 export type SelectMenuNonResolvedTypes = ComponentTypes.STRING_SELECT;
 export type SelectMenuResolvedTypes = ComponentTypes.USER_SELECT | ComponentTypes.ROLE_SELECT | ComponentTypes.MENTIONABLE_SELECT | ComponentTypes.CHANNEL_SELECT;
 export type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
 
-export type MessageComponentTypes = ComponentTypes.BUTTON | SelectMenuTypes;
-export type ModalComponentTypes = ComponentTypes.TEXT_INPUT | SelectMenuTypes;
+export type MessageComponentTypes = ComponentTypes.BUTTON | ComponentTypes.FILE_UPLOAD | SelectMenuTypes;
+export type ModalComponentTypes = ComponentTypes.TEXT_INPUT | SelectMenuTypes | ComponentTypes.FILE_UPLOAD;
 
 export enum ButtonStyles {
     PRIMARY   = 1,
