@@ -1219,13 +1219,13 @@ export interface RawSectionComponent extends BaseComponent {
 
 export type RawComponent = AnyRawMessageComponent | AnyRawModalComponent;
 export type AnyRawMessageComponent = RawMessageComponent | RawMessageActionRowComponent | RawThumbnailComponent;
-export type AnyRawModalComponent = RawModalComponent | RawModalActionRowComponent | RawModalLabelComponent | RawFileUploadComponent;
+export type AnyRawModalComponent = RawModalComponent | RawModalActionRowComponent | RawModalLabelComponent;
 export type AnyRawBaseComponent = RawMessageComponent | RawModalComponent;
 export type RawMessageActionRowComponent = RawButtonComponent | RawSelectMenuComponent;
 export type RawMessageComponent = RawMessageActionRow | RawSectionComponent | RawTextDisplayComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent | RawContainerComponent;
 /** @deprecated */
 export type RawModalActionRowComponent = RawTextInput;
-export type RawModalLabelComponent = RawSelectMenuComponent | RawTextInput;
+export type RawModalLabelComponent = RawSelectMenuComponent | RawTextInput | RawFileUploadComponent;
 export type RawModalComponent = RawModalActionRow | RawModalLabel | RawTextDisplayComponent;
 export type RawButtonComponent = RawTextButton | URLButton | RawPremiumButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
@@ -1287,13 +1287,14 @@ export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow> =
 
 export type Component = AnyMessageComponent | AnyModalComponent;
 export type AnyMessageComponent = MessageComponent | MessageActionRowComponent | ThumbnailComponent;
-export type AnyModalComponent = ModalComponent | ModalActionRowComponent | ModalLabelComponent | FileUploadComponent;
+export type AnyModalComponent = ModalComponent | ModalActionRowComponent | ModalLabelComponent;
 export type AnyBaseComponent = MessageComponent | ModalComponent;
 export type MessageActionRowComponent = ButtonComponent | SelectMenuComponent;
 export type MessageComponent = MessageActionRow | SectionComponent | TextDisplayComponent | MediaGalleryComponent | SeparatorComponent | FileComponent | ContainerComponent;
 /** @deprecated */
 export type ModalActionRowComponent = TextInput;
-export type ModalLabelComponent = SelectMenuComponent | TextInput;
+/** a child of a label component */
+export type ModalLabelComponent = SelectMenuComponent | TextInput | FileUploadComponent;
 export type ModalComponent = ModalActionRow | ModalLabel | TextDisplayComponent;
 export type ButtonComponent = TextButton | URLButton | PremiumButton;
 export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
