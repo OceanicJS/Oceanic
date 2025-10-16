@@ -3,12 +3,12 @@ import { mapRawToResolved } from "./shared";
 import { WrapperError } from "../Errors";
 import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
 import type {
-    MessageComponentInteractionResolvedData,
     ModalSubmitChannelSelectComponent,
     ModalSubmitComponents,
     ModalSubmitComponentsActionRow,
     ModalSubmitComponentsLabel,
     ModalSubmitFileUploadComponent,
+    ModalSubmitInteractionResolvedData,
     ModalSubmitMentionableSelectComponent,
     ModalSubmitRoleSelectComponent,
     ModalSubmitStringSelectComponent,
@@ -25,8 +25,8 @@ import type Attachment from "../../structures/Attachment";
 export default class ModalSubmitInteractionComponentsWrapper {
     /** The raw components from Discord.  */
     raw: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>;
-    resolved: MessageComponentInteractionResolvedData;
-    constructor(resolved: MessageComponentInteractionResolvedData, data: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>) {
+    resolved: ModalSubmitInteractionResolvedData;
+    constructor(resolved: ModalSubmitInteractionResolvedData, data: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>) {
         this.raw = data;
         this.resolved = resolved;
     }
