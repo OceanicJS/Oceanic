@@ -1225,7 +1225,7 @@ export type RawMessageActionRowComponent = RawButtonComponent | RawSelectMenuCom
 export type RawMessageComponent = RawMessageActionRow | RawSectionComponent | RawTextDisplayComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent | RawContainerComponent;
 /** @deprecated */
 export type RawModalActionRowComponent = RawTextInput;
-export type RawModalLabelComponent = RawSelectMenuComponent | RawTextInput | RawFileUploadComponent;
+export type RawModalLabelComponent = RawSelectMenuComponent | RawTextInput | RawModalFileUploadComponent;
 export type RawModalComponent = RawModalActionRow | RawModalLabel | RawTextDisplayComponent;
 export type RawButtonComponent = RawTextButton | URLButton | RawPremiumButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
@@ -1249,7 +1249,7 @@ export type ToComponentFromRaw<T extends RawComponent> =
                                                                 T extends RawFileComponent ? FileComponent :
                                                                     T extends RawContainerComponent ? ContainerComponent :
                                                                         T extends RawModalLabel ? ModalLabel :
-                                                                            T extends RawFileUploadComponent ? FileUploadComponent :
+                                                                            T extends RawModalFileUploadComponent ? ModalFileUploadComponent :
                                                                                 never;
 export type ToRawFromComponent<T extends Component> =
     T extends MessageActionRow ? RawMessageActionRow :
@@ -1270,7 +1270,7 @@ export type ToRawFromComponent<T extends Component> =
                                                                 T extends FileComponent ? RawFileComponent :
                                                                     T extends ContainerComponent ? RawContainerComponent :
                                                                         T extends ModalLabel ? RawModalLabel :
-                                                                            T extends FileUploadComponent ? RawFileUploadComponent :
+                                                                            T extends ModalFileUploadComponent ? RawModalFileUploadComponent :
                                                                                 never;
 
 export interface RawActionRowBase<T extends RawComponent> {
@@ -1294,7 +1294,7 @@ export type MessageComponent = MessageActionRow | SectionComponent | TextDisplay
 /** @deprecated */
 export type ModalActionRowComponent = TextInput;
 /** a child of a label component */
-export type ModalLabelComponent = SelectMenuComponent | TextInput | FileUploadComponent;
+export type ModalLabelComponent = SelectMenuComponent | TextInput | ModalFileUploadComponent;
 export type ModalComponent = ModalActionRow | ModalLabel | TextDisplayComponent;
 export type ButtonComponent = TextButton | URLButton | PremiumButton;
 export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
@@ -1512,7 +1512,7 @@ export interface RawModalLabel extends Omit<BaseComponent, "id"> {
     type: ComponentTypes.LABEL;
 }
 
-export interface FileUploadComponent extends BaseComponent {
+export interface ModalFileUploadComponent extends BaseComponent {
     customID: string;
     maxValues?: number;
     minValues?: number;
@@ -1520,7 +1520,7 @@ export interface FileUploadComponent extends BaseComponent {
     type: ComponentTypes.FILE_UPLOAD;
 }
 
-export interface RawFileUploadComponent extends BaseComponent {
+export interface RawModalFileUploadComponent extends BaseComponent {
     custom_id: string;
     max_values?: number;
     min_values?: number;
