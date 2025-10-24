@@ -805,8 +805,6 @@ export enum ComponentTypes {
     MENTIONABLE_SELECT = 7,
     CHANNEL_SELECT     = 8,
     SECTION            = 9,
-    /** @deprecated Use {@link ComponentTypes.TEXT_DISPLAY | TEXT_DISPLAY}. This will be removed in 1.13.0. */
-    TEXT               = 10,
     TEXT_DISPLAY       = 10,
     THUMBNAIL          = 11,
     MEDIA_GALLERY      = 12,
@@ -854,8 +852,6 @@ export enum MessageFlags {
     SUPPRESS_NOTIFICATIONS                 = 1 << 12,
     IS_VOICE_MESSAGE                       = 1 << 13,
     HAS_SNAPSHOT                           = 1 << 14,
-    /** @deprecated Use {@link MessageFlags.IS_COMPONENTS_V2 | IS_COMPONENTS_V2}. This will be removed in 1.13.0. */
-    IS_UIKIT_COMPONENTS                    = 1 << 15,
     IS_COMPONENTS_V2                       = 1 << 15,
 }
 
