@@ -11,6 +11,7 @@ import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
 import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import Role from "./Role";
+import Attachment from "./Attachment";
 import { InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
 import type {
     AuthorizingIntegrationOwners,
@@ -92,13 +93,18 @@ export default class ModalSubmitInteraction<T extends AnyInteractionChannel | Un
         this.user = client.users.update(data.user ?? data.member!.user);
 
         const resolved: ModalSubmitInteractionResolvedData = {
-            channels: new TypedCollection(InteractionResolvedChannel, client),
-            members:  new TypedCollection(Member, client),
-            roles:    new TypedCollection(Role, client),
-            users:    new TypedCollection(User, client)
+            attachments: new TypedCollection(Attachment, client),
+            channels:    new TypedCollection(InteractionResolvedChannel, client),
+            members:     new TypedCollection(Member, client),
+            roles:       new TypedCollection(Role, client),
+            users:       new TypedCollection(User, client)
         };
 
         if (data.data.resolved) {
+            if (data.data.resolved.attachments) {
+                for (const attachment of Object.values(data.data.resolved.attachments)) resolved.attachments.add(new Attachment(attachment, client));
+            }
+
             if (data.data.resolved.channels) {
                 for (const channel of Object.values(data.data.resolved.channels)) resolved.channels.update(channel);
             }

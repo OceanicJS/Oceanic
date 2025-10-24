@@ -186,6 +186,7 @@ export interface MessageComponentSelectMenuInteractionData {
 }
 
 export interface RawModalSubmitInteractionResolvedData {
+    attachments?: Record<string, RawAttachment>;
     channels?: Record<string, RawInteractionResolvedChannel>;
     members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
     roles?: Record<string, RawRole>;
@@ -193,6 +194,7 @@ export interface RawModalSubmitInteractionResolvedData {
 }
 
 export interface ModalSubmitInteractionResolvedData {
+    attachments: TypedCollection<RawAttachment, Attachment>;
     channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
     members: TypedCollection<RawMember, Member, [guildID: string]>;
     roles: TypedCollection<RawRole, Role, [guildID: string]>;
@@ -392,12 +394,13 @@ T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
             T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent :
                 T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
                     T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
-                        never;
+                        T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
+                            never;
 
 /** @deprecated */
 export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
 export type RawModalSubmitComponentsLabel = RawModalComponentsLabel<RawModalSubmitComponents>;
-export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitSelectComponents;
+export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitFileUploadComponent | RawModalSubmitSelectComponents;
 export type RawModalSubmitSelectComponents = RawModalSubmitStringSelectComponent | RawModalSubmitUserSelectComponent | RawModalSubmitRoleSelectComponent | RawModalSubmitMentionableSelectComponent | RawModalSubmitChannelSelectComponent;
 export interface RawModalSubmitTextInputComponent extends RawModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
 export interface RawModalSubmitStringSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
@@ -405,6 +408,7 @@ export interface RawModalSubmitUserSelectComponent extends RawModalSubmitCompone
 export interface RawModalSubmitRoleSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.ROLE_SELECT> {}
 export interface RawModalSubmitMentionableSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> {}
 export interface RawModalSubmitChannelSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> {}
+export interface RawModalSubmitFileUploadComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.FILE_UPLOAD> { }
 
 interface ModalSubmitComponentsBase {
     customID: string;
@@ -427,12 +431,13 @@ T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
             T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent :
                 T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
                     T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
-                        never;
+                        T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent :
+                            never;
 
 /** @deprecated */
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
 export type ModalSubmitComponentsLabel = ModalComponentsLabel<ModalSubmitComponents>;
-export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents;
+export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents | ModalSubmitFileUploadComponent;
 export type ModalSubmitSelectComponents = ModalSubmitStringSelectComponent | ModalSubmitUserSelectComponent | ModalSubmitRoleSelectComponent | ModalSubmitMentionableSelectComponent | ModalSubmitChannelSelectComponent;
 export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
 export interface ModalSubmitStringSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
@@ -440,6 +445,7 @@ export interface ModalSubmitUserSelectComponent extends ModalSubmitComponentsStr
 export interface ModalSubmitRoleSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.ROLE_SELECT> {}
 export interface ModalSubmitMentionableSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> {}
 export interface ModalSubmitChannelSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> {}
+export interface ModalSubmitFileUploadComponent extends ModalSubmitComponentsStringValues<ComponentTypes.FILE_UPLOAD> { }
 
 export type ApplicationCommandTypesWithTarget = ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE;
 
