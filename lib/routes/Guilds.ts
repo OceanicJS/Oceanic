@@ -248,7 +248,7 @@ export default class Guilds {
      */
     async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
-        let deleteMessageSeconds: number | undefined;
+        let deleteMessageSeconds: number | undefined = options?.deleteMessageSeconds;
         if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) {
             deleteMessageSeconds = options.deleteMessageDays! * 86400;
         }
