@@ -260,7 +260,7 @@ export type ApplicationCommandOptionsInteger = ApplicationCommandOptionBase<Appl
 export interface ApplicationCommandOptionsMentionable extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.MENTIONABLE> {}
 export type ApplicationCommandOptionsNumber = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.NUMBER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.NUMBER>>;
 export interface ApplicationCommandOptionsRole extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ROLE> {}
-export type ApplicationCommandOptionsString = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxLength | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
+export type ApplicationCommandOptionsString = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & ExclusifyUnion<(ApplicationCommandOptionsAutocomplete & ApplicationCommandOptionsMinMaxLength) | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
 export interface ApplicationCommandOptionsUser extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.USER> {}
 
 // desc, options
