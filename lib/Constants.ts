@@ -566,6 +566,8 @@ export namespace Permissions {
     export const SET_VOICE_CHANNEL_STATUS            = 281474976710656n; // 1 << 48
     export const SEND_POLLS                          = 562949953421312n; // 1 << 49
     export const USE_EXTERNAL_APPS                   = 1125899906842624n; // 1 << 50
+    export const PIN_MESSAGES                        = 2251799813685248n; // 1 << 51
+    export const BYPASS_SLOWMODE                     = 4503599627370496n; // 1 << 52
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
@@ -596,7 +598,9 @@ export const TextPermissions = [
     Permissions.SEND_VOICE_MESSAGES,
     Permissions.USE_CLYDE_AI,
     Permissions.SEND_POLLS,
-    Permissions.USE_EXTERNAL_APPS
+    Permissions.USE_EXTERNAL_APPS,
+    Permissions.PIN_MESSAGES,
+    Permissions.BYPASS_SLOWMODE
 ] as const;
 export const AllTextPermissions = TextPermissions.reduce((all, p) => all | p, 0n);
 export const AllTextPermissionNames = TextPermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -634,7 +638,8 @@ export const VoicePermissions = [
     Permissions.USE_CLYDE_AI,
     Permissions.SET_VOICE_CHANNEL_STATUS,
     Permissions.SEND_POLLS,
-    Permissions.USE_EXTERNAL_APPS
+    Permissions.USE_EXTERNAL_APPS,
+    Permissions.BYPASS_SLOWMODE
 ] as const;
 export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
 export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -665,7 +670,8 @@ export const StagePermissions = [
     Permissions.SEND_VOICE_MESSAGES,
     Permissions.USE_CLYDE_AI,
     Permissions.SEND_POLLS,
-    Permissions.USE_EXTERNAL_APPS
+    Permissions.USE_EXTERNAL_APPS,
+    Permissions.BYPASS_SLOWMODE
 ] as const;
 export const AllStagePermissions = StagePermissions.reduce((all, p) => all | p, 0n);
 export const AllStagePermissionNames = StagePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
