@@ -1499,14 +1499,14 @@ export interface RawContainerComponent extends Omit<BaseComponent, "id"> {
 }
 
 export interface ModalLabel extends BaseComponent {
-    component: SelectMenuComponent | TextInput;
+    component: ModalLabelComponent;
     description?: string;
     label: string;
     type: ComponentTypes.LABEL;
 }
 
 export interface RawModalLabel extends Omit<BaseComponent, "id"> {
-    component: RawSelectMenuComponent | RawTextInput;
+    component: RawModalLabelComponent;
     description?: string;
     label: string;
     type: ComponentTypes.LABEL;
