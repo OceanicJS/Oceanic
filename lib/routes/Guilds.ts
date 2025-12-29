@@ -1446,6 +1446,18 @@ export default class Guilds {
     }
 
     /**
+     * Get the member count of the roles in a guild. The result is a key-value map of role id to member count.
+     * @param guildID The ID of the guild.
+     * @caching This method **does not** cache its result.
+     */
+    async getRoleMemberCounts(guildID: string): Promise<Record<string, number>> {
+        return this._manager.authRequest<Record<string, number>>({
+            method: "GET",
+            path:   Routes.GUILD_ROLE_MEMBER_COUNTS(guildID)
+        });
+    }
+
+    /**
      * Get the roles in a guild.
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.

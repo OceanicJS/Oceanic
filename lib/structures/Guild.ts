@@ -1270,6 +1270,13 @@ export default class Guild extends Base {
     }
 
     /**
+     * Get the member count of the roles in this guild. The result is a key-value map of role id to member count.
+     */
+    async getRoleMemberCounts(): Promise<Record<string, number>> {
+        return this.client.rest.guilds.getRoleMemberCounts(this.id);
+    }
+
+    /**
      * Get the roles in this guild. Only use this if you need to. See the `roles` collection.
      */
     async getRoles(): Promise<Array<Role>> {
