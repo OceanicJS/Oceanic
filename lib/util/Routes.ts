@@ -50,6 +50,7 @@ export const GUILD_MEMBERS_SEARCH        = (guildID: string) => encode`/guilds/$
 export const GUILD_MEMBER_ROLE           = (guildID: string, userID: string, roleID: string) => encode`/guilds/${guildID}/members/${userID}/roles/${roleID}`;
 export const GUILD_ROLES                 = (guildID: string) => encode`/guilds/${guildID}/roles`;
 export const GUILD_ROLE                  = (guildID: string, roleID: string) => encode`/guilds/${guildID}/roles/${roleID}`;
+export const GUILD_ROLE_MEMBER_COUNTS    = (guildID: string) => encode`/guilds/${guildID}/roles/member-counts`;
 export const GUILD_PRUNE                 = (guildID: string) => encode`/guilds/${guildID}/prune`;
 export const GUILD_INVITES               = (guildID: string) => encode`/guilds/${guildID}/invites`;
 export const GUILD_INTEGRATION           = (guildID: string, integrationID: string) => encode`/guilds/${guildID}/integrations/${integrationID}`;
