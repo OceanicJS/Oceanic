@@ -1,6 +1,6 @@
 /** @module Types/Users */
 import type { RawMember } from "./guilds";
-import type { PremiumTypes } from "../Constants";
+import type { DisplayNameEffect, DisplayNameFont, PremiumTypes } from "../Constants";
 
 export interface RESTUser {
     accent_color?: number | null;
@@ -11,6 +11,7 @@ export interface RESTUser {
     clan?: RawClan | null;
     collectibles?: RawCollectibles | null;
     discriminator: string;
+    display_name_styles?: RawDisplayNameStyles | null;
     email?: string | null;
     flags?: number;
     global_name: string | null;
@@ -19,12 +20,13 @@ export interface RESTUser {
     member?: RawMember;
     mfa_enabled?: boolean;
     premium_type?: PremiumTypes;
+    primary_guild?: RawClan | null;
     public_flags?: number;
     system?: boolean;
     username: string;
     verified?: boolean;
 }
-export interface RawUser extends Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration_data" | "bot" | "system" | "banner" | "accent_color" | "clan" | "collectibles">, Required<Pick<RESTUser, "public_flags" | "global_name">> {}
+export interface RawUser extends Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration_data" | "bot" | "system" | "banner" | "accent_color" | "clan" | "collectibles" | "primary_guild" | "display_name_styles">, Required<Pick<RESTUser, "public_flags" | "global_name">> {}
 export interface RawUserWithMember extends RawUser, Pick<RESTUser, "member"> {}
 export interface RawOAuthUser extends Pick<RESTUser, "id" | "username" | "discriminator" | "avatar" | "avatar_decoration_data" | "bot" | "system" | "global_name">, Required<Pick<RESTUser, "banner" | "accent_color" | "locale" | "mfa_enabled" | "email" | "verified" | "flags" | "public_flags" | "clan">> {}
 export interface RawExtendedUser extends Pick<RawOAuthUser, "avatar" | "avatar_decoration_data" | "bot" | "discriminator" | "email" | "flags" | "id" | "mfa_enabled" | "username" | "verified" | "global_name" | "clan"> {}
@@ -85,3 +87,18 @@ export interface Nameplate {
 }
 
 export type NameplatePalette = "crimson" | "berry" | "sky" | "teal" | "forest" | "bubble_gum" | "violet" | "cobalt" | "clover" | "lemon" | "white";
+
+export interface RawDisplayNameStyles {
+    colors: Array<number>;
+    effect_id: DisplayNameEffect;
+    font_id: DisplayNameFont;
+}
+
+export interface DisplayNameStyles {
+    /** The colors to use encoded as an array of integers representing hexadecimal color codes (max 2) */
+    colors: Array<number>;
+    /** The effect to use */
+    effectID: DisplayNameEffect;
+    /** The font to use */
+    fontID: DisplayNameFont;
+}

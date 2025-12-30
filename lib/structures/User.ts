@@ -7,7 +7,7 @@ import Clan from "./Clan";
 import { EntitlementOwnerTypes, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import type { AvatarDecorationData, Collectibles, RawUser } from "../types/users";
+import type { AvatarDecorationData, Collectibles, DisplayNameStyles, RawUser } from "../types/users";
 import type { JSONUser } from "../types/json";
 import type { SearchEntitlementsOptions } from "../types/applications";
 import { UncachedError } from "../util/Errors";
@@ -30,8 +30,11 @@ export default class User extends Base {
     collectibles: Collectibles | null;
     /** The 4 digits after this user's username, if they have not been migrated. If migrated, this will be a single "0". */
     discriminator: string;
+    displayNameStyles: DisplayNameStyles | null;
     /** The user's display name, if set. */
     globalName: string | null;
+    /** The primary clan this user is in. */
+    primaryGuild: Clan | null;
     /** The user's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     publicFlags: number;
     /** If this user is an official discord system user. */
@@ -46,7 +49,9 @@ export default class User extends Base {
         this.clan = null;
         this.collectibles = null;
         this.discriminator = data.discriminator;
+        this.displayNameStyles = null;
         this.globalName = data.global_name;
+        this.primaryGuild = null;
         this.publicFlags = 0;
         this.system = !!data.system;
         this.username = data.username;
@@ -82,17 +87,23 @@ export default class User extends Base {
         if (data.discriminator !== undefined) {
             this.discriminator = data.discriminator;
         }
+        if (data.display_name_styles !== undefined) {
+            this.displayNameStyles = data.display_name_styles === null ? null : {
+                colors:   data.display_name_styles.colors,
+                effectID: data.display_name_styles.effect_id,
+                fontID:   data.display_name_styles.font_id
+            };
+        }
         if (data.global_name !== undefined) {
             this.globalName = data.global_name;
-        }
-        if (data.public_flags !== undefined) {
-            this.publicFlags = data.public_flags;
         }
         if (data.username !== undefined) {
             this.username = data.username;
         }
-        if (data.clan !== undefined) {
-            this.clan = data.clan ? new Clan(data.clan, this.client) : null;
+        if (data.clan !== undefined || data.primary_guild !== undefined) {
+            const d = data.clan ?? data.primary_guild;
+            this.clan = d ? new Clan(d, this.client) : null;
+            this.primaryGuild = d ? new Clan(d, this.client) : null;
         }
     }
 

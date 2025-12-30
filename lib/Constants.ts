@@ -1558,6 +1558,30 @@ export enum SeparatorSpacingSize {
     LARGE = 2,
 }
 
+export enum DisplayNameFont {
+    BANGERS = 1,
+    BIO_RHYME = 2,
+    CHERRY_BOMB = 3,
+    CHICLE = 4,
+    COMPAGNON = 5,
+    MUSEO_MODERNO = 6,
+    NEO_CASTEL = 7,
+    PIXELFY = 8,
+    RIBES = 9,
+    SINISTRE = 10,
+    DEFAULT = 11,
+    ZILLA_SLAB = 12,
+}
+
+export enum DisplayNameEffect {
+    SOLID = 1,
+    GRADIENT = 2,
+    NEON = 3,
+    TOON = 4,
+    POP = 5,
+    GLOW = 6,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {
