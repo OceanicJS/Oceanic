@@ -1206,7 +1206,6 @@ export interface MessagePollResults {
 }
 
 export interface RawTextDisplayComponent extends Omit<TextDisplayComponent, "id"> {}
-export interface RawThumbnailComponent extends Omit<ThumbnailComponent, "id"> {}
 export interface RawSeparatorComponent extends Omit<SeparatorComponent, "id"> {}
 
 export interface RawSectionComponent extends BaseComponent {
@@ -1468,6 +1467,13 @@ export interface TextDisplayComponent extends BaseComponent {
 export interface ThumbnailComponent extends BaseComponent {
     description?: string;
     media: UnfurledMediaItem;
+    spoiler?: boolean;
+    type: ComponentTypes.THUMBNAIL;
+}
+
+export interface RawThumbnailComponent extends Omit<BaseComponent, "id"> {
+    description?: string;
+    media: RawUnfurledMediaItem;
     spoiler?: boolean;
     type: ComponentTypes.THUMBNAIL;
 }

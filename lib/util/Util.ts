@@ -237,9 +237,24 @@ export default class Util {
                 }
             }
 
-            case ComponentTypes.TEXT_DISPLAY:
-            case ComponentTypes.THUMBNAIL: {
+            case ComponentTypes.TEXT_DISPLAY: {
                 return component as never;
+            }
+
+            case ComponentTypes.THUMBNAIL: {
+                return {
+                    description: component.description,
+                    media:       {
+                        attachmentID: component.media.attachment_id,
+                        contentType:  component.media.content_type,
+                        height:       component.media.height,
+                        proxyURL:     component.media.proxy_url,
+                        url:          component.media.url,
+                        width:        component.media.width
+                    },
+                    spoiler: component.spoiler,
+                    type:    component.type
+                } as never;
             }
 
             case ComponentTypes.MEDIA_GALLERY: {
@@ -390,9 +405,24 @@ export default class Util {
                 }
             }
 
-            case ComponentTypes.TEXT_DISPLAY:
-            case ComponentTypes.THUMBNAIL: {
+            case ComponentTypes.TEXT_DISPLAY: {
                 return component as never;
+            }
+
+            case ComponentTypes.THUMBNAIL: {
+                return {
+                    description: component.description,
+                    media:       {
+                        attachment_id: component.media.attachmentID,
+                        content_type:  component.media.contentType,
+                        height:        component.media.height,
+                        proxy_url:     component.media.proxyURL,
+                        url:           component.media.url,
+                        width:         component.media.width
+                    },
+                    spoiler: component.spoiler,
+                    type:    component.type
+                } as never;
             }
 
             case ComponentTypes.MEDIA_GALLERY: {
