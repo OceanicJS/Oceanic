@@ -3,17 +3,17 @@ import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
 import type { RawClan } from "../types/users";
-import type { JSONClan } from "../types";
+import type { JSONPrimaryGuild } from "../types";
 
-/** Represents an invite. */
-export default class Clan {
+/** Represents a primary guild. */
+export default class PrimaryGuild {
     /** The badge hash of this clan. */
-    badge: string;
+    badge: string | null;
     client!: Client;
-    identityEnabled: boolean;
-    identityGuildID: string;
+    identityEnabled: boolean | null;
+    identityGuildID: string | null;
     /** The tag of this clan, shown beside messages. */
-    tag: string;
+    tag: string | null;
     constructor(data: RawClan, client: Client) {
         Object.defineProperty(this, "client", {
             value:        client,
@@ -51,11 +51,12 @@ export default class Clan {
      * @param format The format the url should be.
      * @param size The dimensions of the image.
      */
-    badgeURL(format?: ImageFormat, size?: number): string {
+    badgeURL(format?: ImageFormat, size?: number): string | null {
+        if (this.identityGuildID === null || this.badge === null) return null;
         return this.client.util.formatImage(Routes.CLAN_ICON(this.identityGuildID, this.badge), format, size);
     }
 
-    toJSON(): JSONClan {
+    toJSON(): JSONPrimaryGuild {
         return {
             badge:           this.badge,
             identityEnabled: this.identityEnabled,

@@ -218,12 +218,6 @@ export interface JSONCategoryChannel extends JSONGuildChannel {
 export interface JSONChannel extends JSONBase {
     type: ChannelTypes;
 }
-export interface JSONClan {
-    badge: string;
-    identityEnabled: boolean;
-    identityGuildID: string;
-    tag: string;
-}
 export interface JSONClientApplication extends JSONBase {
     flags: number;
 }
@@ -620,6 +614,12 @@ export interface JSONPoll {
     layoutType: PollLayoutType;
     question: PollQuestion;
     results: PollResults;
+}
+export interface JSONPrimaryGuild {
+    badge: string | null;
+    identityEnabled: boolean | null;
+    identityGuildID: string | null;
+    tag: string | null;
 }
 export interface JSONPrivateChannel extends JSONChannel {
     lastMessageID: string | null;

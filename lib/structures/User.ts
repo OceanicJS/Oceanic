@@ -3,7 +3,7 @@ import Base from "./Base";
 import type PrivateChannel from "./PrivateChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
-import Clan from "./Clan";
+import PrimaryGuild from "./PrimaryGuild";
 import { EntitlementOwnerTypes, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
@@ -24,8 +24,6 @@ export default class User extends Base {
     banner?: string | null;
     /** If this user is a bot. */
     bot: boolean;
-    /** The primary clan this user is in. */
-    clan: Clan | null;
     /** The user's collectibles. */
     collectibles: Collectibles | null;
     /** The 4 digits after this user's username, if they have not been migrated. If migrated, this will be a single "0". */
@@ -33,8 +31,8 @@ export default class User extends Base {
     displayNameStyles: DisplayNameStyles | null;
     /** The user's display name, if set. */
     globalName: string | null;
-    /** The primary clan this user is in. */
-    primaryGuild: Clan | null;
+    /** The primary guild this user is in. */
+    primaryGuild: PrimaryGuild | null;
     /** The user's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
     publicFlags: number;
     /** If this user is an official discord system user. */
@@ -46,7 +44,6 @@ export default class User extends Base {
         this.avatar = null;
         this.avatarDecorationData = null;
         this.bot = !!data.bot;
-        this.clan = null;
         this.collectibles = null;
         this.discriminator = data.discriminator;
         this.displayNameStyles = null;
@@ -100,11 +97,17 @@ export default class User extends Base {
         if (data.username !== undefined) {
             this.username = data.username;
         }
-        if (data.clan !== undefined || data.primary_guild !== undefined) {
-            const d = data.clan ?? data.primary_guild;
-            this.clan = d ? new Clan(d, this.client) : null;
-            this.primaryGuild = d ? new Clan(d, this.client) : null;
+        if (data.primary_guild !== undefined) {
+            this.primaryGuild = data.primary_guild ? new PrimaryGuild(data.primary_guild, this.client) : null;
         }
+    }
+
+    /**
+     * The primary guild this user is in.
+     * @deprecated Use {@link primaryGuild}
+     */
+    get clan(): PrimaryGuild | null {
+        return this.primaryGuild;
     }
 
     /** The default avatar value of this user. */
