@@ -107,7 +107,8 @@ import type {
     MemberSearchOptions,
     MemberSearchResults,
     CreateSoundboardSoundOptions,
-    EditSoundboardSoundOptions
+    EditSoundboardSoundOptions,
+    GuildProfile
 } from "../types/guilds";
 import type {
     CreateScheduledEventOptions,
@@ -214,6 +215,8 @@ export default class Guild extends Base {
     premiumSubscriptionCount?: number;
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
+    /** The guild's server tag, only present for guilds recieved over the gateway. */
+    profile: GuildProfile | null;
     /** The channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannel?: AnyTextableGuildChannel | null;
     /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
@@ -305,6 +308,7 @@ export default class Guild extends Base {
         this.preferredLocale = data.preferred_locale;
         this.premiumProgressBarEnabled = data.premium_progress_bar_enabled;
         this.premiumTier = data.premium_tier;
+        this.profile = null;
         this.publicUpdatesChannelID = null;
         this.roles = new TypedCollection(Role, client, client.util._getLimit("roles", this.id));
         this.rulesChannelID = null;
@@ -574,6 +578,9 @@ export default class Guild extends Base {
         }
         if (data.premium_tier !== undefined) {
             this.premiumTier = data.premium_tier;
+        }
+        if (data.profile !== undefined) {
+            this.profile = data.profile;
         }
         if (data.public_updates_channel_id !== undefined) {
             this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyTextableGuildChannel>(data.public_updates_channel_id);
@@ -1578,6 +1585,7 @@ export default class Guild extends Base {
             premiumProgressBarEnabled:   this.premiumProgressBarEnabled,
             premiumSubscriptionCount:    this.premiumSubscriptionCount,
             premiumTier:                 this.premiumTier,
+            profile:                     this.profile,
             publicUpdatesChannelID:      this.publicUpdatesChannelID,
             region:                      this.region,
             roles:                       this.roles.map(role => role.toJSON()),

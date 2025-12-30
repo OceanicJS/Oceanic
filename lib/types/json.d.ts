@@ -21,7 +21,8 @@ import type {
     Sticker,
     Presence,
     IncidentActions,
-    RoleColors
+    RoleColors,
+    GuildProfile
 } from "./guilds";
 import type {
     ChannelMention,
@@ -333,6 +334,7 @@ export interface JSONGuild extends JSONBase {
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
     premiumTier: PremiumTiers;
+    profile: GuildProfile | null;
     publicUpdatesChannelID: string | null;
     region?: string | null;
     roles: Array<JSONRole>;

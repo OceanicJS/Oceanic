@@ -85,6 +85,7 @@ export interface RawGuild {
     premium_subscription_count?: number;
     premium_tier: PremiumTiers;
     presences: Array<PresenceUpdate>;
+    profile?: GuildProfile;
     public_updates_channel_id: string | null;
     region?: string | null;
     roles: Array<RawRole>;
@@ -983,4 +984,11 @@ export interface MemberSearchNotIndexedResult {
     documents_indexed: number;
     message: string;
     retry_after: number;
+}
+
+export interface GuildProfile {
+    /** The hash for the server's tag badge. */
+    badge: string;
+    /** The 1-4 character text seen beside user's names when they adopt a server's tag. */
+    tag: string;
 }
