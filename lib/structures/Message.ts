@@ -309,8 +309,9 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
                         roles:    s.message.mention_roles,
                         users:    s.message.mentions.map(u => this.client.users.update(u))
                     },
-                    timestamp: new Date(s.message.timestamp),
-                    type:      s.message.type
+                    stickerItems: s.message.sticker_items ?? [],
+                    timestamp:    new Date(s.message.timestamp),
+                    type:         s.message.type
                 }
             }));
         }
