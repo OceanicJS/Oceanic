@@ -1163,13 +1163,14 @@ export interface EventReaction {
     type: ReactionType;
 }
 
-export interface RawMessageSnapshotMessage extends Pick<RawMessage, "type" | "content" | "embeds" | "attachments" | "timestamp" | "edited_timestamp" | "flags" | "mentions" | "mention_roles"> {}
+export interface RawMessageSnapshotMessage extends Pick<RawMessage, "type" | "components" | "content" | "embeds" | "attachments" | "timestamp" | "edited_timestamp" | "flags" | "mentions" | "mention_roles"> {}
 
 export interface RawMessageSnapshot {
     message: RawMessageSnapshotMessage;
 }
 export interface MessageSnapshotMessage {
     attachments: Array<Attachment>;
+    components: Array<MessageComponent>;
     content: string;
     editedTimestamp: Date | null;
     embeds: Array<Embed>;

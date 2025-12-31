@@ -299,6 +299,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             this.messageSnapshots = data.message_snapshots.map(s => ({
                 message: {
                     attachments:     s.message.attachments.map(a => new Attachment(a, this.client)),
+                    components:      s.message.components ? this.client.util.componentsToParsed(s.message.components) : [],
                     content:         s.message.content,
                     editedTimestamp: s.message.edited_timestamp ? new Date(s.message.edited_timestamp) : null,
                     embeds:          this.client.util.embedsToParsed(s.message.embeds),
