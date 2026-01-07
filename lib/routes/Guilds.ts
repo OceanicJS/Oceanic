@@ -706,10 +706,31 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}<br>{@link Guild#clientMember | Guild#clientMember}
      */
     async editCurrentMember(guildID: string, options: EditCurrentMemberOptions): Promise<Member> {
+        options = this._manager.client.util._freeze(options);
+
+        let avatar = options.avatar;
+        let banner = options.banner;
+        let bio = options.bio;
+
+        if (avatar) {
+            avatar = this._manager.client.util._convertImage(avatar, "avatar");
+        }
+
+        if (banner) {
+            banner = this._manager.client.util._convertImage(banner, "banner");
+        }
+
+        /**
+         * @TODO https://github.com/discord/discord-api-docs/issues/8067
+         */
+        if (bio === null) {
+            bio = "";
+        }
+
         return this._manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, "@me"),
-            json:   { nick: options.nick },
+            json:   { nick: options.nick, banner, avatar, bio },
             reason: options.reason
         }).then(data => this._manager.client.util.updateMember(guildID, data.user.id, data));
     }
