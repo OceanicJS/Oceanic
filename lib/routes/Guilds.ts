@@ -710,7 +710,6 @@ export default class Guilds {
 
         let avatar = options.avatar;
         let banner = options.banner;
-        let bio = options.bio;
 
         if (avatar) {
             avatar = this._manager.client.util._convertImage(avatar, "avatar");
@@ -720,17 +719,10 @@ export default class Guilds {
             banner = this._manager.client.util._convertImage(banner, "banner");
         }
 
-        /**
-         * @TODO https://github.com/discord/discord-api-docs/issues/8067
-         */
-        if (bio === null) {
-            bio = "";
-        }
-
         return this._manager.authRequest<RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, "@me"),
-            json:   { nick: options.nick, banner, avatar, bio },
+            json:   { nick: options.nick, banner, avatar, bio: options.bio },
             reason: options.reason
         }).then(data => this._manager.client.util.updateMember(guildID, data.user.id, data));
     }
