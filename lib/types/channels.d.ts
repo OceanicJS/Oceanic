@@ -1206,10 +1206,7 @@ export interface MessagePollResults {
 }
 
 export interface RawTextDisplayComponent extends Omit<TextDisplayComponent, "id"> {}
-export interface RawThumbnailComponent extends Omit<ThumbnailComponent, "id"> {}
-export interface RawMediaGalleryComponent extends Omit<MediaGalleryComponent, "id"> {}
 export interface RawSeparatorComponent extends Omit<SeparatorComponent, "id"> {}
-export interface RawFileComponent extends Omit<FileComponent, "id"> {}
 
 export interface RawSectionComponent extends BaseComponent {
     accessory: RawThumbnailComponent | RawButtonComponent;
@@ -1438,8 +1435,22 @@ export interface TextInput extends BaseComponent {
     value?: string;
 }
 
-export interface UnfurledMediaItem {
+export interface RawUnfurledMediaItem {
+    attachment_id?: string;
+    content_type?: string;
+    height?: number;
+    proxy_url?: string;
     url: string;
+    width?: number;
+}
+
+export interface UnfurledMediaItem {
+    attachmentID?: string;
+    contentType?: string;
+    height?: number;
+    proxyURL?: string;
+    url: string;
+    width?: number;
 }
 
 export interface SectionComponent extends BaseComponent {
@@ -1460,6 +1471,19 @@ export interface ThumbnailComponent extends BaseComponent {
     type: ComponentTypes.THUMBNAIL;
 }
 
+export interface RawThumbnailComponent extends Omit<BaseComponent, "id"> {
+    description?: string;
+    media: RawUnfurledMediaItem;
+    spoiler?: boolean;
+    type: ComponentTypes.THUMBNAIL;
+}
+
+export interface RawMediaGalleryItem {
+    description?: string;
+    media: RawUnfurledMediaItem;
+    spoiler?: boolean;
+}
+
 export interface MediaGalleryItem {
     description?: string;
     media: UnfurledMediaItem;
@@ -1468,6 +1492,11 @@ export interface MediaGalleryItem {
 
 export interface MediaGalleryComponent extends BaseComponent {
     items: Array<MediaGalleryItem>;
+    type: ComponentTypes.MEDIA_GALLERY;
+}
+
+export interface RawMediaGalleryComponent extends Omit<BaseComponent, "id"> {
+    items: Array<RawMediaGalleryItem>;
     type: ComponentTypes.MEDIA_GALLERY;
 }
 
@@ -1480,6 +1509,13 @@ export interface SeparatorComponent extends BaseComponent {
 export interface FileComponent extends BaseComponent {
     // The UnfurledMediaItem ONLY supports attachment://<filename> references
     file: UnfurledMediaItem;
+    spoiler?: boolean;
+    type: ComponentTypes.FILE;
+}
+
+export interface RawFileComponent extends Omit<BaseComponent, "id"> {
+    // The RawUnfurledMediaItem ONLY supports attachment://<filename> references
+    file: RawUnfurledMediaItem;
     spoiler?: boolean;
     type: ComponentTypes.FILE;
 }

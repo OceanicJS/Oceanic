@@ -237,10 +237,59 @@ export default class Util {
                 }
             }
 
-            case ComponentTypes.TEXT_DISPLAY:
-            case ComponentTypes.THUMBNAIL:
-            case ComponentTypes.MEDIA_GALLERY:
-            case ComponentTypes.FILE:
+            case ComponentTypes.TEXT_DISPLAY: {
+                return component as never;
+            }
+
+            case ComponentTypes.THUMBNAIL: {
+                return {
+                    description: component.description,
+                    media:       {
+                        attachmentID: component.media.attachment_id,
+                        contentType:  component.media.content_type,
+                        height:       component.media.height,
+                        proxyURL:     component.media.proxy_url,
+                        url:          component.media.url,
+                        width:        component.media.width
+                    },
+                    spoiler: component.spoiler,
+                    type:    component.type
+                } as never;
+            }
+
+            case ComponentTypes.MEDIA_GALLERY: {
+                return {
+                    items: component.items.map(i => ({
+                        description: i.description,
+                        media:       {
+                            attachmentID: i.media.attachment_id,
+                            contentType:  i.media.content_type,
+                            height:       i.media.height,
+                            proxyURL:     i.media.proxy_url,
+                            url:          i.media.url,
+                            width:        i.media.width
+                        },
+                        spoiler: i.spoiler
+                    })),
+                    type: component.type
+                } as never;
+            }
+
+            case ComponentTypes.FILE: {
+                return {
+                    file: {
+                        attachmentID: component.file.attachment_id,
+                        contentType:  component.file.content_type,
+                        height:       component.file.height,
+                        proxyURL:     component.file.proxy_url,
+                        url:          component.file.url,
+                        width:        component.file.width
+                    },
+                    spoiler: component.spoiler,
+                    type:    component.type
+                } as never;
+            }
+
             case ComponentTypes.SEPARATOR: {
                 return component as never;
             }
@@ -356,10 +405,59 @@ export default class Util {
                 }
             }
 
-            case ComponentTypes.TEXT_DISPLAY:
-            case ComponentTypes.THUMBNAIL:
-            case ComponentTypes.MEDIA_GALLERY:
-            case ComponentTypes.FILE:
+            case ComponentTypes.TEXT_DISPLAY: {
+                return component as never;
+            }
+
+            case ComponentTypes.THUMBNAIL: {
+                return {
+                    description: component.description,
+                    media:       {
+                        attachment_id: component.media.attachmentID,
+                        content_type:  component.media.contentType,
+                        height:        component.media.height,
+                        proxy_url:     component.media.proxyURL,
+                        url:           component.media.url,
+                        width:         component.media.width
+                    },
+                    spoiler: component.spoiler,
+                    type:    component.type
+                } as never;
+            }
+
+            case ComponentTypes.MEDIA_GALLERY: {
+                return {
+                    items: component.items.map(i => ({
+                        description: i.description,
+                        media:       {
+                            attachment_id: i.media.attachmentID,
+                            content_type:  i.media.contentType,
+                            height:        i.media.height,
+                            proxy_url:     i.media.proxyURL,
+                            url:           i.media.url,
+                            width:         i.media.width
+                        },
+                        spoiler: i.spoiler
+                    })),
+                    type: component.type
+                } as never;
+            }
+
+            case ComponentTypes.FILE: {
+                return {
+                    file: {
+                        attachment_id: component.file.attachmentID,
+                        content_type:  component.file.contentType,
+                        height:        component.file.height,
+                        proxy_url:     component.file.proxyURL,
+                        url:           component.file.url,
+                        width:         component.file.width
+                    },
+                    spoiler: component.spoiler,
+                    type:    component.type
+                } as never;
+            }
+
             case ComponentTypes.SEPARATOR: {
                 return component as never;
             }
