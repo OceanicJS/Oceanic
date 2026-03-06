@@ -1,27 +1,15 @@
 /** @module Shard */
 import type ShardManager from "./ShardManager";
 import type Compression from "./compression/base";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import TypedEmitter from "../util/TypedEmitter";
 import Bucket from "../rest/Bucket";
 import { GatewayCloseCodes, GatewayOPCodes, GATEWAY_VERSION, Intents } from "../Constants";
-import type {
-    UpdatePresenceOptions,
-    RequestGuildMembersOptions,
-    UpdateVoiceStateOptions,
-    SendStatuses,
-    BotActivity,
-    ShardStatus,
-    RequestSoundboardSoundsOptions
-} from "../types/gateway";
 import type Member from "../structures/Member";
 import Base from "../structures/Base";
-import type {  AnyReceivePacket, ReadyPacket } from "../types/gateway-raw";
-import type { RawOAuthUser, RawUser } from "../types/users";
-import type { RawGuild } from "../types/guilds";
 import ExtendedUser from "../structures/ExtendedUser";
 import type Guild from "../structures/Guild";
-import type { ShardEvents } from "../types/events";
 import { GatewayError, DependencyError, NotImplementedError } from "../util/Errors";
 import ClientApplication from "../structures/ClientApplication";
 import type Soundboard from "../structures/Soundboard";
@@ -37,8 +25,8 @@ try {
 } catch {}
 /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
-/** Represents a gateway connection to Discord. See {@link ShardEvents | Shard Events} for a list of events. */
-export default class Shard extends TypedEmitter<ShardEvents> {
+/** Represents a gateway connection to Discord. See {@link Types.Events.ShardEvents | Shard Events} for a list of events. */
+export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     private _compressor: Compression | undefined;
     private _connectTimeout: NodeJS.Timeout | null;
     private _getAllUsersCount: Record<string, true>;
@@ -58,14 +46,14 @@ export default class Shard extends TypedEmitter<ShardEvents> {
     latency: number;
     manager!: ShardManager;
     preReady: boolean;
-    presence!: Required<UpdatePresenceOptions>;
+    presence!: Required<Types.Gateway.UpdatePresenceOptions>;
     presenceUpdateBucket!: Bucket;
     ready: boolean;
     reconnectInterval: number;
     resumeURL: string | null;
     sequence: number;
     sessionID: string | null;
-    status: ShardStatus;
+    status: Types.Gateway.ShardStatus;
     ws!: WebSocket | null;
     constructor(id: number, manager: ShardManager) {
         super();
@@ -119,7 +107,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.hardReset();
     }
 
-    private _ready(data: ReadyPacket["d"]): void {
+    private _ready(data: Types.GatewayRaw.ReadyPacket["d"]): void {
         this.connectAttempts = 0;
         this.reconnectInterval = 1000;
         this.connecting = false;
@@ -130,9 +118,9 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         this.client.shards["_ready"](this.id);
         this.client["_application"] = new ClientApplication(data.application, this.client);
         if (this.client["_user"]) {
-            this.client.users.update(data.user as unknown as RawUser);
+            this.client.users.update(data.user as unknown as Types.Users.RawUser);
         } else {
-            this.client["_user"] = this.client.users.add(new ExtendedUser(data.user as RawOAuthUser, this.client));
+            this.client["_user"] = this.client.users.add(new ExtendedUser(data.user as Types.Users.RawOAuthUser, this.client));
         }
 
         let url = data.resume_gateway_url;
@@ -192,7 +180,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }
     }
 
-    private createGuild(data: RawGuild): Guild {
+    private createGuild(data: Types.Guilds.RawGuild): Guild {
         this.client.guildShardMap.set(data.id, this.id);
         const guild = this.client.guilds.update(data);
         if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
@@ -266,7 +254,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         }, this.client.shards.options.connectionTimeout);
     }
 
-    private onPacket(packet: AnyReceivePacket): void {
+    private onPacket(packet: Types.GatewayRaw.AnyReceivePacket): void {
         if ("s" in packet && packet.s) {
             if (packet.s > this.sequence + 1 && this.ws && this.status !== "resuming") {
                 this.client.emit("warn", `Non-consecutive sequence (${this.sequence} -> ${packet.s})`, this.id);
@@ -477,7 +465,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                 }
 
                 if (Erlpack) {
-                    return this.onPacket(Erlpack.unpack(result) as AnyReceivePacket);
+                    return this.onPacket(Erlpack.unpack(result) as Types.GatewayRaw.AnyReceivePacket);
                 } else {
                     // After the valid data, all the remaining octets are filled with zero, so remove them.
                     let last = result.length - 1;
@@ -485,12 +473,12 @@ export default class Shard extends TypedEmitter<ShardEvents> {
                         while (result[last - 1] === 0 && last > 0) last--;
                         result = result.subarray(0, last);
                     }
-                    return this.onPacket(JSON.parse(String(result)) as AnyReceivePacket);
+                    return this.onPacket(JSON.parse(String(result)) as Types.GatewayRaw.AnyReceivePacket);
                 }
             } else if (Erlpack) {
-                return this.onPacket(Erlpack.unpack(buf) as AnyReceivePacket);
+                return this.onPacket(Erlpack.unpack(buf) as Types.GatewayRaw.AnyReceivePacket);
             } else {
-                return this.onPacket(JSON.parse(String(buf)) as AnyReceivePacket);
+                return this.onPacket(JSON.parse(String(buf)) as Types.GatewayRaw.AnyReceivePacket);
             }
         } catch (err) {
             this.client.emit("error", err as Error, this.id);
@@ -611,7 +599,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
      * @param status The status.
      * @param activities An array of activities.
      */
-    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []): Promise<void> {
+    async editStatus(status: Types.Gateway.SendStatuses, activities: Array<Types.Gateway.BotActivity> = []): Promise<void> {
         this.presence.status = status;
         this.presence.activities = activities;
         return this.sendPresenceUpdate();
@@ -678,7 +666,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
      * @param guildID The ID of the guild to request the members of.
      * @param options The options for requesting the members.
      */
-    async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions): Promise<Array<Member>> {
+    async requestGuildMembers(guildID: string, options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
         const opts = {
             guild_id:  guildID,
             limit:     options?.limit ?? 0,
@@ -718,7 +706,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
         });
     }
 
-    async requestSoundboardSounds(guildID: string, options?: RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
+    async requestSoundboardSounds(guildID: string, options?: Types.Gateway.RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
         const opts = {
             guild_ids: [guildID],
             nonce:     randomBytes(16).toString("hex")
@@ -806,7 +794,7 @@ export default class Shard extends TypedEmitter<ShardEvents> {
      * @param channelID The ID of the voice channel to join. Null to disconnect.
      * @param options The options for updating the voice state.
      */
-    updateVoiceState(guildID: string, channelID: string | null, options?: UpdateVoiceStateOptions): void {
+    updateVoiceState(guildID: string, channelID: string | null, options?: Types.Gateway.UpdateVoiceStateOptions): void {
         this.send(GatewayOPCodes.VOICE_STATE_UPDATE, {
             channel_id: channelID,
             guild_id:   guildID,

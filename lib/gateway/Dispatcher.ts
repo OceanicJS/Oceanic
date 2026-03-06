@@ -2,11 +2,11 @@
 import type Shard from "./Shard";
 import type ShardManager from "./ShardManager";
 import * as DefaultDispatchEvents from "./events";
-import type { AnyDispatchPacket } from "../types/gateway-raw";
+import type * as Types from "../types/namespaced";
 
-export type DispatchEvent = AnyDispatchPacket["t"];
+export type DispatchEvent = Types.GatewayRaw.AnyDispatchPacket["t"];
 export type DispatchEventMap = {
-    [K in AnyDispatchPacket as K["t"]]: K["d"];
+    [K in Types.GatewayRaw.AnyDispatchPacket as K["t"]]: K["d"];
 };
 export type DispatchFunction<K extends DispatchEvent = DispatchEvent> = (data: DispatchEventMap[K], shard: Shard) => void;
 export default class Dispatcher {
@@ -32,7 +32,7 @@ export default class Dispatcher {
         }
     }
 
-    private handle(data: AnyDispatchPacket, shard: Shard): void {
+    private handle(data: Types.GatewayRaw.AnyDispatchPacket, shard: Shard): void {
         const event = data.t;
         if (!this.events.has(event)) return;
         const arr = this.events.get(event)!;

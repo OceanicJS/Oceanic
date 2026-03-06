@@ -1,6 +1,7 @@
 /** @module ShardManager */
 import Shard from "./Shard";
 import Dispatcher from "./Dispatcher";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import {
     AllIntents,
@@ -10,7 +11,6 @@ import {
     Intents,
     PrivilegedIntentMapping
 } from "../Constants";
-import type { GatewayOptions, GetBotGatewayResponse, ShardManagerInstanceOptions } from "../types/gateway";
 import Collection from "../util/Collection";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
@@ -32,8 +32,8 @@ export default class ShardManager extends Collection<number, Shard> {
     client!: Client;
     connected = false;
     dispatcher!: Dispatcher;
-    options: ShardManagerInstanceOptions;
-    constructor(client: Client, options: GatewayOptions = {}) {
+    options: Types.Gateway.ShardManagerInstanceOptions;
+    constructor(client: Client, options: Types.Gateway.GatewayOptions = {}) {
         super();
         this._buckets = {};
         this._connectQueue = [];
@@ -54,7 +54,7 @@ export default class ShardManager extends Collection<number, Shard> {
             },
             firstShardID: options.firstShardID && options.firstShardID < 0 ? 0 : options.firstShardID ?? 0,
             getAllUsers:  options.getAllUsers ?? false,
-            override:     options.override as ShardManagerInstanceOptions["override"] ?? {
+            override:     options.override as Types.Gateway.ShardManagerInstanceOptions["override"] ?? {
                 appendQuery:              true,
                 gatewayURLIsResumeURL:    false,
                 timeBetweenShardConnects: 5000
@@ -181,7 +181,7 @@ export default class ShardManager extends Collection<number, Shard> {
             throw new Error("Already connected.");
         }
 
-        let url: string | null, data: GetBotGatewayResponse | undefined;
+        let url: string | null, data: Types.Gateway.GetBotGatewayResponse | undefined;
         const overrideURL = (this.options.override.getBot || this.options.override.url) !== undefined;
         try {
             if (this.options.maxShards === -1 || this.options.concurrency === -1) {
