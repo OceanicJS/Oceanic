@@ -1,7 +1,7 @@
 /** @module DiscordHTTPError */
 import DiscordRESTError from "./DiscordRESTError";
+import type * as Types from "../types/namespaced";
 import type { RESTMethod } from "../Constants";
-import type { JSONDiscordHTTPError } from "../types/json";
 
 /** An HTTP error received from Discord. */
 export default class DiscordHTTPError extends Error {
@@ -54,7 +54,7 @@ export default class DiscordHTTPError extends Error {
         return this.response.statusText;
     }
 
-    toJSON(): JSONDiscordHTTPError {
+    toJSON(): Types.JSON.JSONDiscordHTTPError {
         return {
             message: this.message,
             method:  this.method,

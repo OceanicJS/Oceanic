@@ -1,21 +1,21 @@
 /** @module SequentialBucket */
+import type * as Types from "../types/namespaced";
 /**
  * Latency & ratelimit related things lovingly borrowed from eris
  * https://github.com/abalabahaha/eris/blob/dev/lib/util/SequentialBucket.js (eb403730855714eafa36c541dbe2cb84c9979158)
  */
 
-import type { LatencyRef } from "../types/request-handler";
 
 /** A ratelimit bucket. */
 export default class SequentialBucket {
     private _queue: Array<(cb: () => void) => void> = [];
     last: number;
-    latencyRef: LatencyRef;
+    latencyRef: Types.RequestHandler.LatencyRef;
     limit: number;
     processing: NodeJS.Timeout | boolean = false;
     remaining: number;
     reset: number;
-    constructor(limit: number, latencyRef: LatencyRef) {
+    constructor(limit: number, latencyRef: Types.RequestHandler.LatencyRef) {
         this.limit = this.remaining = limit;
         this.latencyRef = latencyRef;
         this.last = this.reset = 0;

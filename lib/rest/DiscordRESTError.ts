@@ -1,6 +1,6 @@
 /** @module DiscordRESTError */
+import type * as Types from "../types/namespaced";
 import type { RESTMethod } from "../Constants";
-import type { JSONDiscordRESTError } from "../types/json";
 
 /** A REST error received from Discord. */
 export default class DiscordRESTError extends Error {
@@ -78,7 +78,7 @@ export default class DiscordRESTError extends Error {
         return this.response.statusText;
     }
 
-    toJSON(): JSONDiscordRESTError {
+    toJSON(): Types.JSON.JSONDiscordRESTError {
         return {
             message: this.message,
             method:  this.method,

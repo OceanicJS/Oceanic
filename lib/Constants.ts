@@ -1,3 +1,4 @@
+import type * as Types from "./types/namespaced";
 /* eslint-disable unicorn/prefer-math-trunc, @typescript-eslint/no-duplicate-enum-values */
 /** @module Constants */
 import type PrivateChannel from "./structures/PrivateChannel";
@@ -11,36 +12,7 @@ import type PublicThreadChannel from "./structures/PublicThreadChannel";
 import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
 import type StageChannel from "./structures/StageChannel";
 import type ForumChannel from "./structures/ForumChannel";
-import type { ReverseMap, StringMap } from "./types/shared";
-import type {
-    RawAnnouncementChannel,
-    RawAnnouncementThreadChannel,
-    RawCategoryChannel,
-    RawForumChannel,
-    RawGroupChannel,
-    RawMediaChannel,
-    RawPrivateChannel,
-    RawPrivateThreadChannel,
-    RawPublicThreadChannel,
-    RawStageChannel,
-    RawTextChannel,
-    RawVoiceChannel
-} from "./types/channels";
 import type MediaChannel from "./structures/MediaChannel";
-import type {
-    JSONAnnouncementChannel,
-    JSONAnnouncementThreadChannel,
-    JSONCategoryChannel,
-    JSONForumChannel,
-    JSONGroupChannel,
-    JSONMediaChannel,
-    JSONPrivateChannel,
-    JSONPrivateThreadChannel,
-    JSONPublicThreadChannel,
-    JSONStageChannel,
-    JSONTextChannel,
-    JSONVoiceChannel
-} from "./types";
 import pkg from "../package.json";
 
 export const GATEWAY_VERSION = 10;
@@ -438,38 +410,38 @@ export interface ChannelTypeMap {
     [ChannelTypes.GUILD_MEDIA]: MediaChannel;
 }
 export interface RawChannelTypeMap {
-    [ChannelTypes.GUILD_TEXT]: RawTextChannel;
-    [ChannelTypes.DM]: RawPrivateChannel;
-    [ChannelTypes.GUILD_VOICE]: RawVoiceChannel;
-    [ChannelTypes.GROUP_DM]: RawGroupChannel;
-    [ChannelTypes.GUILD_CATEGORY]: RawCategoryChannel;
-    [ChannelTypes.GUILD_ANNOUNCEMENT]: RawAnnouncementChannel;
+    [ChannelTypes.GUILD_TEXT]: Types.Channels.RawTextChannel;
+    [ChannelTypes.DM]: Types.Channels.RawPrivateChannel;
+    [ChannelTypes.GUILD_VOICE]: Types.Channels.RawVoiceChannel;
+    [ChannelTypes.GROUP_DM]: Types.Channels.RawGroupChannel;
+    [ChannelTypes.GUILD_CATEGORY]: Types.Channels.RawCategoryChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: Types.Channels.RawAnnouncementChannel;
     [ChannelTypes.GUILD_STORE]: never;
     [ChannelTypes.GUILD_LFG]: never;
     [ChannelTypes.LFG_GROUP_DM]: never;
     [ChannelTypes.THREAD_ALPHA]: never;
-    [ChannelTypes.ANNOUNCEMENT_THREAD]: RawAnnouncementThreadChannel;
-    [ChannelTypes.PUBLIC_THREAD]: RawPublicThreadChannel;
-    [ChannelTypes.PRIVATE_THREAD]: RawPrivateThreadChannel;
-    [ChannelTypes.GUILD_STAGE_VOICE]: RawStageChannel;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: Types.Channels.RawAnnouncementThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: Types.Channels.RawPublicThreadChannel;
+    [ChannelTypes.PRIVATE_THREAD]: Types.Channels.RawPrivateThreadChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: Types.Channels.RawStageChannel;
     [ChannelTypes.GUILD_DIRECTORY]: never;
-    [ChannelTypes.GUILD_FORUM]: RawForumChannel;
-    [ChannelTypes.GUILD_MEDIA]: RawMediaChannel;
+    [ChannelTypes.GUILD_FORUM]: Types.Channels.RawForumChannel;
+    [ChannelTypes.GUILD_MEDIA]: Types.Channels.RawMediaChannel;
 }
 export interface JSONChannelTypeMap {
-    [ChannelTypes.GUILD_TEXT]: JSONTextChannel;
-    [ChannelTypes.DM]: JSONPrivateChannel;
-    [ChannelTypes.GUILD_VOICE]: JSONVoiceChannel;
-    [ChannelTypes.GROUP_DM]: JSONGroupChannel;
-    [ChannelTypes.GUILD_CATEGORY]: JSONCategoryChannel;
-    [ChannelTypes.GUILD_ANNOUNCEMENT]: JSONAnnouncementChannel;
-    [ChannelTypes.ANNOUNCEMENT_THREAD]: JSONAnnouncementThreadChannel;
-    [ChannelTypes.PUBLIC_THREAD]: JSONPublicThreadChannel;
-    [ChannelTypes.PRIVATE_THREAD]: JSONPrivateThreadChannel;
-    [ChannelTypes.GUILD_STAGE_VOICE]: JSONStageChannel;
+    [ChannelTypes.GUILD_TEXT]: Types.JSON.JSONTextChannel;
+    [ChannelTypes.DM]: Types.JSON.JSONPrivateChannel;
+    [ChannelTypes.GUILD_VOICE]: Types.JSON.JSONVoiceChannel;
+    [ChannelTypes.GROUP_DM]: Types.JSON.JSONGroupChannel;
+    [ChannelTypes.GUILD_CATEGORY]: Types.JSON.JSONCategoryChannel;
+    [ChannelTypes.GUILD_ANNOUNCEMENT]: Types.JSON.JSONAnnouncementChannel;
+    [ChannelTypes.ANNOUNCEMENT_THREAD]: Types.JSON.JSONAnnouncementThreadChannel;
+    [ChannelTypes.PUBLIC_THREAD]: Types.JSON.JSONPublicThreadChannel;
+    [ChannelTypes.PRIVATE_THREAD]: Types.JSON.JSONPrivateThreadChannel;
+    [ChannelTypes.GUILD_STAGE_VOICE]: Types.JSON.JSONStageChannel;
     [ChannelTypes.GUILD_DIRECTORY]: never;
-    [ChannelTypes.GUILD_FORUM]: JSONForumChannel;
-    [ChannelTypes.GUILD_MEDIA]: JSONMediaChannel;
+    [ChannelTypes.GUILD_FORUM]: Types.JSON.JSONForumChannel;
+    [ChannelTypes.GUILD_MEDIA]: Types.JSON.JSONMediaChannel;
 }
 /* eslint-enable @typescript-eslint/member-ordering */
 
@@ -596,7 +568,7 @@ export namespace Permissions {
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
-export const PermissionValueToName = Object.fromEntries(Object.entries(Permissions).map(([k, v]) => [String(v), k] as [string, string])) as ReverseMap<StringMap<typeof Permissions>>;
+export const PermissionValueToName = Object.fromEntries(Object.entries(Permissions).map(([k, v]) => [String(v), k] as [string, string])) as Types.Shared.ReverseMap<Types.Shared.StringMap<typeof Permissions>>;
 
 export const AllPermissions = Object.values(Permissions).reduce((a, b) => a | b, 0n);
 export const TextPermissions = [

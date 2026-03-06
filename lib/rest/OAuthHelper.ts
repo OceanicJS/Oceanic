@@ -1,29 +1,13 @@
 /** @module OAuthHelper */
 import type RESTManager from "./RESTManager";
+import type * as Types from "../types/namespaced";
 import OAuthApplication from "../structures/OAuthApplication";
-import type {
-    AuthorizationInformation,
-    Connection,
-    OAuthURLOptions,
-    RawAuthorizationInformation,
-    RawConnection,
-    RevokeTokenOptions
-} from "../types/oauth";
-import type { RawOAuthGuild, RESTMember } from "../types/guilds";
 import * as Routes from "../util/Routes";
 import PartialApplication from "../structures/PartialApplication";
 import Integration from "../structures/Integration";
 import Member from "../structures/Member";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
-import type {
-    AddMemberOptions,
-    RESTOAuthApplication,
-    RawOAuthUser,
-    RawRoleConnection,
-    RoleConnection,
-    UpdateUserApplicationRoleConnectionOptions
-} from "../types";
 import { BASE_URL } from "../Constants";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */
@@ -39,7 +23,7 @@ export default class OAuthHelper {
      * Construct an oauth authorization url.
      * @param options The options to construct the url with.
      */
-    static constructURL(options: OAuthURLOptions): string {
+    static constructURL(options: Types.OAuth.OAuthURLOptions): string {
         const params: Array<string> = [
             `client_id=${options.clientID}`,
             `response_type=${options.responseType ?? "code"}`,
@@ -69,7 +53,7 @@ export default class OAuthHelper {
         return `${BASE_URL}${Routes.OAUTH_AUTHORIZE}?${params.join("&")}`;
     }
 
-    async addGuildMember(guildID: string, userID: string, options?: Omit<AddMemberOptions, "accessToken">): Promise<Member | undefined> {
+    async addGuildMember(guildID: string, userID: string, options?: Omit<Types.Guilds.AddMemberOptions, "accessToken">): Promise<Member | undefined> {
         return this._manager.guilds.addMember(guildID, userID, { accessToken: this._token.split(" ").slice(1).join(" "), ...options });
     }
 
@@ -77,7 +61,7 @@ export default class OAuthHelper {
      * Get the current OAuth2 application's information.
      */
     async getApplication(): Promise<OAuthApplication> {
-        return this._manager.request<RESTOAuthApplication>({
+        return this._manager.request<Types.Applications.RESTOAuthApplication>({
             method: "GET",
             path:   Routes.OAUTH_APPLICATION,
             auth:   this._token
@@ -87,8 +71,8 @@ export default class OAuthHelper {
     /**
      * Get information about the current authorization.
      */
-    async getCurrentAuthorizationInformation(): Promise<AuthorizationInformation> {
-        return this._manager.request<RawAuthorizationInformation>({
+    async getCurrentAuthorizationInformation(): Promise<Types.OAuth.AuthorizationInformation> {
+        return this._manager.request<Types.OAuth.RawAuthorizationInformation>({
             method: "GET",
             path:   Routes.OAUTH_INFO,
             auth:   this._token
@@ -105,8 +89,8 @@ export default class OAuthHelper {
      *
      * Note: Requires the `connections` scope.
      */
-    async getCurrentConnections(): Promise<Array<Connection>> {
-        return this._manager.request<Array<RawConnection>>({
+    async getCurrentConnections(): Promise<Array<Types.OAuth.Connection>> {
+        return this._manager.request<Array<Types.OAuth.RawConnection>>({
             method: "GET",
             path:   Routes.OAUTH_CONNECTIONS,
             auth:   this._token
@@ -131,7 +115,7 @@ export default class OAuthHelper {
      * @param guild the ID of the guild
      */
     async getCurrentGuildMember(guild: string): Promise<Member> {
-        return this._manager.request<RESTMember>({
+        return this._manager.request<Types.Guilds.RESTMember>({
             method: "GET",
             path:   Routes.OAUTH_GUILD_MEMBER(guild),
             auth:   this._token
@@ -142,7 +126,7 @@ export default class OAuthHelper {
      * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
      */
     async getCurrentGuilds(): Promise<Array<OAuthGuild>> {
-        return this._manager.request<Array<RawOAuthGuild>>({
+        return this._manager.request<Array<Types.Guilds.RawOAuthGuild>>({
             method: "GET",
             path:   Routes.OAUTH_GUILDS,
             auth:   this._token
@@ -155,7 +139,7 @@ export default class OAuthHelper {
      * Note: This does not touch the client's cache in any way.
      */
     async getCurrentUser(): Promise<ExtendedUser> {
-        return this._manager.request<RawOAuthUser>({
+        return this._manager.request<Types.Users.RawOAuthUser>({
             method: "GET",
             path:   Routes.OAUTH_CURRENT_USER,
             auth:   this._token
@@ -167,7 +151,7 @@ export default class OAuthHelper {
      * Revoke the used access token.
      * @param options The options for revoking the token.
      */
-    async revokeToken(options: Omit<RevokeTokenOptions, "token">): Promise<void> {
+    async revokeToken(options: Omit<Types.OAuth.RevokeTokenOptions, "token">): Promise<void> {
         const form = new FormData();
         form.append("client_id", options.clientID);
         form.append("client_secret", options.clientSecret);
@@ -184,8 +168,8 @@ export default class OAuthHelper {
      * @param applicationID The ID of the application.
      * @param data The metadata to update.
      */
-    async updateRoleConnection(applicationID: string, data: UpdateUserApplicationRoleConnectionOptions): Promise<RoleConnection> {
-        return this._manager.request<RawRoleConnection>({
+    async updateRoleConnection(applicationID: string, data: Types.OAuth.UpdateUserApplicationRoleConnectionOptions): Promise<Types.OAuth.RoleConnection> {
+        return this._manager.request<Types.OAuth.RawRoleConnection>({
             method: "PUT",
             path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
             json:   {

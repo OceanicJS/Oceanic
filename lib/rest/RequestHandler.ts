@@ -3,10 +3,9 @@ import SequentialBucket from "./SequentialBucket";
 import DiscordRESTError from "./DiscordRESTError";
 import DiscordHTTPError from "./DiscordHTTPError";
 import type RESTManager from "./RESTManager";
+import type * as Types from "../types/namespaced";
 import { API_URL, RESTMethods, USER_AGENT, type RESTMethod } from "../Constants";
 import Base from "../structures/Base";
-import type { LatencyRef, RequestHandlerInstanceOptions, RequestOptions } from "../types/request-handler";
-import type { RESTOptions } from "../types/client";
 import { RateLimitedError } from "../util/Errors";
 
 /**
@@ -18,11 +17,11 @@ import { RateLimitedError } from "../util/Errors";
 export default class RequestHandler {
     private _manager: RESTManager;
     globalBlock = false;
-    latencyRef: LatencyRef;
-    options: RequestHandlerInstanceOptions;
+    latencyRef: Types.RequestHandler.LatencyRef;
+    options: Types.RequestHandler.RequestHandlerInstanceOptions;
     ratelimits: Record<string, SequentialBucket> = {};
     readyQueue: Array<() => void> = [];
-    constructor(manager: RESTManager, options: RESTOptions = {}) {
+    constructor(manager: RESTManager, options: Types.Client.RESTOptions = {}) {
         if (options && options.baseURL && options.baseURL.endsWith("/")) {
             options.baseURL = options.baseURL.slice(0, -1);
         }
@@ -84,7 +83,7 @@ export default class RequestHandler {
     }
 
     /** same as `request`, but with `auth` always set to `true`. */
-    async authRequest<T = unknown>(options: Omit<RequestOptions, "auth">): Promise<T> {
+    async authRequest<T = unknown>(options: Omit<Types.RequestHandler.RequestOptions, "auth">): Promise<T> {
         return this.request<T>({
             ...options,
             auth: true
@@ -95,7 +94,7 @@ export default class RequestHandler {
      * Make a request. `null` will be returned if the request results in a `204 NO CONTENT`.
      * @param options The options for the request.
      */
-    async request<T = unknown>(options: RequestOptions): Promise<T> {
+    async request<T = unknown>(options: Types.RequestHandler.RequestOptions): Promise<T> {
         options.method = options.method.toUpperCase() as RESTMethod;
         if (!RESTMethods.includes(options.method)) {
             throw new TypeError(`Invalid method "${options.method}.`);

@@ -1,23 +1,17 @@
 /** @module Client */
+import type * as Types from "./types/namespaced";
 import RESTManager from "./rest/RESTManager";
 import TypedCollection from "./util/TypedCollection";
 import PrivateChannel from "./structures/PrivateChannel";
 import GroupChannel from "./structures/GroupChannel";
 import User from "./structures/User";
 import Guild from "./structures/Guild";
-import type { AnyChannel, RawGroupChannel, RawPrivateChannel } from "./types/channels";
-import type { RawGuild, RawUnavailableGuild } from "./types/guilds";
-import type { RawUser } from "./types/users";
-import type {  ClientInstanceOptions, ClientOptions, CollectionLimitsOptions } from "./types/client";
 import TypedEmitter from "./util/TypedEmitter";
 import type ClientApplication from "./structures/ClientApplication";
 import ShardManager from "./gateway/ShardManager";
-import type { BotActivity, SendStatuses } from "./types/gateway";
 import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
-import type { ClientEvents } from "./types/events";
-import type { JoinVoiceChannelOptions } from "./types/voice";
 import { DependencyError, UncachedError } from "./util/Errors";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
@@ -33,32 +27,32 @@ try {
 } catch {}
 /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
-/** The primary class for interfacing with Discord. See {@link ClientEvents | Client Events} for a list of events. */
-export default class Client<E extends ClientEvents = ClientEvents> extends TypedEmitter<E> {
+/** The primary class for interfacing with Discord. See {@link Types.Events.ClientEvents | Client Events} for a list of events. */
+export default class Client<E extends Types.Events.ClientEvents = Types.Events.ClientEvents> extends TypedEmitter<E> {
     private _application?: ClientApplication;
     private _user?: ExtendedUser;
     /** A key-value mapping of channel IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#channels | channels collection}. */
     channelGuildMap = new Map<string, string>();
-    groupChannels: TypedCollection<RawGroupChannel, GroupChannel>;
+    groupChannels: TypedCollection<Types.Channels.RawGroupChannel, GroupChannel>;
     guildShardMap = new Map<string, number>();
-    guilds: TypedCollection<RawGuild, Guild, [rest?: boolean]>;
-    options: ClientInstanceOptions;
-    privateChannels: TypedCollection<RawPrivateChannel, PrivateChannel>;
+    guilds: TypedCollection<Types.Guilds.RawGuild, Guild, [rest?: boolean]>;
+    options: Types.Client.ClientInstanceOptions;
+    privateChannels: TypedCollection<Types.Channels.RawPrivateChannel, PrivateChannel>;
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
     startTime = 0;
     /** A key-value mapping of thread IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#threads | threads collection}. */
     threadGuildMap = new Map<string, string>();
-    unavailableGuilds: TypedCollection<RawUnavailableGuild, UnavailableGuild>;
-    users: TypedCollection<RawUser, User>;
+    unavailableGuilds: TypedCollection<Types.Guilds.RawUnavailableGuild, UnavailableGuild>;
+    users: TypedCollection<Types.Users.RawUser, User>;
     util: Util;
     voiceAdapters = new Map<string, DiscordGatewayAdapterLibraryMethods>();
     /**
      * @constructor
      * @param options The options to create the client with.
      */
-    constructor(options?: ClientOptions) {
+    constructor(options?: Types.Client.ClientOptions) {
         super();
         this.util = new Util(this);
         const disableCache = options?.disableCache === true || options?.disableCache === "no-warning";
@@ -84,7 +78,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
             users:               0,
             voiceMembers:        0,
             voiceStates:         0
-        } satisfies Required<CollectionLimitsOptions>;
+        } satisfies Required<Types.Client.CollectionLimitsOptions>;
         this.options = {
             allowedMentions: options?.allowedMentions ?? {
                 everyone:    false,
@@ -201,7 +195,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * @param status The status.
      * @param activities An array of activities.
      */
-    async editStatus(status: SendStatuses, activities: Array<BotActivity> = []): Promise<void>{
+    async editStatus(status: Types.Gateway.SendStatuses, activities: Array<Types.Gateway.BotActivity> = []): Promise<void>{
         for (const [,shard] of this.shards) await shard.editStatus(status, activities);
     }
 
@@ -209,7 +203,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * Get a channel from an ID. This will return undefined if the channel is not cached.
      * @param channelID The id of the channel.
      */
-    getChannel<T extends AnyChannel = AnyChannel>(channelID: string): T | undefined {
+    getChannel<T extends Types.Channels.AnyChannel = Types.Channels.AnyChannel>(channelID: string): T | undefined {
         if (this.channelGuildMap.has(channelID)) {
             return this.guilds.get(this.channelGuildMap.get(channelID)!)?.channels.get(channelID) as T;
         } else if (this.threadGuildMap.has(channelID)) {
@@ -242,7 +236,7 @@ export default class Client<E extends ClientEvents = ClientEvents> extends Typed
      * Join a voice channel.
      * @param options The options to join the channel with.
      * */
-    joinVoiceChannel(options: JoinVoiceChannelOptions): VoiceConnection {
+    joinVoiceChannel(options: Types.Voice.JoinVoiceChannelOptions): VoiceConnection {
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
