@@ -54,6 +54,7 @@ All compression options are mutually exclusive.
 * `erlpack` - Encoding (gateway, alternative to JSON)
 * `zstd-napi` - zstd compression (gateway)
 * `node:zlib` (node >=22.15.0, >=23.8.0) - zstd compression (gateway, faster than zstd-napi)
+* `@discordjs/voice` - voice, requires node >=22.12.0
 
 ## Links
 * [Examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples)
