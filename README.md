@@ -52,6 +52,8 @@ All compression options are mutually exclusive.
 * `pako` - zlib Compression (gateway)
 * `zlib-sync` - zlib Compression (gateway, faster than pako)
 * `erlpack` - Encoding (gateway, alternative to JSON)
+* `zstd-napi` - zstd compression (gateway)
+* `node:zlib` (node >=22.15.0, >=23.8.0) - zstd compression (gateway, faster than zstd-napi)
 
 ## Links
 * [Examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples)

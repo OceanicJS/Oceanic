@@ -27,7 +27,7 @@ interface GatewayOptions {
      * @note `true` is the same as `zlib-stream`. This behavior is deprecated.
      * @defaultValue false
      */
-    compress?: boolean | "zlib-stream"; // | "zstd-stream";
+    compress?: boolean | "zlib-stream" | "zstd-stream";
     /**
      * The concurrency for shard connections. If you don't know what this is, don't mess with it. Only bots in >150,000 servers can use any non-default value.
      * @defaultValue 1
@@ -164,7 +164,7 @@ export interface OverrideOptions {
 }
 
 export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence" | "dispatcher" | "compress">> {
-    compress: false | "zlib-stream"; // | "zstd-stream";
+    compress: false | "zlib-stream" | "zstd-stream";
     concurrency: number;
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
     dispatcher: DispatcherInstanceOptions;

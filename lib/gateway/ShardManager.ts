@@ -221,7 +221,7 @@ export default class ShardManager extends Collection<number, Shard> {
         if (url && this.options.override.appendQuery) {
             url += `?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
             if (this.options.compress) {
-                const type = /* this.options.compress === "zstd-stream" ? "zstd-stream" :  */"zlib-stream";
+                const type = this.options.compress === "zstd-stream" ? "zstd-stream" : "zlib-stream";
                 url += `&compress=${type}`;
             }
             this._gatewayURL = url;

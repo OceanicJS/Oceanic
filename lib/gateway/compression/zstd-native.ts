@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
 import Compression from "./base";
 import type Shard from "../Shard";
 import { GatewayError } from "../../util/Errors";
-import * as zstd from "zstd-napi";
+// @ts-ignore only in node >=22.15.0
+import { createZstdDecompress, type ZstdDecompress } from "node:zlib";
 
-export default class ZstdCompression extends Compression {
+export default class ZstdNativeCompression extends Compression {
     _decompressQueue: Promise<void>;
-    stream: zstd.DecompressStream;
+    stream: ZstdDecompress;
     constructor(shard: Shard) {
         super(shard);
         this._decompressQueue = Promise.resolve();
-        this.stream = new zstd.DecompressStream();
+        this.stream = createZstdDecompress({ chunkSize: 65535 });
+        // @ts-ignore only in node >=22.15.0
+        this.stream.on("error", err => {
+            this.shard.client.emit("error", new GatewayError(`zstd error: ${String(err)}`, 0));
+        });
     }
 
     async decompress(data: Buffer): Promise<Buffer | null> {
@@ -21,6 +27,7 @@ export default class ZstdCompression extends Compression {
             };
 
             this.stream.on("data", onData);
+            // @ts-ignore only in node >=22.15.0
             this.stream.write(data, "binary", error => {
                 this.stream.off("data", onData);
                 if (error) {

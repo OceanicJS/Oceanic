@@ -10,12 +10,13 @@ import type Member from "../structures/Member";
 import Base from "../structures/Base";
 import ExtendedUser from "../structures/ExtendedUser";
 import type Guild from "../structures/Guild";
-import { GatewayError, DependencyError, NotImplementedError } from "../util/Errors";
+import { GatewayError, DependencyError } from "../util/Errors";
 import ClientApplication from "../structures/ClientApplication";
 import type Soundboard from "../structures/Soundboard";
 import WebSocket, { type Data } from "ws";
 import { randomBytes } from "node:crypto";
 import { inspect } from "node:util";
+import zlib from "node:zlib";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access */
 // @ts-ignore
@@ -132,7 +133,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         }
         this.resumeURL = `${url}?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
         if (this.client.shards.options.compress) {
-            const type = /* this.client.shards.options.compress === "zstd-stream" ? "zstd-stream" :  */"zlib-stream";
+            const type = this.client.shards.options.compress === "zstd-stream" ? "zstd-stream" : "zlib-stream";
             this.resumeURL += `&compress=${type}`;
         }
         this.sessionID = data.session_id;
@@ -201,13 +202,20 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             const type = this.client.shards.options.compress;
             /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
             if (String(type) === "zstd-stream") {
-                throw new NotImplementedError("zstd-stream compression has been temporarily removed");
-                /* if (!this.client.util._isModuleInstalled("fzstd")) {
-                    throw new DependencyError("Cannot use zstd based compression without fzstd.");
+                if ("createZstdDecompress" in zlib) {
+                    this.client.emit("debug", "Initializing zstd-based compression with native zlib.");
+                    const ZstdNativeCompression = (require(`${__dirname}/compression/zstd-native`) as { default: new(shard: Shard) => Compression; }).default;
+                    this._compressor = new ZstdNativeCompression(this);
+                } else {
+                    const hasZstdNapi = this.client.util._isModuleInstalled("zstd-napi");
+                    if (hasZstdNapi) {
+                        this.client.emit("debug", "Initializing zstd-based compression with zstd-napi.");
+                        const ZstdCompression = (require(`${__dirname}/compression/zstd`) as { default: new(shard: Shard) => Compression; }).default;
+                        this._compressor = new ZstdCompression(this);
+                    } else {
+                        throw new DependencyError("Cannot use zstd based compression without native support (node >=22.15.0, >=23.8.0) or zstd-napi.");
+                    }
                 }
-                this.client.emit("debug", "Initializing zstd-based compression with fzstd.");
-                const ZstdCompression = (require(`${__dirname}/compression/zstd`) as { default: new(shard: Shard) => Compression; }).default;
-                this._compressor = new ZstdCompression(this); */
             } else  if (type === "zlib-stream") {
                 const hasZlibSync = this.client.util._isModuleInstalled("zlib-sync");
                 const hasPako = this.client.util._isModuleInstalled("pako");
