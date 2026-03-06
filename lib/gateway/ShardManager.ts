@@ -166,7 +166,8 @@ export default class ShardManager extends Collection<number, Shard> {
     }
 
     private _ready(id: number): void {
-        const rateLimitKey = (id % this.options.concurrency) ?? 0;
+        const mod = id % this.options.concurrency;
+        const rateLimitKey = isNaN(mod) ? 0 : mod;
         this._buckets[rateLimitKey] = Date.now();
 
         this.tryConnect();
@@ -333,7 +334,8 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         for (const shard of this._connectQueue) {
-            const rateLimitKey = (shard.id % this.options.concurrency) ?? 0;
+            const mod = shard.id % this.options.concurrency;
+            const rateLimitKey = isNaN(mod) ? 0 : mod;
             const lastConnect = this._buckets[rateLimitKey] ?? 0;
             if (!shard.sessionID && Date.now() - lastConnect < this.options.override.timeBetweenShardConnects) {
                 continue;

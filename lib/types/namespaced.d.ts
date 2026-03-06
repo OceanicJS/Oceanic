@@ -11,6 +11,7 @@ export * as Guilds from "./guilds";
 export * as Interactions from "./interactions";
 export * as Invites from "./invites";
 export * as JSON from "./json";
+export * as Lobbies from "./lobbies";
 export * as Misc from "./misc";
 export * as OAuth from "./oauth";
 export * as RequestHandler from "./request-handler";

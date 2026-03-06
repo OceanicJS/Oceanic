@@ -1,14 +1,13 @@
 /** @module LobbyMember */
 import Base from "./Base";
 import type Client from "../Client";
-import type { RawLobbyMember } from "../types/lobbies";
-import type { JSONLobbyMember } from "../types/json";
+import type * as Types from "../types/namespaced";
 
 export default class LobbyMember extends Base {
     flags?: number;
     lobbyID: string;
     metadata?: Record<string, string> | null;
-    constructor(data: RawLobbyMember, client: Client, lobbyID: string) {
+    constructor(data: Types.Lobbies.RawLobbyMember, client: Client, lobbyID: string) {
         super(data.id, client);
         this.flags = data.flags;
         this.lobbyID = lobbyID;
@@ -22,7 +21,7 @@ export default class LobbyMember extends Base {
         return this.client.rest.lobbies.removeMember(this.lobbyID, this.id);
     }
 
-    override toJSON(): JSONLobbyMember {
+    override toJSON(): Types.JSON.JSONLobbyMember {
         return {
             ...super.toJSON(),
             flags:    this.flags,

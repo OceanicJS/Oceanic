@@ -5,7 +5,7 @@ import User from "./User";
 import Team from "./Team";
 import SKU from "./SKU";
 import type Client from "../Client";
-import type { InstallParams } from "../types/oauth";
+import type * as Types from "../types/namespaced";
 import type {
     ApplicationDiscoverabilityState,
     ApplicationEventWebhookEventType,
@@ -25,14 +25,6 @@ import type {
     StoreApplicationState
 } from "../Constants";
 import * as Routes from "../util/Routes";
-import type {
-    ApplicationCompany,
-    ApplicationExecutable,
-    EmbeddedActivityConfig,
-    EmbeddedActivityPlatformConfig,
-    IntegrationTypesConfig,
-    RawApplication
-} from "../types";
 
 /** Represents an application. */
 export default class Application extends ClientApplication {
@@ -68,13 +60,13 @@ export default class Application extends ClientApplication {
     /** The description of the application. */
     description: string;
     /** The companies that developed the application */
-    developers?: Array<ApplicationCompany>;
+    developers?: Array<Types.Applications.ApplicationCompany>;
     /** The state of this application's discoverability. */
     discoverabilityState?: ApplicationDiscoverabilityState;
     /** The { @link Constants~ApplicationDiscoveryEligibilityFlags | flags } for this application's discovery eligibility. */
     discoveryEligibilityFlags?: number;
     /** The configuration for the application's embedded activity */
-    embeddedActivityConfig?: EmbeddedActivityConfig;
+    embeddedActivityConfig?: Types.Applications.EmbeddedActivityConfig;
     /** The ID of the EULA required to play the application's game */
     eulaID?: string;
     /** If webhook events are enabled for the app. */
@@ -84,7 +76,7 @@ export default class Application extends ClientApplication {
     /** Event webhooks URL for the app to receive webhook events. */
     eventWebhooksURL?: string | null;
     /** The unique executables of the application's game */
-    executables?: Array<ApplicationExecutable>;
+    executables?: Array<Types.Applications.ApplicationExecutable>;
     /** The explicit content filter for this application. */
     explicitContentFilter?: ApplicationExplicitContentFilterLevel;
     // flags is in the parent class
@@ -97,7 +89,7 @@ export default class Application extends ClientApplication {
     /** The icon hash of the application. */
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */
-    installParams?: InstallParams;
+    installParams?: Types.OAuth.InstallParams;
     /** Whether only the application owner can add the integration */
     integrationPublic?: boolean;
     /** Whether the integration will only be added upon completion of a full OAuth2 token exchange */
@@ -105,7 +97,7 @@ export default class Application extends ClientApplication {
     /** The install types available for this application. */
     integrationTypes?: Array<ApplicationIntegrationTypes>;
     /** The configs for the install types available for this application. */
-    integrationTypesConfig?: IntegrationTypesConfig;
+    integrationTypesConfig?: Types.Applications.IntegrationTypesConfig;
     /** This applications interaction endpoint url, if any. */
     interactionsEndpointURL?: string | null;
     /** The event types that will be recieved like http interactions, if interactionsVersion is 2. */
@@ -147,7 +139,7 @@ export default class Application extends ClientApplication {
     /** A URL to this application's privacy policy. */
     privacyPolicyURL?: string;
     /** The companies that published the application*/
-    publishers?: Array<ApplicationCompany>;
+    publishers?: Array<Types.Applications.ApplicationCompany>;
     /** The redirect URIs for this application. */
     redirectURIs?: Array<string>;
     /** This application's role connections verification url, if any. */
@@ -176,7 +168,7 @@ export default class Application extends ClientApplication {
     verificationState?: ApplicationVerificationState;
     /** The bot's hex encoded public key. */
     verifyKey: string;
-    constructor(data: RawApplication, client: Client) {
+    constructor(data: Types.Applications.RawApplication, client: Client) {
         super(data, client);
         this.description = data.description;
         this.hook = data.hook;
@@ -191,7 +183,7 @@ export default class Application extends ClientApplication {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawApplication>): void {
+    protected override update(data: Partial<Types.Applications.RawApplication>): void {
         super.update(data);
         if (data.aliases !== undefined) this.aliases = data.aliases;
         if (data.approved_consoles !== undefined) this.approvedConsoles = data.approved_consoles;
@@ -226,7 +218,7 @@ export default class Application extends ClientApplication {
                         releasePhase:          value.release_phase
                     };
                     return obj;
-                }, {} as Record<EmbeddedActivityPlatformType, EmbeddedActivityPlatformConfig>),
+                }, {} as Record<EmbeddedActivityPlatformType, Types.Applications.EmbeddedActivityPlatformConfig>),
                 defaultOrientationLockState:       data.embedded_activity_config.default_orientation_lock_state,
                 displaysAdvertisements:            data.embedded_activity_config.displays_advertisements,
                 freePeriodEndsAt:                  data.embedded_activity_config.free_period_ends_at ? new Date(data.embedded_activity_config.free_period_ends_at) : null,
@@ -267,7 +259,7 @@ export default class Application extends ClientApplication {
                 oauth2InstallParams: value.oauth2_install_params
             };
             return obj;
-        }, {} as IntegrationTypesConfig);
+        }, {} as Types.Applications.IntegrationTypesConfig);
         if (data.interactions_endpoint_url !== undefined) this.interactionsEndpointURL = data.interactions_endpoint_url;
         if (data.interactions_event_types !== undefined) this.interactionsEventTypes = data.interactions_event_types;
         if (data.interactions_version !== undefined) this.interactionsVersion = data.interactions_version;

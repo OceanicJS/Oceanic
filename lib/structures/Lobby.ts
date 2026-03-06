@@ -3,16 +3,14 @@ import Base from "./Base";
 import GuildChannel from "./GuildChannel";
 import LobbyMember from "./LobbyMember";
 import type Client from "../Client";
-import type { AddLobbyMemberOptions, EditLobbyOptions, RawLobby } from "../types/lobbies";
-import type { Uncached } from "../types/shared";
-import type { JSONLobby } from "../types/json";
+import type * as Types from "../types/namespaced";
 
 export default class Lobby extends Base {
     applicationID: string;
-    linkedChannel?: GuildChannel | Uncached;
+    linkedChannel?: GuildChannel | Types.Shared.Uncached;
     members: Array<LobbyMember>;
     metadata?: Record<string, string> | null;
-    constructor(data: RawLobby, client: Client) {
+    constructor(data: Types.Lobbies.RawLobby, client: Client) {
         super(data.id, client);
         this.applicationID = data.application_id;
         this.linkedChannel = data.linked_channel ? client.util.updateChannel(data.linked_channel) : undefined;
@@ -25,7 +23,7 @@ export default class Lobby extends Base {
      * @param userID The ID of the user to add to the lobby.
      * @param options The options for adding the member to the lobby.
      */
-    async addMember(userID: string, options?: AddLobbyMemberOptions): Promise<LobbyMember> {
+    async addMember(userID: string, options?: Types.Lobbies.AddLobbyMemberOptions): Promise<LobbyMember> {
         return this.client.rest.lobbies.addMember(this.id, userID, options);
     }
 
@@ -38,7 +36,7 @@ export default class Lobby extends Base {
      * Edit this lobby.
      * @param options The options for editing the lobby.
      */
-    async edit(options: EditLobbyOptions): Promise<Lobby> {
+    async edit(options: Types.Lobbies.EditLobbyOptions): Promise<Lobby> {
         return this.client.rest.lobbies.edit(this.id, options);
     }
 
@@ -67,7 +65,7 @@ export default class Lobby extends Base {
         return this.client.rest.lobbies.removeMember(this.id, userID);
     }
 
-    override toJSON(): JSONLobby {
+    override toJSON(): Types.JSON.JSONLobby {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
