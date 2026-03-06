@@ -2,8 +2,8 @@
 import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
+import type * as Types from "../types/namespaced";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import type { JSONOAuthGuild, RawOAuthGuild } from "../types";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
 
@@ -26,7 +26,7 @@ export default class OAuthGuild extends Base {
     owner: boolean;
     /** The permissions of the user in this guild. */
     permissions: Permission;
-    constructor(data: RawOAuthGuild, client: Client) {
+    constructor(data: Types.Guilds.RawOAuthGuild, client: Client) {
         super(data.id, client);
         this.approximateMemberCount = data.approximate_member_count;
         this.approximatePresenceCount = data.approximate_presence_count;
@@ -61,7 +61,7 @@ export default class OAuthGuild extends Base {
         return this.icon === null ? null : this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.icon), format, size);
     }
 
-    override toJSON(): JSONOAuthGuild {
+    override toJSON(): Types.JSON.JSONOAuthGuild {
         return {
             ...super.toJSON(),
             approximateMemberCount:   this.approximateMemberCount,

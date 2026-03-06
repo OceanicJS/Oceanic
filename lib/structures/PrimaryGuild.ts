@@ -1,9 +1,8 @@
 /** @module Clan */
+import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
-import type { RawClan } from "../types/users";
-import type { JSONPrimaryGuild } from "../types";
 
 /** Represents a primary guild. */
 export default class PrimaryGuild {
@@ -14,7 +13,7 @@ export default class PrimaryGuild {
     identityGuildID: string | null;
     /** The tag of this clan, shown beside messages. */
     tag: string | null;
-    constructor(data: RawClan, client: Client) {
+    constructor(data: Types.Users.RawClan, client: Client) {
         Object.defineProperty(this, "client", {
             value:        client,
             enumerable:   false,
@@ -28,7 +27,7 @@ export default class PrimaryGuild {
         this.update(data);
     }
 
-    protected update(data: Partial<RawClan>): void {
+    protected update(data: Partial<Types.Users.RawClan>): void {
         if (data.badge !== undefined) {
             this.badge = data.badge;
         }
@@ -56,7 +55,7 @@ export default class PrimaryGuild {
         return this.client.util.formatImage(Routes.CLAN_ICON(this.identityGuildID, this.badge), format, size);
     }
 
-    toJSON(): JSONPrimaryGuild {
+    toJSON(): Types.JSON.JSONPrimaryGuild {
         return {
             badge:           this.badge,
             identityEnabled: this.identityEnabled,

@@ -4,13 +4,12 @@ import type TextChannel from "./TextChannel";
 import Permission from "./Permission";
 import Channel from "./Channel";
 import type ForumChannel from "./ForumChannel";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { RawInteractionResolvedChannel, ThreadMetadata, PrivateThreadMetadata } from "../types/channels";
-import type { AnyImplementedChannel, ImplementedChannels } from "../types";
 
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
-    private _cachedCompleteChannel?: AnyImplementedChannel;
+    private _cachedCompleteChannel?: Types.Channels.AnyImplementedChannel;
     private _cachedParent?: TextChannel | AnnouncementChannel | ForumChannel | null;
     /** The permissions the bot has in the channel. */
     appPermissions: Permission;
@@ -19,9 +18,9 @@ export default class InteractionResolvedChannel extends Channel {
     /** The ID of the parent of this channel, if this represents a thread. */
     parentID: string | null;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this channel, if this represents a thread. */
-    threadMetadata: ThreadMetadata | PrivateThreadMetadata | null;
-    declare type: ImplementedChannels;
-    constructor(data: RawInteractionResolvedChannel, client: Client) {
+    threadMetadata: Types.Channels.ThreadMetadata | Types.Channels.PrivateThreadMetadata | null;
+    declare type: Types.Channels.ImplementedChannels;
+    constructor(data: Types.Channels.RawInteractionResolvedChannel, client: Client) {
         super(data, client);
         this.appPermissions = new Permission(data.permissions ?? "0");
         this.name = data.name;
@@ -37,7 +36,7 @@ export default class InteractionResolvedChannel extends Channel {
     }
 
     /** The complete channel this channel option represents, if it's cached. */
-    get completeChannel(): AnyImplementedChannel | undefined {
+    get completeChannel(): Types.Channels.AnyImplementedChannel | undefined {
         return this._cachedCompleteChannel ??= this.client.getChannel(this.id);
     }
 

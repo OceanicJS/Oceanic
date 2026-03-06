@@ -1,8 +1,7 @@
 /** @module ExtendedUser */
 import User from "./User";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { EditSelfUserOptions, RawOAuthUser } from "../types/users";
-import type { JSONExtendedUser } from "../types/json";
 
 /** Represents the currently authenticated user. */
 export default class ExtendedUser extends User {
@@ -16,7 +15,7 @@ export default class ExtendedUser extends User {
     mfaEnabled: boolean;
     /** If this user's email is verified. (always true for bots) */
     verified: boolean;
-    constructor(data: RawOAuthUser, client: Client) {
+    constructor(data: Types.Users.RawOAuthUser, client: Client) {
         super(data, client);
         this.email = data.email;
         this.flags = data.flags;
@@ -25,7 +24,7 @@ export default class ExtendedUser extends User {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawOAuthUser>): void {
+    protected override update(data: Partial<Types.Users.RawOAuthUser>): void {
         super.update(data);
         if (data.email !== undefined) {
             this.email = data.email;
@@ -42,11 +41,11 @@ export default class ExtendedUser extends User {
      * Modify this user.
      * @param options The options for editing the user.
      */
-    async edit(options: EditSelfUserOptions): Promise<ExtendedUser> {
+    async edit(options: Types.Users.EditSelfUserOptions): Promise<ExtendedUser> {
         return this.client.rest.users.editSelf(options);
     }
 
-    override toJSON(): JSONExtendedUser {
+    override toJSON(): Types.JSON.JSONExtendedUser {
         return {
             ...super.toJSON(),
             email:      this.email,

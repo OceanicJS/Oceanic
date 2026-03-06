@@ -3,18 +3,9 @@ import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
 import type ClientApplication from "./ClientApplication";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import { ApplicationCommandTypes, type InteractionContextTypes, type ApplicationIntegrationTypes, type EntryPointCommandHandlerTypes } from "../Constants";
-import type {
-    ApplicationCommandOptionConversion,
-    ApplicationCommandOptions,
-    EditApplicationCommandPermissionsOptions,
-    LocaleMap,
-    RawApplicationCommand,
-    RESTGuildApplicationCommandPermissions,
-    TypeToEdit
-} from "../types/applications";
-import type { JSONApplicationCommand } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents an application command. */
@@ -31,7 +22,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** The description of this command. Empty string for non `CHAT_INPUT` commands. */
     description: T extends ApplicationCommandTypes.CHAT_INPUT ? string : "";
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
-    descriptionLocalizations?: LocaleMap | null;
+    descriptionLocalizations?: Types.Applications.LocaleMap | null;
     /** The description of this application command in the requested locale. */
     descriptionLocalized?: string;
     /** If this command can be used in direct messages (global commands only). */
@@ -45,18 +36,18 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /** The name of this command. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
-    nameLocalizations?: LocaleMap | null;
+    nameLocalizations?: Types.Applications.LocaleMap | null;
     /** The description of this application command in the requested locale. */
     nameLocalized?: string;
     /** Whether the command is age restricted. */
     nsfw?: boolean;
     /** The options on this command. Only valid for `CHAT_INPUT`. */
-    options?: Array<ApplicationCommandOptions>;
+    options?: Array<Types.Applications.ApplicationCommandOptions>;
     /** The [type](https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-types) of this command. */
     type: T;
     /** Autoincrementing version identifier updated during substantial record changes. */
     version: string;
-    constructor(data: RawApplicationCommand, client: Client) {
+    constructor(data: Types.Applications.RawApplicationCommand, client: Client) {
         super(data.id, client);
         this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
         this.applicationID = data.application_id;
@@ -103,7 +94,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Edit this command.
      * @param options The options for editing the command.
      */
-    async edit(options: TypeToEdit<T>): Promise<ApplicationCommandOptionConversion<TypeToEdit<T>>> {
+    async edit(options: Types.Applications.TypeToEdit<T>): Promise<Types.Applications.ApplicationCommandOptionConversion<Types.Applications.TypeToEdit<T>>> {
         return this.guildID ? this.client.rest.applications.editGuildCommand(this.applicationID, this.guildID, this.id, options) : this.client.rest.applications.editGlobalCommand(this.applicationID, this.id, options);
     }
 
@@ -111,7 +102,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * Edit this command's permissions (guild commands only). This requires a bearer token with the `applications.commands.permissions.update` scope.
      * @param options The options for editing the permissions.
      */
-    async editGuildCommandPermissions(options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
+    async editGuildCommandPermissions(options: Types.Applications.EditApplicationCommandPermissionsOptions): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         if (!this.guildID) {
             throw new TypeError("editGuildCommandPermissions cannot be used on global commands.");
         }
@@ -121,7 +112,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     /**
      * Get this command's permissions (guild commands only).
      */
-    async getGuildPermission(): Promise<RESTGuildApplicationCommandPermissions> {
+    async getGuildPermission(): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         if (!this.guildID) {
             throw new TypeError("getGuildPermission cannot be used on global commands.");
         }
@@ -140,7 +131,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         return `</${text}:${this.id}>`;
     }
 
-    override toJSON(): JSONApplicationCommand {
+    override toJSON(): Types.JSON.JSONApplicationCommand {
         return {
             ...super.toJSON(),
             applicationID:            this.applicationID,

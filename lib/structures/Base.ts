@@ -1,6 +1,6 @@
 /** @module Base */
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { JSONBase } from "../types/json";
 import { inspect } from "node:util";
 
 const DISCORD_EPOCH = 1420070400000n;
@@ -55,7 +55,7 @@ export default abstract class Base {
         return copy;
     }
 
-    toJSON(): JSONBase{
+    toJSON(): Types.JSON.JSONBase{
         return {
             createdAt: this.createdAt.getTime(),
             id:        this.id

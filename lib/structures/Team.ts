@@ -1,9 +1,8 @@
 /** @module Team */
 import Base from "./Base";
 import type User from "./User";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { RawTeam, TeamMember, TeamPayoutAccount } from "../types/applications";
-import type { JSONTeam } from "../types/json";
 import type { TeamPayoutAccountStatus } from "../Constants";
 
 /** Represents an OAuth team. */
@@ -11,7 +10,7 @@ export default class Team extends Base {
     /** The icon hash of this team. */
     icon: string | null;
     /** The members of this team. */
-    members: Array<TeamMember>;
+    members: Array<Types.Applications.TeamMember>;
     /** The name of this team. */
     name: string;
     /** The owner of this team. */
@@ -21,10 +20,10 @@ export default class Team extends Base {
     /** The status of the team's primary payout account */
     payoutAccountStatus?: TeamPayoutAccountStatus | null;
     /** The statuses of the team's payout accounts */
-    payoutAccountStatuses?: Array<TeamPayoutAccount>;
+    payoutAccountStatuses?: Array<Types.Applications.TeamPayoutAccount>;
     /** The ID of the team's Stripe Connect account */
     stripeConnectAccountID?: string;
-    constructor(data: RawTeam, client: Client) {
+    constructor(data: Types.Applications.RawTeam, client: Client) {
         super(data.id, client);
         this.icon = null;
         this.members = [];
@@ -37,7 +36,7 @@ export default class Team extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawTeam>): void {
+    protected override update(data: Partial<Types.Applications.RawTeam>): void {
         if (data.icon !== undefined) {
             this.icon = data.icon;
         }
@@ -77,7 +76,7 @@ export default class Team extends Base {
         }
     }
 
-    override toJSON(): JSONTeam {
+    override toJSON(): Types.JSON.JSONTeam {
         return {
             ...super.toJSON(),
             icon:    this.icon,

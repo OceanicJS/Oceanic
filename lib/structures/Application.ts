@@ -25,7 +25,6 @@ import type {
     StoreApplicationState
 } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { JSONApplication } from "../types/json";
 import type {
     ApplicationCompany,
     ApplicationExecutable,
@@ -324,7 +323,7 @@ export default class Application extends ClientApplication {
         return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.id, this.icon), format, size);
     }
 
-    override toJSON(): JSONApplication {
+    override toJSON(): Types.JSON.JSONApplication {
         return {
             ...super.toJSON(),
             aliases:                           this.aliases,

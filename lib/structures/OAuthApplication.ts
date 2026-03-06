@@ -3,12 +3,10 @@ import type User from "./User";
 import Team from "./Team";
 import type Guild from "./Guild";
 import Base from "./Base";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { InstallParams } from "../types/oauth";
-import type { IntegrationTypesConfig, RESTOAuthApplication } from "../types/applications";
 import type { ApplicationIntegrationTypes, ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { JSONOAuthApplication } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents an oauth application. */
@@ -31,11 +29,11 @@ export default class OAuthApplication extends Base {
     /** The icon hash of the application. */
     icon: string | null;
     /** Settings for this application's in-app authorization link, if enabled. */
-    installParams?: InstallParams;
+    installParams?: Types.OAuth.InstallParams;
     /** The install types available for this application. */
     integrationTypes: Array<ApplicationIntegrationTypes>;
     /** The configs for the install types available for this application. */
-    integrationTypesConfig: IntegrationTypesConfig;
+    integrationTypesConfig: Types.Applications.IntegrationTypesConfig;
     /** The name of the application. */
     name: string;
     /** The owner of this application. */
@@ -62,7 +60,7 @@ export default class OAuthApplication extends Base {
     type: number | null;
     /** The bot's hex encoded public key. */
     verifyKey: string;
-    constructor(data: RESTOAuthApplication, client: Client) {
+    constructor(data: Types.Applications.RESTOAuthApplication, client: Client) {
         super(data.id, client);
         this.botPublic = !!data.bot_public;
         this.botRequireCodeGrant = !!data.bot_require_code_grant;
@@ -83,7 +81,7 @@ export default class OAuthApplication extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RESTOAuthApplication>): void {
+    protected override update(data: Partial<Types.Applications.RESTOAuthApplication>): void {
         super.update(data);
         if (data.bot_public !== undefined) {
             this.botPublic = data.bot_public;
@@ -192,7 +190,7 @@ export default class OAuthApplication extends Base {
         return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_ICON(this.id, this.icon), format, size);
     }
 
-    override toJSON(): JSONOAuthApplication {
+    override toJSON(): Types.JSON.JSONOAuthApplication {
         return {
             ...super.toJSON(),
             botPublic:              this.botPublic,

@@ -1,33 +1,24 @@
 /** @module TextableChannel */
 import TextableChannel from "./TextableChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
+import type * as Types from "../types/namespaced";
 import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
 import type Client from "../Client";
-import type { RawAnnouncementChannel, RawTextChannel } from "../types/channels";
-import type {
-    AnyTextableGuildChannel,
-    AnyThreadChannel,
-    ArchivedThreads,
-    GetArchivedThreadsOptions,
-    JSONThreadableChannel,
-    StartThreadFromMessageOptions,
-    StartThreadWithoutMessageOptions
-} from "../types";
 import Collection from "../util/Collection";
 
 /** Represents a guild textable channel. */
-export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyTextableGuildChannel, TH extends AnyThreadChannel = AnyThreadChannel> extends TextableChannel<TC> {
+export default class ThreadableChannel<TC extends Types.Channels.AnyTextableGuildChannel = Types.Channels.AnyTextableGuildChannel, TH extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel> extends TextableChannel<TC> {
     /** The default auto archive duration for threads created in this channel. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     /** The threads in this channel. */
     declare type: ChannelTypes.GUILD_TEXT | ChannelTypes.GUILD_ANNOUNCEMENT;
-    constructor(data: RawTextChannel | RawAnnouncementChannel, client: Client) {
+    constructor(data: Types.Channels.RawTextChannel | Types.Channels.RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         this.update(data);
     }
 
-    protected override update(data: Partial<RawTextChannel | RawAnnouncementChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawTextChannel | Types.Channels.RawAnnouncementChannel>): void {
         super.update(data);
         if (data.default_auto_archive_duration !== undefined) {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
@@ -43,7 +34,7 @@ export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyT
      * Get the public archived threads in this channel.
      * @param options The options for getting the public archived threads.
      */
-    async getPublicArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<Exclude<TH, PrivateThreadChannel>>> {
+    async getPublicArchivedThreads(options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<Exclude<TH, PrivateThreadChannel>>> {
         return this.client.rest.channels.getPublicArchivedThreads<Exclude<TH, PrivateThreadChannel>>(this.id, options);
     }
 
@@ -52,7 +43,7 @@ export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyT
      * @param messageID The ID of the message to create a thread from.
      * @param options The options for creating the thread.
      */
-    async startThreadFromMessage(messageID: string, options: StartThreadFromMessageOptions): Promise<TH> {
+    async startThreadFromMessage(messageID: string, options: Types.Channels.StartThreadFromMessageOptions): Promise<TH> {
         return this.client.rest.channels.startThreadFromMessage<Exclude<TH, PrivateThreadChannel>>(this.id, messageID, options);
     }
 
@@ -60,12 +51,12 @@ export default class ThreadableChannel<TC extends AnyTextableGuildChannel = AnyT
      * Create a thread without an existing message in this channel.
      * @param options The options for creating the thread.
      */
-    async startThreadWithoutMessage(options: StartThreadWithoutMessageOptions): Promise<TH> {
+    async startThreadWithoutMessage(options: Types.Channels.StartThreadWithoutMessageOptions): Promise<TH> {
         return this.client.rest.channels.startThreadWithoutMessage<TH>(this.id, options);
     }
 
 
-    override toJSON(): JSONThreadableChannel {
+    override toJSON(): Types.JSON.JSONThreadableChannel {
         return {
             ...super.toJSON(),
             defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,

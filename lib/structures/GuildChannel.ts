@@ -5,10 +5,9 @@ import type CategoryChannel from "./CategoryChannel";
 import type TextChannel from "./TextChannel";
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type ForumChannel from "./ForumChannel";
+import type * as Types from "../types/namespaced";
 import type { ChannelTypeMap } from "../Constants";
 import type Client from "../Client";
-import type { EditChannelOptionsMap, GuildChannels, RawGuildChannel } from "../types/channels";
-import type { JSONGuildChannel } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild channel. */
@@ -21,15 +20,15 @@ export default class GuildChannel extends Channel {
     name: string;
     /** The ID of the parent of this channel, if applicable. */
     parentID: string | null;
-    declare type: GuildChannels;
-    constructor(data: RawGuildChannel, client: Client) {
+    declare type: Types.Channels.GuildChannels;
+    constructor(data: Types.Channels.RawGuildChannel, client: Client) {
         super(data, client);
         this.guildID = data.guild_id;
         this.name = data.name;
         this.parentID = data.parent_id;
     }
 
-    protected override update(data: Partial<RawGuildChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawGuildChannel>): void {
         super.update(data);
         if (data.guild_id !== undefined) {
             this.guildID = data.guild_id;
@@ -73,12 +72,12 @@ export default class GuildChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditChannelOptionsMap[this["type"]]): Promise<this> {
+    async edit(options: Types.Channels.EditChannelOptionsMap[this["type"]]): Promise<this> {
         // edit is called down the chain
         return this.client.rest.channels.edit<ChannelTypeMap[this["type"]]>(this.id, options) as unknown as Promise<this>;
     }
 
-    override toJSON(): JSONGuildChannel {
+    override toJSON(): Types.JSON.JSONGuildChannel {
         return {
             ...super.toJSON(),
             guildID:  this.guildID,

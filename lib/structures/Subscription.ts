@@ -1,7 +1,7 @@
 import Base from "./Base";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { SubscriptionStatuses } from "../Constants";
-import type { RawSubscription } from "../types";
 
 export default class Subscription extends Base {
     /** When the subscription was canceled. */
@@ -22,7 +22,7 @@ export default class Subscription extends Base {
     status: SubscriptionStatuses;
     /**	ID of the user who is subscribed. */
     userID: string;
-    constructor(data: RawSubscription, client: Client) {
+    constructor(data: Types.Applications.RawSubscription, client: Client) {
         super(data.id, client);
         this.canceledAt = data.canceled_at ? new Date(data.canceled_at) : null;
         this.country = data.country;

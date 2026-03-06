@@ -1,10 +1,8 @@
 /** @module GuildTemplate */
 import type Guild from "./Guild";
 import type User from "./User";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
-import type { RawGuild } from "../types/guilds";
-import type { JSONGuildTemplate } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild template. */
@@ -24,14 +22,14 @@ export default class GuildTemplate {
     /** The name of this template. */
     name: string;
     /** A snapshot of the guild. */
-    serializedSourceGuild: Partial<RawGuild>;
+    serializedSourceGuild: Partial<Types.Guilds.RawGuild>;
     /** The ID of the source guild of this template. */
     sourceGuildID: string;
     /** When this template was last updated. */
     updatedAt: Date;
     /** The amount of times this template has been used. */
     usageCount: number;
-    constructor(data: RawGuildTemplate, client: Client) {
+    constructor(data: Types.GuildTemplate.RawGuildTemplate, client: Client) {
         Object.defineProperty(this, "client", {
             value:        client,
             enumerable:   false,
@@ -51,7 +49,7 @@ export default class GuildTemplate {
         this.update(data);
     }
 
-    protected update(data: Partial<RawGuildTemplate>): void {
+    protected update(data: Partial<Types.GuildTemplate.RawGuildTemplate>): void {
         if (data.description !== undefined) {
             this.description = data.description;
         }
@@ -104,7 +102,7 @@ export default class GuildTemplate {
      * Edit this template.
      * @param options The options for editing the template.
      */
-    async editTemplate(options: EditGuildTemplateOptions): Promise<GuildTemplate> {
+    async editTemplate(options: Types.GuildTemplate.EditGuildTemplateOptions): Promise<GuildTemplate> {
         return this.client.rest.guilds.editTemplate(this.sourceGuild.id, this.code, options);
     }
 
@@ -115,7 +113,7 @@ export default class GuildTemplate {
         return this.client.rest.guilds.syncTemplate(this.sourceGuild.id, this.code);
     }
 
-    toJSON(): JSONGuildTemplate {
+    toJSON(): Types.JSON.JSONGuildTemplate {
         return {
             code:                  this.code,
             createdAt:             this.createdAt.getTime(),

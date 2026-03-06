@@ -2,17 +2,16 @@
 import Base from "./Base";
 import type User from "./User";
 import type Guild from "./Guild";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { AutoModerationAction, EditAutoModerationRuleOptions, RawAutoModerationRule, TriggerMetadata } from "../types/auto-moderation";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
-import type { JSONAutoModerationRule } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
     private _cachedGuild?: Guild;
     /** The actions that will execute when this rule is triggered. */
-    actions: Array<AutoModerationAction>;
+    actions: Array<Types.AutoModeration.AutoModerationAction>;
     /** The creator of this rule. */
     creator?: User;
     /** The ID of the creator of this rule. */
@@ -30,10 +29,10 @@ export default class AutoModerationRule extends Base {
     /** The name of this rule */
     name: string;
     /** The metadata of this rule's trigger.  */
-    triggerMetadata: TriggerMetadata;
+    triggerMetadata: Types.AutoModeration.TriggerMetadata;
     /** This rule's [trigger type](https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object-trigger-types). */
     triggerType: AutoModerationTriggerTypes;
-    constructor(data: RawAutoModerationRule, client: Client) {
+    constructor(data: Types.AutoModeration.RawAutoModerationRule, client: Client) {
         super(data.id, client);
         this.actions = data.actions.map(a => ({
             metadata: {
@@ -63,7 +62,7 @@ export default class AutoModerationRule extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawAutoModerationRule>): void {
+    protected override update(data: Partial<Types.AutoModeration.RawAutoModerationRule>): void {
         if (data.actions !== undefined) {
             this.actions = data.actions.map(a => ({
                 metadata: {
@@ -125,11 +124,11 @@ export default class AutoModerationRule extends Base {
      * Edit this auto moderation rule.
      * @param options The options for editing the rule.
      */
-    async edit(options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
+    async edit(options: Types.AutoModeration.EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
         return this.client.rest.guilds.editAutoModerationRule(this.guildID, this.id, options);
     }
 
-    override toJSON(): JSONAutoModerationRule {
+    override toJSON(): Types.JSON.JSONAutoModerationRule {
         return {
             ...super.toJSON(),
             actions:         this.actions,

@@ -2,13 +2,11 @@
 import Channel from "./Channel";
 import User from "./User";
 import type ClientApplication from "./ClientApplication";
+import type * as Types from "../types/namespaced";
 import type { ChannelTypes, ImageFormat } from "../Constants";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
-import type { AddGroupRecipientOptions, EditGroupDMOptions, RawGroupChannel } from "../types/channels";
-import type { RawUser } from "../types/users";
 import TypedCollection from "../util/TypedCollection";
-import type { JSONGroupChannel } from "../types/json";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
@@ -31,9 +29,9 @@ export default class GroupChannel extends Channel {
     /** The ID of the owner of this group channel. */
     ownerID: string;
     /** The other recipients in this group channel. */
-    recipients: TypedCollection<RawUser, User>;
+    recipients: TypedCollection<Types.Users.RawUser, User>;
     declare type: ChannelTypes.GROUP_DM;
-    constructor(data: RawGroupChannel, client: Client) {
+    constructor(data: Types.Channels.RawGroupChannel, client: Client) {
         super(data, client);
         this.applicationID = data.application_id;
         this.icon = null;
@@ -50,7 +48,7 @@ export default class GroupChannel extends Channel {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawGroupChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawGroupChannel>): void {
         super.update(data);
         if (data.application_id !== undefined) {
             this.application = this.client["_application"] && this.client.application.id === data.application_id ? this.client.application : undefined;
@@ -91,7 +89,7 @@ export default class GroupChannel extends Channel {
      * Add a user to this channel.
      * @param options The options for adding the user.
      */
-    async addRecipient(options: AddGroupRecipientOptions): Promise<void> {
+    async addRecipient(options: Types.Channels.AddGroupRecipientOptions): Promise<void> {
         return this.client.rest.channels.addGroupRecipient(this.id, options);
     }
 
@@ -99,7 +97,7 @@ export default class GroupChannel extends Channel {
      * Edit this channel.
      * @param options The options for editing the channel.
      */
-    async edit(options: EditGroupDMOptions): Promise<this> {
+    async edit(options: Types.Channels.EditGroupDMOptions): Promise<this> {
         return this.client.rest.channels.edit<this>(this.id, options);
     }
 
@@ -127,7 +125,7 @@ export default class GroupChannel extends Channel {
         return this.client.rest.channels.sendTyping(this.id);
     }
 
-    override toJSON(): JSONGroupChannel {
+    override toJSON(): Types.JSON.JSONGroupChannel {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,

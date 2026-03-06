@@ -1,10 +1,9 @@
 /** @module PartialApplication */
 import Base from "./Base";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { RawPartialApplication } from "../types/applications";
-import type { JSONPartialApplication } from "../types/json";
 
 /** Represents a partial application. */
 export default class PartialApplication extends Base {
@@ -20,7 +19,7 @@ export default class PartialApplication extends Base {
     name: string;
     /** The bot's hex encoded public key. */
     verifyKey?: string;
-    constructor(data: RawPartialApplication, client: Client) {
+    constructor(data: Types.Applications.RawPartialApplication, client: Client) {
         super(data.id, client);
         this.description = data.description;
         this.icon = null;
@@ -29,7 +28,7 @@ export default class PartialApplication extends Base {
         this.update(data);
     }
 
-    protected override update(data: RawPartialApplication): void {
+    protected override update(data: Types.Applications.RawPartialApplication): void {
         if (data.bot_public !== undefined) {
             this.botPublic = data.bot_public;
         }
@@ -56,7 +55,7 @@ export default class PartialApplication extends Base {
         return this.icon === null ? null : this.client.util.formatImage(Routes.APPLICATION_COVER(this.id, this.icon), format, size);
     }
 
-    override toJSON(): JSONPartialApplication {
+    override toJSON(): Types.JSON.JSONPartialApplication {
         return {
             ...super.toJSON(),
             botPublic:           this.botPublic,

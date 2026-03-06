@@ -2,9 +2,8 @@
 import Base from "./Base";
 import Permission from "./Permission";
 import type Guild from "./Guild";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { RawRole, RoleTags, EditRoleOptions, RoleColors } from "../types/guilds";
-import type { JSONRole } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a role in a guild. */
@@ -16,7 +15,7 @@ export default class Role extends Base {
      */
     color: number;
     /** The colors of this role. */
-    colors: RoleColors;
+    colors: Types.Guilds.RoleColors;
     /** The {@link Constants~RoleFlags | flags } for this role. */
     flags: number;
     /** The id of the guild this role is in. */
@@ -36,10 +35,10 @@ export default class Role extends Base {
     /** The position of this role. */
     position: number;
     /** The [tags](https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure) of this role. */
-    tags!: RoleTags;
+    tags!: Types.Guilds.RoleTags;
     /** The unicode emoji of this role. */
     unicodeEmoji: string | null;
-    constructor(data: RawRole, client: Client, guildID: string) {
+    constructor(data: Types.Guilds.RawRole, client: Client, guildID: string) {
         super(data.id, client);
         this.color = data.color;
         this.colors = {
@@ -60,7 +59,7 @@ export default class Role extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawRole>): void {
+    protected override update(data: Partial<Types.Guilds.RawRole>): void {
         if (data.flags !== undefined) {
             this.flags = data.flags;
         }
@@ -141,11 +140,11 @@ export default class Role extends Base {
      * Edit this role.
      * @param options The options for editing the role.
      */
-    async edit(options: EditRoleOptions): Promise<Role> {
+    async edit(options: Types.Guilds.EditRoleOptions): Promise<Role> {
         return this.client.rest.guilds.editRole(this.guildID, this.id, options);
     }
 
-    override toJSON(): JSONRole {
+    override toJSON(): Types.JSON.JSONRole {
         return {
             ...super.toJSON(),
             color:        this.color,

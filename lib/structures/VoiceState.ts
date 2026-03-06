@@ -3,14 +3,12 @@ import Base from "./Base";
 import type Member from "./Member";
 import type Guild from "./Guild";
 import type User from "./User";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { RawVoiceState } from "../types/voice";
-import type { JSONVoiceState } from "../types/json";
 import { UncachedError } from "../util/Errors";
-import type { AnyVoiceChannel } from "../types";
 
 /** Represents a guild member's voice state. */
-export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> extends Base {
+export default class VoiceState<T extends Types.Channels.AnyVoiceChannel = Types.Channels.AnyVoiceChannel> extends Base {
     private _cachedChannel?: T | null;
     private _cachedGuild?: Guild;
     private _cachedMember?: Member;
@@ -39,7 +37,7 @@ export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> ext
     suppress: boolean;
     /** The ID of the user associated with this voice state. */
     userID: string;
-    constructor(data: RawVoiceState, client: Client) {
+    constructor(data: Types.Voice.RawVoiceState, client: Client) {
         super(data.user_id, client);
         this.channelID = data.channel_id;
         this.deaf = false;
@@ -55,7 +53,7 @@ export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> ext
         this.update(data);
     }
 
-    protected override update(data: Partial<RawVoiceState>): void {
+    protected override update(data: Partial<Types.Voice.RawVoiceState>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
             this._cachedChannel = null;
@@ -132,7 +130,7 @@ export default class VoiceState<T extends AnyVoiceChannel = AnyVoiceChannel> ext
         return this._cachedUser ?? (this._cachedUser = this.client.users.get(this.userID));
     }
 
-    override toJSON(): JSONVoiceState {
+    override toJSON(): Types.JSON.JSONVoiceState {
         return {
             ...super.toJSON(),
             channelID:               this.channelID,

@@ -1,10 +1,9 @@
 import Base from "./Base";
 import type TestEntitlement from "./TestEntitlement";
 import type Entitlement from "./Entitlement";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { EntitlementOwnerTypes, SKUAccessTypes, SKUTypes } from "../Constants";
-import type { RawSKU, SearchEntitlementsOptions } from "../types/applications";
-import type { JSONSKU } from "../types/json";
 
 export default class SKU extends Base {
     accessType: SKUAccessTypes; // undocumented
@@ -19,7 +18,7 @@ export default class SKU extends Base {
     showAgeGate: boolean;
     slug: string;
     type: SKUTypes;
-    constructor(data: RawSKU, client: Client) {
+    constructor(data: Types.Applications.RawSKU, client: Client) {
         super(data.id, client);
         this.accessType = data.access_type;
         this.applicationID = data.application_id;
@@ -51,11 +50,11 @@ export default class SKU extends Base {
      * Get the entitlements for this SKU.
      * @param options The options for getting the entitlements.
      */
-    async getEntitlements(options?: Omit<SearchEntitlementsOptions, "skuIDs">): Promise<Array<Entitlement | TestEntitlement>> {
+    async getEntitlements(options?: Omit<Types.Applications.SearchEntitlementsOptions, "skuIDs">): Promise<Array<Entitlement | TestEntitlement>> {
         return this.client.rest.applications.getEntitlements(this.applicationID, { skuIDs: [this.id], ...options });
     }
 
-    override toJSON(): JSONSKU {
+    override toJSON(): Types.JSON.JSONSKU {
         return {
             ...super.toJSON(),
             accessType:     this.accessType,

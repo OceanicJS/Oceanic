@@ -1,20 +1,19 @@
 import type Message from "./Message";
 import type User from "./User";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { PollLayoutType } from "../Constants";
-import type { GetPollAnswerUsersOptions, PollAnswer, PollResults, RawPoll } from "../types/channels";
-import type { JSONPoll, PollQuestion } from "../types";
 
 export default class Poll {
     allowMultiselect: boolean;
-    answers: Array<PollAnswer>;
+    answers: Array<Types.Channels.PollAnswer>;
     client!: Client;
     expiry: Date;
     layoutType: PollLayoutType;
     message: Message;
-    question: PollQuestion;
-    results: PollResults;
-    constructor(data: RawPoll, client: Client, message: Message) {
+    question: Types.Channels.PollQuestion;
+    results: Types.Channels.PollResults;
+    constructor(data: Types.Channels.RawPoll, client: Client, message: Message) {
         Object.defineProperty(this, "client", {
             value:        client,
             enumerable:   false,
@@ -68,11 +67,11 @@ export default class Poll {
      * @param answerID The ID of the poll answer to get voters for.
      * @param options The options for getting the voters.
      */
-    async getAnswerUsers(answerID: number, options?: GetPollAnswerUsersOptions): Promise<Array<User>> {
+    async getAnswerUsers(answerID: number, options?: Types.Channels.GetPollAnswerUsersOptions): Promise<Array<User>> {
         return this.client.rest.channels.getPollAnswerUsers.call(this.client.rest.channels, this.message.channelID, this.message.id, answerID, options);
     }
 
-    toJSON(): JSONPoll {
+    toJSON(): Types.JSON.JSONPoll {
         return {
             allowMultiselect: this.allowMultiselect,
             answers:          this.answers,

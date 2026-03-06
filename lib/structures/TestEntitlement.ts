@@ -1,10 +1,10 @@
 import BaseEntitlement from "./BaseEntitlement";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { JSONTestEntitlement, RawTestEntitlement } from "../types";
 
 /** Represents a test entitlement. */
 export default class TestEntitlement extends BaseEntitlement {
-    constructor(data: RawTestEntitlement, client: Client) {
+    constructor(data: Types.Applications.RawTestEntitlement, client: Client) {
         super(data, client);
     }
 
@@ -13,7 +13,7 @@ export default class TestEntitlement extends BaseEntitlement {
         return this.client.rest.applications.deleteTestEntitlement(this.applicationID, this.id);
     }
 
-    override toJSON(): JSONTestEntitlement {
+    override toJSON(): Types.JSON.JSONTestEntitlement {
         return {
             ...super.toJSON()
         };

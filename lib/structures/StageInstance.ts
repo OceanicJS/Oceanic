@@ -3,10 +3,9 @@ import Base from "./Base";
 import type StageChannel from "./StageChannel";
 import type Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
-import type { JSONStageInstance } from "../types/json";
-import type { RawStageInstance } from "../types/guilds";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a stage instance. */
@@ -26,7 +25,7 @@ export default class StageInstance extends Base {
     scheduledEventID: string | null;
     /** The topic of this stage instance. */
     topic: string;
-    constructor(data: RawStageInstance, client: Client) {
+    constructor(data: Types.Guilds.RawStageInstance, client: Client) {
         super(data.id, client);
         this.channelID = data.channel_id;
         this.discoverableDisabled = !!data.discoverable_disabled;
@@ -37,7 +36,7 @@ export default class StageInstance extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawStageInstance>): void {
+    protected override update(data: Partial<Types.Guilds.RawStageInstance>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
         }
@@ -91,7 +90,7 @@ export default class StageInstance extends Base {
         return this._cachedScheduledEvent === null ? this._cachedScheduledEvent : (this._cachedScheduledEvent = null);
     }
 
-    override toJSON(): JSONStageInstance {
+    override toJSON(): Types.JSON.JSONStageInstance {
         return {
             ...super.toJSON(),
             channelID:            this.channelID,

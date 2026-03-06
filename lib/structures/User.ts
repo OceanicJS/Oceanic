@@ -4,12 +4,10 @@ import type PrivateChannel from "./PrivateChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
 import PrimaryGuild from "./PrimaryGuild";
+import type * as Types from "../types/namespaced";
 import { EntitlementOwnerTypes, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import type { AvatarDecorationData, Collectibles, DisplayNameStyles, RawUser } from "../types/users";
-import type { JSONUser } from "../types/json";
-import type { SearchEntitlementsOptions } from "../types/applications";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a user. */
@@ -19,16 +17,16 @@ export default class User extends Base {
     /** The user's avatar hash. */
     avatar: string | null;
     /** The data for this user's avatar decoration. */
-    avatarDecorationData: AvatarDecorationData | null;
+    avatarDecorationData: Types.Users.AvatarDecorationData | null;
     /** The user's banner hash. If this member was received via the gateway, this will never be present. */
     banner?: string | null;
     /** If this user is a bot. */
     bot: boolean;
     /** The user's collectibles. */
-    collectibles: Collectibles | null;
+    collectibles: Types.Users.Collectibles | null;
     /** The 4 digits after this user's username, if they have not been migrated. If migrated, this will be a single "0". */
     discriminator: string;
-    displayNameStyles: DisplayNameStyles | null;
+    displayNameStyles: Types.Users.DisplayNameStyles | null;
     /** The user's display name, if set. */
     globalName: string | null;
     /** The primary guild this user is in. */
@@ -39,7 +37,7 @@ export default class User extends Base {
     system: boolean;
     /** The user's username. */
     username: string;
-    constructor(data: RawUser, client: Client) {
+    constructor(data: Types.Users.RawUser, client: Client) {
         super(data.id, client);
         this.avatar = null;
         this.avatarDecorationData = null;
@@ -55,7 +53,7 @@ export default class User extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawUser>): void {
+    protected override update(data: Partial<Types.Users.RawUser>): void {
         if (data.accent_color !== undefined) {
             this.accentColor = data.accent_color;
         }
@@ -197,14 +195,14 @@ export default class User extends Base {
      * Get the entitlements for this guild.
      * @param options The options for getting the entitlements.
      */
-    async getEntitlements(options?: Omit<SearchEntitlementsOptions, "userID">, applicationID?: string): Promise<Array<Entitlement | TestEntitlement>> {
+    async getEntitlements(options?: Omit<Types.Applications.SearchEntitlementsOptions, "userID">, applicationID?: string): Promise<Array<Entitlement | TestEntitlement>> {
         if (applicationID === undefined && this.client["_application"] === undefined) {
             throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
         }
         return this.client.rest.applications.getEntitlements(applicationID ?? this.client.application.id, { userID: this.id, ...options });
     }
 
-    override toJSON(): JSONUser {
+    override toJSON(): Types.JSON.JSONUser {
         return {
             ...super.toJSON(),
             accentColor:          this.accentColor,

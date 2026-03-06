@@ -4,10 +4,9 @@ import type CategoryChannel from "./CategoryChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type Message from "./Message";
 import ThreadableChannel from "./ThreadableChannel";
+import type * as Types from "../types/namespaced";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { FollowedChannel, RawAnnouncementChannel } from "../types/channels";
-import type { JSONAnnouncementChannel } from "../types/json";
 
 /**
  * Represents a guild announcement channel.
@@ -17,7 +16,7 @@ export default class AnnouncementChannel extends ThreadableChannel<AnnouncementC
     /** The amount of seconds between non-moderators sending messages. Always zero in announcement channels. */
     declare rateLimitPerUser: 0;
     declare type: ChannelTypes.GUILD_ANNOUNCEMENT;
-    constructor(data: RawAnnouncementChannel, client: Client) {
+    constructor(data: Types.Channels.RawAnnouncementChannel, client: Client) {
         super(data, client);
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
     }
@@ -46,11 +45,11 @@ export default class AnnouncementChannel extends ThreadableChannel<AnnouncementC
      * @param webhookChannelID The ID of the channel crossposted messages should be sent to. The client must have the `MANAGE_WEBHOOKS` permission in this channel.
      * @param reason The reason for following this channel.
      */
-    async follow(webhookChannelID: string, reason?: string): Promise<FollowedChannel> {
+    async follow(webhookChannelID: string, reason?: string): Promise<Types.Channels.FollowedChannel> {
         return this.client.rest.channels.followAnnouncement(this.id, webhookChannelID, reason);
     }
 
-    override toJSON(): JSONAnnouncementChannel {
+    override toJSON(): Types.JSON.JSONAnnouncementChannel {
         return {
             ...super.toJSON(),
             rateLimitPerUser: 0,

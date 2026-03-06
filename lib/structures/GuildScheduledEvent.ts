@@ -3,11 +3,10 @@ import Base from "./Base";
 import type User from "./User";
 import type Guild from "./Guild";
 import type StageChannel from "./StageChannel";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
 import * as Routes from "../util/Routes";
-import type { RawScheduledEvent, ScheduledEventEntityMetadata } from "../types/scheduled-events";
-import type { JSONScheduledEvent } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild scheduled event. */
@@ -23,7 +22,7 @@ export default class GuildScheduledEvent extends Base {
     /** The id of the entity associated with the event. */
     entityID: string | null;
     /** The [metadata](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-field-requirements-by-entity-type) associated with the event. */
-    entityMetadata: ScheduledEventEntityMetadata | null;
+    entityMetadata: Types.ScheduledEvents.ScheduledEventEntityMetadata | null;
     /** The [entity type](https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-entity-types) of the event */
     entityType: GuildScheduledEventEntityTypes;
     /** The id of the guild this scheduled event belongs to. */
@@ -42,7 +41,7 @@ export default class GuildScheduledEvent extends Base {
     status: GuildScheduledEventStatuses;
     /** The number of users subscribed to the event. */
     userCount: number;
-    constructor(data: RawScheduledEvent, client: Client) {
+    constructor(data: Types.ScheduledEvents.RawScheduledEvent, client: Client) {
         super(data.id, client);
         this.channelID = data.channel_id;
         this.entityID = null;
@@ -62,7 +61,7 @@ export default class GuildScheduledEvent extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawScheduledEvent>): void {
+    protected override update(data: Partial<Types.ScheduledEvents.RawScheduledEvent>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
         }
@@ -145,7 +144,7 @@ export default class GuildScheduledEvent extends Base {
         return this.image ? this.client.util.formatImage(Routes.GUILD_SCHEDULED_EVENT_COVER(this.id, this.image), format, size) : null;
     }
 
-    override toJSON(): JSONScheduledEvent {
+    override toJSON(): Types.JSON.JSONScheduledEvent {
         return {
             ...super.toJSON(),
             channelID:          this.channelID,

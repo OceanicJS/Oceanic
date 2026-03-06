@@ -3,15 +3,14 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type PrivateThreadChannel from "./PrivateThreadChannel";
 import ThreadableChannel from "./ThreadableChannel";
+import type * as Types from "../types/namespaced";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type { ArchivedThreads, FollowedChannel, GetArchivedThreadsOptions, RawTextChannel } from "../types/channels";
-import type { JSONTextChannel } from "../types/json";
 
 /** Represents a guild text channel. */
 export default class TextChannel extends ThreadableChannel<TextChannel, PublicThreadChannel | PrivateThreadChannel>  {
     declare type: ChannelTypes.GUILD_TEXT;
-    constructor(data: RawTextChannel, client: Client) {
+    constructor(data: Types.Channels.RawTextChannel, client: Client) {
         super(data, client);
     }
 
@@ -27,7 +26,7 @@ export default class TextChannel extends ThreadableChannel<TextChannel, PublicTh
      * @param webhookChannelID The ID of the channel to follow the announcement channel to.
      * @param reason The reason for following the announcement channel.
      */
-    async followAnnouncement(webhookChannelID: string, reason?: string): Promise<FollowedChannel> {
+    async followAnnouncement(webhookChannelID: string, reason?: string): Promise<Types.Channels.FollowedChannel> {
         return this.client.rest.channels.followAnnouncement(this.id, webhookChannelID, reason);
     }
 
@@ -35,7 +34,7 @@ export default class TextChannel extends ThreadableChannel<TextChannel, PublicTh
      * Get the private archived threads the current user has joined in this channel.
      * @param options The options for getting the joined private archived threads.
      */
-    async getJoinedPrivateArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+    async getJoinedPrivateArchivedThreads(options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         return this.client.rest.channels.getJoinedPrivateArchivedThreads(this.id, options);
     }
 
@@ -43,11 +42,11 @@ export default class TextChannel extends ThreadableChannel<TextChannel, PublicTh
      * Get the private archived threads in this channel.
      * @param options The options for getting the private archived threads.
      */
-    async getPrivateArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+    async getPrivateArchivedThreads(options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         return this.client.rest.channels.getPrivateArchivedThreads(this.id, options);
     }
 
-    override toJSON(): JSONTextChannel {
+    override toJSON(): Types.JSON.JSONTextChannel {
         return {
             ...super.toJSON(),
             type: this.type

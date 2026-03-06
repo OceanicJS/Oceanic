@@ -2,9 +2,8 @@
 import Base from "./Base";
 import type User from "./User";
 import Application from "./Application";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { RawAttachment } from "../types/channels";
-import type { JSONAttachment } from "../types/json";
 
 /** Represents a file attachment. */
 export default class Attachment extends Base {
@@ -40,7 +39,7 @@ export default class Attachment extends Base {
     waveform?: string | null;
     /** The width of this attachment, if an image. */
     width?: number;
-    constructor(data: RawAttachment, client: Client) {
+    constructor(data: Types.Channels.RawAttachment, client: Client) {
         super(data.id, client);
         this.application = data.application ? new Application(data.application, client) : undefined;
         this.clipCreatedAt = data.clip_created_at ? new Date(data.clip_created_at) : undefined;
@@ -59,7 +58,7 @@ export default class Attachment extends Base {
         this.width = data.width;
     }
 
-    override toJSON(): JSONAttachment {
+    override toJSON(): Types.JSON.JSONAttachment {
         return {
             ...super.toJSON(),
             contentType: this.contentType,

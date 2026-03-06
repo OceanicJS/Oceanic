@@ -12,70 +12,55 @@ import type PrivateChannel from "./PrivateChannel";
 import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
+import type * as Types from "../types/namespaced";
 import TypedCollection from "../util/TypedCollection";
 import { ApplicationCommandTypes, InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
-import type {
-    ApplicationCommandInteractionData,
-    InteractionContent,
-    ModalData,
-    RawApplicationCommandInteraction,
-    ApplicationCommandInteractionResolvedData,
-    InteractionGuild,
-    AuthorizingIntegrationOwners,
-    EditInteractionContent,
-    InteractionCallbackResponse
-} from "../types/interactions";
 import type Client from "../Client";
-import type { RawMember } from "../types/guilds";
-import type { AnyTextableGuildChannel, AnyInteractionChannel } from "../types/channels";
-import type { RawUser } from "../types/users";
-import type { JSONCommandInteraction } from "../types/json";
 import InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
-import type { Uncached } from "../types/shared";
 import { UncachedError } from "../util/Errors";
 import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
 
 /** Represents a command interaction. */
-export default class CommandInteraction<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> extends Interaction {
-    private _cachedChannel!: T extends AnyInteractionChannel ? T : undefined;
-    private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
+export default class CommandInteraction<T extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> extends Interaction {
+    private _cachedChannel!: T extends Types.Channels.AnyInteractionChannel ? T : undefined;
+    private _cachedGuild?: T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from. If in a dm/group dm, this will contain `ATTACH_FILES`, `EMBED_LINKS`, and `MENTION_EVERYONE`. In addition, `USE_EXTERNAL_EMOJIS` will be included for DMs with the app's bot user. */
     appPermissions: Permission;
     /** The maximum size limit per attachment. This will be 10MiB by default, unless the user that created this interaction has a Nitro subscription or the guild it was sent from has been boosted to level 2 or above. */
     attachmentSizeLimit: number;
     /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
-    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
     /** The ID of the channel this interaction was sent from. */
     channelID: string;
     /** The context this interaction was sent from. */
     context?: InteractionContextTypes;
     /** The data associated with the interaction. */
-    data: ApplicationCommandInteractionData<T, C>;
+    data: Types.Interactions.ApplicationCommandInteractionData<T, C>;
     /** The entitlements for the user that created this interaction, and the guild it was created in. */
     entitlements: Array<Entitlement | TestEntitlement>;
     /** The id of the guild this interaction was sent from, if applicable. */
-    guildID: T extends AnyTextableGuildChannel ? string : string | null;
+    guildID: T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
     /** The preferred [locale](https://discord.com/developers/docs/reference#locales) of the guild this interaction was sent from, if applicable. */
-    guildLocale: T extends AnyTextableGuildChannel ? string : string | undefined;
+    guildLocale: T extends Types.Channels.AnyTextableGuildChannel ? string : string | undefined;
     /** The partial guild this interaction was sent from, if applicable. */
-    guildPartial?: T extends AnyTextableGuildChannel ? InteractionGuild : InteractionGuild | undefined;
+    guildPartial?: T extends Types.Channels.AnyTextableGuildChannel ? Types.Interactions.InteractionGuild : Types.Interactions.InteractionGuild | undefined;
     /** The [locale](https://discord.com/developers/docs/reference#locales) of the invoking user. */
     locale: string;
     /** The member associated with the invoking user, if this interaction is sent from a guild. */
-    member: T extends AnyTextableGuildChannel ? Member : Member | null;
+    member: T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | null;
     /** The permissions of the member associated with the invoking user, if this interaction is sent from a guild. */
-    memberPermissions: T extends AnyTextableGuildChannel ? Permission : Permission | null;
+    memberPermissions: T extends Types.Channels.AnyTextableGuildChannel ? Permission : Permission | null;
     declare type: InteractionTypes.APPLICATION_COMMAND;
     /** The user that invoked this interaction. */
     user: User;
-    constructor(data: RawApplicationCommandInteraction, client: Client) {
+    constructor(data: Types.Interactions.RawApplicationCommandInteraction, client: Client) {
         super(data, client);
         this.appPermissions = new Permission(data.app_permissions ?? "0");
         this.attachmentSizeLimit = data.attachment_size_limit;
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
         this.channelID = data.channel_id!;
         this.context = data.context;
-        const resolved: ApplicationCommandInteractionResolvedData = {
+        const resolved: Types.Interactions.ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
             channels:    new TypedCollection(InteractionResolvedChannel, client),
             members:     new TypedCollection(Member, client),
@@ -84,12 +69,12 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
             users:       new TypedCollection(User, client)
         };
         this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
-        this.guildID = (data.guild_id ?? null) as T extends AnyTextableGuildChannel ? string : string | null;
-        this.guildLocale = data.guild_locale as T extends AnyTextableGuildChannel ? string : string | undefined;
+        this.guildID = (data.guild_id ?? null) as T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
+        this.guildLocale = data.guild_locale as T extends Types.Channels.AnyTextableGuildChannel ? string : string | undefined;
         this.guildPartial = data.guild;
         this.locale = data.locale!;
-        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends AnyTextableGuildChannel ? Member : Member | null;
-        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends AnyTextableGuildChannel ? Permission : Permission | null;
+        this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | null;
+        this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends Types.Channels.AnyTextableGuildChannel ? Permission : Permission | null;
         this.user = client.users.update((data.user ?? data.member!.user)!);
 
         if (data.data.resolved) {
@@ -103,7 +88,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
 
             if (data.data.resolved.members) {
                 for (const [id, member] of Object.entries(data.data.resolved.members)) {
-                    const m = member as unknown as RawMember & { user: RawUser; };
+                    const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser; };
                     m.user = data.data.resolved.users![id];
                     resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                 }
@@ -156,12 +141,12 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     }
 
     /** The channel this interaction was sent from. */
-    get channel(): T extends AnyInteractionChannel ? T : undefined {
-        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyInteractionChannel ? T : undefined;
+    get channel(): T extends Types.Channels.AnyInteractionChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends Types.Channels.AnyInteractionChannel ? T : undefined;
     }
 
     /** The guild this interaction was sent from, if applicable. This will throw an error if the guild is not cached. */
-    get guild(): T extends AnyTextableGuildChannel ? Guild : Guild | null {
+    get guild(): T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
@@ -171,7 +156,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
             return this._cachedGuild;
         }
 
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyTextableGuildChannel ? Guild : Guild | null);
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null);
     }
 
     /**
@@ -179,7 +164,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for creating the followup message.
      */
-    async createFollowup(options: InteractionContent): Promise<FollowupMessageInteractionResponse<this>> {
+    async createFollowup(options: Types.Interactions.InteractionContent): Promise<FollowupMessageInteractionResponse<this>> {
         const message = await this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
         return new MessageInteractionResponse<CommandInteraction<T>>(this, message, "followup", null) as FollowupMessageInteractionResponse<this>;
     }
@@ -189,7 +174,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for the message.
      */
-    async createMessage(options: InteractionContent): Promise<InitialMessagedInteractionResponse<this>> {
+    async createMessage(options: Types.Interactions.InteractionContent): Promise<InitialMessagedInteractionResponse<this>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -202,7 +187,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Respond to this interaction with a modal. This is an initial response, and more than one initial response cannot be used.
      * @param options The options for the modal.
      */
-    async createModal(options: ModalData): Promise<InteractionCallbackResponse<T>> {
+    async createModal(options: Types.Interactions.ModalData): Promise<Types.Interactions.InteractionCallbackResponse<T>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -214,7 +199,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Defer this interaction. This is an initial response, and more than one initial response cannot be used.
      * @param flags The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) to respond with.
      */
-    async defer(flags?: number): Promise<InteractionCallbackResponse<T>> {
+    async defer(flags?: number): Promise<Types.Interactions.InteractionCallbackResponse<T>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -242,7 +227,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
      */
-    async editFollowup(messageID: string, options: EditInteractionContent): Promise<Message<T>> {
+    async editFollowup(messageID: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
         return this.client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
     }
 
@@ -250,7 +235,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Edit the original interaction response.
      * @param options The options for editing the original message.
      */
-    async editOriginal(options: EditInteractionContent): Promise<Message<T>> {
+    async editOriginal(options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
         return this.client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
     }
 
@@ -270,12 +255,12 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     }
 
     /** Whether this interaction belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is CommandInteraction<AnyTextableGuildChannel> {
+    inCachedGuildChannel(): this is CommandInteraction<Types.Channels.AnyTextableGuildChannel> {
         return this.channel instanceof GuildChannel;
     }
 
     /** Whether this interaction belongs to a private channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the interaction properties typing definitions based on the channel it belongs to. */
-    inPrivateChannel(): this is CommandInteraction<PrivateChannel | Uncached> {
+    inPrivateChannel(): this is CommandInteraction<PrivateChannel | Types.Shared.Uncached> {
         return this.guildID === null;
     }
 
@@ -302,7 +287,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
     /**
      * Launch the bot's activity. This is an initial response, and more than one initial response cannot be used.
      */
-    async launchActivity(): Promise<InteractionCallbackResponse<T>> {
+    async launchActivity(): Promise<Types.Interactions.InteractionCallbackResponse<T>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -315,7 +300,7 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Show a "premium required" response to the user. This is an initial response, and more than one initial response cannot be used.
      * @deprecated The {@link Constants~InteractionResponseTypes.PREMIUM_REQUIRED | PREMIUM_REQUIRED} interaction response type is now deprecated in favor of using {@link Types/Channels~PremiumButton | custom premium buttons}.
      */
-    async premiumRequired(): Promise<InteractionCallbackResponse<T>> {
+    async premiumRequired(): Promise<Types.Interactions.InteractionCallbackResponse<T>> {
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -329,11 +314,11 @@ export default class CommandInteraction<T extends AnyInteractionChannel | Uncach
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for the message.
      */
-    async reply(options: InteractionContent): Promise<MessageInteractionResponse<this>> {
+    async reply(options: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>> {
         return this.acknowledged ? this.createFollowup(options) : this.createMessage(options);
     }
 
-    override toJSON(): JSONCommandInteraction {
+    override toJSON(): Types.JSON.JSONCommandInteraction {
         return {
             ...super.toJSON(),
             appPermissions:               this.appPermissions.toJSON(),

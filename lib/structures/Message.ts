@@ -13,48 +13,19 @@ import type TextChannel from "./TextChannel";
 import GuildChannel from "./GuildChannel";
 import type PrivateChannel from "./PrivateChannel";
 import Poll from "./Poll";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { BASE_URL, type MessageTypes } from "../Constants";
-import type { Uncached } from "../types/shared";
-import type {
-    AnyTextableGuildChannel,
-    AnyTextableChannel,
-    ChannelMention,
-    EditMessageOptions,
-    Embed,
-    GetReactionsOptions,
-    MessageActivity,
-    MessageInteraction,
-    MessageReference,
-    RawAttachment,
-    RawMessage,
-    StartThreadFromMessageOptions,
-    StickerItem,
-    MessageReaction,
-    AnyThreadChannel,
-    RoleSubscriptionData,
-    GetPollAnswerUsersOptions,
-    Call,
-    MessageSnapshot,
-    MessageMentions,
-    MessagePollResults,
-    AnyMessageInteractionMetadata,
-    MessageInteractionMetadata,
-    MessageComponent
-} from "../types/channels";
-import type { RawMember } from "../types/guilds";
-import type { DeleteWebhookMessageOptions, EditWebhookMessageOptions } from "../types/webhooks";
-import type { JSONMessage } from "../types/json";
 import * as Routes from "../util/Routes";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a message. */
-export default class Message<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> extends Base {
-    private _cachedChannel!: T extends AnyTextableChannel ? T : undefined;
-    private _cachedGuild?: T extends AnyTextableGuildChannel ? Guild : Guild | null;
+export default class Message<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached> extends Base {
+    private _cachedChannel!: T extends Types.Channels.AnyTextableChannel ? T : undefined;
+    private _cachedGuild?: T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null;
     /** The [activity](https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure) associated with this message. */
-    activity?: MessageActivity;
+    activity?: Types.Channels.MessageActivity;
     /**
      * The application associated with this message. This can be present in two scenarios:
      * * If the message was from an interaction or application owned webhook ({@link ClientApplication} if any shard has reached READY, {@link PartialApplication} otherwise).
@@ -68,42 +39,42 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      */
     applicationID: string | null;
     /** The attachments on this message. */
-    attachments: TypedCollection<RawAttachment, Attachment>;
+    attachments: TypedCollection<Types.Channels.RawAttachment, Attachment>;
     /** The author of this message. */
     author: User;
     /** The call associated with this message. */
-    call?: Call;
+    call?: Types.Channels.Call;
     /** The ID of the channel this message was created in. */
     channelID: string;
     /** The components on this message. */
-    components: Array<MessageComponent>;
+    components: Array<Types.Channels.MessageComponent>;
     /** The content of this message. */
     content: string;
     /** The timestamp at which this message was last edited. */
     editedTimestamp: Date | null;
     /** The embeds on this message. */
-    embeds: Array<Embed>;
+    embeds: Array<Types.Channels.Embed>;
     /** The [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) on this message. */
     flags: number;
     /** The ID of the guild this message is in. */
-    guildID: T extends AnyTextableGuildChannel ? string : string | null;
+    guildID: T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
     /**
      * The interaction info, if this message was the result of an interaction.
      * @deprecated Use {@link Message#interactionMetadata | Message#interactionMetadata } instead.
      */
-    interaction?: MessageInteraction;
+    interaction?: Types.Channels.MessageInteraction;
     /** The interaction info, if this message was the result of an interaction. */
-    interactionMetadata?: AnyMessageInteractionMetadata;
+    interactionMetadata?: Types.Channels.AnyMessageInteractionMetadata;
     /** The member that created this message, if this message is in a guild. */
-    member: T extends AnyTextableGuildChannel ? Member : Member | undefined;
+    member: T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | undefined;
     /** Channels mentioned in a `CROSSPOSTED` channel follower message. See [Discord's docs](https://discord.com/developers/docs/resources/channel#channel-mention-object) for more information. */
-    mentionChannels?: Array<ChannelMention>;
+    mentionChannels?: Array<Types.Channels.ChannelMention>;
     /** The mentions in this message. */
-    mentions: MessageMentions;
+    mentions: Types.Channels.MessageMentions;
     /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, some info about the referenced message. */
-    messageReference?: MessageReference;
+    messageReference?: Types.Channels.MessageReference;
     /** If this message is a forwarded message, the partial contents of that message. */
-    messageSnapshots?: Array<MessageSnapshot>;
+    messageSnapshots?: Array<Types.Channels.MessageSnapshot>;
     /** A nonce for ensuring a message was sent. */
     nonce?: number | string;
     /** If this message is pinned. */
@@ -111,20 +82,20 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     /** The poll on this message, if any. */
     poll?: Poll;
     /** The poll results extracted from the embeds of this message. This will only be present for {@link Constants~MessageTypes.POLL_RESULT | POLL_RESULT } messages. */
-    pollResults?: MessagePollResults;
+    pollResults?: Types.Channels.MessagePollResults;
     /** This message's relative position, if in a thread. */
     position?: number;
     /** The reactions on this message. */
-    reactions: Array<MessageReaction>;
+    reactions: Array<Types.Channels.MessageReaction>;
     /** If this message is a `REPLY` or `THREAD_STARTER_MESSAGE`, this will be the message that's referenced. */
     referencedMessage?: Message | null;
     /** The data of the role subscription purchase or renewal that prompted this message. */
-    roleSubscriptionData?: RoleSubscriptionData;
+    roleSubscriptionData?: Types.Channels.RoleSubscriptionData;
     // stickers exists, but is deprecated
     /** The sticker items on this message. */
-    stickerItems?: Array<StickerItem>;
+    stickerItems?: Array<Types.Channels.StickerItem>;
     /** The thread associated with this message, if any. */
-    thread?: AnyThreadChannel;
+    thread?: Types.Channels.AnyThreadChannel;
     /** The timestamp at which this message was sent. */
     timestamp: Date;
     /** If this message was read aloud. */
@@ -133,7 +104,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     type: MessageTypes;
     /** The webhook associated with this message, if sent via a webhook. This only has an `id` property. */
     webhookID?: string;
-    constructor(data: RawMessage, client: Client) {
+    constructor(data: Types.Channels.RawMessage, client: Client) {
         super(data.id, client);
         this.attachments = new TypedCollection(Attachment, client);
         this.channelID = data.channel_id;
@@ -142,8 +113,8 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
-        this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends AnyTextableGuildChannel ? string : string | null;
-        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author })) as T extends AnyTextableGuildChannel ? Member : Member | undefined;
+        this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
+        this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author })) as T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | undefined;
         this.mentions = {
             channels: [],
             everyone: false,
@@ -177,7 +148,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
         }
     }
 
-    protected override update(data: Partial<RawMessage>): void {
+    protected override update(data: Partial<Types.Channels.RawMessage>): void {
         if (data.mention_everyone !== undefined) {
             this.mentions.everyone = data.mention_everyone;
         }
@@ -188,7 +159,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             const members: Array<Member> = [];
             this.mentions.users = data.mentions.map(user => {
                 if (this.channel && "guildID" in (this.channel as T) && user.member) {
-                    members.push(this.client.util.updateMember((this.channel as AnyTextableGuildChannel).guildID, user.id, { ...user.member, user }));
+                    members.push(this.client.util.updateMember((this.channel as Types.Channels.AnyTextableGuildChannel).guildID, user.id, { ...user.member, user }));
                 }
                 return this.client.users.update(user);
             });
@@ -248,7 +219,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             this.flags = data.flags;
         }
         if (data.interaction !== undefined) {
-            let member: RawMember | undefined;
+            let member: Types.Guilds.RawMember | undefined;
             if (data.interaction.member) {
                 member = {
                     ...data.interaction.member,
@@ -284,7 +255,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
                     type:                         data.interaction_metadata.triggering_interaction_metadata.type,
                     user:                         this.client.users.update(data.interaction_metadata.triggering_interaction_metadata.user)
                 }
-            } as AnyMessageInteractionMetadata;
+            } as Types.Channels.AnyMessageInteractionMetadata;
         }
         if (data.message_reference) {
             this.messageReference = {
@@ -364,12 +335,12 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
     }
 
     /** The channel this message was created in. */
-    get channel(): T extends AnyTextableChannel ? T : undefined {
-        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends AnyTextableChannel ? T : undefined;
+    get channel(): T extends Types.Channels.AnyTextableChannel ? T : undefined {
+        return this._cachedChannel ??= this.client.getChannel(this.channelID) as T extends Types.Channels.AnyTextableChannel ? T : undefined;
     }
 
     /** The guild this message is in. This will throw an error if the guild is not cached. */
-    get guild(): T extends AnyTextableGuildChannel ? Guild : Guild | null {
+    get guild(): T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null {
         if (this.guildID !== null && this._cachedGuild !== null) {
             this._cachedGuild ??= this.client.guilds.get(this.guildID);
             if (!this._cachedGuild) {
@@ -387,7 +358,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
             return this._cachedGuild;
         }
 
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends AnyTextableGuildChannel ? Guild : Guild | null);
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null as T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null);
     }
 
     /** A link to this message. */
@@ -440,7 +411,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      * @param token The token of the webhook.
      * @param options Options for deleting the message.
      */
-    async deleteWebhook(token: string, options: DeleteWebhookMessageOptions): Promise<void> {
+    async deleteWebhook(token: string, options: Types.Webhooks.DeleteWebhookMessageOptions): Promise<void> {
         if (!this.webhookID) {
             throw new TypeError("This message is not a webhook message.");
         }
@@ -451,7 +422,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      * Edit this message.
      * @param options The options for editing the message.
      */
-    async edit(options: EditMessageOptions):  Promise<Message<T>> {
+    async edit(options: Types.Channels.EditMessageOptions):  Promise<Message<T>> {
         return this.client.rest.channels.editMessage<T>(this.channelID, this.id, options);
     }
 
@@ -460,7 +431,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      * @param token The token of the webhook.
      * @param options The options for editing the message.
      */
-    async editWebhook(token: string, options: EditWebhookMessageOptions): Promise<Message<T>> {
+    async editWebhook(token: string, options: Types.Webhooks.EditWebhookMessageOptions): Promise<Message<T>> {
         if (!this.webhookID) {
             throw new TypeError("This message is not a webhook message.");
         }
@@ -481,7 +452,7 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      * @param answerID The ID of the poll answer to get voters for.
      * @param options The options for getting the voters.
      */
-    async getPollAnswerUsers(answerID: number, options?: GetPollAnswerUsersOptions): Promise<Array<User>> {
+    async getPollAnswerUsers(answerID: number, options?: Types.Channels.GetPollAnswerUsersOptions): Promise<Array<User>> {
         if (this.poll === undefined) {
             throw new TypeError("Message does not have a poll.");
         }
@@ -494,17 +465,17 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
+    async getReactions(emoji: string, options?: Types.Channels.GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.channelID, this.id, emoji, options);
     }
 
     /** Whether this message belongs to a cached guild channel. The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
-    inCachedGuildChannel(): this is Message<AnyTextableGuildChannel> {
+    inCachedGuildChannel(): this is Message<Types.Channels.AnyTextableGuildChannel> {
         return this.channel instanceof GuildChannel;
     }
 
     /** Whether this message belongs to a direct message channel (PrivateChannel or uncached). The only difference on using this method over a simple if statement is to easily update all the message properties typing definitions based on the channel it belongs to. */
-    inDirectMessageChannel(): this is Message<PrivateChannel | Uncached> {
+    inDirectMessageChannel(): this is Message<PrivateChannel | Types.Shared.Uncached> {
         return this.guildID === null;
     }
 
@@ -521,11 +492,11 @@ export default class Message<T extends AnyTextableChannel | Uncached = AnyTextab
      * Create a thread from this message.
      * @param options The options for creating the thread.
      */
-    async startThread(options: StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never> {
+    async startThread(options: Types.Channels.StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never> {
         return this.client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channelID, this.id, options);
     }
-    override toJSON(): JSONMessage {
-        const im = this.interactionMetadata as MessageInteractionMetadata;
+    override toJSON(): Types.JSON.JSONMessage {
+        const im = this.interactionMetadata as Types.Channels.MessageInteractionMetadata;
         return {
             ...super.toJSON(),
             activity:        this.activity,

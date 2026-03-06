@@ -25,6 +25,7 @@ import AuditLogEntry from "./AuditLogEntry";
 import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
 import Soundboard from "./Soundboard";
+import type * as Types from "../types/namespaced";
 import {
     AllPermissions,
     Permissions,
@@ -44,91 +45,11 @@ import {
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
-import type {
-    AnyGuildChannel,
-    AnyGuildChannelWithoutThreads,
-    AnyTextableGuildChannel,
-    AnyThreadChannel,
-    RawGuildChannel,
-    RawThreadChannel,
-    GuildChannelsWithoutThreads,
-    RawSoundboard,
-    AnyGuildInviteChannel
-} from "../types/channels";
-import type {
-    AddMemberOptions,
-    BeginPruneOptions,
-    CreateBanOptions,
-    CreateChannelOptions,
-    CreateGuildEmojiOptions,
-    CreateRoleOptions,
-    EditCurrentMemberOptions,
-    EditCurrentUserVoiceStateOptions,
-    EditGuildEmojiOptions,
-    EditGuildOptions,
-    EditMemberOptions,
-    EditRoleOptions,
-    EditRolePositionsEntry,
-    EditUserVoiceStateOptions,
-    EditWelcomeScreenOptions,
-    GetBansOptions,
-    GetMembersOptions,
-    GetPruneCountOptions,
-    GuildEmoji,
-    ModifyChannelPositionsEntry,
-    RawGuild,
-    RawMember,
-    RawRole,
-    SearchMembersOptions,
-    WelcomeScreen,
-    WidgetImageStyle,
-    WidgetSettings,
-    RawIntegration,
-    Widget,
-    GetActiveThreadsResponse,
-    Ban,
-    GetVanityURLResponse,
-    RawWidget,
-    RawStageInstance,
-    RESTMember,
-    CreateStickerOptions,
-    Sticker,
-    EditStickerOptions,
-    Onboarding,
-    EditOnboardingOptions,
-    RawGuildEmoji,
-    RawSticker,
-    InventorySettings,
-    EditIncidentActionsOptions,
-    IncidentActions,
-    BulkBanOptions,
-    BulkBanResponse,
-    MemberSearchOptions,
-    MemberSearchResults,
-    CreateSoundboardSoundOptions,
-    EditSoundboardSoundOptions,
-    GuildProfile
-} from "../types/guilds";
-import type {
-    CreateScheduledEventOptions,
-    EditScheduledEventOptions,
-    GetScheduledEventUsersOptions,
-    RawScheduledEvent,
-    ScheduledEventUser
-} from "../types/scheduled-events";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type { AuditLog, GetAuditLogOptions, RawAuditLogEntry } from "../types/audit-log";
-import type { CreateTemplateOptions, EditGuildTemplateOptions } from "../types/guild-template";
-import type { JoinVoiceChannelOptions, RawVoiceState, VoiceRegion } from "../types/voice";
-import type { JSONGuild } from "../types/json";
-import type { PresenceUpdate, RequestGuildMembersOptions } from "../types/gateway";
 import type Shard from "../gateway/Shard";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore-line
 import { UncachedError } from "../util/Errors";
 import SimpleCollection from "../util/SimpleCollection";
-import type { SearchEntitlementsOptions } from "../types/applications";
-import type { RawInvite } from "../types/invites";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
@@ -152,13 +73,13 @@ export default class Guild extends Base {
     /** The approximate number of non-offline members in this guild (if retrieved with counts). */
     approximatePresenceCount?: number;
     /** The cached audit log entries. This requires both the {@link Constants~Intents.GUILD_MODERATION | GUILD_MODERATION} intent, as well as the {@link Constants~Permissions | VIEW_AUDIT_LOG } permission. */
-    auditLogEntries: TypedCollection<RawAuditLogEntry, AuditLogEntry>;
+    auditLogEntries: TypedCollection<Types.AuditLog.RawAuditLogEntry, AuditLogEntry>;
     /** The auto moderation rules in this guild. */
-    autoModerationRules: TypedCollection<RawAutoModerationRule, AutoModerationRule>;
+    autoModerationRules: TypedCollection<Types.AutoModeration.RawAutoModerationRule, AutoModerationRule>;
     /** The hash of this guild's banner. */
     banner: string | null;
     /** The channels in this guild. */
-    channels: TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
+    channels: TypedCollection<Types.Channels.RawGuildChannel, Types.Channels.AnyGuildChannelWithoutThreads>;
     /** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
     defaultMessageNotifications: DefaultMessageNotificationLevels;
     /** The description of this guild. */
@@ -166,20 +87,20 @@ export default class Guild extends Base {
     /** The discovery splash of this guild. Only present if the guild has the `DISCOVERABLE` feature. */
     discoverySplash: string | null;
     /** The custom emojis of this guild. */
-    emojis: SimpleCollection<string, RawGuildEmoji, GuildEmoji>;
+    emojis: SimpleCollection<string, Types.Guilds.RawGuildEmoji, Types.Guilds.GuildEmoji>;
     /** The [explicit content filter](https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level) of this guild. */
     explicitContentFilter: ExplicitContentFilterLevels;
     /** The [features](https://discord.com/developers/docs/resources/guild#guild-object-guild-features) this guild has. */
     features: Array<GuildFeature>;
     /** The icon hash of this guild. */
     icon: string | null;
-    incidentActions: IncidentActions | null;
+    incidentActions: Types.Guilds.IncidentActions | null;
     /** The integrations in this guild. */
-    integrations: TypedCollection<RawIntegration, Integration, [guildID?: string]>;
+    integrations: TypedCollection<Types.Guilds.RawIntegration, Integration, [guildID?: string]>;
     /** The guild's inventory settings. */
-    inventorySettings: InventorySettings | null;
+    inventorySettings: Types.Guilds.InventorySettings | null;
     /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
-    invites: SimpleCollection<string, RawInvite, InviteWithMetadata<AnyGuildInviteChannel>, "code">;
+    invites: SimpleCollection<string, Types.Invites.RawInvite, InviteWithMetadata<Types.Channels.AnyGuildInviteChannel>, "code">;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -196,7 +117,7 @@ export default class Guild extends Base {
     /** The number of members in this guild. */
     memberCount: number;
     /** The cached members in this guild. */
-    members: TypedCollection<RawMember | RESTMember, Member, [guildID: string]>;
+    members: TypedCollection<Types.Guilds.RawMember | Types.Guilds.RESTMember, Member, [guildID: string]>;
     /** The required [mfa level](https://discord.com/developers/docs/resources/guild#guild-object-mfa-level) for moderators of this guild. */
     mfaLevel: MFALevels;
     /** The name of this guild. */
@@ -216,15 +137,15 @@ export default class Guild extends Base {
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
     /** The guild's server tag, only present for guilds recieved over the gateway. */
-    profile: GuildProfile | null;
+    profile: Types.Guilds.GuildProfile | null;
     /** The channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
-    publicUpdatesChannel?: AnyTextableGuildChannel | null;
+    publicUpdatesChannel?: Types.Channels.AnyTextableGuildChannel | null;
     /** The id of the channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannelID: string | null;
     /** @deprecated The region of this guild. */
     region?: string | null;
     /** The roles in this guild. */
-    roles: TypedCollection<RawRole, Role, [guildID: string]>;
+    roles: TypedCollection<Types.Guilds.RawRole, Role, [guildID: string]>;
     /** The channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
     rulesChannel?: TextChannel | null;
     /** The id of the channel where rules/guidelines are displayed. Only present in guilds with the `COMMUNITY` feature. */
@@ -234,15 +155,15 @@ export default class Guild extends Base {
     /** The ID if the channel where safety related notices are posted. */
     safetyAlertsChannelID: string | null;
     /** The scheduled events in this guild. */
-    scheduledEvents: TypedCollection<RawScheduledEvent, GuildScheduledEvent>;
+    scheduledEvents: TypedCollection<Types.ScheduledEvents.RawScheduledEvent, GuildScheduledEvent>;
     /** The soundboard sounds in this guild. */
-    soundboardSounds: TypedCollection<RawSoundboard, Soundboard>;
+    soundboardSounds: TypedCollection<Types.Channels.RawSoundboard, Soundboard>;
     /** The invite splash hash of this guild. */
     splash: string | null;
     /** The stage instances in this guild. */
-    stageInstances: TypedCollection<RawStageInstance, StageInstance>;
+    stageInstances: TypedCollection<Types.Guilds.RawStageInstance, StageInstance>;
     /** The custom stickers of this guild. */
-    stickers: SimpleCollection<string, RawSticker, Sticker>;
+    stickers: SimpleCollection<string, Types.Guilds.RawSticker, Types.Guilds.Sticker>;
     /** The channel where welcome messages and boosts notices are posted. */
     systemChannel?: TextChannel | null;
     /** The [flags](https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags) for the system channel. */
@@ -250,7 +171,7 @@ export default class Guild extends Base {
     /** The ID of the channel where welcome messages and boosts notices are posted. */
     systemChannelID: string | null;
     /** The threads in this guild. */
-    threads: TypedCollection<RawThreadChannel, AnyThreadChannel>;
+    threads: TypedCollection<Types.Channels.RawThreadChannel, Types.Channels.AnyThreadChannel>;
     /** If this guild is unavailable. */
     unavailable: boolean;
     /** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
@@ -258,16 +179,16 @@ export default class Guild extends Base {
     /** The [verification level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
     /** The voice states of members in voice channels. */
-    voiceStates: TypedCollection<RawVoiceState, VoiceState>;
+    voiceStates: TypedCollection<Types.Voice.RawVoiceState, VoiceState>;
     /** The welcome screen configuration. Only present in guilds with the `WELCOME_SCREEN_ENABLED` feature. */
-    welcomeScreen?: WelcomeScreen;
+    welcomeScreen?: Types.Guilds.WelcomeScreen;
     /** The channel the widget will generate an invite to, or `null` if set to no invite. */
-    widgetChannel?: Exclude<AnyGuildChannel, CategoryChannel> | null;
+    widgetChannel?: Exclude<Types.Channels.AnyGuildChannel, CategoryChannel> | null;
     /** The id of the channel the widget will generate an invite to, or `null` if set to no invite. */
     widgetChannelID: string | null;
     /** If the widget is enabled. */
     widgetEnabled?: boolean;
-    constructor(data: RawGuild, client: Client, rest?: boolean) {
+    constructor(data: Types.Guilds.RawGuild, client: Client, rest?: boolean) {
         super(data.id, client);
         this.afkChannelID = null;
         this.afkTimeout = 0;
@@ -278,12 +199,12 @@ export default class Guild extends Base {
         this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
             construct: (channel): GuildChannel => {
                 client.channelGuildMap.set(channel.id, this.id);
-                return Channel.from<AnyGuildChannelWithoutThreads>(channel, client);
+                return Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(channel, client);
             },
             delete: (id): void => {
                 client.channelGuildMap.delete(id);
             }
-        }) as TypedCollection<RawGuildChannel, AnyGuildChannelWithoutThreads>;
+        }) as TypedCollection<Types.Channels.RawGuildChannel, Types.Channels.AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
@@ -323,12 +244,12 @@ export default class Guild extends Base {
         this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
             construct: (thread): ThreadChannel => {
                 client.threadGuildMap.set(thread.id, this.id);
-                return Channel.from<AnyThreadChannel>(thread, client);
+                return Channel.from<Types.Channels.AnyThreadChannel>(thread, client);
             },
             delete: (id): void => {
                 client.threadGuildMap.delete(id);
             }
-        }) as TypedCollection<RawThreadChannel, AnyThreadChannel>;
+        }) as TypedCollection<Types.Channels.RawThreadChannel, Types.Channels.AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
@@ -378,7 +299,7 @@ export default class Guild extends Base {
             for (const presence of data.presences) {
                 const member = this.members.get(presence.user.id);
                 if (member) {
-                    delete (presence as { user?: PresenceUpdate["user"]; }).user;
+                    delete (presence as { user?: Types.Gateway.PresenceUpdate["user"]; }).user;
                     member.presence = {
                         clientStatus: presence.client_status,
                         guildID:      presence.guild_id,
@@ -474,7 +395,7 @@ export default class Guild extends Base {
         this.client.emit("debug", `The limit of the members collection of guild ${this.id} has been updated from ${original} to ${this.members.limit} to accommodate at least ${toAdd === true ? this.memberCount : this.members.size + toAdd} members.`);
     }
 
-    protected override update(data: Partial<RawGuild>): void {
+    protected override update(data: Partial<Types.Guilds.RawGuild>): void {
         if (data.afk_channel_id !== undefined) {
             this.afkChannel = data.afk_channel_id === null ? null : this.client.getChannel<VoiceChannel>(data.afk_channel_id);
             this.afkChannelID = data.afk_channel_id;
@@ -583,7 +504,7 @@ export default class Guild extends Base {
             this.profile = data.profile;
         }
         if (data.public_updates_channel_id !== undefined) {
-            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<AnyTextableGuildChannel>(data.public_updates_channel_id);
+            this.publicUpdatesChannel = data.public_updates_channel_id === null ? null : this.client.getChannel<Types.Channels.AnyTextableGuildChannel>(data.public_updates_channel_id);
             this.publicUpdatesChannelID = data.public_updates_channel_id;
         }
         if (data.region !== undefined) {
@@ -629,7 +550,7 @@ export default class Guild extends Base {
             };
         }
         if (data.widget_channel_id !== undefined) {
-            this.widgetChannel = data.widget_channel_id === null ? null : this.client.getChannel<Exclude<AnyGuildChannel, CategoryChannel>>(data.widget_channel_id);
+            this.widgetChannel = data.widget_channel_id === null ? null : this.client.getChannel<Exclude<Types.Channels.AnyGuildChannel, CategoryChannel>>(data.widget_channel_id);
             this.widgetChannelID = data.widget_channel_id;
         }
         if (data.widget_enabled !== undefined) {
@@ -704,7 +625,7 @@ export default class Guild extends Base {
      * @param userID The ID of the user to add.
      * @param options The options for adding the member.
      */
-    async addMember(userID: string, options: AddMemberOptions):  Promise<void | Member> {
+    async addMember(userID: string, options: Types.Guilds.AddMemberOptions):  Promise<void | Member> {
         return this.client.rest.guilds.addMember(this.id, userID, options);
     }
 
@@ -731,7 +652,7 @@ export default class Guild extends Base {
      * Begin a prune.
      * @param options The options for the prune.
      */
-    async beginPrune(options?: BeginPruneOptions): Promise<number | null> {
+    async beginPrune(options?: Types.Guilds.BeginPruneOptions): Promise<number | null> {
         return this.client.rest.guilds.beginPrune(this.id, options);
     }
 
@@ -741,7 +662,7 @@ export default class Guild extends Base {
      * The bot user is ignored.
      * @param options The options for banning.
      */
-    async bulkBan(options: BulkBanOptions): Promise<BulkBanResponse> {
+    async bulkBan(options: Types.Guilds.BulkBanOptions): Promise<Types.Guilds.BulkBanResponse> {
         return this.client.rest.guilds.bulkBan(this.id, options);
     }
 
@@ -749,7 +670,7 @@ export default class Guild extends Base {
      * Create an auto moderation rule for this guild.
      * @param options The options for the rule.
      */
-    async createAutoModerationRule(options: CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
+    async createAutoModerationRule(options: Types.AutoModeration.CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
         return this.client.rest.guilds.createAutoModerationRule(this.id, options);
     }
 
@@ -758,7 +679,7 @@ export default class Guild extends Base {
      * @param userID The ID of the user.
      * @param options The options for creating the ban.
      */
-    async createBan(userID: string, options?: CreateBanOptions): Promise<void> {
+    async createBan(userID: string, options?: Types.Guilds.CreateBanOptions): Promise<void> {
         return this.client.rest.guilds.createBan(this.id, userID, options);
     }
 
@@ -766,7 +687,7 @@ export default class Guild extends Base {
      * Create a channel in this guild.
      * @param options The options for creating the channel.
      */
-    async createChannel<T extends GuildChannelsWithoutThreads>(type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
+    async createChannel<T extends Types.Channels.GuildChannelsWithoutThreads>(type: T, options: Omit<Types.Guilds.CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
         return this.client.rest.guilds.createChannel<T>(this.id, type, options);
     }
 
@@ -774,7 +695,7 @@ export default class Guild extends Base {
      * Create an emoji in this guild.
      * @param options The options for creating the emoji.
      */
-    async createEmoji(options: CreateGuildEmojiOptions): Promise<GuildEmoji> {
+    async createEmoji(options: Types.Guilds.CreateGuildEmojiOptions): Promise<Types.Guilds.GuildEmoji> {
         return this.client.rest.guilds.createEmoji(this.id, options);
     }
 
@@ -782,7 +703,7 @@ export default class Guild extends Base {
      * Create a role.
      * @param options The options for creating the role.
      */
-    async createRole(options?: CreateRoleOptions): Promise<Role> {
+    async createRole(options?: Types.Guilds.CreateRoleOptions): Promise<Role> {
         return this.client.rest.guilds.createRole(this.id, options);
     }
 
@@ -790,7 +711,7 @@ export default class Guild extends Base {
      * Create a scheduled event in this guild.
      * @param options The options for creating the scheduled event.
      */
-    async createScheduledEvent(options: CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
+    async createScheduledEvent(options: Types.ScheduledEvents.CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
         return this.client.rest.guilds.createScheduledEvent(this.id, options);
     }
 
@@ -798,7 +719,7 @@ export default class Guild extends Base {
      * Create a soundboard sound.
      * @param options The options for creating the soundboard sound.
      */
-    async createSoundboardSound(options: CreateSoundboardSoundOptions): Promise<Soundboard> {
+    async createSoundboardSound(options: Types.Guilds.CreateSoundboardSoundOptions): Promise<Soundboard> {
         return this.client.rest.guilds.createSoundboardSound(this.id, options);
     }
 
@@ -806,7 +727,7 @@ export default class Guild extends Base {
      * Create a sticker.
      * @param options The options for creating the sticker.
      */
-    async createSticker(options: CreateStickerOptions): Promise<Sticker> {
+    async createSticker(options: Types.Guilds.CreateStickerOptions): Promise<Types.Guilds.Sticker> {
         return this.client.rest.guilds.createSticker(this.id, options);
     }
 
@@ -814,7 +735,7 @@ export default class Guild extends Base {
      * Create a guild template.
      * @param options The options for creating the template.
      */
-    async createTemplate(options: CreateTemplateOptions): Promise<GuildTemplate> {
+    async createTemplate(options: Types.GuildTemplate.CreateTemplateOptions): Promise<GuildTemplate> {
         return this.client.rest.guilds.createTemplate(this.id, options);
     }
 
@@ -950,7 +871,7 @@ export default class Guild extends Base {
      * Edit this guild.
      * @param options The options for editing the guild.
      */
-    async edit(options: EditGuildOptions): Promise<Guild> {
+    async edit(options: Types.Guilds.EditGuildOptions): Promise<Guild> {
         return this.client.rest.guilds.edit(this.id, options);
     }
 
@@ -959,7 +880,7 @@ export default class Guild extends Base {
      * @param ruleID The ID of the rule to edit.
      * @param options The options for editing the rule.
      */
-    async editAutoModerationRule(ruleID: string, options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
+    async editAutoModerationRule(ruleID: string, options: Types.AutoModeration.EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
         return this.client.rest.guilds.editAutoModerationRule(this.id, ruleID, options);
     }
 
@@ -967,7 +888,7 @@ export default class Guild extends Base {
      * Edit the positions of channels in this guild.
      * @param options The channels to move. Unedited channels do not need to be specified.
      */
-    async editChannelPositions(options: Array<ModifyChannelPositionsEntry>): Promise<void> {
+    async editChannelPositions(options: Array<Types.Guilds.ModifyChannelPositionsEntry>): Promise<void> {
         return this.client.rest.guilds.editChannelPositions(this.id, options);
     }
 
@@ -975,7 +896,7 @@ export default class Guild extends Base {
      * Modify the current member in this guild.
      * @param options The options for editing the member.
      */
-    async editCurrentMember(options: EditCurrentMemberOptions): Promise<Member> {
+    async editCurrentMember(options: Types.Guilds.EditCurrentMemberOptions): Promise<Member> {
         return this.client.rest.guilds.editCurrentMember(this.id, options);
     }
 
@@ -983,14 +904,14 @@ export default class Guild extends Base {
      * Edit the current member's voice state in this guild. `channelID` is required, and the current member must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats) for more information.
      * @param options The options for editing the voice state.
      */
-    async editCurrentUserVoiceState(options: EditCurrentUserVoiceStateOptions): Promise<void> {
+    async editCurrentUserVoiceState(options: Types.Guilds.EditCurrentUserVoiceStateOptions): Promise<void> {
         return this.client.rest.guilds.editCurrentUserVoiceState(this.id, options);
     }
     /**
      * Edit an existing emoji in this guild.
      * @param options The options for editing the emoji.
      */
-    async editEmoji(emojiID: string, options: EditGuildEmojiOptions): Promise<GuildEmoji> {
+    async editEmoji(emojiID: string, options: Types.Guilds.EditGuildEmojiOptions): Promise<Types.Guilds.GuildEmoji> {
         return this.client.rest.guilds.editEmoji(this.id, emojiID, options);
     }
 
@@ -998,7 +919,7 @@ export default class Guild extends Base {
      * Edit the incident actions for this guild.
      * @param options The options for editing the incident actions.
      */
-    async editIncidentActions(options: EditIncidentActionsOptions): Promise<IncidentActions> {
+    async editIncidentActions(options: Types.Guilds.EditIncidentActionsOptions): Promise<Types.Guilds.IncidentActions> {
         return this.client.rest.guilds.editIncidentActions(this.id, options);
     }
 
@@ -1007,7 +928,7 @@ export default class Guild extends Base {
      * @param memberID The ID of the member.
      * @param options The options for editing the member.
      */
-    async editMember(memberID: string, options: EditMemberOptions): Promise<Member> {
+    async editMember(memberID: string, options: Types.Guilds.EditMemberOptions): Promise<Member> {
         return this.client.rest.guilds.editMember(this.id, memberID, options);
     }
 
@@ -1015,7 +936,7 @@ export default class Guild extends Base {
      * Edit this guild's onboarding configuration.
      * @param options The options for editing the onboarding configuration.
      */
-    async editOnboarding(options: EditOnboardingOptions): Promise<Onboarding> {
+    async editOnboarding(options: Types.Guilds.EditOnboardingOptions): Promise<Types.Guilds.Onboarding> {
         return this.client.rest.guilds.editOnboarding(this.id, options);
     }
 
@@ -1023,7 +944,7 @@ export default class Guild extends Base {
      * Edit an existing role.
      * @param options The options for editing the role.
      */
-    async editRole(roleID: string, options: EditRoleOptions): Promise<Role> {
+    async editRole(roleID: string, options: Types.Guilds.EditRoleOptions): Promise<Role> {
         return this.client.rest.guilds.editRole(this.id, roleID, options);
     }
 
@@ -1031,7 +952,7 @@ export default class Guild extends Base {
      * Edit the position of roles in this guild.
      * @param options The roles to move.
      */
-    async editRolePositions(options: Array<EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
+    async editRolePositions(options: Array<Types.Guilds.EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
         return this.client.rest.guilds.editRolePositions(this.id, options, reason);
     }
 
@@ -1040,7 +961,7 @@ export default class Guild extends Base {
      * @param scheduledEventID The ID of the scheduled event.
      * @param options The options for editing the scheduled event.
      */
-    async editScheduledEvent(scheduledEventID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
+    async editScheduledEvent(scheduledEventID: string, options: Types.ScheduledEvents.EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         return this.client.rest.guilds.editScheduledEvent(this.id, scheduledEventID, options);
     }
 
@@ -1049,7 +970,7 @@ export default class Guild extends Base {
      * @param soundID The ID of the soundboard sound.
      * @param options The options for editing the soundboard sound.
      */
-    async editSoundboardSound(soundID: string, options: EditSoundboardSoundOptions): Promise<Soundboard> {
+    async editSoundboardSound(soundID: string, options: Types.Guilds.EditSoundboardSoundOptions): Promise<Soundboard> {
         return this.client.rest.guilds.editSoundboardSound(this.id, soundID, options);
     }
 
@@ -1057,7 +978,7 @@ export default class Guild extends Base {
      * Edit a sticker.
      * @param options The options for editing the sticker.
      */
-    async editSticker(stickerID: string, options: EditStickerOptions): Promise<Sticker> {
+    async editSticker(stickerID: string, options: Types.Guilds.EditStickerOptions): Promise<Types.Guilds.Sticker> {
         return this.client.rest.guilds.editSticker(this.id, stickerID, options);
     }
 
@@ -1066,7 +987,7 @@ export default class Guild extends Base {
      * @param code The code of the template.
      * @param options The options for editing the template.
      */
-    async editTemplate(code: string, options: EditGuildTemplateOptions): Promise<GuildTemplate> {
+    async editTemplate(code: string, options: Types.GuildTemplate.EditGuildTemplateOptions): Promise<GuildTemplate> {
         return this.client.rest.guilds.editTemplate(this.id, code, options);
     }
 
@@ -1075,7 +996,7 @@ export default class Guild extends Base {
      * @param memberID The ID of the member.
      * @param options The options for editing the voice state.
      */
-    async editUserVoiceState(memberID: string, options: EditUserVoiceStateOptions): Promise<void> {
+    async editUserVoiceState(memberID: string, options: Types.Guilds.EditUserVoiceStateOptions): Promise<void> {
         return this.client.rest.guilds.editUserVoiceState(this.id, memberID, options);
     }
 
@@ -1083,7 +1004,7 @@ export default class Guild extends Base {
      * Edit the welcome screen in this guild.
      * @param options The options for editing the welcome screen.
      */
-    async editWelcomeScreen(options: EditWelcomeScreenOptions): Promise<WelcomeScreen> {
+    async editWelcomeScreen(options: Types.Guilds.EditWelcomeScreenOptions): Promise<Types.Guilds.WelcomeScreen> {
         return this.client.rest.guilds.editWelcomeScreen(this.id, options);
     }
 
@@ -1091,7 +1012,7 @@ export default class Guild extends Base {
      * Edit the widget of this guild.
      * @param options The options for editing the widget.
      */
-    async editWidget(options: WidgetSettings): Promise<Widget> {
+    async editWidget(options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.Widget> {
         return this.client.rest.guilds.editWidget(this.id, options);
     }
 
@@ -1132,14 +1053,14 @@ export default class Guild extends Base {
      * Request members from this guild.
      * @param options The options for fetching the members.
      */
-    async fetchMembers(options?: RequestGuildMembersOptions): Promise<Array<Member>> {
+    async fetchMembers(options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
         return this.shard.requestGuildMembers(this.id, options);
     }
 
     /**
      * Get the active threads in this guild.
      */
-    async getActiveThreads(): Promise<GetActiveThreadsResponse> {
+    async getActiveThreads(): Promise<Types.Guilds.GetActiveThreadsResponse> {
         return this.client.rest.guilds.getActiveThreads(this.id);
     }
 
@@ -1147,7 +1068,7 @@ export default class Guild extends Base {
      * Get this guild's audit log.
      * @param options The options for the audit log.
      */
-    async getAuditLog(options?: GetAuditLogOptions): Promise<AuditLog> {
+    async getAuditLog(options?: Types.AuditLog.GetAuditLogOptions): Promise<Types.AuditLog.AuditLog> {
         return this.client.rest.guilds.getAuditLog(this.id, options);
     }
 
@@ -1170,7 +1091,7 @@ export default class Guild extends Base {
      * Get a ban in this guild.
      * @param userID The ID of the user to get the ban of.
      */
-    async getBan(userID: string): Promise<Ban> {
+    async getBan(userID: string): Promise<Types.Guilds.Ban> {
         return this.client.rest.guilds.getBan(this.id, userID);
     }
 
@@ -1178,14 +1099,14 @@ export default class Guild extends Base {
      * Get the bans in this guild.
      * @param options The options for getting the bans.
      */
-    async getBans(options?: GetBansOptions): Promise<Array<Ban>> {
+    async getBans(options?: Types.Guilds.GetBansOptions): Promise<Array<Types.Guilds.Ban>> {
         return this.client.rest.guilds.getBans(this.id, options);
     }
 
     /**
      * Get the channels in a guild. Does not include threads. Only use this if you need to. See the `channels` collection.
      */
-    async getChannels(): Promise<Array<AnyGuildChannelWithoutThreads>> {
+    async getChannels(): Promise<Array<Types.Channels.AnyGuildChannelWithoutThreads>> {
         return this.client.rest.guilds.getChannels(this.id);
     }
 
@@ -1193,14 +1114,14 @@ export default class Guild extends Base {
      * Get an emoji in this guild.
      * @param emojiID The ID of the emoji to get.
      */
-    async getEmoji(emojiID: string): Promise<GuildEmoji> {
+    async getEmoji(emojiID: string): Promise<Types.Guilds.GuildEmoji> {
         return this.client.rest.guilds.getEmoji(this.id, emojiID);
     }
 
     /**
      * Get the emojis in this guild.
      */
-    async getEmojis(): Promise<Array<GuildEmoji>> {
+    async getEmojis(): Promise<Array<Types.Guilds.GuildEmoji>> {
         return this.client.rest.guilds.getEmojis(this.id);
     }
 
@@ -1209,7 +1130,7 @@ export default class Guild extends Base {
      * @param options The options for getting the entitlements.
      * @param applicationID The ID of the application to create the entitlement for. If present, defaults to the logged in client's application id.
      */
-    async getEntitlements(options?: Omit<SearchEntitlementsOptions, "guildID">, applicationID?: string): Promise<Array<Entitlement | TestEntitlement>> {
+    async getEntitlements(options?: Omit<Types.Applications.SearchEntitlementsOptions, "guildID">, applicationID?: string): Promise<Array<Entitlement | TestEntitlement>> {
         if (applicationID === undefined && this.client["_application"] === undefined) {
             throw new UncachedError("Client#application is not present, you must provide an applicationID as a second argument. To not need to provide an ID, only call this after at least one shard is READY, or restMode is enabled.");
         }
@@ -1226,7 +1147,7 @@ export default class Guild extends Base {
     /**
      * Get the invites of this guild.
      */
-    async getInvites(): Promise<Array<InviteWithMetadata<AnyGuildInviteChannel>>> {
+    async getInvites(): Promise<Array<InviteWithMetadata<Types.Channels.AnyGuildInviteChannel>>> {
         return this.client.rest.guilds.getInvites(this.id);
     }
 
@@ -1242,14 +1163,14 @@ export default class Guild extends Base {
      * Get this guild's members. This requires the `GUILD_MEMBERS` intent.
      * @param options The options for getting the members.
      */
-    async getMembers(options?: GetMembersOptions): Promise<Array<Member>> {
+    async getMembers(options?: Types.Guilds.GetMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.getMembers(this.id, options);
     }
 
     /**
      * Get the onboarding information for this guild.
      */
-    async getOnboarding(): Promise<Onboarding> {
+    async getOnboarding(): Promise<Types.Guilds.Onboarding> {
         return this.client.rest.guilds.getOnboarding(this.id);
     }
 
@@ -1264,7 +1185,7 @@ export default class Guild extends Base {
      * Get the prune count of this guild.
      * @param options The options for getting the prune count.
      */
-    async getPruneCount(options?: GetPruneCountOptions): Promise<number> {
+    async getPruneCount(options?: Types.Guilds.GetPruneCountOptions): Promise<number> {
         return this.client.rest.guilds.getPruneCount(this.id, options);
     }
 
@@ -1304,7 +1225,7 @@ export default class Guild extends Base {
      * @param eventID The ID of the scheduled event to get the users of.
      * @param options The options for getting the users.
      */
-    async getScheduledEventUsers(eventID: string, options?: GetScheduledEventUsersOptions): Promise<Array<ScheduledEventUser>> {
+    async getScheduledEventUsers(eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
         return this.client.rest.guilds.getScheduledEventUsers(this.id, eventID, options);
     }
 
@@ -1335,14 +1256,14 @@ export default class Guild extends Base {
      * Get a sticker. Response will include a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
      * @param stickerID The ID of the sticker to get.
      */
-    async getSticker(stickerID: string): Promise<Sticker> {
+    async getSticker(stickerID: string): Promise<Types.Guilds.Sticker> {
         return this.client.rest.guilds.getSticker(this.id, stickerID);
     }
 
     /**
      * Get this guild's stickers. Stickers will include a user if the client has the `MANAGE_EMOJIS_AND_STICKERS` permissions.
      */
-    async getStickers(): Promise<Array<Sticker>> {
+    async getStickers(): Promise<Array<Types.Guilds.Sticker>> {
         return this.client.rest.guilds.getStickers(this.id);
     }
 
@@ -1356,14 +1277,14 @@ export default class Guild extends Base {
     /**
      * Get the vanity url of this guild.
      */
-    async getVanityURL(): Promise<GetVanityURLResponse>{
+    async getVanityURL(): Promise<Types.Guilds.GetVanityURLResponse>{
         return this.client.rest.guilds.getVanityURL(this.id);
     }
 
     /**
      * Get the list of usable voice regions for this guild. This will return VIP servers when the guild is VIP-enabled.
      */
-    async getVoiceRegions(): Promise<Array<VoiceRegion>> {
+    async getVoiceRegions(): Promise<Array<Types.Voice.VoiceRegion>> {
         return this.client.rest.guilds.getVoiceRegions(this.id);
     }
 
@@ -1385,14 +1306,14 @@ export default class Guild extends Base {
     /**
      * Get the welcome screen for this guild.
      */
-    async getWelcomeScreen(): Promise<WelcomeScreen> {
+    async getWelcomeScreen(): Promise<Types.Guilds.WelcomeScreen> {
         return this.client.rest.guilds.getWelcomeScreen(this.id);
     }
 
     /**
      * Get the widget of this guild.
      */
-    async getWidget(): Promise<Widget> {
+    async getWidget(): Promise<Types.Guilds.Widget> {
         return this.client.rest.guilds.getWidget(this.id);
     }
 
@@ -1400,21 +1321,21 @@ export default class Guild extends Base {
      * Get the widget image of this guild.
      * @param style The style of the image.
      */
-    async getWidgetImage(style?: WidgetImageStyle): Promise<Buffer> {
+    async getWidgetImage(style?: Types.Guilds.WidgetImageStyle): Promise<Buffer> {
         return this.client.rest.guilds.getWidgetImage(this.id, style);
     }
 
     /**
      * Get the raw JSON widget of this guild.
      */
-    async getWidgetJSON(): Promise<RawWidget> {
+    async getWidgetJSON(): Promise<Types.Guilds.RawWidget> {
         return this.client.rest.guilds.getWidgetJSON(this.id);
     }
 
     /**
      * Get this guild's widget settings.
      */
-    async getWidgetSettings(): Promise<WidgetSettings> {
+    async getWidgetSettings(): Promise<Types.Guilds.WidgetSettings> {
         return this.client.rest.guilds.getWidgetSettings(this.id);
     }
 
@@ -1431,7 +1352,7 @@ export default class Guild extends Base {
      * Join a voice or stage channel.
      * @param options The options to join the channel with.
      */
-    joinChannel(options: Omit<JoinVoiceChannelOptions, "guildID" | "voiceAdapterCreator">): VoiceConnection {
+    joinChannel(options: Omit<Types.Voice.JoinVoiceChannelOptions, "guildID" | "voiceAdapterCreator">): VoiceConnection {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
         return this.client.joinVoiceChannel({
             ...options,
@@ -1459,7 +1380,7 @@ export default class Guild extends Base {
      * @param options The options to search with.
      * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
      */
-    async memberSearch(options?: MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<MemberSearchResults> {
+    async memberSearch(options?: Types.Guilds.MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MemberSearchResults> {
         return this.client.rest.guilds.memberSearch(this.id, options, retryOnIndexNotAvailable);
     }
 
@@ -1529,7 +1450,7 @@ export default class Guild extends Base {
      * Search the username & nicknames of members in this guild. See {@link Guild#memberSearch | memberSearch} for a more detailed search.
      * @param options The options for the search.
      */
-    async searchMembers(options: SearchMembersOptions): Promise<Array<Member>> {
+    async searchMembers(options: Types.Guilds.SearchMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.searchMembers(this.id, options);
     }
 
@@ -1550,7 +1471,7 @@ export default class Guild extends Base {
         return this.client.rest.guilds.syncTemplate(this.id, code);
     }
 
-    override toJSON(): JSONGuild {
+    override toJSON(): Types.JSON.JSONGuild {
         return {
             ...super.toJSON(),
             afkChannelID:                this.afkChannelID,

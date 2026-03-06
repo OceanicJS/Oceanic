@@ -6,18 +6,9 @@ import type IModalSubmitInteraction from "./ModalSubmitInteraction";
 import type IPingInteraction from "./PingInteraction";
 import type IComponentInteraction from "./ComponentInteraction";
 import type IAutocompleteInteraction from "./AutocompleteInteraction";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type {
-    AnyInteraction,
-    AnyRawInteraction,
-    RawApplicationCommandInteraction,
-    RawAutocompleteInteraction,
-    RawInteraction,
-    RawMessageComponentInteraction,
-    RawModalSubmitInteraction
-} from "../types/interactions";
 import { InteractionTypes } from "../Constants";
-import type { JSONInteraction } from "../types/json";
 
 
 /** Represents an interaction. */
@@ -34,7 +25,7 @@ export default class Interaction extends Base {
     type: InteractionTypes;
     /** Read-only property, always `1` */
     version: 1;
-    constructor(data: AnyRawInteraction, client: Client) {
+    constructor(data: Types.Interactions.AnyRawInteraction, client: Client) {
         super(data.id, client);
         this.acknowledged = false;
         this.application = client["_application"] && client.application.id === data.application_id ? client.application : undefined;
@@ -45,22 +36,22 @@ export default class Interaction extends Base {
     }
 
 
-    static from<T extends AnyInteraction = AnyInteraction>(data: RawInteraction, client: Client): T {
+    static from<T extends Types.Interactions.AnyInteraction = Types.Interactions.AnyInteraction>(data: Types.Interactions.RawInteraction, client: Client): T {
         switch (data.type) {
             case InteractionTypes.PING: {
                 return new PingInteraction(data, client) as T;
             }
             case InteractionTypes.APPLICATION_COMMAND: {
-                return new CommandInteraction(data as RawApplicationCommandInteraction, client) as T;
+                return new CommandInteraction(data as Types.Interactions.RawApplicationCommandInteraction, client) as T;
             }
             case InteractionTypes.MESSAGE_COMPONENT: {
-                return new ComponentInteraction(data as RawMessageComponentInteraction, client) as T;
+                return new ComponentInteraction(data as Types.Interactions.RawMessageComponentInteraction, client) as T;
             }
             case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
-                return new AutocompleteInteraction(data as RawAutocompleteInteraction, client) as T;
+                return new AutocompleteInteraction(data as Types.Interactions.RawAutocompleteInteraction, client) as T;
             }
             case InteractionTypes.MODAL_SUBMIT: {
-                return new ModalSubmitInteraction(data as RawModalSubmitInteraction, client) as T;
+                return new ModalSubmitInteraction(data as Types.Interactions.RawModalSubmitInteraction, client) as T;
             }
             default: {
                 return new Interaction(data, client) as never;
@@ -93,7 +84,7 @@ export default class Interaction extends Base {
         return this.type === InteractionTypes.PING;
     }
 
-    override toJSON(): JSONInteraction {
+    override toJSON(): Types.JSON.JSONInteraction {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,

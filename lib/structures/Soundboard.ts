@@ -1,8 +1,8 @@
 /** @module Soundboard */
 import Base from "./Base";
 import User from "./User";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { EditSoundboardSoundOptions, JSONSoundboard, RawSoundboard } from "../types";
 
 /** Represents a soundboard. */
 export default class Soundboard extends Base {
@@ -22,7 +22,7 @@ export default class Soundboard extends Base {
     user?: User;
     /** The volume of the soundboard sound. */
     volume: number;
-    constructor(data: RawSoundboard, client: Client) {
+    constructor(data: Types.Channels.RawSoundboard, client: Client) {
         super(data.sound_id, client);
         this.available = data.available;
         this.emojiID = data.emoji_id;
@@ -46,7 +46,7 @@ export default class Soundboard extends Base {
      * Edit this soundboard sound.
      * @param options The options for editing the soundboard sound.
      */
-    async edit(options: EditSoundboardSoundOptions): Promise<Soundboard> {
+    async edit(options: Types.Guilds.EditSoundboardSoundOptions): Promise<Soundboard> {
         return this.client.rest.guilds.editSoundboardSound(this.guildID!, this.id, options);
     }
 
@@ -59,7 +59,7 @@ export default class Soundboard extends Base {
         return this.client.rest.channels.sendSoundboardSound(channelID, { soundID: this.soundID, sourceGuildID });
     }
 
-    override toJSON(): JSONSoundboard {
+    override toJSON(): Types.JSON.JSONSoundboard {
         return {
             ...super.toJSON(),
             available: this.available,

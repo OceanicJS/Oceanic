@@ -2,18 +2,10 @@
 import Channel from "./Channel";
 import type User from "./User";
 import Message from "./Message";
+import type * as Types from "../types/namespaced";
 import type { ChannelTypes } from "../Constants";
 import type Client from "../Client";
-import type {
-    CreateMessageOptions,
-    EditMessageOptions,
-    GetChannelMessagesOptions,
-    GetReactionsOptions,
-    RawMessage,
-    RawPrivateChannel
-} from "../types/channels";
 import TypedCollection from "../util/TypedCollection";
-import type { JSONPrivateChannel } from "../types/json";
 
 /** Represents a direct message with a user. */
 export default class PrivateChannel extends Channel {
@@ -22,18 +14,18 @@ export default class PrivateChannel extends Channel {
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<RawMessage, Message<this>>;
+    messages: TypedCollection<Types.Channels.RawMessage, Message<this>>;
     /** The other user in this direct message. */
     recipient: User;
     declare type: ChannelTypes.DM;
-    constructor(data: RawPrivateChannel, client: Client) {
+    constructor(data: Types.Channels.RawPrivateChannel, client: Client) {
         super(data, client);
         this.messages = new TypedCollection(Message<this>, client, this.client.util._getLimit("messages", this.id));
         this.lastMessageID = data.last_message_id;
         this.recipient = client.users.update(data.recipients[0]);
     }
 
-    protected override update(data: Partial<RawPrivateChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawPrivateChannel>): void {
         if (data.last_message_id !== undefined) {
             this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
             this.lastMessageID = data.last_message_id;
@@ -44,7 +36,7 @@ export default class PrivateChannel extends Channel {
      * Create a message in this channel.
      * @param options The options for creating the message.
      */
-    async createMessage(options: CreateMessageOptions): Promise<Message<this>> {
+    async createMessage(options: Types.Channels.CreateMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.createMessage<this>(this.id, options);
     }
 
@@ -80,7 +72,7 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<this>> {
+    async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<this>> {
         return this.client.rest.channels.editMessage<this>(this.id, messageID, options);
     }
 
@@ -96,7 +88,7 @@ export default class PrivateChannel extends Channel {
      * Get messages in this channel.
      * @param options The options for getting the messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<this>>> {
+    async getMessages(options?: Types.Channels.GetChannelMessagesOptions): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getMessages<this>(this.id, options);
     }
 
@@ -113,7 +105,7 @@ export default class PrivateChannel extends Channel {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
+    async getReactions(messageID: string, emoji: string, options?: Types.Channels.GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
@@ -133,7 +125,7 @@ export default class PrivateChannel extends Channel {
         return this.client.rest.channels.sendTyping(this.id);
     }
 
-    override toJSON(): JSONPrivateChannel {
+    override toJSON(): Types.JSON.JSONPrivateChannel {
         return {
             ...super.toJSON(),
             lastMessageID: this.lastMessageID,

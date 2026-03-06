@@ -1,6 +1,6 @@
 /** @module Permission */
+import type * as Types from "../types/namespaced";
 import { Permissions, type PermissionName as PermissionNames } from "../Constants";
-import type { JSONPermission } from "../types/json";
 
 /** Represents a permission. */
 export default class Permission {
@@ -56,7 +56,7 @@ export default class Permission {
         return true;
     }
 
-    toJSON(): JSONPermission {
+    toJSON(): Types.JSON.JSONPermission {
         return {
             allow: this.allow.toString(),
             deny:  this.deny.toString()

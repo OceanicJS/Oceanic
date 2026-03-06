@@ -7,23 +7,13 @@ import PartialApplication from "./PartialApplication";
 import InviteGuild from "./InviteGuild";
 import InviteRole from "./InviteRole";
 import GuildChannel from "./GuildChannel";
-import type { AnyGuildInviteChannel, AnyInviteChannel, PartialInviteChannel } from "../types/channels";
-import type {
-    DMInviteChannel,
-    GuildInviteChannel,
-    InviteChannel,
-    InviteStageInstance,
-    InviteTargetUsersJobStatusResponse,
-    RawInvite
-} from "../types/invites";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import { DMInviteChannelTypes, type InviteTargetTypes, type InviteTypes } from "../Constants";
-import type { JSONInvite } from "../types/json";
-import type { Uncached } from "../types/shared";
 
 /** Represents an invite. */
-export default class Invite<CH extends InviteChannel = InviteChannel> {
-    private _cachedChannel!: (CH extends AnyInviteChannel ? CH : PartialInviteChannel) | null;
+export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel> {
+    private _cachedChannel!: (CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) | null;
     /** The approximate number of total members in the guild this invite leads to. */
     approximateMemberCount?: number;
     /** The approximate number of online members in the guild this invite leads to. */
@@ -54,7 +44,7 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
     /** The roles assigned to the user upon accepting the invite . */
     roles?: Array<InviteRole>;
     /** @deprecated The stage instance in the invite this channel is for. */
-    stageInstance?: InviteStageInstance;
+    stageInstance?: Types.Invites.InviteStageInstance;
     /** The embedded application this invite will open. */
     targetApplication?: PartialApplication;
     /** The [target type](https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types) of this invite. */
@@ -67,7 +57,7 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
     type: InviteTypes;
     /** The number of times this invite has been used. */
     uses: number | undefined;
-    constructor(data: RawInvite, client: Client) {
+    constructor(data: Types.Invites.RawInvite, client: Client) {
         Object.defineProperty(this, "client", {
             value:        client,
             enumerable:   false,
@@ -85,23 +75,23 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
         this.update(data);
     }
 
-    static withCounts<CH extends GuildInviteChannel = GuildInviteChannel>(data: RawInvite, client: Client): InviteWithCounts<CH> {
+    static withCounts<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(data: Types.Invites.RawInvite, client: Client): InviteWithCounts<CH> {
         return new Invite<CH>(data, client) as InviteWithCounts<CH>;
     }
 
-    static withCountsAndScheduledEvent<CH extends GuildInviteChannel = GuildInviteChannel>(data: RawInvite, client: Client): InviteWithCountsAndScheduledEvent<CH> {
+    static withCountsAndScheduledEvent<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(data: Types.Invites.RawInvite, client: Client): InviteWithCountsAndScheduledEvent<CH> {
         return new Invite<CH>(data, client) as InviteWithCountsAndScheduledEvent<CH>;
     }
 
-    static withMetadata<CH extends GuildInviteChannel = GuildInviteChannel>(data: RawInvite, client: Client): InviteWithMetadata<CH> {
+    static withMetadata<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(data: Types.Invites.RawInvite, client: Client): InviteWithMetadata<CH> {
         return new Invite<CH>(data, client) as InviteWithMetadata<CH>;
     }
 
-    static withScheduledEvent<CH extends GuildInviteChannel = GuildInviteChannel>(data: RawInvite, client: Client): InviteWithScheduledEvent<CH> {
+    static withScheduledEvent<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(data: Types.Invites.RawInvite, client: Client): InviteWithScheduledEvent<CH> {
         return new Invite<CH>(data, client) as InviteWithScheduledEvent<CH>;
     }
 
-    protected update(data: Partial<RawInvite>): void {
+    protected update(data: Partial<Types.Invites.RawInvite>): void {
         if (data.approximate_member_count !== undefined) {
             this.approximateMemberCount = data.approximate_member_count;
         }
@@ -128,16 +118,16 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
         if (this.channelID === null) {
             this._cachedChannel = null;
         } else {
-            let channel: Channel | PartialInviteChannel | undefined;
-            channel = this.client.getChannel<AnyInviteChannel>(this.channelID);
+            let channel: Channel | Types.Channels.PartialInviteChannel | undefined;
+            channel = this.client.getChannel<Types.Channels.AnyInviteChannel>(this.channelID);
             if (data.channel !== undefined) {
                 if (channel && channel instanceof Channel) {
                     channel["update"](data.channel);
                 } else {
-                    channel = data.channel as PartialInviteChannel;
+                    channel = data.channel as Types.Channels.PartialInviteChannel;
                 }
             }
-            this._cachedChannel = channel as (CH extends AnyInviteChannel ? CH : PartialInviteChannel) | null;
+            this._cachedChannel = channel as (CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) | null;
         }
 
         if (data.inviter !== undefined) {
@@ -183,15 +173,15 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
     }
 
     /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name`, and `type`. */
-    get channel(): (CH extends AnyInviteChannel ? CH : PartialInviteChannel) | null {
+    get channel(): (CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) | null {
         if (this.channelID !== null) {
             if (this._cachedChannel instanceof Channel) {
                 return this._cachedChannel;
             }
 
-            const cachedChannel = this.client.getChannel<AnyInviteChannel>(this.channelID);
+            const cachedChannel = this.client.getChannel<Types.Channels.AnyInviteChannel>(this.channelID);
 
-            return cachedChannel ? (this._cachedChannel = cachedChannel as CH extends AnyInviteChannel ? CH : PartialInviteChannel) : this._cachedChannel;
+            return cachedChannel ? (this._cachedChannel = cachedChannel as CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) : this._cachedChannel;
         }
 
         return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
@@ -211,24 +201,24 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
     }
 
     /** et the target users job status for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
-    async getTargetUsersJobStatus(): Promise<InviteTargetUsersJobStatusResponse> {
+    async getTargetUsersJobStatus(): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
         return this.client.rest.channels.getInviteTargetUsersJobStatus(this.code);
     }
 
     /** Whether this invite belongs to a cached channel. The only difference on using this method over a simple if statement is to easily update all the invite properties typing definitions based on the channel it belongs to. */
-    inCachedChannel(): this is Invite<AnyInviteChannel> {
+    inCachedChannel(): this is Invite<Types.Channels.AnyInviteChannel> {
         return this.channel instanceof Channel;
     }
 
-    inCachedGuildChannel(): this is Invite<AnyGuildInviteChannel> {
+    inCachedGuildChannel(): this is Invite<Types.Channels.AnyGuildInviteChannel> {
         return this.channel instanceof GuildChannel;
     }
 
-    inDMChannel(): this is Invite<Exclude<DMInviteChannel, Uncached>> {
+    inDMChannel(): this is Invite<Exclude<Types.Invites.DMInviteChannel, Types.Shared.Uncached>> {
         return this.channel !== null && DMInviteChannelTypes.includes(this.channel.type as never);
     }
 
-    toJSON(): JSONInvite {
+    toJSON(): Types.JSON.JSONInvite {
         return {
             approximateMemberCount:   this.approximateMemberCount,
             approximatePresenceCount: this.approximatePresenceCount,
@@ -267,7 +257,7 @@ export default class Invite<CH extends InviteChannel = InviteChannel> {
 }
 
 // only possible on `/invites/{code}`
-export interface InviteWithoutCounts<CH extends InviteChannel = InviteChannel> extends Invite<CH> {
+export interface InviteWithoutCounts<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel> extends Invite<CH> {
     approximateMemberCount: undefined;
     approximatePresenceCount: undefined;
     createdAt: undefined;
@@ -279,7 +269,7 @@ export interface InviteWithoutCounts<CH extends InviteChannel = InviteChannel> e
 }
 
 // only possible on `/invites/{code}`
-export interface InviteWithScheduledEvent<CH extends GuildInviteChannel = GuildInviteChannel> extends Invite<CH> {
+export interface InviteWithScheduledEvent<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel> extends Invite<CH> {
     approximateMemberCount: undefined;
     approximatePresenceCount: undefined;
     createdAt: undefined;
@@ -291,7 +281,7 @@ export interface InviteWithScheduledEvent<CH extends GuildInviteChannel = GuildI
 }
 
 // only possible via `with_counts=true` on `/invites/{code}`
-export interface InviteWithCounts<CH extends InviteChannel = GuildInviteChannel | DMInviteChannel> extends Invite<CH> {
+export interface InviteWithCounts<CH extends Types.Invites.InviteChannel = Types.Invites.GuildInviteChannel | Types.Invites.DMInviteChannel> extends Invite<CH> {
     approximateMemberCount: number;
     approximatePresenceCount: number | undefined;
     createdAt: undefined;
@@ -303,7 +293,7 @@ export interface InviteWithCounts<CH extends InviteChannel = GuildInviteChannel 
 }
 
 // only possible via `with_counts=true&guild_scheduled_event_id={id}` on `/invites/{code}`
-export interface InviteWithCountsAndScheduledEvent<CH extends GuildInviteChannel = GuildInviteChannel> extends Invite<CH> {
+export interface InviteWithCountsAndScheduledEvent<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel> extends Invite<CH> {
     approximateMemberCount: number;
     approximatePresenceCount: number;
     createdAt: undefined;
@@ -315,7 +305,7 @@ export interface InviteWithCountsAndScheduledEvent<CH extends GuildInviteChannel
 }
 
 // only possible on `/channels/{id}/invites` and `/guilds/{id}/invites`
-export interface InviteWithMetadata<CH extends GuildInviteChannel = GuildInviteChannel> extends Invite<CH> {
+export interface InviteWithMetadata<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel> extends Invite<CH> {
     approximateMemberCount: undefined;
     approximatePresenceCount: undefined;
     createdAt: Date;

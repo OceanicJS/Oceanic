@@ -4,20 +4,11 @@ import type User from "./User";
 import type Guild from "./Guild";
 import type Permission from "./Permission";
 import type VoiceState from "./VoiceState";
+import type * as Types from "../types/namespaced";
 import { GuildMemberFlags, type ImageFormat } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import type {
-    CreateBanOptions,
-    EditMemberOptions,
-    EditUserVoiceStateOptions,
-    RawMember,
-    RESTMember,
-    Presence
-} from "../types/guilds";
-import type { JSONMember } from "../types/json";
 import { UncachedError } from "../util/Errors";
-import type { AvatarDecorationData } from "../types";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
@@ -25,7 +16,7 @@ export default class Member extends Base {
     /** The member's avatar hash, if they have set a guild avatar. */
     avatar: string | null;
     /** The data for this user's avatar decoration. */
-    avatarDecorationData: AvatarDecorationData | null;
+    avatarDecorationData: Types.Users.AvatarDecorationData | null;
     /** The member's banner hash, if they have set a guild banner. */
     banner: string | null;
     /** When the member's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire, if active. */
@@ -49,12 +40,12 @@ export default class Member extends Base {
     /** The date at which this member started boosting the guild, if applicable. */
     premiumSince: Date | null;
     /** The presence of this member. */
-    presence?: Presence;
+    presence?: Types.Guilds.Presence;
     /** The roles this member has. */
     roles: Array<string>;
     /** The user associated with this member. */
     user: User;
-    constructor(data: (RawMember | RESTMember) & { id?: string; }, client: Client, guildID: string) {
+    constructor(data: (Types.Guilds.RawMember | Types.Guilds.RESTMember) & { id?: string; }, client: Client, guildID: string) {
         let user: User | undefined;
         let id: string | undefined;
         if (!data.user && data.id) {
@@ -87,7 +78,7 @@ export default class Member extends Base {
         return this.edit({ flags: enable ? this.flags | flag : this.flags & ~flag, reason });
     }
 
-    protected override update(data: Partial<RawMember | RESTMember>): void {
+    protected override update(data: Partial<Types.Guilds.RawMember | Types.Guilds.RESTMember>): void {
         if (data.avatar !== undefined) {
             this.avatar = data.avatar;
         }
@@ -233,7 +224,7 @@ export default class Member extends Base {
      * Create a ban for this member.
      * @param options The options for the ban.
      */
-    async ban(options?: CreateBanOptions): Promise<void> {
+    async ban(options?: Types.Guilds.CreateBanOptions): Promise<void> {
         await this.client.rest.guilds.createBan(this.guildID, this.id, options);
     }
 
@@ -261,7 +252,7 @@ export default class Member extends Base {
      * Edit this member. Use {@link Guild#editCurrentMember | Guild#editCurrentMember} if you wish to update the nick of this client using the `CHANGE_NICKNAME` permission.
      * @param options The options for editing the member.
      */
-    async edit(options: EditMemberOptions): Promise<Member> {
+    async edit(options: Types.Guilds.EditMemberOptions): Promise<Member> {
         return this.client.rest.guilds.editMember(this.guildID, this.id, options);
     }
 
@@ -269,7 +260,7 @@ export default class Member extends Base {
      * Edit this guild member's voice state. `channelID` is required, and the user must already be in that channel. See [Discord's docs](https://discord.com/developers/docs/resources/guild#modify-user-voice-state) for more information.
      * @param options The options for editing the voice state.
      */
-    async editVoiceState(options: EditUserVoiceStateOptions): Promise<void> {
+    async editVoiceState(options: Types.Guilds.EditUserVoiceStateOptions): Promise<void> {
         return this.client.rest.guilds.editUserVoiceState(this.guildID, this.id, options);
     }
 
@@ -298,7 +289,7 @@ export default class Member extends Base {
         await this.client.rest.guilds.removeMemberRole(this.guildID, this.id, roleID, reason);
     }
 
-    override toJSON(): JSONMember {
+    override toJSON(): Types.JSON.JSONMember {
         return {
             ...super.toJSON(),
             avatar:                     this.avatar,

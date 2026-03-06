@@ -1,10 +1,9 @@
 /** @module PermissionOverwrite */
 import Base from "./Base";
 import Permission from "./Permission";
+import type * as Types from "../types/namespaced";
 import type { OverwriteTypes, PermissionName as PermissionNames, Permissions } from "../Constants";
 import type Client from "../Client";
-import type { RawOverwrite } from "../types/channels";
-import type { JSONPermissionOverwrite } from "../types/json";
 
 /** Represents a permission overwrite. */
 export default class PermissionOverwrite extends Base {
@@ -12,13 +11,13 @@ export default class PermissionOverwrite extends Base {
     permission: Permission;
     /** The type of this overwrite. `0` for role, `1` for user. */
     type: OverwriteTypes;
-    constructor(data: RawOverwrite, client: Client) {
+    constructor(data: Types.Channels.RawOverwrite, client: Client) {
         super(data.id, client);
         this.permission = new Permission(data.allow, data.deny);
         this.type = data.type;
     }
 
-    protected override update(data: Partial<RawOverwrite>): void {
+    protected override update(data: Partial<Types.Channels.RawOverwrite>): void {
         if (data.allow !== undefined || data.deny !== undefined) {
             this.permission = new Permission(data.allow ?? 0n, data.deny ?? 0n);
         }
@@ -44,7 +43,7 @@ export default class PermissionOverwrite extends Base {
         return this.permission.has(...permissions);
     }
 
-    override toJSON(): JSONPermissionOverwrite {
+    override toJSON(): Types.JSON.JSONPermissionOverwrite {
         return {
             ...super.toJSON(),
             permission: this.permission.toJSON(),

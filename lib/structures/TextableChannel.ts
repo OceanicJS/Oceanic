@@ -8,38 +8,24 @@ import type Member from "./Member";
 import Permission from "./Permission";
 import type User from "./User";
 import type Webhook from "./Webhook";
+import type * as Types from "../types/namespaced";
 import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
-import type {
-    CreateMessageOptions,
-    EditMessageOptions,
-    EditPermissionOptions,
-    GetChannelMessagesOptions,
-    GetReactionsOptions,
-    RawMessage,
-    RawAnnouncementChannel,
-    RawOverwrite,
-    RawTextChannel,
-    PurgeOptions
-} from "../types/channels";
-import type { JSONTextableChannel } from "../types/json";
-import type { CreateInviteOptions } from "../types/invites";
-import type { AnyTextableGuildChannel, CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild textable channel. */
-export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTextableGuildChannel> extends GuildChannel {
+export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildChannel = Types.Channels.AnyTextableGuildChannel> extends GuildChannel {
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
     lastMessage?: Message<CH> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<RawMessage, Message<CH>>;
+    messages: TypedCollection<Types.Channels.RawMessage, Message<CH>>;
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<Types.Channels.RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators sending messages. */
@@ -47,7 +33,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
     /** The topic of the channel. */
     topic: string | null;
     declare type: CH["type"];
-    constructor(data: RawTextChannel | RawAnnouncementChannel | RawVoiceChannel | RawStageChannel, client: Client) {
+    constructor(data: Types.Channels.RawTextChannel | Types.Channels.RawAnnouncementChannel | Types.Channels.RawVoiceChannel | Types.Channels.RawStageChannel, client: Client) {
         super(data, client);
         this.lastMessageID = data.last_message_id;
         this.messages = new TypedCollection(Message<CH>, client, this.client.util._getLimit("messages", this.id));
@@ -59,7 +45,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
         this.update(data);
     }
 
-    protected override update(data: Partial<RawTextChannel | RawAnnouncementChannel | RawVoiceChannel | RawStageChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawTextChannel | Types.Channels.RawAnnouncementChannel | Types.Channels.RawVoiceChannel | Types.Channels.RawStageChannel>): void {
         super.update(data);
         if (data.last_message_id !== undefined) {
             this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
@@ -96,7 +82,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * Create an invite for this channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param options The options for the invite.
      */
-    async createInvite(options: CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
+    async createInvite(options: Types.Invites.CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
         return this.client.rest.channels.createInvite<CH>(this.id, options);
     }
 
@@ -104,7 +90,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * Create a message in this channel.
      * @param options The options for the message.
      */
-    async createMessage(options: CreateMessageOptions): Promise<Message<CH>> {
+    async createMessage(options: Types.Channels.CreateMessageOptions): Promise<Message<CH>> {
         return this.client.rest.channels.createMessage<CH>(this.id, options);
     }
 
@@ -121,7 +107,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * Create a webhook in this channel.
      * @param options The options to create the webhook with.
      */
-    async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+    async createWebhook(options: Types.Webhooks.CreateWebhookOptions): Promise<Webhook> {
         return this.client.rest.webhooks.create(this.id, options);
     }
 
@@ -176,7 +162,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<CH>> {
+    async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<CH>> {
         return this.client.rest.channels.editMessage<CH>(this.id, messageID, options);
     }
 
@@ -185,7 +171,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
+    async editPermission(overwriteID: string, options: Types.Channels.EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
@@ -208,7 +194,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * Get messages in this channel.
      * @param options The options for getting the messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<CH>>> {
+    async getMessages(options?: Types.Channels.GetChannelMessagesOptions): Promise<Array<Message<CH>>> {
         return this.client.rest.channels.getMessages<CH>(this.id, options);
     }
 
@@ -225,7 +211,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      */
-    async getReactions(messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
+    async getReactions(messageID: string, emoji: string, options?: Types.Channels.GetReactionsOptions): Promise<Array<User>> {
         return this.client.rest.channels.getReactions(this.id, messageID, emoji, options);
     }
 
@@ -285,7 +271,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
      * Purge an amount of messages from this channel.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async purge(options: PurgeOptions<CH>): Promise<number> {
+    async purge(options: Types.Channels.PurgeOptions<CH>): Promise<number> {
         return this.client.rest.channels.purgeMessages(this.id, options);
     }
 
@@ -296,7 +282,7 @@ export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTex
         return this.client.rest.channels.sendTyping(this.id);
     }
 
-    override toJSON(): JSONTextableChannel {
+    override toJSON(): Types.JSON.JSONTextableChannel {
         return {
             ...super.toJSON(),
             lastMessageID:        this.lastMessageID,

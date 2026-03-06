@@ -4,9 +4,8 @@ import Permission from "./Permission";
 import type Guild from "./Guild";
 import type InviteGuild from "./InviteGuild";
 import type Role from "./Role";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type { EditRoleOptions, RoleColors, RawInviteRole } from "../types/guilds";
-import type { JSONInviteRole } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a partial role for an invite. */
@@ -19,7 +18,7 @@ export default class InviteRole extends Base {
      */
     color: number;
     /** The colors of this role. */
-    colors: RoleColors;
+    colors: Types.Guilds.RoleColors;
     guild: InviteGuild;
     /** The id of the guild this role is in. */
     guildID: string;
@@ -33,7 +32,7 @@ export default class InviteRole extends Base {
     position: number;
     /** The unicode emoji of this role. */
     unicodeEmoji: string | null;
-    constructor(data: RawInviteRole, client: Client, guildID: string, guild: InviteGuild) {
+    constructor(data: Types.Guilds.RawInviteRole, client: Client, guildID: string, guild: InviteGuild) {
         super(data.id, client);
         this.color = data.color;
         this.colors = {
@@ -91,7 +90,7 @@ export default class InviteRole extends Base {
      * Edit this role.
      * @param options The options for editing the role.
      */
-    async edit(options: EditRoleOptions): Promise<Role> {
+    async edit(options: Types.Guilds.EditRoleOptions): Promise<Role> {
         return this.client.rest.guilds.editRole(this.guildID, this.id, options);
     }
 
@@ -103,7 +102,7 @@ export default class InviteRole extends Base {
         return role;
     }
 
-    override toJSON(): JSONInviteRole {
+    override toJSON(): Types.JSON.JSONInviteRole {
         return {
             ...super.toJSON(),
             color:        this.color,

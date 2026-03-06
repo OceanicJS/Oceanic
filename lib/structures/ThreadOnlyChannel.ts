@@ -7,18 +7,8 @@ import Permission from "./Permission";
 import type CategoryChannel from "./CategoryChannel";
 import type Webhook from "./Webhook";
 import type { InviteWithMetadata } from "./Invite";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import type {
-    ArchivedThreads,
-    EditPermissionOptions,
-    ForumEmoji,
-    ForumTag,
-    GetArchivedThreadsOptions,
-    RawOverwrite,
-    StartThreadInThreadOnlyChannelOptions
-} from "../types/channels";
-import type { CreateInviteOptions } from "../types/invites";
-import type { JSONThreadOnlyChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 import {
     AllPermissions,
@@ -27,20 +17,19 @@ import {
     type ForumLayoutTypes,
     type ThreadAutoArchiveDuration
 } from "../Constants";
-import type { CreateWebhookOptions, RawThreadOnlyChannel, ThreadOnlyChannels } from "../types";
 import { UncachedError } from "../util/Errors";
 import Collection from "../util/Collection";
 
 /** Represents a thread only channel. */
 export default class ThreadOnlyChannel extends GuildChannel {
     /** The usable tags for threads. */
-    availableTags: Array<ForumTag>;
+    availableTags: Array<Types.Channels.ForumTag>;
     /** The default auto archive duration for threads. */
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     /** The default forum layout used to display threads. */
     defaultForumLayout: ForumLayoutTypes;
     /** The default reaction emoji for threads. */
-    defaultReactionEmoji: ForumEmoji | null;
+    defaultReactionEmoji: Types.Channels.ForumEmoji | null;
     /** The default sort order mode used to sort threads. */
     defaultSortOrder: SortOrderTypes | null;
     /** The default amount of seconds between non-moderators sending messages in threads. */
@@ -52,15 +41,15 @@ export default class ThreadOnlyChannel extends GuildChannel {
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<Types.Channels.RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     /** The amount of seconds between non-moderators creating threads. */
     rateLimitPerUser: number;
     /** The `guidelines` of this forum channel. */
     topic: string | null;
-    declare type: ThreadOnlyChannels;
-    constructor(data: RawThreadOnlyChannel, client: Client) {
+    declare type: Types.Channels.ThreadOnlyChannels;
+    constructor(data: Types.Channels.RawThreadOnlyChannel, client: Client) {
         super(data, client);
         this.availableTags = [];
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
@@ -78,7 +67,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawThreadOnlyChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawThreadOnlyChannel>): void {
         super.update(data);
         if (data.available_tags !== undefined) {
             this.availableTags = data.available_tags.map(tag => ({
@@ -153,7 +142,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * Create an invite for this channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param options The options for the invite.
      */
-    async createInvite(options: CreateInviteOptions): Promise<InviteWithMetadata<this>> {
+    async createInvite(options: Types.Invites.CreateInviteOptions): Promise<InviteWithMetadata<this>> {
         return this.client.rest.channels.createInvite<this>(this.id, options);
     }
 
@@ -161,7 +150,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * Create a webhook in this channel.
      * @param options The options to create the webhook with.
      */
-    async createWebhook(options: CreateWebhookOptions): Promise<Webhook> {
+    async createWebhook(options: Types.Webhooks.CreateWebhookOptions): Promise<Webhook> {
         return this.client.rest.webhooks.create(this.id, options);
     }
 
@@ -179,7 +168,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
+    async editPermission(overwriteID: string, options: Types.Channels.EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
@@ -194,7 +183,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * Get the public archived threads in this channel.
      * @param options The options for getting the public archived threads.
      */
-    async getPublicArchivedThreads(options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PublicThreadChannel>> {
+    async getPublicArchivedThreads(options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PublicThreadChannel>> {
         return this.client.rest.channels.getPublicArchivedThreads<PublicThreadChannel>(this.id, options);
     }
 
@@ -246,11 +235,11 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * Create a thread in this forum channel.
      * @param options The options for starting the thread.
      */
-    async startThread(options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
+    async startThread(options: Types.Channels.StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         return this.client.rest.channels.startThreadInThreadOnlyChannel(this.id, options);
     }
 
-    override toJSON(): JSONThreadOnlyChannel {
+    override toJSON(): Types.JSON.JSONThreadOnlyChannel {
         return {
             ...super.toJSON(),
             availableTags:                 this.availableTags,

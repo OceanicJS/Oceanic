@@ -4,10 +4,9 @@ import PartialApplication from "./PartialApplication";
 import type User from "./User";
 import type Guild from "./Guild";
 import type Role from "./Role";
-import type { IntegrationAccount, RawIntegration } from "../types/guilds";
+import type * as Types from "../types/namespaced";
 import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
 import type Client from "../Client";
-import type { JSONIntegration } from "../types/json";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild integration. */
@@ -15,7 +14,7 @@ export default class Integration extends Base {
     private _cachedGuild?: Guild | null;
     private _cachedRole?: Role | null;
     /** The account information associated with this integration. */
-    account: IntegrationAccount;
+    account: Types.Guilds.IntegrationAccount;
     /** The application associated with this integration. */
     application: PartialApplication | null;
     /** If emoticons should be synced for this integration. */
@@ -46,7 +45,7 @@ export default class Integration extends Base {
     type: IntegrationType;
     /** The user associated with this integration, if applicable. */
     user?: User;
-    constructor(data: RawIntegration, client: Client, guildID?: string) {
+    constructor(data: Types.Guilds.RawIntegration, client: Client, guildID?: string) {
         super(data.id, client);
         this.account = data.account;
         this.application = null;
@@ -61,7 +60,7 @@ export default class Integration extends Base {
         this.update(data);
     }
 
-    protected override update(data: Partial<RawIntegration>): void {
+    protected override update(data: Partial<Types.Guilds.RawIntegration>): void {
         if (data.account !== undefined) {
             this.account = data.account;
         }
@@ -144,7 +143,7 @@ export default class Integration extends Base {
         return this._cachedRole === null ? this._cachedRole : (this._cachedRole = null);
     }
 
-    override toJSON(): JSONIntegration {
+    override toJSON(): Types.JSON.JSONIntegration {
         return {
             ...super.toJSON(),
             account:           this.account,

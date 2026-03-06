@@ -3,29 +3,28 @@ import PermissionOverwrite from "./PermissionOverwrite";
 import GuildChannel from "./GuildChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
-import type { EditPermissionOptions, RawCategoryChannel, RawOverwrite } from "../types/channels";
-import type { JSONCategoryChannel } from "../types/json";
 import { UncachedError } from "../util/Errors";
 import Collection from "../util/Collection";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {
     /** The permission overwrites of this channel. */
-    permissionOverwrites: TypedCollection<RawOverwrite, PermissionOverwrite>;
+    permissionOverwrites: TypedCollection<Types.Channels.RawOverwrite, PermissionOverwrite>;
     /** The position of this channel on the sidebar. */
     position: number;
     declare type: ChannelTypes.GUILD_CATEGORY;
-    constructor(data: RawCategoryChannel, client: Client) {
+    constructor(data: Types.Channels.RawCategoryChannel, client: Client) {
         super(data, client);
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.update(data);
     }
 
-    protected override update(data: Partial<RawCategoryChannel>): void {
+    protected override update(data: Partial<Types.Channels.RawCategoryChannel>): void {
         super.update(data);
         if (data.position !== undefined) {
             this.position = data.position;
@@ -62,7 +61,7 @@ export default class CategoryChannel extends GuildChannel {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      */
-    async editPermission(overwriteID: string, options: EditPermissionOptions): Promise<void> {
+    async editPermission(overwriteID: string, options: Types.Channels.EditPermissionOptions): Promise<void> {
         return this.client.rest.channels.editPermission(this.id, overwriteID, options);
     }
 
@@ -102,7 +101,7 @@ export default class CategoryChannel extends GuildChannel {
         return new Permission(permission);
     }
 
-    override toJSON(): JSONCategoryChannel {
+    override toJSON(): Types.JSON.JSONCategoryChannel {
         return {
             ...super.toJSON(),
             channels:             this.channels.map(channel => channel.id),

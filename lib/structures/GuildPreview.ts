@@ -1,9 +1,8 @@
 /** @module GuildPreview */
 import Base from "./Base";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import type { GuildEmoji, RawGuildPreview, RawSticker } from "../types/guilds";
-import type { JSONGuildPreview } from "../types/json";
 import * as Routes from "../util/Routes";
 
 /** Represents a preview of a guild. */
@@ -17,7 +16,7 @@ export default class GuildPreview extends Base {
     /** The discovery splash hash of this guild. */
     discoverySplash: string | null;
     /** The emojis of this guild. */
-    emojis: Array<GuildEmoji>;
+    emojis: Array<Types.Guilds.GuildEmoji>;
     /** The [features](https://discord.com/developers/docs/resources/guild#guild-object-guild-features) of this guild. */
     features: Array<GuildFeature>;
     /** The icon hash of this guild. */
@@ -27,8 +26,8 @@ export default class GuildPreview extends Base {
     /** The invite splash of this guild. */
     splash: string | null;
     /** The stickers in this guild. */
-    stickers: Array<RawSticker>;
-    constructor(data: RawGuildPreview, client: Client) {
+    stickers: Array<Types.Guilds.RawSticker>;
+    constructor(data: Types.Guilds.RawGuildPreview, client: Client) {
         super(data.id, client);
         this.approximateMemberCount = 0;
         this.approximatePresenceCount = 0;
@@ -43,7 +42,7 @@ export default class GuildPreview extends Base {
         this.update(data);
     }
 
-    protected override update(data: RawGuildPreview): void {
+    protected override update(data: Types.Guilds.RawGuildPreview): void {
         if (data.approximate_member_count !== undefined) {
             this.approximateMemberCount = data.approximate_member_count;
         }
@@ -106,7 +105,7 @@ export default class GuildPreview extends Base {
         return this.splash === null ? null : this.client.util.formatImage(Routes.GUILD_SPLASH(this.id, this.splash), format, size);
     }
 
-    override toJSON(): JSONGuildPreview {
+    override toJSON(): Types.JSON.JSONGuildPreview {
         return {
             ...super.toJSON(),
             approximateMemberCount:   this.approximateMemberCount,

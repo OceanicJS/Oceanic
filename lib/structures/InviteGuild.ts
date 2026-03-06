@@ -1,8 +1,8 @@
 /** @module InviteGuild */
 import Base from "./Base";
 import type Guild from "./Guild";
+import type * as Types from "../types/namespaced";
 import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants";
-import type { JSONInviteGuild, RawInviteGuild } from "../types";
 import type Client from "../Client";
 import * as Routes from "../util/Routes";
 
@@ -29,7 +29,7 @@ export default class InviteGuild extends Base {
     vanityURLCode: string | null;
     /** The [verification level](https://discord.com/developers/docs/resources/guild#guild-object-verification-level) of this guild. */
     verificationLevel: VerificationLevels;
-    constructor(data: RawInviteGuild, client: Client) {
+    constructor(data: Types.Guilds.RawInviteGuild, client: Client) {
         super(data.id, client);
         this.banner = data.banner;
         this.description = data.description;
@@ -83,7 +83,7 @@ export default class InviteGuild extends Base {
         return this.splash === null ? null : this.client.util.formatImage(Routes.GUILD_SPLASH(this.id, this.splash), format, size);
     }
 
-    override toJSON(): JSONInviteGuild {
+    override toJSON(): Types.JSON.JSONInviteGuild {
         return {
             ...super.toJSON(),
             banner:                   this.banner,

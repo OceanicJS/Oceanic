@@ -1,8 +1,7 @@
 import Base from "./Base";
+import type * as Types from "../types/namespaced";
 import type { EntitlementTypes } from "../Constants";
-import type { RawBaseEntitlement } from "../types/applications";
 import type Client from "../Client";
-import type { JSONBaseEntitlement } from "../types";
 
 /** Represents a base entitlement. See {@link TestEntitlement | TestEntitlement} and {@link Entitlement | Entitlement}. */
 export default class BaseEntitlement extends Base {
@@ -15,7 +14,7 @@ export default class BaseEntitlement extends Base {
     skuID: string;
     type: EntitlementTypes;
     userID: string | null;
-    constructor(data: RawBaseEntitlement, client: Client) {
+    constructor(data: Types.Applications.RawBaseEntitlement, client: Client) {
         super(data.id, client);
         this.applicationID = data.application_id;
         this.consumed = data.consumed;
@@ -33,7 +32,7 @@ export default class BaseEntitlement extends Base {
         return this.client.rest.applications.consumeEntitlement(this.applicationID, this.id);
     }
 
-    override toJSON(): JSONBaseEntitlement {
+    override toJSON(): Types.JSON.JSONBaseEntitlement {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
