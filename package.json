@@ -53,7 +53,7 @@
     "erlpack": "^0.1.4",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-import-newlines": "^1.4.0",
+    "eslint-plugin-import-newlines": "^1.4.1",
     "eslint-plugin-jsdoc": "^50.6.11",
     "eslint-plugin-json": "^4.0.1",
     "eslint-plugin-prefer-arrow": "^1.2.3",
