@@ -88,30 +88,35 @@ export enum PremiumTypes {
 
 // @TODO: bigints?
 export enum UserFlags {
-    STAFF                      = 1 << 0,
-    PARTNER                    = 1 << 1,
-    HYPESQUAD                  = 1 << 2,
-    BUG_HUNTER_LEVEL_1         = 1 << 3,
-    MFA_SMS                    = 1 << 4,
-    PREMIUM_PROMO_DISMISSED    = 1 << 5,
-    HYPESQUAD_BRAVERY          = 1 << 6,
-    HYPESQUAD_BRILLIANCE       = 1 << 7,
-    HYPESQUAD_BALANCE          = 1 << 8,
-    EARLY_SUPPORTER            = 1 << 9,
-    PSEUDO_TEAM_USER           = 1 << 10,
-    INTERNAL_APPLICATION       = 1 << 11,
+    STAFF                      = 2 ** 0,
+    PARTNER                    = 2 ** 1,
+    HYPESQUAD                  = 2 ** 2,
+    BUG_HUNTER_LEVEL_1         = 2 ** 3,
+    MFA_SMS                    = 2 ** 4,
+    PREMIUM_PROMO_DISMISSED    = 2 ** 5,
+    HYPESQUAD_BRAVERY          = 2 ** 6,
+    HYPESQUAD_BRILLIANCE       = 2 ** 7,
+    HYPESQUAD_BALANCE          = 2 ** 8,
+    EARLY_SUPPORTER            = 2 ** 9,
+    PSEUDO_TEAM_USER           = 2 ** 10,
+    /** @deprecated Use `IS_HUBSPOT_CONTACT`. This will be removed in `1.15.0` */
+    INTERNAL_APPLICATION       = 2 ** 11,
+    IS_HUBSPOT_CONTACT         = 2 ** 11,
     /** @deprecated */
-    SYSTEM                     = 1 << 12,
-    HAS_UNREAD_URGENT_MESSAGES = 1 << 13,
-    BUG_HUNTER_LEVEL_2         = 1 << 14,
-    UNDERAGE_DELETED           = 1 << 15,
-    VERIFIED_BOT               = 1 << 16,
-    VERIFIED_DEVELOPER         = 1 << 17,
-    CERTIFIED_MODERATOR        = 1 << 18,
-    BOT_HTTP_INTERACTIONS      = 1 << 19,
-    SPAMMER                    = 1 << 20,
-    DISABLE_PREMIUM            = 1 << 21,
-    ACTIVE_DEVELOPER           = 1 << 22,
+    SYSTEM                     = 2 ** 12,
+    HAS_UNREAD_URGENT_MESSAGES = 2 ** 13,
+    BUG_HUNTER_LEVEL_2         = 2 ** 14,
+    UNDERAGE_DELETED           = 2 ** 15,
+    VERIFIED_BOT               = 2 ** 16,
+    VERIFIED_DEVELOPER         = 2 ** 17,
+    CERTIFIED_MODERATOR        = 2 ** 18,
+    BOT_HTTP_INTERACTIONS      = 2 ** 19,
+    SPAMMER                    = 2 ** 20,
+    /** @deprecated */
+    DISABLE_PREMIUM            = 2 ** 21,
+    /** @deprecated */
+    ACTIVE_DEVELOPER           = 2 ** 22,
+    PROVISIONAL_ACCOUNT        = 2 ** 23,
 
     HIGH_GLOBAL_RATE_LIMIT       = 2 ** 33,
     DELETED                      = 2 ** 34,
@@ -126,6 +131,8 @@ export enum UserFlags {
 
     VERIFIED_EMAIL = 2 ** 43,
     QUARANTINED    = 2 ** 44,
+
+    PREMIUM_ELIGIBLE_FOR_UNIQUE_USERNAME = 2 ** 47,
 
     COLLABORATOR            = 2 ** 50,
     RESTRICTED_COLLABORATOR = 2 ** 51,
@@ -143,41 +150,57 @@ export enum InteractionContextTypes {
 }
 
 export enum ApplicationFlags {
-    EMBEDDED_RELEASED                             = 1 << 1,
-    MANAGED_EMOJI                                 = 1 << 2,
-    EMBEDDED_IAP                                  = 1 << 3,
-    GROUP_DM_CREATE                               = 1 << 4,
-    RPC_PRIVATE_BETA                              = 1 << 5,
+    EMBEDDED_RELEASED                             = 2 ** 1,
+    MANAGED_EMOJI                                 = 2 ** 2,
+    EMBEDDED_IAP                                  = 2 ** 3,
+    GROUP_DM_CREATE                               = 2 ** 4,
+    RPC_PRIVATE_BETA                              = 2 ** 5,
     /** Indicates if an app uses the {@link https://discord.com/developers/docs/resources/auto-moderation | Auto Moderation API}. Applications must have at least 100 enabled auto moderation rules to get the badge. */
-    APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 1 << 6,
-
-    ALLOW_ASSETS                                  = 1 << 8,
-    ALLOW_ACTIVITY_ACTION_SPECTATE                = 1 << 9,
-    ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 1 << 10,
-    RPC_HAS_CONNECTED_ACCOUNT                     = 1 << 11,
+    APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 2 ** 6,
+    GAME_PROFILE_DISABLED                         = 2 ** 7,
+    /** @deprecated Use `PUBLIC_OAUTH2_CLIENT`. This will be removed in `1.15.0`. */
+    ALLOW_ASSETS                                  = 2 ** 8,
+    PUBLIC_OAUTH2_CLIENT                          = 2 ** 8,
+    /** @deprecated Use `CONTEXTLESS_ACTIVITY`. This will be removed in `1.15.0`. */
+    ALLOW_ACTIVITY_ACTION_SPECTATE                = 2 ** 9,
+    CONTEXTLESS_ACTIVITY                          = 2 ** 9,
+    /** @deprecated Use `SOCIAL_LAYER_INTEGRATION_LIMITED`. This will be removed in `1.15.0`. */
+    ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 2 ** 10,
+    SOCIAL_LAYER_INTEGRATION_LIMITED              = 2 ** 10,
+    /** @deprecated Use `CLOUD_GAMING_DEMO`. This will be removed in `1.15.0`. */
+    RPC_HAS_CONNECTED_ACCOUNT                     = 2 ** 11,
+    CLOUD_GAMING_DEMO                             = 2 ** 11,
     /** Intent required for bots in **100 or more servers** to receive {@link ClientEvents.presenceUpdate | `presenceUpdate`} events. */
-    GATEWAY_PRESENCE                              = 1 << 12,
+    GATEWAY_PRESENCE                              = 2 ** 12,
     /** Intent required for bots in **under 100 servers** to receive {@link ClientEvents.presenceUpdate | `presenceUpdate`} events. */
-    GATEWAY_PRESENCE_LIMITED                      = 1 << 13,
+    GATEWAY_PRESENCE_LIMITED                      = 2 ** 13,
     /** Intent required for bots in **100 or more servers** to receive member-related events like {@link ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
-    GATEWAY_GUILD_MEMBERS                         = 1 << 14,
+    GATEWAY_GUILD_MEMBERS                         = 2 ** 14,
     /** Intent required for bots in **under 100 servers** to receive member-related events like {@link ClientEvents.guildMemberAdd | `guildMemberAdd`}. */
-    GATEWAY_GUILD_MEMBERS_LIMITED                 = 1 << 15,
+    GATEWAY_GUILD_MEMBERS_LIMITED                 = 2 ** 15,
     /** Indicates unusual growth of an app that prevents verification */
-    VERIFICATION_PENDING_GUILD_LIMIT              = 1 << 16,
+    VERIFICATION_PENDING_GUILD_LIMIT              = 2 ** 16,
     /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
-    EMBEDDED                                      = 1 << 17,
+    EMBEDDED                                      = 2 ** 17,
     /** Intent required for bots in **100 or more servers** to receive {@link https://support-dev.discord.com/hc/en-us/articles/4404772028055 | message content}. */
-    GATEWAY_MESSAGE_CONTENT                       = 1 << 18,
+    GATEWAY_MESSAGE_CONTENT                       = 2 ** 18,
     /** Intent required for bots in **under 100 servers** to receive {@link https://support-dev.discord.com/hc/en-us/articles/4404772028055 | message content}. */
-    GATEWAY_MESSAGE_CONTENT_LIMITED               = 1 << 19,
-    EMBEDDED_FIRST_PARTY                          = 1 << 20,
+    GATEWAY_MESSAGE_CONTENT_LIMITED               = 2 ** 19,
+    EMBEDDED_FIRST_PARTY                          = 2 ** 20,
+    APPLICATION_COMMAND_MIGRATED                  = 2 ** 21,
 
     /** Indicates if an app has registered global {@link https://discord.com/developers/docs/interactions/application-commands | application commands}. */
-    APPLICATION_COMMAND_BADGE                     = 1 << 23,
-    ACTIVE                                        = 1 << 24,
+    APPLICATION_COMMAND_BADGE = 2 ** 23,
+    ACTIVE                    = 2 ** 24,
+    ACTIVE_GRACE_PERIOD       = 2 ** 25,
+    IFRAME_MODAL              = 2 ** 26,
+    SOCIAL_LAYER_INTEGRATION  = 2 ** 27,
 
-    SOCIAL_LAYER_INTEGRATION                      = 1 << 27,
+    PROMOTED = 2 ** 28,
+    PARTNER  = 2 ** 29,
+
+    PARENT                      = 2 ** 33,
+    DISABLE_RELATIONSHIP_ACCESS = 2 ** 34,
 }
 
 export const GuildFeatures = [
@@ -1091,17 +1114,24 @@ export enum AuditLogActionTypes {
     GUILD_HOME_FEATURE_ITEM = 171,
     GUILD_HOME_REMOVE_ITEM  = 172,
 
+    /** @deprecated */
     HARMFUL_LINKS_BLOCKED_MESSAGE = 180,
 
     HOME_SETTINGS_CREATE        = 190,
     HOME_SETTINGS_UPDATE        = 191,
     VOICE_CHANNEL_STATUS_CREATE = 192,
     VOICE_CHANNEL_STATUS_DELETE = 193,
+    /** @deprecated */
     CLYDE_AI_PROFILE_UPDATE     = 194,
 
     GUILD_SCHEDULED_EVENT_EXCEPTION_CREATE = 200,
     GUILD_SCHEDULED_EVENT_EXCEPTION_UPDATE = 201,
     GUILD_SCHEDULED_EVENT_EXCEPTION_DELETE = 202,
+
+    GUILD_MEMBER_VERIFICATION_UPDATE         = 210,
+    GUILD_PROFILE_UPDATE                     = 211,
+    PIN_PERMISSION_MIGRATION_COMPLETE        = 212,
+    BYPASS_SLOWMODE_PERMISSION_MIGRATION_COM = 213,
 }
 
 export enum ApplicationCommandTypes {
@@ -1455,7 +1485,6 @@ export enum ApplicationDiscoveryEligibilityFlags {
     SUPPORTED_LOCALES       = 1 << 13,
     SAFE_SHORT_DESCRIPTION  = 1 << 14,
     SAFE_ROLE_CONNECTIONS   = 1 << 15,
-    ELIGIBLE                = 1 << 16,
 }
 
 export enum ApplicationExplicitContentFilterLevel {
@@ -1478,6 +1507,11 @@ export enum ApplicationMonetizationEligibilityFlags {
     SAFE_DESCRIPTION            = 1 << 6,
     SAFE_ROLE_CONNECTIONS       = 1 << 7,
     NOT_QUARANTINED             = 1 << 9,
+    USER_LOCALE_SUPPORTED       = 1 << 10,
+    USER_AGE_SUPPORTED          = 1 << 11,
+    USER_DATE_OF_BIRTH_DEFINED  = 1 << 12,
+    USER_MFA_ENABLED            = 1 << 13,
+    USER_EMAIL_VERIFIED         = 1 << 14,
     TEAM_MEMBERS_EMAIL_VERIFIED = 1 << 15,
     TEAM_MEMBERS_MFA_ENABLED    = 1 << 16,
     NO_BLOCKING_ISSUES          = 1 << 17,
@@ -1591,6 +1625,70 @@ export enum InviteTargetUsersJobStatus {
     PROCESSING  = 1,
     COMPLETED   = 2,
     FAILED      = 3,
+}
+
+export enum ApplicationInternalGuildRestriction {
+    JOIN_ALL           = 1,
+    JOIN_EXTERNAL_ONLY = 2,
+    JOIN_INTERNAL_ONLY = 3,
+}
+
+export enum EmbeddedActivityOrientationLockStateType {
+    UNLOCKED  = 1,
+    PORTRAIT  = 2,
+    LANDSCAPE = 3,
+}
+
+export enum EmbeddedActivityLabelType {
+    NONE    = 0,
+    NEW     = 1,
+    UPDATED = 2,
+}
+
+export const EmbeddedActivityReleasePhases = ["in_development", "activities_team", "employee_release", "soft_launch", "soft_launch_multi_geo", "global_launch"] as const;
+export type EmbeddedActivityReleasePhase = typeof EmbeddedActivityReleasePhases[number];
+export const EmbeddedActivitySurfaces = ["voice_launcher", "text_launcher"] as const;
+export type EmbeddedActivitySurface = typeof EmbeddedActivitySurfaces[number];
+export const EmbeddedActivityPlatformTypes = ["web", "android", "ios"] as const;
+export type EmbeddedActivityPlatformType = typeof EmbeddedActivityPlatformTypes[number];
+export const PricingLocalizationStrategies = ["localized_price_sets"] as const;
+export type PricingLocalizationStrategy = typeof PricingLocalizationStrategies[number];
+export const OperatingSystemTypes = ["windows", "osx", "linux", "android", "ios", "playstation", "xbox", "unknown"] as const;
+export type OperatingSystemType = typeof OperatingSystemTypes[number];
+export const TeamMemberRoleTypes = ["admin", "developer", "read_only"] as const;
+export type TeamMemberRoleType = typeof TeamMemberRoleTypes[number];
+
+export enum ApprovableConsoleType {
+    XBOX          = 1,
+    PLAYSTATION_5 = 2,
+    PLAYSTATION_4 = 3,
+}
+
+export enum OverlayMethodFlags {
+    OUT_OF_PROCESS = 1 << 0,
+}
+
+export enum TeamPayoutAccountStatus {
+    UNSUBMITTED     = 1,
+    PENDING         = 2,
+    ACTION_REQUIRED = 3,
+    ACTIVE          = 4,
+    BLOCKED         = 5,
+    SUSPENDED       = 6,
+}
+
+export enum TeamPayoutGateway {
+    STRIPE_TOPUP   = 1,
+    TIPALTI        = 2,
+    STRIPE_PRIMARY = 3,
+}
+
+export enum ApplicationType {
+    DEPRECATED_GAME      = 1,
+    MUSIC                = 2,
+    TICKETED_EVENTS      = 3,
+    CREATOR_MONETIZATION = 4,
+    GAME                 = 5,
 }
 
 // entries are intentionally not aligned

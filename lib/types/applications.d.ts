@@ -12,75 +12,194 @@ import type {
     ApplicationEventWebhookStatus,
     ApplicationExplicitContentFilterLevel,
     ApplicationIntegrationTypes,
+    ApplicationInteractionsVersion,
     ApplicationMonetizationState,
     ApplicationVerificationState,
     EntitlementOwnerTypes,
     EntitlementTypes,
     EntryPointCommandHandlerTypes,
     InteractionContextTypes,
+    ApplicationInternalGuildRestriction,
     RPCApplicationState,
     SKUAccessTypes,
     SKUTypes,
     StoreApplicationState,
     SubscriptionStatuses,
-    TeamMembershipState
+    TeamMembershipState,
+    EmbeddedActivityOrientationLockStateType,
+    PremiumTiers,
+    EmbeddedActivityLabelType,
+    EmbeddedActivityReleasePhase,
+    EmbeddedActivitySurface,
+    EmbeddedActivityPlatformType,
+    ApprovableConsoleType,
+    PricingLocalizationStrategy,
+    OperatingSystemType,
+    TeamPayoutAccountStatus,
+    TeamPayoutGateway,
+    TeamMemberRoleType,
+    ApplicationType
 } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
 import type User from "../structures/User";
 
 export interface RawApplication {
+    aliases?: Array<string>;
+    approved_consoles?: Array<ApprovableConsoleType>;
     approximate_guild_count?: number;
+    approximate_user_authorization_count?: number;
     approximate_user_install_count?: number;
+    bot_approximate_guild_count?: number;
+    bot_disabled?: boolean;
+    /** @deprecated */
     bot_public?: boolean;
+    bot_quarantined?: boolean;
+    /** @deprecated */
     bot_require_code_grant?: boolean;
+    connection_entrypoint_url?: string;
     cover_image?: string;
+    creator_monetization_state?: number; // values unknown
     custom_install_url?: string;
+    deeplink_uri?: string;
     description: string;
+    developers?: Array<ApplicationCompany>;
     discoverability_state?: ApplicationDiscoverabilityState;
     discovery_eligibility_flags?: number;
-    event_webhooks_status: ApplicationEventWebhookStatus;
+    embedded_activity_config?: RawEmbeddedActivityConfig;
+    eula_id?: string;
+    event_webhooks_status?: ApplicationEventWebhookStatus;
     event_webhooks_types?: Array<ApplicationEventWebhookEventType>;
     event_webhooks_url?: string | null;
-    explicit_content_filter?: ApplicationExplicitContentFilterLevel;
-    flags?: number;
+    executables?: Array<RawApplicationExecutable>;
+    explicit_content_filter: ApplicationExplicitContentFilterLevel;
+    flags: number;
     guild?: RawOAuthGuild;
     guild_id?: string;
     hook: boolean;
     icon: string | null;
     id: string;
     install_params?: InstallParams;
+    integration_public?: boolean;
+    integration_require_code_grant: boolean;
     integration_types?: Array<ApplicationIntegrationTypes>;
     integration_types_config?: Partial<Record<`${ApplicationIntegrationTypes}`, RawApplicationIntegrationConfig>>;
     interactions_endpoint_url?: string | null;
     interactions_event_types?: Array<string>;
-    interactions_version?: number;
+    interactions_version?: ApplicationInteractionsVersion;
+    internal_guild_restriction: ApplicationInternalGuildRestriction;
+    is_discoverable: boolean;
     is_monetized: boolean;
+    is_verified: boolean;
+    max_participants?: number;
     monetization_eligibility_flags?: number;
     monetization_state?: ApplicationMonetizationState;
     name: string;
+    overlay?: boolean;
+    overlay_compatibility_hook?: boolean;
+    overlay_methods?: number;
+    overlay_warn?: boolean;
     owner?: RawUser;
+    parent_id?: string;
+    pricing_localization_strategy?: PricingLocalizationStrategy; // values unknown
     primary_sku_id?: string;
     privacy_policy_url?: string;
+    publishers?: Array<ApplicationCompany>;
     redirect_uris?: Array<string>;
     role_connections_verification_url?: string | null;
     rpc_application_state?: RPCApplicationState;
     rpc_origins?: Array<string>;
     slug?: string;
     store_application_state?: StoreApplicationState;
+    storefront_available: boolean;
     tags?: Array<string>;
     team?: RawTeam | null;
     terms_of_service_url?: string;
-    type: number | null;
+    third_party_skus?: Array<RawSKU>;
+    type: ApplicationType | null;
     verification_state?: ApplicationVerificationState;
     verify_key: string;
+}
+
+export interface RawEmbeddedActivityConfig {
+    activity_preview_video_asset_id: string | null;
+    application_id?: string;
+    blocked_locales: Array<string>;
+    client_platform_config: Record<EmbeddedActivityPlatformType, RawEmbeddedActivityPlatformConfig>;
+    default_orientation_lock_state: EmbeddedActivityOrientationLockStateType;
+    displays_advertisements: boolean;
+    /** @deprecated */
+    free_period_ends_at?: string | null;
+    /** @deprecated */
+    free_period_starts_at?: string | null;
+    has_csp_exception: boolean;
+    legacy_responsive_aspect_ratio: boolean;
+    /** @deprecated */
+    premium_tier_requirement?: PremiumTiers | null;
+    requires_age_gate: boolean;
+    shelf_rank: number;
+    supported_locales: Array<string>;
+    supported_platforms: Array<string>;
+    tablet_default_orientation_lock_state: EmbeddedActivityOrientationLockStateType;
+}
+
+export interface RawEmbeddedActivityPlatformConfig {
+    label_type: EmbeddedActivityLabelType;
+    label_until?: string | null;
+    omit_badge_from_surfaces: Array<EmbeddedActivitySurface>;
+    release_phase: EmbeddedActivityReleasePhase;
+}
+
+export interface RawApplicationExecutable {
+    is_launcher: boolean;
+    name: string;
+    os: OperatingSystemType;
+}
+
+export interface EmbeddedActivityConfig {
+    activityPreviewVideoAssetID: string | null;
+    applicationID?: string;
+    blockedLocales: Array<string>;
+    clientPlatformConfig: Record<EmbeddedActivityPlatformType, EmbeddedActivityPlatformConfig>;
+    defaultOrientationLockState: EmbeddedActivityOrientationLockStateType;
+    displaysAdvertisements: boolean;
+    /** @deprecated */
+    freePeriodEndsAt: Date | null;
+    /** @deprecated */
+    freePeriodStartsAt: Date | null;
+    hasCspException: boolean;
+    legacyResponsiveAspectRatio: boolean;
+    /** @deprecated */
+    premiumTierRequirement?: PremiumTiers | null;
+    requiresAgeGate: boolean;
+    shelfRank: number;
+    supportedLocales: Array<string>;
+    supportedPlatforms: Array<string>;
+    tabletDefaultOrientationLockState: EmbeddedActivityOrientationLockStateType;
+}
+
+export interface EmbeddedActivityPlatformConfig {
+    labelType: EmbeddedActivityLabelType;
+    labelUntil: Date | null;
+    omitBadgeFromSurfaces: Array<EmbeddedActivitySurface>;
+    releasePhase: EmbeddedActivityReleasePhase;
+}
+
+export interface ApplicationExecutable {
+    isLauncher: boolean;
+    name: string;
+    os: OperatingSystemType;
+}
+
+export interface ApplicationCompany {
+    id: string;
+    name: string;
 }
 
 export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
 export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
 export interface RESTApplication extends WithRequired<RawApplication, "flags" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
 export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
-export type TeamMemberRoleTypes = "admin" | "developer" | "read-only";
 
 export interface IntegrationTypesConfig extends Partial<Record<`${ApplicationIntegrationTypes}`, ApplicationIntegrationConfig>> {}
 
@@ -98,11 +217,19 @@ export interface RawTeam {
     members: Array<RawTeamMember>;
     name: string;
     owner_user_id: string;
+    payout_account_status?: TeamPayoutAccountStatus | null;
+    payout_account_statuses?: Array<TeamPayoutAccount>;
+    stripe_connect_account_id?: string;
+}
+
+export interface TeamPayoutAccount {
+    gateway: TeamPayoutGateway;
+    status: TeamPayoutAccountStatus;
 }
 
 export interface RawTeamMember {
     membership_state: TeamMembershipState;
-    role: TeamMemberRoleTypes;
+    role: TeamMemberRoleType;
     team_id: string;
     user: RawUser;
 }
@@ -111,7 +238,7 @@ export interface TeamMember {
     /** This member's [membership state](https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum) on this team. */
     membershipState: TeamMembershipState;
     /** The [role](https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types) of the team member. */
-    role: TeamMemberRoleTypes;
+    role: TeamMemberRoleType;
     /** The id of the team this member is associated with. */
     teamID: string;
     /** The user associated with this team member. */

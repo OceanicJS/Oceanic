@@ -1,7 +1,15 @@
 /** @module Types/JSON */
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { InstallParams } from "./oauth";
-import type { ApplicationCommandOptions, IntegrationTypesConfig, LocaleMap, TeamMember } from "./applications";
+import type {
+    ApplicationCommandOptions,
+    ApplicationCompany,
+    ApplicationExecutable,
+    EmbeddedActivityConfig,
+    IntegrationTypesConfig,
+    LocaleMap,
+    TeamMember
+} from "./applications";
 import type {
     ApplicationCommandInteractionData,
     AuthorizingIntegrationOwners,
@@ -82,11 +90,20 @@ import type {
     InteractionContextTypes,
     PollLayoutType,
     ApplicationDiscoverabilityState,
+    ApplicationEventWebhookEventType,
+    ApplicationEventWebhookStatus,
     ApplicationExplicitContentFilterLevel,
+    ApplicationInternalGuildRestriction,
     ApplicationMonetizationState,
+    ApplicationType,
+    ApprovableConsoleType,
+    PricingLocalizationStrategy,
     RPCApplicationState,
+    SKUAccessTypes,
+    SKUTypes,
     StoreApplicationState,
     ApplicationVerificationState,
+    ApplicationInteractionsVersion,
     EntryPointCommandHandlerTypes
 } from "../Constants";
 
@@ -99,42 +116,74 @@ export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
     type: ChannelTypes.ANNOUNCEMENT_THREAD;
 }
 export interface JSONApplication extends JSONClientApplication {
-    approximateGuildCount: number;
+    aliases?: Array<string>;
+    approvedConsoles?: Array<ApprovableConsoleType>;
+    approximateGuildCount?: number;
+    approximateUserAuthorizationCount?: number;
+    approximateUserInstallCount?: number;
+    botApproximateGuildCount?: number;
+    botDisabled?: boolean;
     botPublic?: boolean;
+    botQuarantined?: boolean;
     botRequireCodeGrant?: boolean;
-    coverImage: string | null;
+    connectionEntrypointURL?: string;
+    coverImage?: string | null;
+    creatorMonetizationState?: number;
     customInstallURL?: string;
+    deeplinkURI?: string;
     description: string;
+    developers?: Array<ApplicationCompany>;
     discoverabilityState?: ApplicationDiscoverabilityState;
     discoveryEligibilityFlags?: number;
+    embeddedActivityConfig?: EmbeddedActivityConfig;
+    eulaID?: string;
+    eventWebhooksStatus?: ApplicationEventWebhookStatus;
+    eventWebhooksTypes?: Array<ApplicationEventWebhookEventType>;
+    eventWebhooksURL?: string | null;
+    executables?: Array<ApplicationExecutable>;
     explicitContentFilter?: ApplicationExplicitContentFilterLevel;
     guild: JSONOAuthGuild | null;
-    guildID: string | null;
+    guildID?: string | null;
     hook: boolean;
     icon: string | null;
     installParams?: InstallParams;
-    integrationTypes: Array<ApplicationIntegrationTypes>;
-    integrationTypesConfig: IntegrationTypesConfig;
-    interactionsEndpointURL: string | null;
+    integrationPublic?: boolean;
+    integrationRequireCodeGrant?: boolean;
+    integrationTypes?: Array<ApplicationIntegrationTypes>;
+    integrationTypesConfig?: IntegrationTypesConfig;
+    interactionsEndpointURL?: string | null;
     interactionsEventTypes?: Array<string>;
-    interactionsVersion?: number;
+    interactionsVersion?: ApplicationInteractionsVersion;
+    internalGuildRestriction?: ApplicationInternalGuildRestriction;
+    isDiscoverable: boolean;
     isMonetized: boolean;
+    isVerified: boolean;
+    maxParticipants?: number;
     monetizationEligibilityFlags?: number;
     monetizationState?: ApplicationMonetizationState;
     name: string;
+    overlay?: boolean;
+    overlayCompatibilityHook?: boolean;
+    overlayMethods?: number;
+    overlayWarn?: boolean;
     owner: JSONUser | null;
+    parentID?: string;
+    pricingLocalizationStrategy?: PricingLocalizationStrategy;
     primarySKUID?: string;
     privacyPolicyURL?: string;
-    redirectURIs: Array<string>;
-    roleConnectionsVerificationURL: string | null;
+    publishers?: Array<ApplicationCompany>;
+    redirectURIs?: Array<string>;
+    roleConnectionsVerificationURL?: string | null;
     rpcApplicationState?: RPCApplicationState;
-    rpcOrigins: Array<string>;
+    rpcOrigins?: Array<string>;
     slug?: string;
     storeApplicationState?: StoreApplicationState;
-    tags: Array<string>;
+    storefrontAvailable: boolean;
+    tags?: Array<string>;
     team: JSONTeam | null;
     termsOfServiceURL?: string;
-    type: number | null;
+    thirdPartySKUs?: Array<JSONSKU>;
+    type: ApplicationType | null;
     verificationState?: ApplicationVerificationState;
     verifyKey: string;
 }
@@ -679,6 +728,19 @@ export interface JSONScheduledEvent extends JSONBase {
     scheduledStartTime: number;
     status: GuildScheduledEventStatuses;
     userCount?: number;
+}
+export interface JSONSKU extends JSONBase {
+    accessType: SKUAccessTypes;
+    applicationID: string;
+    dependentSKUID: string | null;
+    features: [];
+    flags: number;
+    manifestLabels: null;
+    name: string;
+    releaseDate: null;
+    showAgeGate: boolean;
+    slug: string;
+    type: SKUTypes;
 }
 export interface JSONSoundboard extends JSONBase {
     available: boolean;

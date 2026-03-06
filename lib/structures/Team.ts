@@ -2,8 +2,9 @@
 import Base from "./Base";
 import type User from "./User";
 import type Client from "../Client";
-import type { RawTeam, TeamMember } from "../types/applications";
+import type { RawTeam, TeamMember, TeamPayoutAccount } from "../types/applications";
 import type { JSONTeam } from "../types/json";
+import { type TeamPayoutAccountStatus } from "../Constants";
 
 /** Represents an OAuth team. */
 export default class Team extends Base {
@@ -17,6 +18,12 @@ export default class Team extends Base {
     owner?: User;
     /** The ID of the owner of this team. */
     ownerID: string;
+    /** The status of the team's primary payout account */
+    payoutAccountStatus?: TeamPayoutAccountStatus | null;
+    /** The statuses of the team's payout accounts */
+    payoutAccountStatuses?: Array<TeamPayoutAccount>;
+    /** The ID of the team's Stripe Connect account */
+    stripeConnectAccountID?: string;
     constructor(data: RawTeam, client: Client) {
         super(data.id, client);
         this.icon = null;
@@ -24,6 +31,9 @@ export default class Team extends Base {
         this.name = data.name;
         this.owner = this.client.users.get(data.owner_user_id);
         this.ownerID = data.owner_user_id;
+        this.payoutAccountStatus = data.payout_account_status;
+        this.payoutAccountStatuses = data.payout_account_statuses;
+        this.stripeConnectAccountID = data.stripe_connect_account_id;
         this.update(data);
     }
 
@@ -55,8 +65,15 @@ export default class Team extends Base {
                     });
                 }
             }
-
-
+        }
+        if (data.payout_account_status !== undefined) {
+            this.payoutAccountStatus = data.payout_account_status;
+        }
+        if (data.payout_account_statuses !== undefined) {
+            this.payoutAccountStatuses = data.payout_account_statuses;
+        }
+        if (data.stripe_connect_account_id !== undefined) {
+            this.stripeConnectAccountID = data.stripe_connect_account_id;
         }
     }
 

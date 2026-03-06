@@ -71,6 +71,7 @@ export interface RawChannel {
     flags?: number;
     guild_id?: string;
     icon?: string | null;
+    icon_emoji?: IconEmoji;
     id: string;
     last_message_id?: string | null;
     last_pin_timestamp?: string | null;
@@ -1471,4 +1472,9 @@ export interface RawModalFileUploadComponent extends BaseComponent {
     min_values?: number;
     required?: boolean;
     type: ComponentTypes.FILE_UPLOAD;
+}
+
+export interface IconEmoji {
+    id: string | null;
+    name: string | null;
 }

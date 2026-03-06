@@ -319,7 +319,9 @@ export interface PresenceUpdate {
 
 export interface ClientStatus {
     desktop?: string;
+    embedded?: string;
     mobile?: string;
+    vr?: string;
     web?: string;
 }
 

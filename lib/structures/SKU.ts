@@ -4,6 +4,7 @@ import type Entitlement from "./Entitlement";
 import type Client from "../Client";
 import type { EntitlementOwnerTypes, SKUAccessTypes, SKUTypes } from "../Constants";
 import type { RawSKU, SearchEntitlementsOptions } from "../types/applications";
+import type { JSONSKU } from "../types/json";
 
 export default class SKU extends Base {
     accessType: SKUAccessTypes; // undocumented
@@ -52,5 +53,22 @@ export default class SKU extends Base {
      */
     async getEntitlements(options?: Omit<SearchEntitlementsOptions, "skuIDs">): Promise<Array<Entitlement | TestEntitlement>> {
         return this.client.rest.applications.getEntitlements(this.applicationID, { skuIDs: [this.id], ...options });
+    }
+
+    override toJSON(): JSONSKU {
+        return {
+            ...super.toJSON(),
+            accessType:     this.accessType,
+            applicationID:  this.applicationID,
+            dependentSKUID: this.dependentSKUID,
+            features:       this.features,
+            flags:          this.flags,
+            manifestLabels: this.manifestLabels,
+            name:           this.name,
+            releaseDate:    this.releaseDate,
+            showAgeGate:    this.showAgeGate,
+            slug:           this.slug,
+            type:           this.type
+        };
     }
 }
