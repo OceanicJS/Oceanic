@@ -1,11 +1,8 @@
 /** @module REST/Miscellaneous */
+import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
 import type RESTManager from "../rest/RESTManager";
-import type { RawSticker, RawStickerPack, Sticker, StickerPack } from "../types/guilds";
-import type { VoiceRegion } from "../types/voice";
-import type { RawRefreshAttachmentURLsResponse, RefreshAttachmentURLsResponse } from "../types/misc";
 import Soundboard from "../structures/Soundboard";
-import type { RawSoundboard } from "../types";
 
 /** Methods that don't fit anywhere else. Located at {@link Client#rest | Client#rest}{@link RESTManager#misc | .misc}. */
 export default class Miscellaneous {
@@ -19,7 +16,7 @@ export default class Miscellaneous {
      * @caching This method **does not** cache its result.
      */
     async getDefaultSoundboardSounds(): Promise<Array<Soundboard>> {
-        return this._manager.authRequest<Array<RawSoundboard>>({
+        return this._manager.authRequest<Array<Types.Channels.RawSoundboard>>({
             method: "GET",
             path:   Routes.SOUNDBOARD_DEFAULT_SOUNDS
         }).then(data => data.map(d => new Soundboard(d, this._manager.client)));
@@ -31,8 +28,8 @@ export default class Miscellaneous {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached, or if the sticker is not a guild sticker.
      * @caches {@link Guild#stickers | Guild#stickers}
      */
-    async getSticker(stickerID: string): Promise<Sticker> {
-        return this._manager.authRequest<RawSticker>({
+    async getSticker(stickerID: string): Promise<Types.Guilds.Sticker> {
+        return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "GET",
             path:   Routes.STICKER(stickerID)
         }).then(data => data.guild_id === undefined ? this._manager.client.util.convertSticker(data) : this._manager.client.guilds.get(data.guild_id)?.stickers.update(data) ?? this._manager.client.util.convertSticker(data));
@@ -42,8 +39,8 @@ export default class Miscellaneous {
      * Get the default sticker packs.
      * @caching This method **does not** cache its result.
      */
-    async getStickerPacks(): Promise<Array<StickerPack>> {
-        return this._manager.authRequest<{ sticker_packs: Array<RawStickerPack>; }>({
+    async getStickerPacks(): Promise<Array<Types.Guilds.StickerPack>> {
+        return this._manager.authRequest<{ sticker_packs: Array<Types.Guilds.RawStickerPack>; }>({
             method: "GET",
             path:   Routes.STICKER_PACKS
         }).then(data => data.sticker_packs.map(pack => ({
@@ -61,8 +58,8 @@ export default class Miscellaneous {
      * Get the list of usable voice regions.
      * @caching This method **does not** cache its result.
      */
-    async getVoiceRegions(): Promise<Array<VoiceRegion>> {
-        return this._manager.authRequest<Array<VoiceRegion>>({
+    async getVoiceRegions(): Promise<Array<Types.Voice.VoiceRegion>> {
+        return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
             method: "GET",
             path:   Routes.VOICE_REGIONS
         });
@@ -72,8 +69,8 @@ export default class Miscellaneous {
      * Refresh expired attachment URLs.
      * @param urls The CDN urls to refresh.
      */
-    async refreshAttachmentURLs(urls: Array<string>): Promise<RefreshAttachmentURLsResponse> {
-        return this._manager.authRequest<RawRefreshAttachmentURLsResponse>({
+    async refreshAttachmentURLs(urls: Array<string>): Promise<Types.Misc.RefreshAttachmentURLsResponse> {
+        return this._manager.authRequest<Types.Misc.RawRefreshAttachmentURLsResponse>({
             method: "POST",
             path:   Routes.REFRESH_ATTACHMENT_URLS,
             json:   {

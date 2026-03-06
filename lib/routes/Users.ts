@@ -1,6 +1,6 @@
 /** @module REST/Users */
 import type Channels from "./Channels";
-import type { EditSelfUserOptions, RawOAuthUser, RawUser } from "../types/users";
+import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";
 import type RESTManager from "../rest/RESTManager";
@@ -23,7 +23,7 @@ export default class Users {
      * @param options The options to edit with.
      * @caching This method **does not** cache its result.
      */
-    async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
+    async editSelf(options: Types.Users.EditSelfUserOptions): Promise<ExtendedUser> {
         options = this._manager.client.util._freeze(options);
 
         let avatar = options.avatar;
@@ -37,7 +37,7 @@ export default class Users {
             banner = this._manager.client.util._convertImage(banner, "banner");
         }
 
-        return this._manager.authRequest<RawOAuthUser>({
+        return this._manager.authRequest<Types.Users.RawOAuthUser>({
             method: "PATCH",
             path:   Routes.USER("@me"),
             json:   {
@@ -55,7 +55,7 @@ export default class Users {
      * @caches {@link Client#users | Client#users}
      */
     async get(userID: string): Promise<User> {
-        return this._manager.authRequest<RawUser>({
+        return this._manager.authRequest<Types.Users.RawUser>({
             method: "GET",
             path:   Routes.USER(userID)
         }).then(data => this._manager.client.users.update(data));

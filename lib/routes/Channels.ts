@@ -1,47 +1,7 @@
 /** @module REST/Channels */
-import type {
-    AddGroupRecipientOptions,
-    AnyChannel,
-    AnyTextableChannel,
-    ArchivedThreads,
-    CreateMessageOptions,
-    EditChannelOptions,
-    EditMessageOptions,
-    EditPermissionOptions,
-    FollowedChannel,
-    GetChannelMessagesOptions,
-    GetArchivedThreadsOptions,
-    GetReactionsOptions,
-    AnyInviteChannel,
-    RawArchivedThreads,
-    RawChannel,
-    RawFollowedChannel,
-    RawMessage,
-    RawAnnouncementThreadChannel,
-    RawPrivateThreadChannel,
-    RawPublicThreadChannel,
-    ThreadMember,
-    StartThreadFromMessageOptions,
-    StartThreadInThreadOnlyChannelOptions,
-    StartThreadWithoutMessageOptions,
-    RawThreadMember,
-    RawPrivateChannel,
-    RawGroupChannel,
-    AnyEditableChannel,
-    PartialInviteChannel,
-    RawThreadChannel,
-    PurgeOptions,
-    AnyTextableGuildChannel,
-    GetThreadMembersOptions,
-    AnyGuildChannel,
-    GetChannelMessagesIteratorOptions,
-    MessagesIterator,
-    GetPollAnswerUsersOptions,
-    SendSoundboardSoundOptions
-} from "../types/channels";
+import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
 import type Message from "../structures/Message";
-import type { CreateGroupChannelOptions, RawUser } from "../types/users";
 import Invite, {
     type InviteWithoutCounts,
     type InviteWithMetadata,
@@ -53,30 +13,13 @@ import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChan
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type { VoiceRegion } from "../types/voice";
 import type RESTManager from "../rest/RESTManager";
 import type PrivateChannel from "../structures/PrivateChannel";
 import type GroupChannel from "../structures/GroupChannel";
 import type User from "../structures/User";
-import type { Uncached } from "../types/shared";
-import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInstance } from "../types/guilds";
 import StageInstance from "../structures/StageInstance";
 import { MessageFlags } from "../Constants";
 import QueryBuilder from "../util/QueryBuilder";
-import type {
-    CreateInviteOptions,
-    DMInviteChannel,
-    GetInviteOptions,
-    GetInviteWithCountsAndScheduledEventOptions,
-    GetInviteWithCountsOptions,
-    GetInviteWithNoneOptions,
-    GetInviteWithScheduledEventOptions,
-    GuildInviteChannel,
-    InviteChannel,
-    InviteTargetUsersJobStatusResponse,
-    RawInvite,
-    RawInviteTargetUsersJobStatusResponse
-} from "../types/invites";
 
 /** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {
@@ -91,7 +34,7 @@ export default class Channels {
      * @param options The options for adding the recipient.
      * @caching This method **does not** cache its result.
      */
-    async addGroupRecipient(groupID: string, options: AddGroupRecipientOptions): Promise<void> {
+    async addGroupRecipient(groupID: string, options: Types.Channels.AddGroupRecipientOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PUT",
@@ -126,7 +69,7 @@ export default class Channels {
         if ((cache = this._manager.client.privateChannels.find(ch => ch.recipient.id === recipient))) {
             return cache;
         }
-        return this._manager.authRequest<RawPrivateChannel>({
+        return this._manager.authRequest<Types.Channels.RawPrivateChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
             json:   { recipient_id: recipient }
@@ -140,9 +83,9 @@ export default class Channels {
      * @caching This method **does** cache its result.
      * @caches {@link Client#groupChannels | Client#groupChannels}
      */
-    async createGroupDM(options: CreateGroupChannelOptions): Promise<GroupChannel> {
+    async createGroupDM(options: Types.Users.CreateGroupChannelOptions): Promise<GroupChannel> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawGroupChannel>({
+        return this._manager.authRequest<Types.Channels.RawGroupChannel>({
             method: "POST",
             path:   Routes.OAUTH_CHANNELS,
             json:   {
@@ -158,9 +101,9 @@ export default class Channels {
      * @param options The options for creating the invite.
      * @caching This method **does not** cache its result.
      */
-    async createInvite<CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
+    async createInvite<CH extends Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached>(channelID: string, options: Types.Invites.CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawInvite>({
+        return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "POST",
             path:   Routes.CHANNEL_INVITES(channelID),
             json:   {
@@ -185,9 +128,9 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async createMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options: CreateMessageOptions): Promise<Message<T>> {
+    async createMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawMessage>({
+        return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(channelID),
             json:   {
@@ -241,9 +184,9 @@ export default class Channels {
      * @param options The options for creating the stage instance.
      * @caching This method **does not** cache its result.
      */
-    async createStageInstance(channelID: string, options: CreateStageInstanceOptions): Promise<StageInstance> {
+    async createStageInstance(channelID: string, options: Types.Guilds.CreateStageInstanceOptions): Promise<StageInstance> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawStageInstance>({
+        return this._manager.authRequest<Types.Guilds.RawStageInstance>({
             method: "POST",
             path:   Routes.STAGE_INSTANCES,
             json:   {
@@ -263,8 +206,8 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async crosspostMessage<T extends AnnouncementChannel | Uncached = AnnouncementChannel | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
-        return this._manager.authRequest<RawMessage>({
+    async crosspostMessage<T extends AnnouncementChannel | Types.Shared.Uncached = AnnouncementChannel | Types.Shared.Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
+        return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES_CROSSPOST(channelID, messageID)
         }).then(data => this._manager.client.util.updateMessage<T>(data));
@@ -277,7 +220,7 @@ export default class Channels {
      * @caching This method **does not** cache its result.
      */
     async delete(channelID: string, reason?: string): Promise<void> {
-        await this._manager.authRequest<RawChannel>({
+        await this._manager.authRequest<Types.Channels.RawChannel>({
             method: "DELETE",
             path:   Routes.CHANNEL(channelID),
             reason
@@ -290,8 +233,8 @@ export default class Channels {
      * @param reason The reason for deleting the invite.
      * @caching This method **does not** cache its result.
      */
-    async deleteInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<T>> {
-        return this._manager.authRequest<RawInvite>({
+    async deleteInvite<T extends Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached>(code: string, reason?: string): Promise<Invite<T>> {
+        return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),
             reason
@@ -306,7 +249,7 @@ export default class Channels {
      * @caching This method **does not** cache its result.
      */
     async deleteMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
-        await this._manager.authRequest<RawMessage>({
+        await this._manager.authRequest<Types.Channels.RawMessage>({
             method: "DELETE",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID),
             reason
@@ -418,7 +361,7 @@ export default class Channels {
      * @caching This method **may** cache its result. If a guild channel, the result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#groupChannels | Client#groupChannels}
      */
-    async edit<T extends AnyEditableChannel = AnyEditableChannel>(channelID: string, options: EditChannelOptions): Promise<T> {
+    async edit<T extends Types.Channels.AnyEditableChannel = Types.Channels.AnyEditableChannel>(channelID: string, options: Types.Channels.EditChannelOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options.icon) {
@@ -429,7 +372,7 @@ export default class Channels {
             }
         }
 
-        return this._manager.authRequest<RawChannel>({
+        return this._manager.authRequest<Types.Channels.RawChannel>({
             method: "PATCH",
             path:   Routes.CHANNEL(channelID),
             json:   {
@@ -477,9 +420,9 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async editMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string, options: EditMessageOptions): Promise<Message<T>> {
+    async editMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<T>> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawMessage>({
+        return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "PATCH",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID),
             json:   {
@@ -503,7 +446,7 @@ export default class Channels {
      * @param options The options for editing the permission overwrite.
      * @caching This method **does not** cache its result.
      */
-    async editPermission(channelID: string, overwriteID: string, options: EditPermissionOptions): Promise<void> {
+    async editPermission(channelID: string, overwriteID: string, options: Types.Channels.EditPermissionOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PUT",
@@ -523,9 +466,9 @@ export default class Channels {
      * @param options The options for editing the stage instance.
      * @caching This method **does not** cache its result.
      */
-    async editStageInstance(channelID: string, options: EditStageInstanceOptions): Promise<StageInstance> {
+    async editStageInstance(channelID: string, options: Types.Guilds.EditStageInstanceOptions): Promise<StageInstance> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawStageInstance>({
+        return this._manager.authRequest<Types.Guilds.RawStageInstance>({
             method: "PATCH",
             path:   Routes.STAGE_INSTANCE(channelID),
             json:   {
@@ -557,8 +500,8 @@ export default class Channels {
      * @param reason The reason for following the announcement channel.
      * @caching This method **does not** cache its result.
      */
-    async followAnnouncement(channelID: string, webhookChannelID: string, reason?: string): Promise<FollowedChannel> {
-        return this._manager.authRequest<RawFollowedChannel>({
+    async followAnnouncement(channelID: string, webhookChannelID: string, reason?: string): Promise<Types.Channels.FollowedChannel> {
+        return this._manager.authRequest<Types.Channels.RawFollowedChannel>({
             method: "POST",
             reason,
             path:   Routes.CHANNEL_FOLLOWERS(channelID),
@@ -575,8 +518,8 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#privateChannels | Client#privateChannels}<br>{@link Client#groupChannels | Client#groupChannels}
      */
-    async get<T extends AnyChannel = AnyChannel>(channelID: string): Promise<T> {
-        return this._manager.authRequest<RawChannel>({
+    async get<T extends Types.Channels.AnyChannel = Types.Channels.AnyChannel>(channelID: string): Promise<T> {
+        return this._manager.authRequest<Types.Channels.RawChannel>({
             method: "GET",
             path:   Routes.CHANNEL(channelID)
         }).then(data => this._manager.client.util.updateChannel<T>(data));
@@ -588,16 +531,16 @@ export default class Channels {
      * @param options The options for getting the invite.
      * @caching This method **does not** cache its result.
      */
-    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options?: GetInviteWithNoneOptions): Promise<InviteWithoutCounts<CH>>;
-    async getInvite<CH extends InviteChannel = GuildInviteChannel | DMInviteChannel>(code: string, options: GetInviteWithCountsOptions): Promise<InviteWithCounts<CH>>;
-    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsAndScheduledEventOptions): Promise<InviteWithCountsAndScheduledEvent<CH>>;
-    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithScheduledEventOptions): Promise<InviteWithScheduledEvent<CH>>;
-    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions): Promise<Invite<CH>> {
+    async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel>(code: string, options?: Types.Invites.GetInviteWithNoneOptions): Promise<InviteWithoutCounts<CH>>;
+    async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.GuildInviteChannel | Types.Invites.DMInviteChannel>(code: string, options: Types.Invites.GetInviteWithCountsOptions): Promise<InviteWithCounts<CH>>;
+    async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel>(code: string, options: Types.Invites.GetInviteWithCountsAndScheduledEventOptions): Promise<InviteWithCountsAndScheduledEvent<CH>>;
+    async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel>(code: string, options: Types.Invites.GetInviteWithScheduledEventOptions): Promise<InviteWithScheduledEvent<CH>>;
+    async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel>(code: string, options?: Types.Invites.GetInviteOptions): Promise<Invite<CH>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("guild_scheduled_event_id", options?.guildScheduledEventID);
         query.setIfPresent("with_counts", options?.withCounts);
-        return this._manager.authRequest<RawInvite>({
+        return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "GET",
             path:   Routes.INVITE(code),
             query
@@ -619,8 +562,8 @@ export default class Channels {
      * Get the target users job status for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
      * @param code The code of the invite.
      */
-    async getInviteTargetUsersJobStatus(code: string): Promise<InviteTargetUsersJobStatusResponse> {
-        return this._manager.authRequest<RawInviteTargetUsersJobStatusResponse>({
+    async getInviteTargetUsersJobStatus(code: string): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
+        return this._manager.authRequest<Types.Invites.RawInviteTargetUsersJobStatusResponse>({
             method: "GET",
             path:   Routes.INVITE_TARGET_USERS_JOB_STATUS(code)
         }).then(data => ({
@@ -638,8 +581,8 @@ export default class Channels {
      * @param channelID The ID of the channel to get the invites of.
      * @caching This method **does not** cache its result.
      */
-    async getInvites<CH extends GuildInviteChannel = GuildInviteChannel>(channelID: string): Promise<Array<InviteWithMetadata<CH>>> {
-        return this._manager.authRequest<Array<RawInvite>>({
+    async getInvites<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(channelID: string): Promise<Array<InviteWithMetadata<CH>>> {
+        return this._manager.authRequest<Array<Types.Invites.RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(channelID)
         }).then(data => data.map(invite => Invite.withMetadata<CH>(invite, this._manager.client)));
@@ -651,9 +594,9 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      * @caching This method **does not** cache its result.
      */
-    async getJoinedPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+    async getJoinedPrivateArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+        return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
             json:   {
@@ -667,7 +610,7 @@ export default class Channels {
                 id:            m.id,
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
-            }) as ThreadMember),
+            }) as Types.Channels.ThreadMember),
             threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
@@ -679,8 +622,8 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async getMessage<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
-        return this._manager.authRequest<RawMessage>({
+    async getMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
+        return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "GET",
             path:   Routes.CHANNEL_MESSAGE(channelID, messageID)
         }).then(data => this._manager.client.util.updateMessage<T>(data));
@@ -693,7 +636,7 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async getMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
+    async getMessages<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         let chosenOption: "after" | "around" | "before";
@@ -715,7 +658,7 @@ export default class Channels {
                 query.set("limit", Math.min(options.limit, 100));
             }
 
-            const messages = await this._manager.authRequest<Array<RawMessage>>({
+            const messages = await this._manager.authRequest<Array<Types.Channels.RawMessage>>({
                 method: "GET",
                 path:   Routes.CHANNEL_MESSAGES(channelID),
                 query
@@ -756,7 +699,7 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    getMessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string, options?: GetChannelMessagesIteratorOptions<T>): MessagesIterator<T> {
+    getMessagesIterator<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelMessagesIteratorOptions<T>): Types.Channels.MessagesIterator<T> {
         options = this._manager.client.util._freeze(options);
         const filter = options?.filter?.bind(this) ?? ((): true => true);
         const chosenOption = options?.after === undefined ? "before" : "after";
@@ -809,8 +752,8 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      */
-    async getPinnedMessages<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached>(channelID: string): Promise<Array<Message<T>>> {
-        return this._manager.authRequest<Array<RawMessage>>({
+    async getPinnedMessages<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string): Promise<Array<Message<T>>> {
+        return this._manager.authRequest<Array<Types.Channels.RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(channelID)
         }).then(data => data.map(d => this._manager.client.util.updateMessage<T>(d)));
@@ -825,18 +768,18 @@ export default class Channels {
      * @caching This method **does** cache its result.
      * @caches {@link Client#users | Client#users}
      */
-    async getPollAnswerUsers(channelID: string, messageID: string, answerID: number, options?: GetPollAnswerUsersOptions): Promise<Array<User>> {
+    async getPollAnswerUsers(channelID: string, messageID: string, answerID: number, options?: Types.Channels.GetPollAnswerUsersOptions): Promise<Array<User>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("before", options?.after);
         query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<{ users: Array<RawUser>; }>({
+        return this._manager.authRequest<{ users: Array<Types.Users.RawUser>; }>({
             method: "GET",
             path:   Routes.POLL_ANSWER_USERS(channelID, messageID, answerID),
             query
         }).then(data => {
             const users = data.users.map(user => this._manager.client.users.update(user));
-            const message = this._manager.client.getChannel<AnyTextableChannel>(channelID)?.messages.get(messageID);
+            const message = this._manager.client.getChannel<Types.Channels.AnyTextableChannel>(channelID)?.messages.get(messageID);
             if (message?.poll) {
                 this._manager.client.util.replacePollAnswer(message.poll, answerID, users.length, users.map(u => u.id));
             }
@@ -851,12 +794,12 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async getPrivateArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+    async getPrivateArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("before", options?.before);
         query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+        return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
             query
@@ -867,7 +810,7 @@ export default class Channels {
                 id:            m.id,
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
-            }) as ThreadMember),
+            }) as Types.Channels.ThreadMember),
             threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
@@ -879,12 +822,12 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async getPrivateJoinedArchivedThreads(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<PrivateThreadChannel>> {
+    async getPrivateJoinedArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("before", options?.before);
         query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<RawArchivedThreads<RawPrivateThreadChannel>>({
+        return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
             query
@@ -895,7 +838,7 @@ export default class Channels {
                 id:            m.id,
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
-            }) as ThreadMember),
+            }) as Types.Channels.ThreadMember),
             threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
@@ -907,12 +850,12 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, options?: GetArchivedThreadsOptions): Promise<ArchivedThreads<T>> {
+    async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<T>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("before", options?.before);
         query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<RawArchivedThreads<RawAnnouncementThreadChannel | RawPublicThreadChannel>>({
+        return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawAnnouncementThreadChannel | Types.Channels.RawPublicThreadChannel>>({
             method: "GET",
             path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(channelID),
             query
@@ -923,7 +866,7 @@ export default class Channels {
                 id:            m.id,
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
-            }) as ThreadMember),
+            }) as Types.Channels.ThreadMember),
             threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
@@ -936,14 +879,14 @@ export default class Channels {
      * @param options The options for getting the reactions.
      * @caching This method **does not** cache its result.
      */
-    async getReactions(channelID: string, messageID: string, emoji: string, options?: GetReactionsOptions): Promise<Array<User>> {
+    async getReactions(channelID: string, messageID: string, emoji: string, options?: Types.Channels.GetReactionsOptions): Promise<Array<User>> {
         options = this._manager.client.util._freeze(options);
-        const _getReactions = async (_options?: GetReactionsOptions): Promise<Array<User>> => {
+        const _getReactions = async (_options?: Types.Channels.GetReactionsOptions): Promise<Array<User>> => {
             const query = new QueryBuilder();
             query.setIfPresent("after", _options?.after);
             query.setIfPresent("limit", _options?.limit);
             query.setIfPresent("type", options?.type);
-            return this._manager.authRequest<Array<RawUser>>({
+            return this._manager.authRequest<Array<Types.Users.RawUser>>({
                 method: "GET",
                 path:   Routes.CHANNEL_REACTION(channelID, messageID, emoji),
                 query
@@ -984,7 +927,7 @@ export default class Channels {
      * @caching This method **does not** cache its result.
      */
     async getStageInstance(channelID: string): Promise<StageInstance> {
-        return this._manager.authRequest<RawStageInstance>({
+        return this._manager.authRequest<Types.Guilds.RawStageInstance>({
             method: "GET",
             path:   Routes.STAGE_INSTANCE(channelID)
         }).then(data => new StageInstance(data, this._manager.client));
@@ -996,8 +939,8 @@ export default class Channels {
      * @param userID The ID of the user to get the thread member of.
      * @caching This method **does not** cache its result.
      */
-    async getThreadMember(channelID: string, userID: string): Promise<ThreadMember> {
-        return this._manager.authRequest<RawThreadMember>({
+    async getThreadMember(channelID: string, userID: string): Promise<Types.Channels.ThreadMember> {
+        return this._manager.authRequest<Types.Channels.RawThreadMember>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBER(channelID, userID)
         }).then(data => ({
@@ -1014,19 +957,19 @@ export default class Channels {
      * @param options The options for getting the thread members.
      * @caching This method **does not** cache its result.
      */
-    async getThreadMembers(channelID: string, options?: GetThreadMembersOptions): Promise<Array<ThreadMember>> {
+    async getThreadMembers(channelID: string, options?: Types.Channels.GetThreadMembersOptions): Promise<Array<Types.Channels.ThreadMember>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("after", options?.after);
         query.setIfPresent("limit", options?.limit);
         query.setIfPresent("with_member", options?.withMember);
-        return this._manager.authRequest<Array<RawThreadMember>>({
+        return this._manager.authRequest<Array<Types.Channels.RawThreadMember>>({
             method: "GET",
             path:   Routes.CHANNEL_THREAD_MEMBERS(channelID),
             query
         }).then(data => data.map(d => {
             // eslint-disable-next-line @typescript-eslint/dot-notation
-            const guild = this._manager.client.getChannel<AnyGuildChannel>(channelID)?.["_cachedGuild"];
+            const guild = this._manager.client.getChannel<Types.Channels.AnyGuildChannel>(channelID)?.["_cachedGuild"];
             const member = guild && options?.withMember ? guild.members.update(d.member!, guild.id) : undefined;
             return {
                 flags:         d.flags,
@@ -1039,8 +982,8 @@ export default class Channels {
     }
 
     /** @deprecated Get the list of usable voice regions. Moved to `misc`. */
-    async getVoiceRegions(): Promise<Array<VoiceRegion>> {
-        return this._manager.authRequest<Array<VoiceRegion>>({
+    async getVoiceRegions(): Promise<Array<Types.Voice.VoiceRegion>> {
+        return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
             method: "GET",
             path:   Routes.VOICE_REGIONS
         });
@@ -1091,7 +1034,7 @@ export default class Channels {
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      * @caching This method **does not** cache its result.
      */
-    async purgeMessages<T extends AnyTextableGuildChannel | Uncached = AnyTextableGuildChannel | Uncached>(channelID: string, options: PurgeOptions<T>): Promise<number> {
+    async purgeMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(channelID: string, options: Types.Channels.PurgeOptions<T>): Promise<number> {
         options = this._manager.client.util._freeze(options);
         const filter = (message: Message<T>): boolean | "break" | PromiseLike<boolean | "break"> => {
             if (message.timestamp.getTime() < Date.now() - 1209600000) {
@@ -1174,7 +1117,7 @@ export default class Channels {
      * @param options The options for sending the soundboard sound.
      * @caching This method **does not** cache its result.
      */
-    async sendSoundboardSound(channelID: string, options: SendSoundboardSoundOptions): Promise<void> {
+    async sendSoundboardSound(channelID: string, options: Types.Channels.SendSoundboardSoundOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "POST",
@@ -1216,9 +1159,9 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, messageID: string, options: StartThreadFromMessageOptions): Promise<T> {
+    async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, messageID: string, options: Types.Channels.StartThreadFromMessageOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawThreadChannel>({
+        return this._manager.authRequest<Types.Channels.RawThreadChannel>({
             method: "POST",
             path:   Routes.CHANNEL_MESSAGE_THREADS(channelID, messageID),
             json:   {
@@ -1237,9 +1180,9 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async startThreadInThreadOnlyChannel(channelID: string, options: StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
+    async startThreadInThreadOnlyChannel(channelID: string, options: Types.Channels.StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawThreadChannel>({
+        return this._manager.authRequest<Types.Channels.RawThreadChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(channelID),
             json:   {
@@ -1269,9 +1212,9 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(channelID: string, options: StartThreadWithoutMessageOptions): Promise<T> {
+    async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(channelID: string, options: Types.Channels.StartThreadWithoutMessageOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawThreadChannel>({
+        return this._manager.authRequest<Types.Channels.RawThreadChannel>({
             method: "POST",
             path:   Routes.CHANNEL_THREADS(channelID),
             json:   {

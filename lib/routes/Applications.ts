@@ -1,48 +1,12 @@
 /** @module REST/ApplicationCommands */
 import * as Routes from "../util/Routes";
-import type {
-    AnyApplicationCommand,
-    ApplicationCommandOptionConversion,
-    CreateApplicationCommandOptions,
-    CreateChatInputApplicationCommandOptions,
-    EditApplicationCommandOptions,
-    EditApplicationCommandPermissionsOptions,
-    EditChatInputApplicationCommandOptions,
-    RESTGuildApplicationCommandPermissions,
-    RawApplicationCommand,
-    RawGuildApplicationCommandPermissions,
-    CreateGuildApplicationCommandOptions,
-    EditGuildApplicationCommandOptions,
-    GetApplicationCommandOptions,
-    CreateTestEntitlementOptions,
-    RawEntitlement,
-    RawSKU,
-    RawTestEntitlement,
-    SearchEntitlementsOptions
-} from "../types/applications";
+import type * as Types from "../types/namespaced";
 import ApplicationCommand from "../structures/ApplicationCommand";
-import type { RequestOptions } from "../types/request-handler";
 import type RESTManager from "../rest/RESTManager";
 import SKU from "../structures/SKU";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 import ClientApplication from "../structures/ClientApplication";
-import type {
-    ActivityInstance,
-    ApplicationEmoji,
-    ApplicationEmojis,
-    CreateApplicationEmojiOptions,
-    CreatePrimaryEntryPointApplicationCommandOptions,
-    EditApplicationEmojiOptions,
-    EditApplicationOptions,
-    RESTApplication,
-    RawActivityInstance,
-    RawApplicationEmoji,
-    RawApplicationEmojis,
-    RawClientApplication,
-    RawSubscription,
-    SearchSKUSubscriptions
-} from "../types";
 import Application from "../structures/Application";
 import Subscription from "../structures/Subscription";
 import QueryBuilder from "../util/QueryBuilder";
@@ -60,9 +24,9 @@ export default class Applications {
      * @param options The commands.
      * @caching This method **does not** cache its result.
      */
-    async bulkEditGlobalCommands(applicationID: string, options: Array<CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
-        const opts = options as Array<CreateChatInputApplicationCommandOptions>;
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+    async bulkEditGlobalCommands(applicationID: string, options: Array<Types.Applications.CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
+        const opts = options as Array<Types.Applications.CreateChatInputApplicationCommandOptions>;
+        return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
             method: "PUT",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             json:   opts.map(opt => ({
@@ -71,7 +35,7 @@ export default class Applications {
                 default_member_permissions: opt.defaultMemberPermissions,
                 description_localizations:  opt.descriptionLocalizations,
                 dm_permission:              opt.dmPermission,
-                handler:                    (opt as unknown as CreatePrimaryEntryPointApplicationCommandOptions).handler,
+                handler:                    (opt as unknown as Types.Applications.CreatePrimaryEntryPointApplicationCommandOptions).handler,
                 integration_types:          opt.integrationTypes,
                 name:                       opt.name,
                 name_localizations:         opt.nameLocalizations,
@@ -89,9 +53,9 @@ export default class Applications {
      * @param options The commands.
      * @caching This method **does not** cache its result.
      */
-    async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
-        const opts = this._manager.client.util._freeze(options) as Array<CreateChatInputApplicationCommandOptions>;
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+    async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<Types.Applications.CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
+        const opts = this._manager.client.util._freeze(options) as Array<Types.Applications.CreateChatInputApplicationCommandOptions>;
+        return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
             method: "PUT",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   opts.map(opt => ({
@@ -127,14 +91,14 @@ export default class Applications {
      * @param options The options for creating the emoji.
      * @caching This method **does not** cache its result.
      */
-    async createEmoji(applicationID: string, options: CreateApplicationEmojiOptions): Promise<ApplicationEmoji> {
+    async createEmoji(applicationID: string, options: Types.Applications.CreateApplicationEmojiOptions): Promise<Types.Applications.ApplicationEmoji> {
         options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
         }
 
-        return this._manager.authRequest<RawApplicationEmoji>({
+        return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
             method: "POST",
             path:   Routes.APPLICATION_EMOJIS(applicationID),
             json:   {
@@ -150,9 +114,9 @@ export default class Applications {
      * @param options The options for the command.
      * @caching This method **does not** cache its result.
      */
-    async createGlobalCommand<T extends CreateApplicationCommandOptions = CreateApplicationCommandOptions>(applicationID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = this._manager.client.util._freeze(options) as CreateChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+    async createGlobalCommand<T extends Types.Applications.CreateApplicationCommandOptions = Types.Applications.CreateApplicationCommandOptions>(applicationID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
+        const opt = this._manager.client.util._freeze(options) as Types.Applications.CreateChatInputApplicationCommandOptions;
+        return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "POST",
             path:   Routes.APPLICATION_COMMANDS(applicationID),
             json:   {
@@ -161,7 +125,7 @@ export default class Applications {
                 description_localizations:  opt.descriptionLocalizations,
                 description:                opt.description,
                 dm_permission:              opt.dmPermission,
-                handler:                    (opt as unknown as CreatePrimaryEntryPointApplicationCommandOptions).handler,
+                handler:                    (opt as unknown as Types.Applications.CreatePrimaryEntryPointApplicationCommandOptions).handler,
                 integration_types:          opt.integrationTypes,
                 name_localizations:         opt.nameLocalizations,
                 name:                       opt.name,
@@ -179,9 +143,9 @@ export default class Applications {
      * @param options The options for the command.
      * @caching This method **does not** cache its result.
      */
-    async createGuildCommand<T extends CreateGuildApplicationCommandOptions = CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = this._manager.client.util._freeze(options) as CreateChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+    async createGuildCommand<T extends Types.Applications.CreateGuildApplicationCommandOptions = Types.Applications.CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
+        const opt = this._manager.client.util._freeze(options) as Types.Applications.CreateChatInputApplicationCommandOptions;
+        return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "POST",
             path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             json:   {
@@ -203,9 +167,9 @@ export default class Applications {
      * @param applicationID The ID of the application to create the entitlement for.
      * @param options The options for creating the test entitlement.
      */
-    async createTestEntitlement(applicationID: string, options: CreateTestEntitlementOptions): Promise<TestEntitlement> {
+    async createTestEntitlement(applicationID: string, options: Types.Applications.CreateTestEntitlementOptions): Promise<TestEntitlement> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawTestEntitlement>({
+        return this._manager.authRequest<Types.Applications.RawTestEntitlement>({
             method: "POST",
             path:   Routes.ENTITLEMENTS(applicationID),
             json:   {
@@ -273,7 +237,7 @@ export default class Applications {
      * @param options The options for editing the application.
      * @caching This method **does not** cache its result.
      */
-    async editCurrent(options: EditApplicationOptions): Promise<Application> {
+    async editCurrent(options: Types.Applications.EditApplicationOptions): Promise<Application> {
         options = this._manager.client.util._freeze(options);
         let coverImage: string | undefined, icon: string | undefined;
         if (options.coverImage) {
@@ -284,7 +248,7 @@ export default class Applications {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
 
-        return this._manager.authRequest<RESTApplication>({
+        return this._manager.authRequest<Types.Applications.RESTApplication>({
             method: "PATCH",
             path:   Routes.APPLICATION,
             json:   {
@@ -312,9 +276,9 @@ export default class Applications {
      * @param options The options for editing the emoji.
      * @caching This method **does not** cache its result.
      */
-    async editEmoji(applicationID: string, emojiID: string, options: EditApplicationEmojiOptions): Promise<ApplicationEmoji> {
+    async editEmoji(applicationID: string, emojiID: string, options: Types.Applications.EditApplicationEmojiOptions): Promise<Types.Applications.ApplicationEmoji> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawApplicationEmoji>({
+        return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
             method: "PATCH",
             path:   Routes.APPLICATION_EMOJI(applicationID, emojiID),
             json:   { name: options.name }
@@ -328,9 +292,9 @@ export default class Applications {
      * @param options The options for editing the command.
      * @caching This method **does not** cache its result.
      */
-    async editGlobalCommand<T extends EditApplicationCommandOptions = EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = this._manager.client.util._freeze(options) as EditChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+    async editGlobalCommand<T extends Types.Applications.EditApplicationCommandOptions = Types.Applications.EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
+        const opt = this._manager.client.util._freeze(options) as Types.Applications.EditChatInputApplicationCommandOptions;
+        return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "PATCH",
             path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
             json:   {
@@ -356,9 +320,9 @@ export default class Applications {
      * @param options The options for editing the command.
      * @caching This method **does not** cache its result.
      */
-    async editGuildCommand<T extends EditGuildApplicationCommandOptions = EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<ApplicationCommandOptionConversion<T>> {
-        const opt = this._manager.client.util._freeze(options) as EditChatInputApplicationCommandOptions;
-        return this._manager.authRequest<RawApplicationCommand>({
+    async editGuildCommand<T extends Types.Applications.EditGuildApplicationCommandOptions = Types.Applications.EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
+        const opt = this._manager.client.util._freeze(options) as Types.Applications.EditChatInputApplicationCommandOptions;
+        return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
             json:   {
@@ -382,15 +346,15 @@ export default class Applications {
      * @param options The options for editing the permissions.
      * @caching This method **does not** cache its result.
      */
-    async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: EditApplicationCommandPermissionsOptions): Promise<RESTGuildApplicationCommandPermissions> {
+    async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: Types.Applications.EditApplicationCommandPermissionsOptions): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         options = this._manager.client.util._freeze(options);
         return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
             method: "PATCH",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
             json:   { permissions: options.permissions },
             auth:   options.accessToken
-        } as Omit<RequestOptions, "auth">).then(data => {
-            const d = data as RawGuildApplicationCommandPermissions;
+        } as Omit<Types.RequestHandler.RequestOptions, "auth">).then(data => {
+            const d = data as Types.Applications.RawGuildApplicationCommandPermissions;
             return {
                 applicationID: d.application_id,
                 guildID:       d.guild_id,
@@ -405,8 +369,8 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param instanceID The ID of the instance.
      */
-    async getActivityInstance(applicationID: string, instanceID: string): Promise<ActivityInstance> {
-        return this._manager.authRequest<RawActivityInstance>({
+    async getActivityInstance(applicationID: string, instanceID: string): Promise<Types.Applications.ActivityInstance> {
+        return this._manager.authRequest<Types.Applications.RawActivityInstance>({
             method: "GET",
             path:   Routes.APPLICATION_ACTIVITY_INSTANCE(applicationID, instanceID)
         }).then(data => ({
@@ -428,7 +392,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getClient(): Promise<ClientApplication> {
-        return this._manager.authRequest<RawClientApplication>({
+        return this._manager.authRequest<Types.Applications.RawClientApplication>({
             method: "GET",
             path:   Routes.APPLICATION
         }).then(data => new ClientApplication(data, this._manager.client));
@@ -439,7 +403,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getCurrent(): Promise<Application> {
-        return this._manager.authRequest<RESTApplication>({
+        return this._manager.authRequest<Types.Applications.RESTApplication>({
             method: "GET",
             path:   Routes.APPLICATION
         }).then(data => new Application(data, this._manager.client));
@@ -451,8 +415,8 @@ export default class Applications {
      * @param emojiID The ID of the emoji to get.
      * @caching This method **does not** cache its result.
      */
-    async getEmoji(applicationID: string, emojiID: string): Promise<ApplicationEmoji> {
-        return this._manager.authRequest<RawApplicationEmoji>({
+    async getEmoji(applicationID: string, emojiID: string): Promise<Types.Applications.ApplicationEmoji> {
+        return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
             method: "GET",
             path:   Routes.APPLICATION_EMOJI(applicationID, emojiID)
         }).then(emoji => this._manager.client.util.convertApplicationEmoji(emoji));
@@ -463,8 +427,8 @@ export default class Applications {
      * @param applicationID The ID of the application to get the emojis of.
      * @caching This method **does not** cache its result.
      */
-    async getEmojis(applicationID: string): Promise<ApplicationEmojis> {
-        return this._manager.authRequest<RawApplicationEmojis>({
+    async getEmojis(applicationID: string): Promise<Types.Applications.ApplicationEmojis> {
+        return this._manager.authRequest<Types.Applications.RawApplicationEmojis>({
             method: "GET",
             path:   Routes.APPLICATION_EMOJIS(applicationID)
         }).then(({ items }) => ({
@@ -477,7 +441,7 @@ export default class Applications {
      * @param applicationID The ID of the application to get the entitlements of.
      * @param options The options for getting the entitlements.
      */
-    async getEntitlements(applicationID: string, options: SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
+    async getEntitlements(applicationID: string, options: Types.Applications.SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("after", options.after);
@@ -488,7 +452,7 @@ export default class Applications {
         query.setIfPresent("limit", options.limit);
         query.setIfPresent("sku_ids", options.skuIDs?.join(","));
         query.setIfPresent("user_id", options.userID);
-        return this._manager.authRequest<Array<RawEntitlement | RawTestEntitlement>>({
+        return this._manager.authRequest<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
             method: "GET",
             path:   Routes.ENTITLEMENTS(applicationID),
             query
@@ -502,11 +466,11 @@ export default class Applications {
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
      */
-    async getGlobalCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
+    async getGlobalCommand<T extends Types.Applications.AnyApplicationCommand = Types.Applications.AnyApplicationCommand>(applicationID: string, commandID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method:  "GET",
             path:    Routes.APPLICATION_COMMAND(applicationID, commandID),
             query,
@@ -520,11 +484,11 @@ export default class Applications {
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
      */
-    async getGlobalCommands(applicationID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
+    async getGlobalCommands(applicationID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<Array<Types.Applications.AnyApplicationCommand>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+        return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
             method:  "GET",
             path:    Routes.APPLICATION_COMMANDS(applicationID),
             query,
@@ -540,11 +504,11 @@ export default class Applications {
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
      */
-    async getGuildCommand<T extends AnyApplicationCommand = AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: GetApplicationCommandOptions): Promise<T> {
+    async getGuildCommand<T extends Types.Applications.AnyApplicationCommand = Types.Applications.AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
-        return this._manager.authRequest<RawApplicationCommand>({
+        return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method:  "GET",
             path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
             query,
@@ -559,11 +523,11 @@ export default class Applications {
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
      */
-    async getGuildCommands(applicationID: string, guildID: string, options?: GetApplicationCommandOptions): Promise<Array<AnyApplicationCommand>> {
+    async getGuildCommands(applicationID: string, guildID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<Array<Types.Applications.AnyApplicationCommand>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
-        return this._manager.authRequest<Array<RawApplicationCommand>>({
+        return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
             method:  "GET",
             path:    Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             query,
@@ -578,8 +542,8 @@ export default class Applications {
      * @param commandID The ID of the command.
      * @caching This method **does not** cache its result.
      */
-    async getGuildPermission(applicationID: string, guildID: string, commandID: string): Promise<RESTGuildApplicationCommandPermissions> {
-        return this._manager.authRequest<RawGuildApplicationCommandPermissions>({
+    async getGuildPermission(applicationID: string, guildID: string, commandID: string): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
+        return this._manager.authRequest<Types.Applications.RawGuildApplicationCommandPermissions>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID)
         }).then(data => ({
@@ -596,8 +560,8 @@ export default class Applications {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getGuildPermissions(applicationID: string, guildID: string): Promise<Array<RESTGuildApplicationCommandPermissions>> {
-        return this._manager.authRequest<Array<RawGuildApplicationCommandPermissions>>({
+    async getGuildPermissions(applicationID: string, guildID: string): Promise<Array<Types.Applications.RESTGuildApplicationCommandPermissions>> {
+        return this._manager.authRequest<Array<Types.Applications.RawGuildApplicationCommandPermissions>>({
             method: "GET",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSIONS(applicationID, guildID)
         }).then(data => data.map(d => ({
@@ -614,7 +578,7 @@ export default class Applications {
      * @param subscriptionID The ID of the subscription to get.
      */
     async getSKUSubscription(skuID: string, subscriptionID: string): Promise<Subscription> {
-        return this._manager.authRequest<RawSubscription>({
+        return this._manager.authRequest<Types.Applications.RawSubscription>({
             method: "GET",
             path:   Routes.SKU_SUBSCRIPTION(skuID, subscriptionID)
         }).then(data => new Subscription(data, this._manager.client));
@@ -625,14 +589,14 @@ export default class Applications {
      * @param skuID The ID of the SKU to get the subscriptions of.
      * @param options The options for getting the subscriptions.
      */
-    async getSKUSubscriptions(skuID: string, options: SearchSKUSubscriptions): Promise<Array<Subscription>> {
+    async getSKUSubscriptions(skuID: string, options: Types.Applications.SearchSKUSubscriptions): Promise<Array<Subscription>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("after", options.after);
         query.setIfPresent("before", options.before);
         query.setIfPresent("limit", options.limit);
         query.setIfPresent("user_id", options.userID);
-        return this._manager.authRequest<Array<RawSubscription>>({
+        return this._manager.authRequest<Array<Types.Applications.RawSubscription>>({
             method: "GET",
             path:   Routes.SKU_SUBSCRIPTIONS(skuID),
             query
@@ -644,7 +608,7 @@ export default class Applications {
      * @param applicationID The ID of the application to get the SKUs of.
      */
     async getSKUs(applicationID: string): Promise<Array<SKU>> {
-        return this._manager.authRequest<Array<RawSKU>>({
+        return this._manager.authRequest<Array<Types.Applications.RawSKU>>({
             method: "GET",
             path:   Routes.SKUS(applicationID)
         }).then(data => data.map(d => new SKU(d, this._manager.client)));

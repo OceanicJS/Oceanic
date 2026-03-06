@@ -1,4 +1,5 @@
 /** @module REST/Guilds */
+import type * as Types from "../types/namespaced";
 import type { ChannelTypeMap } from "../Constants";
 import type RESTManager from "../rest/RESTManager";
 import ApplicationCommand from "../structures/ApplicationCommand";
@@ -15,92 +16,6 @@ import Role from "../structures/Role";
 import Soundboard from "../structures/Soundboard";
 import VoiceState from "../structures/VoiceState";
 import Webhook from "../structures/Webhook";
-import type { GuildInviteChannel, RawInvite } from "../types/invites";
-import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
-import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
-import type {
-    AnyGuildChannelWithoutThreads,
-    GuildChannelsWithoutThreads,
-    RawGuildChannel,
-    RawSoundboard,
-    RawThreadChannel,
-    RawThreadMember
-} from "../types/channels";
-import type { CreateTemplateOptions, EditGuildTemplateOptions, RawGuildTemplate } from "../types/guild-template";
-import type {
-    AddMemberOptions,
-    Ban,
-    BeginPruneOptions,
-    BulkBanOptions,
-    BulkBanResponse,
-    CreateBanOptions,
-    CreateChannelOptions,
-    CreateGuildEmojiOptions,
-    CreateRoleOptions,
-    CreateSoundboardSoundOptions,
-    CreateStickerOptions,
-    EditCurrentMemberOptions,
-    EditCurrentUserVoiceStateOptions,
-    EditGuildEmojiOptions,
-    EditGuildOptions,
-    EditIncidentActionsOptions,
-    EditMemberOptions,
-    EditOnboardingOptions,
-    EditRoleOptions,
-    EditRolePositionsEntry,
-    EditSoundboardSoundOptions,
-    EditStickerOptions,
-    EditUserVoiceStateOptions,
-    EditWelcomeScreenOptions,
-    GetActiveThreadsResponse,
-    GetBansOptions,
-    GetMembersOptions,
-    GetPruneCountOptions,
-    GetVanityURLResponse,
-    GuildEmoji,
-    IncidentActions,
-    MemberSearchAndOrQuery,
-    MemberSearchFilter,
-    MemberSearchNotIndexedResult,
-    MemberSearchOptions,
-    MemberSearchOrQuery,
-    MemberSearchOrQueryRange,
-    MemberSearchPaginationFilter,
-    MemberSearchRangeQuery,
-    MemberSearchResults,
-    ModifyChannelPositionsEntry,
-    Onboarding,
-    RESTMember,
-    RawBan,
-    RawBulkBanResponse,
-    RawGuild,
-    RawGuildEmoji,
-    RawGuildPreview,
-    RawIncidentActions,
-    RawIntegration,
-    RawMemberSearchResults,
-    RawOnboarding,
-    RawRole,
-    RawSticker,
-    RawWelcomeScreen,
-    RawWidget,
-    RawWidgetSettings,
-    SearchMembersOptions,
-    Sticker,
-    WelcomeScreen,
-    Widget,
-    WidgetImageStyle,
-    WidgetSettings
-} from "../types/guilds";
-import type {
-    CreateScheduledEventOptions,
-    EditScheduledEventOptions,
-    GetScheduledEventUsersOptions,
-    RawScheduledEvent,
-    RawScheduledEventUser,
-    ScheduledEventUser
-} from "../types/scheduled-events";
-import type { RawVoiceState, VoiceRegion } from "../types/voice";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
 import { setTimeout } from "node:timers/promises";
@@ -122,9 +37,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
      */
-    async addMember(guildID: string, userID: string, options: AddMemberOptions): Promise<Member | undefined> {
+    async addMember(guildID: string, userID: string, options: Types.Guilds.AddMemberOptions): Promise<Member | undefined> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RESTMember | null>({
+        return this._manager.authRequest<Types.Guilds.RESTMember | null>({
             method: "PUT",
             path:   Routes.GUILD_MEMBER(guildID, userID),
             json:   {
@@ -159,7 +74,7 @@ export default class Guilds {
      * @param options The options for the prune.
      * @caching This method **does not** cache its result.
      */
-    async beginPrune(guildID: string, options?: BeginPruneOptions): Promise<number | null> {
+    async beginPrune(guildID: string, options?: Types.Guilds.BeginPruneOptions): Promise<number | null> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<{ pruned: number | null; }>({
             method: "POST",
@@ -180,9 +95,9 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for banning.
      */
-    async bulkBan(guildID: string, options: BulkBanOptions): Promise<BulkBanResponse> {
+    async bulkBan(guildID: string, options: Types.Guilds.BulkBanOptions): Promise<Types.Guilds.BulkBanResponse> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawBulkBanResponse>({
+        return this._manager.authRequest<Types.Guilds.RawBulkBanResponse>({
             method: "POST",
             path:   Routes.GUILD_BULK_BAN(guildID),
             json:   {
@@ -203,9 +118,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
-    async createAutoModerationRule(guildID: string, options: CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
+    async createAutoModerationRule(guildID: string, options: Types.AutoModeration.CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawAutoModerationRule>({
+        return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
             method: "POST",
             path:   Routes.GUILD_AUTOMOD_RULES(guildID),
             json:   {
@@ -243,7 +158,7 @@ export default class Guilds {
      * @param options The options for creating the ban.
      * @caching This method **does not** cache its result.
      */
-    async createBan(guildID: string, userID: string, options?: CreateBanOptions): Promise<void> {
+    async createBan(guildID: string, userID: string, options?: Types.Guilds.CreateBanOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
         let deleteMessageSeconds: number | undefined = options?.deleteMessageSeconds;
         if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) {
@@ -264,9 +179,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}
      */
-    async createChannel<T extends GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
+    async createChannel<T extends Types.Channels.GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<Types.Guilds.CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawGuildChannel>({
+        return this._manager.authRequest<Types.Channels.RawGuildChannel>({
             method: "POST",
             path:   Routes.GUILD_CHANNELS(guildID),
             json:   {
@@ -304,13 +219,13 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis}<br>{@link Client#users | Client#users} (creator, if applicable)
      */
-    async createEmoji(guildID: string, options: CreateGuildEmojiOptions): Promise<GuildEmoji> {
+    async createEmoji(guildID: string, options: Types.Guilds.CreateGuildEmojiOptions): Promise<Types.Guilds.GuildEmoji> {
         options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
         }
-        return this._manager.authRequest<RawGuildEmoji>({
+        return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
             method: "POST",
             path:   Routes.GUILD_EMOJIS(guildID),
             json:   {
@@ -329,13 +244,13 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
      */
-    async createRole(guildID: string, options?: CreateRoleOptions): Promise<Role> {
+    async createRole(guildID: string, options?: Types.Guilds.CreateRoleOptions): Promise<Role> {
         options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options?.icon) {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
-        return this._manager.authRequest<RawRole>({
+        return this._manager.authRequest<Types.Guilds.RawRole>({
             method: "POST",
             path:   Routes.GUILD_ROLES(guildID),
             json:   {
@@ -362,13 +277,13 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
-    async createScheduledEvent(guildID: string, options: CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
+    async createScheduledEvent(guildID: string, options: Types.ScheduledEvents.CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
         options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
         }
-        return this._manager.authRequest<RawScheduledEvent>({
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEvent>({
             method: "POST",
             path:   Routes.GUILD_SCHEDULED_EVENTS(guildID),
             json:   {
@@ -393,13 +308,13 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
      */
-    async createSoundboardSound(guildID: string, options: CreateSoundboardSoundOptions): Promise<Soundboard> {
+    async createSoundboardSound(guildID: string, options: Types.Guilds.CreateSoundboardSoundOptions): Promise<Soundboard> {
         options = this._manager.client.util._freeze(options);
         let sound: string | undefined;
         if (options.sound) {
             sound = this._manager.client.util._convertSound(options.sound, "sound");
         }
-        return this._manager.authRequest<RawSoundboard>({
+        return this._manager.authRequest<Types.Channels.RawSoundboard>({
             method: "POST",
             path:   Routes.SOUNDBOARD_SOUNDS(guildID),
             json:   {
@@ -420,7 +335,7 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers}<br>{@link Client#users | Client#users} (creator, if applicable)
      */
-    async createSticker(guildID: string, options: CreateStickerOptions): Promise<Sticker> {
+    async createSticker(guildID: string, options: Types.Guilds.CreateStickerOptions): Promise<Types.Guilds.Sticker> {
         options = this._manager.client.util._freeze(options);
         const magic = this._manager.client.util.getMagic(options.file.contents);
         let mime: string | undefined;
@@ -441,7 +356,7 @@ export default class Guilds {
         form.append("tags", options.tags);
         form.append("file", new Blob([options.file.contents], { type: mime }), options.file.name);
 
-        return this._manager.authRequest<RawSticker>({
+        return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "POST",
             path:   Routes.GUILD_STICKERS(guildID),
             form,
@@ -454,9 +369,9 @@ export default class Guilds {
      * @param guildID The ID of the guild to create a template from.
      * @param options The options for creating the template.
      */
-    async createTemplate(guildID: string, options: CreateTemplateOptions): Promise<GuildTemplate> {
+    async createTemplate(guildID: string, options: Types.GuildTemplate.CreateTemplateOptions): Promise<GuildTemplate> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawGuildTemplate>({
+        return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATES(guildID),
             json:   {
@@ -591,7 +506,7 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not already cached.
      * @caches {@link Client#guilds | Client#guilds}
      */
-    async edit(guildID: string, options: EditGuildOptions): Promise<Guild> {
+    async edit(guildID: string, options: Types.Guilds.EditGuildOptions): Promise<Guild> {
         options = this._manager.client.util._freeze(options);
         let banner: string | undefined, discoverySplash: string | undefined, icon: string | undefined, splash: string | undefined;
         if (options.banner) {
@@ -606,7 +521,7 @@ export default class Guilds {
         if (options.splash) {
             splash = this._manager.client.util._convertImage(options.splash, "splash");
         }
-        return this._manager.authRequest<RawGuild>({
+        return this._manager.authRequest<Types.Guilds.RawGuild>({
             method: "PATCH",
             path:   Routes.GUILD(guildID),
             json:   {
@@ -643,9 +558,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
-    async editAutoModerationRule(guildID: string, ruleID: string, options: EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
+    async editAutoModerationRule(guildID: string, ruleID: string, options: Types.AutoModeration.EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawAutoModerationRule>({
+        return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
             method: "PATCH",
             path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
             json:   {
@@ -681,7 +596,7 @@ export default class Guilds {
      * @param options The channels to move. Unedited channels do not need to be specified.
      * @caching This method **does not** cache its result.
      */
-    async editChannelPositions(guildID: string, options: Array<ModifyChannelPositionsEntry>): Promise<void> {
+    async editChannelPositions(guildID: string, options: Array<Types.Guilds.ModifyChannelPositionsEntry>): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
@@ -702,7 +617,7 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}<br>{@link Guild#clientMember | Guild#clientMember}
      */
-    async editCurrentMember(guildID: string, options: EditCurrentMemberOptions): Promise<Member> {
+    async editCurrentMember(guildID: string, options: Types.Guilds.EditCurrentMemberOptions): Promise<Member> {
         options = this._manager.client.util._freeze(options);
 
         let avatar = options.avatar;
@@ -716,7 +631,7 @@ export default class Guilds {
             banner = this._manager.client.util._convertImage(banner, "banner");
         }
 
-        return this._manager.authRequest<RESTMember>({
+        return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, "@me"),
             json:   { nick: options.nick, banner, avatar, bio: options.bio },
@@ -730,7 +645,7 @@ export default class Guilds {
      * @param options The options for editing the voice state.
      * @caching This method **does not** cache its result.
      */
-    async editCurrentUserVoiceState(guildID: string, options: EditCurrentUserVoiceStateOptions): Promise<void> {
+    async editCurrentUserVoiceState(guildID: string, options: Types.Guilds.EditCurrentUserVoiceStateOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
@@ -750,9 +665,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis}
      */
-    async editEmoji(guildID: string, emojiID: string, options: EditGuildEmojiOptions): Promise<GuildEmoji> {
+    async editEmoji(guildID: string, emojiID: string, options: Types.Guilds.EditGuildEmojiOptions): Promise<Types.Guilds.GuildEmoji> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawGuildEmoji>({
+        return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
             method: "PATCH",
             path:   Routes.GUILD_EMOJI(guildID, emojiID),
             json:   {
@@ -769,9 +684,9 @@ export default class Guilds {
      * @param options The options for editing the incident actions.
      * @caching This method **does not** cache its result.
      */
-    async editIncidentActions(guildID: string, options: EditIncidentActionsOptions): Promise<IncidentActions> {
+    async editIncidentActions(guildID: string, options: Types.Guilds.EditIncidentActionsOptions): Promise<Types.Guilds.IncidentActions> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawIncidentActions>({
+        return this._manager.authRequest<Types.Guilds.RawIncidentActions>({
             method: "PUT",
             path:   Routes.GUILD_INCIDENT_ACTIONS(guildID),
             json:   {
@@ -793,9 +708,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
      */
-    async editMember(guildID: string, memberID: string, options: EditMemberOptions): Promise<Member> {
+    async editMember(guildID: string, memberID: string, options: Types.Guilds.EditMemberOptions): Promise<Member> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RESTMember>({
+        return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "PATCH",
             path:   Routes.GUILD_MEMBER(guildID, memberID),
             json:   {
@@ -817,9 +732,9 @@ export default class Guilds {
      * @param options The options for editing the onboarding configuration.
      * @caching This method **does not** cache its result.
      */
-    async editOnboarding(guildID: string, options: EditOnboardingOptions): Promise<Onboarding> {
+    async editOnboarding(guildID: string, options: Types.Guilds.EditOnboardingOptions): Promise<Types.Guilds.Onboarding> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawOnboarding>({
+        return this._manager.authRequest<Types.Guilds.RawOnboarding>({
             method: "PATCH",
             path:   Routes.GUILD_ONBOARDING(guildID),
             json:   {
@@ -873,13 +788,13 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
      */
-    async editRole(guildID: string, roleID: string, options: EditRoleOptions): Promise<Role> {
+    async editRole(guildID: string, roleID: string, options: Types.Guilds.EditRoleOptions): Promise<Role> {
         options = this._manager.client.util._freeze(options);
         let icon: string | undefined;
         if (options.icon) {
             icon = this._manager.client.util._convertImage(options.icon, "icon");
         }
-        return this._manager.authRequest<RawRole>({
+        return this._manager.authRequest<Types.Guilds.RawRole>({
             method: "PATCH",
             path:   Routes.GUILD_ROLE(guildID, roleID),
             json:   {
@@ -906,10 +821,10 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
      */
-    async editRolePositions(guildID: string, options: Array<EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
+    async editRolePositions(guildID: string, options: Array<Types.Guilds.EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
         options = this._manager.client.util._freeze(options);
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<Array<RawRole>>({
+        return this._manager.authRequest<Array<Types.Guilds.RawRole>>({
             method: "PATCH",
             path:   Routes.GUILD_ROLES(guildID),
             json:   options.map(o => ({
@@ -928,13 +843,13 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
      */
-    async editScheduledEvent(guildID: string, scheduledEventID: string, options: EditScheduledEventOptions): Promise<GuildScheduledEvent> {
+    async editScheduledEvent(guildID: string, scheduledEventID: string, options: Types.ScheduledEvents.EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         options = this._manager.client.util._freeze(options);
         let image: string | undefined;
         if (options.image) {
             image = this._manager.client.util._convertImage(options.image, "image");
         }
-        return this._manager.authRequest<RawScheduledEvent>({
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEvent>({
             method: "PATCH",
             path:   Routes.GUILD_SCHEDULED_EVENT(guildID, scheduledEventID),
             json:   {
@@ -961,9 +876,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
      */
-    async editSoundboardSound(guildID: string, soundID: string, options: EditSoundboardSoundOptions): Promise<Soundboard> {
+    async editSoundboardSound(guildID: string, soundID: string, options: Types.Guilds.EditSoundboardSoundOptions): Promise<Soundboard> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawSoundboard>({
+        return this._manager.authRequest<Types.Channels.RawSoundboard>({
             method: "PATCH",
             path:   Routes.SOUNDBOARD_SOUND(guildID, soundID),
             json:   {
@@ -983,9 +898,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers}
      */
-    async editSticker(guildID: string, stickerID: string, options: EditStickerOptions): Promise<Sticker> {
+    async editSticker(guildID: string, stickerID: string, options: Types.Guilds.EditStickerOptions): Promise<Types.Guilds.Sticker> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawSticker>({
+        return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "PATCH",
             path:   Routes.GUILD_STICKER(guildID, stickerID),
             json:   {
@@ -1004,9 +919,9 @@ export default class Guilds {
      * @param options The options for editing the template.
      * @caching This method **does not** cache its result.
      */
-    async editTemplate(guildID: string, code: string, options: EditGuildTemplateOptions): Promise<GuildTemplate> {
+    async editTemplate(guildID: string, code: string, options: Types.GuildTemplate.EditGuildTemplateOptions): Promise<GuildTemplate> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawGuildTemplate>({
+        return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATE(guildID, code),
             json:   {
@@ -1024,7 +939,7 @@ export default class Guilds {
      * @param options The options for editing the voice state.
      * @caching This method **does not** cache its result.
      */
-    async editUserVoiceState(guildID: string, memberID: string, options: EditUserVoiceStateOptions): Promise<void> {
+    async editUserVoiceState(guildID: string, memberID: string, options: Types.Guilds.EditUserVoiceStateOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
@@ -1042,9 +957,9 @@ export default class Guilds {
      * @param options The options for editing the welcome screen.
      * @caching This method **does not** cache its result.
      */
-    async editWelcomeScreen(guildID: string, options: EditWelcomeScreenOptions): Promise<WelcomeScreen> {
+    async editWelcomeScreen(guildID: string, options: Types.Guilds.EditWelcomeScreenOptions): Promise<Types.Guilds.WelcomeScreen> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawWelcomeScreen>({
+        return this._manager.authRequest<Types.Guilds.RawWelcomeScreen>({
             method: "PATCH",
             path:   Routes.GUILD_WELCOME_SCREEN(guildID),
             json:   {
@@ -1075,9 +990,9 @@ export default class Guilds {
      * @param options The options for editing the widget.
      * @caching This method **does not** cache its result.
      */
-    async editWidget(guildID: string, options: WidgetSettings): Promise<Widget> {
+    async editWidget(guildID: string, options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.Widget> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawWidget>({
+        return this._manager.authRequest<Types.Guilds.RawWidget>({
             method: "POST",
             path:   Routes.GUILD_WIDGET(guildID),
             json:   {
@@ -1113,7 +1028,7 @@ export default class Guilds {
     async get(guildID: string, withCounts?: boolean): Promise<Guild> {
         const query = new QueryBuilder();
         query.setIfPresent("with_counts", withCounts);
-        return this._manager.authRequest<RawGuild>({
+        return this._manager.authRequest<Types.Guilds.RawGuild>({
             method: "GET",
             path:   Routes.GUILD(guildID),
             query
@@ -1126,8 +1041,8 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      */
-    async getActiveThreads(guildID: string): Promise<GetActiveThreadsResponse> {
-        return this._manager.authRequest<{ members: Array<RawThreadMember>; threads: Array<RawThreadChannel>; }>({
+    async getActiveThreads(guildID: string): Promise<Types.Guilds.GetActiveThreadsResponse> {
+        return this._manager.authRequest<{ members: Array<Types.Channels.RawThreadMember>; threads: Array<Types.Channels.RawThreadChannel>; }>({
             method: "GET",
             path:   Routes.GUILD_ACTIVE_THREADS(guildID)
         }).then(data => ({
@@ -1148,14 +1063,14 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}<br>{@link Guild#scheduledEvents | Guild#scheduledEvents}<br>{@link Guild#integrations | Guild#integrations}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#users | Client#users}
      */
-    async getAuditLog(guildID: string, options?: GetAuditLogOptions): Promise<AuditLog> {
+    async getAuditLog(guildID: string, options?: Types.AuditLog.GetAuditLogOptions): Promise<Types.AuditLog.AuditLog> {
         const guild = this._manager.client.guilds.get(guildID);
         const query = new QueryBuilder();
         query.setIfPresent("action_type", options?.actionType);
         query.setIfPresent("before", options?.before);
         query.setIfPresent("limit", options?.limit);
         query.setIfPresent("user_id", options?.userID);
-        return this._manager.authRequest<RawAuditLog>({
+        return this._manager.authRequest<Types.AuditLog.RawAuditLog>({
             method: "GET",
             path:   Routes.GUILD_AUDIT_LOG(guildID),
             query
@@ -1179,7 +1094,7 @@ export default class Guilds {
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
      */
     async getAutoModerationRule(guildID: string, ruleID: string): Promise<AutoModerationRule> {
-        return this._manager.authRequest<RawAutoModerationRule>({
+        return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
             method: "GET",
             path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID)
         }).then(data => this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
@@ -1193,7 +1108,7 @@ export default class Guilds {
      */
     async getAutoModerationRules(guildID: string): Promise<Array<AutoModerationRule>> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<Array<RawAutoModerationRule>>({
+        return this._manager.authRequest<Array<Types.AutoModeration.RawAutoModerationRule>>({
             method: "GET",
             path:   Routes.GUILD_AUTOMOD_RULES(guildID)
         }).then(data => data.map(rule => guild?.autoModerationRules.update(rule) ?? new AutoModerationRule(rule, this._manager.client)));
@@ -1206,8 +1121,8 @@ export default class Guilds {
      * @caching This method **does** cache part of its result.
      * @caches {@link Client#users | Client#users}
      */
-    async getBan(guildID: string, userID: string): Promise<Ban> {
-        return this._manager.authRequest<RawBan>({
+    async getBan(guildID: string, userID: string): Promise<Types.Guilds.Ban> {
+        return this._manager.authRequest<Types.Guilds.RawBan>({
             method: "GET",
             path:   Routes.GUILD_BAN(guildID, userID)
         }).then(data => ({
@@ -1223,13 +1138,13 @@ export default class Guilds {
      * @caching This method **does** cache part of its result.
      * @caches {@link Client#users | Client#users}
      */
-    async getBans(guildID: string, options?: GetBansOptions): Promise<Array<Ban>> {
-        const _getBans = async (_options?: GetBansOptions): Promise<Array<Ban>> => {
+    async getBans(guildID: string, options?: Types.Guilds.GetBansOptions): Promise<Array<Types.Guilds.Ban>> {
+        const _getBans = async (_options?: Types.Guilds.GetBansOptions): Promise<Array<Types.Guilds.Ban>> => {
             const query = new QueryBuilder();
             query.setIfPresent("after", _options?.after);
             query.setIfPresent("before", _options?.before);
             query.setIfPresent("limit", _options?.limit);
-            return this._manager.authRequest<Array<RawBan>>({
+            return this._manager.authRequest<Array<Types.Guilds.RawBan>>({
                 method: "GET",
                 path:   Routes.GUILD_BANS(guildID),
                 query
@@ -1250,7 +1165,7 @@ export default class Guilds {
         }
         let optionValue = options?.[chosenOption] ?? undefined;
 
-        let bans: Array<Ban> = [];
+        let bans: Array<Types.Guilds.Ban> = [];
         while (bans.length < limit) {
             const limitLeft = limit - bans.length;
             const limitToFetch = Math.min(limitLeft, 1000);
@@ -1281,8 +1196,8 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}
      */
-    async getChannels(guildID: string): Promise<Array<AnyGuildChannelWithoutThreads>> {
-        return this._manager.authRequest<Array<RawGuildChannel>>({
+    async getChannels(guildID: string): Promise<Array<Types.Channels.AnyGuildChannelWithoutThreads>> {
+        return this._manager.authRequest<Array<Types.Channels.RawGuildChannel>>({
             method: "GET",
             path:   Routes.GUILD_CHANNELS(guildID)
         }).then(data => data.map(d => this._manager.client.util.updateChannel(d)));
@@ -1295,8 +1210,8 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis}
      */
-    async getEmoji(guildID: string, emojiID: string): Promise<GuildEmoji> {
-        return this._manager.authRequest<RawGuildEmoji>({
+    async getEmoji(guildID: string, emojiID: string): Promise<Types.Guilds.GuildEmoji> {
+        return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
             method: "GET",
             path:   Routes.GUILD_EMOJI(guildID, emojiID)
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
@@ -1308,8 +1223,8 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis} (will be completely cleared and refilled)
      */
-    async getEmojis(guildID: string): Promise<Array<GuildEmoji>> {
-        return this._manager.authRequest<Array<RawGuildEmoji>>({
+    async getEmojis(guildID: string): Promise<Array<Types.Guilds.GuildEmoji>> {
+        return this._manager.authRequest<Array<Types.Guilds.RawGuildEmoji>>({
             method: "GET",
             path:   Routes.GUILD_EMOJIS(guildID)
         }).then(data => {
@@ -1327,7 +1242,7 @@ export default class Guilds {
      */
     async getIntegrations(guildID: string): Promise<Array<Integration>> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<Array<RawIntegration>>({
+        return this._manager.authRequest<Array<Types.Guilds.RawIntegration>>({
             method: "GET",
             path:   Routes.GUILD_INTEGRATIONS(guildID)
         }).then(data => data.map(integration => guild?.integrations.update(integration, guildID) ?? new Integration(integration, this._manager.client, guildID)));
@@ -1339,9 +1254,9 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#invites | Guild#invites}
      */
-    async getInvites<CH extends GuildInviteChannel = GuildInviteChannel>(guildID: string): Promise<Array<InviteWithMetadata<CH>>> {
+    async getInvites<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(guildID: string): Promise<Array<InviteWithMetadata<CH>>> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<Array<RawInvite>>({
+        return this._manager.authRequest<Array<Types.Invites.RawInvite>>({
             method: "GET",
             path:   Routes.GUILD_INVITES(guildID)
         }).then(data => data.map(invite => guild?.invites.update(invite) as InviteWithMetadata<CH> ?? Invite.withMetadata<CH>(invite, this._manager.client)));
@@ -1355,7 +1270,7 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async getMember(guildID: string, memberID: string): Promise<Member> {
-        return this._manager.authRequest<RESTMember>({
+        return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "GET",
             path:   Routes.GUILD_MEMBER(guildID, memberID)
         }).then(data => this._manager.client.util.updateMember(guildID, memberID, data));
@@ -1368,11 +1283,11 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}}
      */
-    async getMembers(guildID: string, options?: GetMembersOptions): Promise<Array<Member>> {
+    async getMembers(guildID: string, options?: Types.Guilds.GetMembersOptions): Promise<Array<Member>> {
         const query = new QueryBuilder();
         query.setIfPresent("after", options?.after);
         query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<Array<RESTMember>>({
+        return this._manager.authRequest<Array<Types.Guilds.RESTMember>>({
             method: "GET",
             path:   Routes.GUILD_MEMBERS(guildID),
             query
@@ -1384,8 +1299,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getOnboarding(guildID: string): Promise<Onboarding> {
-        return this._manager.authRequest<RawOnboarding>({
+    async getOnboarding(guildID: string): Promise<Types.Guilds.Onboarding> {
+        return this._manager.authRequest<Types.Guilds.RawOnboarding>({
             method: "GET",
             path:   Routes.GUILD_ONBOARDING(guildID)
         }).then(data => ({
@@ -1417,7 +1332,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async getPreview(guildID: string): Promise<GuildPreview> {
-        return this._manager.authRequest<RawGuildPreview>({
+        return this._manager.authRequest<Types.Guilds.RawGuildPreview>({
             method: "GET",
             path:   Routes.GUILD_PREVIEW(guildID)
         }).then(data => new GuildPreview(data, this._manager.client));
@@ -1429,7 +1344,7 @@ export default class Guilds {
      * @param options The options for getting the prune count.
      * @caching This method **does not** cache its result.
      */
-    async getPruneCount(guildID: string, options?: GetPruneCountOptions): Promise<number> {
+    async getPruneCount(guildID: string, options?: Types.Guilds.GetPruneCountOptions): Promise<number> {
         const query = new QueryBuilder();
         query.setIfPresent("days", options?.days);
         query.setIfPresent("include_roles", options?.includeRoles?.join(","));
@@ -1449,7 +1364,7 @@ export default class Guilds {
      */
     async getRole(guildID: string, roleID: string): Promise<Role> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<RawRole>({
+        return this._manager.authRequest<Types.Guilds.RawRole>({
             method: "GET",
             path:   Routes.GUILD_ROLE(guildID, roleID)
         }).then(data => guild?.roles.update(data, guildID) ?? new Role(data, this._manager.client, guildID));
@@ -1475,7 +1390,7 @@ export default class Guilds {
      */
     async getRoles(guildID: string): Promise<Array<Role>> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<Array<RawRole>>({
+        return this._manager.authRequest<Array<Types.Guilds.RawRole>>({
             method: "GET",
             path:   Routes.GUILD_ROLES(guildID)
         }).then(data => data.map(role => guild?.roles.update(role, guildID) ?? new Role(role, this._manager.client, guildID)));
@@ -1493,7 +1408,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         const query = new QueryBuilder();
         query.setIfPresent("with_user_count", withUserCount);
-        return this._manager.authRequest<RawScheduledEvent>({
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEvent>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
             query
@@ -1508,14 +1423,14 @@ export default class Guilds {
      * @caching This method **does** cache part its result. Members will not be cached if the guild is not cached.
      * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
      */
-    async getScheduledEventUsers(guildID: string, eventID: string, options?: GetScheduledEventUsersOptions): Promise<Array<ScheduledEventUser>> {
+    async getScheduledEventUsers(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
         const guild = this._manager.client.guilds.get(guildID);
         const query = new QueryBuilder();
         query.setIfPresent("after", options?.after);
         query.setIfPresent("before", options?.before);
         query.setIfPresent("limit", options?.limit);
         query.setIfPresent("with_member", options?.withMember);
-        return this._manager.authRequest<Array<RawScheduledEventUser>>({
+        return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID)
         }).then(data => data.map(d => ({
@@ -1537,7 +1452,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         const query = new QueryBuilder();
         query.setIfPresent("with_user_count", withUserCount);
-        return this._manager.authRequest<Array<RawScheduledEvent>>({
+        return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEvent>>({
             method: "GET",
             path:   Routes.GUILD_SCHEDULED_EVENTS(guildID),
             query
@@ -1553,7 +1468,7 @@ export default class Guilds {
      */
     async getSoundboardSound(guildID: string, soundID: string): Promise<Soundboard> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<RawSoundboard>({
+        return this._manager.authRequest<Types.Channels.RawSoundboard>({
             method: "GET",
             path:   Routes.SOUNDBOARD_SOUND(guildID, soundID)
         }).then(data => guild?.soundboardSounds.update(data) ?? new Soundboard(data, this._manager.client));
@@ -1567,7 +1482,7 @@ export default class Guilds {
      */
     async getSoundboardSounds(guildID: string): Promise<Array<Soundboard>> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<{ items: Array<RawSoundboard>; }>({
+        return this._manager.authRequest<{ items: Array<Types.Channels.RawSoundboard>; }>({
             method: "GET",
             path:   Routes.SOUNDBOARD_SOUNDS(guildID)
         }).then(data => data.items.map(d => guild?.soundboardSounds.update(d) ?? new Soundboard(d, this._manager.client)));
@@ -1580,8 +1495,8 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers}
      */
-    async getSticker(guildID: string, stickerID: string): Promise<Sticker> {
-        return this._manager.authRequest<RawSticker>({
+    async getSticker(guildID: string, stickerID: string): Promise<Types.Guilds.Sticker> {
+        return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "GET",
             path:   Routes.GUILD_STICKER(guildID, stickerID)
         }).then(data => this._manager.client.guilds.get(guildID)?.stickers.update(data) ?? this._manager.client.util.convertSticker(data));
@@ -1593,8 +1508,8 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers} (will be completely cleared and refilled)
      */
-    async getStickers(guildID: string): Promise<Array<Sticker>> {
-        return this._manager.authRequest<Array<RawSticker>>({
+    async getStickers(guildID: string): Promise<Array<Types.Guilds.Sticker>> {
+        return this._manager.authRequest<Array<Types.Guilds.RawSticker>>({
             method: "GET",
             path:   Routes.GUILD_STICKERS(guildID)
         }).then(data => {
@@ -1610,7 +1525,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async getTemplate(code: string): Promise<GuildTemplate> {
-        return this._manager.authRequest<RawGuildTemplate>({
+        return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "GET",
             path:   Routes.GUILD_TEMPLATE_CODE(code)
         }).then(data => new GuildTemplate(data, this._manager.client));
@@ -1622,7 +1537,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async getTemplates(guildID: string): Promise<Array<GuildTemplate>> {
-        return this._manager.authRequest<Array<RawGuildTemplate>>({
+        return this._manager.authRequest<Array<Types.GuildTemplate.RawGuildTemplate>>({
             method: "GET",
             path:   Routes.GUILD_TEMPLATES(guildID)
         }).then(data => data.map(d => new GuildTemplate(d, this._manager.client)));
@@ -1633,8 +1548,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getVanityURL(guildID: string): Promise<GetVanityURLResponse> {
-        return this._manager.authRequest<GetVanityURLResponse>({
+    async getVanityURL(guildID: string): Promise<Types.Guilds.GetVanityURLResponse> {
+        return this._manager.authRequest<Types.Guilds.GetVanityURLResponse>({
             method: "GET",
             path:   Routes.GUILD_VANITY_URL(guildID)
         });
@@ -1645,8 +1560,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getVoiceRegions(guildID: string): Promise<Array<VoiceRegion>> {
-        return this._manager.authRequest<Array<VoiceRegion>>({
+    async getVoiceRegions(guildID: string): Promise<Array<Types.Voice.VoiceRegion>> {
+        return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
             method: "GET",
             path:   Routes.GUILD_VOICE_REGIONS(guildID)
         });
@@ -1660,7 +1575,7 @@ export default class Guilds {
      * @caches {@link Guild#voiceStates | Guild#voiceStates}
      */
     async getVoiceState(guildID: string, memberID: string): Promise<VoiceState> {
-        return this._manager.authRequest<RawVoiceState>({
+        return this._manager.authRequest<Types.Voice.RawVoiceState>({
             method: "GET",
             path:   Routes.GUILD_VOICE_STATE(guildID, memberID)
         }).then(data => this._manager.client.guilds.get(guildID)?.voiceStates.update(data) ?? new VoiceState(data, this._manager.client));
@@ -1671,8 +1586,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getWelcomeScreen(guildID: string): Promise<WelcomeScreen> {
-        return this._manager.authRequest<RawWelcomeScreen>({
+    async getWelcomeScreen(guildID: string): Promise<Types.Guilds.WelcomeScreen> {
+        return this._manager.authRequest<Types.Guilds.RawWelcomeScreen>({
             method: "GET",
             path:   Routes.GUILD_WELCOME_SCREEN(guildID)
         }).then(data => ({
@@ -1691,8 +1606,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getWidget(guildID: string): Promise<Widget> {
-        return this._manager.authRequest<RawWidget>({
+    async getWidget(guildID: string): Promise<Types.Guilds.Widget> {
+        return this._manager.authRequest<Types.Guilds.RawWidget>({
             method: "GET",
             path:   Routes.GUILD_WIDGET(guildID)
         }).then(data => ({
@@ -1720,7 +1635,7 @@ export default class Guilds {
      * @param style The style of the image.
      * @caching This method **does not** cache its result.
      */
-    async getWidgetImage(guildID: string, style?: WidgetImageStyle): Promise<Buffer> {
+    async getWidgetImage(guildID: string, style?: Types.Guilds.WidgetImageStyle): Promise<Buffer> {
         const query = new QueryBuilder();
         query.setIfPresent("style", style);
         return this._manager.request<Buffer>({
@@ -1735,8 +1650,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getWidgetJSON(guildID: string): Promise<RawWidget> {
-        return this._manager.request<RawWidget>({
+    async getWidgetJSON(guildID: string): Promise<Types.Guilds.RawWidget> {
+        return this._manager.request<Types.Guilds.RawWidget>({
             method: "GET",
             path:   Routes.GUILD_WIDGET_JSON(guildID)
         });
@@ -1747,8 +1662,8 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
      */
-    async getWidgetSettings(guildID: string): Promise<WidgetSettings> {
-        return this._manager.authRequest<RawWidgetSettings>({
+    async getWidgetSettings(guildID: string): Promise<Types.Guilds.WidgetSettings> {
+        return this._manager.authRequest<Types.Guilds.RawWidgetSettings>({
             method: "GET",
             path:   Routes.GUILD_WIDGET(guildID)
         }).then(data => ({
@@ -1765,29 +1680,29 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
      */
-    async memberSearch(guildID: string, options?: MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<MemberSearchResults> {
+    async memberSearch(guildID: string, options?: Types.Guilds.MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MemberSearchResults> {
         /* eslint-disable @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping */
-        const formatRange = <T>(data: MemberSearchRangeQuery<T>) => ({
+        const formatRange = <T>(data: Types.Guilds.MemberSearchRangeQuery<T>) => ({
             range: data.range === undefined ? undefined : {
                 gte: data.range.gte,
                 lte: data.range.lte
             }
         });
-        const formatOrQuery = <T>(data: MemberSearchOrQuery<T>) => ({
+        const formatOrQuery = <T>(data: Types.Guilds.MemberSearchOrQuery<T>) => ({
             or_query: data.orQuery
         });
-        const formatOrQueryRange = <T>(data: MemberSearchOrQueryRange<T>) => ({
+        const formatOrQueryRange = <T>(data: Types.Guilds.MemberSearchOrQueryRange<T>) => ({
             or_query: data.orQuery,
             range:    data.range === undefined ? undefined : {
                 gte: data.range.gte,
                 lte: data.range.lte
             }
         });
-        const formatAndOrQuery = <T>(data: MemberSearchAndOrQuery<T>) => ({
+        const formatAndOrQuery = <T>(data: Types.Guilds.MemberSearchAndOrQuery<T>) => ({
             and_query: data.andQuery,
             or_query:  data.orQuery
         });
-        const formatSearchFilter = (data: MemberSearchFilter) => ({
+        const formatSearchFilter = (data: Types.Guilds.MemberSearchFilter) => ({
             did_rejoin:       data.didRejoin,
             guild_joined_at:  data.guildJoinedAt === undefined ? undefined : formatRange(data.guildJoinedAt),
             is_pending:       data.isPending,
@@ -1803,12 +1718,12 @@ export default class Guilds {
             user_id:            data.userID === undefined ? undefined : formatOrQueryRange(data.userID),
             usernames:          data.usernames === undefined ? undefined : formatOrQuery(data.usernames)
         });
-        const formatPaginationFilter = (data: MemberSearchPaginationFilter) => ({
+        const formatPaginationFilter = (data: Types.Guilds.MemberSearchPaginationFilter) => ({
             guild_joined_at: data.guildJoinedAt,
             user_id:         data.userID
         });
         /* eslint-enable @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping */
-        return this._manager.authRequest<RawMemberSearchResults | MemberSearchNotIndexedResult>({
+        return this._manager.authRequest<Types.Guilds.RawMemberSearchResults | Types.Guilds.MemberSearchNotIndexedResult>({
             method: "POST",
             path:   Routes.GUILD_MEMBERS_SEARCH(guildID),
             json:   {
@@ -1902,12 +1817,12 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
      */
-    async searchMembers(guildID: string, options: SearchMembersOptions): Promise<Array<Member>> {
+    async searchMembers(guildID: string, options: Types.Guilds.SearchMembersOptions): Promise<Array<Member>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.set("query", options.query);
         query.setIfPresent("limit", options.limit);
-        return this._manager.authRequest<Array<RESTMember>>({
+        return this._manager.authRequest<Array<Types.Guilds.RESTMember>>({
             method: "GET",
             path:   Routes.GUILD_SEARCH_MEMBERS(guildID),
             query
@@ -1921,7 +1836,7 @@ export default class Guilds {
      * @caching This method **does not** cache its result.
      */
     async syncTemplate(guildID: string, code: string): Promise<GuildTemplate> {
-        return this._manager.authRequest<RawGuildTemplate>({
+        return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "POST",
             path:   Routes.GUILD_TEMPLATE(guildID, code)
         }).then(data => new GuildTemplate(data, this._manager.client));

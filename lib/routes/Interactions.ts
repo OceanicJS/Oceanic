@@ -1,18 +1,9 @@
 /** @module REST/Interactions */
-import type {
-    EditInteractionContent,
-    InteractionCallbackResponse,
-    InteractionContent,
-    InteractionResponse,
-    RawInteractionCallbackResponse
-} from "../types/interactions";
-import type { ExecuteWebhookWaitOptions } from "../types/webhooks";
+import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
 import type RESTManager from "../rest/RESTManager";
 import type Message from "../structures/Message";
-import type { AnyInteractionChannel, AnyTextableChannel } from "../types/channels";
-import type { Uncached } from "../types/shared";
 import QueryBuilder from "../util/QueryBuilder";
 
 /** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
@@ -29,8 +20,8 @@ export default class Interactions {
      * @param options The options for creating the followup message.
      * @caching This method **does not** cache its result.
      */
-    async createFollowupMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, options: InteractionContent): Promise<Message<T>> {
-        return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as ExecuteWebhookWaitOptions);
+    async createFollowupMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, options: Types.Interactions.InteractionContent): Promise<Message<T>> {
+        return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as Types.Webhooks.ExecuteWebhookWaitOptions);
     }
 
     /**
@@ -41,9 +32,9 @@ export default class Interactions {
      * @param withResponse Whether to include the response in the result.
      * @caching This method **does not** cache its result.
      */
-    async createInteractionResponse(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse?: false): Promise<null>;
-    async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse: true): Promise<InteractionCallbackResponse<CH>>;
-    async createInteractionResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached>(interactionID: string, interactionToken: string, options: InteractionResponse, withResponse = false): Promise<InteractionCallbackResponse<CH> | null> {
+    async createInteractionResponse(interactionID: string, interactionToken: string, options: Types.Interactions.InteractionResponse, withResponse?: false): Promise<null>;
+    async createInteractionResponse<CH extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached>(interactionID: string, interactionToken: string, options: Types.Interactions.InteractionResponse, withResponse: true): Promise<Types.Interactions.InteractionCallbackResponse<CH>>;
+    async createInteractionResponse<CH extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached>(interactionID: string, interactionToken: string, options: Types.Interactions.InteractionResponse, withResponse = false): Promise<Types.Interactions.InteractionCallbackResponse<CH> | null> {
         options = this._manager.client.util._freeze(options);
         let data: unknown;
         switch (options.type) {
@@ -101,7 +92,7 @@ export default class Interactions {
         }
         const query = new QueryBuilder();
         if (withResponse) query.set("with_response", "true");
-        return this._manager.authRequest<RawInteractionCallbackResponse>({
+        return this._manager.authRequest<Types.Interactions.RawInteractionCallbackResponse>({
             method: "POST",
             path:   Routes.INTERACTION_CALLBACK(interactionID, interactionToken),
             route:  "/interactions/:id/:token/callback",
@@ -163,7 +154,7 @@ export default class Interactions {
      * @param options The options for editing the followup message.
      * @caching This method **does not** cache its result.
      */
-    async editFollowupMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, messageID: string, options: EditInteractionContent): Promise<Message<T>> {
+    async editFollowupMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, messageID: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
         return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
     }
 
@@ -174,7 +165,7 @@ export default class Interactions {
      * @param options The options for editing the original message.
      * @caching This method **does not** cache its result.
      */
-    async editOriginalMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, options: EditInteractionContent): Promise<Message<T>> {
+    async editOriginalMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
         return this.editFollowupMessage<T>(applicationID, interactionToken, "@original", options);
     }
 
@@ -185,7 +176,7 @@ export default class Interactions {
      * @param messageID The ID of the message.
      * @caching This method **does not** cache its result.
      */
-    async getFollowupMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>> {
+    async getFollowupMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>> {
         return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
     }
 
@@ -195,7 +186,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @caching This method **does not** cache its result.
      */
-    async getOriginalMessage<T extends AnyTextableChannel | Uncached>(applicationID: string, interactionToken: string): Promise<Message<T>> {
+    async getOriginalMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string): Promise<Message<T>> {
         return this.getFollowupMessage(applicationID, interactionToken, "@original");
     }
 }
