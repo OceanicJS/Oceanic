@@ -157,13 +157,15 @@ export const APPLICATION_EMOJI                     = (applicationID: string, emo
 export const APPLICATION_ACTIVITY_INSTANCE         = (applicationID: string, instanceID: string) => encode`/applications/${applicationID}/activity-instances/${instanceID}`;
 
 // Misc
-export const GATEWAY                   = "/gateway";
-export const GATEWAY_BOT               = "/gateway/bot";
-export const USER                      = (userID: string) => encode`/users/${userID}`;
-export const MESSAGE_LINK              = (guildID: string, channelID: string, messageID: string) => encode`/channels/${guildID}/${channelID}/${messageID}`;
-export const STICKER_PACKS             = "/sticker-packs";
-export const INVITE                    = (code: string) => encode`/invites/${code}`;
-export const SOUNDBOARD_DEFAULT_SOUNDS = "/soundboard-default-sounds";
-export const STAGE_INSTANCES           = "/stage-instances";
-export const STAGE_INSTANCE            = (channelID: string) => encode`/stage-instances/${channelID}`;
-export const REFRESH_ATTACHMENT_URLS   = "/attachments/refresh-urls";
+export const GATEWAY                        = "/gateway";
+export const GATEWAY_BOT                    = "/gateway/bot";
+export const USER                           = (userID: string) => encode`/users/${userID}`;
+export const MESSAGE_LINK                   = (guildID: string, channelID: string, messageID: string) => encode`/channels/${guildID}/${channelID}/${messageID}`;
+export const STICKER_PACKS                  = "/sticker-packs";
+export const INVITE                         = (code: string) => encode`/invites/${code}`;
+export const INVITE_TARGET_USERS            = (code: string) => encode`/invites/${code}/target-users`;
+export const INVITE_TARGET_USERS_JOB_STATUS = (code: string) => encode`/invites/${code}/target-users/job-status`;
+export const SOUNDBOARD_DEFAULT_SOUNDS      = "/soundboard-default-sounds";
+export const STAGE_INSTANCES                = "/stage-instances";
+export const STAGE_INSTANCE                 = (channelID: string) => encode`/stage-instances/${channelID}`;
+export const REFRESH_ATTACHMENT_URLS        = "/attachments/refresh-urls";

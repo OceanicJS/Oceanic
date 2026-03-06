@@ -9,6 +9,7 @@ import type {
     AnyInviteChannel,
     InviteInfoTypes,
     InviteStageInstance,
+    InviteTargetUsersJobStatusResponse,
     PartialInviteChannel,
     RawInvite,
     RawInviteWithMetadata
@@ -48,6 +49,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     maxAge!: T extends "withMetadata" ? number : never;
     /** The maximum number of times this invite can be used, */
     maxUses!: T extends "withMetadata" ? number : never;
+    /** The roles assigned to the user upon accepting the invite . */
+    roles?: Array<string>;
     /** @deprecated The stage instance in the invite this channel is for. */
     stageInstance?: InviteStageInstance;
     /** The embedded application this invite will open. */
@@ -75,6 +78,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         this.guild = null;
         this.guildID = data.guild?.id ?? null;
         this.expiresAt = (data.expires_at ? new Date(data.expires_at) : undefined) as never;
+        this.roles = data.roles;
         this.targetType = data.target_type;
         this.type = data.type;
         this.update(data);
@@ -181,6 +185,16 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         return this.client.rest.channels.deleteInvite<CH>(this.code, reason);
     }
 
+    /** Get the target users for this invite. */
+    async getTargetUsers(): Promise<Array<string>> {
+        return this.client.rest.channels.getInviteTargetUsers(this.code);
+    }
+
+    /** et the target users job status for this invite. */
+    async getTargetUsersJobStatus(): Promise<InviteTargetUsersJobStatusResponse> {
+        return this.client.rest.channels.getInviteTargetUsersJobStatus(this.code);
+    }
+
     /** Whether this invite belongs to a cached channel. The only difference on using this method over a simple if statement is to easily update all the invite properties typing definitions based on the channel it belongs to. */
     inCachedChannel(): this is Invite<T, AnyInviteChannel> {
         return this.channel instanceof Channel;
@@ -200,6 +214,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             inviter:                  this.inviter?.id,
             maxAge:                   this.maxAge,
             maxUses:                  this.maxUses,
+            roles:                    this.roles,
             stageInstance:            this.stageInstance ? {
                 members:          this.stageInstance.members.map(member => member.id),
                 participantCount: this.stageInstance.participantCount,
@@ -212,5 +227,13 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             temporary:         this.temporary,
             uses:              this.uses
         };
+    }
+
+    /**
+     * Update the target users for this invite. Requires the `MANAGE_GUILD` permission.
+     * @param users The IDs of the users to allow accepting the invite.
+     */
+    async updateInviteTargetUsers(users: Array<string>): Promise<null> {
+        return this.client.rest.channels.updateInviteTargetUsers(this.code, users);
     }
 }

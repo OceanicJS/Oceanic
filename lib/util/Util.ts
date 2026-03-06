@@ -64,7 +64,8 @@ import type {
     RawModalComponent,
     RawModalSubmitComponentsLabel,
     ModalSubmitComponentsLabel,
-    AnyRawBaseComponent
+    AnyRawBaseComponent,
+    File
 } from "../types";
 import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
@@ -99,6 +100,20 @@ export default class Util {
     static rawModalComponents(components: RawModalComponent | Array<RawModalComponent>): ModalComponent | Array<ModalComponent> {
         const data = Util.prototype.componentsToParsed(Array.isArray(components) ? components : [components]);
         return Array.isArray(components) ? data : data[0];
+    }
+
+    /** @hidden intentionally not documented - this is an internal function */
+    _arrayToCSV(data: Array<string>, header?: string): Buffer {
+        return Buffer.from([header, ...data].filter(Boolean).join("\n"), "utf8");
+    }
+
+    /** @hidden intentionally not documented - this is an internal function */
+    _arrayToCSVFile(data: Array<string>, name: string, header?: string): File {
+        return {
+            name:     `${name}.csv`,
+            field:    name,
+            contents: this._arrayToCSV(data, header)
+        };
     }
 
     /** @hidden intentionally not documented - this is an internal function */

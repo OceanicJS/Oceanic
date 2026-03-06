@@ -413,6 +413,7 @@ export interface JSONInvite {
     inviter?: string;
     maxAge?: number;
     maxUses?: number;
+    roles?: Array<string>;
     stageInstance?: {
         members: Array<string>;
         participantCount: number;

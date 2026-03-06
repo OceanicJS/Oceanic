@@ -140,7 +140,7 @@ export default class RequestHandler {
                                 if (!file.contents) {
                                     continue;
                                 }
-                                data.set(`files[${index}]`, new Blob([file.contents]), file.name);
+                                data.set(file.field || `files[${index}]`, new Blob([file.contents]), file.name);
                             }
                             if (stringBody) {
                                 data.set("payload_json", stringBody);

@@ -45,7 +45,9 @@ import type {
     GetChannelMessagesIteratorOptions,
     MessagesIterator,
     GetPollAnswerUsersOptions,
-    SendSoundboardSoundOptions
+    SendSoundboardSoundOptions,
+    InviteTargetUsersJobStatusResponse,
+    RawInviteTargetUsersJobStatusResponse
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import type Message from "../structures/Message";
@@ -160,7 +162,9 @@ export default class Channels {
                 temporary:             options.temporary,
                 unique:                options.unique
             },
-            reason: options.reason
+            reason: options.reason,
+            files:  options.targetUsers ? [this._manager.client.util._arrayToCSVFile(options.targetUsers, "target_users_file", "user_id")] : undefined
+
         }).then(data => new Invite<T, CH>(data, this._manager.client));
     }
 
@@ -589,6 +593,35 @@ export default class Channels {
             path:   Routes.INVITE(code),
             query
         }).then(data => new Invite<never, T>(data, this._manager.client));
+    }
+
+    /**
+     * Get the target users for an invite.
+     * @param code The code of the invite.
+     */
+    async getInviteTargetUsers(code: string): Promise<Array<string>> {
+        return this._manager.authRequest<Buffer>({
+            method: "GET",
+            path:   Routes.INVITE_TARGET_USERS(code)
+        }).then(data => data.toString().split(/\r?\n/).filter(line => /^\d{15,}$/.test(line)));
+    }
+
+    /**
+     * Get the target users job status for an invite.
+     * @param code The code of the invite.
+     */
+    async getInviteTargetUsersJobStatus(code: string): Promise<InviteTargetUsersJobStatusResponse> {
+        return this._manager.authRequest<RawInviteTargetUsersJobStatusResponse>({
+            method: "GET",
+            path:   Routes.INVITE_TARGET_USERS_JOB_STATUS(code)
+        }).then(data => ({
+            completedAt:    data.completed_at ? new Date(data.completed_at) : null,
+            createdAt:      new Date(data.created_at),
+            errorMessage:   data.error_message,
+            processedUsers: data.processed_users,
+            status:         data.status,
+            totalUsers:     data.total_users
+        }));
     }
 
     /**
@@ -1256,6 +1289,21 @@ export default class Channels {
             method: "DELETE",
             path:   Routes.CHANNEL_PINNED_MESSAGE(channelID, messageID),
             reason
+        });
+    }
+
+    /**
+     * Update the target users for an invite. Requires the `MANAGE_GUILD` permission.
+     * @param code The code of the invite.
+     * @param users The IDs of the users to allow accepting the invite.
+     */
+    async updateInviteTargetUsers(code: string, users: Array<string>): Promise<null> {
+        return this._manager.authRequest<null>({
+            method: "PUT",
+            path:   Routes.INVITE_TARGET_USERS(code),
+            files:  [
+                this._manager.client.util._arrayToCSVFile(users, "target_users_file", "user_id")
+            ]
         });
     }
 }

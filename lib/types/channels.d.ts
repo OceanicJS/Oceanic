@@ -42,7 +42,8 @@ import type {
     ReactionType,
     PollLayoutType,
     SeparatorSpacingSize,
-    InviteTypes
+    InviteTypes,
+    InviteTargetUsersJobStatus
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -834,6 +835,7 @@ export interface RawInvite {
     guild?: RawInviteGuild;
     guild_scheduled_event?: RawScheduledEvent;
     inviter?: RawUser;
+    roles?: Array<string>;
     /** @deprecated */
     stage_instance?: RawInviteStageInstance;
     target_application?: RawPartialApplication;
@@ -873,12 +875,16 @@ export interface CreateInviteOptions {
     maxUses?: number;
     /** The reason for creating the invite. */
     reason?: string;
+    /** The IDs of roles to add to the users using the invite. Requires the `MANAGE_ROLES` permission. */
+    roleIDs?: Array<string>;
     /** The id of the embedded application to open for this invite. */
     targetApplicationID?: string;
     /** The [type of target](https://discord.com/developers/docs/resources/channel#invite-target-types) for the invite. */
     targetType?: InviteTargetTypes;
     /** The ID of the user whose stream to display for this invite. */
     targetUserID?: string;
+    /** The IDs of users able to accept this invite. Requires the `MANAGE_GUILD` permission. */
+    targetUsers?: Array<string>;
     /** If the invite should be temporary. */
     temporary?: boolean;
     /** If the invite should be unique. */
@@ -1564,4 +1570,22 @@ export interface RawModalFileUploadComponent extends BaseComponent {
     min_values?: number;
     required?: boolean;
     type: ComponentTypes.FILE_UPLOAD;
+}
+
+export interface RawInviteTargetUsersJobStatusResponse {
+    completed_at: string | null;
+    created_at: string;
+    error_message: string | null;
+    processed_users: number;
+    status: InviteTargetUsersJobStatus;
+    total_users: number;
+}
+
+export interface InviteTargetUsersJobStatusResponse {
+    completedAt: Date | null;
+    createdAt: Date;
+    errorMessage: string | null;
+    processedUsers: number;
+    status: InviteTargetUsersJobStatus;
+    totalUsers: number;
 }

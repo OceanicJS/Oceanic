@@ -1545,7 +1545,7 @@ export const ApplicationEventWebhookEventTypes = [
 export type ApplicationEventWebhookEventType = typeof ApplicationEventWebhookEventTypes[number];
 
 export enum EmbedFlags {
-    CONTAINS_EXPLICIT_MEDIA =    1 << 4,
+    CONTAINS_EXPLICIT_MEDIA    = 1 << 4,
     IS_CONTENT_INVENTORY_ENTRY = 1 << 5,
 }
 
@@ -1559,27 +1559,34 @@ export enum SeparatorSpacingSize {
 }
 
 export enum DisplayNameFont {
-    BANGERS = 1,
-    BIO_RHYME = 2,
-    CHERRY_BOMB = 3,
-    CHICLE = 4,
-    COMPAGNON = 5,
+    BANGERS       = 1,
+    BIO_RHYME     = 2,
+    CHERRY_BOMB   = 3,
+    CHICLE        = 4,
+    COMPAGNON     = 5,
     MUSEO_MODERNO = 6,
-    NEO_CASTEL = 7,
-    PIXELFY = 8,
-    RIBES = 9,
-    SINISTRE = 10,
-    DEFAULT = 11,
-    ZILLA_SLAB = 12,
+    NEO_CASTEL    = 7,
+    PIXELFY       = 8,
+    RIBES         = 9,
+    SINISTRE      = 10,
+    DEFAULT       = 11,
+    ZILLA_SLAB    = 12,
 }
 
 export enum DisplayNameEffect {
-    SOLID = 1,
+    SOLID    = 1,
     GRADIENT = 2,
-    NEON = 3,
-    TOON = 4,
-    POP = 5,
-    GLOW = 6,
+    NEON     = 3,
+    TOON     = 4,
+    POP      = 5,
+    GLOW     = 6,
+}
+
+export enum InviteTargetUsersJobStatus {
+    UNSPECIFIED = 0,
+    PROCESSING  = 1,
+    COMPLETED   = 2,
+    FAILED      = 3,
 }
 
 // entries are intentionally not aligned
