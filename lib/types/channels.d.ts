@@ -1473,27 +1473,27 @@ export interface TextDisplayComponent extends BaseComponent {
 }
 
 export interface ThumbnailComponent extends BaseComponent {
-    description?: string;
+    description?: string | null;
     media: UnfurledMediaItem;
     spoiler?: boolean;
     type: ComponentTypes.THUMBNAIL;
 }
 
 export interface RawThumbnailComponent extends Omit<BaseComponent, "id"> {
-    description?: string;
+    description?: string | null;
     media: RawUnfurledMediaItem;
     spoiler?: boolean;
     type: ComponentTypes.THUMBNAIL;
 }
 
 export interface RawMediaGalleryItem {
-    description?: string;
+    description?: string | null;
     media: RawUnfurledMediaItem;
     spoiler?: boolean;
 }
 
 export interface MediaGalleryItem {
-    description?: string;
+    description?: string | null;
     media: UnfurledMediaItem;
     spoiler?: boolean;
 }
