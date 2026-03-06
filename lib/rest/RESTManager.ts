@@ -13,6 +13,7 @@ import Interactions from "../routes/Interactions";
 import * as Routes from "../util/Routes";
 import type { GetBotGatewayResponse, GetGatewayResponse, RawGetBotGatewayResponse } from "../types/gateway";
 import Miscellaneous from "../routes/Miscellaneous";
+import Lobbies from "../routes/Lobbies";
 
 /** A manager for all rest actions. */
 export default class RESTManager {
@@ -22,6 +23,7 @@ export default class RESTManager {
     guilds: Guilds;
     handler: RequestHandler;
     interactions: Interactions;
+    lobbies: Lobbies;
     misc: Miscellaneous;
     oauth: OAuth;
     users: Users;
@@ -33,6 +35,7 @@ export default class RESTManager {
         this.guilds = new Guilds(this);
         this.handler = new RequestHandler(this, options);
         this.interactions = new Interactions(this);
+        this.lobbies = new Lobbies(this);
         this.misc = new Miscellaneous(this);
         this.oauth = new OAuth(this);
         this.users = new Users(this);

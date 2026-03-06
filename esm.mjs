@@ -39,6 +39,8 @@ const InteractionOptionsWrapper = (await import("./dist/lib/util/interactions/In
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
 const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).default.default;
 const InviteRole = (await import("./dist/lib/structures/InviteRole.js")).default.default;
+const Lobby = (await import("./dist/lib/structures/Lobby.js")).default.default;
+const LobbyMember = (await import("./dist/lib/structures/LobbyMember.js")).default.default;
 const MediaChannel = (await import("./dist/lib/structures/MediaChannel.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
@@ -131,6 +133,8 @@ export {
     Invite,
     InviteGuild,
     InviteRole,
+    Lobby,
+    LobbyMember,
     MediaChannel,
     Member,
     Message,

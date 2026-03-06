@@ -56,6 +56,7 @@ import type {
     MessageComponent
 } from "./channels";
 import type { ScheduledEventEntityMetadata } from "./scheduled-events";
+import type { Uncached } from "./shared";
 import type { AvatarDecorationData, Collectibles } from "./users";
 import type {
     ApplicationCommandTypes,
@@ -443,6 +444,17 @@ export interface JSONIntegration extends JSONBase {
     syncing?: boolean;
     type: IntegrationType;
     user?: JSONUser;
+}
+export interface JSONLobby extends JSONBase {
+    applicationID: string;
+    linkedChannel?: JSONGuildChannel | Uncached;
+    members: Array<JSONLobbyMember>;
+    metadata?: Record<string, string> | null;
+}
+export interface JSONLobbyMember extends JSONBase {
+    flags?: number;
+    lobbyID: string;
+    metadata?: Record<string, string> | null;
 }
 export interface JSONInteraction extends JSONBase {
     applicationID: string;

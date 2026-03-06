@@ -1171,8 +1171,7 @@ export default class Channels {
     /**
      * Send a sound from the soundboard to the channel where the user is connected.
      * @param channelID The ID of the channel to send the soundboard sound to.
-     * @param soundID The ID of the soundboard sound to send.
-     * @param sourceGuildID The ID of the guild the soundboard sound is from.
+     * @param options The options for sending the soundboard sound.
      * @caching This method **does not** cache its result.
      */
     async sendSoundboardSound(channelID: string, options: SendSoundboardSoundOptions): Promise<void> {

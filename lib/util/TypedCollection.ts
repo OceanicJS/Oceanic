@@ -2,7 +2,7 @@
 import Collection from "./Collection";
 import type Client from "../Client";
 import Base from "../structures/Base";
-import type { AnyClass } from "../types/misc";
+import type { AnyClass } from "../types/shared";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ExtraOptions<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> {

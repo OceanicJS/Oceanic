@@ -156,6 +156,13 @@ export const APPLICATION_EMOJIS                    = (applicationID: string) => 
 export const APPLICATION_EMOJI                     = (applicationID: string, emojiID: string) => encode`/applications/${applicationID}/emojis/${emojiID}`;
 export const APPLICATION_ACTIVITY_INSTANCE         = (applicationID: string, instanceID: string) => encode`/applications/${applicationID}/activity-instances/${instanceID}`;
 
+// Lobbies
+export const LOBBIES                           = "/lobbies";
+export const LOBBY                             = (lobbyID: string) => encode`/lobbies/${lobbyID}`;
+export const LOBBY_MEMBER                      = (lobbyID: string, userID: string) => encode`/lobbies/${lobbyID}/members/${userID}`;
+export const LOBBY_CHANNEL_LINKING             = (lobbyID: string) => encode`/lobbies/${lobbyID}/channel-linking`;
+export const LOBBY_MESSAGE_MODERATION_METADATA = (lobbyID: string, messageID: string) => encode`/lobbies/${lobbyID}/messages/${messageID}/moderation-metadata`;
+
 // Misc
 export const GATEWAY                        = "/gateway";
 export const GATEWAY_BOT                    = "/gateway/bot";

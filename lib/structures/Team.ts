@@ -4,7 +4,7 @@ import type User from "./User";
 import type Client from "../Client";
 import type { RawTeam, TeamMember, TeamPayoutAccount } from "../types/applications";
 import type { JSONTeam } from "../types/json";
-import { type TeamPayoutAccountStatus } from "../Constants";
+import type { TeamPayoutAccountStatus } from "../Constants";
 
 /** Represents an OAuth team. */
 export default class Team extends Base {
