@@ -25,13 +25,16 @@ export default class Users {
      */
     async editSelf(options: EditSelfUserOptions): Promise<ExtendedUser> {
         options = this._manager.client.util._freeze(options);
-        let avatar: string | undefined, banner: string | undefined;
-        if (options.avatar) {
-            avatar = this._manager.client.util._convertImage(options.avatar, "avatar");
+
+        let avatar = options.avatar;
+        let banner = options.banner;
+
+        if (avatar) {
+            avatar = this._manager.client.util._convertImage(avatar, "avatar");
         }
 
-        if (options.banner) {
-            banner = this._manager.client.util._convertImage(options.banner, "banner");
+        if (banner) {
+            banner = this._manager.client.util._convertImage(banner, "banner");
         }
 
         return this._manager.authRequest<RawOAuthUser>({

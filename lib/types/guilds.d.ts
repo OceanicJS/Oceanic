@@ -483,7 +483,14 @@ export interface EditMemberOptions {
     roles?: Array<string>;
 }
 
-export interface EditCurrentMemberOptions extends Pick<EditMemberOptions, "nick" | "reason"> {}
+export interface EditCurrentMemberOptions extends Pick<EditMemberOptions, "nick" | "reason"> {
+    /** The new avatar (buffer, or full data url). `null` to reset. */
+    avatar?: Buffer | string | null;
+    /** The new banner (buffer, or full data url). `null` to reset. */
+    banner?:  Buffer | string | null;
+    /** The new bio. `null` to reset. */
+    bio?: string | null;
+}
 
 export interface EditOnboardingOptions {
     /** Channel IDs that members get opted into automatically. */
