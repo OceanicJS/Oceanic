@@ -55,8 +55,8 @@ importers:
         specifier: ^2.32.0
         version: 2.32.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.4.5))(eslint@8.57.1)
       eslint-plugin-import-newlines:
-        specifier: ^1.4.0
-        version: 1.4.0(eslint@8.57.1)
+        specifier: ^1.4.1
+        version: 1.4.1(eslint@8.57.1)
       eslint-plugin-jsdoc:
         specifier: ^50.6.11
         version: 50.6.11(eslint@8.57.1)
@@ -635,12 +635,12 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
 
-  eslint-plugin-import-newlines@1.4.0:
-    resolution: {integrity: sha512-+Cz1x2xBLtI9gJbmuYEpvY7F8K75wskBmJ7rk4VRObIJo+jklUJaejFJgtnWeL0dCFWabGEkhausrikXaNbtoQ==}
+  eslint-plugin-import-newlines@1.4.1:
+    resolution: {integrity: sha512-C9PQEJ4jS5tKoE9k0yY/5j4l1bxkxmVjrWvAFc1EToCnuQuwZGl1kS1JBlqYNF8svp0pnXLlkSdjByYa3JALcg==}
     engines: {node: '>=10.0.0'}
     hasBin: true
     peerDependencies:
-      eslint: '>=6.0.0'
+      eslint: '>=6.0.0 < 10.0.0'
 
   eslint-plugin-import@2.32.0:
     resolution: {integrity: sha512-whOE1HFo/qJDyX4SnXzP4N6zOWn79WhnCUY/iDR0mPfQZO8wcYE4JClzI2oZrhBnnMUCBCHZhO6VQyoBU95mZA==}
@@ -2475,7 +2475,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import-newlines@1.4.0(eslint@8.57.1):
+  eslint-plugin-import-newlines@1.4.1(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
 
