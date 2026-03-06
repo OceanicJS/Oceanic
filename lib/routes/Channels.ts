@@ -596,7 +596,7 @@ export default class Channels {
     }
 
     /**
-     * Get the target users for an invite.
+     * Get the target users for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
      * @param code The code of the invite.
      */
     async getInviteTargetUsers(code: string): Promise<Array<string>> {
@@ -607,7 +607,7 @@ export default class Channels {
     }
 
     /**
-     * Get the target users job status for an invite.
+     * Get the target users job status for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
      * @param code The code of the invite.
      */
     async getInviteTargetUsersJobStatus(code: string): Promise<InviteTargetUsersJobStatusResponse> {
@@ -1293,7 +1293,7 @@ export default class Channels {
     }
 
     /**
-     * Update the target users for an invite. Requires the `MANAGE_GUILD` permission.
+     * Update the target users for an invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
      * @param code The code of the invite.
      * @param users The IDs of the users to allow accepting the invite.
      */

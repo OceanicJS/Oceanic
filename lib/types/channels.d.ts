@@ -883,7 +883,7 @@ export interface CreateInviteOptions {
     targetType?: InviteTargetTypes;
     /** The ID of the user whose stream to display for this invite. */
     targetUserID?: string;
-    /** The IDs of users able to accept this invite. Requires the `MANAGE_GUILD` permission. */
+    /** The IDs of users able to accept this invite. */
     targetUsers?: Array<string>;
     /** If the invite should be temporary. */
     temporary?: boolean;

@@ -185,12 +185,12 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         return this.client.rest.channels.deleteInvite<CH>(this.code, reason);
     }
 
-    /** Get the target users for this invite. */
+    /** Get the target users for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
     async getTargetUsers(): Promise<Array<string>> {
         return this.client.rest.channels.getInviteTargetUsers(this.code);
     }
 
-    /** et the target users job status for this invite. */
+    /** et the target users job status for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
     async getTargetUsersJobStatus(): Promise<InviteTargetUsersJobStatusResponse> {
         return this.client.rest.channels.getInviteTargetUsersJobStatus(this.code);
     }
@@ -230,7 +230,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     }
 
     /**
-     * Update the target users for this invite. Requires the `MANAGE_GUILD` permission.
+     * Update the target users for this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
      * @param users The IDs of the users to allow accepting the invite.
      */
     async updateInviteTargetUsers(users: Array<string>): Promise<null> {
