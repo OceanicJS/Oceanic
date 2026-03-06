@@ -78,7 +78,6 @@ export async function AUTO_MODERATION_RULE_UPDATE(data: DispatchEventMap["AUTO_M
     const oldRule = guild?.autoModerationRules.get(data.id)?.toJSON() ?? null;
     const rule = guild?.autoModerationRules.update(data) ?? new AutoModerationRule(data, shard.client);
     shard.client.emit("autoModerationRuleUpdate", rule, oldRule);
-    shard.client.emit("autoModerationRuleUpdate", rule, oldRule);
 }
 
 export async function CHANNEL_CREATE(data: DispatchEventMap["CHANNEL_CREATE"], shard: Shard): Promise<void> {
@@ -119,10 +118,8 @@ export async function CHANNEL_UPDATE(data: DispatchEventMap["CHANNEL_UPDATE"], s
     const oldChannel = shard.client.getChannel<Types.Channels.AnyGuildChannel>(data.id)?.toJSON() ?? null;
     let channel: Types.Channels.AnyGuildChannel;
     if (oldChannel && oldChannel.type !== data.type) {
-        if (shard.client.channelGuildMap.has(data.id)) {
-            shard.client.guilds.get(shard.client.channelGuildMap.get(data.id)!)!.channels.delete(data.id);
-        }
-
+        const guildID = shard.client.channelGuildMap.get(data.id);
+        if (guildID) shard.client.guilds.get(guildID)?.channels.delete(data.id);
         channel = shard.client.util.updateChannel(data);
     } else {
         channel = shard.client.util.updateChannel(data);
@@ -343,7 +340,7 @@ export async function GUILD_SCHEDULED_EVENT_DELETE(data: DispatchEventMap["GUILD
 }
 
 export async function GUILD_SCHEDULED_EVENT_UPDATE(data: DispatchEventMap["GUILD_SCHEDULED_EVENT_UPDATE"], shard: Shard): Promise<void> {
-    const guild = shard.client.guilds.get(data.guild_id)!;
+    const guild = shard.client.guilds.get(data.guild_id);
     const oldEvent = guild?.scheduledEvents.get(data.id)?.toJSON() ?? null;
     const event = guild?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, shard.client);
     shard.client.emit("guildScheduledEventUpdate", event, oldEvent);
@@ -774,7 +771,7 @@ export async function STAGE_INSTANCE_UPDATE(data: DispatchEventMap["STAGE_INSTAN
 
 export async function THREAD_CREATE(data: DispatchEventMap["THREAD_CREATE"], shard: Shard): Promise<void> {
     const thread = shard.client.util.updateThread(data);
-    const channel = shard.client.getChannel<Types.Channels.ThreadParentChannel>(data.parent_id!);
+    const channel = shard.client.getChannel<Types.Channels.ThreadParentChannel>(data.parent_id);
     if (channel && channel.type === ChannelTypes.GUILD_FORUM) {
         channel.lastThreadID = thread.id;
     }
@@ -782,13 +779,13 @@ export async function THREAD_CREATE(data: DispatchEventMap["THREAD_CREATE"], sha
 }
 
 export async function THREAD_DELETE(data: DispatchEventMap["THREAD_DELETE"], shard: Shard): Promise<void> {
-    const channel = shard.client.getChannel<Types.Channels.ThreadParentChannel>(data.parent_id!);
+    const channel = shard.client.getChannel<Types.Channels.ThreadParentChannel>(data.parent_id);
     const thread = shard.client.getChannel<Types.Channels.AnyThreadChannel>(data.id) ?? {
         id:       data.id,
         guild:    shard.client.guilds.get(data.guild_id),
         guildID:  data.guild_id,
-        parent:   channel || { id: data.parent_id! },
-        parentID: data.parent_id!,
+        parent:   channel || { id: data.parent_id },
+        parentID: data.parent_id,
         type:     data.type
     };
     if (channel && channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === data.id) {

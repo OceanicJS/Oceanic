@@ -441,9 +441,9 @@ export default class Guild extends Base {
             this.icon = data.icon;
         }
         if (data.incident_actions !== undefined) {
-            this.incidentActions = {
-                dmsDisabledUntil:     data.incident_actions!.dms_disabled_until,
-                invitesDisabledUntil: data.incident_actions!.invites_disabled_until
+            this.incidentActions = data.incident_actions === null ? null : {
+                dmsDisabledUntil:     data.incident_actions.dms_disabled_until,
+                invitesDisabledUntil: data.incident_actions.invites_disabled_until
             };
         }
         if (data.inventory_settings !== undefined) {
