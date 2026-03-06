@@ -1,6 +1,5 @@
 /** @module Types/Client */
-import type { AllowedMentions } from "./channels";
-import type { GatewayOptions } from "./gateway";
+import type * as Types from "./namespaced";
 import type { ImageFormat } from "../Constants";
 import type { Dispatcher } from "undici-types";
 
@@ -9,7 +8,7 @@ export interface ClientOptions {
      * The default allowed mentions object.
      * @defaultValue { everyone: false, repliedUser: false, roles: true, users: true }
      */
-    allowedMentions?: AllowedMentions;
+    allowedMentions?: Types.Channels.AllowedMentions;
     /** Fully qualified authorization string (e.x. Bot [TOKEN]) - you MUST prefix it yourself */
     auth?: string | null;
     /** The maximum number of items that can be present in various collections. */
@@ -35,7 +34,7 @@ export interface ClientOptions {
      */
     disableMemberLimitScaling?: boolean;
     /** The gateway options. */
-    gateway?: GatewayOptions;
+    gateway?: Types.Gateway.GatewayOptions;
     /** The options for the request handler. */
     rest?: RESTOptions;
 }

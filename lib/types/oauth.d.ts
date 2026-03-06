@@ -1,8 +1,5 @@
 /** @module Types/OAuth */
-import type { RawUser } from "./users";
-import type { OAuthWebhook } from "./webhooks";
-import type { RawIntegration } from "./guilds";
-import type { LocaleMap, RawPartialApplication } from "./applications";
+import type * as Types from "./namespaced";
 import type {
     ConnectionService,
     PermissionName,
@@ -22,10 +19,10 @@ export interface InstallParams {
 }
 
 export interface RawAuthorizationInformation {
-    application: RawPartialApplication;
+    application: Types.Applications.RawPartialApplication;
     expires: string;
     scopes: Array<string>;
-    user: RawUser;
+    user: Types.Users.RawUser;
 }
 
 export interface AuthorizationInformation {
@@ -38,7 +35,7 @@ export interface AuthorizationInformation {
 export interface RawConnection {
     friend_sync: boolean;
     id: string;
-    integrations?: Array<RawIntegration>;
+    integrations?: Array<Types.Guilds.RawIntegration>;
     name: string;
     revoked?: boolean;
     show_activity: boolean;
@@ -101,7 +98,7 @@ export interface RawExchangeCodeResponse {
     refresh_token: string;
     scope: string;
     token_type: "Bearer";
-    webhook?: OAuthWebhook;
+    webhook?: Types.Webhooks.OAuthWebhook;
 }
 
 export interface ExchangeCodeResponse {
@@ -165,10 +162,10 @@ export interface UpdateRoleConnectionOptions {
 
 export interface RoleConnectionMetadataOptions {
     description: string;
-    descriptionLocalizations?: LocaleMap;
+    descriptionLocalizations?: Types.Applications.LocaleMap;
     key: string;
     name: string;
-    nameLocalizations?: LocaleMap;
+    nameLocalizations?: Types.Applications.LocaleMap;
     type: RoleConnectionMetadataTypes;
 }
 
@@ -180,10 +177,10 @@ export interface RawRoleConnection {
 
 export interface RawRoleConnectionMetadata {
     description: string;
-    description_localizations?: LocaleMap;
+    description_localizations?: Types.Applications.LocaleMap;
     key: string;
     name: string;
-    name_localizations?: LocaleMap;
+    name_localizations?: Types.Applications.LocaleMap;
     type: RoleConnectionMetadataTypes;
 }
 
@@ -201,9 +198,9 @@ export interface UpdateUserApplicationRoleConnectionOptions {
 
 export interface RoleConnectionMetadata {
     description: string;
-    descriptionLocalizations?: LocaleMap;
+    descriptionLocalizations?: Types.Applications.LocaleMap;
     key: string;
     name: string;
-    nameLocalizations?: LocaleMap;
+    nameLocalizations?: Types.Applications.LocaleMap;
     type: RoleConnectionMetadataTypes;
 }

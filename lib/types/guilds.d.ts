@@ -1,21 +1,5 @@
 /** @module Types/Guilds */
-import type { RawAvatarDecorationData, RawUser } from "./users";
-import type {
-    AnyThreadChannel,
-    OverwriteOptions,
-    RawChannel,
-    RawGuildChannel,
-    RawThreadChannel,
-    ThreadMember,
-    ForumEmoji,
-    ForumTag,
-    GuildChannelsWithoutThreads
-} from "./channels";
-import type { RawScheduledEvent } from "./scheduled-events";
-import type { ClientStatus, PresenceUpdate, Activity as GatewayActivity } from "./gateway";
-import type { RawVoiceState } from "./voice";
-import { type File } from "./request-handler";
-import type { Emoji } from "./misc";
+import type * as Types from "./namespaced";
 import type {
     ChannelTypes,
     DefaultMessageNotificationLevels,
@@ -52,14 +36,14 @@ export interface RawGuild {
     approximate_member_count?: number;
     approximate_presence_count?: number;
     banner: string | null;
-    channels: Array<RawGuildChannel>;
+    channels: Array<Types.Channels.RawGuildChannel>;
     default_message_notifications: DefaultMessageNotificationLevels;
     description: string | null;
     discovery_splash: string | null;
     emojis: Array<RawGuildEmoji>;
     explicit_content_filter: ExplicitContentFilterLevels;
     features: Array<GuildFeature>;
-    guild_scheduled_events: Array<RawScheduledEvent>;
+    guild_scheduled_events: Array<Types.ScheduledEvents.RawScheduledEvent>;
     icon: string | null;
     icon_hash?: string | null;
     id: string;
@@ -84,7 +68,7 @@ export interface RawGuild {
     premium_progress_bar_enabled: boolean;
     premium_subscription_count?: number;
     premium_tier: PremiumTiers;
-    presences: Array<PresenceUpdate>;
+    presences: Array<Types.Gateway.PresenceUpdate>;
     profile?: GuildProfile;
     public_updates_channel_id: string | null;
     region?: string | null;
@@ -96,11 +80,11 @@ export interface RawGuild {
     stickers?: Array<RawSticker>;
     system_channel_flags: number;
     system_channel_id: string | null;
-    threads: Array<RawThreadChannel>;
+    threads: Array<Types.Channels.RawThreadChannel>;
     unavailable?: false;
     vanity_url_code: string | null;
     verification_level: VerificationLevels;
-    voice_states: Array<RawVoiceState>;
+    voice_states: Array<Types.Voice.RawVoiceState>;
     welcome_screen?: RawWelcomeScreen;
     widget_channel_id?: string | null;
     widget_enabled?: boolean;
@@ -153,7 +137,7 @@ export interface RoleColors {
     tertiaryColor: number | null;
 }
 
-export interface RawGuildEmoji extends Required<Omit<Emoji, "user" | "id">>  { id: string; user?: RawUser; }
+export interface RawGuildEmoji extends Required<Omit<Types.Misc.Emoji, "user" | "id">>  { id: string; user?: Types.Users.RawUser; }
 export interface GuildEmoji extends Omit<RawGuildEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User; }
 export interface RawWelcomeScreen {
     description: string | null;
@@ -194,7 +178,7 @@ export interface RawSticker {
     sort_value?: number;
     tags: string;
     type: StickerTypes;
-    user?: RawUser;
+    user?: Types.Users.RawUser;
 }
 export interface Sticker {
     /** @deprecated */
@@ -214,7 +198,7 @@ export interface Sticker {
 
 export interface RawMember {
     avatar?: string | null;
-    avatar_decoration_data?: RawAvatarDecorationData | null;
+    avatar_decoration_data?: Types.Users.RawAvatarDecorationData | null;
     banner?: string | null;
     communication_disabled_until?: string | null;
     deaf: boolean;
@@ -230,7 +214,7 @@ export interface RawMember {
     permissions?: string;
     premium_since?: string | null;
     roles: Array<string>;
-    user?: RawUser;
+    user?: Types.Users.RawUser;
 }
 export interface RESTMember extends Required<Omit<RawMember, "permissions" | "joined_at">> { joined_at: string; }
 export interface InteractionMember extends Required<RawMember> {}
@@ -251,7 +235,7 @@ export interface RawIntegration {
     synced_at?: string;
     syncing?: boolean;
     type: IntegrationType;
-    user?: RawUser;
+    user?: Types.Users.RawUser;
 }
 
 export interface IntegrationAccount {
@@ -260,14 +244,14 @@ export interface IntegrationAccount {
 }
 
 export interface RawIntegrationApplication {
-    bot?: RawUser;
+    bot?: Types.Users.RawUser;
     description: string;
     icon: string | null;
     id: string;
     name: string;
 }
 
-export interface PartialEmoji extends Pick<Emoji, "id" | "name" | "animated"> {}
+export interface PartialEmoji extends Pick<Types.Misc.Emoji, "id" | "name" | "animated"> {}
 export interface NullablePartialEmoji {
     id?: string | null;
     name?: string | null;
@@ -352,9 +336,9 @@ export interface EditGuildOptions {
     verificationLevel?: VerificationLevels;
 }
 
-export interface CreateChannelOptions<T extends GuildChannelsWithoutThreads = GuildChannelsWithoutThreads> {
-    /** [Forum] The {@link Types/Channels.ForumTag | tags} available in the channel. */
-    availableTags?: Array<Omit<ForumTag, "id">> | null;
+export interface CreateChannelOptions<T extends Types.Channels.GuildChannelsWithoutThreads = Types.Channels.GuildChannelsWithoutThreads> {
+    /** [Forum] The {@link Types/Channels.Types.Channels.ForumTag | tags} available in the channel. */
+    availableTags?: Array<Omit<Types.Channels.ForumTag, "id">> | null;
     /** [Stage, Voice] The bitrate of the channel. Minimum 8000. */
     bitrate?: number | null;
     /** [Announcement, Text] The default auto archive duration for the channel. */
@@ -362,7 +346,7 @@ export interface CreateChannelOptions<T extends GuildChannelsWithoutThreads = Gu
     /** [Forum] The default forum layout used to display threads. */
     defaultForumLayout?: ForumLayoutTypes;
     /** [Forum] The default reaction emoji for threads. */
-    defaultReactionEmoji?: ForumEmoji | null;
+    defaultReactionEmoji?: Types.Channels.ForumEmoji | null;
     /** [Forum] The default sort order mode used to sort forum threads. */
     defaultSortOrder?: SortOrderTypes | null;
     /** The name of the channel. */
@@ -372,7 +356,7 @@ export interface CreateChannelOptions<T extends GuildChannelsWithoutThreads = Gu
     /** The ID of the category to put this channel in. */
     parentID?: string | null;
     /** The permission overwrites to apply to the channel. */
-    permissionOverwrites?: Array<OverwriteOptions> | null;
+    permissionOverwrites?: Array<Types.Channels.OverwriteOptions> | null;
     /** The position of the channel. */
     position?: number | null;
     /** [Forum, Text] The seconds between sending messages for users. Between 0 and 21600. */
@@ -433,8 +417,8 @@ export interface ModifyChannelPositionsEntry {
 }
 
 export interface GetActiveThreadsResponse {
-    members: Array<ThreadMember>;
-    threads: Array<AnyThreadChannel>;
+    members: Array<Types.Channels.ThreadMember>;
+    threads: Array<Types.Channels.AnyThreadChannel>;
 }
 
 export interface GetMembersOptions {
@@ -516,7 +500,7 @@ export interface GetBansOptions {
 
 export interface RawBan {
     reason: string | null;
-    user: RawUser;
+    user: Types.Users.RawUser;
 }
 
 export interface Ban {
@@ -574,7 +558,7 @@ export interface GetVanityURLResponse {
 }
 
 export interface RawWidget {
-    channels: Array<Required<Pick<RawChannel, "id" | "name" | "position">>>;
+    channels: Array<Required<Pick<Types.Channels.RawChannel, "id" | "name" | "position">>>;
     id: string;
     instant_invite: string | null;
     members: Array<RawWidgetUser>;
@@ -583,7 +567,7 @@ export interface RawWidget {
 }
 
 export interface Widget {
-    channels: Array<Required<Pick<RawChannel, "id" | "name" | "position">>>;
+    channels: Array<Required<Pick<Types.Channels.RawChannel, "id" | "name" | "position">>>;
     id: string;
     instantInvite: string | null;
     members: Array<WidgetUser>;
@@ -707,7 +691,7 @@ export interface CreateStickerOptions {
     /** The description of the sticker. */
     description: string;
     /** The file contents of the sticker. PNG, APNG, or LOTTIE (only `VERIFIED` & `PARTNERED` servers can use lottie). */
-    file: File;
+    file: Types.RequestHandler.File;
     /** The name of the sticker. */
     name: string;
     /** The reason for creating the sticker. */
@@ -759,15 +743,15 @@ export interface RawOAuthGuild {
     permissions: string;
 }
 
-export interface PresenceActivity extends Omit<GatewayActivity, "application_id" | "assets" | "created_at"> {
+export interface PresenceActivity extends Omit<Types.Gateway.Activity, "application_id" | "assets" | "created_at"> {
     applicationID?: string;
     assets?: Partial<Record<"largeImage" | "largeText" | "smallImage" | "smallText", string>>;
     createdAt: number;
 }
 
-export interface Presence extends Omit<PresenceUpdate, "user" | "guild_id" | "client_status" | "activities"> {
+export interface Presence extends Omit<Types.Gateway.PresenceUpdate, "user" | "guild_id" | "client_status" | "activities"> {
     activities?: Array<PresenceActivity>;
-    clientStatus: ClientStatus;
+    clientStatus: Types.Gateway.ClientStatus;
     guildID: string;
 }
 

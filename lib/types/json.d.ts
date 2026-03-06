@@ -1,63 +1,9 @@
 /** @module Types/JSON */
+import type * as Types from "./namespaced";
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import type { InstallParams } from "./oauth";
-import type {
-    ApplicationCommandOptions,
-    ApplicationCompany,
-    ApplicationExecutable,
-    EmbeddedActivityConfig,
-    IntegrationTypesConfig,
-    LocaleMap,
-    TeamMember
-} from "./applications";
-import type {
-    ApplicationCommandInteractionData,
-    AuthorizingIntegrationOwners,
-    AutocompleteInteractionData,
-    MessageComponentButtonInteractionData,
-    MessageComponentSelectMenuInteractionData,
-    ModalSubmitInteractionData
-} from "./interactions";
-import type { AutoModerationAction, TriggerMetadata } from "./auto-moderation";
-import type {
-    GuildEmoji,
-    IntegrationAccount,
-    RawGuild,
-    RoleTags,
-    RawSticker,
-    WelcomeScreen,
-    Sticker,
-    Presence,
-    IncidentActions,
-    RoleColors,
-    GuildProfile
-} from "./guilds";
-import type {
-    ChannelMention,
-    MessageActivity,
-    MessageReference,
-    RawChannel,
-    StickerItem,
-    MessageReaction,
-    ThreadMetadata,
-    PrivateThreadMetadata,
-    ForumTag,
-    ForumEmoji,
-    Embed,
-    GuildChannels,
-    TextableGuildChannels,
-    ThreadChannels,
-    VoiceChannels,
-    ThreadOnlyChannels,
-    PollQuestion,
-    PollResults,
-    PollAnswer,
-    MessagePollResults,
-    MessageComponent
-} from "./channels";
-import type { ScheduledEventEntityMetadata } from "./scheduled-events";
+import type { ApplicationCompany, ApplicationExecutable, EmbeddedActivityConfig, IntegrationTypesConfig } from "./applications";
 import type { Uncached } from "./shared";
-import type { AvatarDecorationData, Collectibles } from "./users";
 import type {
     ApplicationCommandTypes,
     AutoModerationEventTypes,
@@ -113,7 +59,7 @@ export interface JSONAnnouncementChannel extends JSONThreadableChannel {
     type: ChannelTypes.GUILD_ANNOUNCEMENT;
 }
 export interface JSONAnnouncementThreadChannel extends JSONThreadChannel {
-    threadMetadata: ThreadMetadata;
+    threadMetadata: Types.Channels.ThreadMetadata;
     type: ChannelTypes.ANNOUNCEMENT_THREAD;
 }
 export interface JSONApplication extends JSONClientApplication {
@@ -193,15 +139,15 @@ export interface JSONApplicationCommand extends JSONBase {
     contexts: Array<InteractionContextTypes>;
     defaultMemberPermissions?: JSONPermission;
     description: string;
-    descriptionLocalizations?: LocaleMap | null;
+    descriptionLocalizations?: Types.Applications.LocaleMap | null;
     dmPermission?: boolean;
     guildID?: string;
     handler?: EntryPointCommandHandlerTypes;
     integrationTypes: Array<ApplicationIntegrationTypes>;
     name: string;
-    nameLocalizations?: LocaleMap | null;
+    nameLocalizations?: Types.Applications.LocaleMap | null;
     nsfw?: boolean;
-    options?: Array<ApplicationCommandOptions>;
+    options?: Array<Types.Applications.ApplicationCommandOptions>;
     type: ApplicationCommandTypes;
     version: string;
 }
@@ -221,10 +167,10 @@ export interface JSONAttachment extends JSONBase {
 export interface JSONAutocompleteInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
     attachmentSizeLimit: number;
-    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
-    data: AutocompleteInteractionData;
+    data: Types.Interactions.AutocompleteInteractionData;
     guildID?: string;
     guildLocale?: string;
     locale: string;
@@ -233,7 +179,7 @@ export interface JSONAutocompleteInteraction extends JSONInteraction {
     user: JSONUser;
 }
 export interface JSONAutoModerationRule extends JSONBase {
-    actions: Array<AutoModerationAction>;
+    actions: Array<Types.AutoModeration.AutoModerationAction>;
     creatorID: string;
     enabled: boolean;
     eventType: AutoModerationEventTypes;
@@ -241,7 +187,7 @@ export interface JSONAutoModerationRule extends JSONBase {
     exemptRoles: Array<string>;
     guildID: string;
     name: string;
-    triggerMetadata: TriggerMetadata;
+    triggerMetadata: Types.AutoModeration.TriggerMetadata;
     triggerType: AutoModerationTriggerTypes;
 }
 export interface JSONBase {
@@ -281,10 +227,10 @@ export interface JSONClientUser extends JSONUser {
 export interface JSONCommandInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
     attachmentSizeLimit: number;
-    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
-    data: ApplicationCommandInteractionData;
+    data: Types.Interactions.ApplicationCommandInteractionData;
     guildID?: string;
     guildLocale?: string;
     locale: string;
@@ -295,10 +241,10 @@ export interface JSONCommandInteraction extends JSONInteraction {
 export interface JSONComponentInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
     attachmentSizeLimit: number;
-    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
-    data: MessageComponentButtonInteractionData | MessageComponentSelectMenuInteractionData;
+    data: Types.Interactions.MessageComponentButtonInteractionData | Types.Interactions.MessageComponentSelectMenuInteractionData;
     guildID?: string;
     guildLocale?: string;
     locale: string;
@@ -357,11 +303,11 @@ export interface JSONGuild extends JSONBase {
     defaultMessageNotifications: DefaultMessageNotificationLevels;
     description: string | null;
     discoverySplash: string | null;
-    emojis: Array<GuildEmoji>;
+    emojis: Array<Types.Guilds.GuildEmoji>;
     explicitContentFilter: ExplicitContentFilterLevels;
     features: Array<GuildFeature>;
     icon: string | null;
-    incidentActions: IncidentActions | null;
+    incidentActions: Types.Guilds.IncidentActions | null;
     joinedAt: number | null;
     large: boolean;
     maxMembers?: number;
@@ -378,7 +324,7 @@ export interface JSONGuild extends JSONBase {
     premiumProgressBarEnabled: boolean;
     premiumSubscriptionCount?: number;
     premiumTier: PremiumTiers;
-    profile: GuildProfile | null;
+    profile: Types.Guilds.GuildProfile | null;
     publicUpdatesChannelID: string | null;
     region?: string | null;
     roles: Array<JSONRole>;
@@ -386,7 +332,7 @@ export interface JSONGuild extends JSONBase {
     scheduledEvents: Array<JSONScheduledEvent>;
     splash: string | null;
     stageInstances: Array<JSONStageInstance>;
-    stickers?: Array<Sticker>;
+    stickers?: Array<Types.Guilds.Sticker>;
     systemChannelFlags: number;
     systemChannelID: string | null;
     threads: Array<string>;
@@ -394,7 +340,7 @@ export interface JSONGuild extends JSONBase {
     vanityURLCode: string | null;
     verificationLevel: VerificationLevels;
     voiceStates: Array<JSONVoiceState>;
-    welcomeScreen?: WelcomeScreen;
+    welcomeScreen?: Types.Guilds.WelcomeScreen;
     widgetChannelID: string | null;
     widgetEnabled?: boolean;
 }
@@ -402,19 +348,19 @@ export interface JSONGuildChannel extends JSONChannel {
     guildID: string;
     name: string;
     parentID: string | null;
-    type: GuildChannels;
+    type: Types.Channels.GuildChannels;
 }
 export interface JSONGuildPreview extends JSONBase {
     approximateMemberCount: number;
     approximatePresenceCount: number;
     description: string | null;
     discoverySplash: string | null;
-    emojis: Array<GuildEmoji>;
+    emojis: Array<Types.Guilds.GuildEmoji>;
     features: Array<GuildFeature>;
     icon: string | null;
     name: string;
     splash: string | null;
-    stickers: Array<RawSticker>;
+    stickers: Array<Types.Guilds.RawSticker>;
 }
 export interface JSONGuildTemplate {
     code: string;
@@ -423,13 +369,13 @@ export interface JSONGuildTemplate {
     description: string | null;
     isDirty: boolean | null;
     name: string;
-    serializedSourceGuild: Partial<RawGuild>;
+    serializedSourceGuild: Partial<Types.Guilds.RawGuild>;
     sourceGuildID: string;
     updatedAt: number;
     usageCount: number;
 }
 export interface JSONIntegration extends JSONBase {
-    account: IntegrationAccount;
+    account: Types.Guilds.IntegrationAccount;
     application?: JSONPartialApplication;
     enableEmoticons?: boolean;
     enabled?: boolean;
@@ -502,7 +448,7 @@ export interface JSONInviteGuild extends JSONBase {
 export interface JSONInviteRole extends JSONBase {
     /** @deprecated */
     color: number;
-    colors: RoleColors;
+    colors: Types.Guilds.RoleColors;
     guild: JSONInviteGuild;
     guildID: string;
     icon: string | null;
@@ -516,7 +462,7 @@ export interface JSONMediaChannel extends JSONThreadOnlyChannel {
 }
 export interface JSONMember extends JSONBase {
     avatar: string | null;
-    avatarDecorationData: AvatarDecorationData | null;
+    avatarDecorationData: Types.Users.AvatarDecorationData | null;
     banner: string | null;
     communicationDisabledUntil: number | null;
     deaf: boolean;
@@ -528,20 +474,20 @@ export interface JSONMember extends JSONBase {
     nick: string | null;
     pending: boolean;
     premiumSince: number | null;
-    presence?: Presence;
+    presence?: Types.Guilds.Presence;
     roles: Array<string>;
     user: JSONUser;
 }
 export interface JSONMessage extends JSONBase {
-    activity?: MessageActivity;
+    activity?: Types.Channels.MessageActivity;
     applicationID?: string;
     attachments: Array<JSONAttachment>;
     author: JSONUser;
     channelID: string;
-    components?: Array<MessageComponent>;
+    components?: Array<Types.Channels.MessageComponent>;
     content: string;
     editedTimestamp: number | null;
-    embeds: Array<Embed>;
+    embeds: Array<Types.Channels.Embed>;
     flags?: number;
     guildID?: string;
     /** @deprecated Use {@link JSON/JSONMessage#interactionMetadata | JSONMessage#interactionMetadata } instead. */
@@ -553,7 +499,7 @@ export interface JSONMessage extends JSONBase {
         user: JSONUser;
     };
     interactionMetadata?: {
-        authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+        authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
         id: string;
         interactedMessageID?: string;
         name?: string;
@@ -561,7 +507,7 @@ export interface JSONMessage extends JSONBase {
         targetMessageID?: string;
         targetUser?: JSONUser;
         triggeringInteractionMetadata?: {
-            authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+            authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
             id: string;
             interactedMessageID?: string;
             originalResponseMessageID?: string;
@@ -573,7 +519,7 @@ export interface JSONMessage extends JSONBase {
         type: InteractionTypes;
         user: JSONUser;
     };
-    mentionChannels?: Array<ChannelMention>;
+    mentionChannels?: Array<Types.Channels.ChannelMention>;
     mentions: {
         channels: Array<string>;
         everyone: boolean;
@@ -581,13 +527,13 @@ export interface JSONMessage extends JSONBase {
         roles: Array<string>;
         users: Array<JSONUser>;
     };
-    messageReference?: MessageReference;
+    messageReference?: Types.Channels.MessageReference;
     messageSnapshots?: Array<{
         message: {
             attachments: Array<JSONAttachment>;
             content: string;
             editedTimestamp: number | null;
-            embeds: Array<Embed>;
+            embeds: Array<Types.Channels.Embed>;
             flags: number;
             mentions: {
                 channels: Array<string>;
@@ -601,11 +547,11 @@ export interface JSONMessage extends JSONBase {
     nonce?: number | string;
     pinned: boolean;
     poll?: JSONPoll;
-    pollResults?: MessagePollResults;
+    pollResults?: Types.Channels.MessagePollResults;
     position?: number;
-    reactions: Array<MessageReaction>;
+    reactions: Array<Types.Channels.MessageReaction>;
     referencedMessage?: JSONMessage | null;
-    stickerItems?: Array<StickerItem>;
+    stickerItems?: Array<Types.Channels.StickerItem>;
     thread?: JSONAnnouncementThreadChannel | JSONPublicThreadChannel | JSONPrivateThreadChannel;
     timestamp: number;
     tts: boolean;
@@ -615,10 +561,10 @@ export interface JSONMessage extends JSONBase {
 export interface JSONModalSubmitInteraction extends JSONInteraction {
     appPermissions: JSONPermission;
     attachmentSizeLimit: number;
-    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
     channelID: string;
     context?: InteractionContextTypes;
-    data: ModalSubmitInteractionData;
+    data: Types.Interactions.ModalSubmitInteractionData;
     guildID?: string;
     guildLocale?: string;
     locale: string;
@@ -635,9 +581,9 @@ export interface JSONOAuthApplication extends JSONBase {
     flags: number;
     guildID: string | null;
     icon: string | null;
-    installParams?: InstallParams;
+    installParams?: Types.OAuth.InstallParams;
     integrationTypes: Array<ApplicationIntegrationTypes>;
-    integrationTypesConfig?: IntegrationTypesConfig;
+    integrationTypesConfig?: Types.Applications.IntegrationTypesConfig;
     name: string;
     owner: JSONUser;
     ownerID: string;
@@ -683,11 +629,11 @@ export interface JSONPingInteraction extends JSONInteraction {
 }
 export interface JSONPoll {
     allowMultiselect: boolean;
-    answers: Array<PollAnswer>;
+    answers: Array<Types.Channels.PollAnswer>;
     expiry: string;
     layoutType: PollLayoutType;
-    question: PollQuestion;
-    results: PollResults;
+    question: Types.Channels.PollQuestion;
+    results: Types.Channels.PollResults;
 }
 export interface JSONPrimaryGuild {
     badge: string | null;
@@ -702,18 +648,18 @@ export interface JSONPrivateChannel extends JSONChannel {
     type: ChannelTypes.DM;
 }
 export interface JSONPrivateThreadChannel extends JSONThreadChannel {
-    threadMetadata: PrivateThreadMetadata;
+    threadMetadata: Types.Channels.PrivateThreadMetadata;
     type: ChannelTypes.PRIVATE_THREAD;
 }
 export interface JSONPublicThreadChannel extends JSONThreadChannel {
     appliedTags: Array<string>;
-    threadMetadata: ThreadMetadata;
+    threadMetadata: Types.Channels.ThreadMetadata;
     type: ChannelTypes.PUBLIC_THREAD;
 }
 export interface JSONRole extends JSONBase {
     /** @deprecated */
     color: number;
-    colors: RoleColors;
+    colors: Types.Guilds.RoleColors;
     guildID: string;
     hoist: boolean;
     icon: string | null;
@@ -722,7 +668,7 @@ export interface JSONRole extends JSONBase {
     name: string;
     permissions: JSONPermission;
     position: number;
-    tags: RoleTags;
+    tags: Types.Guilds.RoleTags;
     unicodeEmoji: string | null;
 }
 export interface JSONScheduledEvent extends JSONBase {
@@ -730,7 +676,7 @@ export interface JSONScheduledEvent extends JSONBase {
     creator?: JSONUser;
     description?: string | null;
     entityID: string | null;
-    entityMetadata: ScheduledEventEntityMetadata | null;
+    entityMetadata: Types.ScheduledEvents.ScheduledEventEntityMetadata | null;
     entityType: GuildScheduledEventEntityTypes;
     guildID: string;
     image?: string | null;
@@ -777,7 +723,7 @@ export interface JSONStageInstance extends JSONBase {
 }
 export interface JSONTeam extends JSONBase {
     icon: string | null;
-    members: Array<TeamMember>;
+    members: Array<Types.Applications.TeamMember>;
     name: string;
     ownerID: string;
 }
@@ -790,13 +736,13 @@ export interface JSONTextableChannel extends JSONGuildChannel {
     position: number;
     rateLimitPerUser: number;
     topic: string | null;
-    type: TextableGuildChannels;
+    type: Types.Channels.TextableGuildChannels;
 }
 
 export interface JSONTextableVoiceChannel extends JSONTextableChannel {
     bitrate: number;
     rtcRegion: string | null;
-    type: VoiceChannels;
+    type: Types.Channels.VoiceChannels;
     userLimit: number;
     videoQualityMode: VideoQualityModes;
     voiceMembers: Array<string>;
@@ -818,15 +764,15 @@ export interface JSONThreadChannel extends JSONGuildChannel {
     messages: Array<string>;
     ownerID: string;
     rateLimitPerUser: number;
-    threadMetadata: ThreadMetadata | PrivateThreadMetadata;
+    threadMetadata: Types.Channels.ThreadMetadata | Types.Channels.PrivateThreadMetadata;
     totalMessageSent: number;
-    type: ThreadChannels;
+    type: Types.Channels.ThreadChannels;
 }
 export interface JSONThreadOnlyChannel extends JSONGuildChannel {
-    availableTags: Array<ForumTag>;
+    availableTags: Array<Types.Channels.ForumTag>;
     defaultAutoArchiveDuration: ThreadAutoArchiveDuration;
     defaultForumLayout: ForumLayoutTypes;
-    defaultReactionEmoji: ForumEmoji | null;
+    defaultReactionEmoji: Types.Channels.ForumEmoji | null;
     defaultSortOrder: SortOrderTypes | null;
     defaultThreadRateLimitPerUser: number;
     flags: number;
@@ -836,7 +782,7 @@ export interface JSONThreadOnlyChannel extends JSONGuildChannel {
     rateLimitPerUser: number;
     threads: Array<string>;
     topic: string | null;
-    type: ThreadOnlyChannels;
+    type: Types.Channels.ThreadOnlyChannels;
 }
 export interface JSONUnavailableGuild extends JSONBase {
     unavailable: true;
@@ -844,10 +790,10 @@ export interface JSONUnavailableGuild extends JSONBase {
 export interface JSONUser extends JSONBase {
     accentColor?: number | null;
     avatar: string | null;
-    avatarDecorationData: AvatarDecorationData | null;
+    avatarDecorationData: Types.Users.AvatarDecorationData | null;
     banner?: string | null;
     bot: boolean;
-    collectibles: Collectibles | null;
+    collectibles: Types.Users.Collectibles | null;
     discriminator: string;
     globalName: string | null;
     publicFlags: number;
@@ -879,8 +825,8 @@ export interface JSONWebhook extends JSONBase {
     channelID: string | null;
     guildID: string | null;
     name: string | null;
-    sourceChannel?: Pick<RawChannel, "id" | "name">;
-    sourceGuild?: Pick<RawGuild, "id" | "name" | "icon">;
+    sourceChannel?: Pick<Types.Channels.RawChannel, "id" | "name">;
+    sourceGuild?: Pick<Types.Guilds.RawGuild, "id" | "name" | "icon">;
     token?: string;
     type: WebhookTypes;
     user?: JSONUser;

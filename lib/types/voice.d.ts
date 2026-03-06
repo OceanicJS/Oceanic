@@ -1,11 +1,11 @@
 /** @module Types/Voice */
-import type { RawMember } from "./guilds";
+import type * as Types from "./namespaced";
 
 export interface RawVoiceState {
     channel_id: string | null;
     deaf: boolean;
     guild_id?: string;
-    member?: RawMember;
+    member?: Types.Guilds.RawMember;
     mute: boolean;
     request_to_speak_timestamp: string | null;
     self_deaf: boolean;

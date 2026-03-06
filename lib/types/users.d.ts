@@ -1,5 +1,5 @@
 /** @module Types/Users */
-import type { RawMember } from "./guilds";
+import type * as Types from "./namespaced";
 import type { DisplayNameEffect, DisplayNameFont, PremiumTypes } from "../Constants";
 
 export interface RESTUser {
@@ -17,7 +17,7 @@ export interface RESTUser {
     global_name: string | null;
     id: string;
     locale?: string;
-    member?: RawMember;
+    member?: Types.Guilds.RawMember;
     mfa_enabled?: boolean;
     premium_type?: PremiumTypes;
     primary_guild?: RawClan | null;

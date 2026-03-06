@@ -1,11 +1,5 @@
 /** @module Types/AuditLog */
-import type { RawAutoModerationRule } from "./auto-moderation";
-import type { RawAnnouncementThreadChannel, RawPrivateThreadChannel, RawPublicThreadChannel } from "./channels";
-import type { RawIntegration } from "./guilds";
-import type { RawScheduledEvent } from "./scheduled-events";
-import type { RawUser } from "./users";
-import type { RawWebhook } from "./webhooks";
-import type { RawApplicationCommand } from "./applications";
+import type * as Types from "./namespaced";
 import type { AuditLogActionTypes, OverwriteTypes } from "../Constants";
 import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
@@ -19,14 +13,14 @@ import type AuditLogEntry from "../structures/AuditLogEntry";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 
 export interface RawAuditLog {
-    application_commands: Array<RawApplicationCommand>;
+    application_commands: Array<Types.Applications.RawApplicationCommand>;
     audit_log_entries: Array<RawAuditLogEntry>;
-    auto_moderation_rules: Array<RawAutoModerationRule>;
-    guild_scheduled_events: Array<RawScheduledEvent>;
-    integrations: Array<RawIntegration>;
-    threads: Array<RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel>;
-    users: Array<RawUser>;
-    webhooks: Array<RawWebhook>;
+    auto_moderation_rules: Array<Types.AutoModeration.RawAutoModerationRule>;
+    guild_scheduled_events: Array<Types.ScheduledEvents.RawScheduledEvent>;
+    integrations: Array<Types.Guilds.RawIntegration>;
+    threads: Array<Types.Channels.RawAnnouncementThreadChannel | Types.Channels.RawPublicThreadChannel | Types.Channels.RawPrivateThreadChannel>;
+    users: Array<Types.Users.RawUser>;
+    webhooks: Array<Types.Webhooks.RawWebhook>;
 }
 
 export interface AuditLog {
@@ -94,7 +88,7 @@ export interface AuditLogEntryOptions {
     type?: `${OverwriteTypes}`;
 }
 
-export interface RawAuditLogIntegration extends Pick<RawIntegration, "id" | "name" | "type" | "account"> {
+export interface RawAuditLogIntegration extends Pick<Types.Guilds.RawIntegration, "id" | "name" | "type" | "account"> {
     application_id?: string;
 }
 

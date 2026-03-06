@@ -1,16 +1,15 @@
 /** @module Types/GuildTemplate */
-import type { RawGuild } from "./guilds";
-import type { RawUser } from "./users";
+import type * as Types from "./namespaced";
 
 export interface RawGuildTemplate {
     code: string;
     created_at: string;
-    creator: RawUser;
+    creator: Types.Users.RawUser;
     creator_id: string;
     description: string | null;
     is_dirty: boolean | null;
     name: string;
-    serialized_source_guild: Partial<RawGuild>;
+    serialized_source_guild: Partial<Types.Guilds.RawGuild>;
     source_guild_id: string;
     updated_at: string;
     usage_count: number;

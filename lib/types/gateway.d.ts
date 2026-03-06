@@ -1,7 +1,5 @@
 /** @module Types/Gateway */
-import type { PartialEmoji } from ".";
-import type { RawUser } from "./users";
-import type { AutoModerationAction, RawAutoModerationAction } from "./auto-moderation";
+import type * as Types from "./namespaced";
 import type {
     ActivityTypes,
     AnimationTypes,
@@ -314,7 +312,7 @@ export interface PresenceUpdate {
     client_status: ClientStatus;
     guild_id: string;
     status: ReceiveStatuses;
-    user: { id: string; } & Partial<Omit<RawUser, "id">>;
+    user: { id: string; } & Partial<Omit<Types.Users.RawUser, "id">>;
 }
 
 export interface ClientStatus {
@@ -333,7 +331,7 @@ export interface UpdateVoiceStateOptions {
 }
 
 export interface RawAutoModerationActionExecution {
-    action: RawAutoModerationAction;
+    action: Types.AutoModeration.RawAutoModerationAction;
     alert_system_message_id?: string;
     channel_id?: string;
     content: string;
@@ -347,7 +345,7 @@ export interface RawAutoModerationActionExecution {
 }
 
 export interface AutoModerationActionExecution {
-    action: AutoModerationAction;
+    action: Types.AutoModeration.AutoModerationAction;
     alertSystemMessageID?: string;
     content: string;
     matchedContent: string;
@@ -378,7 +376,7 @@ export interface RawVoiceChannelEffect {
     animation_id?: number;
     animation_type?: AnimationTypes;
     channel_id: string;
-    emoji?: PartialEmoji | null;
+    emoji?: Types.Guilds.PartialEmoji | null;
     guild_id: string;
     user_id: string;
 }

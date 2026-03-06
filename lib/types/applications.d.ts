@@ -1,7 +1,5 @@
 /** @module Types/Applications */
-import type { ImplementedChannels, InstallParams, RawOAuthGuild, RawUser } from ".";
-import type { ExclusifyUnion, WithRequired } from "./shared";
-import type { Emoji } from "./misc";
+import type * as Types from "./namespaced";
 import type {
     ActivityLocationKind,
     ApplicationCommandOptionTypes,
@@ -74,12 +72,12 @@ export interface RawApplication {
     executables?: Array<RawApplicationExecutable>;
     explicit_content_filter: ApplicationExplicitContentFilterLevel;
     flags: number;
-    guild?: RawOAuthGuild;
+    guild?: Types.Guilds.RawOAuthGuild;
     guild_id?: string;
     hook: boolean;
     icon: string | null;
     id: string;
-    install_params?: InstallParams;
+    install_params?: Types.OAuth.InstallParams;
     integration_public?: boolean;
     integration_require_code_grant: boolean;
     integration_types?: Array<ApplicationIntegrationTypes>;
@@ -99,7 +97,7 @@ export interface RawApplication {
     overlay_compatibility_hook?: boolean;
     overlay_methods?: number;
     overlay_warn?: boolean;
-    owner?: RawUser;
+    owner?: Types.Users.RawUser;
     parent_id?: string;
     pricing_localization_strategy?: PricingLocalizationStrategy; // values unknown
     primary_sku_id?: string;
@@ -197,18 +195,18 @@ export interface ApplicationCompany {
 }
 
 export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
-export interface RESTOAuthApplication extends WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
-export interface RESTApplication extends WithRequired<RawApplication, "flags" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RESTOAuthApplication extends Types.Shared.WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RESTApplication extends Types.Shared.WithRequired<RawApplication, "flags" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
 export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
 
 export interface IntegrationTypesConfig extends Partial<Record<`${ApplicationIntegrationTypes}`, ApplicationIntegrationConfig>> {}
 
 export interface RawApplicationIntegrationConfig {
-    oauth2_install_params?: InstallParams;
+    oauth2_install_params?: Types.OAuth.InstallParams;
 }
 
 export interface ApplicationIntegrationConfig {
-    oauth2InstallParams?: InstallParams;
+    oauth2InstallParams?: Types.OAuth.InstallParams;
 }
 
 export interface RawTeam {
@@ -231,7 +229,7 @@ export interface RawTeamMember {
     membership_state: TeamMembershipState;
     role: TeamMemberRoleType;
     team_id: string;
-    user: RawUser;
+    user: Types.Users.RawUser;
 }
 
 export interface TeamMember {
@@ -268,7 +266,7 @@ export interface RawApplicationCommand {
 
 export interface RawApplicationCommandOption {
     autocomplete?: boolean;
-    channel_types?: Array<ImplementedChannels>;
+    channel_types?: Array<Types.Channels.ImplementedChannels>;
     choices?: Array<RawApplicationCommandOptionChoice>;
     description: string;
     description_localizations?: LocaleMap | null;
@@ -287,7 +285,7 @@ export interface RawApplicationCommandOption {
 
 export interface CombinedApplicationCommandOption {
     autocomplete?: boolean;
-    channelTypes?: Array<ImplementedChannels>;
+    channelTypes?: Array<Types.Channels.ImplementedChannels>;
     choices?: Array<ApplicationCommandOptionsChoice<ApplicationCommandOptionsTypesWithChoices>>;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
@@ -355,7 +353,7 @@ interface ApplicationCommandOptionsChoice<T extends ApplicationCommandOptionsTyp
 }
 
 interface ApplicationCommandOptionsChannelTypes {
-    channelTypes?: Array<ImplementedChannels>;
+    channelTypes?: Array<Types.Channels.ImplementedChannels>;
 }
 
 interface ApplicationCommandOptionsMinMaxValue {
@@ -383,11 +381,11 @@ interface ApplicationCommandOptionsSubCommandGroup extends ApplicationCommandOpt
 export interface ApplicationCommandOptionsAttachment extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT> {}
 export interface ApplicationCommandOptionsBoolean extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.BOOLEAN> {}
 export interface ApplicationCommandOptionsChannel extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.CHANNEL>, ApplicationCommandOptionsChannelTypes {}
-export type ApplicationCommandOptionsInteger = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;
+export type ApplicationCommandOptionsInteger = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & Types.Shared.ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;
 export interface ApplicationCommandOptionsMentionable extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.MENTIONABLE> {}
-export type ApplicationCommandOptionsNumber = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.NUMBER> & ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.NUMBER>>;
+export type ApplicationCommandOptionsNumber = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.NUMBER> & Types.Shared.ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.NUMBER>>;
 export interface ApplicationCommandOptionsRole extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ROLE> {}
-export type ApplicationCommandOptionsString = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & ExclusifyUnion<(ApplicationCommandOptionsAutocomplete & ApplicationCommandOptionsMinMaxLength) | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
+export type ApplicationCommandOptionsString = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.STRING> & Types.Shared.ExclusifyUnion<(ApplicationCommandOptionsAutocomplete & ApplicationCommandOptionsMinMaxLength) | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.STRING>>;
 export interface ApplicationCommandOptionsUser extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.USER> {}
 
 // desc, options
@@ -602,7 +600,7 @@ export interface EditApplicationOptions {
     /** The icon for the application. */
     icon?: string | Buffer | null;
     /** The install parameters of the application. */
-    installParams?: InstallParams;
+    installParams?: Types.OAuth.InstallParams;
     integrationTypesConfig?: IntegrationTypesConfig;
     /** The url where the application receives interactions. Must be valid according to Discord's [Receiving an interaction](https://discord.com/developers/docs/interactions/receiving-and-responding#receiving-an-interaction) documentation. */
     interactionsEndpointURL?: string;
@@ -612,7 +610,7 @@ export interface EditApplicationOptions {
     tags?: Array<string>;
 }
 
-export interface RawApplicationEmoji extends Required<Omit<Emoji, "user" | "id">>  { id: string; user?: RawUser; }
+export interface RawApplicationEmoji extends Required<Omit<Types.Misc.Emoji, "user" | "id">>  { id: string; user?: Types.Users.RawUser; }
 export interface ApplicationEmoji extends Omit<RawApplicationEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User; }
 
 export interface RawApplicationEmojis {

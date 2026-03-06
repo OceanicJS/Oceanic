@@ -1,9 +1,9 @@
 /** @module Types/RequestHandler */
-import type { RESTOptions } from "./client";
+import type * as Types from "./namespaced";
 import type { RESTMethod } from "../Constants";
 
 // internal use
-export interface RequestHandlerInstanceOptions extends Required<Omit<RESTOptions, "agent">>, Pick<RESTOptions, "agent"> {}
+export interface RequestHandlerInstanceOptions extends Required<Omit<Types.Client.RESTOptions, "agent">>, Pick<Types.Client.RESTOptions, "agent"> {}
 
 export interface RequestOptions {
     auth?: boolean | string;

@@ -1,6 +1,5 @@
 /** @module Types/ScheduledEvents */
-import type { RawUser } from "./users";
-import type { RawMember } from "./guilds";
+import type * as Types from "./namespaced";
 import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
 import type Member from "../structures/Member";
 import type User from "../structures/User";
@@ -8,7 +7,7 @@ import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 
 export interface RawScheduledEvent {
     channel_id: string | null;
-    creator?: RawUser;
+    creator?: Types.Users.RawUser;
     creator_id?: string | null;
     description?: string | null;
     entity_id: string | null;
@@ -76,8 +75,8 @@ export interface GetScheduledEventUsersOptions {
 
 export interface RawScheduledEventUser {
     guild_scheduled_event_id: string;
-    member?: RawMember;
-    user: RawUser;
+    member?: Types.Guilds.RawMember;
+    user: Types.Users.RawUser;
 }
 
 export interface ScheduledEventUser {

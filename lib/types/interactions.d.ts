@@ -1,18 +1,5 @@
 /** @module Types/Interactions */
-import type { EditWebhookMessageOptions, ExecuteWebhookOptions } from "./webhooks";
-import type {
-    AnyTextableGuildChannel,
-    AnyPrivateChannel,
-    RawAttachment,
-    RawInteractionResolvedChannel,
-    RawMessage,
-    AnyInteractionChannel,
-    ModalComponent
-} from "./channels";
-import type { InteractionMember, RawMember, RawRole } from "./guilds";
-import type { RawUser } from "./users";
-import type { Uncached } from "./shared";
-import type { LocaleMap, RawEntitlement, RawTestEntitlement } from "./applications";
+import type * as Types from "./namespaced";
 import type {
     ApplicationCommandOptionTypes,
     ApplicationCommandTypes,
@@ -45,8 +32,8 @@ import type Guild from "../structures/Guild";
 import type Permission from "../structures/Permission";
 import type ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
 
-export interface InteractionContent extends Pick<ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
-export interface EditInteractionContent extends Pick<EditWebhookMessageOptions, "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
+export interface InteractionContent extends Pick<Types.Webhooks.ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
+export interface EditInteractionContent extends Pick<Types.Webhooks.EditWebhookMessageOptions, "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
 
 export type InteractionResponse = PingInteractionResponse | MessageInteractionResponse | DeferredInteractionResponse | AutocompleteInteractionResponse | ModalSubmitInteractionResponse | PremiumRequiredResponse | LaunchActivityResponse;
 export interface PingInteractionResponse {
@@ -88,7 +75,7 @@ export interface LaunchActivityResponse {
 
 export interface ModalData {
     /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawModalComponents | Util#rawModalComponents}. */
-    components: Array<ModalComponent>;
+    components: Array<Types.Channels.ModalComponent>;
     /** The custom ID of the modal. */
     customID: string;
     /** The title of the modal. */
@@ -103,17 +90,17 @@ export interface RawInteraction {
     channel_id?: string;
     context?: InteractionContextTypes;
     data?: RawInteractionData;
-    entitlements?: Array<RawEntitlement | RawTestEntitlement>;
+    entitlements?: Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>;
     guild?: InteractionGuild;
     guild_id?: string;
     guild_locale?: string;
     id: string;
     locale?: string;
-    member?: InteractionMember;
-    message?: RawMessage;
+    member?: Types.Guilds.InteractionMember;
+    message?: Types.Channels.RawMessage;
     token: string;
     type: InteractionTypes;
-    user?: RawUser;
+    user?: Types.Users.RawUser;
     version: 1;
 }
 
@@ -123,9 +110,9 @@ export type AnyRawInteraction = RawPingInteraction | AnyRawGatewayInteraction;
 export type AnyRawGatewayInteraction = RawApplicationCommandInteraction | RawMessageComponentInteraction | RawAutocompleteInteraction | RawModalSubmitInteraction;
 export interface RawPingInteraction extends Pick<RawInteraction, "application_id" | "id" | "token" | "type" | "version"> {}
 export interface RawApplicationCommandInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawApplicationCommandInteractionData; }
-export interface RawMessageComponentInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawMessageComponentInteractionData; message: RawMessage; }
+export interface RawMessageComponentInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawMessageComponentInteractionData; message: Types.Channels.RawMessage; }
 export interface RawAutocompleteInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawAutocompleteInteractionData; }
-export interface RawModalSubmitInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawModalSubmitInteractionData; message?: RawMessage; }
+export interface RawModalSubmitInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawModalSubmitInteractionData; message?: Types.Channels.RawMessage; }
 
 export type RawInteractionData = RawApplicationCommandInteractionData | RawMessageComponentInteractionData | RawAutocompleteInteractionData | RawModalSubmitInteractionData;
 export type InteractionData = ApplicationCommandInteractionData | MessageComponentInteractionData | AutocompleteInteractionData | ModalSubmitInteractionData;
@@ -138,7 +125,7 @@ export interface RawApplicationCommandInteractionData {
     target_id?: string;
     type: ApplicationCommandTypes;
 }
-export interface ApplicationCommandInteractionData<T extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> {
+export interface ApplicationCommandInteractionData<T extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> {
     guildID?: string;
     id: string;
     name: string;
@@ -152,17 +139,17 @@ export interface RawAutocompleteInteractionData extends Omit<RawApplicationComma
 export interface AutocompleteInteractionData extends Omit<ApplicationCommandInteractionData, "resolved" | "target" | "targetID"> {}
 
 export interface RawMessageComponentInteractionResolvedData {
-    channels?: Record<string, RawInteractionResolvedChannel>;
-    members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
-    roles?: Record<string, RawRole>;
-    users?: Record<string, RawUser>;
+    channels?: Record<string, Types.Channels.RawInteractionResolvedChannel>;
+    members?: Record<string, Omit<Types.Guilds.RawMember, "user" | "deaf" | "mute">>;
+    roles?: Record<string, Types.Guilds.RawRole>;
+    users?: Record<string, Types.Users.RawUser>;
 }
 
 export interface MessageComponentInteractionResolvedData {
-    channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
-    members: TypedCollection<RawMember, Member, [guildID: string]>;
-    roles: TypedCollection<RawRole, Role, [guildID: string]>;
-    users: TypedCollection<RawUser, User>;
+    channels: TypedCollection<Types.Channels.RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<Types.Guilds.RawMember, Member, [guildID: string]>;
+    roles: TypedCollection<Types.Guilds.RawRole, Role, [guildID: string]>;
+    users: TypedCollection<Types.Users.RawUser, User>;
 }
 
 export interface RawMessageComponentInteractionData {
@@ -186,19 +173,19 @@ export interface MessageComponentSelectMenuInteractionData {
 }
 
 export interface RawModalSubmitInteractionResolvedData {
-    attachments?: Record<string, RawAttachment>;
-    channels?: Record<string, RawInteractionResolvedChannel>;
-    members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
-    roles?: Record<string, RawRole>;
-    users?: Record<string, RawUser>;
+    attachments?: Record<string, Types.Channels.RawAttachment>;
+    channels?: Record<string, Types.Channels.RawInteractionResolvedChannel>;
+    members?: Record<string, Omit<Types.Guilds.RawMember, "user" | "deaf" | "mute">>;
+    roles?: Record<string, Types.Guilds.RawRole>;
+    users?: Record<string, Types.Users.RawUser>;
 }
 
 export interface ModalSubmitInteractionResolvedData {
-    attachments: TypedCollection<RawAttachment, Attachment>;
-    channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
-    members: TypedCollection<RawMember, Member, [guildID: string]>;
-    roles: TypedCollection<RawRole, Role, [guildID: string]>;
-    users: TypedCollection<RawUser, User>;
+    attachments: TypedCollection<Types.Channels.RawAttachment, Attachment>;
+    channels: TypedCollection<Types.Channels.RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<Types.Guilds.RawMember, Member, [guildID: string]>;
+    roles: TypedCollection<Types.Guilds.RawRole, Role, [guildID: string]>;
+    users: TypedCollection<Types.Users.RawUser, User>;
 }
 
 export interface RawModalSubmitInteractionData {
@@ -214,21 +201,21 @@ export interface ModalSubmitInteractionData {
 }
 
 export interface RawApplicationCommandInteractionResolvedData {
-    attachments?: Record<string, RawAttachment>;
-    channels?: Record<string, RawInteractionResolvedChannel>;
-    members?: Record<string, Omit<RawMember, "user" | "deaf" | "mute">>;
-    messages?: Record<string, RawMessage>;
-    roles?: Record<string, RawRole>;
-    users?: Record<string, RawUser>;
+    attachments?: Record<string, Types.Channels.RawAttachment>;
+    channels?: Record<string, Types.Channels.RawInteractionResolvedChannel>;
+    members?: Record<string, Omit<Types.Guilds.RawMember, "user" | "deaf" | "mute">>;
+    messages?: Record<string, Types.Channels.RawMessage>;
+    roles?: Record<string, Types.Guilds.RawRole>;
+    users?: Record<string, Types.Users.RawUser>;
 }
 
 export interface ApplicationCommandInteractionResolvedData {
-    attachments: TypedCollection<RawAttachment, Attachment>;
-    channels: TypedCollection<RawInteractionResolvedChannel, InteractionResolvedChannel>;
-    members: TypedCollection<RawMember, Member, [guildID: string]>;
-    messages: TypedCollection<RawMessage, Message>;
-    roles: TypedCollection<RawRole, Role, [guildID: string]>;
-    users: TypedCollection<RawUser, User>;
+    attachments: TypedCollection<Types.Channels.RawAttachment, Attachment>;
+    channels: TypedCollection<Types.Channels.RawInteractionResolvedChannel, InteractionResolvedChannel>;
+    members: TypedCollection<Types.Guilds.RawMember, Member, [guildID: string]>;
+    messages: TypedCollection<Types.Channels.RawMessage, Message>;
+    roles: TypedCollection<Types.Guilds.RawRole, Role, [guildID: string]>;
+    users: TypedCollection<Types.Users.RawUser, User>;
 }
 
 export type InteractionOptions = InteractionOptionsWithOptions | InteractionOptionsWithValue;
@@ -287,7 +274,7 @@ export interface AutocompleteChoice {
     /** The name of the choice. */
     name: string;
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized names. */
-    nameLocalizations?: LocaleMap;
+    nameLocalizations?: Types.Applications.LocaleMap;
     /** The value of the choice. */
     value: string;
 }
@@ -309,27 +296,27 @@ type Privatify<T extends Interaction> = Omit<T, "guild" | "guildID" | "guildLoca
     memberPermissions: undefined;
 };
 
-export interface GuildAutocompleteInteraction extends Guildify<AutocompleteInteraction<AnyTextableGuildChannel>> {}
-export interface PrivateAutocompleteInteraction extends Privatify<AutocompleteInteraction<AnyPrivateChannel | Uncached>> {}
+export interface GuildAutocompleteInteraction extends Guildify<AutocompleteInteraction<Types.Channels.AnyTextableGuildChannel>> {}
+export interface PrivateAutocompleteInteraction extends Privatify<AutocompleteInteraction<Types.Channels.AnyPrivateChannel | Types.Shared.Uncached>> {}
 export type AnyAutocompleteInteraction = GuildAutocompleteInteraction | PrivateAutocompleteInteraction;
 
-export interface GuildCommandInteraction extends Guildify<CommandInteraction<AnyTextableGuildChannel>> {}
-export interface PrivateCommandInteraction extends Privatify<CommandInteraction<AnyPrivateChannel | Uncached>> {}
+export interface GuildCommandInteraction extends Guildify<CommandInteraction<Types.Channels.AnyTextableGuildChannel>> {}
+export interface PrivateCommandInteraction extends Privatify<CommandInteraction<Types.Channels.AnyPrivateChannel | Types.Shared.Uncached>> {}
 export type AnyCommandInteraction = GuildCommandInteraction | PrivateCommandInteraction;
 
-export interface GuildComponentButtonInteraction extends Guildify<ComponentInteraction<ComponentTypes.BUTTON, AnyTextableGuildChannel>> {}
-export interface GuildComponentSelectMenuInteraction extends Guildify<ComponentInteraction<SelectMenuTypes, AnyTextableGuildChannel>> {}
+export interface GuildComponentButtonInteraction extends Guildify<ComponentInteraction<ComponentTypes.BUTTON, Types.Channels.AnyTextableGuildChannel>> {}
+export interface GuildComponentSelectMenuInteraction extends Guildify<ComponentInteraction<SelectMenuTypes, Types.Channels.AnyTextableGuildChannel>> {}
 export type GuildComponentInteraction = GuildComponentButtonInteraction | GuildComponentSelectMenuInteraction;
 
-export interface PrivateComponentButtonInteraction extends Privatify<ComponentInteraction<ComponentTypes.BUTTON, AnyPrivateChannel | Uncached>> {}
-export interface PrivateComponentSelectMenuInteraction extends Privatify<ComponentInteraction<SelectMenuTypes, AnyPrivateChannel | Uncached>> {}
+export interface PrivateComponentButtonInteraction extends Privatify<ComponentInteraction<ComponentTypes.BUTTON, Types.Channels.AnyPrivateChannel | Types.Shared.Uncached>> {}
+export interface PrivateComponentSelectMenuInteraction extends Privatify<ComponentInteraction<SelectMenuTypes, Types.Channels.AnyPrivateChannel | Types.Shared.Uncached>> {}
 export type PrivateComponentInteraction = PrivateComponentButtonInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentButtonInteraction = GuildComponentButtonInteraction | PrivateComponentButtonInteraction;
 export type AnyComponentSelectMenuInteraction = GuildComponentSelectMenuInteraction | PrivateComponentSelectMenuInteraction;
 export type AnyComponentInteraction = AnyComponentButtonInteraction | AnyComponentSelectMenuInteraction;
 
-export interface GuildModalSubmitInteraction extends Guildify<ModalSubmitInteraction<AnyTextableGuildChannel>> {}
-export interface PrivateModalSubmitInteraction extends Privatify<ModalSubmitInteraction<AnyPrivateChannel | Uncached>> {}
+export interface GuildModalSubmitInteraction extends Guildify<ModalSubmitInteraction<Types.Channels.AnyTextableGuildChannel>> {}
+export interface PrivateModalSubmitInteraction extends Privatify<ModalSubmitInteraction<Types.Channels.AnyPrivateChannel | Types.Shared.Uncached>> {}
 export type AnyModalSubmitInteraction = GuildModalSubmitInteraction | PrivateModalSubmitInteraction;
 
 export type SubCommandArray = [subcommand: string] | [subcommandGroup: string, subcommand: string];
@@ -465,7 +452,7 @@ export interface RawInteractionCallback {
 
 export interface RawInteractionCallbackResource {
     activity_instance?: Array<InteractionCallbackActivityInstance>;
-    message?: RawMessage;
+    message?: Types.Channels.RawMessage;
     type: InteractionResponseTypes;
 }
 
@@ -474,7 +461,7 @@ export interface InteractionCallbackActivityInstance {
     id: string;
 }
 
-export interface InteractionCallbackResponse<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> {
+export interface InteractionCallbackResponse<CH extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached> {
     /** The interaction object associated with the interaction response. */
     interaction: InteractionCallback;
     /** The resource that was created by the interaction response. */
@@ -496,7 +483,7 @@ export interface InteractionCallback {
     type: InteractionTypes;
 }
 
-export interface InteractionCallbackResource<CH extends AnyInteractionChannel | Uncached = AnyInteractionChannel | Uncached> {
+export interface InteractionCallbackResource<CH extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached> {
     /** Represents the Activity launched by this interaction. Only present if type is `LAUNCH_ACTIVITY`. */
     activityInstance?: Array<InteractionCallbackActivityInstance>;
     /** Message created by the interaction. Only present if type is either `CHANNEL_MESSAGE_WITH_SOURCE` or `UPDATE_MESSAGE`. */

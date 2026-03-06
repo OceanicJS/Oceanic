@@ -1,17 +1,4 @@
-import type { RawInviteGuild, RawInviteRole, RawMember } from "./guilds";
-import type {
-    AnyDMInviteChannel,
-    AnyGuildInviteChannel,
-    AnyInviteChannel,
-    PartialChannel,
-    PartialDMInviteChannel,
-    PartialGuildInviteChannel,
-    PartialInviteChannel
-} from "./channels";
-import type { RawScheduledEvent } from "./scheduled-events";
-import type { RawPartialApplication } from "./applications";
-import type { RawUser } from "./users";
-import type { Uncached } from "./shared";
+import type * as Types from "./namespaced";
 import type { InviteTargetTypes, InviteTargetUsersJobStatus, InviteTypes } from "../Constants";
 import type Member from "../structures/Member";
 
@@ -19,25 +6,25 @@ export interface RawInvite {
     approximate_member_count?: number;
     approximate_presence_count?: number;
     // the gateway only gets an id
-    channel?: PartialChannel;
+    channel?: Types.Channels.PartialChannel;
     // gateway
     channel_id?: string;
     code: string;
     created_at?: string;
     expires_at?: string;
     flags?: number;
-    guild?: RawInviteGuild;
+    guild?: Types.Guilds.RawInviteGuild;
     guild_id?: string;
-    guild_scheduled_event?: RawScheduledEvent;
-    inviter?: RawUser;
+    guild_scheduled_event?: Types.ScheduledEvents.RawScheduledEvent;
+    inviter?: Types.Users.RawUser;
     max_age?: number;
     max_uses?: number;
-    roles?: Array<RawInviteRole>;
+    roles?: Array<Types.Guilds.RawInviteRole>;
     /** @deprecated */
     stage_instance?: RawInviteStageInstance;
-    target_application?: RawPartialApplication;
+    target_application?: Types.Applications.RawPartialApplication;
     target_type?: InviteTargetTypes;
-    target_user?: RawUser;
+    target_user?: Types.Users.RawUser;
     temporary?: boolean;
     type: InviteTypes;
     uses?: number;
@@ -45,7 +32,7 @@ export interface RawInvite {
 
 
 export interface RawInviteStageInstance {
-    members: Array<RawMember>;
+    members: Array<Types.Guilds.RawMember>;
     participant_count: number;
     speaker_count: number;
     topic: string;
@@ -135,6 +122,6 @@ export interface GetInviteWithNoneOptions extends Omit<GetInviteOptions, "withCo
     /** If the invite should contain approximate member counts. */
     withCounts?: false;
 }
-export type InviteChannel = AnyInviteChannel | PartialInviteChannel | Uncached;
-export type DMInviteChannel = AnyDMInviteChannel | PartialDMInviteChannel | Uncached;
-export type GuildInviteChannel = AnyGuildInviteChannel | PartialGuildInviteChannel | Uncached;
+export type InviteChannel = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached;
+export type DMInviteChannel = Types.Channels.AnyDMInviteChannel | Types.Channels.PartialDMInviteChannel | Types.Shared.Uncached;
+export type GuildInviteChannel = Types.Channels.AnyGuildInviteChannel | Types.Channels.PartialGuildInviteChannel | Types.Shared.Uncached;

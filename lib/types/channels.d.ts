@@ -1,10 +1,5 @@
 /** @module Types/Channels */
-import type { NullablePartialEmoji, PartialEmoji, RawMember } from "./guilds";
-import type { RESTApplication, RawApplication } from "./applications";
-import type { RawUser, RawUserWithMember } from "./users";
-import type { File } from "./request-handler";
-import type { Uncached, Nullable } from "./shared";
-import type { AuthorizingIntegrationOwners, SelectMenuDefaultValue } from "./interactions";
+import type * as Types from "./namespaced";
 import type {
     ButtonStyles,
     ChannelTypes,
@@ -88,7 +83,7 @@ export interface RawChannel {
     permissions?: string;
     position?: number;
     rate_limit_per_user?: number;
-    recipients?: Array<RawUser>;
+    recipients?: Array<Types.Users.RawUser>;
     rtc_region?: string | null;
     status?: string | null;
     thread_metadata?: RawThreadMetadata;
@@ -156,7 +151,7 @@ export interface RawThreadMember {
     flags: number;
     id: string;
     join_timestamp: string;
-    member?: RawMember;
+    member?: Types.Guilds.RawMember;
     user_id: string;
 }
 export type RawChannelThreadMember = Pick<RawThreadMember, "flags" | "join_timestamp">;
@@ -307,7 +302,7 @@ export interface CreateMessageOptions {
     /** If Discord should enforce the unique nonce. This prevents duplicate messages being sent within a few minutes. */
     enforceNonce?: boolean;
     /** The files to send. */
-    files?: Array<File>;
+    files?: Array<Types.RequestHandler.File>;
     /** The {@link Constants.MessageFlags | Message Flags} to send with the message. */
     flags?: number;
     /** Reply to a message. */
@@ -497,9 +492,9 @@ export interface MessageReference {
 }
 
 export interface RawAttachment {
-    application?: RESTApplication;
+    application?: Types.Applications.RESTApplication;
     clip_created_at?: string;
-    clip_participants?: Array<RawUser>;
+    clip_participants?: Array<Types.Users.RawUser>;
     content_type?: string;
     description?: string;
     duration_secs?: number;
@@ -530,10 +525,10 @@ export interface RawAllowedMentions {
 
 export interface RawMessage {
     activity?: MessageActivity;
-    application?: RawApplication; // @TODO specific properties sent
+    application?: Types.Applications.RawApplication; // @TODO specific properties sent
     application_id?: string;
     attachments: Array<RawAttachment>;
-    author: RawUser; // this can be an invalid user if `webhook_id` is set
+    author: Types.Users.RawUser; // this can be an invalid user if `webhook_id` is set
     call?: RawCall;
     channel_id: string;
     components?: Array<RawMessageComponent>;
@@ -546,11 +541,11 @@ export interface RawMessage {
     /** @deprecated */
     interaction?: RawMessageInteraction;
     interaction_metadata?: RawMessageInteractionMetadata;
-    member?: RawMember;
+    member?: Types.Guilds.RawMember;
     mention_channels?: Array<ChannelMention>;
     mention_everyone: boolean;
     mention_roles: Array<string>;
-    mentions: Array<RawUserWithMember>;
+    mentions: Array<Types.Users.RawUserWithMember>;
     message_reference?: RawMessageReference;
     message_snapshots?: Array<RawMessageSnapshot>;
     nonce?: number | string;
@@ -576,7 +571,7 @@ export interface RawSoundboard {
     guild_id?: string;
     name: string;
     sound_id: string;
-    user?: RawUser;
+    user?: Types.Users.RawUser;
     volume: number;
 }
 
@@ -606,7 +601,7 @@ export interface RawMessageReaction {
     burst_colors: Array<string>;
     count: number;
     count_details: MessageReactionCountDetails;
-    emoji: PartialEmoji;
+    emoji: Types.Guilds.PartialEmoji;
     me: boolean;
     me_burst: boolean;
 }
@@ -615,7 +610,7 @@ export interface MessageReaction {
     burstColors: Array<string>;
     count: number;
     countDetails: MessageReactionCountDetails;
-    emoji: PartialEmoji;
+    emoji: Types.Guilds.PartialEmoji;
     me: boolean;
     meBurst: boolean;
 }
@@ -635,10 +630,10 @@ export interface RawMessageReference {
 
 export interface RawMessageInteraction {
     id: string;
-    member?: RawMember;
+    member?: Types.Guilds.RawMember;
     name: string;
     type: InteractionTypes;
-    user: RawUser;
+    user: Types.Users.RawUser;
 }
 
 /** @deprecated */
@@ -651,21 +646,21 @@ export interface MessageInteraction {
 }
 
 export interface RawMessageInteractionMetadata {
-    authorizing_integration_owners: AuthorizingIntegrationOwners;
+    authorizing_integration_owners: Types.Interactions.AuthorizingIntegrationOwners;
     id: string;
     interacted_message_id?: string;
     name?: string;
     original_response_message_id?: string;
     target_message_id?: string;
-    target_user?: RawUser;
+    target_user?: Types.Users.RawUser;
     triggering_interaction_metadata?: Omit<RawMessageInteractionMetadata, "triggering_interaction_metadata">;
     type: InteractionTypes;
-    user: RawUser;
+    user: Types.Users.RawUser;
 }
 
 export interface MessageInteractionMetadata {
     /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
-    authorizingIntegrationOwners: AuthorizingIntegrationOwners;
+    authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
     id: string;
     /** The ID of the message that contained interactive component, present only on messages created from component interactions. */
     interactedMessageID?: string;
@@ -761,12 +756,12 @@ export interface PartialDMInviteChannel extends Omit<PartialInviteChannel, "type
 
 export type PossiblyUncachedInvite = Invite | UncachedInvite;
 export interface UncachedInvite {
-    channel?: AnyInviteChannel | Uncached;
+    channel?: AnyInviteChannel | Types.Shared.Uncached;
     code: string;
-    guild?: Guild | Uncached;
+    guild?: Guild | Types.Shared.Uncached;
 }
 
-export interface GetChannelMessagesOptions<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> {
+export interface GetChannelMessagesOptions<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
     /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     after?: string;
     /** Get messages around this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
@@ -782,7 +777,7 @@ export interface GetChannelMessagesOptions<T extends AnyTextableChannel | Uncach
     filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
 }
 
-export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> {
+export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
     /** Get messages after this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
     after?: string;
     /** Get messages before this message ID. IDs don't need to be valid, an ID can be generated for any timestamp via {@link Base.generateID | Base#generateID}. */
@@ -796,7 +791,7 @@ export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel 
     filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
 }
 
-export interface MessagesIterator<T extends AnyTextableChannel | Uncached = AnyTextableChannel | Uncached> extends AsyncIterable<Array<Message<T>>> {
+export interface MessagesIterator<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> extends AsyncIterable<Array<Message<T>>> {
     /** The most recent "last" message seen by the iterator, used for future requests. */
     lastMessage?: string;
     /** The current limit of remaining messages to get. */
@@ -819,7 +814,7 @@ export interface SendSoundboardSoundOptions {
     sourceGuildID?: string;
 }
 
-export interface EditMessageOptions extends Nullable<Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags">> {}
+export interface EditMessageOptions extends Types.Shared.Nullable<Pick<CreateMessageOptions, "content" | "embeds" | "allowedMentions" | "components" | "attachments" | "files" | "flags">> {}
 
 export interface EditPermissionOptions {
     /** The permissions to allow. */
@@ -930,26 +925,26 @@ export type PossiblyUncachedMessage = Message | UncachedEventMessage;
 export type PossiblyUncachedThread = AnyThreadChannel | UncachedEventThread;
 export type MinimalPossiblyUncachedThread = AnyThreadChannel | MinimalPossiblyUncachedEventThread;
 
-export interface UncachedEventMessage extends Uncached {
-    channel: AnyTextableChannel | Uncached;
+export interface UncachedEventMessage extends Types.Shared.Uncached {
+    channel: AnyTextableChannel | Types.Shared.Uncached;
     channelID: string;
     guild?: Guild;
     guildID?: string;
 }
 
-export interface UncachedEventThread extends Pick<AnyThreadChannel, "type">, Uncached {
+export interface UncachedEventThread extends Pick<AnyThreadChannel, "type">, Types.Shared.Uncached {
     guild?: Guild;
     guildID?: string;
-    parent?: ThreadParentChannel | Uncached;
+    parent?: ThreadParentChannel | Types.Shared.Uncached;
     parentID: string;
 }
 
-export interface MinimalPossiblyUncachedEventThread extends Uncached {
+export interface MinimalPossiblyUncachedEventThread extends Types.Shared.Uncached {
     guild?: Guild;
     guildID: string;
 }
 
-export interface PurgeOptions<T extends AnyTextableGuildChannel | Uncached> {
+export interface PurgeOptions<T extends AnyTextableGuildChannel | Types.Shared.Uncached> {
     /** The ID of the message to purge after. */
     after?: string;
     /** The ID of the message to purge around. */
@@ -1023,7 +1018,7 @@ export interface RawPollResults {
 
 export interface PollMedia {
     /** The emoji to dispaly. */
-    emoji?: NullablePartialEmoji;
+    emoji?: Types.Guilds.NullablePartialEmoji;
     // @FIXME: Discord has said this is currently always nonnull, but not to depend on that in the future (https://github.com/discord/discord-api-docs/pull/6746)
     /** The text. */
     text: string;
@@ -1067,7 +1062,7 @@ export interface PollAnswerCount {
 export interface EventReaction {
     burst: boolean;
     burstColors?: Array<string>;
-    emoji: PartialEmoji;
+    emoji: Types.Guilds.PartialEmoji;
     type: ReactionType;
 }
 
@@ -1223,7 +1218,7 @@ export interface ModalActionRow extends ActionRowBase<ModalActionRowComponent> {
 
 export interface ButtonBase extends BaseComponent {
     disabled?: boolean;
-    emoji?: NullablePartialEmoji;
+    emoji?: Types.Guilds.NullablePartialEmoji;
     label?: string;
     style: ButtonStyles;
     type: ComponentTypes.BUTTON;
@@ -1290,11 +1285,11 @@ export interface SelectMenuBase<T extends SelectMenuTypes> extends BaseComponent
 }
 
 interface DefaultValuesRaw {
-    default_values?: Array<SelectMenuDefaultValue>;
+    default_values?: Array<Types.Interactions.SelectMenuDefaultValue>;
 }
 
 interface DefaultValues {
-    defaultValues?: Array<SelectMenuDefaultValue>;
+    defaultValues?: Array<Types.Interactions.SelectMenuDefaultValue>;
 }
 
 export interface StringSelectMenuOptions {
@@ -1314,7 +1309,7 @@ export interface ChannelSelectMenu extends SelectMenuBase<ComponentTypes.CHANNEL
 export interface SelectOption {
     default?: boolean;
     description?: string;
-    emoji?: NullablePartialEmoji;
+    emoji?: Types.Guilds.NullablePartialEmoji;
     label: string;
     value: string;
 }

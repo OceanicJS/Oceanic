@@ -1,5 +1,5 @@
 /** @module Types/Miscellaneous */
-import type { RawUser } from "./users";
+import type * as Types from "./namespaced";
 
 export interface RawRefreshAttachmentURLsResponse {
     refreshed_urls: Array<RefreshedAttachment>;
@@ -21,5 +21,5 @@ export interface Emoji {
     name: string;
     require_colons?: boolean;
     roles?: Array<string>;
-    user?: RawUser;
+    user?: Types.Users.RawUser;
 }
