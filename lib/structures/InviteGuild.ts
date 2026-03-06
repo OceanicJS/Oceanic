@@ -57,6 +57,14 @@ export default class InviteGuild extends Base {
         return this.banner === null ? null : this.client.util.formatImage(Routes.BANNER(this.id, this.banner), format, size);
     }
 
+    /** Get the complete guild this InviteGuild represents. */
+    async getCompleteGuild(): Promise<Guild> {
+        if (this.completeGuild) return this.completeGuild;
+        const guild = await this.client.rest.guilds.get(this.id);
+        this._cachedCompleteGuild = guild;
+        return guild;
+    }
+
     /**
      * The url of this guild's icon.
      * @param format The format the url should be.

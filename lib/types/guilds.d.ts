@@ -999,3 +999,5 @@ export interface GuildProfile {
     /** The 1-4 character text seen beside user's names when they adopt a server's tag. */
     tag: string;
 }
+
+export interface RawInviteRole extends Pick<RawRole, "id" | "name" | "position" | "color" | "colors" | "icon" | "unicode_emoji" | "permissions"> {}

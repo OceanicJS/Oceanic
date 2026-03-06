@@ -5,6 +5,7 @@ import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
 import InviteGuild from "./InviteGuild";
+import InviteRole from "./InviteRole";
 import type {
     AnyInviteChannel,
     InviteInfoTypes,
@@ -50,7 +51,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
     /** The maximum number of times this invite can be used, */
     maxUses!: T extends "withMetadata" ? number : never;
     /** The roles assigned to the user upon accepting the invite . */
-    roles?: Array<string>;
+    roles?: Array<InviteRole>;
     /** @deprecated The stage instance in the invite this channel is for. */
     stageInstance?: InviteStageInstance;
     /** The embedded application this invite will open. */
@@ -76,9 +77,8 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
         this.code = data.code;
         this.flags = data.flags ?? 0;
         this.guild = null;
-        this.guildID = data.guild?.id ?? null;
+        this.guildID = data.guild_id ?? null;
         this.expiresAt = (data.expires_at ? new Date(data.expires_at) : undefined) as never;
-        this.roles = data.roles;
         this.targetType = data.target_type;
         this.type = data.type;
         this.update(data);
@@ -125,6 +125,9 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
 
         if (data.inviter !== undefined) {
             this.inviter = this.client.users.update(data.inviter);
+        }
+        if (data.roles !== undefined) {
+            this.roles = data.roles?.map(role => new InviteRole(role, this.client, data.guild_id!, this.guild!));
         }
         if (data.stage_instance !== undefined) {
             this.stageInstance = {
@@ -211,10 +214,10 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             guild:                    this.guild?.toJSON(),
             guildID:                  this.guildID ?? undefined,
             guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
-            inviter:                  this.inviter?.id,
+            inviter:                  this.inviter?.toJSON(),
             maxAge:                   this.maxAge,
             maxUses:                  this.maxUses,
-            roles:                    this.roles,
+            roles:                    this.roles?.map(role => role.toJSON()),
             stageInstance:            this.stageInstance ? {
                 members:          this.stageInstance.members.map(member => member.id),
                 participantCount: this.stageInstance.participantCount,
@@ -223,7 +226,7 @@ export default class Invite<T extends InviteInfoTypes = "withMetadata", CH exten
             } : undefined,
             targetApplication: this.targetApplication?.toJSON(),
             targetType:        this.targetType,
-            targetUser:        this.targetUser?.id,
+            targetUser:        this.targetUser?.toJSON(),
             temporary:         this.temporary,
             uses:              this.uses
         };

@@ -410,10 +410,10 @@ export interface JSONInvite {
     guild?: JSONInviteGuild;
     guildID?: string;
     guildScheduledEvent?: JSONScheduledEvent;
-    inviter?: string;
+    inviter?: JSONUser;
     maxAge?: number;
     maxUses?: number;
-    roles?: Array<string>;
+    roles?: Array<JSONInviteRole>;
     stageInstance?: {
         members: Array<string>;
         participantCount: number;
@@ -422,7 +422,7 @@ export interface JSONInvite {
     };
     targetApplication?: JSONPartialApplication;
     targetType?: InviteTargetTypes;
-    targetUser?: string;
+    targetUser?: JSONUser;
     temporary?: boolean;
     uses?: number;
 }
@@ -437,6 +437,18 @@ export interface JSONInviteGuild extends JSONBase {
     splash: string | null;
     vanityURLCode: string | null;
     verificationLevel: VerificationLevels;
+}
+export interface JSONInviteRole extends JSONBase {
+    /** @deprecated */
+    color: number;
+    colors: RoleColors;
+    guild: JSONInviteGuild;
+    guildID: string;
+    icon: string | null;
+    name: string;
+    permissions: JSONPermission;
+    position: number;
+    unicodeEmoji: string | null;
 }
 export interface JSONMediaChannel extends JSONThreadOnlyChannel {
     type: ChannelTypes.GUILD_MEDIA;

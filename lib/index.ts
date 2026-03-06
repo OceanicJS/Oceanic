@@ -42,6 +42,7 @@ export { default as InteractionResolvedChannel } from "./structures/InteractionR
 export { default as InteractionOptionsWrapper } from "./util/interactions/InteractionOptionsWrapper";
 export { default as Invite } from "./structures/Invite";
 export { default as InviteGuild } from "./structures/InviteGuild";
+export { default as InviteRole } from "./structures/InviteRole";
 export { default as MediaChannel } from "./structures/MediaChannel";
 export { default as Member } from "./structures/Member";
 export { default as Message } from "./structures/Message";

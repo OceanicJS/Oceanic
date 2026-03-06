@@ -1,5 +1,11 @@
 /** @module Types/Channels */
-import type { NullablePartialEmoji, PartialEmoji, RawInviteGuild, RawMember } from "./guilds";
+import type {
+    NullablePartialEmoji,
+    PartialEmoji,
+    RawInviteGuild,
+    RawInviteRole,
+    RawMember
+} from "./guilds";
 import type { RESTApplication, RawApplication, RawPartialApplication } from "./applications";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
@@ -833,9 +839,10 @@ export interface RawInvite {
     expires_at?: string;
     flags?: number;
     guild?: RawInviteGuild;
+    guild_id?: string;
     guild_scheduled_event?: RawScheduledEvent;
     inviter?: RawUser;
-    roles?: Array<string>;
+    roles?: Array<RawInviteRole>;
     /** @deprecated */
     stage_instance?: RawInviteStageInstance;
     target_application?: RawPartialApplication;
