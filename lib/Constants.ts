@@ -779,7 +779,7 @@ export enum OAuthScopes {
     IDENTIFY = "identify",
     /** for local rpc server api access, this allows you to read messages from all client channels (otherwise restricted to channels/guilds your app creates) */
     MESSAGES_READ = "messages.read",
-    /** allows your app to know a user's friends and implicit relationships - requires Discord approval */
+    /** allows your app to know a user's friends and implicit relationships */
     RELATIONSHIPS_READ = "relationships.read",
     /** allows your app to update a user's connection and metadata for the app */
     ROLE_CONNECTIONS_WRITE = "role_connections.write",
