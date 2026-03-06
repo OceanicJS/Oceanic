@@ -1,6 +1,7 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
 import { FrozenModificationError } from "./Errors";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import {
     ButtonStyles,
@@ -15,58 +16,8 @@ import {
     type ApplicationFlags,
     type PrivilegedIntentNames
 } from "../Constants";
-import type {
-    AllowedMentions,
-    AnyChannel,
-    AnyThreadChannel,
-    Component,
-    Embed,
-    EmbedOptions,
-    RawAllowedMentions,
-    RawChannel,
-    RawComponent,
-    RawEmbed,
-    RawEmbedOptions,
-    RawGuildChannel,
-    RawThreadChannel,
-    ToComponentFromRaw,
-    ToRawFromComponent
-} from "../types/channels";
-import type { RawMember, RawSticker, RESTMember, Sticker } from "../types/guilds";
-import type { ApplicationCommandOptions, CombinedApplicationCommandOption, RawApplicationCommandOption } from "../types/applications";
 import Member from "../structures/Member";
 import Channel from "../structures/Channel";
-import type {
-    AnyTextableChannel,
-    CollectionLimitsOptions,
-    GuildEmoji,
-    ModalSubmitComponentsActionRow,
-    RawGroupChannel,
-    RawGuildEmoji,
-    RawMessage,
-    RawModalSubmitComponents,
-    RawModalSubmitComponentsActionRow,
-    RawPrivateChannel,
-    RawSelectMenuComponent,
-    RawStringSelectMenu,
-    SelectMenuComponent,
-    StringSelectMenu,
-    ToModalSubmitComponentFromRaw,
-    Uncached,
-    RawBaseEntitlement,
-    RawEntitlement,
-    RawTestEntitlement,
-    ApplicationEmoji,
-    RawApplicationEmoji,
-    MessageComponent,
-    ModalComponent,
-    RawMessageComponent,
-    RawModalComponent,
-    RawModalSubmitComponentsLabel,
-    ModalSubmitComponentsLabel,
-    AnyRawBaseComponent,
-    File
-} from "../types";
 import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
@@ -81,23 +32,23 @@ export default class Util {
         this._client = client;
     }
 
-    static rawEmbeds(embeds: RawEmbed): Embed;
-    static rawEmbeds(embeds: Array<RawEmbed>): Array<Embed>;
-    static rawEmbeds(embeds: RawEmbed | Array<RawEmbed>): Embed | Array<Embed> {
+    static rawEmbeds(embeds: Types.Channels.RawEmbed): Types.Channels.Embed;
+    static rawEmbeds(embeds: Array<Types.Channels.RawEmbed>): Array<Types.Channels.Embed>;
+    static rawEmbeds(embeds: Types.Channels.RawEmbed | Array<Types.Channels.RawEmbed>): Types.Channels.Embed | Array<Types.Channels.Embed> {
         const data = Util.prototype.embedsToParsed(Array.isArray(embeds) ? embeds : [embeds]);
         return Array.isArray(embeds) ? data : data[0];
     }
 
-    static rawMessageComponents(components: RawMessageComponent): MessageComponent;
-    static rawMessageComponents(components: Array<RawMessageComponent>): Array<MessageComponent>;
-    static rawMessageComponents(components: RawMessageComponent | Array<RawMessageComponent>): MessageComponent | Array<MessageComponent> {
+    static rawMessageComponents(components: Types.Channels.RawMessageComponent): Types.Channels.MessageComponent;
+    static rawMessageComponents(components: Array<Types.Channels.RawMessageComponent>): Array<Types.Channels.MessageComponent>;
+    static rawMessageComponents(components: Types.Channels.RawMessageComponent | Array<Types.Channels.RawMessageComponent>): Types.Channels.MessageComponent | Array<Types.Channels.MessageComponent> {
         const data = Util.prototype.componentsToParsed(Array.isArray(components) ? components : [components]);
         return Array.isArray(components) ? data : data[0];
     }
 
-    static rawModalComponents(components: RawModalComponent): ModalComponent;
-    static rawModalComponents(components: Array<RawModalComponent>): Array<ModalComponent>;
-    static rawModalComponents(components: RawModalComponent | Array<RawModalComponent>): ModalComponent | Array<ModalComponent> {
+    static rawModalComponents(components: Types.Channels.RawModalComponent): Types.Channels.ModalComponent;
+    static rawModalComponents(components: Array<Types.Channels.RawModalComponent>): Array<Types.Channels.ModalComponent>;
+    static rawModalComponents(components: Types.Channels.RawModalComponent | Array<Types.Channels.RawModalComponent>): Types.Channels.ModalComponent | Array<Types.Channels.ModalComponent> {
         const data = Util.prototype.componentsToParsed(Array.isArray(components) ? components : [components]);
         return Array.isArray(components) ? data : data[0];
     }
@@ -108,7 +59,7 @@ export default class Util {
     }
 
     /** @hidden intentionally not documented - this is an internal function */
-    _arrayToCSVFile(data: Array<string>, name: string, header?: string): File {
+    _arrayToCSVFile(data: Array<string>, name: string, header?: string): Types.RequestHandler.File {
         return {
             name:     `${name}.csv`,
             field:    name,
@@ -152,7 +103,7 @@ export default class Util {
     }
 
     /** @hidden intended for internal use only */
-    _getLimit(name: Exclude<keyof CollectionLimitsOptions, "users">, id?: string): number {
+    _getLimit(name: Exclude<keyof Types.Client.CollectionLimitsOptions, "users">, id?: string): number {
         const opt = this._client.options.collectionLimits[name];
         if (typeof opt === "number") {
             return opt;
@@ -183,7 +134,7 @@ export default class Util {
         return values;
     }
 
-    componentToParsed<T extends RawComponent>(component: T): ToComponentFromRaw<T> {
+    componentToParsed<T extends Types.Channels.RawComponent>(component: T): Types.Channels.ToComponentFromRaw<T> {
         switch (component.type) {
             case ComponentTypes.ACTION_ROW: {
                 return {
@@ -240,7 +191,7 @@ export default class Util {
                 };
 
                 if (component.type !== ComponentTypes.STRING_SELECT && component.default_values !== undefined) {
-                    (parsedComponent as Exclude<SelectMenuComponent, StringSelectMenu>).defaultValues = component.default_values;
+                    (parsedComponent as Exclude<Types.Channels.SelectMenuComponent, Types.Channels.StringSelectMenu>).defaultValues = component.default_values;
                 }
 
                 if (component.type === ComponentTypes.STRING_SELECT) {
@@ -349,7 +300,7 @@ export default class Util {
         }
     }
 
-    componentToRaw<T extends Component>(component: T): ToRawFromComponent<T> {
+    componentToRaw<T extends Types.Channels.Component>(component: T): Types.Channels.ToRawFromComponent<T> {
         switch (component.type) {
             case ComponentTypes.ACTION_ROW: {
                 return {
@@ -408,7 +359,7 @@ export default class Util {
                 };
 
                 if (component.type !== ComponentTypes.STRING_SELECT && component.defaultValues !== undefined) {
-                    (rawComponent as Exclude<RawSelectMenuComponent, RawStringSelectMenu>).default_values = component.defaultValues;
+                    (rawComponent as Exclude<Types.Channels.RawSelectMenuComponent, Types.Channels.RawStringSelectMenu>).default_values = component.defaultValues;
                 }
 
                 if (component.type === ComponentTypes.STRING_SELECT) {
@@ -516,19 +467,19 @@ export default class Util {
         }
     }
 
-    componentsToParsed<T extends AnyRawBaseComponent>(components: Array<T>): Array<ToComponentFromRaw<T>> {
+    componentsToParsed<T extends Types.Channels.AnyRawBaseComponent>(components: Array<T>): Array<Types.Channels.ToComponentFromRaw<T>> {
         return components.map(component => this.componentToParsed(component)) as never;
     }
 
-    componentsToRaw<T extends MessageComponent | ModalComponent>(components: Array<T>): Array<T extends MessageComponent ? RawMessageComponent : T extends ModalComponent ? RawModalComponent : never> {
+    componentsToRaw<T extends Types.Channels.MessageComponent | Types.Channels.ModalComponent>(components: Array<T>): Array<T extends Types.Channels.MessageComponent ? Types.Channels.RawMessageComponent : T extends Types.Channels.ModalComponent ? Types.Channels.RawModalComponent : never> {
         return components.map(component => this.componentToRaw(component)) as never;
     }
 
-    convertApplicationEmoji(raw: RawApplicationEmoji): ApplicationEmoji {
+    convertApplicationEmoji(raw: Types.Applications.RawApplicationEmoji): Types.Applications.ApplicationEmoji {
         return this.convertGuildEmoji(raw);
     }
 
-    convertGuildEmoji(raw: RawGuildEmoji): GuildEmoji {
+    convertGuildEmoji(raw: Types.Guilds.RawGuildEmoji): Types.Guilds.GuildEmoji {
         return {
             animated:      raw.animated,
             available:     raw.available,
@@ -597,7 +548,7 @@ export default class Util {
         return audio;
     }
 
-    convertSticker(raw: RawSticker): Sticker {
+    convertSticker(raw: Types.Guilds.RawSticker): Types.Guilds.Sticker {
         return {
             asset:       raw.asset,
             available:   raw.available,
@@ -632,7 +583,7 @@ export default class Util {
         return missing;
     }
 
-    embedsToParsed(embeds: Array<RawEmbed>): Array<Embed> {
+    embedsToParsed(embeds: Array<Types.Channels.RawEmbed>): Array<Types.Channels.Embed> {
         return embeds.map(embed => ({
             author: embed.author === undefined ? undefined : {
                 name:         embed.author.name,
@@ -683,7 +634,7 @@ export default class Util {
         }));
     }
 
-    embedsToRaw(embeds: Array<EmbedOptions>): Array<RawEmbedOptions> {
+    embedsToRaw(embeds: Array<Types.Channels.EmbedOptions>): Array<Types.Channels.RawEmbedOptions> {
         return embeds.map(embed => ({
             author: embed.author === undefined ? undefined :  {
                 name:     embed.author.name,
@@ -709,8 +660,8 @@ export default class Util {
         }));
     }
 
-    formatAllowedMentions(allowed?: AllowedMentions | null): RawAllowedMentions {
-        const result: RawAllowedMentions = { parse: [] };
+    formatAllowedMentions(allowed?: Types.Channels.AllowedMentions | null): Types.Channels.RawAllowedMentions {
+        const result: Types.Channels.RawAllowedMentions = { parse: [] };
 
         if (!allowed) {
             return this.formatAllowedMentions(this._client.options.allowedMentions);
@@ -753,7 +704,7 @@ export default class Util {
         return [...new Uint8Array(file.subarray(0, len))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
     }
 
-    modalSubmitComponentToParsed<T extends RawModalSubmitComponents>(component: T): ToModalSubmitComponentFromRaw<T> {
+    modalSubmitComponentToParsed<T extends Types.Interactions.RawModalSubmitComponents>(component: T): Types.Interactions.ToModalSubmitComponentFromRaw<T> {
         switch (component.type) {
             case ComponentTypes.TEXT_INPUT: {
                 return {
@@ -781,7 +732,7 @@ export default class Util {
         }
     }
 
-    modalSubmitComponentsToParsed<T extends RawModalSubmitComponentsActionRow | RawModalSubmitComponentsLabel>(components: Array<T>): Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel> {
+    modalSubmitComponentsToParsed<T extends Types.Interactions.RawModalSubmitComponentsActionRow | Types.Interactions.RawModalSubmitComponentsLabel>(components: Array<T>): Array<Types.Interactions.ModalSubmitComponentsActionRow | Types.Interactions.ModalSubmitComponentsLabel> {
         return components.map(row => {
             if (row.type === ComponentTypes.ACTION_ROW) {
                 return {
@@ -797,7 +748,7 @@ export default class Util {
         }) as never;
     }
 
-    optionToParsed(option: RawApplicationCommandOption): ApplicationCommandOptions {
+    optionToParsed(option: Types.Applications.RawApplicationCommandOption): Types.Applications.ApplicationCommandOptions {
         return {
             autocomplete:             option.autocomplete,
             channelTypes:             option.channel_types,
@@ -815,11 +766,11 @@ export default class Util {
             options:                  option.options?.map(o => this.optionToParsed(o)),
             required:                 option.required,
             type:                     option.type
-        } as ApplicationCommandOptions;
+        } as Types.Applications.ApplicationCommandOptions;
     }
 
-    optionToRaw(option: ApplicationCommandOptions): RawApplicationCommandOption {
-        const opt = option as CombinedApplicationCommandOption;
+    optionToRaw(option: Types.Applications.ApplicationCommandOptions): Types.Applications.RawApplicationCommandOption {
+        const opt = option as Types.Applications.CombinedApplicationCommandOption;
         return {
             autocomplete:  opt.autocomplete,
             channel_types: opt.channelTypes,
@@ -836,10 +787,10 @@ export default class Util {
             min_value:                 opt.minValue,
             name:                      opt.name,
             name_localizations:        opt.nameLocalizations,
-            options:                   opt.options?.map(o => this.optionToRaw(o as ApplicationCommandOptions)),
+            options:                   opt.options?.map(o => this.optionToRaw(o as Types.Applications.ApplicationCommandOptions)),
             required:                  opt.required,
             type:                      opt.type
-        } satisfies RawApplicationCommandOption as RawApplicationCommandOption;
+        } satisfies Types.Applications.RawApplicationCommandOption as Types.Applications.RawApplicationCommandOption;
     }
 
     /** @internal */
@@ -861,7 +812,7 @@ export default class Util {
         }
     }
 
-    updateChannel<T extends AnyChannel>(channelData: RawChannel): T {
+    updateChannel<T extends Types.Channels.AnyChannel>(channelData: Types.Channels.RawChannel): T {
         guild: if (channelData.guild_id) {
             const guild = this._client.guilds.get(channelData.guild_id);
             if (guild) {
@@ -869,33 +820,33 @@ export default class Util {
                     if (!channelData.parent_id) {
                         break guild;
                     }
-                    return guild.threads.update(channelData as RawThreadChannel) as T;
+                    return guild.threads.update(channelData as Types.Channels.RawThreadChannel) as T;
                 } else {
-                    return guild.channels.update(channelData as RawGuildChannel) as T;
+                    return guild.channels.update(channelData as Types.Channels.RawGuildChannel) as T;
                 }
             }
         }
 
         switch (channelData.type) {
-            case ChannelTypes.DM: return this._client.privateChannels.update(channelData as RawPrivateChannel) as T;
-            case ChannelTypes.GROUP_DM: return this._client.groupChannels.update(channelData as RawGroupChannel) as T;
+            case ChannelTypes.DM: return this._client.privateChannels.update(channelData as Types.Channels.RawPrivateChannel) as T;
+            case ChannelTypes.GROUP_DM: return this._client.groupChannels.update(channelData as Types.Channels.RawGroupChannel) as T;
             default: return Channel.from<T>(channelData, this._client);
         }
     }
 
     /** @internal */
-    updateEntitlement<T extends Entitlement | TestEntitlement = Entitlement | TestEntitlement>(data: RawBaseEntitlement): T {
+    updateEntitlement<T extends Entitlement | TestEntitlement = Entitlement | TestEntitlement>(data: Types.Applications.RawBaseEntitlement): T {
         if (this._client["_application"] === undefined) {
             return "subscription_id" in data && data.subscription_id ?
-                new Entitlement(data as RawEntitlement, this._client) as T :
-                new TestEntitlement(data as RawTestEntitlement, this._client) as T;
+                new Entitlement(data as Types.Applications.RawEntitlement, this._client) as T :
+                new TestEntitlement(data as Types.Applications.RawTestEntitlement, this._client) as T;
         } else {
             return this._client.application.entitlements.update(data) as T;
         }
     }
 
     /** @internal */
-    updateMember(guildID: string, memberID: string, member: RawMember | RESTMember): Member {
+    updateMember(guildID: string, memberID: string, member: Types.Guilds.RawMember | Types.Guilds.RESTMember): Member {
         const guild = this._client.guilds.get(guildID);
         if (guild && this._client["_user"] && this._client.user.id === memberID) {
             if (guild["_clientMember"]) {
@@ -909,7 +860,7 @@ export default class Util {
     }
 
     /** @internal */
-    updateMessage<T extends AnyTextableChannel | Uncached>(data: RawMessage): Message<T> {
+    updateMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(data: Types.Channels.RawMessage): Message<T> {
         const channel = this._client.getChannel(data.channel_id) as T | undefined;
         if (channel && "messages" in channel) {
             return channel.messages.update(data) as Message<T>;
@@ -951,7 +902,7 @@ export default class Util {
     }
 
     /** @internal */
-    updateThread<T extends AnyThreadChannel>(threadData: RawThreadChannel): T {
+    updateThread<T extends Types.Channels.AnyThreadChannel>(threadData: Types.Channels.RawThreadChannel): T {
         const guild = this._client.guilds.get(threadData.guild_id);
         if (guild) {
             return guild.threads.update(threadData) as T;

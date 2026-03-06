@@ -1,9 +1,9 @@
 /** @module MessageInteractionResponse */
+import type * as Types from "../../types/namespaced";
 import type CommandInteraction from "../../structures/CommandInteraction";
 import type Message from "../../structures/Message";
 import type ComponentInteraction from "../../structures/ComponentInteraction";
 import type ModalSubmitInteraction from "../../structures/ModalSubmitInteraction";
-import type { InteractionCallbackResponse } from "../../types";
 
 export type AnyResponseInteraction = CommandInteraction | ComponentInteraction | ModalSubmitInteraction;
 export type ResponseInteractionChannelType<I extends AnyResponseInteraction> =
@@ -12,11 +12,11 @@ I extends CommandInteraction<infer T> ? T :
         I extends ComponentInteraction<never, infer T> ? T :
             never;
 export default class MessageInteractionResponse<I extends AnyResponseInteraction> {
-    callback: InteractionCallbackResponse | null;
+    callback: Types.Interactions.InteractionCallbackResponse | null;
     declare interaction: I;
     message: Message<ResponseInteractionChannelType<I>> | null;
     type: "initial" | "followup";
-    constructor(interaction: I, message: Message<ResponseInteractionChannelType<I>> | null, type: "initial" | "followup", callback: InteractionCallbackResponse | null) {
+    constructor(interaction: I, message: Message<ResponseInteractionChannelType<I>> | null, type: "initial" | "followup", callback: Types.Interactions.InteractionCallbackResponse | null) {
         this.interaction = interaction;
         this.message = message;
         this.type = type;
@@ -45,7 +45,7 @@ export default class MessageInteractionResponse<I extends AnyResponseInteraction
 }
 
 export interface InitialMessagedInteractionResponse<I extends AnyResponseInteraction> extends MessageInteractionResponse<I> {
-    callback: InteractionCallbackResponse;
+    callback: Types.Interactions.InteractionCallbackResponse;
     message: null;
     type: "initial";
 }

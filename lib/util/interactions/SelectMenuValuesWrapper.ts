@@ -1,12 +1,11 @@
 /** @module SelectMenuValuesWrapper */
 import { mapRawToResolved } from "./shared";
+import type * as Types from "../../types/namespaced";
 import { ChannelTypes } from "../../Constants";
 import type Member from "../../structures/Member";
 import type Role from "../../structures/Role";
 import type User from "../../structures/User";
 import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
-import type { AnyImplementedChannel } from "../../types/channels";
-import type { MessageComponentInteractionResolvedData } from "../../types/interactions";
 import Collection from "../Collection";
 
 /** A wrapper for select menu data. */
@@ -14,8 +13,8 @@ export default class SelectMenuValuesWrapper {
     /** The raw received values. */
     raw: Array<string>;
     /** The resolved data for this instance. */
-    resolved: MessageComponentInteractionResolvedData;
-    constructor(resolved: MessageComponentInteractionResolvedData, values: Array<string>) {
+    resolved: Types.Interactions.MessageComponentInteractionResolvedData;
+    constructor(resolved: Types.Interactions.MessageComponentInteractionResolvedData, values: Array<string>) {
         this.resolved = resolved;
         this.raw = values;
     }
@@ -36,7 +35,7 @@ export default class SelectMenuValuesWrapper {
      * If `ensurePresent` is false, channels that aren't in resolved will be ignored.
      * @param ensurePresent If true, an error will be thrown if any value cannot be mapped to a channel.
      */
-    getCompleteChannels(ensurePresent?: boolean): Array<AnyImplementedChannel | InteractionResolvedChannel> {
+    getCompleteChannels(ensurePresent?: boolean): Array<Types.Channels.AnyImplementedChannel | InteractionResolvedChannel> {
         return this.getChannels(ensurePresent).map(ch => ch.type === ChannelTypes.DM ? ch.completeChannel ?? ch : ch);
     }
 

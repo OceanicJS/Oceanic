@@ -1,8 +1,8 @@
 /** @module TypedCollection */
 import Collection from "./Collection";
+import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import Base from "../structures/Base";
-import type { AnyClass } from "../types/shared";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ExtraOptions<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> {
@@ -13,10 +13,10 @@ export interface ExtraOptions<M extends Record<string, any>, C extends Base, E e
 /** This is an internal class, you should not use it in your projects. If you want a collection type for your own projects, look at {@link Collection}. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class TypedCollection<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends Collection<string, C> {
-    private _baseObject: AnyClass<M, C, E>;
+    private _baseObject: Types.Shared.AnyClass<M, C, E>;
     extraOptions: Required<ExtraOptions<M, C, E>>;
     limit: number;
-    constructor(baseObject: AnyClass<M, C, E>, client: Client, limit = Infinity, extraOptions?: ExtraOptions<M, C, E>) {
+    constructor(baseObject: Types.Shared.AnyClass<M, C, E>, client: Client, limit = Infinity, extraOptions?: ExtraOptions<M, C, E>) {
         super();
         if (!(baseObject.prototype instanceof Base)) {
             throw new TypeError("baseObject must be a class that extends Base.");

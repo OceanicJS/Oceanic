@@ -1,20 +1,8 @@
 /** @module ModalSubmitInteractionComponentsWrapper */
 import { mapRawToResolved } from "./shared";
+import type * as Types from "../../types/namespaced";
 import { WrapperError } from "../Errors";
 import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
-import type {
-    ModalSubmitChannelSelectComponent,
-    ModalSubmitComponents,
-    ModalSubmitComponentsActionRow,
-    ModalSubmitComponentsLabel,
-    ModalSubmitFileUploadComponent,
-    ModalSubmitInteractionResolvedData,
-    ModalSubmitMentionableSelectComponent,
-    ModalSubmitRoleSelectComponent,
-    ModalSubmitStringSelectComponent,
-    ModalSubmitTextInputComponent,
-    ModalSubmitUserSelectComponent
-} from "../../types/interactions";
 import type Role from "../../structures/Role";
 import type User from "../../structures/User";
 import Collection from "../Collection";
@@ -24,14 +12,14 @@ import type Attachment from "../../structures/Attachment";
 /** A wrapper for interaction components. */
 export default class ModalSubmitInteractionComponentsWrapper {
     /** The raw components from Discord.  */
-    raw: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>;
-    resolved: ModalSubmitInteractionResolvedData;
-    constructor(resolved: ModalSubmitInteractionResolvedData, data: Array<ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel>) {
+    raw: Array<Types.Interactions.ModalSubmitComponentsActionRow | Types.Interactions.ModalSubmitComponentsLabel>;
+    resolved: Types.Interactions.ModalSubmitInteractionResolvedData;
+    constructor(resolved: Types.Interactions.ModalSubmitInteractionResolvedData, data: Array<Types.Interactions.ModalSubmitComponentsActionRow | Types.Interactions.ModalSubmitComponentsLabel>) {
         this.raw = data;
         this.resolved = resolved;
     }
 
-    private _getComponent<T extends ModalSubmitComponents = ModalSubmitComponents>(customID: string, required = false, type: ModalComponentTypes): T | undefined {
+    private _getComponent<T extends Types.Interactions.ModalSubmitComponents = Types.Interactions.ModalSubmitComponents>(customID: string, required = false, type: ModalComponentTypes): T | undefined {
         const opt = this.getComponents().find(o => o.customID === customID && o.type === type) as T | undefined;
         if (!opt && required) {
             throw new WrapperError(`Missing required component: ${customID}`);
@@ -45,9 +33,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getChannelSelectComponent(name: string, required?: false): ModalSubmitChannelSelectComponent | undefined;
-    getChannelSelectComponent(name: string, required: true): ModalSubmitChannelSelectComponent;
-    getChannelSelectComponent(name: string, required?: boolean): ModalSubmitChannelSelectComponent | undefined {
+    getChannelSelectComponent(name: string, required?: false): Types.Interactions.ModalSubmitChannelSelectComponent | undefined;
+    getChannelSelectComponent(name: string, required: true): Types.Interactions.ModalSubmitChannelSelectComponent;
+    getChannelSelectComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitChannelSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.CHANNEL_SELECT);
     }
 
@@ -64,7 +52,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
     }
 
     /** Get the components in this interaction. */
-    getComponents(): Array<ModalSubmitComponents> {
+    getComponents(): Array<Types.Interactions.ModalSubmitComponents> {
         return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
     }
 
@@ -73,9 +61,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getFileUploadComponent(name: string, required?: false): ModalSubmitFileUploadComponent | undefined;
-    getFileUploadComponent(name: string, required: true): ModalSubmitFileUploadComponent;
-    getFileUploadComponent(name: string, required?: boolean): ModalSubmitFileUploadComponent | undefined {
+    getFileUploadComponent(name: string, required?: false): Types.Interactions.ModalSubmitFileUploadComponent | undefined;
+    getFileUploadComponent(name: string, required: true): Types.Interactions.ModalSubmitFileUploadComponent;
+    getFileUploadComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitFileUploadComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.FILE_UPLOAD);
     }
 
@@ -96,9 +84,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getMentionableSelectComponent(name: string, required?: false): ModalSubmitMentionableSelectComponent | undefined;
-    getMentionableSelectComponent(name: string, required: true): ModalSubmitMentionableSelectComponent;
-    getMentionableSelectComponent(name: string, required?: boolean): ModalSubmitMentionableSelectComponent | undefined {
+    getMentionableSelectComponent(name: string, required?: false): Types.Interactions.ModalSubmitMentionableSelectComponent | undefined;
+    getMentionableSelectComponent(name: string, required: true): Types.Interactions.ModalSubmitMentionableSelectComponent;
+    getMentionableSelectComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitMentionableSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.MENTIONABLE_SELECT);
     }
 
@@ -119,9 +107,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getRoleSelectComponent(name: string, required?: false): ModalSubmitRoleSelectComponent | undefined;
-    getRoleSelectComponent(name: string, required: true): ModalSubmitRoleSelectComponent;
-    getRoleSelectComponent(name: string, required?: boolean): ModalSubmitRoleSelectComponent | undefined {
+    getRoleSelectComponent(name: string, required?: false): Types.Interactions.ModalSubmitRoleSelectComponent | undefined;
+    getRoleSelectComponent(name: string, required: true): Types.Interactions.ModalSubmitRoleSelectComponent;
+    getRoleSelectComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitRoleSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.ROLE_SELECT);
     }
 
@@ -142,9 +130,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getStringSelectComponent(name: string, required?: false): ModalSubmitStringSelectComponent | undefined;
-    getStringSelectComponent(name: string, required: true): ModalSubmitStringSelectComponent;
-    getStringSelectComponent(name: string, required?: boolean): ModalSubmitStringSelectComponent | undefined {
+    getStringSelectComponent(name: string, required?: false): Types.Interactions.ModalSubmitStringSelectComponent | undefined;
+    getStringSelectComponent(name: string, required: true): Types.Interactions.ModalSubmitStringSelectComponent;
+    getStringSelectComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitStringSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.STRING_SELECT);
     }
 
@@ -175,9 +163,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getTextInputComponent(name: string, required?: false): ModalSubmitTextInputComponent | undefined;
-    getTextInputComponent(name: string, required: true): ModalSubmitTextInputComponent;
-    getTextInputComponent(name: string, required?: boolean): ModalSubmitTextInputComponent | undefined {
+    getTextInputComponent(name: string, required?: false): Types.Interactions.ModalSubmitTextInputComponent | undefined;
+    getTextInputComponent(name: string, required: true): Types.Interactions.ModalSubmitTextInputComponent;
+    getTextInputComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitTextInputComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.TEXT_INPUT);
     }
 
@@ -186,9 +174,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
      * @param name The name of the option.
      * @param required If true, an error will be thrown if the option is not present.
      */
-    getUserSelectComponent(name: string, required?: false): ModalSubmitUserSelectComponent | undefined;
-    getUserSelectComponent(name: string, required: true): ModalSubmitUserSelectComponent;
-    getUserSelectComponent(name: string, required?: boolean): ModalSubmitUserSelectComponent | undefined {
+    getUserSelectComponent(name: string, required?: false): Types.Interactions.ModalSubmitUserSelectComponent | undefined;
+    getUserSelectComponent(name: string, required: true): Types.Interactions.ModalSubmitUserSelectComponent;
+    getUserSelectComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitUserSelectComponent | undefined {
         return this._getComponent(name, required, ComponentTypes.USER_SELECT);
     }
 
