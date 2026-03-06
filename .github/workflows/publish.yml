@@ -1,37 +1,37 @@
 name: Publish Release
 permissions:
-  contents: read
-  id-token: write
+    contents: read
+    id-token: write
 on:
-  workflow_dispatch:
-  release:
-    types: [released]
+    workflow_dispatch:
+    release:
+        types: [released]
 
 jobs:
-  lint:
-    name: ESLint
-    uses: ./.github/workflows/lint.yml
-  publish:
-    runs-on: ubuntu-latest
-    needs: [lint]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+    lint:
+        name: ESLint
+        uses: ./.github/workflows/lint.yml
+    publish:
+        runs-on: ubuntu-latest
+        needs: [lint]
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
 
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-          registry-url: https://registry.npmjs.org/
+            - name: Install Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version-file: .node-version
+                  cache: pnpm
+                  registry-url: https://registry.npmjs.org/
 
-      - name: Update NPM # Needed for provenance
-        run: npm i -g npm@"^9.5"
+            - name: Update NPM # Needed for provenance
+              run: npm i -g npm@"^9.5"
 
-      - name: Install Dependencies
-        run: pnpm i --frozen-lockfile --ignore-scripts
+            - name: Install Dependencies
+              run: pnpm i --frozen-lockfile --ignore-scripts --force
 
-      - name: Publish
-        run: pnpm publish --provenance --no-git-checks --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: Publish
+              run: pnpm publish --provenance --no-git-checks --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

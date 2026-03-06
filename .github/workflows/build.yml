@@ -1,17 +1,17 @@
 name: Build Code
 permissions:
-  contents: read
+    contents: read
 on: [push, pull_request, workflow_call]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v4
 
-      - name: Install Dependencies
-        run: pnpm i --frozen-lockfile --ignore-scripts
+            - name: Install Dependencies
+              run: pnpm i --frozen-lockfile --ignore-scripts --force
 
-      - name: Build
-        run: pnpm run test:build && pnpm run test:esm
+            - name: Build
+              run: pnpm run test:build && pnpm run test:esm
