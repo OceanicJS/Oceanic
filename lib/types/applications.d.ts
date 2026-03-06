@@ -1,7 +1,7 @@
 /** @module Types/Applications */
 import type { ImplementedChannels, InstallParams, RawOAuthGuild, RawUser } from ".";
-import type { ExclusifyUnion } from "./shared";
-import type { Emoji, WithRequired } from "./misc";
+import type { ExclusifyUnion, WithRequired } from "./shared";
+import type { Emoji } from "./misc";
 import type {
     ActivityLocationKind,
     ApplicationCommandOptionTypes,

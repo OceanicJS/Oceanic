@@ -19,7 +19,7 @@ import Channel from "./Channel";
 import type StageChannel from "./StageChannel";
 import type GuildTemplate from "./GuildTemplate";
 import type GuildPreview from "./GuildPreview";
-import Invite from "./Invite";
+import Invite, { type InviteWithMetadata } from "./Invite";
 import type Webhook from "./Webhook";
 import AuditLogEntry from "./AuditLogEntry";
 import type Entitlement from "./Entitlement";
@@ -49,12 +49,11 @@ import type {
     AnyGuildChannelWithoutThreads,
     AnyTextableGuildChannel,
     AnyThreadChannel,
-    AnyInviteChannel,
     RawGuildChannel,
     RawThreadChannel,
     GuildChannelsWithoutThreads,
-    RawInvite,
-    RawSoundboard
+    RawSoundboard,
+    AnyGuildInviteChannel
 } from "../types/channels";
 import type {
     AddMemberOptions,
@@ -129,6 +128,7 @@ import type Shard from "../gateway/Shard";
 import { UncachedError } from "../util/Errors";
 import SimpleCollection from "../util/SimpleCollection";
 import type { SearchEntitlementsOptions } from "../types/applications";
+import type { RawInvite } from "../types/invites";
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */
@@ -179,7 +179,7 @@ export default class Guild extends Base {
     /** The guild's inventory settings. */
     inventorySettings: InventorySettings | null;
     /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
-    invites: SimpleCollection<string, RawInvite, Invite, "code">;
+    invites: SimpleCollection<string, RawInvite, InviteWithMetadata<AnyGuildInviteChannel>, "code">;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -294,7 +294,7 @@ export default class Guild extends Base {
         this.incidentActions = null;
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
         this.inventorySettings = null;
-        this.invites = new SimpleCollection(rawInvite => new Invite(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
+        this.invites = new SimpleCollection(rawInvite => Invite.withMetadata(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
         this.latestOnboardingQuestionID = null;
@@ -1226,7 +1226,7 @@ export default class Guild extends Base {
     /**
      * Get the invites of this guild.
      */
-    async getInvites(): Promise<Array<Invite<"withMetadata", AnyInviteChannel>>> {
+    async getInvites(): Promise<Array<InviteWithMetadata<AnyGuildInviteChannel>>> {
         return this.client.rest.guilds.getInvites(this.id);
     }
 

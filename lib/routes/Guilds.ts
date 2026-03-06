@@ -9,21 +9,19 @@ import GuildPreview from "../structures/GuildPreview";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import GuildTemplate from "../structures/GuildTemplate";
 import Integration from "../structures/Integration";
-import Invite from "../structures/Invite";
+import Invite, { type InviteWithMetadata } from "../structures/Invite";
 import type Member from "../structures/Member";
 import Role from "../structures/Role";
 import Soundboard from "../structures/Soundboard";
 import VoiceState from "../structures/VoiceState";
 import Webhook from "../structures/Webhook";
+import type { GuildInviteChannel, RawInvite } from "../types/invites";
 import type { AuditLog, GetAuditLogOptions, RawAuditLog } from "../types/audit-log";
 import type { CreateAutoModerationRuleOptions, EditAutoModerationRuleOptions, RawAutoModerationRule } from "../types/auto-moderation";
 import type {
     AnyGuildChannelWithoutThreads,
-    AnyInviteChannel,
     GuildChannelsWithoutThreads,
-    PartialInviteChannel,
     RawGuildChannel,
-    RawInvite,
     RawSoundboard,
     RawThreadChannel,
     RawThreadMember
@@ -102,7 +100,6 @@ import type {
     RawScheduledEventUser,
     ScheduledEventUser
 } from "../types/scheduled-events";
-import type { Uncached } from "../types/shared";
 import type { RawVoiceState, VoiceRegion } from "../types/voice";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
@@ -1342,12 +1339,12 @@ export default class Guilds {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#invites | Guild#invites}
      */
-    async getInvites<CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(guildID: string): Promise<Array<Invite<"withMetadata", CH>>> {
+    async getInvites<CH extends GuildInviteChannel = GuildInviteChannel>(guildID: string): Promise<Array<InviteWithMetadata<CH>>> {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.GUILD_INVITES(guildID)
-        }).then(data => data.map(invite => guild?.invites.update(invite) as Invite<"withMetadata", CH> ?? new Invite<"withMetadata", CH>(invite, this._manager.client)));
+        }).then(data => data.map(invite => guild?.invites.update(invite) as InviteWithMetadata<CH> ?? Invite.withMetadata<CH>(invite, this._manager.client)));
     }
 
     /**

@@ -1,24 +1,15 @@
 /** @module Types/Channels */
-import type {
-    NullablePartialEmoji,
-    PartialEmoji,
-    RawInviteGuild,
-    RawInviteRole,
-    RawMember
-} from "./guilds";
-import type { RESTApplication, RawApplication, RawPartialApplication } from "./applications";
+import type { NullablePartialEmoji, PartialEmoji, RawMember } from "./guilds";
+import type { RESTApplication, RawApplication } from "./applications";
 import type { RawUser, RawUserWithMember } from "./users";
 import type { File } from "./request-handler";
-import type { RawScheduledEvent } from "./scheduled-events";
-import { type  Uncached } from "./shared";
+import type { Uncached, Nullable } from "./shared";
 import type { AuthorizingIntegrationOwners, SelectMenuDefaultValue } from "./interactions";
-import type { Nullable } from "./misc";
 import type {
     ButtonStyles,
     ChannelTypes,
     ComponentTypes,
     InteractionTypes,
-    InviteTargetTypes,
     MessageActivityTypes,
     MessageTypes,
     OverwriteTypes,
@@ -48,8 +39,8 @@ import type {
     ReactionType,
     PollLayoutType,
     SeparatorSpacingSize,
-    InviteTypes,
-    InviteTargetUsersJobStatus
+    GuildInviteChannelTypes,
+    DMInviteChannelTypes
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -726,10 +717,11 @@ export type TextableGuildChannels = typeof TextableGuildChannelTypes[number];
 export type TextableChannelsWithoutThreads = typeof TextableChannelsWithoutThreadsTypes[number];
 export type TextableGuildChannelsWithoutThreads = typeof TextableGuildChannelsWithoutThreadsTypes[number];
 export type VoiceChannels = typeof VoiceChannelTypes[number];
+export type GuildInviteChannels = typeof GuildInviteChannelTypes[number];
+export type DMInviteChannels = typeof DMInviteChannelTypes[number];
 export type InviteChannels = typeof InviteChannelTypes[number];
 export type InteractionChannels = typeof InteractionChannelTypes[number];
 export type ThreadOnlyChannels = typeof ThreadOnlyChannelTypes[number];
-
 
 export type AnyChannel = ChannelTypeMap[ChannelTypes];
 export type AnyNotImplementedChannel = ChannelTypeMap[NotImplementedChannels];
@@ -744,15 +736,26 @@ export type AnyTextableGuildChannel = ChannelTypeMap[TextableGuildChannels];
 export type AnyTextableChannelWithoutThreads = ChannelTypeMap[TextableChannelsWithoutThreads];
 export type AnyTextableGuildChannelWithoutThreads = ChannelTypeMap[TextableGuildChannelsWithoutThreads];
 export type AnyVoiceChannel = ChannelTypeMap[VoiceChannels];
+export type AnyGuildInviteChannel = ChannelTypeMap[GuildInviteChannels];
+export type AnyDMInviteChannel = ChannelTypeMap[DMInviteChannels];
 export type AnyInviteChannel = ChannelTypeMap[InviteChannels];
 export type AnyInteractionChannel = ChannelTypeMap[InteractionChannels];
 export type AnyThreadOnlyChannel = ChannelTypeMap[ThreadOnlyChannels];
 
 export interface PartialInviteChannel {
-    icon?: string | null;
     id: string;
     name: string | null;
+    recipients?: Array<Record<"username", string>>;
     type: InviteChannels;
+}
+
+export interface PartialGuildInviteChannel extends Omit<PartialInviteChannel, "name" | "type" | "recipients"> {
+    name: string;
+    type: GuildInviteChannels;
+}
+
+export interface PartialDMInviteChannel extends Omit<PartialInviteChannel, "type"> {
+    type: DMInviteChannels;
 }
 
 export type PossiblyUncachedInvite = Invite | UncachedInvite;
@@ -828,76 +831,6 @@ export interface EditPermissionOptions {
     type: OverwriteTypes;
 }
 
-export interface RawInvite {
-    approximate_member_count?: number;
-    approximate_presence_count?: number;
-    // this is partial because the gateway only gets an id
-    channel?: PartialChannel;
-    // gateway
-    channel_id?: string;
-    code: string;
-    expires_at?: string;
-    flags?: number;
-    guild?: RawInviteGuild;
-    guild_id?: string;
-    guild_scheduled_event?: RawScheduledEvent;
-    inviter?: RawUser;
-    roles?: Array<RawInviteRole>;
-    /** @deprecated */
-    stage_instance?: RawInviteStageInstance;
-    target_application?: RawPartialApplication;
-    target_type?: InviteTargetTypes;
-    target_user?: RawUser;
-    type: InviteTypes;
-}
-
-export interface RawInviteWithMetadata extends RawInvite {
-    created_at: string;
-    max_age: number;
-    max_uses: number;
-    temporary: boolean;
-    uses: number;
-}
-
-
-export interface RawInviteStageInstance {
-    members: Array<RawMember>;
-    participant_count: number;
-    speaker_count: number;
-    topic: string;
-}
-
-
-export interface InviteStageInstance {
-    members: Array<Member>;
-    participantCount: number;
-    speakerCount: number;
-    topic: string;
-}
-
-export interface CreateInviteOptions {
-    /** How long the invite should last. */
-    maxAge?: number;
-    /** How many times the invite can be used. */
-    maxUses?: number;
-    /** The reason for creating the invite. */
-    reason?: string;
-    /** The IDs of roles to add to the users using the invite. Requires the `MANAGE_ROLES` permission. */
-    roleIDs?: Array<string>;
-    /** The id of the embedded application to open for this invite. */
-    targetApplicationID?: string;
-    /** The [type of target](https://discord.com/developers/docs/resources/channel#invite-target-types) for the invite. */
-    targetType?: InviteTargetTypes;
-    /** The ID of the user whose stream to display for this invite. */
-    targetUserID?: string;
-    /** The IDs of users able to accept this invite. */
-    targetUsers?: Array<string>;
-    /** If the invite should be temporary. */
-    temporary?: boolean;
-    /** If the invite should be unique. */
-    unique?: boolean;
-}
-
 export interface RawFollowedChannel {
     channel_id: string;
     webhook_id: string;
@@ -953,45 +886,6 @@ export interface ArchivedThreads<T extends AnnouncementThreadChannel | PublicThr
     members: Array<ThreadMember>;
     threads: Array<T>;
 }
-
-export interface GetInviteOptions {
-    /** The id of the guild scheduled event to include with the invite. */
-    guildScheduledEventID?: string;
-    /** If the invite should contain approximate member counts. */
-    withCounts?: boolean;
-    /** If the invite should contain expiration data.  */
-    withExpiration?: boolean;
-}
-
-export interface GetInviteWithCountsOptions extends Omit<GetInviteOptions, "withCounts"> {
-    /** If the invite should contain approximate member counts. */
-    withCounts: true;
-}
-
-export interface GetInviteWithExpirationOptions extends Omit<GetInviteOptions, "withExpiration"> {
-    /** If the invite should contain expiration data.  */
-    withExpiration: true;
-}
-
-
-export interface GetInviteWithCountsAndExpirationOptions extends Omit<GetInviteOptions, "withCounts" | "withExpiration"> {
-    /** If the invite should contain approximate member counts. */
-    withCounts: true;
-    /** If the invite should contain expiration data.  */
-    withExpiration: true;
-}
-
-
-export interface GetInviteWithNoneOptions extends Omit<GetInviteOptions, "withCounts" | "withExpiration"> {
-    /** If the invite should contain approximate member counts. */
-    withCounts?: false;
-    /** If the invite should contain expiration data.  */
-    withExpiration?: false;
-}
-
-// for the love of god find a way to make this not so shit
-export type InviteInfoTypes = "withMetadata" | "withCounts" | "withoutCounts" | "withExpiration" | "withoutExpiration";
-
 
 export interface ThreadMetadata {
     archiveTimestamp: Date;
@@ -1577,22 +1471,4 @@ export interface RawModalFileUploadComponent extends BaseComponent {
     min_values?: number;
     required?: boolean;
     type: ComponentTypes.FILE_UPLOAD;
-}
-
-export interface RawInviteTargetUsersJobStatusResponse {
-    completed_at: string | null;
-    created_at: string;
-    error_message: string | null;
-    processed_users: number;
-    status: InviteTargetUsersJobStatus;
-    total_users: number;
-}
-
-export interface InviteTargetUsersJobStatusResponse {
-    completedAt: Date | null;
-    createdAt: Date;
-    errorMessage: string | null;
-    processedUsers: number;
-    status: InviteTargetUsersJobStatus;
-    totalUsers: number;
 }

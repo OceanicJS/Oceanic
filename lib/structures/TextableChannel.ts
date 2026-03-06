@@ -2,7 +2,7 @@
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
-import type Invite from "./Invite";
+import type { InviteWithMetadata } from "./Invite";
 import type CategoryChannel from "./CategoryChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
@@ -12,7 +12,6 @@ import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type {
-    CreateInviteOptions,
     CreateMessageOptions,
     EditMessageOptions,
     EditPermissionOptions,
@@ -25,17 +24,18 @@ import type {
     PurgeOptions
 } from "../types/channels";
 import type { JSONTextableChannel } from "../types/json";
+import type { CreateInviteOptions } from "../types/invites";
 import type { AnyTextableGuildChannel, CreateWebhookOptions, RawStageChannel, RawVoiceChannel } from "../types";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild textable channel. */
-export default class TextableChannel<T extends AnyTextableGuildChannel = AnyTextableGuildChannel> extends GuildChannel {
+export default class TextableChannel<CH extends AnyTextableGuildChannel = AnyTextableGuildChannel> extends GuildChannel {
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
-    lastMessage?: Message<T> | null;
+    lastMessage?: Message<CH> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The cached messages in this channel. */
-    messages: TypedCollection<RawMessage, Message<T>>;
+    messages: TypedCollection<RawMessage, Message<CH>>;
     /** If this channel is age gated. */
     nsfw: boolean;
     /** The permission overwrites of this channel. */
@@ -46,11 +46,11 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
     rateLimitPerUser: number;
     /** The topic of the channel. */
     topic: string | null;
-    declare type: T["type"];
+    declare type: CH["type"];
     constructor(data: RawTextChannel | RawAnnouncementChannel | RawVoiceChannel | RawStageChannel, client: Client) {
         super(data, client);
         this.lastMessageID = data.last_message_id;
-        this.messages = new TypedCollection(Message<T>, client, this.client.util._getLimit("messages", this.id));
+        this.messages = new TypedCollection(Message<CH>, client, this.client.util._getLimit("messages", this.id));
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
@@ -96,16 +96,16 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
      * Create an invite for this channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param options The options for the invite.
      */
-    async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", T>> {
-        return this.client.rest.channels.createInvite<"withMetadata", T>(this.id, options);
+    async createInvite(options: CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
+        return this.client.rest.channels.createInvite<CH>(this.id, options);
     }
 
     /**
      * Create a message in this channel.
      * @param options The options for the message.
      */
-    async createMessage(options: CreateMessageOptions): Promise<Message<T>> {
-        return this.client.rest.channels.createMessage<T>(this.id, options);
+    async createMessage(options: CreateMessageOptions): Promise<Message<CH>> {
+        return this.client.rest.channels.createMessage<CH>(this.id, options);
     }
 
     /**
@@ -176,8 +176,8 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<T>> {
-        return this.client.rest.channels.editMessage<T>(this.id, messageID, options);
+    async editMessage(messageID: string, options: EditMessageOptions): Promise<Message<CH>> {
+        return this.client.rest.channels.editMessage<CH>(this.id, messageID, options);
     }
 
     /**
@@ -192,31 +192,31 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
     /**
      * Get the invites of this channel.
      */
-    async getInvites(): Promise<Array<Invite<"withMetadata", T>>> {
-        return this.client.rest.channels.getInvites<T>(this.id);
+    async getInvites(): Promise<Array<InviteWithMetadata<CH>>> {
+        return this.client.rest.channels.getInvites<CH>(this.id);
     }
 
     /**
      * Get a message in this channel.
      * @param messageID The ID of the message to get.
      */
-    async getMessage(messageID: string): Promise<Message<T>> {
-        return this.client.rest.channels.getMessage<T>(this.id, messageID);
+    async getMessage(messageID: string): Promise<Message<CH>> {
+        return this.client.rest.channels.getMessage<CH>(this.id, messageID);
     }
 
     /**
      * Get messages in this channel.
      * @param options The options for getting the messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        return this.client.rest.channels.getMessages<T>(this.id, options);
+    async getMessages(options?: GetChannelMessagesOptions): Promise<Array<Message<CH>>> {
+        return this.client.rest.channels.getMessages<CH>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this channel.
      */
-    async getPinnedMessages(): Promise<Array<Message<T>>> {
-        return this.client.rest.channels.getPinnedMessages<T>(this.id);
+    async getPinnedMessages(): Promise<Array<Message<CH>>> {
+        return this.client.rest.channels.getPinnedMessages<CH>(this.id);
     }
 
     /**
@@ -285,7 +285,7 @@ export default class TextableChannel<T extends AnyTextableGuildChannel = AnyText
      * Purge an amount of messages from this channel.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async purge(options: PurgeOptions<T>): Promise<number> {
+    async purge(options: PurgeOptions<CH>): Promise<number> {
         return this.client.rest.channels.purgeMessages(this.id, options);
     }
 

@@ -11,7 +11,7 @@ import type PublicThreadChannel from "./structures/PublicThreadChannel";
 import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
 import type StageChannel from "./structures/StageChannel";
 import type ForumChannel from "./structures/ForumChannel";
-import type { ReverseMap, StringMap } from "./types/misc";
+import type { ReverseMap, StringMap } from "./types/shared";
 import type {
     RawAnnouncementChannel,
     RawAnnouncementThreadChannel,
@@ -388,7 +388,9 @@ export const TextableGuildChannelTypes = exclude(TextableChannelTypes, [ChannelT
 export const TextableChannelsWithoutThreadsTypes = exclude(TextableChannelTypes, ThreadChannelTypes);
 export const TextableGuildChannelsWithoutThreadsTypes = exclude(TextableGuildChannelTypes, ThreadChannelTypes);
 export const VoiceChannelTypes = [ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_STAGE_VOICE] as const;
-export const InviteChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_ANNOUNCEMENT, ...VoiceChannelTypes, ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA, ChannelTypes.GROUP_DM] as const;
+export const GuildInviteChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_ANNOUNCEMENT, ...VoiceChannelTypes, ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA] as const;
+export const DMInviteChannelTypes = [ChannelTypes.GROUP_DM] as const;
+export const InviteChannelTypes = [...GuildInviteChannelTypes, ...DMInviteChannelTypes] as const;
 export const InteractionChannelTypes = [...TextableChannelTypes, ChannelTypes.GROUP_DM] as const;
 export const ThreadOnlyChannelTypes = [ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA] as const;
 
@@ -1350,7 +1352,9 @@ export enum OnboardingModes {
 }
 
 export enum InviteFlags {
-    GUEST = 1 << 0,
+    /** @deprecated Use `IS_GUEST_INVITE`. This will be removed in `1.15.0`. */
+    GUEST           = 1 << 0,
+    IS_GUEST_INVITE = 1 << 0,
 }
 
 export enum ReactionType {

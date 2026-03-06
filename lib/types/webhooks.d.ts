@@ -2,7 +2,7 @@
 import type { CreateMessageOptions, MessagePollOptions, RawChannel } from "./channels";
 import type { RawGuild } from "./guilds";
 import type { RawUser } from "./users";
-import type { Nullable } from "./misc";
+import type { Nullable } from "./shared";
 import type { WebhookTypes } from "../Constants";
 
 export interface RawWebhook {

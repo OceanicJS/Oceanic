@@ -2,15 +2,14 @@
 import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import type PublicThreadChannel from "./PublicThreadChannel";
-import type Invite from "./Invite";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type CategoryChannel from "./CategoryChannel";
 import type Webhook from "./Webhook";
+import type { InviteWithMetadata } from "./Invite";
 import type Client from "../Client";
 import type {
     ArchivedThreads,
-    CreateInviteOptions,
     EditPermissionOptions,
     ForumEmoji,
     ForumTag,
@@ -18,6 +17,7 @@ import type {
     RawOverwrite,
     StartThreadInThreadOnlyChannelOptions
 } from "../types/channels";
+import type { CreateInviteOptions } from "../types/invites";
 import type { JSONThreadOnlyChannel } from "../types/json";
 import TypedCollection from "../util/TypedCollection";
 import {
@@ -153,8 +153,8 @@ export default class ThreadOnlyChannel extends GuildChannel {
      * Create an invite for this channel. If the guild is not a `COMMUNITY` server, invites can only be made to last 30 days.
      * @param options The options for the invite.
      */
-    async createInvite(options: CreateInviteOptions): Promise<Invite<"withMetadata", this>> {
-        return this.client.rest.channels.createInvite<"withMetadata", this>(this.id, options);
+    async createInvite(options: CreateInviteOptions): Promise<InviteWithMetadata<this>> {
+        return this.client.rest.channels.createInvite<this>(this.id, options);
     }
 
     /**
@@ -186,7 +186,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
     /**
      * Get the invites of this channel.
      */
-    async getInvites(): Promise<Array<Invite<"withMetadata", this>>> {
+    async getInvites(): Promise<Array<InviteWithMetadata<this>>> {
         return this.client.rest.channels.getInvites<this>(this.id);
     }
 

@@ -4,7 +4,6 @@ import type {
     AnyChannel,
     AnyTextableChannel,
     ArchivedThreads,
-    CreateInviteOptions,
     CreateMessageOptions,
     EditChannelOptions,
     EditMessageOptions,
@@ -17,7 +16,6 @@ import type {
     RawArchivedThreads,
     RawChannel,
     RawFollowedChannel,
-    RawInvite,
     RawMessage,
     RawAnnouncementThreadChannel,
     RawPrivateThreadChannel,
@@ -26,13 +24,7 @@ import type {
     StartThreadFromMessageOptions,
     StartThreadInThreadOnlyChannelOptions,
     StartThreadWithoutMessageOptions,
-    GetInviteOptions,
-    GetInviteWithCountsAndExpirationOptions,
-    GetInviteWithCountsOptions,
-    GetInviteWithExpirationOptions,
-    GetInviteWithNoneOptions,
     RawThreadMember,
-    InviteInfoTypes,
     RawPrivateChannel,
     RawGroupChannel,
     AnyEditableChannel,
@@ -45,14 +37,18 @@ import type {
     GetChannelMessagesIteratorOptions,
     MessagesIterator,
     GetPollAnswerUsersOptions,
-    SendSoundboardSoundOptions,
-    InviteTargetUsersJobStatusResponse,
-    RawInviteTargetUsersJobStatusResponse
+    SendSoundboardSoundOptions
 } from "../types/channels";
 import * as Routes from "../util/Routes";
 import type Message from "../structures/Message";
 import type { CreateGroupChannelOptions, RawUser } from "../types/users";
-import Invite from "../structures/Invite";
+import Invite, {
+    type InviteWithoutCounts,
+    type InviteWithMetadata,
+    type InviteWithCountsAndScheduledEvent,
+    type InviteWithCounts,
+    type InviteWithScheduledEvent
+} from "../structures/Invite";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
@@ -67,6 +63,20 @@ import type { CreateStageInstanceOptions, EditStageInstanceOptions, RawStageInst
 import StageInstance from "../structures/StageInstance";
 import { MessageFlags } from "../Constants";
 import QueryBuilder from "../util/QueryBuilder";
+import type {
+    CreateInviteOptions,
+    DMInviteChannel,
+    GetInviteOptions,
+    GetInviteWithCountsAndScheduledEventOptions,
+    GetInviteWithCountsOptions,
+    GetInviteWithNoneOptions,
+    GetInviteWithScheduledEventOptions,
+    GuildInviteChannel,
+    InviteChannel,
+    InviteTargetUsersJobStatusResponse,
+    RawInvite,
+    RawInviteTargetUsersJobStatusResponse
+} from "../types/invites";
 
 /** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {
@@ -148,7 +158,7 @@ export default class Channels {
      * @param options The options for creating the invite.
      * @caching This method **does not** cache its result.
      */
-    async createInvite<T extends InviteInfoTypes, CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<Invite<T, CH>> {
+    async createInvite<CH extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string, options: CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawInvite>({
             method: "POST",
@@ -165,7 +175,7 @@ export default class Channels {
             reason: options.reason,
             files:  options.targetUsers ? [this._manager.client.util._arrayToCSVFile(options.targetUsers, "target_users_file", "user_id")] : undefined
 
-        }).then(data => new Invite<T, CH>(data, this._manager.client));
+        }).then(data => Invite.withMetadata<CH>(data, this._manager.client));
     }
 
     /**
@@ -280,12 +290,12 @@ export default class Channels {
      * @param reason The reason for deleting the invite.
      * @caching This method **does not** cache its result.
      */
-    async deleteInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<"withMetadata", T>> {
+    async deleteInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, reason?: string): Promise<Invite<T>> {
         return this._manager.authRequest<RawInvite>({
             method: "DELETE",
             path:   Routes.INVITE(code),
             reason
-        }).then(data => new Invite<"withMetadata", T>(data, this._manager.client));
+        }).then(data => new Invite<T>(data, this._manager.client));
     }
 
     /**
@@ -578,21 +588,20 @@ export default class Channels {
      * @param options The options for getting the invite.
      * @caching This method **does not** cache its result.
      */
-    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteWithNoneOptions): Promise<Invite<"withMetadata", T>>;
-    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsAndExpirationOptions): Promise<Invite<"withMetadata" | "withCounts" | "withExpiration", T>>;
-    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithCountsOptions): Promise<Invite<"withMetadata" | "withCounts", T>>;
-    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options: GetInviteWithExpirationOptions): Promise<Invite<"withMetadata" | "withExpiration", T>>;
-    async getInvite<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(code: string, options?: GetInviteOptions): Promise<Invite<never, T>> {
+    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options?: GetInviteWithNoneOptions): Promise<InviteWithoutCounts<CH>>;
+    async getInvite<CH extends InviteChannel = GuildInviteChannel | DMInviteChannel>(code: string, options: GetInviteWithCountsOptions): Promise<InviteWithCounts<CH>>;
+    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithCountsAndScheduledEventOptions): Promise<InviteWithCountsAndScheduledEvent<CH>>;
+    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options: GetInviteWithScheduledEventOptions): Promise<InviteWithScheduledEvent<CH>>;
+    async getInvite<CH extends InviteChannel = InviteChannel>(code: string, options?: GetInviteOptions): Promise<Invite<CH>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("guild_scheduled_event_id", options?.guildScheduledEventID);
         query.setIfPresent("with_counts", options?.withCounts);
-        query.setIfPresent("with_expiration", options?.withExpiration);
         return this._manager.authRequest<RawInvite>({
             method: "GET",
             path:   Routes.INVITE(code),
             query
-        }).then(data => new Invite<never, T>(data, this._manager.client));
+        }).then(data => new Invite<CH>(data, this._manager.client));
     }
 
     /**
@@ -629,11 +638,11 @@ export default class Channels {
      * @param channelID The ID of the channel to get the invites of.
      * @caching This method **does not** cache its result.
      */
-    async getInvites<T extends AnyInviteChannel | PartialInviteChannel | Uncached = AnyInviteChannel | PartialInviteChannel | Uncached>(channelID: string): Promise<Array<Invite<"withMetadata", T>>> {
+    async getInvites<CH extends GuildInviteChannel = GuildInviteChannel>(channelID: string): Promise<Array<InviteWithMetadata<CH>>> {
         return this._manager.authRequest<Array<RawInvite>>({
             method: "GET",
             path:   Routes.CHANNEL_INVITES(channelID)
-        }).then(data => data.map(invite => new Invite<"withMetadata", T>(invite, this._manager.client)));
+        }).then(data => data.map(invite => Invite.withMetadata<CH>(invite, this._manager.client)));
     }
 
     /**
