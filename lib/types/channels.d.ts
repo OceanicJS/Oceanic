@@ -293,7 +293,7 @@ export interface CreateMessageOptions {
     allowedMentions?: AllowedMentions;
     /** An array of [partial attachments](https://discord.com/developers/docs/resources/channel#attachment-object) related to the sent files. */
     attachments?: Array<MessageAttachment>;
-    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawMessageComponents | Util#rawMessageComponents}. Note that the {@link Contents~MessageFlags.IS_COMPONENTS_V2 | IS_COMPONENTS_V2} flag must be provided to use any of the v2 components, and with this enabled `content`, `embeds`, and `stickerIDs` cannot be used. */
+    /** An array of [components](https://discord.com/developers/docs/interactions/message-components) to send. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawMessageComponents | Util#rawMessageComponents}. Note that the {@link Constants~MessageFlags.IS_COMPONENTS_V2 | IS_COMPONENTS_V2} flag must be provided to use any of the v2 components, and with this enabled `content`, `embeds`, and `stickerIDs` cannot be used. */
     components?: Array<MessageComponent>;
     /** The content of the message. */
     content?: string;
