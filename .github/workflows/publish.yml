@@ -25,9 +25,6 @@ jobs:
                   cache: pnpm
                   registry-url: https://registry.npmjs.org/
 
-            - name: Update NPM # Needed for provenance
-              run: npm i -g npm@"^9.5"
-
             - name: Install Dependencies
               run: pnpm i --frozen-lockfile --ignore-scripts --force
 
