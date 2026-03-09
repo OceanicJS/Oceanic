@@ -46,6 +46,6 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Deprecate Old Versions
-              run: pnpm dlx -y npm-deprecate
+              run: pnpm dlx npm-deprecate
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
