@@ -21,9 +21,6 @@ importers:
       '@favware/npm-deprecate':
         specifier: ^2.0.0
         version: 2.0.0
-      '@mxssfd/typedoc-theme':
-        specifier: ^1.1.7
-        version: 1.1.7(typedoc@0.28.17(typescript@5.9.3))
       '@types/node':
         specifier: ~25.3.5
         version: 25.3.5
@@ -54,9 +51,6 @@ importers:
       typedoc:
         specifier: ^0.28.17
         version: 0.28.17(typescript@5.9.3)
-      typedoc-plugin-extras:
-        specifier: ~4.0.1
-        version: 4.0.1(typedoc@0.28.17(typescript@5.9.3))
       typedoc-plugin-mdn-links:
         specifier: ^5.1.1
         version: 5.1.1(typedoc@0.28.17(typescript@5.9.3))
@@ -171,12 +165,6 @@ packages:
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
     engines: {node: '>=18.0.0'}
-
-  '@mxssfd/typedoc-theme@1.1.7':
-    resolution: {integrity: sha512-dj4p0TjIoudD8j1u+Kf+KzcEc+je3IB/B1oohWcVJmMRfbw5uZYX6qOGHzfUzAPiU1pYe2u5Vo1IPqgLo58taA==}
-    engines: {node: '>= 14'}
-    peerDependencies:
-      typedoc: ^0.26.7
 
   '@npmcli/agent@3.0.0':
     resolution: {integrity: sha512-S79NdEgDQd/NGCay6TCoVzXSj74skRZIKJcpJjC5lOq34SZzyI6MqtiiWoiVWoVrTcGjNeC4ipbh1VIHlpfF5Q==}
@@ -1100,11 +1088,6 @@ packages:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
 
-  typedoc-plugin-extras@4.0.1:
-    resolution: {integrity: sha512-ab3T37ukHCwBjwBJpAcWdxy/XAaLdUyy5pwbgF9WDqCRN0DTJmJPLew9Kv6qrx5qnxiyfe6F4Og+PUp15kJWLw==}
-    peerDependencies:
-      typedoc: 0.27.x || 0.28.x
-
   typedoc-plugin-mdn-links@5.1.1:
     resolution: {integrity: sha512-fLlYudnlGkE9uspOEm/SBXwr+G0RbxoDZiHAVsCg+5NwKe2aUxjZK1YyQfleNZydImanzkX2oUJF29xbEeOSWw==}
     peerDependencies:
@@ -1327,10 +1310,6 @@ snapshots:
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
       minipass: 7.1.3
-
-  '@mxssfd/typedoc-theme@1.1.7(typedoc@0.28.17(typescript@5.9.3))':
-    dependencies:
-      typedoc: 0.28.17(typescript@5.9.3)
 
   '@npmcli/agent@3.0.0':
     dependencies:
@@ -2289,10 +2268,6 @@ snapshots:
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
-
-  typedoc-plugin-extras@4.0.1(typedoc@0.28.17(typescript@5.9.3)):
-    dependencies:
-      typedoc: 0.28.17(typescript@5.9.3)
 
   typedoc-plugin-mdn-links@5.1.1(typedoc@0.28.17(typescript@5.9.3)):
     dependencies:
