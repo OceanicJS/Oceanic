@@ -5,7 +5,7 @@ Guidelines:
 * If a feature had been rejected previously, do not attempt to suggest it again.
 * An understanding of typescript, types, and how to use these effectively is required for contributing.
 * Pull Requests should always target the `dev` branch.
-* Ensure you are following the eslint rules. You can use `npm run lint` & `npm run lint:fix` to test locally.
+* Ensure you are following the eslint rules. You can use `pnpm run lint` & `pnpm run lint:fix` to test locally.
 * If any of the tests fail on your pull request, attempt to understand why. Your pull request will not be merged without all three tests passing. (test code, test docs, lint)
 * Don't be hostile.
 * Pull requests to fix a few words in docs will be denied. Point them out in our support server and we will get to them.
