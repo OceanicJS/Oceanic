@@ -13,7 +13,6 @@ import {
 } from "../Constants";
 import Collection from "../util/Collection";
 
-// @ts-expect-error optional dependency
 let Erlpack: typeof import("erlpack") | undefined;
 try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

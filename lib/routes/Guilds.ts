@@ -354,7 +354,7 @@ export default class Guilds {
         form.append("description", options.description);
         form.append("name", options.name);
         form.append("tags", options.tags);
-        form.append("file", new Blob([options.file.contents], { type: mime }), options.file.name);
+        form.append("file", new Blob([new Uint8Array(options.file.contents as Buffer)], { type: mime }), options.file.name);
 
         return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "POST",

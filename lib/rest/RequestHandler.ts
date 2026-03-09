@@ -139,7 +139,7 @@ export default class RequestHandler {
                                 if (!file.contents) {
                                     continue;
                                 }
-                                data.set(file.field || `files[${index}]`, new Blob([file.contents]), file.name);
+                                data.set(file.field || `files[${index}]`, new Blob([new Uint8Array(file.contents as Buffer)]), file.name);
                             }
                             if (stringBody) {
                                 data.set("payload_json", stringBody);
