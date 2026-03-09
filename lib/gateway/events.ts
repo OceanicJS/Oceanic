@@ -181,7 +181,7 @@ export async function GUILD_CREATE(data: DispatchEventMap["GUILD_CREATE"], shard
 }
 
 export async function GUILD_DELETE(data: DispatchEventMap["GUILD_DELETE"], shard: Shard): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
     shard.client.voiceAdapters.get(data.id)?.destroy();
     shard.client.guildShardMap.delete(data.id);
     const guild = shard.client.guilds.get(data.id);
@@ -198,7 +198,7 @@ export async function GUILD_DELETE(data: DispatchEventMap["GUILD_DELETE"], shard
 export async function GUILD_EMOJIS_UPDATE(data: DispatchEventMap["GUILD_EMOJIS_UPDATE"], shard: Shard): Promise<void> {
     const guild = shard.client.guilds.get(data.guild_id);
     const oldEmojis = guild?.emojis ? guild.emojis.toArray() : null;
-    // eslint-disable-next-line @typescript-eslint/dot-notation
+
     guild?.["update"]({ emojis: data.emojis });
     shard.client.emit(
         "guildEmojisUpdate",
@@ -223,7 +223,7 @@ export async function GUILD_MEMBER_ADD(data: DispatchEventMap["GUILD_MEMBER_ADD"
 
 export async function GUILD_MEMBERS_CHUNK(data: DispatchEventMap["GUILD_MEMBERS_CHUNK"], shard: Shard): Promise<void> {
     const guild = shard.client.guilds.get(data.guild_id);
-    // eslint-disable-next-line @typescript-eslint/dot-notation
+
     guild?.["updateMemberLimit"](data.members.length);
     const members = data.members.map(member => shard.client.util.updateMember(data.guild_id, member.user!.id, member));
     if (data.presences) for (const presence of data.presences) {
@@ -285,7 +285,7 @@ export async function GUILD_MEMBER_REMOVE(data: DispatchEventMap["GUILD_MEMBER_R
         return;
     }
     const guild = shard.client.guilds.get(data.guild_id);
-    // eslint-disable-next-line @typescript-eslint/dot-notation
+
     let user: Member | User | undefined = guild?.members.get(data.user.id);
     if (user instanceof Member) {
         user["update"]({ user: data.user });
@@ -396,7 +396,7 @@ export async function GUILD_SOUNDBOARD_SOUNDS_UPDATE(data: DispatchEventMap["GUI
 export async function GUILD_STICKERS_UPDATE(data: DispatchEventMap["GUILD_STICKERS_UPDATE"], shard: Shard): Promise<void> {
     const guild = shard.client.guilds.get(data.guild_id);
     const oldStickers = guild?.stickers ? guild.stickers.toArray() : null;
-    // eslint-disable-next-line @typescript-eslint/dot-notation
+
     guild?.["update"]({ stickers: data.stickers });
     shard.client.emit("guildStickersUpdate", guild ?? { id: data.guild_id }, guild?.stickers?.toArray() ?? data.stickers.map(sticker => shard.client.util.convertSticker(sticker)), oldStickers);
 }
@@ -930,7 +930,7 @@ export async function VOICE_CHANNEL_EFFECT_SEND(data: DispatchEventMap["VOICE_CH
 
 export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPDATE"], shard: Shard): Promise<void> {
     if (data.guild_id && data.session_id && data.user_id === shard.client.user.id) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
         shard.client.voiceAdapters.get(data.guild_id)?.onVoiceStateUpdate(data as never);
     }
     // @TODO voice states without guilds?
@@ -974,7 +974,7 @@ export async function VOICE_CHANNEL_STATUS_UPDATE(data: DispatchEventMap["VOICE_
 }
 
 export async function VOICE_SERVER_UPDATE(data: DispatchEventMap["VOICE_SERVER_UPDATE"], shard: Shard): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
     shard.client.voiceAdapters.get(data.guild_id)?.onVoiceServerUpdate(data);
 }
 

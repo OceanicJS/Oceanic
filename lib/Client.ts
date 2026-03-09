@@ -14,7 +14,7 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import { DependencyError, UncachedError } from "./util/Errors";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment */
 // @ts-ignore
 import type OAuthHelper from "./rest/OAuthHelper";
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
@@ -25,7 +25,7 @@ let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
     DiscordJSVoice = require("@discordjs/voice");
 } catch {}
-/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment */
 
 /** The primary class for interfacing with Discord. See {@link Types.Events.ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends Types.Events.ClientEvents = Types.Events.ClientEvents> extends TypedEmitter<E> {
@@ -165,7 +165,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+
         return DiscordJSVoice.getVoiceConnections();
     }
 
@@ -228,7 +228,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
         return DiscordJSVoice.getVoiceConnection(guildID);
     }
 
@@ -240,12 +240,12 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+
         return DiscordJSVoice.joinVoiceChannel({
-            channelId:      options.channelID,
-            guildId:        options.guildID,
-            debug:          options.debug,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            channelId: options.channelID,
+            guildId:   options.guildID,
+            debug:     options.debug,
+
             adapterCreator: options.voiceAdapterCreator,
             selfDeaf:       options.selfDeaf,
             selfMute:       options.selfMute
@@ -257,7 +257,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      * @param guildID The ID of the guild the voice channel belongs to.
      */
     leaveVoiceChannel(guildID: string): void {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+
         return this.getVoiceConnection(guildID)?.destroy();
     }
 

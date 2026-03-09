@@ -5,6 +5,7 @@ export default class QueryBuilder extends URLSearchParams {
                 this.delete(name);
             }
         } else {
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             super.set(name, String(value));
         }
     }

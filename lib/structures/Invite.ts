@@ -1,6 +1,5 @@
 /** @module Invite */
 import Channel from "./Channel";
-import type Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
@@ -102,7 +101,7 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
             this.flags = data.flags;
         }
 
-        let guild: Guild | undefined;
+        const guild = data.guild ? this.client.guilds.get(data.guild.id) : undefined;
         if (data.guild) {
             if (this.guild === null) {
                 this.guild = new InviteGuild(data.guild, this.client);

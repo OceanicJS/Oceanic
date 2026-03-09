@@ -368,7 +368,7 @@ export default class Channels {
             try {
                 icon = this._manager.client.util.convertImage(options.icon);
             } catch (err) {
-                throw new TypeError("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err as Error });
+                throw new TypeError("Invalid icon provided. Ensure you are providing a valid, fully-qualified base64 url.", { cause: err });
             }
         }
 
@@ -968,7 +968,7 @@ export default class Channels {
             path:   Routes.CHANNEL_THREAD_MEMBERS(channelID),
             query
         }).then(data => data.map(d => {
-            // eslint-disable-next-line @typescript-eslint/dot-notation
+
             const guild = this._manager.client.getChannel<Types.Channels.AnyGuildChannel>(channelID)?.["_cachedGuild"];
             const member = guild && options?.withMember ? guild.members.update(d.member!, guild.id) : undefined;
             return {

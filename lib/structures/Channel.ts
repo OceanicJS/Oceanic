@@ -78,7 +78,7 @@ export default class Channel extends Base {
 }
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
 const TextChannel = (require("./TextChannel") as typeof import("./TextChannel")).default;
 const PrivateChannel = (require("./PrivateChannel") as typeof import("./PrivateChannel")).default;
 const VoiceChannel = (require("./VoiceChannel") as typeof import("./VoiceChannel")).default;
@@ -91,4 +91,4 @@ const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typ
 const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
 const ForumChannel = (require("./ForumChannel") as typeof import("./ForumChannel")).default;
 const MediaChannel = (require("./MediaChannel") as typeof import("./MediaChannel")).default;
-/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+

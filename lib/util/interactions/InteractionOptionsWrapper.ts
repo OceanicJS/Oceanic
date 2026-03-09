@@ -207,7 +207,7 @@ export default class InteractionOptionsWrapper {
             throw new TypeError("Attempt to use getMentionable with null resolved. If this is on an autocomplete interaction, use getAttachmentOption instead.");
         }
         let val: string | undefined;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+
         if (!(val = (this._getOption(name, required as false, ApplicationCommandOptionTypes.MENTIONABLE) as Types.Interactions.InteractionOptionsMentionable | undefined)?.value)) {
             return undefined;
         }

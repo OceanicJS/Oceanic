@@ -96,10 +96,10 @@ export default class Interaction extends Base {
 
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
 const AutocompleteInteraction = (require("./AutocompleteInteraction") as typeof import("./AutocompleteInteraction")).default;
 const CommandInteraction = (require("./CommandInteraction") as typeof import("./CommandInteraction")).default;
 const ComponentInteraction = (require("./ComponentInteraction") as typeof import("./ComponentInteraction")).default;
 const ModalSubmitInteraction = (require("./ModalSubmitInteraction") as typeof import("./ModalSubmitInteraction")).default;
 const PingInteraction = (require("./PingInteraction") as typeof import("./PingInteraction")).default;
-/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+

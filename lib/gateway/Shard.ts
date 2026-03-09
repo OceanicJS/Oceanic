@@ -18,13 +18,13 @@ import { randomBytes } from "node:crypto";
 import { inspect } from "node:util";
 import zlib from "node:zlib";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment */
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
     Erlpack = require("erlpack");
 } catch {}
-/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment */
 
 /** Represents a gateway connection to Discord. See {@link Types.Events.ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
@@ -185,7 +185,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.client.guildShardMap.set(data.id, this.id);
         const guild = this.client.guilds.update(data);
         if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+
             void this.requestGuildMembers(guild.id, { presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES });
         }
 
@@ -200,7 +200,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.status = "connecting";
         if (this.client.shards.options.compress) {
             const type = this.client.shards.options.compress;
-            /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
             if (String(type) === "zstd-stream") {
                 if ("createZstdDecompress" in zlib) {
                     this.client.emit("debug", "Initializing zstd-based compression with native zlib.");
@@ -234,7 +234,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             } else {
                 throw new TypeError(`Invalid compression type "${type as string}".`);
             }
-            /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
         }
         if (!this.client.shards.options.override.gatewayURLIsResumeURL && this.sessionID) {
             if (this.resumeURL === null) {
@@ -450,7 +450,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.client.emit("error", err, this.id);
     }
 
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
+
     private async onWSMessage(data: Data): Promise<void> {
         if (typeof data === "string") {
             data = Buffer.from(data);
@@ -492,7 +492,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             this.client.emit("error", err as Error, this.id);
         }
     }
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
+
 
     private onWSOpen(): void {
         this.status = "handshaking";
@@ -615,7 +615,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
 
     hardReset(): void {
         this.reset();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
         for (const [,voiceAdapter] of this.client.voiceAdapters) voiceAdapter.destroy();
         this.sequence = 0;
         this.sessionID = null;
@@ -775,7 +775,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             let i = 0, waitFor = 1;
             const func = (): void => {
                 if (++i >= waitFor && this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+
                     const d: string | Buffer = Erlpack ? Erlpack.pack({ op, d: data }) : JSON.stringify({ op, d: data });
                     this.ws.send(d);
                     if (typeof data === "object" && data && "token" in data) {
