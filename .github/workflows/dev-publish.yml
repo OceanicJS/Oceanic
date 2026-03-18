@@ -28,9 +28,6 @@ jobs:
                   cache: pnpm
                   registry-url: https://registry.npmjs.org/
 
-            - name: Update NPM # Needed for provenance
-              run: npm i -g npm@"^9.5"
-
             - name: Install Dependencies
               run: pnpm i --frozen-lockfile --ignore-scripts --force
 
@@ -49,6 +46,6 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Deprecate Old Versions
-              run: npx -y npm-deprecate
+              run: pnpm dlx npm-deprecate
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

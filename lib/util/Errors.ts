@@ -15,7 +15,6 @@ export class UncaughtError extends Error {
 /** An error ancountered when an object is unexpectedly not cached. */
 export class UncachedError extends Error {
     override name = "UncachedError";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
     constructor(...args: [message: string] | [clazz: object, property: string, intent: IntentNames, client?: Client]) {
         let message: string;
         if (args.length === 1) {

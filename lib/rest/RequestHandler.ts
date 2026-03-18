@@ -139,7 +139,7 @@ export default class RequestHandler {
                                 if (!file.contents) {
                                     continue;
                                 }
-                                data.set(file.field || `files[${index}]`, new Blob([file.contents]), file.name);
+                                data.set(file.field || `files[${index}]`, new Blob([new Uint8Array(file.contents as Buffer)]), file.name);
                             }
                             if (stringBody) {
                                 data.set("payload_json", stringBody);
@@ -229,7 +229,7 @@ export default class RequestHandler {
                             `x-ratelimit-global = ${res.headers.get("x-ratelimit-global") ?? "null"}`].join("\n"));
                     }
 
-                    this.ratelimits[route].remaining = res.headers.has("x-ratelimit-remaining") ? Number(res.headers.get("x-ratelimit-remaining")) ?? 0 : 1;
+                    this.ratelimits[route].remaining = res.headers.has("x-ratelimit-remaining") ? (Number(res.headers.get("x-ratelimit-remaining")) || 0) : 1;
                     const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") ?? res.headers.get("retry-after") ?? 0) * 1000;
                     if (retryAfter >= 0) {
                         if (res.headers.has("x-ratelimit-global")) {
@@ -258,7 +258,7 @@ export default class RequestHandler {
                                     delay = (resBody as { retry_after: number; }).retry_after * 1000;
                                 } catch (err) {
                                     cb();
-                                    reject(err);
+                                    reject(err instanceof Error ? err : new Error(String(err)));
                                 }
                             }
 
@@ -270,7 +270,7 @@ export default class RequestHandler {
                                 }
                                 setTimeout(() => {
                                     cb();
-                                    // eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, prefer-spread
+
                                     this.request<T>(options).then(resolve).catch(reject);
                                 }, delay);
                                 return;

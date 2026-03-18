@@ -72,7 +72,7 @@ export default class Util {
         try {
             return this.convertImage(image);
         } catch (err) {
-            throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
+            throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err });
         }
     }
 
@@ -81,7 +81,7 @@ export default class Util {
         try {
             return this.convertSound(sound);
         } catch (err) {
-            throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err as Error });
+            throw new TypeError(`Invalid ${name} provided. Ensure you are providing a valid, fully-qualified base64 url.`, { cause: err });
         }
     }
 
@@ -114,7 +114,7 @@ export default class Util {
     /** @hidden intended for internal use only */
     _isModuleInstalled(name: string): boolean {
         try {
-            // eslint-disable-next-line unicorn/prefer-module
+
             require(name);
             return true;
         } catch {

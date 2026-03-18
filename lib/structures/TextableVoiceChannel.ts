@@ -63,10 +63,10 @@ export default class TextableVoiceChannel<T extends Types.Channels.AnyVoiceChann
      * @param options The options to join the channel with.
      */
     join(options: Omit<Types.Voice.JoinVoiceChannelOptions, "guildID" | "channelID" | "voiceAdapterCreator">): VoiceConnection {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+
         return this.client.joinVoiceChannel({
             ...options,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
             voiceAdapterCreator: this.guild.voiceAdapterCreator,
             guildID:             this.guildID,
             channelID:           this.id

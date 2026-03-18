@@ -1,6 +1,6 @@
 /** @module Types/JSON */
 import type * as Types from "./namespaced";
-/* eslint-disable @typescript-eslint/no-empty-interface */
+
 import type { InstallParams } from "./oauth";
 import type { ApplicationCompany, ApplicationExecutable, EmbeddedActivityConfig, IntegrationTypesConfig } from "./applications";
 import type { Uncached } from "./shared";

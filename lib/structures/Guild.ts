@@ -352,11 +352,11 @@ export default class Guild extends Base {
                 }
                 if (client.shards.options.seedVoiceConnections && voiceState.user_id === client.user.id && !this.client.getVoiceConnection(this.id)) {
                     this.client.joinVoiceChannel({
-                        guildID:             this.id,
-                        channelID:           voiceState.channel_id,
-                        selfDeaf:            voiceState.self_deaf,
-                        selfMute:            voiceState.self_mute,
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        guildID:   this.id,
+                        channelID: voiceState.channel_id,
+                        selfDeaf:  voiceState.self_deaf,
+                        selfMute:  voiceState.self_mute,
+
                         voiceAdapterCreator: this.voiceAdapterCreator
                     });
                 }
@@ -604,9 +604,10 @@ export default class Guild extends Base {
             throw new TypeError(`Failed to determine shard for ${this.constructor.name}#voiceAdapterCreator (guild: ${this.id})`);
         }
 
+        // eslint-disable-next-line unicorn/consistent-function-scoping
         return (methods: DiscordGatewayAdapterLibraryMethods): DiscordGatewayAdapterImplementerMethods => {
             this.client.voiceAdapters.set(this.id, methods);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
             return {
                 sendPayload: (payload: { d: unknown; op: GatewayOPCodes; }): true => {
                     this.shard.send(payload.op, payload.d);
@@ -1353,10 +1354,10 @@ export default class Guild extends Base {
      * @param options The options to join the channel with.
      */
     joinChannel(options: Omit<Types.Voice.JoinVoiceChannelOptions, "guildID" | "voiceAdapterCreator">): VoiceConnection {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
+
         return this.client.joinVoiceChannel({
             ...options,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
             voiceAdapterCreator: this.voiceAdapterCreator,
             guildID:             this.id
         });

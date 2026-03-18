@@ -354,7 +354,7 @@ export default class Guilds {
         form.append("description", options.description);
         form.append("name", options.name);
         form.append("tags", options.tags);
-        form.append("file", new Blob([options.file.contents], { type: mime }), options.file.name);
+        form.append("file", new Blob([new Uint8Array(options.file.contents as Buffer)], { type: mime }), options.file.name);
 
         return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "POST",
@@ -1681,7 +1681,7 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async memberSearch(guildID: string, options?: Types.Guilds.MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MemberSearchResults> {
-        /* eslint-disable @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping */
+        /* eslint-disable @typescript-eslint/explicit-function-return-type */
         const formatRange = <T>(data: Types.Guilds.MemberSearchRangeQuery<T>) => ({
             range: data.range === undefined ? undefined : {
                 gte: data.range.gte,
@@ -1722,7 +1722,7 @@ export default class Guilds {
             guild_joined_at: data.guildJoinedAt,
             user_id:         data.userID
         });
-        /* eslint-enable @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping */
+        /* eslint-enable @typescript-eslint/explicit-function-return-type */
         return this._manager.authRequest<Types.Guilds.RawMemberSearchResults | Types.Guilds.MemberSearchNotIndexedResult>({
             method: "POST",
             path:   Routes.GUILD_MEMBERS_SEARCH(guildID),

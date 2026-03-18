@@ -13,13 +13,12 @@ import {
 } from "../Constants";
 import Collection from "../util/Collection";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     Erlpack = require("erlpack");
 } catch {}
-/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
 
 let __compressionTrueDeprecationWarning = 0;
@@ -192,7 +191,7 @@ export default class ShardManager extends Collection<number, Shard> {
                 url = overrideURL ? null : (await this.client.rest.getGateway()).url;
             }
         } catch (err) {
-            throw new TypeError("Failed to get gateway information.", { cause: err as Error });
+            throw new TypeError("Failed to get gateway information.", { cause: err });
         }
         if (url && this.options.override.appendQuery) {
             if (url.includes("?")) {
@@ -203,7 +202,7 @@ export default class ShardManager extends Collection<number, Shard> {
             }
         }
 
-        /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
+
         if (this.options.removeDisallowedIntents && PrivilegedIntentMapping.some(([intent]) => (this.options.intents & intent) === intent)) {
             const { flags } = await this.client.rest.applications.getCurrent();
             const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
@@ -216,7 +215,7 @@ export default class ShardManager extends Collection<number, Shard> {
                 check(intent, allowed);
             }
         }
-        /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
+
 
         if (url && this.options.override.appendQuery) {
             url += `?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;

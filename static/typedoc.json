@@ -3,10 +3,8 @@
   "name": "Oceanic",
   "entryPoints": ["../lib"],
   "plugin": [
-    "typedoc-plugin-extras",
     "typedoc-plugin-mdn-links",
     "typedoc-plugin-merge-modules",
-    "@mxssfd/typedoc-theme",
     "./dark.js"
   ],
   "tsconfig": "../tsconfig.json",
@@ -20,7 +18,7 @@
   "out": "../docs",
   "json": "../docs/docs.json",
   "exclude": [],
-  "favicon": "./static/favicon.ico",
+  "favicon": "./favicon.ico",
   "titleLink": "https://docs.oceanic.ws",
   "mergeModulesMergeMode": "project",
   "kindSortOrder": ["Class", "Namespace"]
