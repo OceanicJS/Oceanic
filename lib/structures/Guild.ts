@@ -50,6 +50,8 @@ import type Shard from "../gateway/Shard";
 // @ts-ignore-line
 import { UncachedError } from "../util/Errors";
 import SimpleCollection from "../util/SimpleCollection";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore optional dependency
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
 
 /** Represents a Discord server. */

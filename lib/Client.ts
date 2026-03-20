@@ -13,14 +13,14 @@ import UnavailableGuild from "./structures/UnavailableGuild";
 import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import { DependencyError, UncachedError } from "./util/Errors";
+import type OAuthHelper from "./rest/OAuthHelper";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
-// @ts-ignore
-import type OAuthHelper from "./rest/OAuthHelper";
+// @ts-ignore optional dependency
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
 import { isDeepStrictEqual } from "node:util";
 
-// @ts-ignore
+// @ts-ignore optional dependency
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
     DiscordJSVoice = require("@discordjs/voice");
@@ -224,6 +224,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      * Get a voice connection.
      * @param guildID The ID of the guild the voice channel belongs to.
      */
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
     getVoiceConnection(guildID: string): VoiceConnection | undefined {
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");

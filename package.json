@@ -49,7 +49,6 @@
     "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "erlpack": "^0.1.4",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-import-newlines": "^1.4.1",
@@ -58,7 +57,6 @@
     "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-unicorn": "^56.0.1",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "pako": "^2.1.0",
     "pkg-pr-new": "^0.0.66",
     "rimraf": "^6.1.3",
     "typedoc": "~0.25.13",
@@ -66,9 +64,7 @@
     "typedoc-plugin-mdn-links": "^3.3.8",
     "typedoc-plugin-merge-modules": "5.1.0",
     "typescript": "~5.4.5",
-    "undici-types": "~5.28.4",
-    "zlib-sync": "^0.1.10",
-    "zstd-napi": "^0.0.12"
+    "undici-types": "~5.28.4"
   },
   "dependencies": {
     "tslib": "^2.8.1",
@@ -79,6 +75,26 @@
   },
   "optionalDependencies": {
     "@discordjs/voice": "^0.19.0"
+  },
+  "peerDependencies": {
+    "erlpack": "^0.1.4",
+    "pako": "^2.1.0",
+    "zlib-sync": "^0.1.10",
+    "zstd-napi": "^0.0.12"
+  },
+  "peerDependenciesMeta": {
+    "erlpack": {
+      "optional": true
+    },
+    "pako": {
+      "optional": true
+    },
+    "zlib-sync": {
+      "optional": true
+    },
+    "zstd-napi": {
+      "optional": true
+    }
   },
   "pnpm": {
     "patchedDependencies": {
