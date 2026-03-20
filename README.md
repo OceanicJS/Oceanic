@@ -2,6 +2,7 @@
   <img width=60% src="https://user-images.githubusercontent.com/68125679/193473284-e14ea33d-b086-4c28-870d-4221e766d775.png">
   <br>
   <a href="https://npmjs.com/package/oceanic.js"><img src="https://img.shields.io/npm/v/oceanic.js.svg?style=flat-square&color=informational"></a>
+  <a href="https://pkg.pr.new/~/OceanicJS/Oceanic"><img src="https://pkg.pr.new/badge/OceanicJS/Oceanic"></a>
   <img src="https://img.shields.io/github/stars/OceanicJS/Oceanic?color=yellow&style=flat-square">
   <img src="https://img.shields.io/npm/dw/oceanic.js?color=red&style=flat-square">
 </p>
@@ -40,7 +41,7 @@ See the [examples](https://github.com/OceanicJS/Oceanic/tree/dev/examples) folde
 
 ### Development Builds
 ```sh
-npm i oceanic.js@dev
+npm i https://pkg.pr.new/oceanic.js@dev
 ```
 
 The documentation under `dev` is always for the latest commit. If something isn't working that's in the documentation, you're likely looking at the wrong documentation.
