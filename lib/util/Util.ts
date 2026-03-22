@@ -299,10 +299,10 @@ export default class Util {
                     customID: component.custom_id,
                     required: component.required,
                     options:  component.options.map(o => ({
-                        value:       o.value,
+                        default:     o.default,
                         description: o.description,
-                        default:     o.value,
-                        label:       o.value
+                        label:       o.label,
+                        value:       o.value
                     })),
                     type: component.type
                 } as never;
@@ -501,10 +501,10 @@ export default class Util {
                     custom_id: component.customID,
                     required:  component.required,
                     options:   component.options.map(o => ({
-                        value:       o.value,
+                        default:     o.default,
                         description: o.description,
-                        default:     o.value,
-                        label:       o.value
+                        label:       o.label,
+                        value:       o.value
                     })),
                     type: component.type
                 } as never;
