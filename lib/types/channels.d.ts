@@ -1152,7 +1152,10 @@ export type ToComponentFromRaw<T extends RawComponent> =
                                                                     T extends RawContainerComponent ? ContainerComponent :
                                                                         T extends RawModalLabel ? ModalLabel :
                                                                             T extends RawModalFileUploadComponent ? ModalFileUploadComponent :
-                                                                                T extends RawRadioGroupComponent ? RadioGroupComponent : T extends RawCheckboxComponent ? CheckboxComponent : T extends RawCheckboxGroupComponent ? CheckboxGroupComponent : never;
+                                                                                T extends RawRadioGroupComponent ? RadioGroupComponent :
+                                                                                    T extends RawCheckboxComponent ? CheckboxComponent :
+                                                                                        T extends RawCheckboxGroupComponent ? CheckboxGroupComponent :
+                                                                                            never;
 export type ToRawFromComponent<T extends Component> =
     T extends MessageActionRow ? RawMessageActionRow :
         T extends ModalActionRow ? RawModalActionRow :
@@ -1173,7 +1176,10 @@ export type ToRawFromComponent<T extends Component> =
                                                                     T extends ContainerComponent ? RawContainerComponent :
                                                                         T extends ModalLabel ? RawModalLabel :
                                                                             T extends ModalFileUploadComponent ? RawModalFileUploadComponent :
-                                                                                T extends RadioGroupComponent ? RawRadioGroupComponent : T extends CheckboxComponent ? RawCheckboxComponent : T extends CheckboxGroupComponent ? RawCheckboxGroupComponent : never;
+                                                                                T extends RadioGroupComponent ? RawRadioGroupComponent :
+                                                                                    T extends CheckboxComponent ? RawCheckboxComponent :
+                                                                                        T extends CheckboxGroupComponent ? RawCheckboxGroupComponent :
+                                                                                            never;
 
 export interface RawActionRowBase<T extends RawComponent> {
     components: Array<T>;
