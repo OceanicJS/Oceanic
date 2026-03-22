@@ -51,6 +51,50 @@ export default class ModalSubmitInteractionComponentsWrapper {
         return component?.values && mapRawToResolved("channel", component.values, this.resolved.channels, false);
     }
 
+    /**
+     * Get a checkbox option.
+     * @param name The name of the option
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getCheckboxComponent(name: string, required?: false): Types.Interactions.ModalSubmitCheckboxComponent | undefined;
+    getCheckboxComponent(name: string, required: true): Types.Interactions.ModalSubmitCheckboxComponent;
+    getCheckboxComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitCheckboxComponent | undefined {
+        return this._getComponent(name, required, ComponentTypes.CHECKBOX);
+    }
+
+    /**
+     * Get a checkbox group option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getCheckboxGroupComponent(name: string, required?: false): Types.Interactions.ModalSubmitCheckboxGroupComponent | undefined;
+    getCheckboxGroupComponent(name: string, required: true): Types.Interactions.ModalSubmitCheckboxGroupComponent;
+    getCheckboxGroupComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitCheckboxGroupComponent | undefined {
+        return this._getComponent(name, required, ComponentTypes.CHECKBOX_GROUP);
+    }
+
+    /**
+     * Get the values of a checkbox group option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getCheckboxGroupValues(name: string, required?: false): Array<string> | undefined;
+    getCheckboxGroupValues(name: string, required: true): Array<string>;
+    getCheckboxGroupValues(name: string, required?: boolean): Array<string> | undefined {
+        return this.getCheckboxGroupComponent(name, required as false)?.values;
+    }
+
+    /**
+     * Get the value of a checkbox option.
+     * @param name The name of the option
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getCheckboxValue(name: string, required?: false): boolean | undefined;
+    getCheckboxValue(name: string, required: true): boolean;
+    getCheckboxValue(name: string, required?: boolean): boolean | undefined {
+        return this.getCheckboxComponent(name, required as false)?.value;
+    }
+
     /** Get the components in this interaction. */
     getComponents(): Array<Types.Interactions.ModalSubmitComponents> {
         return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
@@ -100,6 +144,30 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getMentionableSelectValues(name: string, required?: boolean): Array<User | Role> | undefined {
         const component = this.getMentionableSelectComponent(name, required as false);
         return component?.values && mapRawToResolved("mentionable", component.values, new Collection<string, User | Role>([...this.resolved.users, ...this.resolved.roles]), false);
+    }
+
+    /**
+     * Get a radio group option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     */
+    getRadioGroupComponent(name: string, required?: false): Types.Interactions.ModalSubmitRadioGroupComponent | undefined;
+    getRadioGroupComponent(name: string, required: true): Types.Interactions.ModalSubmitRadioGroupComponent;
+    getRadioGroupComponent(name: string, required?: boolean): Types.Interactions.ModalSubmitRadioGroupComponent | undefined {
+        return this._getComponent(name, required, ComponentTypes.RADIO_GROUP);
+    }
+
+    /**
+     * Get the value of a radio group option.
+     * @param name The name of the option.
+     * @param required If true, an error will be thrown if the option is not present.
+     *
+     * Note: If no option is selected, `null` will be returned.
+     */
+    getRadioGroupValue(name: string, required?: false): string | null | undefined;
+    getRadioGroupValue(name: string, required: true): string | null;
+    getRadioGroupValue(name: string, required?: boolean): string | null|undefined {
+        return this.getRadioGroupComponent(name, required as false)?.value;
     }
 
     /**
