@@ -294,6 +294,41 @@ export default class Util {
                     type:      component.type
                 } as never;
             }
+            case ComponentTypes.RADIO_GROUP: {
+                return {
+                    customId: component.custom_id,
+                    required: component.required,
+                    options:  component.options.map(o => ({
+                        value:       o.value,
+                        description: o.description,
+                        default:     o.value,
+                        label:       o.value
+                    })),
+                    type: component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX: {
+                return {
+                    customID: component.custom_id,
+                    default:  component.default,
+                    type:     component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX_GROUP: {
+                return {
+                    customID:  component.custom_id,
+                    maxValues: component.max_values,
+                    minValues: component.min_values,
+                    options:   component.options.map(o => ({
+                        default:     o.default,
+                        description: o.description,
+                        label:       o.label,
+                        value:       o.value
+                    })),
+                    required: component.required,
+                    type:     component.type
+                } as never;
+            }
             default: {
                 return component as never;
             }
@@ -461,6 +496,41 @@ export default class Util {
                     required:   component.required,
                     type:       component.type
                 } as never;
+            case ComponentTypes.RADIO_GROUP: {
+                return {
+                    custom_id: component.customID,
+                    required:  component.required,
+                    options:   component.options.map(o => ({
+                        value:       o.value,
+                        description: o.description,
+                        default:     o.value,
+                        label:       o.value
+                    })),
+                    type: component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX: {
+                return {
+                    custom_id: component.customID,
+                    default:   component.default,
+                    type:      component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX_GROUP: {
+                return {
+                    custom_id:  component.customID,
+                    max_values: component.maxValues,
+                    min_values: component.minValues,
+                    options:    component.options.map(o => ({
+                        default:     o.default,
+                        description: o.description,
+                        label:       o.label,
+                        value:       o.value
+                    })),
+                    required: component.required,
+                    type:     component.type
+                } as never;
+            }
             default: {
                 return component as never;
             }
