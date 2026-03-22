@@ -776,6 +776,8 @@ export default class Util {
 
     modalSubmitComponentToParsed<T extends Types.Interactions.RawModalSubmitComponents>(component: T): Types.Interactions.ToModalSubmitComponentFromRaw<T> {
         switch (component.type) {
+            case ComponentTypes.CHECKBOX:
+            case ComponentTypes.RADIO_GROUP:
             case ComponentTypes.TEXT_INPUT: {
                 return {
                     customID: component.custom_id,
@@ -789,6 +791,7 @@ export default class Util {
             case ComponentTypes.ROLE_SELECT:
             case ComponentTypes.MENTIONABLE_SELECT:
             case ComponentTypes.CHANNEL_SELECT:
+            case ComponentTypes.CHECKBOX_GROUP:
             case ComponentTypes.FILE_UPLOAD: {
                 return {
                     customID: component.custom_id,
@@ -796,6 +799,7 @@ export default class Util {
                     values:   component.values
                 } as never;
             }
+
             default: {
                 return component as never;
             }
