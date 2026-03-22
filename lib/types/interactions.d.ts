@@ -437,7 +437,7 @@ export interface ModalSubmitComponentsNullableStringValue<T extends ModalCompone
     value: string | null;
 }
 
-export type ToRawFromoModalSubmitComponent<T extends ModalSubmitComponents> =
+export type ToRawFromModalSubmitComponent<T extends ModalSubmitComponents> =
 T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
     T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
         T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
