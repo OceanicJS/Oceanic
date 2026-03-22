@@ -1127,7 +1127,7 @@ export type RawMessageActionRowComponent = RawButtonComponent | RawSelectMenuCom
 export type RawMessageComponent = RawMessageActionRow | RawSectionComponent | RawTextDisplayComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent | RawContainerComponent;
 /** @deprecated */
 export type RawModalActionRowComponent = RawTextInput;
-export type RawModalLabelComponent = RawSelectMenuComponent | RawTextInput | RawModalFileUploadComponent;
+export type RawModalLabelComponent = RawCheckboxComponent | RawCheckboxGroupComponent | RawRadioGroupComponent | RawSelectMenuComponent | RawTextInput | RawModalFileUploadComponent;
 export type RawModalComponent = RawModalActionRow | RawModalLabel | RawTextDisplayComponent;
 export type RawButtonComponent = RawTextButton | URLButton | RawPremiumButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
@@ -1152,7 +1152,7 @@ export type ToComponentFromRaw<T extends RawComponent> =
                                                                     T extends RawContainerComponent ? ContainerComponent :
                                                                         T extends RawModalLabel ? ModalLabel :
                                                                             T extends RawModalFileUploadComponent ? ModalFileUploadComponent :
-                                                                                never;
+                                                                                T extends RawRadioGroupComponent ? RadioGroupComponent : T extends RawCheckboxComponent ? CheckboxComponent : T extends RawCheckboxGroupComponent ? CheckboxGroupComponent : never;
 export type ToRawFromComponent<T extends Component> =
     T extends MessageActionRow ? RawMessageActionRow :
         T extends ModalActionRow ? RawModalActionRow :
@@ -1173,7 +1173,7 @@ export type ToRawFromComponent<T extends Component> =
                                                                     T extends ContainerComponent ? RawContainerComponent :
                                                                         T extends ModalLabel ? RawModalLabel :
                                                                             T extends ModalFileUploadComponent ? RawModalFileUploadComponent :
-                                                                                never;
+                                                                                T extends RadioGroupComponent ? RawRadioGroupComponent : T extends CheckboxComponent ? RawCheckboxComponent : T extends CheckboxGroupComponent ? RawCheckboxGroupComponent : never;
 
 export interface RawActionRowBase<T extends RawComponent> {
     components: Array<T>;
@@ -1196,10 +1196,88 @@ export type MessageComponent = MessageActionRow | SectionComponent | TextDisplay
 /** @deprecated */
 export type ModalActionRowComponent = TextInput;
 /** a child of a label component */
-export type ModalLabelComponent = SelectMenuComponent | TextInput | ModalFileUploadComponent;
+export type ModalLabelComponent = CheckboxComponent | CheckboxGroupComponent | RadioGroupComponent | SelectMenuComponent | TextInput | ModalFileUploadComponent;
 export type ModalComponent = ModalActionRow | ModalLabel | TextDisplayComponent;
 export type ButtonComponent = TextButton | URLButton | PremiumButton;
 export type SelectMenuComponent = StringSelectMenu | UserSelectMenu | RoleSelectMenu | MentionableSelectMenu | ChannelSelectMenu;
+
+export interface RadioGroupComponent extends BaseComponent {
+    customID: string;
+    id?: number;
+    options: Array<RadioGroupOption>;
+    required?: boolean;
+    type: ComponentTypes.RADIO_GROUP;
+}
+
+export interface RawRadioGroupComponent extends BaseComponent {
+    custom_id: string;
+    id?: number;
+    options: Array<RawRadioGroupOption>;
+    required?: boolean;
+    type: ComponentTypes.RADIO_GROUP;
+}
+
+export interface RadioGroupOption {
+    default?: boolean;
+    description?: string;
+    label: string;
+    value: string;
+}
+
+export interface RawRadioGroupOption {
+    default?: boolean;
+    description?: string;
+    label: string;
+    value: string;
+}
+
+export interface CheckboxComponent extends BaseComponent {
+    customID: string;
+    default?: boolean;
+    id?: number;
+    type: ComponentTypes.CHECKBOX;
+}
+
+export interface RawCheckboxComponent extends BaseComponent {
+    custom_id: string;
+    default?: boolean;
+    id?: number;
+    type: ComponentTypes.CHECKBOX;
+}
+
+export interface CheckboxGroupComponent extends BaseComponent {
+    customID: string;
+    id?: number;
+    maxValues?: number;
+    minValues?: number;
+    options: Array<CheckboxGroupOption>;
+    required?: boolean;
+    type: ComponentTypes.CHECKBOX_GROUP;
+}
+
+export interface RawCheckboxGroupComponent extends BaseComponent {
+    custom_id: string;
+    id?: number;
+    max_values?: number;
+    min_values?: number;
+    options: Array<RawCheckboxGroupOption>;
+    required?: boolean;
+    type: ComponentTypes.CHECKBOX_GROUP;
+}
+
+export interface CheckboxGroupOption {
+    default?: boolean;
+    description?: string;
+    label: string;
+    value: string;
+}
+
+export interface RawCheckboxGroupOption {
+    default?: boolean;
+    description?: string;
+    label: string;
+    value: string;
+}
 
 export interface BaseComponent {
     /** Autoincremented number if not provided */
