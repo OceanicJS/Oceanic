@@ -296,7 +296,7 @@ export default class Util {
             }
             case ComponentTypes.RADIO_GROUP: {
                 return {
-                    customId: component.custom_id,
+                    customID: component.custom_id,
                     required: component.required,
                     options:  component.options.map(o => ({
                         value:       o.value,
