@@ -400,7 +400,7 @@ T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
 /** @deprecated */
 export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
 export type RawModalSubmitComponentsLabel = RawModalComponentsLabel<RawModalSubmitComponents>;
-export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitFileUploadComponent | RawModalSubmitSelectComponents | RawModalSubmitCheckboxComponent | ModalSubmitCheckboxGroupComponent | ModalSubmitRadioGroupComponent;
+export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitFileUploadComponent | RawModalSubmitSelectComponents | RawModalSubmitCheckboxComponent | RawModalSubmitCheckboxGroupComponent | ModalSubmitRadioGroupComponent;
 export type RawModalSubmitSelectComponents = RawModalSubmitStringSelectComponent | RawModalSubmitUserSelectComponent | RawModalSubmitRoleSelectComponent | RawModalSubmitMentionableSelectComponent | RawModalSubmitChannelSelectComponent;
 export interface RawModalSubmitTextInputComponent extends RawModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
 export interface RawModalSubmitStringSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
