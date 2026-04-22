@@ -37,8 +37,15 @@ export interface ClientOptions {
     gateway?: Types.Gateway.GatewayOptions;
     /** The options for the request handler. */
     rest?: RESTOptions;
+    /**
+     * A bot token. The value will be prefixed with `Bot ` if not already. Functionally the same to `auth` if already prefixed.
+     * 
+     * The client function {@link Client._prefixToken | _prefixToken} can be overridden to change the default prefix.
+     */
+    token?: string;
 }
-export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits" | "disableCache">> {
+
+export interface ClientInstanceOptions extends Required<Omit<ClientOptions, "rest" | "gateway" | "collectionLimits" | "disableCache" | "token">> {
     collectionLimits: Required<CollectionLimitsOptions>;
     disableCache: boolean;
     /** If rest mode has been enabled. */

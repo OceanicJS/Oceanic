@@ -20,7 +20,7 @@
     "noImplicitOverride": true,
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "allowUnusedLabels": false,

@@ -19,6 +19,7 @@ import type OAuthHelper from "./rest/OAuthHelper";
 // @ts-ignore optional dependency
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
 import { isDeepStrictEqual } from "node:util";
+import { warning, WarningCodes } from "./util/warning";
 
 // @ts-ignore optional dependency
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
@@ -79,6 +80,13 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
             voiceMembers:        0,
             voiceStates:         0
         } satisfies Required<Types.Client.CollectionLimitsOptions>;
+
+        if (options?.token) {
+            if (options.auth) warning(WarningCodes.OCEANIC_AUTH_AND_TOKEN_PROVIDED)
+            else options.auth = this._prefixToken(options.token);
+            delete options.token;
+        }
+
         this.options = {
             allowedMentions: options?.allowedMentions ?? {
                 everyone:    false,
@@ -117,16 +125,10 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
             disableCache
         };
         if (options?.disableCache === true) {
-            process.emitWarning("Enabling the disableCache option is not recommended. This will break many aspects of the library, as it is not designed to function without cache.", {
-                code:   "OCEANIC_CACHE_DISABLED",
-                detail: "Set the disableCache option to the literal string \"no-warning\" to disable this warning."
-            });
+            warning(WarningCodes.OCEANIC_CACHE_DISABLED);
         }
         if (disableCache && options?.collectionLimits !== undefined && !isDeepStrictEqual(options.collectionLimits, colZero)) {
-            process.emitWarning("Providing the collectionsLimit option when the disableCache option has been enabled is redundant. Any provided values will be ignored.", {
-                code:   "OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED",
-                detail: "Remove the collectionsLimit option, or zero out all of the possible options to disable this warning."
-            });
+            warning(WarningCodes.OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED);
         }
         this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);
         this.guilds = new TypedCollection(Guild, this, this.options.collectionLimits.guilds);
@@ -167,6 +169,11 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return DiscordJSVoice.getVoiceConnections();
+    }
+
+    /** The function called to prefix the `token` option. This will always be called if the {@link Types.Client.ClientOptions#token | token} option is set. */
+    _prefixToken(token: string): string {
+        return token.startsWith("Bot ") ? token : `Bot ${token}`;
     }
 
     /** Connect the client to Discord. */
