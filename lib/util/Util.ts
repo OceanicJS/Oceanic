@@ -294,6 +294,41 @@ export default class Util {
                     type:      component.type
                 } as never;
             }
+            case ComponentTypes.RADIO_GROUP: {
+                return {
+                    customID: component.custom_id,
+                    required: component.required,
+                    options:  component.options.map(o => ({
+                        default:     o.default,
+                        description: o.description,
+                        label:       o.label,
+                        value:       o.value
+                    })),
+                    type: component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX: {
+                return {
+                    customID: component.custom_id,
+                    default:  component.default,
+                    type:     component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX_GROUP: {
+                return {
+                    customID:  component.custom_id,
+                    maxValues: component.max_values,
+                    minValues: component.min_values,
+                    options:   component.options.map(o => ({
+                        default:     o.default,
+                        description: o.description,
+                        label:       o.label,
+                        value:       o.value
+                    })),
+                    required: component.required,
+                    type:     component.type
+                } as never;
+            }
             default: {
                 return component as never;
             }
@@ -461,6 +496,41 @@ export default class Util {
                     required:   component.required,
                     type:       component.type
                 } as never;
+            case ComponentTypes.RADIO_GROUP: {
+                return {
+                    custom_id: component.customID,
+                    required:  component.required,
+                    options:   component.options.map(o => ({
+                        default:     o.default,
+                        description: o.description,
+                        label:       o.label,
+                        value:       o.value
+                    })),
+                    type: component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX: {
+                return {
+                    custom_id: component.customID,
+                    default:   component.default,
+                    type:      component.type
+                } as never;
+            }
+            case ComponentTypes.CHECKBOX_GROUP: {
+                return {
+                    custom_id:  component.customID,
+                    max_values: component.maxValues,
+                    min_values: component.minValues,
+                    options:    component.options.map(o => ({
+                        default:     o.default,
+                        description: o.description,
+                        label:       o.label,
+                        value:       o.value
+                    })),
+                    required: component.required,
+                    type:     component.type
+                } as never;
+            }
             default: {
                 return component as never;
             }
@@ -706,6 +776,8 @@ export default class Util {
 
     modalSubmitComponentToParsed<T extends Types.Interactions.RawModalSubmitComponents>(component: T): Types.Interactions.ToModalSubmitComponentFromRaw<T> {
         switch (component.type) {
+            case ComponentTypes.CHECKBOX:
+            case ComponentTypes.RADIO_GROUP:
             case ComponentTypes.TEXT_INPUT: {
                 return {
                     customID: component.custom_id,
@@ -719,6 +791,7 @@ export default class Util {
             case ComponentTypes.ROLE_SELECT:
             case ComponentTypes.MENTIONABLE_SELECT:
             case ComponentTypes.CHANNEL_SELECT:
+            case ComponentTypes.CHECKBOX_GROUP:
             case ComponentTypes.FILE_UPLOAD: {
                 return {
                     customID: component.custom_id,
@@ -726,6 +799,7 @@ export default class Util {
                     values:   component.values
                 } as never;
             }
+
             default: {
                 return component as never;
             }

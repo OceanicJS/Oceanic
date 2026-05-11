@@ -818,6 +818,10 @@ export enum ComponentTypes {
     CONTAINER               = 17,
     LABEL                   = 18,
     FILE_UPLOAD             = 19,
+
+    RADIO_GROUP    = 21,
+    CHECKBOX_GROUP = 22,
+    CHECKBOX       = 23,
 }
 
 export type SelectMenuNonResolvedTypes = ComponentTypes.STRING_SELECT;
@@ -825,7 +829,7 @@ export type SelectMenuResolvedTypes = ComponentTypes.USER_SELECT | ComponentType
 export type SelectMenuTypes = SelectMenuNonResolvedTypes | SelectMenuResolvedTypes;
 
 export type MessageComponentTypes = ComponentTypes.BUTTON | SelectMenuTypes;
-export type ModalComponentTypes = ComponentTypes.TEXT_INPUT | SelectMenuTypes | ComponentTypes.FILE_UPLOAD;
+export type ModalComponentTypes = ComponentTypes.CHECKBOX | ComponentTypes.CHECKBOX_GROUP | ComponentTypes.RADIO_GROUP | ComponentTypes.TEXT_INPUT | SelectMenuTypes | ComponentTypes.FILE_UPLOAD;
 
 export enum ButtonStyles {
     PRIMARY   = 1,

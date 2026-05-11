@@ -352,6 +352,16 @@ export interface RawModalSubmitComponentsStringValues<T extends ModalComponentTy
     values: Array<string>;
 }
 
+export interface RawModalSubmitComponentsBooleanValue<T extends ModalComponentTypes = ModalComponentTypes> extends RawModalSubmitComponentsBase {
+    type: T;
+    value: boolean;
+}
+
+export interface RawModalSubmitComponentsNullableStringValue<T extends ModalComponentTypes = ModalComponentTypes> extends RawModalSubmitComponentsBase {
+    type: T;
+    value: string | null;
+}
+
 /** @deprecated */
 interface RawModalComponentsActionRow<T extends RawModalSubmitComponents> {
     components: Array<T>;
@@ -382,12 +392,15 @@ T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
                 T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
                     T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
                         T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
-                            never;
+                            T extends RawModalSubmitCheckboxComponent ? ModalSubmitCheckboxComponent :
+                                T extends RawModalSubmitCheckboxGroupComponent ? ModalSubmitCheckboxGroupComponent :
+                                    T extends RawModalSubmitRadioGroupComponent ? ModalSubmitRadioGroupComponent :
+                                        never;
 
 /** @deprecated */
 export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
 export type RawModalSubmitComponentsLabel = RawModalComponentsLabel<RawModalSubmitComponents>;
-export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitFileUploadComponent | RawModalSubmitSelectComponents;
+export type RawModalSubmitComponents = RawModalSubmitTextInputComponent | RawModalSubmitFileUploadComponent | RawModalSubmitSelectComponents | RawModalSubmitCheckboxComponent | RawModalSubmitCheckboxGroupComponent | RawModalSubmitRadioGroupComponent;
 export type RawModalSubmitSelectComponents = RawModalSubmitStringSelectComponent | RawModalSubmitUserSelectComponent | RawModalSubmitRoleSelectComponent | RawModalSubmitMentionableSelectComponent | RawModalSubmitChannelSelectComponent;
 export interface RawModalSubmitTextInputComponent extends RawModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
 export interface RawModalSubmitStringSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
@@ -396,6 +409,9 @@ export interface RawModalSubmitRoleSelectComponent extends RawModalSubmitCompone
 export interface RawModalSubmitMentionableSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> {}
 export interface RawModalSubmitChannelSelectComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> {}
 export interface RawModalSubmitFileUploadComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.FILE_UPLOAD> { }
+export interface RawModalSubmitCheckboxComponent extends RawModalSubmitComponentsBooleanValue<ComponentTypes.CHECKBOX> { }
+export interface RawModalSubmitCheckboxGroupComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.CHECKBOX_GROUP> {}
+export interface RawModalSubmitRadioGroupComponent extends RawModalSubmitComponentsNullableStringValue<ComponentTypes.RADIO_GROUP> {}
 
 interface ModalSubmitComponentsBase {
     customID: string;
@@ -411,7 +427,17 @@ export interface ModalSubmitComponentsStringValues<T extends ModalComponentTypes
     values: Array<string>;
 }
 
-export type ToRawFromoModalSubmitComponent<T extends ModalSubmitComponents> =
+export interface ModalSubmitComponentsBooleanValue<T extends ModalComponentTypes = ModalComponentTypes> extends ModalSubmitComponentsBase {
+    type: T;
+    value: boolean;
+}
+
+export interface ModalSubmitComponentsNullableStringValue<T extends ModalComponentTypes = ModalComponentTypes> extends ModalSubmitComponentsBase {
+    type: T;
+    value: string | null;
+}
+
+export type ToRawFromModalSubmitComponent<T extends ModalSubmitComponents> =
 T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
     T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
         T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
@@ -419,12 +445,15 @@ T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
                 T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
                     T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
                         T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent :
-                            never;
+                            T extends ModalSubmitCheckboxComponent ? RawModalSubmitCheckboxComponent :
+                                T extends ModalSubmitCheckboxGroupComponent ? RawModalSubmitCheckboxGroupComponent :
+                                    T extends ModalSubmitRadioGroupComponent ? RawModalSubmitRadioGroupComponent :
+                                        never;
 
 /** @deprecated */
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
 export type ModalSubmitComponentsLabel = ModalComponentsLabel<ModalSubmitComponents>;
-export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents | ModalSubmitFileUploadComponent;
+export type ModalSubmitComponents = ModalSubmitTextInputComponent | ModalSubmitSelectComponents | ModalSubmitFileUploadComponent | ModalSubmitCheckboxComponent | ModalSubmitCheckboxGroupComponent | ModalSubmitRadioGroupComponent;
 export type ModalSubmitSelectComponents = ModalSubmitStringSelectComponent | ModalSubmitUserSelectComponent | ModalSubmitRoleSelectComponent | ModalSubmitMentionableSelectComponent | ModalSubmitChannelSelectComponent;
 export interface ModalSubmitTextInputComponent extends ModalSubmitComponentsStringValue<ComponentTypes.TEXT_INPUT> {}
 export interface ModalSubmitStringSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.STRING_SELECT> {}
@@ -433,6 +462,9 @@ export interface ModalSubmitRoleSelectComponent extends ModalSubmitComponentsStr
 export interface ModalSubmitMentionableSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.MENTIONABLE_SELECT> {}
 export interface ModalSubmitChannelSelectComponent extends ModalSubmitComponentsStringValues<ComponentTypes.CHANNEL_SELECT> {}
 export interface ModalSubmitFileUploadComponent extends ModalSubmitComponentsStringValues<ComponentTypes.FILE_UPLOAD> { }
+export interface ModalSubmitCheckboxComponent extends ModalSubmitComponentsBooleanValue<ComponentTypes.CHECKBOX> {}
+export interface ModalSubmitCheckboxGroupComponent extends ModalSubmitComponentsStringValues<ComponentTypes.CHECKBOX_GROUP> { }
+export interface ModalSubmitRadioGroupComponent extends ModalSubmitComponentsNullableStringValue<ComponentTypes.RADIO_GROUP> {}
 
 export type ApplicationCommandTypesWithTarget = ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE;
 
