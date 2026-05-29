@@ -197,25 +197,25 @@ export default class ThreadChannel<CH extends Types.Channels.AnyThreadChannel = 
     }
 
     /**
-         * Edit a message in this thread.
-         * @param messageID The ID of the message to edit.
-         * @param options The options for editing the message.
-         */
-        async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<CH>>;
-        /**
-         * Edit a message in this thread.
-         * @param messageID The ID of the message to edit.
-         * @param content The content for editing the message.
-         * @param options The options for editing the message.
-         */
-        async editMessage(messageID: string, content: string, options?: Types.Channels.EditMessageOptions): Promise<Message<CH>>;
-        async editMessage(messageID: string, content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions): Promise<Message<CH>> {
-            if (typeof content === "string") {
-                options = {
-                    ...options,
-                    content
-                };
-            } else options = content;
+     * Edit a message in this thread.
+     * @param messageID The ID of the message to edit.
+     * @param options The options for editing the message.
+     */
+    async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<CH>>;
+    /**
+     * Edit a message in this thread.
+     * @param messageID The ID of the message to edit.
+     * @param content The content for editing the message.
+     * @param options The options for editing the message.
+     */
+    async editMessage(messageID: string, content: string, options?: Types.Channels.EditMessageOptions): Promise<Message<CH>>;
+    async editMessage(messageID: string, content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions): Promise<Message<CH>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.channels.editMessage<CH>(this.id, messageID, options);
     }
 

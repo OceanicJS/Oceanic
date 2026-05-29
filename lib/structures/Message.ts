@@ -499,9 +499,9 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
             messageReference: {
                 channelID: this.channelID,
                 messageID: this.id,
-                type: MessageReferenceType.FORWARD,
-            },
-        })
+                type:      MessageReferenceType.FORWARD
+            }
+        });
     }
 
     /**
@@ -566,9 +566,9 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
             ...options,
             messageReference: {
                 messageID: this.id,
-                type: MessageReferenceType.DEFAULT,
-            },
-        })
+                type:      MessageReferenceType.DEFAULT
+            }
+        });
     }
 
     /**

@@ -147,7 +147,7 @@ export default class Channels {
                     fail_if_not_exists: options.messageReference.failIfNotExists,
                     guild_id:           options.messageReference.guildID,
                     message_id:         options.messageReference.messageID,
-                    type:               options.messageReference.type,
+                    type:               options.messageReference.type
                 } : undefined,
                 nonce: options.nonce,
                 poll:  options.poll ? {

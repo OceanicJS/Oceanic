@@ -183,7 +183,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         return new MessageInteractionResponse<ComponentInteraction<V, T>>(this, message, "followup", null) as FollowupMessageInteractionResponse<this>;
     }
 
-     /**
+    /**
      * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link ComponentInteraction#createFollowup | createFollowup}.
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for the message.
@@ -263,7 +263,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         return this.client.rest.interactions.deleteOriginalMessage(this.applicationID, this.token);
     }
 
-     /**
+    /**
      * Edit a followup message.
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
