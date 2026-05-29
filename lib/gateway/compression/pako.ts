@@ -1,4 +1,4 @@
-import Compression from "./base";
+import Compressor from "./base";
 import type Shard from "../Shard";
 import { GatewayError } from "../../util/Errors";
 import { Inflate, constants } from "pako";
@@ -11,7 +11,7 @@ interface PakoExtra {
     };
 }
 
-export default class PakoCompression extends Compression {
+export default class PakoCompression extends Compressor {
     _sharedZLib: Inflate & PakoExtra;
     constructor(shard: Shard) {
         super(shard);

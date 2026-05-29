@@ -1,6 +1,7 @@
 /** @module Shard */
 import type ShardManager from "./ShardManager";
-import type Compression from "./compression/base";
+import type Compressor from "./compression/base";
+import CompressionConfigs from "./compression/config";
 import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import TypedEmitter from "../util/TypedEmitter";
@@ -27,7 +28,7 @@ try {
 
 /** Represents a gateway connection to Discord. See {@link Types.Events.ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
-    private _compressor: Compression | undefined;
+    private _compressor: Compressor | undefined;
     private _connectTimeout: NodeJS.Timeout | null;
     private _getAllUsersCount: Record<string, true>;
     private _getAllUsersQueue: Array<string>;
@@ -200,50 +201,13 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         if (this.client.shards.options.compress) {
             const type = this.client.shards.options.compress;
             const library = this.client.shards.options.compressLibrary;
-            /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
-            if (type === "zstd-stream") {
-                if (library === "native") {
-                    this.client.emit("debug", "Initializing zstd-based compression with native zlib.");
-                    const ZstdNativeCompression = (require(`${__dirname}/compression/zstd-native`) as { default: new(shard: Shard) => Compression; }).default;
-                    this._compressor = new ZstdNativeCompression(this);
-                } else if (library === "zstd-napi") {
-                    this.client.emit("debug", "Initializing zstd-based compression with zstd-napi.");
-                    const ZstdCompression = (require(`${__dirname}/compression/zstd-napi`) as { default: new(shard: Shard) => Compression; }).default;
-                    this._compressor = new ZstdCompression(this);
-                } else {
-                    throw new Error(`Unknown zstd library: ${library}`);
-                }
-            } else  if (type === "zlib-stream") {
-                switch (library) {
-                    case "native": {
-                        this.client.emit("debug", "Initializing zlib-based compression with native zlib.");
-                        const ZlibNativeCompression = (require(`${__dirname}/compression/zlib-native`) as { default: new(shard: Shard) => Compression; }).default;
-                        this._compressor = new ZlibNativeCompression(this);
-
-                        break;
-                    }
-                    case "zlib-sync": {
-                        this.client.emit("debug", "Initializing zlib-based compression with zlib-sync.");
-                        const ZlibSyncCompression = (require(`${__dirname}/compression/zlib-sync`) as { default: new(shard: Shard) => Compression; }).default;
-                        this._compressor = new ZlibSyncCompression(this);
-
-                        break;
-                    }
-                    case "pako": {
-                        this.client.emit("debug", "Initializing zlib-based compression with pako.");
-                        const PakoCompression = (require(`${__dirname}/compression/pako`) as { default: new(shard: Shard) => Compression; }).default;
-                        this._compressor = new PakoCompression(this);
-
-                        break;
-                    }
-                    default: {
-                        throw new Error(`Unknown zlib library: ${library}`);
-                    }
-                }
-            } else {
-                throw new TypeError(`Invalid compression type "${type as string}".`);
+            const config = CompressionConfigs[type]?.find(cnf => cnf.name === library);
+            if (!config) {
+                throw new Error("Invalid compression config");
             }
-            /* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+
+            this.client.emit("debug", `Initializing ${type} compression with ${library}.`);
+            this._compressor = new (config.getClass())(this);
         }
         if (!this.client.shards.options.override.gatewayURLIsResumeURL && this.sessionID) {
             if (this.resumeURL === null) {

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access */
-import Compression from "./base";
+import Compressor from "./base";
 import type Shard from "../Shard";
 import { GatewayError } from "../../util/Errors";
 // @ts-ignore only in node >=22.15.0
 import { createZstdDecompress, type ZstdDecompress } from "node:zlib";
 
-export default class ZstdNativeCompression extends Compression {
+export default class ZstdNativeCompressor extends Compressor {
     _decompressQueue: Promise<void>;
     stream: ZstdDecompress;
     constructor(shard: Shard) {

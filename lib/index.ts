@@ -72,7 +72,8 @@ export { default as SelectMenuValuesWrapper } from "./util/interactions/SelectMe
 export { default as SequentialBucket } from "./rest/SequentialBucket";
 export { default as SimpleCollection } from "./util/SimpleCollection";
 export { default as Shard } from "./gateway/Shard";
-export { default as ShardManager, CompressionConfig } from "./gateway/ShardManager";
+export { default as ShardManager } from "./gateway/ShardManager";
+export { default as CompressionConfigs } from "./gateway/compression/config";
 export { default as StageChannel } from "./structures/StageChannel";
 export { default as StageInstance } from "./structures/StageInstance";
 export { default as Subscription } from "./structures/Subscription";

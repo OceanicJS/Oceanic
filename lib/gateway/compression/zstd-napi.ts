@@ -1,9 +1,9 @@
-import Compression from "./base";
+import Compressor from "./base";
 import type Shard from "../Shard";
 import { GatewayError } from "../../util/Errors";
 import * as zstd from "zstd-napi";
 
-export default class ZstdCompression extends Compression {
+export default class ZstdCompressor extends Compressor {
     _decompressQueue: Promise<void>;
     stream: zstd.DecompressStream;
     constructor(shard: Shard) {

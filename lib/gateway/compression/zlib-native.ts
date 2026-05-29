@@ -1,9 +1,9 @@
-import Compression from "./base";
+import Compressor from "./base";
 import type Shard from "../Shard";
 import { GatewayError } from "../../util/Errors";
 import { createInflate, type Inflate } from "node:zlib";
 
-export default class ZlibNativeCompression extends Compression {
+export default class ZlibNativeCompressor extends Compressor {
     _chunks: Array<Buffer>;
     _decompressQueue: Promise<void>;
     stream: Inflate;

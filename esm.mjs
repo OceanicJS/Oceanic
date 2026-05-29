@@ -19,6 +19,7 @@ const ClientApplication = (await import("./dist/lib/structures/ClientApplication
 const Collection = (await import("./dist/lib/util/Collection.js")).default.default;
 const CommandInteraction = (await import("./dist/lib/structures/CommandInteraction.js")).default.default;
 const ComponentInteraction = (await import("./dist/lib/structures/ComponentInteraction.js")).default.default;
+const CompressionConfigs = (await import("./dist/lib/gateway/compression/config.js")).default.default;
 const Constants = (await import("./dist/lib/Constants.js")).default;
 const DefaultDispatchEvents = (await import("./dist/lib/gateway/events.js")).default;
 const DiscordHTTPError = (await import("./dist/lib/rest/DiscordHTTPError.js")).default.default;
@@ -67,7 +68,7 @@ const Routes = (await import("./dist/lib/util/Routes.js")).default;
 const SelectMenuValuesWrapper = (await import ("./dist/lib/util/interactions/SelectMenuValuesWrapper.js")).default.default;
 const SequentialBucket = (await import("./dist/lib/rest/SequentialBucket.js")).default.default;
 const Shard = (await import("./dist/lib/gateway/Shard.js")).default.default;
-const { default: ShardManager, CompressionConfig } = (await import("./dist/lib/gateway/ShardManager.js")).default;
+const ShardManager = (await import("./dist/lib/gateway/ShardManager.js")).default.default;
 const SimpleCollection = (await import("./dist/lib/util/SimpleCollection.js")).default.default;
 const StageChannel = (await import("./dist/lib/structures/StageChannel.js")).default.default;
 const StageInstance = (await import("./dist/lib/structures/StageInstance.js")).default.default;
@@ -114,7 +115,7 @@ export {
     Collection,
     CommandInteraction,
     ComponentInteraction,
-    CompressionConfig,
+    CompressionConfigs,
     Constants,
     DefaultDispatchEvents,
     DiscordHTTPError,

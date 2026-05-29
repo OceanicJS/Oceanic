@@ -10,13 +10,16 @@ import type {
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type Shard from "../gateway/Shard";
 import type { DispatchEvent } from "../gateway/Dispatcher";
+import { type CompressionLibrary, type CompressionType } from "../gateway/compression/config";
 import type { ClientOptions as WSClientOptions } from "ws";
 
 export type ReconnectDelayFunction = (lastDelay: number, attempts: number) => number;
 export type GetGatewayOverrideFunction = () => GetGatewayResponse;
 export type GetBotGatewayOverrideFunction = (response: GetBotGatewayResponse) => GetBotGatewayResponse;
 export type GetBotGatewayFullOverrideFunction = () => GetBotGatewayResponse;
-interface GatewayOptions {
+export type * from "../gateway/compression/config";
+
+export interface GatewayOptions {
     /**
      * If dropped connections should be automatically reconnected.
      * @defaultValue true
@@ -26,12 +29,12 @@ interface GatewayOptions {
      * If packets to and from Discord should be compressed.
      * @defaultValue false
      */
-    compress?: "zlib-stream" | "zstd-stream" | false;
+    compress?: CompressionType | false;
     /**
      * The library used for compression
      * @defaultValue Determined by available packages.
      */
-    compressLibrary?: "native" | "pako" | "zlib-sync" | "zstd-napi" | null;
+    compressLibrary?: CompressionLibrary | null;
     /**
      * The concurrency for shard connections. If you don't know what this is, don't mess with it. Only bots in >150,000 servers can use any non-default value.
      * @defaultValue 1
