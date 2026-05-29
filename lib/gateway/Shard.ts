@@ -229,7 +229,9 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                     const PakoCompression = (require(`${__dirname}/compression/pako`) as { default: new(shard: Shard) => Compression; }).default;
                     this._compressor = new PakoCompression(this);
                 } else {
-                    throw new DependencyError("Cannot use zlib based compression without pako or zlib-sync.");
+                    this.client.emit("debug", "Initializing zlib-based compression with native zlib.");
+                    const ZlibNativeCompression = (require(`${__dirname}/compression/zlib-native`) as { default: new(shard: Shard) => Compression; }).default;
+                    this._compressor = new ZlibNativeCompression(this);
                 }
             } else {
                 throw new TypeError(`Invalid compression type "${type as string}".`);
