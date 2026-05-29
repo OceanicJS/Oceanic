@@ -20,6 +20,7 @@ import type OAuthHelper from "./rest/OAuthHelper";
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
 import { isDeepStrictEqual } from "node:util";
 import { warning, WarningCodes } from "./util/warning";
+import Time from "./util/Time";
 
 // @ts-ignore optional dependency
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
@@ -42,12 +43,12 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
-    startTime = 0;
     /** A key-value mapping of thread IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#threads | threads collection}. */
     threadGuildMap = new Map<string, string>();
+    time = new Time(this);
     unavailableGuilds: TypedCollection<Types.Guilds.RawUnavailableGuild, UnavailableGuild>;
     users: TypedCollection<Types.Users.RawUser, User>;
-    util: Util;
+    util = new Util(this);
     voiceAdapters = new Map<string, DiscordGatewayAdapterLibraryMethods>();
     /**
      * @constructor
@@ -55,7 +56,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      */
     constructor(options?: Types.Client.ClientOptions) {
         super();
-        this.util = new Util(this);
+        this.time.set("start", Date.now());
         const disableCache = options?.disableCache === true || options?.disableCache === "no-warning";
         const colZero = {
             auditLogEntries:     0,
@@ -150,7 +151,12 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
     }
 
     get uptime(): number {
-        return this.startTime ? Date.now() - this.startTime : 0;
+        return this.time.start === null ? 0 : Date.now() - this.time.start;
+    }
+
+    /** @deprecated Use {@link Time.start | time.start}. */
+    get startTime(): number {
+        return this.time.start ?? 0;
     }
 
     /** The client's user. This will throw an error if not using a gateway connection or no shard is READY. If using a client for rest only, consider enabling rest mode. */

@@ -267,6 +267,7 @@ export default class ShardManager extends Collection<number, Shard> {
 
         this.client.ready = false;
         for (const [,shard] of this) shard.disconnect(reconnect);
+        this.client.time.reset();
         this._resetConnectQueue();
     }
 
@@ -277,6 +278,7 @@ export default class ShardManager extends Collection<number, Shard> {
             this.set(id, shard);
             shard
                 .on("ready", () => {
+                    this.client.time.set("ready", Date.now());
                     this.client.emit("shardReady", id);
                     if (this.client.ready) {
                         return;
@@ -288,10 +290,10 @@ export default class ShardManager extends Collection<number, Shard> {
                     }
 
                     this.client.ready = true;
-                    this.client.startTime = Date.now();
                     this.client.emit("ready");
                 })
                 .on("resume", () => {
+                    this.client.time.set("resume", Date.now());
                     this.client.emit("shardResume", id);
                     if (this.client.ready) {
                         return;
@@ -303,10 +305,10 @@ export default class ShardManager extends Collection<number, Shard> {
                     }
 
                     this.client.ready = true;
-                    this.client.startTime = Date.now();
                     this.client.emit("ready");
                 })
                 .on("disconnect", error => {
+                    this.client.time.set("disconnect", Date.now());
                     this.client.emit("shardDisconnect", error, id);
                     for (const other of this.values()) {
                         if (other.ready) {
@@ -315,10 +317,10 @@ export default class ShardManager extends Collection<number, Shard> {
                     }
 
                     this.client.ready = false;
-                    this.client.startTime = 0;
                     this.client.emit("disconnect");
                 })
                 .on("preReady", () => {
+                    this.client.time.set("preReady", Date.now());
                     this.client.emit("shardPreReady", id);
                 });
         }
@@ -344,6 +346,7 @@ export default class ShardManager extends Collection<number, Shard> {
             if (this.some(s => s.connecting && ((s.id % this.options.concurrency) || 0) === rateLimitKey)) {
                 continue;
             }
+            this.client.time.set("connect", Date.now());
             void shard.connect();
             this._buckets[rateLimitKey] = Date.now();
             this._connectQueue.splice(this._connectQueue.findIndex(s => s.id === shard.id), 1);
