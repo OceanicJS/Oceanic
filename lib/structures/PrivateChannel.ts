@@ -36,7 +36,20 @@ export default class PrivateChannel extends Channel {
      * Create a message in this channel.
      * @param options The options for creating the message.
      */
-    async createMessage(options: Types.Channels.CreateMessageOptions): Promise<Message<this>> {
+    async createMessage(options: Types.Channels.CreateMessageOptions): Promise<Message<this>>;
+    /**
+     * Create a message in this channel.
+     * @param content The content for creating the message
+     * @param options The options for creating the message.
+     */
+    async createMessage(content: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<this>>;
+    async createMessage(content: Types.Channels.CreateMessageOptions | string, options?: Types.Channels.CreateMessageOptions): Promise<Message<this>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.channels.createMessage<this>(this.id, options);
     }
 
@@ -72,7 +85,21 @@ export default class PrivateChannel extends Channel {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      */
-    async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<this>> {
+    async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<this>>;
+    /**
+     * Edit a message in this channel.
+     * @param messageID The ID of the message to edit.
+     * @param content The content for editing the message.
+     * @param options The options for editing the message.
+     */
+    async editMessage(messageID: string, content: string, options?: Types.Channels.EditMessageOptions): Promise<Message<this>>;
+    async editMessage(messageID: string, content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions): Promise<Message<this>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.channels.editMessage<this>(this.id, messageID, options);
     }
 

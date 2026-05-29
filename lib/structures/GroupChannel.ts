@@ -67,6 +67,11 @@ export default class GroupChannel extends Channel {
             this.name = data.name;
         }
         if (data.nicks !== undefined) {
+    /**
+     * Forward this message.
+     * @param channelID The ID of the channel to forward the message to.
+     * @param options The options for the message.
+     */
             this.nicks = data.nicks;
         }
         if (data.owner_id !== undefined) {

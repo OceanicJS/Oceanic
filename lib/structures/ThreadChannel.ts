@@ -11,11 +11,11 @@ import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
 
 /** Represents a guild thread channel. */
-export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel> extends GuildChannel {
+export default class ThreadChannel<CH extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel> extends GuildChannel {
     /** The [flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) for this thread channel. */
     flags: number;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
-    lastMessage?: Message<T> | null;
+    lastMessage?: Message<CH> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
     /** The approximate number of members in this thread. Stops counting after 50. */
@@ -25,7 +25,7 @@ export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = T
     /** The number of messages (not including the initial message or deleted messages) in the thread. Stops counting after 50. */
     messageCount: number;
     /** The cached messages in this channel. */
-    messages: TypedCollection<Types.Channels.RawMessage, Message<T>>;
+    messages: TypedCollection<Types.Channels.RawMessage, Message<CH>>;
     /** The owner of this thread. */
     owner?: User;
     /** The ID of the owner of this thread. */
@@ -45,7 +45,7 @@ export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = T
         this.memberCount = 0;
         this.members = [];
         this.messageCount = 0;
-        this.messages = new TypedCollection(Message<T>, client, this.client.util._getLimit("messages", this.id));
+        this.messages = new TypedCollection(Message<CH>, client, this.client.util._getLimit("messages", this.id));
         this.ownerID = data.owner_id;
         this.rateLimitPerUser = data.rate_limit_per_user;
         this.threadMetadata = {
@@ -133,8 +133,21 @@ export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = T
      * Create a message in this thread.
      * @param options The options for creating the message.
      */
-    async createMessage(options: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
-        return this.client.rest.channels.createMessage<T>(this.id, options);
+    async createMessage(options: Types.Channels.CreateMessageOptions): Promise<Message<CH>>;
+    /**
+     * Create a message in this thread.
+     * @param content The content for creating the message
+     * @param options The options for creating the message.
+     */
+    async createMessage(content: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<CH>>;
+    async createMessage(content: Types.Channels.CreateMessageOptions | string, options?: Types.Channels.CreateMessageOptions): Promise<Message<CH>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
+        return this.client.rest.channels.createMessage<CH>(this.id, options);
     }
 
     /**
@@ -184,12 +197,26 @@ export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = T
     }
 
     /**
-     * Edit a message in this thread.
-     * @param messageID The ID of the message to edit.
-     * @param options The options for editing the message.
-     */
-    async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<T>> {
-        return this.client.rest.channels.editMessage<T>(this.id, messageID, options);
+         * Edit a message in this thread.
+         * @param messageID The ID of the message to edit.
+         * @param options The options for editing the message.
+         */
+        async editMessage(messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<CH>>;
+        /**
+         * Edit a message in this thread.
+         * @param messageID The ID of the message to edit.
+         * @param content The content for editing the message.
+         * @param options The options for editing the message.
+         */
+        async editMessage(messageID: string, content: string, options?: Types.Channels.EditMessageOptions): Promise<Message<CH>>;
+        async editMessage(messageID: string, content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions): Promise<Message<CH>> {
+            if (typeof content === "string") {
+                options = {
+                    ...options,
+                    content
+                };
+            } else options = content;
+        return this.client.rest.channels.editMessage<CH>(this.id, messageID, options);
     }
 
     /**
@@ -211,23 +238,23 @@ export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = T
      * Get a message in this thread.
      * @param messageID The ID of the message to get.
      */
-    async getMessage(messageID: string): Promise<Message<T>> {
-        return this.client.rest.channels.getMessage<T>(this.id, messageID);
+    async getMessage(messageID: string): Promise<Message<CH>> {
+        return this.client.rest.channels.getMessage<CH>(this.id, messageID);
     }
 
     /**
      * Get messages in this thread.
      * @param options The options for getting the messages. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async getMessages(options?: Types.Channels.GetChannelMessagesOptions): Promise<Array<Message<T>>> {
-        return this.client.rest.channels.getMessages<T>(this.id, options);
+    async getMessages(options?: Types.Channels.GetChannelMessagesOptions): Promise<Array<Message<CH>>> {
+        return this.client.rest.channels.getMessages<CH>(this.id, options);
     }
 
     /**
      * Get the pinned messages in this thread.
      */
-    async getPinnedMessages(): Promise<Array<Message<T>>> {
-        return this.client.rest.channels.getPinnedMessages<T>(this.id);
+    async getPinnedMessages(): Promise<Array<Message<CH>>> {
+        return this.client.rest.channels.getPinnedMessages<CH>(this.id);
     }
 
     /**
@@ -278,7 +305,7 @@ export default class ThreadChannel<T extends Types.Channels.AnyThreadChannel = T
      * Purge an amount of messages from this channel.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      */
-    async purge(options: Types.Channels.PurgeOptions<T>): Promise<number> {
+    async purge(options: Types.Channels.PurgeOptions<CH>): Promise<number> {
         return this.client.rest.channels.purgeMessages(this.id, options);
     }
 

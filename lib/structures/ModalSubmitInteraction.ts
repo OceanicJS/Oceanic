@@ -299,13 +299,22 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for the message.
      */
-    async reply(options: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>> {
-        let useFollowup = this.acknowledged;
-        if (!useFollowup && options.files && options.files.length !== 0) {
-            await this.defer(options.flags);
-            useFollowup = true;
-        }
-        return useFollowup ? this.createFollowup(options) : this.createMessage(options);
+    async reply(options: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>>;
+    /**
+     * Reply to this interaction. If the interaction hasn't been acknowledged, {@link ModalSubmitInteraction#createMessage | createMessage} is used. Else, {@link ModalSubmitInteraction#createFollowup | createFollowup} is used.
+     * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
+     * @param content The content for the message.
+     * @param options The options for the message.
+     */
+    async reply(content: string, options?: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>>;
+    async reply(content: Types.Interactions.InteractionContent | string, options?: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
+        return this.acknowledged ? this.createFollowup(options) : this.createMessage(options);
     }
 
     override toJSON(): Types.JSON.JSONModalSubmitInteraction {

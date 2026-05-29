@@ -422,7 +422,20 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
      * Edit this message.
      * @param options The options for editing the message.
      */
-    async edit(options: Types.Channels.EditMessageOptions):  Promise<Message<T>> {
+    async edit(options: Types.Channels.EditMessageOptions):  Promise<Message<T>>;
+    /**
+     * Edit this message.
+     * @param content The content for editing the message
+     * @param options The options for editing the message.
+     */
+    async edit(content: string, options?: Types.Channels.EditMessageOptions):  Promise<Message<T>>;
+    async edit(content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions):  Promise<Message<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.channels.editMessage<T>(this.channelID, this.id, options);
     }
 
@@ -431,7 +444,21 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
      * @param token The token of the webhook.
      * @param options The options for editing the message.
      */
-    async editWebhook(token: string, options: Types.Webhooks.EditWebhookMessageOptions): Promise<Message<T>> {
+    async editWebhook(token: string, options: Types.Webhooks.EditWebhookMessageOptions): Promise<Message<T>>;
+    /**
+     * Edit this message as a webhook.
+     * @param token The token of the webhook.
+     * @param content The content for editing the message
+     * @param options The options for editing the message.
+     */
+    async editWebhook(token: string, content: string, options?: Types.Webhooks.EditWebhookMessageOptions): Promise<Message<T>>;
+    async editWebhook(token: string, content: Types.Webhooks.EditWebhookMessageOptions | string, options?: Types.Webhooks.EditWebhookMessageOptions): Promise<Message<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         if (!this.webhookID) {
             throw new TypeError("This message is not a webhook message.");
         }
@@ -452,7 +479,21 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
      * @param channelID The ID of the channel to forward the message to.
      * @param options The options for the message.
      */
-    async forward(channelID: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
+    async forward(channelID: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>>;
+    /**
+     * Forward this message.
+     * @param channelID The ID of the channel to forward the message to.
+     * @param content The content for the message.
+     * @param options The options for the message.
+     */
+    async forward(channelID: string, content: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>>;
+    async forward(channelID: string, content?: Types.Channels.CreateMessageOptions | string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.channels.createMessage(channelID, {
             ...options,
             messageReference: {
@@ -507,7 +548,20 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
      * Reply to this message
      * @param options The options for the message.
      */
-    async reply(options: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
+    async reply(options: Types.Channels.CreateMessageOptions): Promise<Message<T>>;
+    /**
+     * Reply to this message
+     * @param content The content for the message.
+     * @param options The options for the message.
+     */
+    async reply(content: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>>;
+    async reply(content: Types.Channels.CreateMessageOptions | string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.channels.createMessage(this.channelID, {
             ...options,
             messageReference: {

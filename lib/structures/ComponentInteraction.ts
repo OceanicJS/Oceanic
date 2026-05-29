@@ -164,17 +164,46 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for creating the followup message.
      */
-    async createFollowup(options: Types.Interactions.InteractionContent): Promise<FollowupMessageInteractionResponse<this>> {
+    async createFollowup(options: Types.Interactions.InteractionContent): Promise<FollowupMessageInteractionResponse<this>>;
+    /**
+     * Create a followup message.
+     * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
+     * @param content The content for creating the followup message.
+     * @param options The options for creating the followup message.
+     */
+    async createFollowup(content: string, options?: Types.Interactions.InteractionContent): Promise<FollowupMessageInteractionResponse<this>>;
+    async createFollowup(content: Types.Interactions.InteractionContent | string, options?: Types.Interactions.InteractionContent): Promise<FollowupMessageInteractionResponse<this>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         const message = await this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
         return new MessageInteractionResponse<ComponentInteraction<V, T>>(this, message, "followup", null) as FollowupMessageInteractionResponse<this>;
     }
 
-    /**
-     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use  {@link ComponentInteraction#createFollowup | createFollowup}.
+     /**
+     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link ComponentInteraction#createFollowup | createFollowup}.
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for the message.
      */
-    async createMessage(options: Types.Interactions.InteractionContent): Promise<InitialMessagedInteractionResponse<this>> {
+    async createMessage(options: Types.Interactions.InteractionContent): Promise<InitialMessagedInteractionResponse<this>>;
+    /**
+     * Create a message through this interaction. This is an initial response, and more than one initial response cannot be used. Use {@link ComponentInteraction#createFollowup | createFollowup}.
+     * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
+     * @param content The content for the message.
+     * @param options The options for the message.
+     */
+    async createMessage(content: string, options?: Types.Interactions.InteractionContent): Promise<InitialMessagedInteractionResponse<this>>;
+    async createMessage(content: Types.Interactions.InteractionContent | string, options?: Types.Interactions.InteractionContent): Promise<InitialMessagedInteractionResponse<this>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
+
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -234,12 +263,26 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         return this.client.rest.interactions.deleteOriginalMessage(this.applicationID, this.token);
     }
 
-    /**
+     /**
      * Edit a followup message.
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
      */
-    async editFollowup(messageID: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
+    async editFollowup(messageID: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>>;
+    /**
+     * Edit a followup message.
+     * @param messageID The ID of the message.
+     * @param content The content for editing the followup message.
+     * @param options The options for editing the followup message.
+     */
+    async editFollowup(messageID: string, content: string, options?: Types.Interactions.EditInteractionContent): Promise<Message<T>>;
+    async editFollowup(messageID: string, content: Types.Interactions.EditInteractionContent | string, options?: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
     }
 
@@ -247,15 +290,42 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      * Edit the original interaction response.
      * @param options The options for editing the original message.
      */
-    async editOriginal(options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
+    async editOriginal(options: Types.Interactions.EditInteractionContent): Promise<Message<T>>;
+    /**
+     * Edit the original interaction response.
+     * @param content The content for editing the original message.
+     * @param options The options for editing the original message.
+     */
+    async editOriginal(content: string, options?: Types.Interactions.EditInteractionContent): Promise<Message<T>>;
+    async editOriginal(content: Types.Interactions.EditInteractionContent | string, options?: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
     }
 
     /**
-     * Edit the message this interaction is from. If this interaction has already been acknowledged, use `editOriginal`.
+     * Edit the message this interaction is from. If this interaction has already been acknowledged, use {@link editOriginal}.
      * @param options The options for editing the message.
      */
-    async editParent(options: Types.Interactions.InteractionContent): Promise<Types.Interactions.InteractionCallbackResponse<T>> {
+    async editParent(options: Types.Interactions.InteractionContent): Promise<Types.Interactions.InteractionCallbackResponse<T>>;
+    /**
+     * Edit the message this interaction is from. If this interaction has already been acknowledged, use {@link editOriginal}.
+     * @param content The content for editing the message.
+     * @param options The options for editing the message.
+     */
+    async editParent(content: string, options?: Types.Interactions.InteractionContent): Promise<Types.Interactions.InteractionCallbackResponse<T>>;
+    async editParent(content: Types.Interactions.InteractionContent | string, options?: Types.Interactions.InteractionContent): Promise<Types.Interactions.InteractionCallbackResponse<T>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
+
         if (this.acknowledged) {
             throw new TypeError("Interactions cannot have more than one initial response.");
         }
@@ -332,7 +402,21 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
      * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
      * @param options The options for the message.
      */
-    async reply(options: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>> {
+    async reply(options: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>>;
+    /**
+     * Reply to this interaction. If the interaction hasn't been acknowledged, {@link ComponentInteraction#createMessage | createMessage} is used. Else, {@link ComponentInteraction#createFollowup | createFollowup} is used.
+     * Note that the returned class is not a message. It is a wrapper around the interaction response. The {@link MessageInteractionResponse#getMessage | getMessage} function can be used to get the message.
+     * @param content The content for the message.
+     * @param options The options for the message.
+     */
+    async reply(content: string, options?: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>>;
+    async reply(content: Types.Interactions.InteractionContent | string, options?: Types.Interactions.InteractionContent): Promise<MessageInteractionResponse<this>> {
+        if (typeof content === "string") {
+            options = {
+                ...options,
+                content
+            };
+        } else options = content;
         return this.acknowledged ? this.createFollowup(options) : this.createMessage(options);
     }
 
