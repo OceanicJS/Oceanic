@@ -2,7 +2,7 @@ const { Client } = require("oceanic.js");
 const { VoiceConnectionStatus, AudioPlayerStatus, createAudioPlayer, createAudioResource } = require("@discordjs/voice");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         intents: ["GUILDS", "GUILD_VOICE_STATES"] // Voice connections require the GUILDS intent; We specify the GUILD_VOICE_STATES intent to reconnect to the voice channel in case we get disconnected
     }

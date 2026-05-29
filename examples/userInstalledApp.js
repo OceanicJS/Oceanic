@@ -6,7 +6,7 @@ const { ApplicationCommandTypes, ApplicationIntegrationTypes, Client, Interactio
 // This example is a slightly modified copy of the applicationCommand example
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         intents: 0 // No intents are needed if you are only using interactions
     }

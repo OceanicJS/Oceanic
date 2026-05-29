@@ -1,7 +1,7 @@
 const { Client } = require("oceanic.js");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
 		// List of intents: https://discord.com/developers/docs/topics/gateway#list-of-intents
 		// They change what events our client receives to lower the amount of computer power needed to run it

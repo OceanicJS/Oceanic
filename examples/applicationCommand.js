@@ -4,7 +4,7 @@
 const { ApplicationCommandOptionTypes, ApplicationCommandTypes, Client } = require("oceanic.js");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         intents: 0 // No intents are needed if you are only using interactions
     }

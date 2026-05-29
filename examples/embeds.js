@@ -2,7 +2,7 @@ const { Client } = require("oceanic.js");
 const { readFileSync } = require("fs");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         intents: ["GUILD_MESSAGES"] // If the message does not start with a mention to or somehow relate to your client, you will need the MESSAGE_CONTENT intent as well
     }

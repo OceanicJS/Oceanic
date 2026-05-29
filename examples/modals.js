@@ -1,7 +1,7 @@
 const { Client, ComponentTypes, ApplicationCommandTypes, InteractionTypes, ChannelTypes } = require("oceanic.js");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         intents: [] // modals need no intents
     }

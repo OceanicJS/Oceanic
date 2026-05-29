@@ -2,7 +2,7 @@ const { readFileSync } = require("fs");
 const { ApplicationCommandTypes, ButtonStyles, Client, ComponentTypes, InteractionTypes, MessageFlags, SeparatorSpacingSize } = require("oceanic.js");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         intents: [] // interactions need no intents
     }

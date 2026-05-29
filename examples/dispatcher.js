@@ -1,7 +1,7 @@
 const { Client, DefaultDispatchEvents } = require("oceanic.js");
 
 const client = new Client({
-    auth: "Bot [TOKEN]",
+    token: "[TOKEN]",
     gateway: {
         dispatcher: {
             // A list of dispatch events to disable. This takes precedence over whitelist.

@@ -9,7 +9,7 @@
 
 ```js
 const { Client } = require("oceanic.js");
-const client = new Client({ auth: "Bot [TOKEN]" });
+const client = new Client({ token: "[TOKEN]" });
 
 client.on("ready", async() => {
     console.log("Ready as", client.user.tag);
