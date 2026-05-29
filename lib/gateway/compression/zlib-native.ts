@@ -21,6 +21,7 @@ export default class ZlibNativeCompression extends Compression {
         const isComplete = data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF;
         let result: Buffer | null = null;
         this._decompressQueue = this._decompressQueue.then(async() => new Promise<void>(resolve => {
+            // eslint-disable-next-line unicorn/consistent-function-scoping
             const onData = (chunk: Buffer): void => {
                 this._chunks.push(chunk);
             };

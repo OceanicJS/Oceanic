@@ -17,10 +17,10 @@ import type OAuthHelper from "./rest/OAuthHelper";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore optional dependency
-import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
-import { isDeepStrictEqual } from "node:util";
 import { warning, WarningCodes } from "./util/warning";
 import Time from "./util/Time";
+import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
+import { isDeepStrictEqual } from "node:util";
 
 // @ts-ignore optional dependency
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
@@ -83,7 +83,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         } satisfies Required<Types.Client.CollectionLimitsOptions>;
 
         if (options?.token) {
-            if (options.auth) warning(WarningCodes.OCEANIC_AUTH_AND_TOKEN_PROVIDED)
+            if (options.auth) warning(WarningCodes.OCEANIC_AUTH_AND_TOKEN_PROVIDED);
             else options.auth = this._prefixToken(options.token);
             delete options.token;
         }
@@ -150,13 +150,13 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         }
     }
 
-    get uptime(): number {
-        return this.time.start === null ? 0 : Date.now() - this.time.start;
-    }
-
     /** @deprecated Use {@link Time.start | time.start}. */
     get startTime(): number {
         return this.time.start ?? 0;
+    }
+
+    get uptime(): number {
+        return this.time.start === null ? 0 : Date.now() - this.time.start;
     }
 
     /** The client's user. This will throw an error if not using a gateway connection or no shard is READY. If using a client for rest only, consider enabling rest mode. */

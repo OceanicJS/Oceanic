@@ -25,7 +25,7 @@ export default class Time {
     }
 
     /** @internal */
-    private _setConnect(value: number) {
+    private _setConnect(value: number): void {
         this.shardConnect = value;
         this.disconnect = null;
         if (!this.connect) {
@@ -34,7 +34,7 @@ export default class Time {
     }
 
     /** @internal */
-    private _setDisconnect(value: number) {
+    private _setDisconnect(value: number): void {
         this.shardDisconnect = value;
         const noneReady = this.client.shards.every(shard => !shard.ready);
         if (noneReady) {
@@ -46,29 +46,29 @@ export default class Time {
     }
 
     /** @internal */
-    private _setPreReady(value: number) {
+    private _setPreReady(value: number): void {
         this.shardPreReady = value;
     }
 
     /** @internal */
-    private _setReady(value: number) {
+    private _setReady(value: number): void {
         this.shardReady = value;
         if (!this.ready) this.ready = value;
     }
 
     /** @internal */
-    private _setResume(value: number) {
+    private _setResume(value: number): void {
         this.shardResume = value;
     }
 
     /** @internal */
-    private _setStart(value: number) {
+    private _setStart(value: number): void {
         if (!this.start) {
             this.start = value;
         }
     }
 
-    reset() {
+    reset(): void {
         this.connect = null;
         this.disconnect = null;
         this.ready = null;
@@ -82,7 +82,7 @@ export default class Time {
 
     /** @internal */
     set(type: "connect" | "disconnect" | "preReady" | "ready" | "resume" | "start", value: number): void {
-        switch(type) {
+        switch (type) {
             case "connect": return this._setConnect(value);
             case "disconnect": return this._setDisconnect(value);
             case "preReady": return this._setPreReady(value);
