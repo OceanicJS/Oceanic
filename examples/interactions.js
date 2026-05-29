@@ -1,4 +1,4 @@
-const { Client, InteractionTypes, MessageFlags, ComponentTypes, ApplicationCommandTypes } = require("oceanic.js");
+const { Client, InteractionTypes, ComponentTypes, ApplicationCommandTypes } = require("oceanic.js");
 
 const client = new Client({
     token: "[TOKEN]",
@@ -138,7 +138,6 @@ client.on("interactionCreate", async(interaction) => {
                                     value: "choice-2"
                                 }
                             ]);
-                            break;
                         }
                     }
                 }

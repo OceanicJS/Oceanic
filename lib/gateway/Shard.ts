@@ -171,7 +171,6 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             if (this._getAllUsersQueue.length !== 0) {
                 const id = this._getAllUsersQueue.shift()!;
                 await this.requestGuildMembers(id);
-                this._getAllUsersQueue.splice(this._getAllUsersQueue.indexOf(id), 1);
                 return;
             }
             if (Object.keys(this._getAllUsersCount).length === 0) {

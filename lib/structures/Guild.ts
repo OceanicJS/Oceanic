@@ -138,7 +138,7 @@ export default class Guild extends Base {
     premiumSubscriptionCount?: number;
     /** The [boost level](https://discord.com/developers/docs/resources/guild#guild-object-premium-tier) of this guild. */
     premiumTier: PremiumTiers;
-    /** The guild's server tag, only present for guilds recieved over the gateway. */
+    /** The guild's server tag, only present for guilds received over the gateway. */
     profile: Types.Guilds.GuildProfile | null;
     /** The channel where notices from Discord are received. Only present in guilds with the `COMMUNITY` feature. */
     publicUpdatesChannel?: Types.Channels.AnyTextableGuildChannel | null;
@@ -256,7 +256,7 @@ export default class Guild extends Base {
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
         this.voiceStates = new TypedCollection(VoiceState, client, client.util._getLimit("voiceStates", this.id));
-        this.widgetChannelID = data.widget_channel_id === null ? null : data.widget_channel_id!;
+        this.widgetChannelID = !data.widget_channel_id ? null : data.widget_channel_id;
         for (const role of data.roles) {
             this.roles.update(role, data.id);
         }
@@ -266,7 +266,6 @@ export default class Guild extends Base {
         if (data.channels) {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
-                client.channelGuildMap.set(channelData.id, this.id); // @TODO this seems redundant
                 this.channels.update(channelData);
             }
         }
@@ -599,7 +598,7 @@ export default class Guild extends Base {
         }
 
         if (!this.client.shards.connected) {
-            throw new TypeError(`${this.constructor.name}#shard cannot be used without a gateway connection.`);
+            throw new TypeError(`${this.constructor.name}#voiceAdapterCreator cannot be used without a gateway connection.`);
         }
 
         if (!this._shard) {

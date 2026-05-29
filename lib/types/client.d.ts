@@ -123,13 +123,13 @@ export interface RESTOptions {
  */
 export interface CollectionLimitsOptions {
     /**
-     * The maximum number of audit log entries to keep cached. Entries are only cached if recieved via the `GUILD_AUDIT_LOG_ENTRY_CREATE` gateway event.
+     * The maximum number of audit log entries to keep cached. Entries are only cached if received via the `GUILD_AUDIT_LOG_ENTRY_CREATE` gateway event.
      * @dictionaryKey guild id
      * @defaultValue 50
      */
     auditLogEntries?: number | Record<string, number>;
     /**
-     * The maximum number of auto moderation rules to keep cached. Entries are only cached if fetched via REST, or recieved via the `AUTO_MODERATION_RULE_CREATE`/`AUTO_MODERATION_RULE_UPDATE` events.
+     * The maximum number of auto moderation rules to keep cached. Entries are only cached if fetched via REST, or received via the `AUTO_MODERATION_RULE_CREATE`/`AUTO_MODERATION_RULE_UPDATE` events.
      * @dictionaryKey guild id
      * @defaultValue Infinity
      */

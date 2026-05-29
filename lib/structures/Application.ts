@@ -80,7 +80,7 @@ export default class Application extends ClientApplication {
     /** The explicit content filter for this application. */
     explicitContentFilter?: ApplicationExplicitContentFilterLevel;
     // flags is in the parent class
-    /** If this application is a game sold on Discord, the guild to which it has been linked. This will only be present if recieved via {@link REST/Applications.getCurrent | `/applications/@me`}. */
+    /** If this application is a game sold on Discord, the guild to which it has been linked. This will only be present if received via {@link REST/Applications.getCurrent | `/applications/@me`}. */
     guild?: OAuthGuild | null;
     /** If this application is a game sold on Discord, the ID of the guild to which it has been linked. */
     guildID?: string | null;
@@ -100,7 +100,7 @@ export default class Application extends ClientApplication {
     integrationTypesConfig?: Types.Applications.IntegrationTypesConfig;
     /** This applications interaction endpoint url, if any. */
     interactionsEndpointURL?: string | null;
-    /** The event types that will be recieved like http interactions, if interactionsVersion is 2. */
+    /** The event types that will be received like http interactions, if interactionsVersion is 2. */
     interactionsEventTypes?: Array<string>;
     /** The interactions version of this application. */
     interactionsVersion?: ApplicationInteractionsVersion;

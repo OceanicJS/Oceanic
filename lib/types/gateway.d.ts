@@ -162,9 +162,9 @@ export interface OverrideOptions {
      * @defaultValue 5000
      */
     timeBetweenShardConnects?: number;
-    /** Replaces the response normally recieved from `GET /gateway/bot`. The `url` function below will override the value returned here. */
+    /** Replaces the response normally received from `GET /gateway/bot`. The `url` function below will override the value returned here. */
     getBot?(): Promise<GetBotGatewayResponse>;
-    /** Replaces the `resume_url` recieved from Discord. */
+    /** Replaces the `resume_url` received from Discord. */
     resumeURL?(shard: Shard, totalShards: number): Promise<string>;
     /** Replaces the gateway url shards connect to. This WILL be called multiple times if you have more than one shard, be sure to cache its results if you do anythng that isn't quickly repeatable. */
     url?(shard: Shard, totalShards: number): Promise<string>;

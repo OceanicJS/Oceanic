@@ -1,4 +1,4 @@
-/** @module Clan */
+/** @module PrimaryGuild */
 import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";

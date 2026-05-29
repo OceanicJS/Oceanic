@@ -97,7 +97,9 @@ export default class ModalSubmitInteractionComponentsWrapper {
 
     /** Get the components in this interaction. */
     getComponents(): Array<Types.Interactions.ModalSubmitComponents> {
-        return this.raw.flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component).filter(Boolean);
+        return this.raw
+            .flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component)
+            .filter(c => c !== undefined);
     }
 
     /**
@@ -166,7 +168,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
      */
     getRadioGroupValue(name: string, required?: false): string | null | undefined;
     getRadioGroupValue(name: string, required: true): string | null;
-    getRadioGroupValue(name: string, required?: boolean): string | null|undefined {
+    getRadioGroupValue(name: string, required?: boolean): string | null | undefined {
         return this.getRadioGroupComponent(name, required as false)?.value;
     }
 
