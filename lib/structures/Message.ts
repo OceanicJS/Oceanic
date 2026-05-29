@@ -16,7 +16,7 @@ import Poll from "./Poll";
 import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
-import { BASE_URL, type MessageTypes } from "../Constants";
+import { BASE_URL, MessageReferenceType, type MessageTypes } from "../Constants";
 import * as Routes from "../util/Routes";
 import { UncachedError } from "../util/Errors";
 
@@ -438,13 +438,29 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         return this.client.rest.webhooks.editMessage<never>(this.webhookID, token, this.id, options);
     }
 
-    /** End this The poll on this message now. */
+    /** End the poll on this message now. */
     async expire(): Promise<void> {
         if (this.poll === undefined) {
             throw new TypeError("Message does not have a poll.");
         }
 
         await this.poll.expire();
+    }
+
+    /**
+     * Forward this message.
+     * @param channelID The ID of the channel to forward the message to.
+     * @param options The options for the message.
+     */
+    async forward(channelID: string, options?: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
+        return this.client.rest.channels.createMessage(channelID, {
+            ...options,
+            messageReference: {
+                channelID: this.channelID,
+                messageID: this.id,
+                type: MessageReferenceType.FORWARD,
+            },
+        })
     }
 
     /**
@@ -487,6 +503,19 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         return this.client.rest.channels.pinMessage(this.channelID, this.id, reason);
     }
 
+    /**
+     * Reply to this message
+     * @param options The options for the message.
+     */
+    async reply(options: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
+        return this.client.rest.channels.createMessage(this.channelID, {
+            ...options,
+            messageReference: {
+                messageID: this.id,
+                type: MessageReferenceType.DEFAULT,
+            },
+        })
+    }
 
     /**
      * Create a thread from this message.
@@ -495,6 +524,7 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
     async startThread(options: Types.Channels.StartThreadFromMessageOptions): Promise<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never> {
         return this.client.rest.channels.startThreadFromMessage<T extends AnnouncementChannel ? AnnouncementThreadChannel : T extends TextChannel ? PublicThreadChannel : never>(this.channelID, this.id, options);
     }
+
     override toJSON(): Types.JSON.JSONMessage {
         const im = this.interactionMetadata as Types.Channels.MessageInteractionMetadata;
         return {

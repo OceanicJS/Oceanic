@@ -1671,6 +1671,11 @@ export enum LobbyMemberFlags {
     CAN_LINK_LOBBY = 1 << 0,
 }
 
+export enum MessageReferenceType {
+    DEFAULT = 0,
+    FORWARD = 1,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {

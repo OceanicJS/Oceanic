@@ -35,7 +35,8 @@ import type {
     PollLayoutType,
     SeparatorSpacingSize,
     GuildInviteChannelTypes,
-    DMInviteChannelTypes
+    DMInviteChannelTypes,
+    MessageReferenceType
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -489,6 +490,8 @@ export interface MessageReference {
     guildID?: string;
     /** The ID of the message to reply to. */
     messageID?: string;
+    /** Determines how associated data is populated. `FORWARD` can only be used for basic messages. {@link Constants~MessageTypes.DEFAULT | DEFAULT}, {@link Constants~MessageTypes.REPLY | REPLY}, {@link Constants~MessageTypes.CONTEXT_MENU_COMMAND | CONTEXT_MENU_COMMAND}, {@link Constants~MessageTypes.DEFAULT | DEFAULT}*/
+    type?: MessageReferenceType;
 }
 
 export interface RawAttachment {
