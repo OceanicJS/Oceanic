@@ -67,7 +67,7 @@ const Routes = (await import("./dist/lib/util/Routes.js")).default;
 const SelectMenuValuesWrapper = (await import ("./dist/lib/util/interactions/SelectMenuValuesWrapper.js")).default.default;
 const SequentialBucket = (await import("./dist/lib/rest/SequentialBucket.js")).default.default;
 const Shard = (await import("./dist/lib/gateway/Shard.js")).default.default;
-const ShardManager = (await import("./dist/lib/gateway/ShardManager.js")).default.default;
+const { default: ShardManager, CompressionConfig } = (await import("./dist/lib/gateway/ShardManager.js")).default;
 const SimpleCollection = (await import("./dist/lib/util/SimpleCollection.js")).default.default;
 const StageChannel = (await import("./dist/lib/structures/StageChannel.js")).default.default;
 const StageInstance = (await import("./dist/lib/structures/StageInstance.js")).default.default;
@@ -114,6 +114,7 @@ export {
     Collection,
     CommandInteraction,
     ComponentInteraction,
+    CompressionConfig,
     Constants,
     DefaultDispatchEvents,
     DiscordHTTPError,

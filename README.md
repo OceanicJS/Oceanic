@@ -50,11 +50,12 @@ The documentation under `dev` is always for the latest commit. If something isn'
 
 ### Optional Dependencies
 All compression options are mutually exclusive.
+* `node:zlib` - native zlib Compression (gateway)
 * `pako` - zlib Compression (gateway)
 * `zlib-sync` - zlib Compression (gateway, faster than pako)
 * `erlpack` - Encoding (gateway, alternative to JSON)
 * `zstd-napi` - zstd compression (gateway)
-* `node:zlib` (node >=22.15.0, >=23.8.0) - zstd compression (gateway, faster than zstd-napi)
+* `node:zlib` (node >=22.15.0, >=23.8.0) - native zstd compression (gateway, faster than zstd-napi)
 * `@discordjs/voice` - voice, requires node >=22.12.0
 
 ## Links

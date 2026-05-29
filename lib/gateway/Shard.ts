@@ -10,13 +10,12 @@ import type Member from "../structures/Member";
 import Base from "../structures/Base";
 import ExtendedUser from "../structures/ExtendedUser";
 import type Guild from "../structures/Guild";
-import { GatewayError, DependencyError } from "../util/Errors";
+import { GatewayError } from "../util/Errors";
 import ClientApplication from "../structures/ClientApplication";
 import type Soundboard from "../structures/Soundboard";
 import WebSocket, { type Data } from "ws";
 import { randomBytes } from "node:crypto";
 import { inspect } from "node:util";
-import zlib from "node:zlib";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access */
 // @ts-ignore
@@ -200,38 +199,46 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.status = "connecting";
         if (this.client.shards.options.compress) {
             const type = this.client.shards.options.compress;
+            const library = this.client.shards.options.compressLibrary;
             /* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
-            if (String(type) === "zstd-stream") {
-                if ("createZstdDecompress" in zlib) {
+            if (type === "zstd-stream") {
+                if (library === "native") {
                     this.client.emit("debug", "Initializing zstd-based compression with native zlib.");
                     const ZstdNativeCompression = (require(`${__dirname}/compression/zstd-native`) as { default: new(shard: Shard) => Compression; }).default;
                     this._compressor = new ZstdNativeCompression(this);
+                } else if (library === "zstd-napi") {
+                    this.client.emit("debug", "Initializing zstd-based compression with zstd-napi.");
+                    const ZstdCompression = (require(`${__dirname}/compression/zstd-napi`) as { default: new(shard: Shard) => Compression; }).default;
+                    this._compressor = new ZstdCompression(this);
                 } else {
-                    const hasZstdNapi = this.client.util._isModuleInstalled("zstd-napi");
-                    if (hasZstdNapi) {
-                        this.client.emit("debug", "Initializing zstd-based compression with zstd-napi.");
-                        const ZstdCompression = (require(`${__dirname}/compression/zstd`) as { default: new(shard: Shard) => Compression; }).default;
-                        this._compressor = new ZstdCompression(this);
-                    } else {
-                        throw new DependencyError("Cannot use zstd based compression without native support (node >=22.15.0, >=23.8.0) or zstd-napi.");
-                    }
+                    throw new Error(`Unknown zstd library: ${library}`);
                 }
             } else  if (type === "zlib-stream") {
-                const hasZlibSync = this.client.util._isModuleInstalled("zlib-sync");
-                const hasPako = this.client.util._isModuleInstalled("pako");
+                switch (library) {
+                    case "native": {
+                        this.client.emit("debug", "Initializing zlib-based compression with native zlib.");
+                        const ZlibNativeCompression = (require(`${__dirname}/compression/zlib-native`) as { default: new(shard: Shard) => Compression; }).default;
+                        this._compressor = new ZlibNativeCompression(this);
 
-                if (hasZlibSync) {
-                    this.client.emit("debug", "Initializing zlib-based compression with zlib-sync.");
-                    const ZlibSyncCompression = (require(`${__dirname}/compression/zlib-sync`) as { default: new(shard: Shard) => Compression; }).default;
-                    this._compressor = new ZlibSyncCompression(this);
-                } else if (hasPako) {
-                    this.client.emit("debug", "Initializing zlib-based compression with pako.");
-                    const PakoCompression = (require(`${__dirname}/compression/pako`) as { default: new(shard: Shard) => Compression; }).default;
-                    this._compressor = new PakoCompression(this);
-                } else {
-                    this.client.emit("debug", "Initializing zlib-based compression with native zlib.");
-                    const ZlibNativeCompression = (require(`${__dirname}/compression/zlib-native`) as { default: new(shard: Shard) => Compression; }).default;
-                    this._compressor = new ZlibNativeCompression(this);
+                        break;
+                    }
+                    case "zlib-sync": {
+                        this.client.emit("debug", "Initializing zlib-based compression with zlib-sync.");
+                        const ZlibSyncCompression = (require(`${__dirname}/compression/zlib-sync`) as { default: new(shard: Shard) => Compression; }).default;
+                        this._compressor = new ZlibSyncCompression(this);
+
+                        break;
+                    }
+                    case "pako": {
+                        this.client.emit("debug", "Initializing zlib-based compression with pako.");
+                        const PakoCompression = (require(`${__dirname}/compression/pako`) as { default: new(shard: Shard) => Compression; }).default;
+                        this._compressor = new PakoCompression(this);
+
+                        break;
+                    }
+                    default: {
+                        throw new Error(`Unknown zlib library: ${library}`);
+                    }
                 }
             } else {
                 throw new TypeError(`Invalid compression type "${type as string}".`);

@@ -1,7 +1,8 @@
+/** @module Time */
 import type Client from "../Client";
 
 export default class Time {
-    private client: Client;
+    private client!: Client;
     /** When the first shard connect happened, reset if all shards disconnect. */
     connect: number | null = null;
     /** When all shards disconnected, reset on any shard connect. */
@@ -21,7 +22,12 @@ export default class Time {
     /** When the client started. */
     start: number | null = null;
     constructor(client: Client) {
-        this.client = client;
+        Object.defineProperty(this, "client", {
+            value:        client,
+            writable:     false,
+            enumerable:   false,
+            configurable: false
+        });
     }
 
     /** @internal */

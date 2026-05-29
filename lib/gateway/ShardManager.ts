@@ -12,6 +12,8 @@ import {
     PrivilegedIntentMapping
 } from "../Constants";
 import Collection from "../util/Collection";
+import { DependencyError } from "../util/Errors";
+import * as zlib from "node:zlib";
 
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore
@@ -21,8 +23,35 @@ try {
 } catch {}
 /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars */
+export const CompressionConfig: Record<string, Array<[name: Exclude<Types.Gateway.GatewayOptions["compressLibrary"], null | undefined>, usable: (client: Client) => boolean, unusableError: () => DependencyError]>> = {
+    "zlib-stream": [
+        ["zlib-sync",
+            (client: Client) => client.util._isModuleInstalled("zlib-sync"),
+            () => new DependencyError("zlib-sync based zlib-stream compression is not available: zlib-sync is not installed")
+        ],
+        ["pako",
+            (client: Client) => client.util._isModuleInstalled("pako"),
+            () => new DependencyError("pako based zlib-stream compression is not available: pako is not installed")
+        ],
+        ["native",
+            (_client: Client) => "createInflate" in zlib,
+            () => new DependencyError("native zlib-stream compression is not available: zlib.createInflate does not exist")
+        ]
+    ],
+    "zstd-stream": [
+        ["zstd-napi",
+            (client: Client) => client.util._isModuleInstalled("zstd-napi"),
+            () => new DependencyError("zstd-napi based zstd-stream compression is not available: zstd-napi is not installed")
+        ],
+        ["native",
+            (_client: Client) => "createZstdDecompress" in zlib,
+            () => new DependencyError("native zstd-stream compression is not available: zlib.createZstdDecompress does not exist")
+        ]
+    ]
+};
+/* eslint-enable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars */
 
-let __compressionTrueDeprecationWarning = 0;
 /** A manager for all the client's shards. */
 export default class ShardManager extends Collection<number, Shard> {
     private _buckets: Record<number, number>;
@@ -35,12 +64,20 @@ export default class ShardManager extends Collection<number, Shard> {
     options: Types.Gateway.ShardManagerInstanceOptions;
     constructor(client: Client, options: Types.Gateway.GatewayOptions = {}) {
         super();
+        Object.defineProperty(this, "client", {
+            value:        client,
+            writable:     false,
+            enumerable:   false,
+            configurable: false
+        });
+
         this._buckets = {};
         this._connectQueue = [];
         this._connectTimeout = null;
         this.options = {
             autoReconnect:        options.autoReconnect ?? true,
-            compress:             options.compress === true ? (__compressionTrueDeprecationWarning++, "zlib-stream") : options.compress ?? false,
+            compress:             options.compress ?? false,
+            compressLibrary:      options.compressLibrary ?? null,
             connectionProperties: {
                 browser: options.connectionProperties?.browser ?? "Oceanic",
                 device:  options.connectionProperties?.device ?? "Oceanic",
@@ -78,11 +115,32 @@ export default class ShardManager extends Collection<number, Shard> {
             shardIDs:                options.shardIDs ?? [],
             ws:                      options.ws ?? {}
         };
-        if (__compressionTrueDeprecationWarning === 1) {
-            process.emitWarning("Using `compress: true` is deprecated and will be removed in a future version. Please use `compress: \"zlib-stream\"` instead.", {
-                code: "OCEANIC_GATEWAY_COMPRESSION_TRUE_DEPRECATION"
-            });
+
+        if (this.options.compress) {
+            const types = Object.keys(CompressionConfig);
+            if (!types.includes(this.options.compress)) {
+                throw new Error(`Invalid compress type: ${this.options.compress}`);
+            }
+
+            if (this.options.compressLibrary) {
+                const config = CompressionConfig[this.options.compress].find(cnf => cnf[0] === this.options.compressLibrary);
+                if (!config) {
+                    throw new Error(`Invalid library "${this.options.compressLibrary}" for ${this.options.compress}`);
+                }
+
+                if (!config[1](client)) {
+                    throw config[2]();
+                }
+            } else {
+                const available = CompressionConfig[this.options.compress] ?? [];
+                const usable = available.find(av => av[1](client));
+                if (!usable) {
+                    throw new DependencyError(`Unable to find a usable ${this.options.compress} compressor`);
+                }
+                this.options.compressLibrary = usable[0];
+            }
         }
+
         this.options.override.appendQuery ??= (this.options.override.getBot === undefined && this.options.override.url === undefined);
         this.options.override.gatewayURLIsResumeURL ??= (this.options.override.getBot !== undefined || this.options.override.url !== undefined);
         this.options.override.timeBetweenShardConnects ??= 5000;
@@ -123,21 +181,13 @@ export default class ShardManager extends Collection<number, Shard> {
         if (this.options.getAllUsers && !(this.options.intents & Intents.GUILD_MEMBERS)) {
             throw new TypeError("Guild members cannot be requested without the GUILD_MEMBERS intent");
         }
-        Object.defineProperties(this, {
-            client: {
-                value:        client,
-                writable:     false,
-                enumerable:   false,
-                configurable: false
-            },
-            dispatcher: {
-                value:        new Dispatcher(this),
-                writable:     false,
-                enumerable:   false,
-                configurable: false
-            }
-        });
 
+        Object.defineProperty(this, "dispatcher", {
+            value:        new Dispatcher(this),
+            writable:     false,
+            enumerable:   false,
+            configurable: false
+        });
     }
 
     private _connect(shard: Shard): void {

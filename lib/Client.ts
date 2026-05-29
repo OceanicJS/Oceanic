@@ -14,11 +14,10 @@ import type ExtendedUser from "./structures/ExtendedUser";
 import Util from "./util/Util";
 import { DependencyError, UncachedError } from "./util/Errors";
 import type OAuthHelper from "./rest/OAuthHelper";
-
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
-// @ts-ignore optional dependency
 import { warning, WarningCodes } from "./util/warning";
 import Time from "./util/Time";
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+// @ts-ignore optional dependency
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
 import { isDeepStrictEqual } from "node:util";
 
