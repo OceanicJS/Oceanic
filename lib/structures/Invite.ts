@@ -1,7 +1,7 @@
 /** @module Invite */
 import Channel from "./Channel";
-import type Guild from "./Guild";
-import type GuildScheduledEvent from "./GuildScheduledEvent";
+import Guild from "./Guild";
+import GuildScheduledEvent from "./GuildScheduledEvent";
 import type User from "./User";
 import PartialApplication from "./PartialApplication";
 import InviteGuild from "./InviteGuild";
@@ -102,7 +102,6 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
             this.flags = data.flags;
         }
 
-        let guild: Guild | undefined;
         if (data.guild) {
             if (this.guild === null) {
                 this.guild = new InviteGuild(data.guild, this.client);
@@ -138,7 +137,7 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
         }
         if (data.stage_instance !== undefined) {
             this.stageInstance = {
-                members:          data.stage_instance.members.map(member => this.client.util.updateMember(guild!.id, member.user!.id, member)),
+                members:          data.stage_instance.members.map(member => this.client.util.updateMember(this.guildID!, member.user!.id, member)),
                 participantCount: data.stage_instance.participant_count,
                 speakerCount:     data.stage_instance.speaker_count,
                 topic:            data.stage_instance.topic
@@ -148,26 +147,26 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
             this.targetApplication = new PartialApplication(data.target_application, this.client);
         }
         if (data.guild_scheduled_event !== undefined) {
-            this.guildScheduledEvent = guild!.scheduledEvents.update(data.guild_scheduled_event);
+            this.guildScheduledEvent = this.guild instanceof Guild ? this.guild.scheduledEvents.update(data.guild_scheduled_event) : new GuildScheduledEvent(data.guild_scheduled_event, this.client);
         }
         if (data.target_user !== undefined) {
             this.targetUser = this.client.users.update(data.target_user);
         }
         if ("created_at" in data) {
             if (data.created_at !== undefined) {
-                this.createdAt = new Date(data.created_at) as never;
+                this.createdAt = new Date(data.created_at);
             }
             if (data.uses !== undefined) {
-                this.uses = data.uses as never;
+                this.uses = data.uses;
             }
             if (data.max_uses !== undefined) {
-                this.maxUses = data.max_uses as never;
+                this.maxUses = data.max_uses;
             }
             if (data.max_age !== undefined) {
-                this.maxAge = data.max_age as never;
+                this.maxAge = data.max_age;
             }
             if (data.temporary !== undefined) {
-                this.temporary = data.temporary as never;
+                this.temporary = data.temporary;
             }
         }
     }
