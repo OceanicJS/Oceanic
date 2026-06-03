@@ -1566,7 +1566,4 @@ export interface IconEmoji {
     name: string | null;
 }
 
-export type ParentChannelType<CH extends GuildChannel> = 
-    CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel :
-        CH extends TextableChannel | Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel :
-        TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
+export type ParentChannelType<_CH extends GuildChannel> = TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
