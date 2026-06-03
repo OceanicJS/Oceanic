@@ -1,7 +1,3 @@
-// Channel and Interaction MUST be at the top due to circular imports
-const Channel = (await import("./dist/lib/structures/Channel.js")).default.default;
-const Interaction = (await import("./dist/lib/structures/Interaction.js")).default.default;
-
 const AnnouncementChannel = (await import("./dist/lib/structures/AnnouncementChannel.js")).default.default;
 const AnnouncementThreadChannel = (await import("./dist/lib/structures/AnnouncementThreadChannel.js")).default.default;
 const Application = (await import("./dist/lib/structures/Application.js")).default.default;
@@ -14,6 +10,7 @@ const Base = (await import("./dist/lib/structures/Base.js")).default.default;
 const BaseEntitlement = (await import("./dist/lib/structures/BaseEntitlement.js")).default.default;
 const Bucket = (await import("./dist/lib/rest/Bucket.js")).default.default;
 const CategoryChannel = (await import("./dist/lib/structures/CategoryChannel.js")).default.default;
+const Channel = (await import("./dist/lib/structures/Channel.js")).default.default;
 const Client = (await import("./dist/lib/Client.js")).default.default;
 const ClientApplication = (await import("./dist/lib/structures/ClientApplication.js")).default.default;
 const Collection = (await import("./dist/lib/util/Collection.js")).default.default;
@@ -36,6 +33,7 @@ const GuildPreview = (await import("./dist/lib/structures/GuildPreview.js")).def
 const GuildScheduledEvent = (await import("./dist/lib/structures/GuildScheduledEvent.js")).default.default;
 const GuildTemplate = (await import("./dist/lib/structures/GuildTemplate.js")).default.default;
 const Integration = (await import("./dist/lib/structures/Integration.js")).default.default;
+const Interaction = (await import("./dist/lib/structures/Interaction.js")).default.default;
 const InteractionOptionsWrapper = (await import("./dist/lib/util/interactions/InteractionOptionsWrapper.js")).default.default;
 const InteractionResolvedChannel = (await import("./dist/lib/structures/InteractionResolvedChannel.js")).default.default;
 const Invite = (await import("./dist/lib/structures/Invite.js")).default.default;
@@ -96,8 +94,6 @@ export * from "./dist/lib/Constants.js";
 export * from "./dist/lib/util/Errors.js";
 
 export {
-    Channel,
-    Interaction,
     AnnouncementChannel,
     AnnouncementThreadChannel,
     Application,
@@ -110,6 +106,7 @@ export {
     BaseEntitlement,
     Bucket,
     CategoryChannel,
+    Channel,
     Client,
     ClientApplication,
     Collection,
@@ -132,6 +129,7 @@ export {
     GuildScheduledEvent,
     GuildTemplate,
     Integration,
+    Interaction,
     InteractionOptionsWrapper,
     InteractionResolvedChannel,
     Invite,

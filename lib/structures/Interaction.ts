@@ -10,6 +10,11 @@ import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import { InteractionTypes } from "../Constants";
 
+let PingInteraction: typeof import("./PingInteraction").default,
+    CommandInteraction: typeof import("./CommandInteraction").default,
+    ComponentInteraction: typeof import("./ComponentInteraction").default,
+    AutocompleteInteraction: typeof import("./AutocompleteInteraction").default,
+    ModalSubmitInteraction: typeof import("./ModalSubmitInteraction").default;
 
 /** Represents an interaction. */
 export default class Interaction extends Base {
@@ -36,26 +41,34 @@ export default class Interaction extends Base {
     }
 
 
-    static from<T extends Types.Interactions.AnyInteraction = Types.Interactions.AnyInteraction>(data: Types.Interactions.RawInteraction, client: Client): T {
+    static async from<T extends Types.Interactions.AnyInteraction = Types.Interactions.AnyInteraction>(data: Types.Interactions.RawInteraction, client: Client): Promise<T> {
         switch (data.type) {
             case InteractionTypes.PING: {
+                PingInteraction ??= await import("./PingInteraction").then(m => m.default);
                 return new PingInteraction(data, client) as T;
             }
+
             case InteractionTypes.APPLICATION_COMMAND: {
+                CommandInteraction ??= await import("./CommandInteraction").then(m => m.default);
                 return new CommandInteraction(data as Types.Interactions.RawApplicationCommandInteraction, client) as T;
             }
+
             case InteractionTypes.MESSAGE_COMPONENT: {
+                ComponentInteraction ??= await import("./ComponentInteraction").then(m => m.default);
                 return new ComponentInteraction(data as Types.Interactions.RawMessageComponentInteraction, client) as T;
             }
+
             case InteractionTypes.APPLICATION_COMMAND_AUTOCOMPLETE: {
+                AutocompleteInteraction ??= await import("./AutocompleteInteraction").then(m => m.default);
                 return new AutocompleteInteraction(data as Types.Interactions.RawAutocompleteInteraction, client) as T;
             }
+
             case InteractionTypes.MODAL_SUBMIT: {
+                ModalSubmitInteraction ??= await import("./ModalSubmitInteraction").then(m => m.default);
                 return new ModalSubmitInteraction(data as Types.Interactions.RawModalSubmitInteraction, client) as T;
             }
-            default: {
-                return new Interaction(data, client) as never;
-            }
+
+            default: return new Interaction(data, client) as never;
         }
     }
 
@@ -93,13 +106,3 @@ export default class Interaction extends Base {
         };
     }
 }
-
-
-// Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
-const AutocompleteInteraction = (require("./AutocompleteInteraction") as typeof import("./AutocompleteInteraction")).default;
-const CommandInteraction = (require("./CommandInteraction") as typeof import("./CommandInteraction")).default;
-const ComponentInteraction = (require("./ComponentInteraction") as typeof import("./ComponentInteraction")).default;
-const ModalSubmitInteraction = (require("./ModalSubmitInteraction") as typeof import("./ModalSubmitInteraction")).default;
-const PingInteraction = (require("./PingInteraction") as typeof import("./PingInteraction")).default;
-/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

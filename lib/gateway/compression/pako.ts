@@ -12,7 +12,7 @@ interface PakoExtra {
 }
 
 export default class PakoCompression extends Compressor {
-    _sharedZLib: Inflate & PakoExtra;
+    protected _sharedZLib: Inflate & PakoExtra;
     constructor(shard: Shard) {
         super(shard);
         this._sharedZLib = new Inflate({ chunkSize: 128 * 1024 }) as Inflate & PakoExtra;

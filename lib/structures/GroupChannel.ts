@@ -42,7 +42,7 @@ export default class GroupChannel extends Channel {
         this.owner = this.client.users.get(data.owner_id);
         this.ownerID = data.owner_id;
         this.recipients = new TypedCollection(User, client, Infinity, {
-            construct: (user): User => client.users.update(user)
+            construct: (user, collectionClient): User => collectionClient.users.update(user)
         });
         for (const r of data.recipients) this.recipients.update(r);
         this.update(data);

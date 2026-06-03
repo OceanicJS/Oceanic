@@ -20,12 +20,12 @@ export default class ClientApplication extends Base {
     constructor(data: Types.Applications.RawClientApplication, client: Client) {
         super(data.id, client);
         this.entitlements = new TypedCollection(BaseEntitlement, client, Infinity, {
-            construct: (entitlement): BaseEntitlement => {
+            construct: (entitlement, collectionClient): BaseEntitlement => {
                 if ("subscription_id" in entitlement && entitlement.subscription_id) {
-                    return new Entitlement(entitlement as Types.Applications.RawEntitlement, client);
+                    return new Entitlement(entitlement as Types.Applications.RawEntitlement, collectionClient);
                 }
 
-                return new TestEntitlement(entitlement as Types.Applications.RawTestEntitlement, client);
+                return new TestEntitlement(entitlement as Types.Applications.RawTestEntitlement, collectionClient);
             }
         }) as TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
         this.flags = data.flags;

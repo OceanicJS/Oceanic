@@ -1045,14 +1045,14 @@ export default class Guilds {
         return this._manager.authRequest<{ members: Array<Types.Channels.RawThreadMember>; threads: Array<Types.Channels.RawThreadChannel>; }>({
             method: "GET",
             path:   Routes.GUILD_ACTIVE_THREADS(guildID)
-        }).then(data => ({
+        }).then(async data => ({
             members: data.members.map(member => ({
                 flags:         member.flags,
                 id:            member.id,
                 joinTimestamp: new Date(member.join_timestamp),
                 userID:        member.user_id
             })),
-            threads: data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread))
+            threads: await Promise.all(data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread)))
         }));
     }
 
@@ -1074,13 +1074,13 @@ export default class Guilds {
             method: "GET",
             path:   Routes.GUILD_AUDIT_LOG(guildID),
             query
-        }).then(data => ({
+        }).then(async data => ({
             applicationCommands:  data.application_commands.map(command => new ApplicationCommand(command, this._manager.client)),
             autoModerationRules:  data.auto_moderation_rules.map(rule => guild?.autoModerationRules.update(rule) ?? new AutoModerationRule(rule, this._manager.client)),
             entries:              data.audit_log_entries.map(entry => new AuditLogEntry(entry, this._manager.client)),
             guildScheduledEvents: data.guild_scheduled_events.map(event => guild?.scheduledEvents.update(event) ?? new GuildScheduledEvent(event, this._manager.client)),
             integrations:         data.integrations.map(integration => guild?.integrations.update(integration, guildID) ?? new Integration(integration, this._manager.client, guildID)),
-            threads:              data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread)),
+            threads:              await Promise.all(data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread))),
             users:                data.users.map(user => this._manager.client.users.update(user)),
             webhooks:             data.webhooks.map(webhook => new Webhook(webhook, this._manager.client))
         }));
@@ -1200,7 +1200,7 @@ export default class Guilds {
         return this._manager.authRequest<Array<Types.Channels.RawGuildChannel>>({
             method: "GET",
             path:   Routes.GUILD_CHANNELS(guildID)
-        }).then(data => data.map(d => this._manager.client.util.updateChannel(d)));
+        }).then(data => Promise.all(data.map(d => this._manager.client.util.updateChannel<Types.Channels.AnyGuildChannelWithoutThreads>(d))));
     }
 
     /**

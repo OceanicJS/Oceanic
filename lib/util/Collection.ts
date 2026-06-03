@@ -34,10 +34,13 @@ export default class Collection<K, V> extends Map<K, V> {
     }
 
     /**
-     * Get the first element, or first X elements if a number is provided.
-     * @param amount The amount of elements to get.
+     * Get the first element.
      */
     first(): V | undefined;
+    /**
+     * Get the first X elements.
+     * @param amount The amount of elements to get.
+     */
     first(amount: number): Array<V>;
     first(amount?: number): V | Array<V> | undefined {
         if (amount === undefined) {
@@ -55,10 +58,13 @@ export default class Collection<K, V> extends Map<K, V> {
     }
 
     /**
-     * Get the last element, or last X elements if a number is provided.
-     * @param amount The amount of elements to get.
+     * Get the last element.
      */
     last(): V | undefined;
+    /**
+     * Get the last X elements.
+     * @param amount The amount of elements to get.
+     */
     last(amount: number): Array<V>;
     last(amount?: number): V | Array<V> | undefined {
         const iterator = Array.from(this.values());
