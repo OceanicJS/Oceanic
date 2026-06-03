@@ -256,7 +256,7 @@ export default class Guild extends Base {
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
         this.voiceStates = new TypedCollection(VoiceState, client, client.util._getLimit("voiceStates", this.id));
-        this.widgetChannelID = !data.widget_channel_id ? null : data.widget_channel_id;
+        this.widgetChannelID = data.widget_channel_id ?? null;
         for (const role of data.roles) {
             this.roles.update(role, data.id);
         }
