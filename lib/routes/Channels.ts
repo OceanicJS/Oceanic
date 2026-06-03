@@ -1030,7 +1030,7 @@ export default class Channels {
     }
 
     /**
-     * Purge an amount of messages from a channel. 
+     * Purge an amount of messages from a channel.
      * @param channelID The ID of the channel to purge.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      * @caching This method **does not** cache its result.

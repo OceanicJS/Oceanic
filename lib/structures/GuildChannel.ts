@@ -59,13 +59,12 @@ export default class GuildChannel extends Channel {
         return this._cachedGuild;
     }
 
-    /** 
+    /**
      * The parent of this channel, if applicable.
-     * 
+     *
      * If the channel is an {@link AnnouncementThread}, {@link PublicThread}, or {@link PrivateThread}, this will be a {@link TextChannel}, {@link AnnouncementChannel}, {@link ForumChannel}, or {@link MediaChannel}.
-     * 
+     *
      * If the channel is a {@link TextChannel}, {@link VoiceChannel}, {@link AnnouncementChannel}, {@link ForumChannel}, or {@link MediaChannel}, this will be a {@link CategoryChannel}.
-     * 
      * @returns If undefined, no attempt was made to resolve the parent channel. If null, the parent channel was attempted to be resolved but was not found in the client's cache.
      */
     get parent(): Types.Channels.ParentChannelType<this> | null | undefined {
@@ -75,7 +74,7 @@ export default class GuildChannel extends Channel {
                 this._cachedParent = this.client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(this.parentID);
                 this._cachedParent ??= null;
                 return this._cachedParent as Types.Channels.ParentChannelType<this> | null;
-            } 
+            }
 
             return null;
         }
