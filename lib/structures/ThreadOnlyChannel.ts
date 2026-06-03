@@ -4,7 +4,6 @@ import PermissionOverwrite from "./PermissionOverwrite";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
-import type CategoryChannel from "./CategoryChannel";
 import type Webhook from "./Webhook";
 import type { InviteWithMetadata } from "./Invite";
 import type * as Types from "../types/namespaced";
@@ -127,10 +126,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
     /** The most recently created thread. */
     get lastThread(): PublicThreadChannel | null {
         return this.lastThreadID === null ? null : this.guild.threads.get(this.lastThreadID) as PublicThreadChannel;
-    }
-
-    override get parent(): CategoryChannel | null | undefined {
-        return super.parent as CategoryChannel | null | undefined;
     }
 
     /** The threads in this channel. The returned collection is disposable. */

@@ -50,6 +50,11 @@ import type Message from "../structures/Message";
 import type Guild from "../structures/Guild";
 import type Invite from "../structures/Invite";
 import type Attachment from "../structures/Attachment";
+import GuildChannel from "../structures/GuildChannel";
+import ThreadChannel from "../structures/ThreadChannel";
+import CategoryChannel from "../structures/CategoryChannel";
+import MediaChannel from "../structures/MediaChannel";
+import TextableChannel from "../structures/TextableChannel";
 
 export interface RawChannel {
     application_id?: string;
@@ -954,7 +959,7 @@ export interface PurgeOptions<T extends AnyTextableGuildChannel | Types.Shared.U
     around?: string;
     /** The ID of the message to purge before. */
     before?: string;
-    /** The limit of messages to purge. */
+    /** The limit of messages to purge. `0` will return immediately, use `Infinity` for no limit. */
     limit: number;
     /** The reason for purging the messages. */
     reason?: string;
@@ -1560,3 +1565,8 @@ export interface IconEmoji {
     id: string | null;
     name: string | null;
 }
+
+export type ParentChannelType<CH extends GuildChannel> = 
+    CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel :
+        CH extends TextableChannel | Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel :
+        TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;

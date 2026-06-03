@@ -1,6 +1,5 @@
 /** @module TextableVoiceChannel */
 import Member from "./Member";
-import type CategoryChannel from "./CategoryChannel";
 import TextableChannel from "./TextableChannel";
 import type VoiceState from "./VoiceState";
 import type * as Types from "../types/namespaced";
@@ -47,10 +46,6 @@ export default class TextableVoiceChannel<T extends Types.Channels.AnyVoiceChann
         if (data.video_quality_mode !== undefined) {
             this.videoQualityMode = data.video_quality_mode;
         }
-    }
-
-    override get parent(): CategoryChannel | null | undefined {
-        return super.parent as CategoryChannel | null | undefined;
     }
 
     /** The voice states related to this channel. */

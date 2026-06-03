@@ -772,7 +772,7 @@ export default class Channels {
     async getPollAnswerUsers(channelID: string, messageID: string, answerID: number, options?: Types.Channels.GetPollAnswerUsersOptions): Promise<Array<User>> {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
-        query.setIfPresent("before", options?.after);
+        query.setIfPresent("after", options?.after);
         query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<{ users: Array<Types.Users.RawUser>; }>({
             method: "GET",
@@ -1030,13 +1030,17 @@ export default class Channels {
     }
 
     /**
-     * Purge an amount of messages from a channel.
+     * Purge an amount of messages from a channel. 
      * @param channelID The ID of the channel to purge.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      * @caching This method **does not** cache its result.
      */
     async purgeMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(channelID: string, options: Types.Channels.PurgeOptions<T>): Promise<number> {
         options = this._manager.client.util._freeze(options);
+        if (options.limit === 0) {
+            return 0;
+        }
+
         const filter = (message: Message<T>): boolean | "break" | PromiseLike<boolean | "break"> => {
             if (message.timestamp.getTime() < Date.now() - 1209600000) {
                 return "break";

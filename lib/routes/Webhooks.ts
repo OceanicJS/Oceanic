@@ -63,7 +63,8 @@ export default class Webhooks {
         query.setIfPresent("thread_id", options?.threadID);
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID)
+            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID),
+            query
         });
     }
 
@@ -299,7 +300,8 @@ export default class Webhooks {
         query.setIfPresent("thread_id", threadID);
         return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "GET",
-            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID)
+            path:   Routes.WEBHOOK_MESSAGE(webhookID, token, messageID),
+            query
         }).then(data => new Message<T>(data, this._manager.client));
     }
 }

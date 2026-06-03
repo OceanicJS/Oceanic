@@ -117,10 +117,6 @@ export default class ThreadChannel<CH extends Types.Channels.AnyThreadChannel = 
         }
     }
 
-    override get parent(): Types.Channels.ThreadParentChannel | undefined {
-        return super.parent as Types.Channels.ThreadParentChannel | undefined;
-    }
-
     /**
      * Add a member to this thread.
      * @param userID The ID of the user to add to the thread.

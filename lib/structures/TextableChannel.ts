@@ -3,7 +3,6 @@ import GuildChannel from "./GuildChannel";
 import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
 import type { InviteWithMetadata } from "./Invite";
-import type CategoryChannel from "./CategoryChannel";
 import type Member from "./Member";
 import Permission from "./Permission";
 import type User from "./User";
@@ -14,7 +13,7 @@ import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
 
-/** Represents a guild textable channel. */
+/** Represents a guild textable channel. Not used for threads. */
 export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildChannel = Types.Channels.AnyTextableGuildChannel> extends GuildChannel {
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
     lastMessage?: Message<CH> | null;
@@ -72,10 +71,6 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
 
             data.permission_overwrites.map(overwrite => this.permissionOverwrites.update(overwrite));
         }
-    }
-
-    override get parent(): CategoryChannel | undefined | null {
-        return super.parent as CategoryChannel | undefined | null;
     }
 
     /**

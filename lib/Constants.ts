@@ -1525,7 +1525,7 @@ export enum MemberSearchSortType {
     JOINED_AT_DESC  = 1,
     JOINED_AT_ASC   = 2,
     USER_ID_DESC    = 3,
-    USER_ID_ASC     = 1,
+    USER_ID_ASC     = 4,
 }
 
 export enum MemberJoinSourceType {

@@ -21,10 +21,6 @@ export default class AnnouncementChannel extends ThreadableChannel<AnnouncementC
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
     }
 
-    override get parent(): CategoryChannel | null | undefined {
-        return super.parent;
-    }
-
     /**
      * Convert this announcement channel to a text channel.
      */

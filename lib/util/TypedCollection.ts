@@ -40,7 +40,11 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
             if (this.limit && this.size > this.limit) {
                 const iter = this.keys();
                 while (this.size > this.limit) {
-                    this.delete(iter.next().value as string);
+                    const value = iter.next().value;
+                    if (value === undefined) {
+                        break;
+                    }
+                    this.delete(value);
                 }
 
             }

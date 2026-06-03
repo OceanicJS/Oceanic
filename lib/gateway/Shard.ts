@@ -113,7 +113,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.reconnectInterval = 1000;
         this.connecting = false;
         if (this._connectTimeout) {
-            clearInterval(this._connectTimeout);
+            clearTimeout(this._connectTimeout);
         }
         this.status = "ready";
         this.client.shards["_ready"](this.id);
@@ -158,7 +158,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.reconnectInterval = 1000;
         this.connecting = false;
         if (this._connectTimeout) {
-            clearInterval(this._connectTimeout);
+            clearTimeout(this._connectTimeout);
         }
         this.status = "ready";
         this.client.shards["_ready"](this.id);

@@ -59,13 +59,28 @@ export default class GuildChannel extends Channel {
         return this._cachedGuild;
     }
 
-    /** The parent of this channel, if applicable. This will be a text/announcement/forum channel if we're in a thread, category otherwise. */
-    get parent(): TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel | null | undefined {
-        if (this.parentID !== null && this._cachedParent !== null) {
-            return this._cachedParent ?? (this._cachedParent = this.client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(this.parentID));
+    /** 
+     * The parent of this channel, if applicable.
+     * 
+     * If the channel is an {@link AnnouncementThread}, {@link PublicThread}, or {@link PrivateThread}, this will be a {@link TextChannel}, {@link AnnouncementChannel}, {@link ForumChannel}, or {@link MediaChannel}.
+     * 
+     * If the channel is a {@link TextChannel}, {@link VoiceChannel}, {@link AnnouncementChannel}, {@link ForumChannel}, or {@link MediaChannel}, this will be a {@link CategoryChannel}.
+     * 
+     * @returns If undefined, no attempt was made to resolve the parent channel. If null, the parent channel was attempted to be resolved but was not found in the client's cache.
+     */
+    get parent(): Types.Channels.ParentChannelType<this> | null | undefined {
+        if (this.parentID !== null) {
+            if (this._cachedParent !== null) {
+                if (this._cachedParent) return this._cachedParent as Types.Channels.ParentChannelType<this>;
+                this._cachedParent = this.client.getChannel<TextChannel | AnnouncementChannel | CategoryChannel | ForumChannel>(this.parentID);
+                this._cachedParent ??= null;
+                return this._cachedParent as Types.Channels.ParentChannelType<this> | null;
+            } 
+
+            return null;
         }
 
-        return this._cachedParent === null ? this._cachedParent : (this._cachedParent = null);
+        return undefined;
     }
 
     /**

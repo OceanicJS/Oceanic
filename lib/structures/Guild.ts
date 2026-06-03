@@ -848,7 +848,7 @@ export default class Guild extends Base {
      * @param reason The reason for disabling the feature.
      */
     async disableInvites(reason?: string): Promise<Guild> {
-        return this.toggleFeature("INVITES_DISABLED", true, reason);
+        return this.toggleFeature("INVITES_DISABLED", false, reason);
     }
 
     /**
@@ -1039,7 +1039,7 @@ export default class Guild extends Base {
      * @param reason The reason for enabling the feature.
      */
     async enableInvites(reason?: string): Promise<Guild> {
-        return this.toggleFeature("INVITES_DISABLED", false, reason);
+        return this.toggleFeature("INVITES_DISABLED", true, reason);
     }
 
     /**
