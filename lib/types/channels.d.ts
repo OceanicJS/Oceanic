@@ -50,11 +50,9 @@ import type Message from "../structures/Message";
 import type Guild from "../structures/Guild";
 import type Invite from "../structures/Invite";
 import type Attachment from "../structures/Attachment";
-import GuildChannel from "../structures/GuildChannel";
-import ThreadChannel from "../structures/ThreadChannel";
-import CategoryChannel from "../structures/CategoryChannel";
-import MediaChannel from "../structures/MediaChannel";
-import TextableChannel from "../structures/TextableChannel";
+import type GuildChannel from "../structures/GuildChannel";
+import type CategoryChannel from "../structures/CategoryChannel";
+import type MediaChannel from "../structures/MediaChannel";
 
 export interface RawChannel {
     application_id?: string;
@@ -1566,4 +1564,7 @@ export interface IconEmoji {
     name: string | null;
 }
 
-export type ParentChannelType<_CH extends GuildChannel> = TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
+export type ParentChannelType<CH extends GuildChannel> =
+    CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel :
+        CH extends Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel :
+            TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
