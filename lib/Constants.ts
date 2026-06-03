@@ -1183,7 +1183,7 @@ export enum Intents {
 
 export type IntentNames = keyof typeof Intents;
 export type PrivilegedIntentNames = "GUILD_MEMBERS" | "GUILD_PRESENCES" | "MESSAGE_CONTENT";
-// TODO: find a way to make the above not manual, if possible
+// @TODO: find a way to make the above not manual, if possible
 
 export const NonPrivilegedIntents = [
     Intents.GUILDS,
