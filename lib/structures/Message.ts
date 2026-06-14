@@ -329,7 +329,7 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
             this.stickerItems = data.sticker_items;
         }
         if (data.thread !== undefined) {
-            this.thread = this.client.util.updateThreadSync(data.thread);
+            this.thread = this.client.util.updateThread(data.thread);
 
         }
     }

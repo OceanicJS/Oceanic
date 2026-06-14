@@ -4,19 +4,6 @@ import type * as Types from "../types/namespaced";
 import { ChannelTypes } from "../Constants";
 import type Client from "../Client";
 
-let TextChannel: typeof import("./TextChannel").default,
-    PrivateChannel: typeof import("./PrivateChannel").default,
-    VoiceChannel: typeof import("./VoiceChannel").default,
-    GroupChannel: typeof import("./GroupChannel").default,
-    CategoryChannel: typeof import("./CategoryChannel").default,
-    AnnouncementChannel: typeof import("./AnnouncementChannel").default,
-    AnnouncementThreadChannel: typeof import("./AnnouncementThreadChannel").default,
-    PublicThreadChannel: typeof import("./PublicThreadChannel").default,
-    PrivateThreadChannel: typeof import("./PrivateThreadChannel").default,
-    StageChannel: typeof import("./StageChannel").default,
-    ForumChannel: typeof import("./ForumChannel").default,
-    MediaChannel: typeof import("./MediaChannel").default;
-
 /** Represents a channel. */
 export default class Channel extends Base {
     /** The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of this channel. */
@@ -26,69 +13,47 @@ export default class Channel extends Base {
         this.type = data.type;
     }
 
-    static async from<T extends Types.Channels.AnyChannel = Types.Channels.AnyChannel>(data: Types.Channels.RawChannel, client: Client): Promise<T> {
+    static from<T extends Types.Channels.AnyChannel = Types.Channels.AnyChannel>(data: Types.Channels.RawChannel, client: Client): T {
         switch (data.type) {
             case ChannelTypes.GUILD_TEXT: {
-                TextChannel ??= await import("./TextChannel").then(m => m.default);
                 return new TextChannel(data as Types.Channels.RawTextChannel, client) as T;
             }
-
             case ChannelTypes.DM: {
-                PrivateChannel ??= await import("./PrivateChannel").then(m => m.default);
                 return new PrivateChannel(data as Types.Channels.RawPrivateChannel, client) as T;
             }
-
             case ChannelTypes.GUILD_VOICE: {
-                VoiceChannel ??= await import("./VoiceChannel").then(m => m.default);
                 return new VoiceChannel(data as Types.Channels.RawVoiceChannel, client) as T;
             }
-
             case ChannelTypes.GROUP_DM: {
-                GroupChannel ??= await import("./GroupChannel").then(m => m.default);
                 return new GroupChannel(data as Types.Channels.RawGroupChannel, client) as T;
             }
-
             case ChannelTypes.GUILD_CATEGORY: {
-                CategoryChannel ??= await import("./CategoryChannel").then(m => m.default);
                 return new CategoryChannel(data as Types.Channels.RawCategoryChannel, client) as T;
             }
-
             case ChannelTypes.GUILD_ANNOUNCEMENT: {
-                AnnouncementChannel ??= await import("./AnnouncementChannel").then(m => m.default);
                 return new AnnouncementChannel(data as Types.Channels.RawAnnouncementChannel, client) as T;
             }
-
             case ChannelTypes.ANNOUNCEMENT_THREAD: {
-                AnnouncementThreadChannel ??= await import("./AnnouncementThreadChannel").then(m => m.default);
                 return new AnnouncementThreadChannel(data as Types.Channels.RawAnnouncementThreadChannel, client) as T;
             }
-
             case ChannelTypes.PUBLIC_THREAD: {
-                PublicThreadChannel ??= await import("./PublicThreadChannel").then(m => m.default);
                 return new PublicThreadChannel(data as Types.Channels.RawPublicThreadChannel, client) as T;
             }
-
             case ChannelTypes.PRIVATE_THREAD: {
-                PrivateThreadChannel ??= await import("./PrivateThreadChannel").then(m => m.default);
                 return new PrivateThreadChannel(data as Types.Channels.RawPrivateThreadChannel, client) as T;
             }
-
             case ChannelTypes.GUILD_STAGE_VOICE: {
-                StageChannel ??= await import("./StageChannel").then(m => m.default);
                 return new StageChannel(data as Types.Channels.RawStageChannel, client) as T;
             }
-
             case ChannelTypes.GUILD_FORUM: {
-                ForumChannel ??= await import("./ForumChannel").then(m => m.default);
                 return new ForumChannel(data as Types.Channels.RawForumChannel, client) as T;
             }
-
             case ChannelTypes.GUILD_MEDIA: {
-                MediaChannel ??= await import("./MediaChannel").then(m => m.default);
                 return new MediaChannel(data as Types.Channels.RawMediaChannel, client) as T;
             }
-
-            default: return new Channel(data, client) as T;
+            default: {
+                return new Channel(data, client) as T;
+            }
         }
     }
 
@@ -111,3 +76,19 @@ export default class Channel extends Base {
         };
     }
 }
+
+// Yes this sucks, but it works. That's the important part. Circular imports are hell.
+/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+const TextChannel = (require("./TextChannel") as typeof import("./TextChannel")).default;
+const PrivateChannel = (require("./PrivateChannel") as typeof import("./PrivateChannel")).default;
+const VoiceChannel = (require("./VoiceChannel") as typeof import("./VoiceChannel")).default;
+const CategoryChannel = (require("./CategoryChannel") as typeof import("./CategoryChannel")).default;
+const GroupChannel = (require("./GroupChannel") as typeof import("./GroupChannel")).default;
+const AnnouncementChannel = (require("./AnnouncementChannel") as typeof import("./AnnouncementChannel")).default;
+const PublicThreadChannel = (require("./PublicThreadChannel") as typeof import("./PublicThreadChannel")).default;
+const PrivateThreadChannel = (require("./PrivateThreadChannel") as typeof import("./PrivateThreadChannel")).default;
+const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typeof import("./AnnouncementThreadChannel")).default;
+const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
+const ForumChannel = (require("./ForumChannel") as typeof import("./ForumChannel")).default;
+const MediaChannel = (require("./MediaChannel") as typeof import("./MediaChannel")).default;
+/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

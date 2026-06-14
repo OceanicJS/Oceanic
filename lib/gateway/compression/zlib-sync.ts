@@ -4,7 +4,7 @@ import { GatewayError } from "../../util/Errors";
 import ZlibSync from "zlib-sync";
 
 export default class ZlibSyncCompressor extends Compressor {
-    protected _sharedZLib: ZlibSync.Inflate;
+    _sharedZLib: ZlibSync.Inflate;
     constructor(shard: Shard) {
         super(shard);
         this._sharedZLib = new ZlibSync.Inflate({ chunkSize: 128 * 1024 });

@@ -16,7 +16,6 @@ import { DependencyError, UncachedError } from "./util/Errors";
 import type OAuthHelper from "./rest/OAuthHelper";
 import { warning, WarningCodes } from "./util/warning";
 import Time from "./util/Time";
-import AsyncTypedCollection from "./util/AsyncTypedCollection";
 /* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
 // @ts-ignore optional dependency
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
@@ -35,11 +34,11 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
     private _user?: ExtendedUser;
     /** A key-value mapping of channel IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#channels | channels collection}. */
     channelGuildMap = new Map<string, string>();
-    groupChannels: AsyncTypedCollection<Types.Channels.RawGroupChannel, GroupChannel>;
+    groupChannels: TypedCollection<Types.Channels.RawGroupChannel, GroupChannel>;
     guildShardMap = new Map<string, number>();
     guilds: TypedCollection<Types.Guilds.RawGuild, Guild, [rest?: boolean]>;
     options: Types.Client.ClientInstanceOptions;
-    privateChannels: AsyncTypedCollection<Types.Channels.RawPrivateChannel, PrivateChannel>;
+    privateChannels: TypedCollection<Types.Channels.RawPrivateChannel, PrivateChannel>;
     ready: boolean;
     rest: RESTManager;
     shards: ShardManager;
@@ -131,9 +130,9 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         if (disableCache && options?.collectionLimits !== undefined && !isDeepStrictEqual(options.collectionLimits, colZero)) {
             warning(WarningCodes.OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED);
         }
-        this.groupChannels = new AsyncTypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);
+        this.groupChannels = new TypedCollection(GroupChannel, this, this.options.collectionLimits.groupChannels);
         this.guilds = new TypedCollection(Guild, this, this.options.collectionLimits.guilds);
-        this.privateChannels = new AsyncTypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels);
+        this.privateChannels = new TypedCollection(PrivateChannel, this, this.options.collectionLimits.privateChannels);
         this.ready = false;
         this.rest = new RESTManager(this, options?.rest);
         this.shards = new ShardManager(this, options?.gateway);

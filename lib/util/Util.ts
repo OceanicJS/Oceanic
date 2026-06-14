@@ -22,16 +22,6 @@ import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 import type Poll from "../structures/Poll";
-import AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import PublicThreadChannel from "../structures/PublicThreadChannel";
-import TextChannel from "../structures/TextChannel";
-import VoiceChannel from "../structures/VoiceChannel";
-import CategoryChannel from "../structures/CategoryChannel";
-import AnnouncementChannel from "../structures/AnnouncementChannel";
-import StageChannel from "../structures/StageChannel";
-import ForumChannel from "../structures/ForumChannel";
-import MediaChannel from "../structures/MediaChannel";
 import { types } from "node:util";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
@@ -896,30 +886,7 @@ export default class Util {
         }
     }
 
-    async updateChannel<T extends Types.Channels.AnyChannel>(channelData: Types.Channels.RawChannel): Promise<T> {
-        if (channelData.guild_id) {
-            const guild = this._client.guilds.get(channelData.guild_id);
-            if (guild) {
-                if (ThreadChannelTypes.includes(channelData.type as typeof ThreadChannelTypes[number])) {
-                    return guild.threads.update(channelData as Types.Channels.RawThreadChannel) as Promise<T>;
-                } else {
-                    return guild.channels.update(channelData as Types.Channels.RawGuildChannel) as Promise<T>;
-                }
-            }
-        }
-
-        switch (channelData.type) {
-            case ChannelTypes.DM: return this._client.privateChannels.update(channelData as Types.Channels.RawPrivateChannel) as Promise<T>;
-            case ChannelTypes.GROUP_DM: return this._client.groupChannels.update(channelData as Types.Channels.RawGroupChannel) as Promise<T>;
-            default: return Channel.from<T>(channelData, this._client);
-        }
-    }
-
-    /**
-     * @deprecated Avoid if possible.
-     * @internal
-     */
-    updateChannelSync<T extends Types.Channels.AnyChannel>(channelData: Types.Channels.RawChannel): T {
+    updateChannel<T extends Types.Channels.AnyChannel>(channelData: Types.Channels.RawChannel): T {
         guild: if (channelData.guild_id) {
             const guild = this._client.guilds.get(channelData.guild_id);
             if (guild) {
@@ -927,45 +894,17 @@ export default class Util {
                     if (!channelData.parent_id) {
                         break guild;
                     }
-                    let klass: typeof AnnouncementThreadChannel | typeof PrivateThreadChannel | typeof PublicThreadChannel;
-                    switch (channelData.type) {
-                        case ChannelTypes.ANNOUNCEMENT_THREAD: klass = AnnouncementThreadChannel; break;
-                        case ChannelTypes.PRIVATE_THREAD: klass = PrivateThreadChannel; break;
-                        case ChannelTypes.PUBLIC_THREAD: klass = PublicThreadChannel; break;
-                        default: throw new Error(`Unknown thread channel type: ${channelData.type}`);
-                    }
-                    return guild.threads.updateSync((data, client, ...extra) => new klass(data as never, client, ...extra), channelData as Types.Channels.RawThreadChannel) as T;
+                    return guild.threads.update(channelData as Types.Channels.RawThreadChannel) as T;
                 } else {
-                    let klass: typeof TextChannel | typeof VoiceChannel | typeof CategoryChannel | typeof AnnouncementChannel | typeof StageChannel | typeof ForumChannel | typeof MediaChannel;
-                    switch (channelData.type) {
-                        case ChannelTypes.GUILD_TEXT: klass = TextChannel; break;
-                        case ChannelTypes.GUILD_VOICE: klass = VoiceChannel; break;
-                        case ChannelTypes.GUILD_CATEGORY: klass = CategoryChannel; break;
-                        case ChannelTypes.GUILD_ANNOUNCEMENT: klass = AnnouncementChannel; break;
-                        case ChannelTypes.GUILD_STAGE_VOICE: klass = StageChannel; break;
-                        case ChannelTypes.GUILD_FORUM: klass = ForumChannel; break;
-                        case ChannelTypes.GUILD_MEDIA: klass = MediaChannel; break;
-                        default: throw new Error(`Unknown guild channel type: ${channelData.type}`);
-                    }
-                    return guild.channels.updateSync((data, client, ...extra) => new klass(data as never, client, ...extra), channelData as Types.Channels.RawGuildChannel) as T;
+                    return guild.channels.update(channelData as Types.Channels.RawGuildChannel) as T;
                 }
             }
         }
 
         switch (channelData.type) {
-            case ChannelTypes.GUILD_TEXT: return new TextChannel(channelData as Types.Channels.RawTextChannel, this._client) as T;
-            case ChannelTypes.DM: return this._client.privateChannels.updateSync(null, channelData as Types.Channels.RawPrivateChannel) as T;
-            case ChannelTypes.GUILD_VOICE: return new VoiceChannel(channelData as Types.Channels.RawVoiceChannel, this._client) as T;
-            case ChannelTypes.GROUP_DM: return this._client.groupChannels.updateSync(null, channelData as Types.Channels.RawGroupChannel) as T;
-            case ChannelTypes.GUILD_CATEGORY: return new CategoryChannel(channelData as Types.Channels.RawCategoryChannel, this._client) as T;
-            case ChannelTypes.GUILD_ANNOUNCEMENT: return new AnnouncementChannel(channelData as Types.Channels.RawAnnouncementChannel, this._client) as T;
-            case ChannelTypes.ANNOUNCEMENT_THREAD: return new AnnouncementThreadChannel(channelData as Types.Channels.RawAnnouncementThreadChannel, this._client) as T;
-            case ChannelTypes.PUBLIC_THREAD: return new PublicThreadChannel(channelData as Types.Channels.RawPublicThreadChannel, this._client) as T;
-            case ChannelTypes.PRIVATE_THREAD: return new PrivateThreadChannel(channelData as Types.Channels.RawPrivateThreadChannel, this._client) as T;
-            case ChannelTypes.GUILD_STAGE_VOICE: return new StageChannel(channelData as Types.Channels.RawStageChannel, this._client) as T;
-            case ChannelTypes.GUILD_FORUM: return new ForumChannel(channelData as Types.Channels.RawForumChannel, this._client) as T;
-            case ChannelTypes.GUILD_MEDIA: return new MediaChannel(channelData as Types.Channels.RawMediaChannel, this._client) as T;
-            default: throw new Error(`Unknown channel type: ${channelData.type}`);
+            case ChannelTypes.DM: return this._client.privateChannels.update(channelData as Types.Channels.RawPrivateChannel) as T;
+            case ChannelTypes.GROUP_DM: return this._client.groupChannels.update(channelData as Types.Channels.RawGroupChannel) as T;
+            default: return Channel.from<T>(channelData, this._client);
         }
     }
 
@@ -1036,20 +975,12 @@ export default class Util {
         }
     }
 
-    /**
-     * @deprecated Functionally the same as {@link updateChannel} with a narrower type.
-     * @internal
-     */
-    async updateThread<T extends Types.Channels.AnyThreadChannel>(threadData: Types.Channels.RawThreadChannel): Promise<T> {
-        return this.updateChannel(threadData);
-    }
-
-    /**
-     * @deprecated Functionally the same as {@link updateChannelSync} with a narrower type.
-     * @deprecated Avoid if possible.
-     * @internal
-     */
-    updateThreadSync<T extends Types.Channels.AnyThreadChannel>(threadData: Types.Channels.RawThreadChannel): T {
-        return this.updateChannelSync(threadData);
+    /** @internal */
+    updateThread<T extends Types.Channels.AnyThreadChannel>(threadData: Types.Channels.RawThreadChannel): T {
+        const guild = this._client.guilds.get(threadData.guild_id);
+        if (guild) {
+            return guild.threads.update(threadData) as T;
+        }
+        return Channel.from<T>(threadData, this._client);
     }
 }

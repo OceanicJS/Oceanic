@@ -22,4 +22,3 @@ export type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K
 export type Nullable<T> = {
     [K in keyof T]: T[K] | null;
 };
-export type MaybePromise<T> = T | Promise<T>;

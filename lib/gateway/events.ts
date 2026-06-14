@@ -81,14 +81,14 @@ export async function AUTO_MODERATION_RULE_UPDATE(data: DispatchEventMap["AUTO_M
 }
 
 export async function CHANNEL_CREATE(data: DispatchEventMap["CHANNEL_CREATE"], shard: Shard): Promise<void> {
-    const channel = await shard.client.util.updateChannel<Types.Channels.AnyGuildChannelWithoutThreads>(data);
+    const channel = shard.client.util.updateChannel<Types.Channels.AnyGuildChannelWithoutThreads>(data);
     shard.client.emit("channelCreate", channel);
 }
 
 export async function CHANNEL_DELETE(data: DispatchEventMap["CHANNEL_DELETE"], shard: Shard): Promise<void> {
     if (data.type === ChannelTypes.DM) {
         const channel = shard.client.privateChannels.get(data.id);
-        await shard.client.privateChannels.delete(data.id);
+        shard.client.privateChannels.delete(data.id);
         shard.client.emit("channelDelete", channel ?? {
             id:            data.id,
             flags:         data.flags,
@@ -98,14 +98,14 @@ export async function CHANNEL_DELETE(data: DispatchEventMap["CHANNEL_DELETE"], s
         return;
     }
     const guild = shard.client.guilds.get(data.guild_id);
-    const channel = await shard.client.util.updateChannel<Types.Channels.AnyGuildChannelWithoutThreads>(data);
+    const channel = shard.client.util.updateChannel<Types.Channels.AnyGuildChannelWithoutThreads>(data);
     if (channel instanceof VoiceChannel || channel instanceof StageChannel) {
         for (const [,member] of channel.voiceMembers) {
             channel.voiceMembers.delete(member.id);
             shard.client.emit("voiceChannelLeave", member, channel);
         }
     }
-    await guild?.channels.delete(data.id);
+    guild?.channels.delete(data.id);
     shard.client.emit("channelDelete", channel);
 }
 
@@ -119,10 +119,10 @@ export async function CHANNEL_UPDATE(data: DispatchEventMap["CHANNEL_UPDATE"], s
     let channel: Types.Channels.AnyGuildChannel;
     if (oldChannel && oldChannel.type !== data.type) {
         const guildID = shard.client.channelGuildMap.get(data.id);
-        if (guildID) await shard.client.guilds.get(guildID)?.channels.delete(data.id);
-        channel = await shard.client.util.updateChannel(data);
+        if (guildID) shard.client.guilds.get(guildID)?.channels.delete(data.id);
+        channel = shard.client.util.updateChannel(data);
     } else {
-        channel = await shard.client.util.updateChannel(data);
+        channel = shard.client.util.updateChannel(data);
     }
     shard.client.emit("channelUpdate", channel, oldChannel);
 }
@@ -185,8 +185,8 @@ export async function GUILD_DELETE(data: DispatchEventMap["GUILD_DELETE"], shard
     shard.client.voiceAdapters.get(data.id)?.destroy();
     shard.client.guildShardMap.delete(data.id);
     const guild = shard.client.guilds.get(data.id);
-    await guild?.channels.clear();
-    await guild?.threads.clear();
+    guild?.channels.clear();
+    guild?.threads.clear();
     shard.client.guilds.delete(data.id);
     if (data.unavailable) {
         shard.client.emit("guildUnavailable", shard.client.unavailableGuilds.update(data));
@@ -428,7 +428,7 @@ export async function INTEGRATION_UPDATE(data: DispatchEventMap["INTEGRATION_UPD
 }
 
 export async function INTERACTION_CREATE(data: DispatchEventMap["INTERACTION_CREATE"], shard: Shard): Promise<void> {
-    shard.client.emit("interactionCreate", await Interaction.from(data, shard.client));
+    shard.client.emit("interactionCreate", Interaction.from(data, shard.client));
 }
 
 export async function INVITE_CREATE(data: DispatchEventMap["INVITE_CREATE"], shard: Shard): Promise<void> {
@@ -770,7 +770,7 @@ export async function STAGE_INSTANCE_UPDATE(data: DispatchEventMap["STAGE_INSTAN
 }
 
 export async function THREAD_CREATE(data: DispatchEventMap["THREAD_CREATE"], shard: Shard): Promise<void> {
-    const thread = await shard.client.util.updateThread(data);
+    const thread = shard.client.util.updateThread(data);
     const channel = shard.client.getChannel<Types.Channels.ThreadParentChannel>(data.parent_id);
     if (channel && channel.type === ChannelTypes.GUILD_FORUM) {
         channel.lastThreadID = thread.id;
@@ -791,7 +791,7 @@ export async function THREAD_DELETE(data: DispatchEventMap["THREAD_DELETE"], sha
     if (channel && channel.type === ChannelTypes.GUILD_FORUM && channel.lastThreadID === data.id) {
         channel.lastThreadID = null;
     }
-    await shard.client.guilds.get(data.guild_id)?.threads.delete(data.id);
+    shard.client.guilds.get(data.guild_id)?.threads.delete(data.id);
     shard.client.emit("threadDelete", thread);
 }
 
@@ -802,7 +802,7 @@ export async function THREAD_LIST_SYNC(data: DispatchEventMap["THREAD_LIST_SYNC"
         return;
     }
     for (const threadData of data.threads) {
-        await shard.client.util.updateThread(threadData);
+        shard.client.util.updateThread(threadData);
     }
     for (const member of data.members) {
         const thread = shard.client.getChannel<Types.Channels.AnyThreadChannel>(member.id);
@@ -897,8 +897,8 @@ export async function THREAD_MEMBERS_UPDATE(data: DispatchEventMap["THREAD_MEMBE
 
 export async function THREAD_UPDATE(data: DispatchEventMap["THREAD_UPDATE"], shard: Shard): Promise<void> {
     const oldThread = shard.client.getChannel<Types.Channels.AnyThreadChannel>(data.id)?.toJSON() ?? null;
-    const thread = await shard.client.util.updateThread<AnnouncementThreadChannel>(data);
-    shard.client.emit("threadUpdate", thread, oldThread as Types.JSON.JSONAnnouncementThreadChannel);
+    const thread = shard.client.util.updateThread(data);
+    shard.client.emit("threadUpdate", thread as AnnouncementThreadChannel, oldThread as Types.JSON.JSONAnnouncementThreadChannel);
 }
 
 export async function TYPING_START(data: DispatchEventMap["TYPING_START"], shard: Shard): Promise<void> {

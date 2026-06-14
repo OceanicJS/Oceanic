@@ -13,7 +13,7 @@ export default class Lobby extends Base {
     constructor(data: Types.Lobbies.RawLobby, client: Client) {
         super(data.id, client);
         this.applicationID = data.application_id;
-        this.linkedChannel = data.linked_channel ? client.util.updateChannelSync(data.linked_channel) : undefined;
+        this.linkedChannel = data.linked_channel ? client.util.updateChannel(data.linked_channel) : undefined;
         this.members = data.members.map(member => new LobbyMember(member, client, this.id));
         this.metadata = data.metadata;
     }

@@ -46,9 +46,10 @@ import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
 import type Shard from "../gateway/Shard";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore-line
 import { UncachedError } from "../util/Errors";
 import SimpleCollection from "../util/SimpleCollection";
-import AsyncTypedCollection from "../util/AsyncTypedCollection";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore optional dependency
 import type { DiscordGatewayAdapterCreator, DiscordGatewayAdapterLibraryMethods, DiscordGatewayAdapterImplementerMethods, VoiceConnection } from "@discordjs/voice";
@@ -80,7 +81,7 @@ export default class Guild extends Base {
     /** The hash of this guild's banner. */
     banner: string | null;
     /** The channels in this guild. */
-    channels: AsyncTypedCollection<Types.Channels.RawGuildChannel, Types.Channels.AnyGuildChannelWithoutThreads>;
+    channels: TypedCollection<Types.Channels.RawGuildChannel, Types.Channels.AnyGuildChannelWithoutThreads>;
     /** The default [message notifications level](https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level) of this guild. */
     defaultMessageNotifications: DefaultMessageNotificationLevels;
     /** The description of this guild. */
@@ -172,7 +173,7 @@ export default class Guild extends Base {
     /** The ID of the channel where welcome messages and boosts notices are posted. */
     systemChannelID: string | null;
     /** The threads in this guild. */
-    threads: AsyncTypedCollection<Types.Channels.RawThreadChannel, Types.Channels.AnyThreadChannel>;
+    threads: TypedCollection<Types.Channels.RawThreadChannel, Types.Channels.AnyThreadChannel>;
     /** If this guild is unavailable. */
     unavailable: boolean;
     /** The vanity url of this guild. Only present in guilds with the `VANITY_URL` feature. */
@@ -197,15 +198,15 @@ export default class Guild extends Base {
         this.auditLogEntries = new TypedCollection(AuditLogEntry, client, client.util._getLimit("auditLogEntries", this.id));
         this.autoModerationRules = new TypedCollection(AutoModerationRule, client, client.util._getLimit("autoModerationRules", this.id));
         this.banner = null;
-        this.channels = new AsyncTypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
-            construct: (channel, collectionClient): Promise<GuildChannel> => {
-                collectionClient.channelGuildMap.set(channel.id, this.id);
-                return Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(channel, collectionClient);
+        this.channels = new TypedCollection(GuildChannel, client, client.util._getLimit("channels", this.id), {
+            construct: (channel): GuildChannel => {
+                client.channelGuildMap.set(channel.id, this.id);
+                return Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(channel, client);
             },
-            delete: (id, collectionClient): void => {
-                collectionClient.channelGuildMap.delete(id);
+            delete: (id): void => {
+                client.channelGuildMap.delete(id);
             }
-        }) as AsyncTypedCollection<Types.Channels.RawGuildChannel, Types.Channels.AnyGuildChannelWithoutThreads>;
+        }) as TypedCollection<Types.Channels.RawGuildChannel, Types.Channels.AnyGuildChannelWithoutThreads>;
         this.defaultMessageNotifications = data.default_message_notifications;
         this.description = null;
         this.discoverySplash = null;
@@ -242,15 +243,15 @@ export default class Guild extends Base {
         this.stickers = new SimpleCollection(rawSticker => client.util.convertSticker(rawSticker), client.util._getLimit("stickers", this.id), "merge");
         this.systemChannelID = null;
         this.systemChannelFlags = data.system_channel_flags;
-        this.threads = new AsyncTypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
-            construct: (thread, collectionClient): Promise<ThreadChannel> => {
-                collectionClient.threadGuildMap.set(thread.id, this.id);
-                return Channel.from<Types.Channels.AnyThreadChannel>(thread, collectionClient);
+        this.threads = new TypedCollection(ThreadChannel, client, client.util._getLimit("guildThreads", this.id), {
+            construct: (thread): ThreadChannel => {
+                client.threadGuildMap.set(thread.id, this.id);
+                return Channel.from<Types.Channels.AnyThreadChannel>(thread, client);
             },
-            delete: (id, collectionClient): void => {
-                collectionClient.threadGuildMap.delete(id);
+            delete: (id): void => {
+                client.threadGuildMap.delete(id);
             }
-        }) as AsyncTypedCollection<Types.Channels.RawThreadChannel, Types.Channels.AnyThreadChannel>;
+        }) as TypedCollection<Types.Channels.RawThreadChannel, Types.Channels.AnyThreadChannel>;
         this.unavailable = !!data.unavailable;
         this.vanityURLCode = data.vanity_url_code;
         this.verificationLevel = data.verification_level;
@@ -265,7 +266,7 @@ export default class Guild extends Base {
         if (data.channels) {
             for (const channelData of data.channels) {
                 channelData.guild_id = this.id;
-                client.util.updateChannelSync(channelData);
+                this.channels.update(channelData);
             }
         }
 
@@ -273,7 +274,7 @@ export default class Guild extends Base {
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
-                client.util.updateThreadSync(threadData);
+                this.threads.update(threadData);
             }
         }
 

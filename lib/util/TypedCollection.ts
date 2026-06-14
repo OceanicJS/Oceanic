@@ -6,15 +6,14 @@ import Base from "../structures/Base";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ExtraOptions<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> {
-    construct?(this: void, data: M, client: Client, ...extra: E): C;
-    delete?(this: void, key: string, client: Client): void;
+    construct?(this: void, data: M, ...extra: E): C;
+    delete?(this: void, key: string): void;
 }
 
 /** This is an internal class, you should not use it in your projects. If you want a collection type for your own projects, look at {@link Collection}. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default class TypedCollection<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> extends Collection<string, C> {
     private _baseObject: Types.Shared.AnyClass<M, C, E>;
-    client!: Client;
     extraOptions: Required<ExtraOptions<M, C, E>>;
     limit: number;
     constructor(baseObject: Types.Shared.AnyClass<M, C, E>, client: Client, limit = Infinity, extraOptions?: ExtraOptions<M, C, E>) {
@@ -25,19 +24,12 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
         this._baseObject = baseObject;
         this.limit = limit;
         this.extraOptions = {
-            construct: extraOptions?.construct ?? ((data, collectionClient, ...extra): C => new baseObject(data, collectionClient, ...extra)),
+            construct: extraOptions?.construct ?? ((data, ...extra): C => new baseObject(data, client, ...extra)),
             delete:    extraOptions?.delete ?? ((): void => {})
         };
-
-        Object.defineProperty(this, "client", {
-            value:        client,
-            enumerable:   false,
-            configurable: false,
-            writable:     false
-        });
     }
 
-    /** @internal */
+    /** @hidden */
     add<T extends C>(value: T): T {
         if ("id" in value) {
             if (this.limit === 0) {
@@ -65,21 +57,19 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
         }
     }
 
-    /** @internal */
     override clear(): void {
         for (const key of this.keys()) {
-            this.extraOptions.delete(key, this.client);
+            this.extraOptions.delete(key);
         }
         super.clear();
     }
 
-    /** @internal */
     override delete(key: string): boolean {
-        this.extraOptions.delete(key, this.client);
+        this.extraOptions.delete(key);
         return super.delete(key);
     }
 
-    /** @internal */
+    /** @hidden */
     update(value: C | Partial<M> & { id?: string; }, ...extra: E): C {
         if (value instanceof this._baseObject) {
             if ("update" in value) {
@@ -90,7 +80,7 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
         // if the object does not have a direct id, we're forced to construct a whole new object
         let item = "id" in value && value.id ? this.get(value.id) : undefined;
         if (!item) {
-            item = this.add(this.extraOptions.construct(value as M, this.client, ...extra));
+            item = this.add(this.extraOptions.construct(value as M, ...extra));
         } else if ("update" in item) {
             item["update"].call(item, value);
         }

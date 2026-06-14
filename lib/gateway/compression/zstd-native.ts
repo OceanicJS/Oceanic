@@ -6,8 +6,8 @@ import { GatewayError } from "../../util/Errors";
 import { createZstdDecompress, type ZstdDecompress } from "node:zlib";
 
 export default class ZstdNativeCompressor extends Compressor {
-    protected _decompressQueue: Promise<void>;
-    protected stream: ZstdDecompress;
+    _decompressQueue: Promise<void>;
+    stream: ZstdDecompress;
     constructor(shard: Shard) {
         super(shard);
         this._decompressQueue = Promise.resolve();

@@ -604,7 +604,7 @@ export default class Channels {
                 before: options?.before,
                 limit:  options?.limit
             }
-        }).then(async data => ({
+        }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
                 flags:         m.flags,
@@ -612,7 +612,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as Types.Channels.ThreadMember),
-            threads: await Promise.all(data.threads.map(d => this._manager.client.util.updateThread<PrivateThreadChannel>(d)))
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
 
@@ -804,7 +804,7 @@ export default class Channels {
             method: "GET",
             path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
             query
-        }).then(async data => ({
+        }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
                 flags:         m.flags,
@@ -812,7 +812,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as Types.Channels.ThreadMember),
-            threads: await Promise.all(data.threads.map(d => this._manager.client.util.updateThread<PrivateThreadChannel>(d)))
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
 
@@ -832,7 +832,7 @@ export default class Channels {
             method: "GET",
             path:   Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
             query
-        }).then(async data => ({
+        }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
                 flags:         m.flags,
@@ -840,7 +840,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as Types.Channels.ThreadMember),
-            threads: await Promise.all(data.threads.map(d => this._manager.client.util.updateThread<PrivateThreadChannel>(d)))
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
 
@@ -860,7 +860,7 @@ export default class Channels {
             method: "GET",
             path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(channelID),
             query
-        }).then(async data => ({
+        }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
                 flags:         m.flags,
@@ -868,7 +868,7 @@ export default class Channels {
                 joinTimestamp: new Date(m.join_timestamp),
                 userID:        m.user_id
             }) as Types.Channels.ThreadMember),
-            threads: await Promise.all(data.threads.map(d => this._manager.client.util.updateThread<T>(d)))
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
         }));
     }
 

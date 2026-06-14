@@ -4,9 +4,9 @@ import { GatewayError } from "../../util/Errors";
 import { createInflate, type Inflate } from "node:zlib";
 
 export default class ZlibNativeCompressor extends Compressor {
-    protected _chunks: Array<Buffer>;
-    protected _decompressQueue: Promise<void>;
-    protected stream: Inflate;
+    _chunks: Array<Buffer>;
+    _decompressQueue: Promise<void>;
+    stream: Inflate;
     constructor(shard: Shard) {
         super(shard);
         this._chunks = [];
