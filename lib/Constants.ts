@@ -1422,8 +1422,8 @@ export enum SKUAccessTypes {
 
 export enum SubscriptionStatuses {
     ACTIVE   = 0,
-    ENDING   = 1,
-    INACTIVE = 2,
+    INACTIVE = 1,
+    ENDING   = 2,
 }
 
 export enum PollLayoutType {
