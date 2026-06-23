@@ -36,7 +36,8 @@ import type {
     SeparatorSpacingSize,
     GuildInviteChannelTypes,
     DMInviteChannelTypes,
-    MessageReferenceType
+    MessageReferenceType,
+    FilterFileTypes
 } from "../Constants";
 import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -1545,6 +1546,7 @@ export interface RawModalLabel extends Omit<BaseComponent, "id"> {
 
 export interface ModalFileUploadComponent extends BaseComponent {
     customID: string;
+    fileTypes?: Array<FilterFileTypes>;
     maxValues?: number;
     minValues?: number;
     required?: boolean;
@@ -1553,6 +1555,7 @@ export interface ModalFileUploadComponent extends BaseComponent {
 
 export interface RawModalFileUploadComponent extends BaseComponent {
     custom_id: string;
+    file_types?: Array<FilterFileTypes>;
     max_values?: number;
     min_values?: number;
     required?: boolean;

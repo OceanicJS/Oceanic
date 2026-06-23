@@ -288,6 +288,7 @@ export default class Util {
             case ComponentTypes.FILE_UPLOAD: {
                 return {
                     customID:  component.custom_id,
+                    fileTypes: component.file_types,
                     maxValues: component.max_values,
                     minValues: component.min_values,
                     required:  component.required,
@@ -491,6 +492,7 @@ export default class Util {
             case ComponentTypes.FILE_UPLOAD:
                 return {
                     custom_id:  component.customID,
+                    file_types: component.fileTypes,
                     max_values: component.maxValues,
                     min_values: component.minValues,
                     required:   component.required,
@@ -830,6 +832,7 @@ export default class Util {
             description:              option.description,
             descriptionLocalizations: option.description_localizations,
             descriptionLocalized:     option.description_localized,
+            fileTypes:                option.file_types,
             max_length:               option.max_length,
             max_value:                option.max_value,
             min_length:               option.min_length,
@@ -855,6 +858,7 @@ export default class Util {
             })),
             description:               opt.description,
             description_localizations: opt.descriptionLocalizations,
+            file_types:                opt.fileTypes,
             max_length:                opt.maxLength,
             max_value:                 opt.maxValue,
             min_length:                opt.minLength,

@@ -36,7 +36,8 @@ import type {
     TeamPayoutAccountStatus,
     TeamPayoutGateway,
     TeamMemberRoleType,
-    ApplicationType
+    ApplicationType,
+    FilterFileTypes
 } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
@@ -271,6 +272,7 @@ export interface RawApplicationCommandOption {
     description: string;
     description_localizations?: LocaleMap | null;
     description_localized?: string;
+    file_types?: Array<FilterFileTypes>;
     max_length?: number;
     max_value?: number;
     min_length?: number;
@@ -289,6 +291,7 @@ export interface CombinedApplicationCommandOption {
     choices?: Array<ApplicationCommandOptionsChoice<ApplicationCommandOptionsTypesWithChoices>>;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
+    fileTypes?: Array<FilterFileTypes>;
     maxLength?: number;
     maxValue?: number;
     minLength?: number;
@@ -378,7 +381,11 @@ interface ApplicationCommandOptionsSubCommandGroup extends ApplicationCommandOpt
     options?: Array<ApplicationCommandOptionsSubCommand | ApplicationCommandOptionsWithValue>;
 }
 
-export interface ApplicationCommandOptionsAttachment extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT> {}
+interface ApplicationCommandOptionsFileTypeFilter {
+    fileTypes?: Array<FilterFileTypes>;
+}
+
+export interface ApplicationCommandOptionsAttachment extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT>, ApplicationCommandOptionsFileTypeFilter {}
 export interface ApplicationCommandOptionsBoolean extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.BOOLEAN> {}
 export interface ApplicationCommandOptionsChannel extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.CHANNEL>, ApplicationCommandOptionsChannelTypes {}
 export type ApplicationCommandOptionsInteger = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & Types.Shared.ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;
