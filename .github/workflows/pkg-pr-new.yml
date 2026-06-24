@@ -27,9 +27,13 @@ jobs:
             - run: pnpm i --frozen-lockfile --ignore-scripts --force
             - run: |
                   pnpm version --no-git-tag-version patch
-                  hash=$(git rev-parse --short dev)
+                  hash=$(git rev-parse --short HEAD)
                   version=$(jq -r .version package.json)
-                  v="$version-dev.$hash"
+                  if [ "${{ github.event_name }}" = "pull_request" ]; then
+                    v="$version-pr.${{ github.event.pull_request.number }}.$hash"
+                  else
+                    v="$version-dev.$hash"
+                  fi
                   echo "Setting Version: $v"
                   contents=$(jq --arg version "$v" '.version = $version' package.json) && echo -E "${contents}" > package.json
             - run: pnpx pkg-pr-new publish --packageManager="pnpm" --pnpm
