@@ -21,7 +21,7 @@ function encode(strings: TemplateStringsArray, ...args: Array<string | number>):
 // Webhooks
 export const CHANNEL_WEBHOOKS = (channelID: string) => encode`/channels/${channelID}/webhooks`;
 export const GUILD_WEBHOOKS   = (guildID: string) => encode`/guilds/${guildID}/webhooks`;
-export const WEBHOOK          = (webhookID: string, webhookToken?: string) => (webhookToken ? encode`/webhooks/${webhookID}/${webhookToken}` : `/webhooks/${webhookID}`) as `/webhooks/${string}` | `/webhooks/${string}/${string}`;
+export const WEBHOOK          = (webhookID: string, webhookToken?: string) => (webhookToken ? encode`/webhooks/${webhookID}/${webhookToken}` : encode`/webhooks/${webhookID}`) as `/webhooks/${string}` | `/webhooks/${string}/${string}`;
 export const WEBHOOK_MESSAGE  = (webhookID: string, webhookToken: string, messageID: string) => encode`/webhooks/${webhookID}/${webhookToken}/messages/${messageID}`;
 export const WEBHOOK_PLATFORM = (webhookID: string, webhookToken: string, platform: "github" | "slack") => encode`/webhooks/${webhookID}/${webhookToken}/${platform}`;
 
