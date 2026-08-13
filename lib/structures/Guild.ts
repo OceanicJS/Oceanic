@@ -5,6 +5,7 @@ import GuildChannel from "./GuildChannel";
 import Member from "./Member";
 import GuildScheduledEvent from "./GuildScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
+import GuildJoinRequest from "./GuildJoinRequest";
 import type User from "./User";
 import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
@@ -103,6 +104,8 @@ export default class Guild extends Base {
     inventorySettings: Types.Guilds.InventorySettings | null;
     /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
     invites: SimpleCollection<string, Types.Invites.RawInvite, InviteWithMetadata<Types.Channels.AnyGuildInviteChannel>, "code">;
+    /** The cached join requests in this guild. This will be empty unless join requests have been fetched. */
+    joinRequests: TypedCollection<Types.Guilds.RawGuildJoinRequest, GuildJoinRequest>;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -218,6 +221,7 @@ export default class Guild extends Base {
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
         this.inventorySettings = null;
         this.invites = new SimpleCollection(rawInvite => Invite.withMetadata(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
+        this.joinRequests = new TypedCollection(GuildJoinRequest, client);
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
         this.latestOnboardingQuestionID = null;
@@ -270,14 +274,12 @@ export default class Guild extends Base {
             }
         }
 
-
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
                 this.threads.update(threadData);
             }
         }
-
 
         if (data.members) {
             for (const rawMember of data.members) {
@@ -294,7 +296,6 @@ export default class Guild extends Base {
                 this.stageInstances.update(stageInstance);
             }
         }
-
 
         if (data.presences) {
             for (const presence of data.presences) {
@@ -334,7 +335,6 @@ export default class Guild extends Base {
 
             }
         }
-
 
         if (data.voice_states) {
             for (const voiceState of data.voice_states) {
@@ -620,6 +620,17 @@ export default class Guild extends Base {
     }
 
     /**
+     * Accept or deny a join request for this guild.
+     * @param requestID The ID of the join request.
+     * @param options The options for actioning the join request.
+     * @caching This method **does** cache its result.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async actionJoinRequest(requestID: string, options: Types.Guilds.ActionGuildJoinRequestOptions): Promise<Types.Guilds.GuildJoinRequest> {
+        return this.client.rest.guilds.actionJoinRequest(this.id, requestID, options);
+    }
+
+    /**
      * Add a member to this guild. Requires an access token with the `guilds.join` scope.
      *
      * Returns the newly added member upon success, or void if the member is already in the guild.
@@ -717,6 +728,17 @@ export default class Guild extends Base {
     }
 
     /**
+     * Create an exception to the recurrence rule for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for creating the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async createScheduledEventException(eventID: string, options: Types.ScheduledEvents.CreateScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        return this.client.rest.guilds.createScheduledEventException(this.id, eventID, options);
+    }
+
+    /**
      * Create a soundboard sound.
      * @param options The options for creating the soundboard sound.
      */
@@ -799,6 +821,18 @@ export default class Guild extends Base {
      */
     async deleteScheduledEvent(eventID: string, reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
+    }
+
+    /**
+     * Delete an exception to the recurrence rule for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param reason The reason for deleting the scheduled event exception.
+     * @caching This method **may** remove the result from cache. The result will not be removed if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async deleteScheduledEventException(eventID: string, exceptionID: string, reason?: string): Promise<void> {
+        return this.client.rest.guilds.deleteScheduledEventException(this.id, eventID, exceptionID, reason);
     }
 
     /**
@@ -967,6 +1001,18 @@ export default class Guild extends Base {
     }
 
     /**
+     * Edit an exception to the recurrence rule for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for editing the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async editScheduledEventException(eventID: string, exceptionID: string, options: Types.ScheduledEvents.EditScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        return this.client.rest.guilds.editScheduledEventException(this.id, eventID, exceptionID, options);
+    }
+
+    /**
      * Edit a soundboard sound.
      * @param soundID The ID of the soundboard sound.
      * @param options The options for editing the soundboard sound.
@@ -1053,9 +1099,10 @@ export default class Guild extends Base {
     /**
      * Request members from this guild.
      * @param options The options for fetching the members.
+     * @deprecated Use {@link requestMembers}. This will be removed in `1.16.0`.
      */
     async fetchMembers(options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
-        return this.shard.requestGuildMembers(this.id, options);
+        return this.requestMembers(options);
     }
 
     /**
@@ -1153,6 +1200,16 @@ export default class Guild extends Base {
     }
 
     /**
+     * Get this guild's join requests.
+     * @param options The options for getting join requests.
+     * @caching This method **does** cache its result.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async getJoinRequests(options: Types.Guilds.GetGuildJoinRequestsOptions): Promise<Types.Guilds.GuildJoinRequests> {
+        return this.client.rest.guilds.getJoinRequests(this.id, options);
+    }
+
+    /**
      * Get a member of this guild.
      * @param memberID The ID of the member.
      */
@@ -1166,6 +1223,13 @@ export default class Guild extends Base {
      */
     async getMembers(options?: Types.Guilds.GetMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.getMembers(this.id, options);
+    }
+
+    /**
+     * Get this guild's new member welcome info.
+     */
+    async getNewMemberWelcome(): Promise<Types.Guilds.NewMemberWelcome | null> {
+        return this.client.rest.guilds.getNewMemberWelcome(this.id);
     }
 
     /**
@@ -1222,9 +1286,34 @@ export default class Guild extends Base {
     }
 
     /**
+     * Get users subscribed to an exception for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for getting the users.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
+     * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
+     */
+    async getScheduledEventExceptionUsers(eventID: string, exceptionID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
+        return this.client.rest.guilds.getScheduledEventExceptionUsers(this.id, eventID, exceptionID, options);
+    }
+
+    /**
+     * Get user counts for a scheduled event and optionally specific exceptions.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for getting the user counts.
+     * @caching This method **may** cache the event user count.
+     * @caches {@link GuildScheduledEvent#userCount | GuildScheduledEvent#userCount}
+     */
+    async getScheduledEventUserCounts(eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUserCountsOptions): Promise<Types.ScheduledEvents.ScheduledEventUserCounts> {
+        return this.client.rest.guilds.getScheduledEventUserCounts(this.id, eventID, options);
+    }
+
+    /**
      * Get the users subscribed to a scheduled event.
      * @param eventID The ID of the scheduled event to get the users of.
      * @param options The options for getting the users.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
+     * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
      */
     async getScheduledEventUsers(eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
         return this.client.rest.guilds.getScheduledEventUsers(this.id, eventID, options);
@@ -1448,11 +1537,44 @@ export default class Guild extends Base {
     }
 
     /**
+     * Request extended channel info for this guild.
+     * @param options The options.
+     */
+    async requestChannelInfo(options: Types.Gateway.RequestChannelInfoOptions): Promise<Array<Types.Gateway.ChannelInfoWithChannel>> {
+        return this.shard.requestChannelInfo(this.id, options);
+    }
+
+    /**
+     * Request members from this guild.
+     * @param options The options for fetching the members.
+     */
+    async requestMembers(options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
+        return this.shard.requestGuildMembers(this.id, options);
+    }
+
+    /**
+     * Request soundboard sounds for this guild.
+     * @param options The options.
+     */
+    async requestSoundboardSounds(options?: Types.Gateway.RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
+        return this.shard.requestSoundboardSounds(this.id, options);
+    }
+
+    /**
      * Search the username & nicknames of members in this guild. See {@link Guild#memberSearch | memberSearch} for a more detailed search.
      * @param options The options for the search.
      */
     async searchMembers(options: Types.Guilds.SearchMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.searchMembers(this.id, options);
+    }
+
+    /**
+     * Search messages in this guild.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     */
+    async searchMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(options?: Types.Guilds.SearchMessagesOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MessageSearchResults<T>> {
+        return this.client.rest.guilds.searchMessages<T>(this.id, options, retryOnIndexNotAvailable);
     }
 
     /**

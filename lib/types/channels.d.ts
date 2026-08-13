@@ -56,7 +56,8 @@ import type CategoryChannel from "../structures/CategoryChannel";
 import type MediaChannel from "../structures/MediaChannel";
 
 export interface RawChannel {
-    application_id?: string;
+    app_permissions?: string;
+    application_id?: string | null;
     applied_tags?: Array<string>;
     available_tags?: Array<RawForumTag>;
     bitrate?: number;
@@ -97,15 +98,16 @@ export interface RawChannel {
     type: ChannelTypes;
     user_limit?: number;
     video_quality_mode?: VideoQualityModes;
+    voice_start_time?: number | null;
 }
-export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> { name: string; type: GuildChannels; }
-export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> { type: ChannelTypes.DM; }
+export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "flags">> { name: string; type: GuildChannels; }
+export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { type: ChannelTypes.DM; }
 // nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> { managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
-export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_TEXT; }
+export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "icon" | "owner_id" | "nsfw" | "last_message_id" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { application_id: string; managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
+export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "flags" | "topic" | "nsfw" | "permission_overwrites" | "position"  >> { type: ChannelTypes.GUILD_TEXT; }
 export interface RawCategoryChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel,  "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_CATEGORY; }
 export interface RawAnnouncementChannel extends Omit<RawTextChannel, "type"> { type: ChannelTypes.GUILD_ANNOUNCEMENT; }
-export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user" | "status">> { type: ChannelTypes.GUILD_VOICE; }
+export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user" | "flags" | "last_pin_timestamp">>, Pick<RawChannel, "status" | "voice_start_time"> { type: ChannelTypes.GUILD_VOICE; }
 export interface RawStageChannel extends Omit<RawVoiceChannel, "type"> { type: ChannelTypes.GUILD_STAGE_VOICE; }
 export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
 export interface RawAnnouncementThreadChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> { name: string; parent_id: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; }
@@ -116,7 +118,7 @@ export interface RawForumChannel extends Omit<RawThreadOnlyChannel, "type"> { ty
 export interface RawMediaChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_MEDIA; }
 
 export interface PartialChannel extends Pick<RawChannel, "id" | "name" | "type"> {}
-export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "thread_metadata" | "parent_id" | "permissions"> { name: string | null; }
+export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "name" | "permissions" | "app_permissions" | "last_message_id" | "last_pin_timestamp" | "nsfw" | "parent_id" | "guild_id" | "flags" | "rate_limit_per_user" | "topic" | "position" | "thread_metadata"> { name: string | null; }
 
 export interface RawOverwrite {
     allow: string;
@@ -177,6 +179,56 @@ export interface GetThreadMembersOptions {
     limit?: number;
     /** If the results should include a `member` object. This also enables pagination. */
     withMember?: boolean;
+}
+
+export type ThreadSearchSortBy = "relevance" | "creation_time" | "last_message_time" | "archive_time";
+export type ThreadSearchSortOrder = "asc" | "desc";
+export type ThreadSearchTagSetting = "match_all" | "match_some";
+
+export interface SearchThreadsOptions {
+    /** Include archived threads. */
+    archived?: boolean;
+    /** The maximum number of threads to return. */
+    limit?: number;
+    /** Search threads before this thread ID. */
+    maxID?: string;
+    /** Search threads after this thread ID. */
+    minID?: string;
+    /** The thread name to search for. */
+    name?: string;
+    /** The offset into the search results. */
+    offset?: number;
+    /** The matching tolerance for the name query. */
+    slop?: number;
+    /** The field to sort by. */
+    sortBy?: ThreadSearchSortBy;
+    /** The sort order. */
+    sortOrder?: ThreadSearchSortOrder;
+    /** Restrict results to threads with these forum/media tags. */
+    tag?: string | Array<string>;
+    /** Whether all or any provided tags should match. */
+    tagSetting?: ThreadSearchTagSetting;
+}
+
+export interface RawThreadSearchResults {
+    first_messages?: Array<RawMessage>;
+    has_more: boolean;
+    members?: Array<RawThreadMember>;
+    threads: Array<RawThreadChannel>;
+    total_results: number;
+}
+
+export interface ThreadSearchResults<T extends AnyThreadChannel = AnyThreadChannel> {
+    /** The first message for each returned thread, if included. */
+    firstMessages?: Array<Message<T>>;
+    /** Whether there are potentially additional threads that could be returned on a subsequent call. */
+    hasMore: boolean;
+    /** Thread members for returned threads, if included. */
+    members?: Array<ThreadMember>;
+    /** The resulting threads. */
+    threads: Array<T>;
+    /** The total number of results that match the query. */
+    totalResults: number;
 }
 
 export interface UncachedThreadMember {
@@ -510,17 +562,20 @@ export interface RawAttachment {
     flags?: number;
     height?: number;
     id: string;
+    placeholder?: string;
+    placeholder_version?: number;
     proxy_url: string;
     size: number;
     title?: string;
     url: string;
-    waveform?: string | null;
+    waveform?: string;
     width?: number;
 }
 // @TODO verify what can be sent with `attachments` in message creation/deletion, this is an assumption
 export interface MessageAttachment extends Partial<Pick<RawAttachment, "description" | "filename">> {
     /** The id of the attachment to edit, or the index of `files` to reference. */
     id?: string | number;
+    isSpoiler?: boolean;
 }
 
 export interface RawAllowedMentions {
@@ -796,6 +851,54 @@ export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel 
      * @param message The message to filter.
      */
     filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface GetChannelPinsOptions<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
+    /** Get messages pinned before this ISO8601 timestamp. */
+    before?: string;
+    /** The maximum amount of pins to get. Defaults to 50. Use Infinity if you wish to get as many pins as possible. */
+    limit?: number;
+    /**
+     * A function used to reject certain pins. If `"break"` is returned, further iteration of pins will stop and the previously allowed pins will be returned.
+     * @param pin The pin to filter.
+     */
+    filter?(pin: MessagePin<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface GetChannelPinsIteratorOptions<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
+    /** Get messages pinned before this ISO8601 timestamp. */
+    before?: string;
+    /** The maximum amount of pins to get. Defaults to 50. Use Infinity if you wish to get as many pins as possible. */
+    limit?: number;
+    /**
+     * A function used to reject certain pins. If `"break"` is returned, the iterator will immediately exit and yield the previously allowed pins.
+     * @param pin The pin to filter.
+     */
+    filter?(pin: MessagePin<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface RawMessagePin {
+    message: RawMessage;
+    pinned_at: string;
+}
+
+export interface RawMessagePinsResponse {
+    has_more: boolean;
+    items: Array<RawMessagePin>;
+}
+
+export interface MessagePin<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
+    /** The pinned message. */
+    message: Message<T>;
+    /** The timestamp this message was pinned at. */
+    pinnedTimestamp: Date;
+}
+
+export interface MessagePinsIterator<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> extends AsyncIterable<Array<MessagePin<T>>> {
+    /** The most recent "last" pin timestamp seen by the iterator, used for future requests. */
+    lastPinTimestamp?: string;
+    /** The current limit of remaining pins to get. */
+    limit: number;
 }
 
 export interface MessagesIterator<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> extends AsyncIterable<Array<Message<T>>> {
@@ -1571,3 +1674,54 @@ export type ParentChannelType<CH extends GuildChannel> =
     CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel :
         CH extends Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel :
             TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
+
+
+/* eslint-disable @typescript-eslint/member-ordering */
+export interface MessageComponentTypeMap {
+    [ComponentTypes.ACTION_ROW]: MessageActionRow;
+    [ComponentTypes.BUTTON]: ButtonComponent;
+    [ComponentTypes.STRING_SELECT]: StringSelectMenu;
+    [ComponentTypes.TEXT_INPUT]: TextInput;
+    [ComponentTypes.USER_SELECT]: UserSelectMenu;
+    [ComponentTypes.ROLE_SELECT]: RoleSelectMenu;
+    [ComponentTypes.MENTIONABLE_SELECT]: MentionableSelectMenu;
+    [ComponentTypes.CHANNEL_SELECT]: ChannelSelectMenu;
+    [ComponentTypes.SECTION]: SectionComponent;
+    [ComponentTypes.TEXT_DISPLAY]: TextDisplayComponent;
+    [ComponentTypes.THUMBNAIL]: ThumbnailComponent;
+    [ComponentTypes.MEDIA_GALLERY]: MediaGalleryComponent;
+    [ComponentTypes.FILE]: FileComponent;
+    [ComponentTypes.SEPARATOR]: SeparatorComponent;
+    [ComponentTypes.CONTENT_INVENTORY_ENTRY]: never;
+    [ComponentTypes.CONTAINER]: ContainerComponent;
+    [ComponentTypes.LABEL]: ModalLabel;
+    [ComponentTypes.FILE_UPLOAD]: ModalFileUploadComponent;
+    [ComponentTypes.RADIO_GROUP]: RadioGroupComponent;
+    [ComponentTypes.CHECKBOX_GROUP]: CheckboxGroupComponent;
+    [ComponentTypes.CHECKBOX]: CheckboxComponent;
+}
+export interface RawMessageComponentTypeMap {
+    [ComponentTypes.ACTION_ROW]: RawMessageActionRow;
+    [ComponentTypes.BUTTON]: RawButtonComponent;
+    [ComponentTypes.STRING_SELECT]: RawStringSelectMenu;
+    [ComponentTypes.TEXT_INPUT]: RawTextInput;
+    [ComponentTypes.USER_SELECT]: RawUserSelectMenu;
+    [ComponentTypes.ROLE_SELECT]: RawRoleSelectMenu;
+    [ComponentTypes.MENTIONABLE_SELECT]: RawMentionableSelectMenu;
+    [ComponentTypes.CHANNEL_SELECT]: RawChannelSelectMenu;
+    [ComponentTypes.SECTION]: RawSectionComponent;
+    [ComponentTypes.TEXT_DISPLAY]: RawTextDisplayComponent;
+    [ComponentTypes.THUMBNAIL]: RawThumbnailComponent;
+    [ComponentTypes.MEDIA_GALLERY]: RawMediaGalleryComponent;
+    [ComponentTypes.FILE]: RawFileComponent;
+    [ComponentTypes.SEPARATOR]: RawSeparatorComponent;
+    [ComponentTypes.CONTENT_INVENTORY_ENTRY]: never;
+    [ComponentTypes.CONTAINER]: RawContainerComponent;
+    [ComponentTypes.LABEL]: RawModalLabel;
+    [ComponentTypes.FILE_UPLOAD]: RawModalFileUploadComponent;
+    [ComponentTypes.RADIO_GROUP]: RawRadioGroupComponent;
+    [ComponentTypes.CHECKBOX_GROUP]: RawCheckboxGroupComponent;
+    [ComponentTypes.CHECKBOX]: RawCheckboxComponent;
+}
+
+/* eslint-enable @typescript-eslint/member-ordering */

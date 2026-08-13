@@ -6,6 +6,8 @@ import Entitlement from "./Entitlement";
 import BaseEntitlement from "./BaseEntitlement";
 import type SKU from "./SKU";
 import type Application from "./Application";
+import Subscription from "./Subscription";
+import type Attachment from "./Attachment";
 import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { ApplicationCommandTypes } from "../Constants";
@@ -15,8 +17,15 @@ import TypedCollection from "../util/TypedCollection";
 export default class ClientApplication extends Base {
     /** The entitlements for this application. This will almost certainly be empty unless you fetch entitlements, or recieve new/updated entitlements. */
     entitlements: TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
-    /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    /**
+     * This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags).
+     * @deprecated See {@link flagsNew}. This will likely be made a bigint in the future.
+     */
     flags: number;
+    /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    flagsNew: bigint;
+    /** The subscriptions for this application. This will almost certainly be empty unless you fetch subscriptions, or recieve new/updated subscriptions. */
+    subscriptions: TypedCollection<Types.Applications.RawSubscription, Subscription>;
     constructor(data: Types.Applications.RawClientApplication, client: Client) {
         super(data.id, client);
         this.entitlements = new TypedCollection(BaseEntitlement, client, Infinity, {
@@ -28,13 +37,18 @@ export default class ClientApplication extends Base {
                 return new TestEntitlement(entitlement as Types.Applications.RawTestEntitlement, client);
             }
         }) as TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
-        this.flags = data.flags;
+        this.flags = data.flags ?? 0;
+        this.flagsNew = BigInt(data.flags_new ?? data.flags ?? "0");
+        this.subscriptions = new TypedCollection(Subscription, client, Infinity);
         this.update(data);
     }
 
     protected override update(data: Partial<Types.Applications.RawClientApplication>): void {
         if (data.flags !== undefined) {
             this.flags = data.flags;
+        }
+        if (data.flags_new !== undefined) {
+            this.flagsNew = BigInt(data.flags_new);
         }
     }
 
@@ -201,8 +215,20 @@ export default class ClientApplication extends Base {
     }
 
     /**
+     * Get an entitlement for this application.
+     * @param entitlementID The ID of the entitlement.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlement(entitlementID: string): Promise<Entitlement | TestEntitlement> {
+        return this.client.rest.applications.getEntitlement(this.id, entitlementID);
+    }
+
+    /**
      * Get the entitlements for this application.
      * @param options The options for getting the entitlements.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
      */
     async getEntitlements(options: Types.Applications.SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         return this.client.rest.applications.getEntitlements(this.id, options);
@@ -285,7 +311,8 @@ export default class ClientApplication extends Base {
     override toJSON(): Types.JSON.JSONClientApplication {
         return {
             ...super.toJSON(),
-            flags: this.flags
+            flags:    this.flags,
+            flagsNew: this.flagsNew
         };
     }
 
@@ -303,5 +330,16 @@ export default class ClientApplication extends Base {
      */
     async updateUserRoleConnection(data: Types.OAuth.UpdateUserApplicationRoleConnectionOptions): Promise<Types.OAuth.RoleConnection> {
         return this.client.rest.oauth.updateUserRoleConnection(this.id, data);
+    }
+
+    /**
+     * Upload an ephemeral attachment for this application.
+     * The application must have Activities enabled (the `EMBEDDED` application flag). Applications without Activities enabled currently return an "Unknown Application" error.
+     * This endpoint requires a user OAuth2 bearer token; client credentials grant tokens are not valid and currently produce a 500 error.
+     * @param options The options for uploading the attachment.
+     * @caching This method **does not** cache its result.
+     */
+    async uploadAttachment(options: Types.Applications.UploadApplicationAttachmentOptions): Promise<Attachment> {
+        return this.client.rest.applications.uploadAttachment(this.id, options);
     }
 }

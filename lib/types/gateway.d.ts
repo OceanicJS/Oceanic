@@ -1,11 +1,14 @@
 /** @module Types/Gateway */
 import type * as Types from "./namespaced";
+import { type AnyVoiceChannel } from "./channels";
 import type {
     ActivityTypes,
     AnimationTypes,
     AutoModerationTriggerTypes,
     ChannelTypes,
-    IntentNames
+    GatewayOPCodes,
+    IntentNames,
+    StatusDisplayType
 } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type Shard from "../gateway/Shard";
@@ -248,6 +251,27 @@ export interface RequestSoundboardSoundsOptions {
     timeout?: number;
 }
 
+export type RequestChannelInfoFields = "status" | "voice_start_time";
+export interface ChannelInfo {
+    id: string;
+    status?: string | null;
+    voice_start_time?: number | null;
+}
+export interface ChannelInfoWithChannel<T extends AnyVoiceChannel = AnyVoiceChannel> {
+    channel: T | null;
+    info: ChannelInfo;
+}
+
+
+export interface RequestChannelInfoOptions {
+    fields?: Array<RequestChannelInfoFields>;
+    /**
+     * The maximum amount of time in milliseconds to wait.
+     * @defaultValue `client.rest.options.requestTimeout`
+     */
+    timeout?: number;
+}
+
 export type MutualStatuses = "online" | "dnd" | "idle";
 export type SendStatuses = MutualStatuses | "invisible";
 export type ReceiveStatuses = MutualStatuses | "offline";
@@ -267,6 +291,7 @@ export interface Activity {
     buttons?: Array<ActivityButton>;
     created_at: number;
     details?: string | null;
+    details_url?: string | null;
     emoji?: ActivityEmoji | null;
     flags?: number;
     instance?: boolean;
@@ -274,6 +299,8 @@ export interface Activity {
     party?: ActivityParty;
     secrets?: Partial<Record<"join" | "spectate" | "match", string>>;
     state?: string | null;
+    state_url?: string | null;
+    status_display_type?: StatusDisplayType | null;
     timestamps?: Partial<Record<"end" | "start", number>>;
     type: ActivityTypes;
     url?: string | null;
@@ -340,9 +367,9 @@ export interface RawAutoModerationActionExecution {
     action: Types.AutoModeration.RawAutoModerationAction;
     alert_system_message_id?: string;
     channel_id?: string;
-    content: string;
+    content?: string | null;
     guild_id: string;
-    matched_content: string;
+    matched_content?: string | null;
     matched_keyword: string | null;
     message_id?: string;
     rule_id: string;
@@ -353,8 +380,8 @@ export interface RawAutoModerationActionExecution {
 export interface AutoModerationActionExecution {
     action: Types.AutoModeration.AutoModerationAction;
     alertSystemMessageID?: string;
-    content: string;
-    matchedContent: string;
+    content?: string | null;
+    matchedContent?: string | null;
     matchedKeyword: string | null;
     messageID?: string;
     rule?: AutoModerationRule;
@@ -384,12 +411,17 @@ export interface RawVoiceChannelEffect {
     channel_id: string;
     emoji?: Types.Guilds.PartialEmoji | null;
     guild_id: string;
+    sound_id?: string | number;
+    sound_volume?: number;
     user_id: string;
 }
 
 export interface VoiceChannelEffect {
     animationID?: number;
     animationType?: AnimationTypes;
+    soundID?: string | number;
+    /** 0-1 */
+    soundVolume?: number;
 }
 
 export interface RawMessagePollVote {
@@ -398,4 +430,15 @@ export interface RawMessagePollVote {
     guild_id?: string;
     message_id: string;
     user_id: string;
+}
+
+export interface RateLimitInfo {
+    meta: RateLimitInfoOPCode8Meta | Record<string, never>;
+    opcode: GatewayOPCodes;
+    retry_after: number;
+}
+
+export interface RateLimitInfoOPCode8Meta {
+    guild_id: string;
+    nonce?: string;
 }

@@ -18,6 +18,8 @@ export default class GroupChannel extends Channel {
     icon: string | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
+    /** The timestamp of the last pinned message in this channel. */
+    lastPinTimestamp: string | null;
     /** If this group channel is managed by an application. */
     managed: boolean;
     /** The name of this group channel. */
@@ -36,6 +38,7 @@ export default class GroupChannel extends Channel {
         this.applicationID = data.application_id;
         this.icon = null;
         this.lastMessageID = data.last_message_id;
+        this.lastPinTimestamp = data.last_pin_timestamp ?? null;
         this.managed = false;
         this.name = data.name;
         this.nicks = [];
@@ -59,6 +62,9 @@ export default class GroupChannel extends Channel {
         }
         if (data.last_message_id !== undefined) {
             this.lastMessageID = data.last_message_id;
+        }
+        if (data.last_pin_timestamp !== undefined) {
+            this.lastPinTimestamp = data.last_pin_timestamp;
         }
         if (data.managed !== undefined) {
             this.managed = data.managed;
@@ -133,14 +139,16 @@ export default class GroupChannel extends Channel {
     override toJSON(): Types.JSON.JSONGroupChannel {
         return {
             ...super.toJSON(),
-            applicationID: this.applicationID,
-            icon:          this.icon,
-            managed:       this.managed,
-            name:          this.name,
-            nicks:         this.nicks,
-            ownerID:       this.ownerID,
-            recipients:    this.recipients.map(user => user.toJSON()),
-            type:          this.type
+            applicationID:    this.applicationID,
+            icon:             this.icon,
+            lastMessageID:    this.lastMessageID,
+            lastPinTimestamp: this.lastPinTimestamp,
+            managed:          this.managed,
+            name:             this.name,
+            nicks:            this.nicks,
+            ownerID:          this.ownerID,
+            recipients:       this.recipients.map(user => user.toJSON()),
+            type:             this.type
         };
     }
 }

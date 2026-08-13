@@ -72,7 +72,8 @@ export interface RawApplication {
     event_webhooks_url?: string | null;
     executables?: Array<RawApplicationExecutable>;
     explicit_content_filter: ApplicationExplicitContentFilterLevel;
-    flags: number;
+    flags?: number;
+    flags_new?: string;
     guild?: Types.Guilds.RawOAuthGuild;
     guild_id?: string;
     hook: boolean;
@@ -190,15 +191,26 @@ export interface ApplicationExecutable {
     os: OperatingSystemType;
 }
 
+export interface RawApplicationAttachmentResponse {
+    attachment: Types.Channels.RawAttachment;
+}
+
+export interface UploadApplicationAttachmentOptions {
+    /** The user OAuth2 bearer token to use for the request. Client credentials grant tokens are not valid for this endpoint and currently produce a 500 error. This may be either raw or prefixed with `Bearer `. */
+    accessToken: string;
+    /** The file to upload. This will be sent as the `file` multipart field. */
+    file: Types.RequestHandler.File;
+}
+
 export interface ApplicationCompany {
     id: string;
     name: string;
 }
 
 export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
-export interface RESTOAuthApplication extends Types.Shared.WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
-export interface RESTApplication extends Types.Shared.WithRequired<RawApplication, "flags" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
-export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
+export interface RESTOAuthApplication extends Types.Shared.WithRequired<RawApplication, "cover_image" | "flags" | "flags_new" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RESTApplication extends Types.Shared.WithRequired<RawApplication, "flags" | "flags_new" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags" | "flags_new">> {}
 
 export interface IntegrationTypesConfig extends Partial<Record<`${ApplicationIntegrationTypes}`, ApplicationIntegrationConfig>> {}
 
@@ -291,6 +303,7 @@ export interface CombinedApplicationCommandOption {
     choices?: Array<ApplicationCommandOptionsChoice<ApplicationCommandOptionsTypesWithChoices>>;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
+    descriptionLocalized?: string;
     fileTypes?: Array<FilterFileTypes>;
     maxLength?: number;
     maxValue?: number;
@@ -298,6 +311,7 @@ export interface CombinedApplicationCommandOption {
     minValue?: number;
     name: string;
     nameLocalizations?: LocaleMap | null;
+    nameLocalized?: string;
     options?: Array<CombinedApplicationCommandOption>;
     required?: boolean;
     type: ApplicationCommandOptionTypes;

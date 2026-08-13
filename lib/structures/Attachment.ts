@@ -27,6 +27,8 @@ export default class Attachment extends Base {
     flags: number;
     /** The height of this attachment, if an image. */
     height?: number;
+    placeholder?: string;
+    placeholderVersion?: number;
     /** A proxied url of this attachment. */
     proxyURL: string;
     /** The size of this attachment. */
@@ -36,7 +38,7 @@ export default class Attachment extends Base {
     /** The source url of this attachment. */
     url: string;
     /** Base64 encoded bytearray representing a sampled waveform for voice messages. */
-    waveform?: string | null;
+    waveform?: string;
     /** The width of this attachment, if an image. */
     width?: number;
     constructor(data: Types.Channels.RawAttachment, client: Client) {
@@ -51,6 +53,8 @@ export default class Attachment extends Base {
         this.filename = data.filename;
         this.flags = data.flags ?? 0;
         this.height = data.height;
+        this.placeholder = data.placeholder;
+        this.placeholderVersion = data.placeholder_version;
         this.proxyURL = data.proxy_url;
         this.size = data.size;
         this.url = data.url;
@@ -61,17 +65,24 @@ export default class Attachment extends Base {
     override toJSON(): Types.JSON.JSONAttachment {
         return {
             ...super.toJSON(),
-            contentType: this.contentType,
-            description: this.description,
-            ephemeral:   this.ephemeral,
-            filename:    this.filename,
-            flags:       this.flags,
-            height:      this.height,
-            proxyURL:    this.proxyURL,
-            size:        this.size,
-            title:       this.title,
-            url:         this.url,
-            width:       this.width
+            application:        this.application?.toJSON(),
+            clipCreatedAt:      this.clipCreatedAt?.getTime(),
+            clipParticipants:   this.clipParticipants?.map(user => user.toJSON()),
+            contentType:        this.contentType,
+            description:        this.description,
+            durationSecs:       this.durationSecs,
+            ephemeral:          this.ephemeral,
+            filename:           this.filename,
+            flags:              this.flags,
+            height:             this.height,
+            placeholder:        this.placeholder,
+            placeholderVersion: this.placeholderVersion,
+            proxyURL:           this.proxyURL,
+            size:               this.size,
+            title:              this.title,
+            url:                this.url,
+            waveform:           this.waveform,
+            width:              this.width
         };
     }
 }

@@ -4,12 +4,13 @@ import type * as Types from "../types/namespaced";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import type RESTManager from "../rest/RESTManager";
 import SKU from "../structures/SKU";
-import Entitlement from "../structures/Entitlement";
+import type Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 import ClientApplication from "../structures/ClientApplication";
 import Application from "../structures/Application";
 import Subscription from "../structures/Subscription";
 import QueryBuilder from "../util/QueryBuilder";
+import Attachment from "../structures/Attachment";
 
 /** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applications | .applications}. */
 export default class Applications {
@@ -250,7 +251,7 @@ export default class Applications {
 
         return this._manager.authRequest<Types.Applications.RESTApplication>({
             method: "PATCH",
-            path:   Routes.APPLICATION,
+            path:   Routes.APPLICATION("@me"),
             json:   {
                 cover_image:                       coverImage,
                 custom_install_url:                options.customInstallURL,
@@ -349,7 +350,7 @@ export default class Applications {
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: Types.Applications.EditApplicationCommandPermissionsOptions): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         options = this._manager.client.util._freeze(options);
         return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
-            method: "PATCH",
+            method: "PUT",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
             json:   { permissions: options.permissions },
             auth:   options.accessToken
@@ -362,6 +363,19 @@ export default class Applications {
                 permissions:   d.permissions
             };
         });
+    }
+
+    /**
+     * Get an application's info.
+     * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
+     * @note This generally cannot be used on any application except the authenticated bot.
+     */
+    async get(applicationID: string): Promise<Application> {
+        return this._manager.authRequest<Types.Applications.RESTApplication>({
+            method: "GET",
+            path:   Routes.APPLICATION(applicationID)
+        }).then(data => new Application(data, this._manager.client));
     }
 
     /**
@@ -394,7 +408,7 @@ export default class Applications {
     async getClient(): Promise<ClientApplication> {
         return this._manager.authRequest<Types.Applications.RawClientApplication>({
             method: "GET",
-            path:   Routes.APPLICATION
+            path:   Routes.APPLICATION("@me")
         }).then(data => new ClientApplication(data, this._manager.client));
     }
 
@@ -403,10 +417,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getCurrent(): Promise<Application> {
-        return this._manager.authRequest<Types.Applications.RESTApplication>({
-            method: "GET",
-            path:   Routes.APPLICATION
-        }).then(data => new Application(data, this._manager.client));
+        return this.get("@me");
     }
 
     /**
@@ -437,9 +448,25 @@ export default class Applications {
     }
 
     /**
+     * Get an entitlement for an application.
+     * @param applicationID The ID of the application that the entitlement is for.
+     * @param entitlementID The ID of the entitlement.
+     * @caching This method **may** cache its result. If the entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlement(applicationID: string, entitlementID: string): Promise<Entitlement | TestEntitlement> {
+        return this._manager.authRequest<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>({
+            method: "GET",
+            path:   Routes.ENTITLEMENT(applicationID, entitlementID)
+        }).then(data => this._manager.client.util.updateEntitlement(data));
+    }
+
+    /**
      * Get the entitlements for an application.
      * @param applicationID The ID of the application to get the entitlements of.
      * @param options The options for getting the entitlements.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
      */
     async getEntitlements(applicationID: string, options: Types.Applications.SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         options = this._manager.client.util._freeze(options);
@@ -456,7 +483,7 @@ export default class Applications {
             method: "GET",
             path:   Routes.ENTITLEMENTS(applicationID),
             query
-        }).then(data => data.map(d => "subscription_id" in d && d.subscription_id ? new Entitlement(d, this._manager.client) : new TestEntitlement(d, this._manager.client)));
+        }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
     /**
@@ -510,7 +537,7 @@ export default class Applications {
         query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method:  "GET",
-            path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
+            path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
             query,
             headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
@@ -612,5 +639,28 @@ export default class Applications {
             method: "GET",
             path:   Routes.SKUS(applicationID)
         }).then(data => data.map(d => new SKU(d, this._manager.client)));
+    }
+
+    /**
+     * Upload an ephemeral attachment for an application.
+     *
+     * The application must have Activities enabled (the {@link ApplicationFlags~EMBEDDED EMBEDDED} application flag). Applications without Activities enabled currently return an "Unknown Application" error.
+     *
+     * This endpoint requires a user OAuth2 bearer token; client credentials grant tokens are not valid and currently produce a 500 error.
+     *
+     * The returned url is only valid for 24 hours.
+     * @param applicationID The ID of the application.
+     * @param options The options for uploading the attachment.
+     * @caching This method **does not** cache its result.
+     */
+    async uploadAttachment(applicationID: string, options: Types.Applications.UploadApplicationAttachmentOptions): Promise<Attachment> {
+        options = this._manager.client.util._freeze(options);
+        const auth = options.accessToken.startsWith("Bearer ") ? options.accessToken : `Bearer ${options.accessToken}`;
+        return this._manager.request<Types.Applications.RawApplicationAttachmentResponse>({
+            method: "POST",
+            path:   Routes.APPLICATION_ATTACHMENT(applicationID),
+            files:  [{ ...options.file, field: "file" }],
+            auth
+        }).then(data => new Attachment(data.attachment, this._manager.client));
     }
 }

@@ -1,15 +1,34 @@
 /** @module REST/Channels */
 import * as Routes from "../util/Routes";
+import QueryBuilder from "../util/QueryBuilder";
 import type RESTManager from "../rest/RESTManager";
+import type * as Types from "../types/namespaced";
 import type { RawLobby, CreateLobbyOptions, AddLobbyMemberOptions, EditLobbyOptions } from "../types/lobbies";
 import Lobby from "../structures/Lobby";
 import LobbyMember from "../structures/LobbyMember";
+import LobbyMessage from "../structures/LobbyMessage";
+
+function formatLobbyMember(member: Types.Lobbies.LobbyMemberOptions): Types.Shared.KeysExist<Types.Lobbies.RawLobbyMember> {
+    return {
+        additional_name: member.additionalName,
+        flags:           member.flags,
+        id:              member.id,
+        metadata:        member.metadata
+    };
+}
 
 /** Various methods for interacting with lobbies. Located at {@link Client#rest | Client#rest}{@link RESTManager#lobbies | .lobbies}. */
 export default class Lobbies {
     private _manager: RESTManager;
     constructor(manager: RESTManager) {
         this._manager = manager;
+    }
+
+    private _getBearerAuth(accessToken?: string): string {
+        if (accessToken === undefined) {
+            return this._manager.client.options.auth!;
+        }
+        return accessToken.startsWith("Bearer ") ? accessToken : `Bearer ${accessToken}`;
     }
 
     /**
@@ -20,11 +39,32 @@ export default class Lobbies {
      */
     async addMember(lobbyID: string, userID: string, options?: AddLobbyMemberOptions): Promise<LobbyMember> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<RawLobby>({
+        return this._manager.authRequest<Types.Lobbies.RawLobbyMember>({
             method: "PUT",
             path:   Routes.LOBBY_MEMBER(lobbyID, userID),
-            json:   options
+            json:   options ? {
+                additional_name: options.additionalName,
+                flags:           options.flags,
+                metadata:        options.metadata
+            } : undefined
         }).then(data => new LobbyMember(data, this._manager.client, lobbyID));
+    }
+
+    /**
+     * Bulk update members in a lobby.
+     * @param lobbyID The ID of the lobby to update members in.
+     * @param members The members to update.
+     */
+    async bulkUpdateMembers(lobbyID: string, members: Array<Types.Lobbies.BulkUpdateLobbyMemberOptions>): Promise<Array<LobbyMember>> {
+        members = this._manager.client.util._freeze(members);
+        return this._manager.authRequest<Array<Types.Lobbies.RawLobbyMember>>({
+            method: "POST",
+            path:   Routes.LOBBY_MEMBERS_BULK(lobbyID),
+            json:   members.map(member => ({
+                ...formatLobbyMember(member),
+                remove_member: member.removeMember
+            }))
+        }).then(data => data.map(member => new LobbyMember(member, this._manager.client, lobbyID)));
     }
 
     /**
@@ -38,11 +78,59 @@ export default class Lobbies {
             method: "POST",
             path:   Routes.LOBBIES,
             json:   {
+                flags:                options?.flags,
                 metadata:             options?.metadata,
-                members:              options?.members,
+                members:              options?.members?.map(formatLobbyMember),
                 idle_timeout_seconds: options?.idleTimeoutSeconds
             }
         }).then(data => new Lobby(data, this._manager.client));
+    }
+
+    /**
+     * Create an invite for the current user to join a lobby's linked channel. This requires bearer token authentication.
+     * @param lobbyID The ID of the lobby to create the invite for.
+     * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     */
+    async createCurrentUserInvite(lobbyID: string, accessToken?: string): Promise<Types.Lobbies.LobbyInvite> {
+        return this._manager.request<Types.Lobbies.RawLobbyInvite>({
+            method: "POST",
+            path:   Routes.LOBBY_MEMBER_INVITES(lobbyID, "@me"),
+            auth:   this._getBearerAuth(accessToken)
+        });
+    }
+
+    /**
+     * Create an invite for a user to join a lobby's linked channel. This requires bearer token authentication.
+     * @param lobbyID The ID of the lobby to create the invite for.
+     * @param userID The ID of the user to create the invite for.
+     * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     */
+    async createInvite(lobbyID: string, userID: string, accessToken?: string): Promise<Types.Lobbies.LobbyInvite> {
+        return this._manager.request<Types.Lobbies.RawLobbyInvite>({
+            method: "POST",
+            path:   Routes.LOBBY_MEMBER_INVITES(lobbyID, userID),
+            auth:   this._getBearerAuth(accessToken)
+        });
+    }
+
+    /**
+     * Create a message in a lobby. This requires bearer token authentication.
+     * @param lobbyID The ID of the lobby to create the message in.
+     * @param options The options for creating the message.
+     * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     */
+    async createMessage(lobbyID: string, options: Types.Lobbies.CreateLobbyMessageOptions, accessToken?: string): Promise<Types.Lobbies.LobbyMessage> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.request<Types.Lobbies.RawLobbyMessage>({
+            method: "POST",
+            path:   Routes.LOBBY_MESSAGES(lobbyID),
+            auth:   this._getBearerAuth(accessToken),
+            json:   {
+                content:  options.content,
+                flags:    options.flags,
+                metadata: options.metadata
+            }
+        }).then(data => new LobbyMessage(data, this._manager.client));
     }
 
     /**
@@ -67,8 +155,9 @@ export default class Lobbies {
             method: "PATCH",
             path:   Routes.LOBBY(lobbyID),
             json:   {
+                flags:                options?.flags,
                 metadata:             options?.metadata,
-                members:              options?.members,
+                members:              options?.members?.map(formatLobbyMember),
                 idle_timeout_seconds: options?.idleTimeoutSeconds
             }
         }).then(data => new Lobby(data, this._manager.client));
@@ -86,22 +175,61 @@ export default class Lobbies {
     }
 
     /**
+     * Get messages in a lobby. This requires bearer token authentication.
+     * @param lobbyID The ID of the lobby to get messages from.
+     * @param options The options for getting the messages.
+     * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     */
+    async getMessages(lobbyID: string, options?: Types.Lobbies.GetLobbyMessagesOptions, accessToken?: string): Promise<Array<Types.Lobbies.LobbyMessage>> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        query.setIfPresent("limit", options?.limit);
+        return this._manager.request<Array<Types.Lobbies.RawLobbyMessage>>({
+            method: "GET",
+            path:   Routes.LOBBY_MESSAGES(lobbyID),
+            auth:   this._getBearerAuth(accessToken),
+            query
+        }).then(data => data.map(message => new LobbyMessage(message, this._manager.client)));
+    }
+
+    /**
+     * Join an existing lobby or create a new lobby.
+     * @param options The options for joining or creating the lobby.
+     * @caching This method **does not** cache its result.
+     */
+    async joinOrCreate(options: Types.Lobbies.JoinLobbyOptions): Promise<Lobby> {
+        options = this._manager.client.util._freeze(options);
+        const requestOptions = {
+            method: "PUT",
+            path:   Routes.LOBBIES,
+            json:   {
+                flags:                options.flags,
+                idle_timeout_seconds: options.idleTimeoutSeconds,
+                lobby_metadata:       options.lobbyMetadata,
+                member_metadata:      options.memberMetadata,
+                secret:               options.secret
+            }
+        } as const;
+        if (options.accessToken === undefined) {
+            return this._manager.authRequest<RawLobby>(requestOptions).then(data => new Lobby(data, this._manager.client));
+        }
+
+        return this._manager.request<RawLobby>({
+            ...requestOptions,
+            auth: this._getBearerAuth(options.accessToken)
+        }).then(data => new Lobby(data, this._manager.client));
+    }
+
+    /**
      * Leave a lobby. This requires bearer token authentication.
      * @param lobbyID The ID of the lobby to leave.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
      */
     async leave(lobbyID: string, accessToken?: string): Promise<void> {
-        let auth = this._manager.client.options.auth!;
-        if (accessToken) {
-            if (!accessToken.startsWith("Bearer ")) {
-                accessToken = `Bearer ${accessToken}`;
-            }
-            auth = accessToken;
-        }
         await this._manager.request<null>({
             method: "DELETE",
             path:   Routes.LOBBY_MEMBER(lobbyID, "@me"),
-            auth
+            auth:   this._getBearerAuth(accessToken)
         });
     }
 
@@ -112,17 +240,10 @@ export default class Lobbies {
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
      */
     async linkChannel(lobbyID: string, channelID: string | undefined, accessToken?: string): Promise<Lobby> {
-        let auth = this._manager.client.options.auth!;
-        if (accessToken) {
-            if (!accessToken.startsWith("Bearer ")) {
-                accessToken = `Bearer ${accessToken}`;
-            }
-            auth = accessToken;
-        }
         return this._manager.request<RawLobby>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.LOBBY_CHANNEL_LINKING(lobbyID),
-            auth,
+            auth:   this._getBearerAuth(accessToken),
             json:   { channel_id: channelID }
         }).then(data => new Lobby(data, this._manager.client));
     }

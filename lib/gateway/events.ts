@@ -20,6 +20,7 @@ import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type User from "../structures/User";
 import Soundboard from "../structures/Soundboard";
+import type Base from "../structures/Base";
 import { isDeepStrictEqual } from "node:util";
 
 export async function APPLICATION_COMMAND_PERMISSIONS_UPDATE(data: DispatchEventMap["APPLICATION_COMMAND_PERMISSIONS_UPDATE"], shard: Shard): Promise<void> {
@@ -109,6 +110,22 @@ export async function CHANNEL_DELETE(data: DispatchEventMap["CHANNEL_DELETE"], s
     shard.client.emit("channelDelete", channel);
 }
 
+export async function CHANNEL_INFO(data: DispatchEventMap["CHANNEL_INFO"], shard: Shard): Promise<void> {
+    const guild = shard.client.guilds.get(data.guild_id);
+    const channels = data.channels.map(channelInfo => ({ channel: guild?.channels.update(channelInfo) as Types.Channels.AnyVoiceChannel, info: channelInfo }));
+    for (const nonce in shard["_requestChannelInfoPromise"]) {
+        if (data.guild_id === shard["_requestChannelInfoPromise"][nonce].guildID) {
+            shard["_requestChannelInfoPromise"][nonce].channels.push(...channels);
+            clearTimeout(shard["_requestChannelInfoPromise"][nonce].timeout);
+            shard["_requestChannelInfoPromise"][nonce].resolve(shard["_requestChannelInfoPromise"][nonce].channels);
+            delete shard["_requestChannelInfoPromise"][nonce];
+        }
+    }
+
+    shard.client.emit("channelInfo", guild ?? { id: data.guild_id }, channels, shard);
+    shard.lastHeartbeatAck = true;
+}
+
 export async function CHANNEL_PINS_UPDATE(data: DispatchEventMap["CHANNEL_PINS_UPDATE"], shard: Shard): Promise<void> {
     const channel = shard.client.getChannel<Types.Channels.AnyTextableChannel>(data.channel_id);
     shard.client.emit("channelPinsUpdate", channel ?? { id: data.channel_id }, data.last_pin_timestamp === undefined || data.last_pin_timestamp === null ? null : new Date(data.last_pin_timestamp));
@@ -161,20 +178,20 @@ export async function GUILD_CREATE(data: DispatchEventMap["GUILD_CREATE"], shard
 
     if (data.unavailable) {
         shard.client.guilds.delete(data.id);
-        shard.client.emit("unavailableGuildCreate", shard.client.unavailableGuilds.update(data));
+        shard.client.emit("unavailableGuildCreate", shard.client.unavailableGuilds.update(data), shard);
     } else {
         const guild = shard["createGuild"](data);
         if (shard.ready) {
             if (shard.client.unavailableGuilds.delete(guild.id)) {
-                shard.client.emit("guildAvailable", guild);
+                shard.client.emit("guildAvailable", guild, shard);
             } else {
-                shard.client.emit("guildCreate", guild);
+                shard.client.emit("guildCreate", guild, shard);
             }
         } else {
             if (shard.client.unavailableGuilds.delete(guild.id)) {
                 void shard["restartGuildCreateTimeout"]();
             } else {
-                shard.client.emit("guildCreate", guild);
+                shard.client.emit("guildCreate", guild, shard);
             }
         }
     }
@@ -189,9 +206,9 @@ export async function GUILD_DELETE(data: DispatchEventMap["GUILD_DELETE"], shard
     guild?.threads.clear();
     shard.client.guilds.delete(data.id);
     if (data.unavailable) {
-        shard.client.emit("guildUnavailable", shard.client.unavailableGuilds.update(data));
+        shard.client.emit("guildUnavailable", shard.client.unavailableGuilds.update(data), shard);
     } else {
-        shard.client.emit("guildDelete", guild ?? { id: data.id });
+        shard.client.emit("guildDelete", guild ?? { id: data.id }, shard);
     }
 }
 
@@ -276,7 +293,7 @@ export async function GUILD_MEMBERS_CHUNK(data: DispatchEventMap["GUILD_MEMBERS_
         }
     }
 
-    shard.client.emit("guildMemberChunk", members);
+    shard.client.emit("guildMemberChunk", members, shard);
     shard.lastHeartbeatAck = true;
 }
 
@@ -703,17 +720,20 @@ export async function PRESENCE_UPDATE(data: DispatchEventMap["PRESENCE_UPDATE"],
                 smallImage: activity.assets.small_image,
                 smallText:  activity.assets.small_text
             } : undefined,
-            buttons:    activity.buttons,
-            details:    activity.details,
-            emoji:      activity.emoji,
-            flags:      activity.flags,
-            instance:   activity.instance,
-            party:      activity.party,
-            secrets:    activity.secrets,
-            state:      activity.state,
-            timestamps: activity.timestamps,
-            url:        activity.url
-        }))
+            buttons:           activity.buttons,
+            details:           activity.details,
+            detailsURL:        activity.details_url,
+            emoji:             activity.emoji,
+            flags:             activity.flags,
+            instance:          activity.instance,
+            party:             activity.party,
+            secrets:           activity.secrets,
+            state:             activity.state,
+            stateURL:          activity.state_url,
+            statusDisplayType: activity.status_display_type,
+            timestamps:        activity.timestamps,
+            url:               activity.url
+        } satisfies Types.Shared.KeysExist<Types.Guilds.PresenceActivity>))
     };
     const userID = data.user.id;
 
@@ -733,6 +753,10 @@ export async function RESUMED(data: DispatchEventMap["RESUMED"], shard: Shard): 
     shard["_resume"]();
 }
 
+export async function RATE_LIMITED(data: DispatchEventMap["RATE_LIMITED"], shard: Shard): Promise<void> {
+    shard.client.emit("rateLimited", data, shard);
+}
+
 export async function SOUNDBOARD_SOUNDS(data: DispatchEventMap["SOUNDBOARD_SOUNDS"], shard: Shard): Promise<void> {
     const guild = shard.client.guilds.get(data.guild_id);
     const soundboardSounds = data.soundboard_sounds.map(soundboardSound => guild?.soundboardSounds.update(soundboardSound) ?? new Soundboard(soundboardSound, shard.client));
@@ -745,8 +769,25 @@ export async function SOUNDBOARD_SOUNDS(data: DispatchEventMap["SOUNDBOARD_SOUND
         }
     }
 
-    shard.client.emit("soundboardSounds", data.guild_id, soundboardSounds);
+    shard.client.emit("soundboardSounds", guild ?? { id: data.guild_id }, soundboardSounds, shard);
     shard.lastHeartbeatAck = true;
+}
+
+export async function SUBSCRIPTION_CREATE(data: DispatchEventMap["SUBSCRIPTION_CREATE"], shard: Shard): Promise<void> {
+    const subscription = shard.client.util.updateSubscription(data);
+    shard.client.emit("subscriptionCreate", subscription);
+}
+
+export async function SUBSCRIPTION_DELETE(data: DispatchEventMap["SUBSCRIPTION_DELETE"], shard: Shard): Promise<void> {
+    const subscription = shard.client.util.updateSubscription(data);
+    shard.client["_application"]?.subscriptions.delete(data.id);
+    shard.client.emit("subscriptionDelete", subscription);
+}
+
+export async function SUBSCRIPTION_UPDATE(data: DispatchEventMap["SUBSCRIPTION_UPDATE"], shard: Shard): Promise<void> {
+    const oldSubscription = shard.client["_application"]?.subscriptions.get(data.id)?.toJSON() ?? null;
+    const subscription = shard.client.util.updateSubscription(data);
+    shard.client.emit("subscriptionUpdate", subscription, oldSubscription);
 }
 
 export async function STAGE_INSTANCE_CREATE(data: DispatchEventMap["STAGE_INSTANCE_CREATE"], shard: Shard): Promise<void> {
@@ -924,7 +965,9 @@ export async function VOICE_CHANNEL_EFFECT_SEND(data: DispatchEventMap["VOICE_CH
     const user = guild?.members.get(data.user_id) ?? shard.client.users.get(data.user_id);
     shard.client.emit("voiceChannelEffectSend", channel ?? { id: data.channel_id, guild: guild ?? { id: data.guild_id } }, user ?? { id: data.user_id }, {
         animationID:   data.animation_id,
-        animationType: data.animation_type
+        animationType: data.animation_type,
+        soundID:       data.sound_id,
+        soundVolume:   data.sound_volume
     });
 }
 
@@ -969,13 +1012,24 @@ export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPD
     }
 }
 
+export async function VOICE_CHANNEL_START_TIME_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_START_TIME_UPDATE"], shard: Shard): Promise<void> {
+    const guild = shard.client.guilds.get(data.guild_id);
+    const channel = shard.client.getChannel<Types.Channels.AnyVoiceChannel>(data.id);
+    if (channel) (channel as Base)["update"]({ voice_start_time: data.voice_start_time });
+    shard.client.emit("voiceChannelStartTimeUpdate", guild ?? { id: data.guild_id }, channel ?? { id: data.id }, data.voice_start_time ?? null);
+}
+
 export async function VOICE_CHANNEL_STATUS_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_STATUS_UPDATE"], shard: Shard): Promise<void> {
-    shard.client.emit("voiceChannelStatusUpdate", shard.client.getChannel<VoiceChannel>(data.id) ?? { id: data.id }, data.status);
+    const guild = shard.client.guilds.get(data.guild_id);
+    const channel = shard.client.getChannel<Types.Channels.AnyVoiceChannel>(data.id);
+    if (channel) (channel as Base)["update"]({ status: data.status });
+    shard.client.emit("voiceChannelStatusUpdate", guild ?? { id: data.guild_id }, channel ?? { id: data.id }, data.status);
 }
 
 export async function VOICE_SERVER_UPDATE(data: DispatchEventMap["VOICE_SERVER_UPDATE"], shard: Shard): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     shard.client.voiceAdapters.get(data.guild_id)?.onVoiceServerUpdate(data);
+    shard.client.emit("voiceServerUpdate", shard.client.guilds.get(data.guild_id) ?? { id: data.guild_id }, data.endpoint, data.token);
 }
 
 export async function WEBHOOKS_UPDATE(data: DispatchEventMap["WEBHOOKS_UPDATE"], shard: Shard): Promise<void> {

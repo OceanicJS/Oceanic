@@ -9,6 +9,8 @@ import Member from "../structures/Member";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
 import { BASE_URL } from "../Constants";
+import type Entitlement from "../structures/Entitlement";
+import type TestEntitlement from "../structures/TestEntitlement";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */
 export default class OAuthHelper {
@@ -55,6 +57,19 @@ export default class OAuthHelper {
 
     async addGuildMember(guildID: string, userID: string, options?: Omit<Types.Guilds.AddMemberOptions, "accessToken">): Promise<Member | undefined> {
         return this._manager.guilds.addMember(guildID, userID, { accessToken: this._token.split(" ").slice(1).join(" "), ...options });
+    }
+
+    /**
+     * Delete the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
+     */
+    async deleteRoleConnection(applicationID: string): Promise<void> {
+        await this._manager.request<null>({
+            method: "DELETE",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
+            auth:   this._token
+        });
     }
 
     /**
@@ -144,6 +159,40 @@ export default class OAuthHelper {
             path:   Routes.OAUTH_CURRENT_USER,
             auth:   this._token
         }).then(data => new ExtendedUser(data, this._manager.client));
+    }
+
+    /**
+     * Get the currently authenticated user's entitlements for an application.
+     * @caching This method **does not** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlements(applicationID: string): Promise<Array<Entitlement | TestEntitlement>> {
+        return this._manager.request<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
+            method: "GET",
+            path:   Routes.OAUTH_ENTITLEMENTS(applicationID),
+            auth:   this._token
+        }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
+    }
+
+    /**
+     * Get the OIDC userinfo.
+     *
+     * Note: requires the `openid` scope.
+     */
+    async getOIDCUserInfo(): Promise<Types.OAuth.OIDCUserInfo> {
+        return this._manager.request<Types.OAuth.RawOIDCUserInfo>({
+            method: "GET",
+            path:   Routes.OAUTH_OIDC_USERINFO,
+            auth:   this._token
+        }).then(data => ({
+            email:             data.email,
+            emailVerified:     data.email_verified,
+            locale:            data.locale,
+            nickname:          data.nickname,
+            picture:           data.picture,
+            preferredUsername: data.preferred_username,
+            sub:               data.sub
+        }));
     }
 
 

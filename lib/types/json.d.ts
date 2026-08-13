@@ -20,6 +20,7 @@ import type {
     MessageTypes,
     MFALevels,
     OverwriteTypes,
+    PremiumTypes,
     PremiumTiers,
     RESTMethod,
     GuildScheduledEventEntityTypes,
@@ -51,7 +52,8 @@ import type {
     StoreApplicationState,
     ApplicationVerificationState,
     ApplicationInteractionsVersion,
-    EntryPointCommandHandlerTypes
+    EntryPointCommandHandlerTypes,
+    SubscriptionStatuses
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
@@ -152,16 +154,23 @@ export interface JSONApplicationCommand extends JSONBase {
     version: string;
 }
 export interface JSONAttachment extends JSONBase {
+    application?: JSONApplication;
+    clipCreatedAt?: number;
+    clipParticipants?: Array<JSONUser>;
     contentType?: string;
     description?: string;
+    durationSecs?: number;
     ephemeral?: boolean;
     filename: string;
     flags: number;
     height?: number;
+    placeholder?: string;
+    placeholderVersion?: number;
     proxyURL: string;
     size: number;
     title?: string;
     url: string;
+    waveform?: string;
     width?: number;
 }
 export interface JSONAutocompleteInteraction extends JSONInteraction {
@@ -212,10 +221,12 @@ export interface JSONCategoryChannel extends JSONGuildChannel {
     type: ChannelTypes.GUILD_CATEGORY;
 }
 export interface JSONChannel extends JSONBase {
+    flags: number;
     type: ChannelTypes;
 }
 export interface JSONClientApplication extends JSONBase {
     flags: number;
+    flagsNew: bigint;
 }
 export interface JSONClientUser extends JSONUser {
     email: string | null;
@@ -284,6 +295,8 @@ export interface JSONForumChannel extends JSONThreadOnlyChannel {
 export interface JSONGroupChannel extends JSONChannel {
     applicationID: string;
     icon: string | null;
+    lastMessageID: string | null;
+    lastPinTimestamp: string | null;
     managed: boolean;
     name: string | null;
     nicks: Array<Record<"id" | "nick", string>>;
@@ -350,6 +363,21 @@ export interface JSONGuildChannel extends JSONChannel {
     parentID: string | null;
     type: Types.Channels.GuildChannels;
 }
+export interface JSONGuildJoinRequest extends JSONBase {
+    actionedAt?: string;
+    actionedByUser?: JSONUser;
+    applicationStatus: Types.Guilds.GuildJoinRequestStatus;
+    createdAt: number;
+    formResponses?: Array<Record<string, unknown>> | null;
+    guildID: string;
+    interviewChannelID: string | null;
+    joinRequestID: string;
+    lastSeen: number | null;
+    rejectionReason: string | null;
+    reviewedAt?: number;
+    user?: JSONUser;
+    userID: string;
+}
 export interface JSONGuildPreview extends JSONBase {
     approximateMemberCount: number;
     approximatePresenceCount: number;
@@ -393,19 +421,41 @@ export interface JSONIntegration extends JSONBase {
 }
 export interface JSONLobby extends JSONBase {
     applicationID: string;
+    flags?: number;
     linkedChannel?: JSONGuildChannel | Uncached;
     members: Array<JSONLobbyMember>;
     metadata?: Record<string, string> | null;
 }
 export interface JSONLobbyMember extends JSONBase {
+    additionalName?: string | null;
     flags?: number;
     lobbyID: string;
     metadata?: Record<string, string> | null;
+}
+export interface JSONLobbyMessage extends JSONBase {
+    applicationID: string;
+    author: JSONUser;
+    channelID: string;
+    content: string;
+    flags: number;
+    lobbyID: string;
+    lobbyMember?: Types.Lobbies.LobbyMessageMember;
+    metadata?: Record<string, string> | null;
+    moderationMetadata?: Record<string, string> | null;
+    type: MessageTypes;
 }
 export interface JSONInteraction extends JSONBase {
     applicationID: string;
     type: InteractionTypes;
     version: 1;
+}
+export interface JSONInteractionResolvedChannel extends JSONChannel {
+    appPermissions: JSONPermissions;
+    name: string | null;
+    parentID: string | null;
+    permissions: JSONPermissions;
+    threadMetadata: Types.Channels.ThreadMetadata | Types.Channels.PrivateThreadMetadata | null;
+    type: Types.Channels.ImplementedChannels;
 }
 export interface JSONInvite {
     approximateMemberCount?: number;
@@ -630,7 +680,7 @@ export interface JSONPingInteraction extends JSONInteraction {
 export interface JSONPoll {
     allowMultiselect: boolean;
     answers: Array<Types.Channels.PollAnswer>;
-    expiry: string;
+    expiry: number;
     layoutType: PollLayoutType;
     question: Types.Channels.PollQuestion;
     results: Types.Channels.PollResults;
@@ -643,6 +693,7 @@ export interface JSONPrimaryGuild {
 }
 export interface JSONPrivateChannel extends JSONChannel {
     lastMessageID: string | null;
+    lastPinTimestamp: string | null;
     messages: Array<string>;
     recipient: JSONUser;
     type: ChannelTypes.DM;
@@ -678,6 +729,7 @@ export interface JSONScheduledEvent extends JSONBase {
     entityID: string | null;
     entityMetadata: Types.ScheduledEvents.ScheduledEventEntityMetadata | null;
     entityType: GuildScheduledEventEntityTypes;
+    exceptions: Array<Types.ScheduledEvents.ScheduledEventException>;
     guildID: string;
     image?: string | null;
     name: string;
@@ -721,6 +773,17 @@ export interface JSONStageInstance extends JSONBase {
     scheduledEventID: string | null;
     topic: string;
 }
+export interface JSONSubscription extends JSONBase {
+    canceledAt: number | null;
+    country?: string;
+    currentPeriodEnd: number;
+    currentPeriodStart: number;
+    entitlementIDs: Array<string>;
+    renewalSKUIDs: Array<string>;
+    skuIDs: Array<string>;
+    status: SubscriptionStatuses;
+    userID: string;
+}
 export interface JSONTeam extends JSONBase {
     icon: string | null;
     members: Array<Types.Applications.TeamMember>;
@@ -730,6 +793,7 @@ export interface JSONTeam extends JSONBase {
 export interface JSONTestEntitlement extends JSONBaseEntitlement {}
 export interface JSONTextableChannel extends JSONGuildChannel {
     lastMessageID: string | null;
+    lastPinTimestamp: string | null;
     messages: Array<string>;
     nsfw: boolean;
     permissionOverwrites: Array<JSONPermissionOverwrite>;
@@ -796,6 +860,7 @@ export interface JSONUser extends JSONBase {
     collectibles: Types.Users.Collectibles | null;
     discriminator: string;
     globalName: string | null;
+    premiumType?: PremiumTypes;
     publicFlags: number;
     system: boolean;
     username: string;

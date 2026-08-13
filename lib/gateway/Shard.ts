@@ -34,6 +34,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     private _getAllUsersQueue: Array<string>;
     private _guildCreateTimeout: NodeJS.Timeout | null;
     private _heartbeatInterval: NodeJS.Timeout | null;
+    private _requestChannelInfoPromise: Record<string, { channels: Array<Types.Gateway.ChannelInfoWithChannel>; guildID: string; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
     private _requestMembersPromise: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
     private _requestSoundboardSoundsPromise: Record<string, { guildID: string; soundboardSounds: Array<Soundboard>; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
     client!: Client;
@@ -99,6 +100,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.preReady = false;
         this.ready = false;
         this.reconnectInterval = 1000;
+        this._requestChannelInfoPromise = {};
         this._requestMembersPromise = {};
         this._requestSoundboardSoundsPromise = {};
         this.resumeURL = null;
@@ -642,6 +644,30 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     }
 
     /**
+     * Request extended channel info for a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options.
+     */
+    async requestChannelInfo(guildID: string, options: Types.Gateway.RequestChannelInfoOptions): Promise<Array<Types.Gateway.ChannelInfoWithChannel>> {
+        const opts = {
+            guild_id: guildID,
+            fields:   options.fields,
+            nonce:    randomBytes(16).toString("hex")
+        };
+        this.send(GatewayOPCodes.REQUEST_CHANNEL_INFO, opts);
+        return new Promise<Array<Types.Gateway.ChannelInfoWithChannel>>((resolve, reject) => this._requestChannelInfoPromise[opts.nonce] = {
+            guildID,
+            channels: [],
+            timeout:  setTimeout(() => {
+                resolve(this._requestChannelInfoPromise[opts.nonce].channels);
+                delete this._requestChannelInfoPromise[opts.nonce];
+            }, options.timeout ?? this.client.rest.options.requestTimeout),
+            resolve,
+            reject
+        });
+    }
+
+    /**
      * Request the members of a guild.
      * @param guildID The ID of the guild to request the members of.
      * @param options The options for requesting the members.
@@ -686,6 +712,11 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         });
     }
 
+    /**
+     * Request soundboard sounds for a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options.
+     */
     async requestSoundboardSounds(guildID: string, options?: Types.Gateway.RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
         const opts = {
             guild_ids: [guildID],

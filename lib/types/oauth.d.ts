@@ -1,5 +1,6 @@
 /** @module Types/OAuth */
 import type * as Types from "./namespaced";
+import { type Locale } from "./applications";
 import type {
     ConnectionService,
     PermissionName,
@@ -203,4 +204,33 @@ export interface RoleConnectionMetadata {
     name: string;
     nameLocalizations?: Types.Applications.LocaleMap;
     type: RoleConnectionMetadataTypes;
+}
+
+export interface OIDCKey {
+    alg: string;
+    e: string;
+    kid: string;
+    kty: string;
+    n: string;
+    use: string;
+}
+
+export interface RawOIDCUserInfo {
+    email: string;
+    email_verified: boolean;
+    locale: Locale;
+    nickname: string;
+    picture: string;
+    preferred_username: string;
+    sub: string;
+}
+
+export interface OIDCUserInfo {
+    email: string;
+    emailVerified: boolean;
+    locale: Locale;
+    nickname: string;
+    picture: string;
+    preferredUsername: string;
+    sub: string;
 }

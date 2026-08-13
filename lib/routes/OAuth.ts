@@ -11,6 +11,8 @@ import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
 import QueryBuilder from "../util/QueryBuilder";
+import type Entitlement from "../structures/Entitlement";
+import type TestEntitlement from "../structures/TestEntitlement";
 
 /** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {
@@ -41,6 +43,18 @@ export default class OAuth {
             tokenType:   data.token_type,
             webhook:     data.webhook ? new Webhook(data.webhook, this._manager.client) : null
         }));
+    }
+
+    /**
+     * Delete the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
+     */
+    async deleteUserRoleConnection(applicationID: string): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "DELETE",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID)
+        });
     }
 
     /**
@@ -128,14 +142,14 @@ export default class OAuth {
      * Get the guild member information about the currently authenticated user.
      *
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
-     * @param guild the ID of the guild
+     * @param guildID the ID of the guild
      * @caching This method **does not** cache its result.
      */
-    async getCurrentGuildMember(guild: string): Promise<Member> {
+    async getCurrentGuildMember(guildID: string): Promise<Member> {
         return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "GET",
-            path:   Routes.OAUTH_GUILD_MEMBER(guild)
-        }).then(data => new Member(data, this._manager.client, guild));
+            path:   Routes.OAUTH_GUILD_MEMBER(guildID)
+        }).then(data => new Member(data, this._manager.client, guildID));
     }
 
     /**
@@ -168,11 +182,51 @@ export default class OAuth {
     }
 
     /**
+     * Get the currently authenticated user's entitlements for an application.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlements(applicationID: string): Promise<Array<Entitlement | TestEntitlement>> {
+        return this._manager.authRequest<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
+            method: "GET",
+            path:   Routes.OAUTH_ENTITLEMENTS(applicationID)
+        }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
+    }
+
+    /**
      * Get a helper instance that can be used with a specific access token.
      * @param accessToken The access token. Must be prefixed with `Bearer `.
      */
     getHelper(accessToken: string): OAuthHelper {
         return new OAuthHelper(this._manager, accessToken);
+    }
+
+    /** Get the OIDC JWKS keys */
+    async getOIDCKeys(): Promise<Array<Types.OAuth.OIDCKey>> {
+        return this._manager.request<{ keys: Array<Types.OAuth.OIDCKey>; }>({
+            method: "GET",
+            path:   Routes.OAUTH_OIDC_KEYS
+        }).then(data => data.keys);
+    }
+
+    /**
+     * Get the OIDC userinfo.
+     *
+     * Note: requires the `openid` scope.
+     */
+    async getOIDCUserInfo(): Promise<Types.OAuth.OIDCUserInfo> {
+        return this._manager.authRequest<Types.OAuth.RawOIDCUserInfo>({
+            method: "GET",
+            path:   Routes.OAUTH_OIDC_USERINFO
+        }).then(data => ({
+            email:             data.email,
+            emailVerified:     data.email_verified,
+            locale:            data.locale,
+            nickname:          data.nickname,
+            picture:           data.picture,
+            preferredUsername: data.preferred_username,
+            sub:               data.sub
+        }));
     }
 
     /**
@@ -218,6 +272,7 @@ export default class OAuth {
             platformUsername: data.platform_username
         }));
     }
+
     /**
      * Refresh an existing access token.
      * @param options The options for refreshing the token.

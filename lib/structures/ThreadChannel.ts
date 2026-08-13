@@ -12,8 +12,6 @@ import { UncachedError } from "../util/Errors";
 
 /** Represents a guild thread channel. */
 export default class ThreadChannel<CH extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel> extends GuildChannel {
-    /** The [flags](https://discord.com/developers/docs/resources/channel#channel-object-channel-flags) for this thread channel. */
-    flags: number;
     /** The last message sent in this channel. This will only be present if a message has been sent within the current session. */
     lastMessage?: Message<CH> | null;
     /** The ID of last message sent in this channel. */
@@ -248,9 +246,26 @@ export default class ThreadChannel<CH extends Types.Channels.AnyThreadChannel = 
 
     /**
      * Get the pinned messages in this thread.
+     * @deprecated Use {@link ThreadChannel#getPins | getPins} instead.
      */
     async getPinnedMessages(): Promise<Array<Message<CH>>> {
         return this.client.rest.channels.getPinnedMessages<CH>(this.id);
+    }
+
+    /**
+     * Get the pins in this thread.
+     * @param options The options for getting pins.
+     */
+    async getPins(options?: Types.Channels.GetChannelPinsOptions<CH>): Promise<Array<Types.Channels.MessagePin<CH>>> {
+        return this.client.rest.channels.getPins<CH>(this.id, options);
+    }
+
+    /**
+     * Get an async iterator for getting pins in this thread.
+     * @param options The options for getting pins.
+     */
+    getPinsIterator(options?: Types.Channels.GetChannelPinsIteratorOptions<CH>): Types.Channels.MessagePinsIterator<CH> {
+        return this.client.rest.channels.getPinsIterator<CH>(this.id, options);
     }
 
     /**

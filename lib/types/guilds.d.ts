@@ -21,11 +21,14 @@ import type {
     OnboardingModes,
     MemberSearchSortType,
     MemberJoinSourceType,
-    JSONErrorCodes
+    JSONErrorCodes,
+    StatusDisplayType
 } from "../Constants";
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
 import type Member from "../structures/Member";
+import type Message from "../structures/Message";
+import type GuildJoinRequestStructure from "../structures/GuildJoinRequest";
 
 // channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only
@@ -164,6 +167,136 @@ export interface WelcomeScreenChannel {
     emojiID: string | null;
     /** The name (or unicode characters) of the emoji to use on the welcome channel. */
     emojiName: string | null;
+}
+
+export type NewMemberActionType = "VIEW" | "CHAT";
+export type GuildJoinRequestStatus = "STARTED" | "SUBMITTED" | "REJECTED" | "APPROVED";
+export type GuildJoinRequestAction = "APPROVED" | "REJECTED";
+export type GuildJoinRequest = GuildJoinRequestStructure;
+
+export interface RawNewMemberWelcome {
+    enabled: boolean;
+    guild_id: string;
+    new_member_actions: Array<RawNewMemberWelcomeAction | null>;
+    resource_channels: Array<RawNewMemberResourceChannel | null>;
+    welcome_message: RawNewMemberWelcomeMessage;
+}
+
+export interface RawNewMemberWelcomeMessage {
+    author_ids: Array<string>;
+    message: string;
+}
+
+export interface RawNewMemberWelcomeAction {
+    action_type: NewMemberActionType;
+    channel_id: string;
+    description: string;
+    emoji?: PartialEmoji;
+    icon?: string;
+    title: string;
+}
+
+export interface RawNewMemberResourceChannel {
+    channel_id: string;
+    description: string;
+    emoji?: PartialEmoji;
+    icon?: string;
+    title: string;
+}
+
+export interface NewMemberWelcome {
+    /** If the new member welcome experience is enabled. */
+    enabled: boolean;
+    /** The ID of the guild this new member welcome is for. */
+    guildID: string;
+    /** Actions shown to new members of the guild. */
+    newMemberActions: Array<NewMemberWelcomeAction | null>;
+    /** Read-only channels that provide resources for new members. */
+    resourceChannels: Array<NewMemberResourceChannel | null>;
+    /** Welcome message shown to new members of the guild. */
+    welcomeMessage: NewMemberWelcomeMessage;
+}
+
+export interface NewMemberWelcomeMessage {
+    /** The IDs of the users who authored the welcome message. */
+    authorIDs: Array<string>;
+    /** The welcome message shown to new members. */
+    message: string;
+}
+
+export interface NewMemberWelcomeAction {
+    /** The action type. */
+    actionType: NewMemberActionType;
+    /** The ID of the channel for this action. */
+    channelID: string;
+    /** The action description. */
+    description: string;
+    /** The emoji for the action, if present. */
+    emoji?: PartialEmoji;
+    /** The action icon, if present. */
+    icon?: string;
+    /** The action title. */
+    title: string;
+}
+
+export interface NewMemberResourceChannel {
+    /** The ID of the resource channel. */
+    channelID: string;
+    /** The resource description. */
+    description: string;
+    /** The emoji for the resource channel, if present. */
+    emoji?: PartialEmoji;
+    /** The resource icon, if present. */
+    icon?: string;
+    /** The resource title. */
+    title: string;
+}
+
+export interface RawGuildJoinRequest {
+    actioned_at?: string;
+    actioned_by_user?: Types.Users.RawUser;
+    application_status: GuildJoinRequestStatus;
+    created_at: string;
+    form_responses?: Array<Record<string, unknown>> | null;
+    guild_id: string;
+    id: string;
+    interview_channel_id: string | null;
+    join_request_id: string;
+    last_seen: string | null;
+    rejection_reason: string | null;
+    reviewed_at?: string;
+    user?: Types.Users.RawUser;
+    user_id: string;
+}
+
+export interface RawGuildJoinRequestsResponse {
+    guild_join_requests: Array<RawGuildJoinRequest>;
+    total?: number;
+}
+
+export interface GetGuildJoinRequestsOptions {
+    /** Get requests after this request ID. */
+    after?: string;
+    /** Get requests before this request ID. */
+    before?: string;
+    /** The maximum number of requests to return. */
+    limit?: number;
+    /** Filter requests by status. */
+    status: Exclude<GuildJoinRequestStatus, "STARTED">;
+}
+
+export interface GuildJoinRequests {
+    /** The join requests for the guild. */
+    guildJoinRequests: Array<GuildJoinRequest>;
+    /** The total number of join requests that match the query, if included. */
+    total?: number;
+}
+
+export interface ActionGuildJoinRequestOptions {
+    /** The action to take on the join request. */
+    action: GuildJoinRequestAction;
+    /** The reason for rejecting the join request. */
+    rejectionReason?: string | null;
 }
 export interface RawSticker {
     /** @deprecated */
@@ -433,6 +566,41 @@ export interface SearchMembersOptions {
     limit?: number;
     /** The query to search for. */
     query: string;
+}
+
+export type MessageSearchSortBy = "relevance" | "timestamp";
+export type SearchSortOrder = "asc" | "desc";
+export type MessageSearchHasFilter = "link" | "embed" | "file" | "video" | "image" | "sound";
+
+export interface SearchMessagesOptions {
+    /** Restrict results to messages sent by these users. */
+    authorIDs?: string | Array<string>;
+    /** Restrict results to these channels. */
+    channelIDs?: string | Array<string>;
+    /** Restrict results to messages created by this application command. */
+    commandID?: string;
+    /** Restrict results to messages created by this application command name. */
+    commandName?: string;
+    /** The content to search for. */
+    content?: string;
+    /** Restrict results to messages containing these attachment/embed types. */
+    has?: MessageSearchHasFilter | Array<MessageSearchHasFilter>;
+    /** Include results from NSFW channels. */
+    includeNSFW?: boolean;
+    /** Search messages before this message ID. */
+    maxID?: string;
+    /** Search for messages mentioning these users. */
+    mentions?: string | Array<string>;
+    /** Search messages after this message ID. */
+    minID?: string;
+    /** The offset into the search results. */
+    offset?: number;
+    /** Restrict results to pinned messages. */
+    pinned?: boolean;
+    /** The field to sort by. */
+    sortBy?: MessageSearchSortBy;
+    /** The sort order. */
+    sortOrder?: SearchSortOrder;
 }
 
 export interface AddMemberOptions {
@@ -743,10 +911,13 @@ export interface RawOAuthGuild {
     permissions: string;
 }
 
-export interface PresenceActivity extends Omit<Types.Gateway.Activity, "application_id" | "assets" | "created_at"> {
+export interface PresenceActivity extends Omit<Types.Gateway.Activity, "application_id" | "assets" | "created_at" | "details_url" | "state_url" | "status_display_type"> {
     applicationID?: string;
     assets?: Partial<Record<"largeImage" | "largeText" | "smallImage" | "smallText", string>>;
     createdAt: number;
+    detailsURL?: string | null;
+    stateURL?: string | null;
+    statusDisplayType?: StatusDisplayType | null;
 }
 
 export interface Presence extends Omit<Types.Gateway.PresenceUpdate, "user" | "guild_id" | "client_status" | "activities"> {
@@ -957,6 +1128,43 @@ export interface RawMemberSearchResults {
     members: Array<RawSupplementalGuildMember>;
     page_result_count: number;
     total_result_count: number;
+}
+
+export interface RawMessageSearchResults {
+    analytics_id?: string;
+    channels?: Array<Types.Channels.RawChannel>;
+    documents_indexed?: number;
+    doing_deep_historical_index?: boolean;
+    members?: Array<Types.Channels.RawThreadMember>;
+    messages: Array<Array<Types.Channels.RawMessage>>;
+    threads?: Array<Types.Channels.RawThreadChannel>;
+    total_results: number;
+}
+
+export interface MessageSearchResults<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached> {
+    /** The search analytics ID returned by Discord, if present. */
+    analyticsID?: string;
+    /** The channels that contain the returned messages, if included. */
+    channels?: Array<Types.Channels.AnyGuildChannelWithoutThreads>;
+    /** The number of documents that have been indexed during the current indexing operation, if any. */
+    documentsIndexed?: number;
+    /** Whether the guild is undergoing a deep historical indexing operation. */
+    doingDeepHistoricalIndex?: boolean;
+    /** Thread members for returned threads, if included. */
+    members?: Array<Types.Channels.ThreadMember>;
+    /** The messages that matched the query. Discord returns this as nested arrays for search-context compatibility. */
+    messages: Array<Array<Message<T>>>;
+    /** Threads that contain the returned messages, if included. */
+    threads?: Array<Types.Channels.AnyThreadChannel>;
+    /** The total number of results that match the query. */
+    totalResults: number;
+}
+
+export interface MessageSearchNotIndexedResult {
+    code: JSONErrorCodes.INDEX_NOT_YET_AVAILABLE;
+    documents_indexed: number;
+    message: string;
+    retry_after: number;
 }
 
 export interface MemberSearchResults {

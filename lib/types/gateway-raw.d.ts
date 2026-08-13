@@ -134,7 +134,7 @@ export interface ThreadUpdatePacket extends BaseDispatchPacket {
 
 export interface ThreadListSyncPacket extends BaseDispatchPacket {
     d: {
-        channel_ids: Array<string>;
+        channel_ids?: Array<string>;
         guild_id: string;
         members: Array<Types.Channels.RawThreadMember>;
         threads: Array<Types.Channels.RawThreadChannel>;
@@ -149,11 +149,11 @@ export interface ThreadMemberUpdatePacket extends BaseDispatchPacket {
 
 export interface ThreadMembersUpdatePacket extends BaseDispatchPacket {
     d: {
-        added_members: Array<Types.Channels.RawThreadMember & { member: Types.Guilds.RawMember; presence: Types.Gateway.PresenceUpdate | null; }>;
+        added_members?: Array<Types.Channels.RawThreadMember & { member: Types.Guilds.RawMember; presence: Types.Gateway.PresenceUpdate | null; }>;
         guild_id: string;
         id: string;
         member_count: number;
-        removed_member_ids: Array<string>;
+        removed_member_ids?: Array<string>;
     };
     t: "THREAD_MEMBERS_UPDATE";
 }
@@ -539,7 +539,7 @@ export interface VoiceChannelEffectSendPacket extends BaseDispatchPacket {
 }
 
 export interface VoiceChannelStatusUpdatePacket extends BaseDispatchPacket {
-    d: { id: string; status: string | null; };
+    d: { guild_id: string; id: string; status: string | null; };
     t: "VOICE_CHANNEL_STATUS_UPDATE";
 }
 
@@ -558,17 +558,50 @@ export interface EntitlementDeletePacket extends BaseDispatchPacket {
     t: "ENTITLEMENT_DELETE";
 }
 
-export interface MessagePollVoteAdd extends BaseDispatchPacket {
+export interface MessagePollVoteAddPacket extends BaseDispatchPacket {
     d: Types.Gateway.RawMessagePollVote;
     t: "MESSAGE_POLL_VOTE_ADD";
 }
 
-export interface MessagePollVoteRemove extends BaseDispatchPacket {
+export interface MessagePollVoteRemovePacket extends BaseDispatchPacket {
     d: Types.Gateway.RawMessagePollVote;
     t: "MESSAGE_POLL_VOTE_REMOVE";
 }
 
-export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
+export interface ChannelInfoPacket extends BaseDispatchPacket {
+    d: {
+        channels: Array<Types.Gateway.ChannelInfo>;
+        guild_id: string;
+    };
+    t: "CHANNEL_INFO";
+}
+
+export interface VoiceChannelStartTimeUpdatePacket extends BaseDispatchPacket {
+    d: { guild_id: string; id: string; voice_start_time?: number | null; };
+    t: "VOICE_CHANNEL_START_TIME_UPDATE";
+}
+
+export interface SubscriptionCreatePacket extends BaseDispatchPacket {
+    d: Types.Applications.RawSubscription;
+    t: "SUBSCRIPTION_CREATE";
+}
+
+export interface SubscriptionUpdatePacket extends BaseDispatchPacket {
+    d: Types.Applications.RawSubscription;
+    t: "SUBSCRIPTION_UPDATE";
+}
+
+export interface SubscriptionDeletePacket extends BaseDispatchPacket {
+    d: Types.Applications.RawSubscription;
+    t: "SUBSCRIPTION_DELETE";
+}
+
+export interface RateLimitedPacket extends BaseDispatchPacket {
+    d: Types.Gateway.RateLimitInfo;
+    t: "RATE_LIMITED";
+}
+
+export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket | RateLimitedPacket | ChannelInfoPacket |
 GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
 ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket |
@@ -580,6 +613,7 @@ GuildScheduledEventCreatePacket | GuildScheduledEventDeletePacket | GuildSchedul
 IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket |
 InviteCreatePacket | InviteDeletePacket |
 MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
-TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
+TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceChannelStartTimeUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
 EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket |
-MessagePollVoteAdd | MessagePollVoteRemove;
+MessagePollVoteAddPacket | MessagePollVoteRemovePacket |
+SubscriptionCreatePacket | SubscriptionDeletePacket | SubscriptionUpdatePacket;

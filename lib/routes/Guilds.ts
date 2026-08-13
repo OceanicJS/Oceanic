@@ -18,6 +18,8 @@ import VoiceState from "../structures/VoiceState";
 import Webhook from "../structures/Webhook";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
+import Channel from "../structures/Channel";
+import GuildJoinRequest from "../structures/GuildJoinRequest";
 import { setTimeout } from "node:timers/promises";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
@@ -25,6 +27,26 @@ export default class Guilds {
     private _manager: RESTManager;
     constructor(manager: RESTManager) {
         this._manager = manager;
+    }
+
+    /**
+     * Accept or deny a guild join request.
+     * @param guildID The ID of the guild.
+     * @param requestID The ID of the join request.
+     * @param options The options for actioning the join request.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async actionJoinRequest(guildID: string, requestID: string, options: Types.Guilds.ActionGuildJoinRequestOptions): Promise<Types.Guilds.GuildJoinRequest> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.authRequest<Types.Guilds.RawGuildJoinRequest>({
+            method: "PATCH",
+            path:   Routes.GUILD_JOIN_REQUEST(guildID, requestID),
+            json:   {
+                action:           options.action,
+                rejection_reason: options.rejectionReason
+            }
+        }).then(data => this._manager.client.guilds.get(guildID)?.joinRequests.update(data) ?? new GuildJoinRequest(data, this._manager.client));
     }
 
     /**
@@ -302,6 +324,41 @@ export default class Guilds {
     }
 
     /**
+     * Create an exception to the recurrence rule for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for creating the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async createScheduledEventException(guildID: string, eventID: string, options: Types.ScheduledEvents.CreateScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventException>({
+            method: "POST",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTIONS(guildID, eventID),
+            json:   {
+                is_canceled:                   options.isCanceled,
+                original_scheduled_start_time: options.originalScheduledStartTime,
+                scheduled_end_time:            options.scheduledEndTime,
+                scheduled_start_time:          options.scheduledStartTime
+            },
+            reason: options.reason
+        }).then(data => {
+            const exception = this._manager.client.util.convertScheduledEventException(data);
+            const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+            if (event) {
+                const existing = event.exceptions.findIndex(e => e.eventExceptionID === exception.eventExceptionID);
+                if (existing === -1) {
+                    event.exceptions.push(exception);
+                } else {
+                    event.exceptions[existing] = exception;
+                }
+            }
+            return exception;
+        });
+    }
+
+    /**
      * Create a soundboard sound
      * @param guildID The ID of the guild
      * @param options The options for creating the soundboard sound
@@ -454,6 +511,27 @@ export default class Guilds {
             path:   Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
             reason
         });
+    }
+
+    /**
+     * Delete an exception to the recurrence rule for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param reason The reason for deleting the scheduled event exception.
+     * @caching This method **may** remove the result from cache. The result will not be removed if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async deleteScheduledEventException(guildID: string, eventID: string, exceptionID: string, reason?: string): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "DELETE",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
+            reason
+        });
+        const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+        if (event) {
+            event.exceptions = event.exceptions.filter(exception => exception.eventExceptionID !== exceptionID);
+        }
     }
 
     /**
@@ -735,7 +813,7 @@ export default class Guilds {
     async editOnboarding(guildID: string, options: Types.Guilds.EditOnboardingOptions): Promise<Types.Guilds.Onboarding> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawOnboarding>({
-            method: "PATCH",
+            method: "PUT",
             path:   Routes.GUILD_ONBOARDING(guildID),
             json:   {
                 enabled:             options.enabled,
@@ -869,6 +947,41 @@ export default class Guilds {
     }
 
     /**
+     * Edit an exception to the recurrence rule for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for editing the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async editScheduledEventException(guildID: string, eventID: string, exceptionID: string, options: Types.ScheduledEvents.EditScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventException>({
+            method: "PATCH",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
+            json:   {
+                is_canceled:          options.isCanceled,
+                scheduled_end_time:   options.scheduledEndTime,
+                scheduled_start_time: options.scheduledStartTime
+            },
+            reason: options.reason
+        }).then(data => {
+            const exception = this._manager.client.util.convertScheduledEventException(data);
+            const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+            if (event) {
+                const existing = event.exceptions.findIndex(e => e.eventExceptionID === exception.eventExceptionID);
+                if (existing === -1) {
+                    event.exceptions.push(exception);
+                } else {
+                    event.exceptions[existing] = exception;
+                }
+            }
+            return exception;
+        });
+    }
+
+    /**
      * Edit a soundboard sound.
      * @param guildID The ID of the guild.
      * @param soundID The ID of the soundboard sound to edit.
@@ -922,7 +1035,7 @@ export default class Guilds {
     async editTemplate(guildID: string, code: string, options: Types.GuildTemplate.EditGuildTemplateOptions): Promise<GuildTemplate> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.GUILD_TEMPLATE(guildID, code),
             json:   {
                 code,
@@ -993,7 +1106,7 @@ export default class Guilds {
     async editWidget(guildID: string, options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.Widget> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawWidget>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.GUILD_WIDGET(guildID),
             json:   {
                 channel_id: options.channelID,
@@ -1263,6 +1376,33 @@ export default class Guilds {
     }
 
     /**
+     * Get guild join requests.
+     * @param guildID The ID of the guild.
+     * @param options The options for getting join requests.
+     * @caching This method **may** cache its result. The results will not be cached if the guild is not cached.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async getJoinRequests(guildID: string, options: Types.Guilds.GetGuildJoinRequestsOptions): Promise<Types.Guilds.GuildJoinRequests> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options.after);
+        query.setIfPresent("before", options.before);
+        query.setIfPresent("limit", options.limit);
+        query.set("status", options.status);
+        return this._manager.authRequest<Types.Guilds.RawGuildJoinRequestsResponse>({
+            method: "GET",
+            path:   Routes.GUILD_JOIN_REQUESTS(guildID),
+            query
+        }).then(data => {
+            const guild = this._manager.client.guilds.get(guildID);
+            return {
+                guildJoinRequests: data.guild_join_requests.map(request => guild?.joinRequests.update(request) ?? new GuildJoinRequest(request, this._manager.client)),
+                total:             data.total
+            };
+        });
+    }
+
+    /**
      * Get a guild member.
      * @param guildID The ID of the guild.
      * @param memberID The ID of the member.
@@ -1292,6 +1432,40 @@ export default class Guilds {
             path:   Routes.GUILD_MEMBERS(guildID),
             query
         }).then(data => data.map(d => this._manager.client.util.updateMember(guildID, d.user.id, d)));
+    }
+
+    /**
+     * Get a guild's new member welcome info.
+     * @param guildID The ID of the guild.
+     * @caching This method **does not** cache its result.
+     */
+    async getNewMemberWelcome(guildID: string): Promise<Types.Guilds.NewMemberWelcome | null> {
+        return this._manager.authRequest<Types.Guilds.RawNewMemberWelcome | null>({
+            method: "GET",
+            path:   Routes.GUILD_NEW_MEMBER_WELCOME(guildID)
+        }).then(data => data === null ? null : {
+            enabled:          data.enabled,
+            guildID:          data.guild_id,
+            newMemberActions: data.new_member_actions.map(action => action === null ? null : {
+                actionType:  action.action_type,
+                channelID:   action.channel_id,
+                description: action.description,
+                emoji:       action.emoji,
+                icon:        action.icon,
+                title:       action.title
+            }),
+            resourceChannels: data.resource_channels.map(channel => channel === null ? null : {
+                channelID:   channel.channel_id,
+                description: channel.description,
+                emoji:       channel.emoji,
+                icon:        channel.icon,
+                title:       channel.title
+            }),
+            welcomeMessage: {
+                authorIDs: data.welcome_message.author_ids,
+                message:   data.welcome_message.message
+            }
+        });
     }
 
     /**
@@ -1416,11 +1590,71 @@ export default class Guilds {
     }
 
     /**
+     * Get users subscribed to an exception for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for getting the users.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
+     * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
+     */
+    async getScheduledEventExceptionUsers(guildID: string, eventID: string, exceptionID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
+        const guild = this._manager.client.guilds.get(guildID);
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options?.after);
+        query.setIfPresent("before", options?.before);
+        query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("with_member", options?.withMember);
+        return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
+            method: "GET",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION_USERS(guildID, eventID, exceptionID),
+            query
+        }).then(data => data.map(d => ({
+            guildScheduledEvent:            guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEventExceptionID: d.guild_scheduled_event_exception_id,
+            guildScheduledEventID:          d.guild_scheduled_event_id,
+            member:                         d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
+            response:                       d.response,
+            user:                           this._manager.client.users.update(d.user),
+            userID:                         d.user_id
+        })));
+    }
+
+    /**
+     * Get user counts for a scheduled event and optionally specific exceptions.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for getting the user counts.
+     * @caching This method **may** cache the event user count. The count will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#userCount | GuildScheduledEvent#userCount}
+     */
+    async getScheduledEventUserCounts(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUserCountsOptions): Promise<Types.ScheduledEvents.ScheduledEventUserCounts> {
+        const query = new QueryBuilder();
+        for (const exceptionID of options?.guildScheduledEventExceptionIDs ?? []) {
+            query.append("guild_scheduled_event_exception_ids", exceptionID);
+        }
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventUserCounts>({
+            method: "GET",
+            path:   Routes.GUILD_SCHEDULED_EVENT_USER_COUNTS(guildID, eventID),
+            query
+        }).then(data => {
+            const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+            if (event) {
+                event.userCount = data.guild_scheduled_event_count;
+            }
+            return {
+                guildScheduledEventCount:           data.guild_scheduled_event_count,
+                guildScheduledEventExceptionCounts: data.guild_scheduled_event_exception_counts
+            };
+        });
+    }
+
+    /**
      * Get the users subscribed to a scheduled event.
      * @param guildID The ID of the guild.
      * @param eventID The ID of the scheduled event.
      * @param options The options for getting the users.
-     * @caching This method **does** cache part its result. Members will not be cached if the guild is not cached.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
      * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
      */
     async getScheduledEventUsers(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
@@ -1432,12 +1666,16 @@ export default class Guilds {
         query.setIfPresent("with_member", options?.withMember);
         return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
             method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID)
+            path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID),
+            query
         }).then(data => data.map(d => ({
-            guildScheduledEvent:   guild?.scheduledEvents.get(d.guild_scheduled_event_id),
-            guildScheduledEventID: d.guild_scheduled_event_id,
-            user:                  this._manager.client.users.update(d.user),
-            member:                d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined
+            guildScheduledEvent:            guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEventExceptionID: d.guild_scheduled_event_exception_id,
+            guildScheduledEventID:          d.guild_scheduled_event_id,
+            member:                         d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
+            response:                       d.response,
+            user:                           this._manager.client.users.update(d.user),
+            userID:                         d.user_id
         })));
     }
 
@@ -1830,6 +2068,79 @@ export default class Guilds {
     }
 
     /**
+     * Search messages in a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     * @caching This method **may** cache its result. The messages, channels, and threads will not be cached if the guild is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}
+     */
+    async searchMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(guildID: string, options?: Types.Guilds.SearchMessagesOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MessageSearchResults<T>> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        const append = (name: string, value: string | Array<string> | undefined): void => {
+            if (Array.isArray(value)) {
+                for (const item of value) {
+                    query.append(name, item);
+                }
+            } else if (value !== undefined) {
+                query.append(name, value);
+            }
+        };
+        query.setIfPresent("content", options?.content);
+        query.setIfPresent("offset", options?.offset);
+        query.setIfPresent("min_id", options?.minID);
+        query.setIfPresent("max_id", options?.maxID);
+        query.setIfPresent("pinned", options?.pinned);
+        query.setIfPresent("command_id", options?.commandID);
+        query.setIfPresent("command_name", options?.commandName);
+        query.setIfPresent("include_nsfw", options?.includeNSFW);
+        query.setIfPresent("sort_by", options?.sortBy);
+        query.setIfPresent("sort_order", options?.sortOrder);
+        append("author_id", options?.authorIDs);
+        append("channel_id", options?.channelIDs);
+        append("has", options?.has);
+        append("mentions", options?.mentions);
+        return this._manager.authRequest<Types.Guilds.RawMessageSearchResults | Types.Guilds.MessageSearchNotIndexedResult>({
+            method: "GET",
+            path:   Routes.GUILD_MESSAGES_SEARCH(guildID),
+            query
+        }).then(async data => {
+            if ("retry_after" in data) {
+                if (!retryOnIndexNotAvailable) {
+                    throw new Error(`Message search for guild ${guildID} failed due to the index not being available.`);
+                }
+
+                let retryAfter = data.retry_after;
+                if (retryAfter === 0) {
+                    retryAfter = Math.floor(Math.random() * 30) + 15;
+                }
+                this._manager.client.emit("debug", `Retrying message search for guild ${guildID} in ${retryAfter} seconds...`);
+                await setTimeout(retryAfter * 1000);
+                return this.searchMessages<T>(guildID, options, false);
+            }
+
+            const guild = this._manager.client.guilds.get(guildID);
+            return {
+                analyticsID:              data.analytics_id,
+                channels:                 data.channels?.map(c => guild?.channels.update(c as Types.Channels.RawGuildChannel) ?? Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(c, this._manager.client)),
+                doingDeepHistoricalIndex: data.doing_deep_historical_index,
+                documentsIndexed:         data.documents_indexed,
+                members:                  data.members?.map(m => ({
+                    flags:         m.flags,
+                    id:            m.id,
+                    joinTimestamp: new Date(m.join_timestamp),
+                    member:        m.member && guild?.members.update(m.member, guildID),
+                    userID:        m.user_id
+                })),
+                messages:     data.messages.map(messages => messages.map(message => this._manager.client.util.updateMessage<T>(message))),
+                threads:      data.threads?.map(thread => this._manager.client.util.updateThread(thread)),
+                totalResults: data.total_results
+            };
+        });
+    }
+
+    /**
      * Sync a guild template.
      * @param guildID The ID of the guild.
      * @param code The code of the template to sync.
@@ -1837,7 +2148,7 @@ export default class Guilds {
      */
     async syncTemplate(guildID: string, code: string): Promise<GuildTemplate> {
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
-            method: "POST",
+            method: "PUT",
             path:   Routes.GUILD_TEMPLATE(guildID, code)
         }).then(data => new GuildTemplate(data, this._manager.client));
     }

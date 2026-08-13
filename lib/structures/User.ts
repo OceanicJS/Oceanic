@@ -5,7 +5,7 @@ import type Entitlement from "./Entitlement";
 import type TestEntitlement from "./TestEntitlement";
 import PrimaryGuild from "./PrimaryGuild";
 import type * as Types from "../types/namespaced";
-import { EntitlementOwnerTypes, type ImageFormat } from "../Constants";
+import { EntitlementOwnerTypes, type ImageFormat, type PremiumTypes } from "../Constants";
 import * as Routes from "../util/Routes";
 import type Client from "../Client";
 import { UncachedError } from "../util/Errors";
@@ -29,6 +29,8 @@ export default class User extends Base {
     displayNameStyles: Types.Users.DisplayNameStyles | null;
     /** The user's display name, if set. */
     globalName: string | null;
+    /** The user's Nitro subscription type. A value of {@link Constants~PremiumTypes.NONE | NONE} can also mean the OAuth request did not include the approved `identify.premium` scope. */
+    premiumType?: PremiumTypes;
     /** The primary guild this user is in. */
     primaryGuild: PrimaryGuild | null;
     /** The user's public [flags](https://discord.com/developers/docs/resources/user#user-object-user-flags). */
@@ -97,6 +99,9 @@ export default class User extends Base {
         }
         if (data.primary_guild !== undefined) {
             this.primaryGuild = data.primary_guild ? new PrimaryGuild(data.primary_guild, this.client) : null;
+        }
+        if (data.premium_type !== undefined) {
+            this.premiumType = data.premium_type;
         }
     }
 
@@ -213,6 +218,7 @@ export default class User extends Base {
             collectibles:         this.collectibles,
             discriminator:        this.discriminator,
             globalName:           this.globalName,
+            premiumType:          this.premiumType,
             publicFlags:          this.publicFlags,
             system:               this.system,
             username:             this.username
