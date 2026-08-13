@@ -728,6 +728,17 @@ export default class Guild extends Base {
     }
 
     /**
+     * Create an exception to the recurrence rule for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for creating the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async createScheduledEventException(eventID: string, options: Types.ScheduledEvents.CreateScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        return this.client.rest.guilds.createScheduledEventException(this.id, eventID, options);
+    }
+
+    /**
      * Create a soundboard sound.
      * @param options The options for creating the soundboard sound.
      */
@@ -810,6 +821,18 @@ export default class Guild extends Base {
      */
     async deleteScheduledEvent(eventID: string, reason?: string): Promise<void> {
         return this.client.rest.guilds.deleteScheduledEvent(this.id, eventID, reason);
+    }
+
+    /**
+     * Delete an exception to the recurrence rule for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param reason The reason for deleting the scheduled event exception.
+     * @caching This method **may** remove the result from cache. The result will not be removed if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async deleteScheduledEventException(eventID: string, exceptionID: string, reason?: string): Promise<void> {
+        return this.client.rest.guilds.deleteScheduledEventException(this.id, eventID, exceptionID, reason);
     }
 
     /**
@@ -975,6 +998,18 @@ export default class Guild extends Base {
      */
     async editScheduledEvent(scheduledEventID: string, options: Types.ScheduledEvents.EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         return this.client.rest.guilds.editScheduledEvent(this.id, scheduledEventID, options);
+    }
+
+    /**
+     * Edit an exception to the recurrence rule for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for editing the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async editScheduledEventException(eventID: string, exceptionID: string, options: Types.ScheduledEvents.EditScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        return this.client.rest.guilds.editScheduledEventException(this.id, eventID, exceptionID, options);
     }
 
     /**
@@ -1251,9 +1286,34 @@ export default class Guild extends Base {
     }
 
     /**
+     * Get users subscribed to an exception for a scheduled event.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for getting the users.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
+     * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
+     */
+    async getScheduledEventExceptionUsers(eventID: string, exceptionID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
+        return this.client.rest.guilds.getScheduledEventExceptionUsers(this.id, eventID, exceptionID, options);
+    }
+
+    /**
+     * Get user counts for a scheduled event and optionally specific exceptions.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for getting the user counts.
+     * @caching This method **may** cache the event user count.
+     * @caches {@link GuildScheduledEvent#userCount | GuildScheduledEvent#userCount}
+     */
+    async getScheduledEventUserCounts(eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUserCountsOptions): Promise<Types.ScheduledEvents.ScheduledEventUserCounts> {
+        return this.client.rest.guilds.getScheduledEventUserCounts(this.id, eventID, options);
+    }
+
+    /**
      * Get the users subscribed to a scheduled event.
      * @param eventID The ID of the scheduled event to get the users of.
      * @param options The options for getting the users.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
+     * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
      */
     async getScheduledEventUsers(eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
         return this.client.rest.guilds.getScheduledEventUsers(this.id, eventID, options);

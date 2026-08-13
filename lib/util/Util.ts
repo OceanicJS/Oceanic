@@ -201,6 +201,16 @@ export default class Util {
         return img;
     }
 
+    convertScheduledEventException(raw: Types.ScheduledEvents.RawScheduledEventException): Types.ScheduledEvents.ScheduledEventException {
+        return {
+            eventExceptionID:   raw.event_exception_id,
+            eventID:            raw.event_id,
+            isCanceled:         raw.is_canceled,
+            scheduledEndTime:   raw.scheduled_end_time === null ? null : new Date(raw.scheduled_end_time),
+            scheduledStartTime: raw.scheduled_start_time === null ? null : new Date(raw.scheduled_start_time)
+        } satisfies Types.Shared.KeysExist<Types.ScheduledEvents.ScheduledEventException>;
+    }
+
     convertSound(audio: Buffer | string): string {
         if (Buffer.isBuffer(audio)) {
             const b64 = audio.toString("base64");

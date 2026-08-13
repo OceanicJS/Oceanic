@@ -14,6 +14,7 @@ export interface RawScheduledEvent {
     entity_metadata: ScheduledEventEntityMetadata | null;
     entity_type: GuildScheduledEventEntityTypes;
     guild_id: string;
+    guild_scheduled_event_exceptions?: Array<RawScheduledEventException>;
     id: string;
     image?: string | null;
     name: string;
@@ -26,6 +27,22 @@ export interface RawScheduledEvent {
 
 export interface ScheduledEventEntityMetadata {
     location?: string;
+}
+
+export interface RawScheduledEventException {
+    event_exception_id: string;
+    event_id: string;
+    is_canceled: boolean;
+    scheduled_end_time: string | null;
+    scheduled_start_time: string | null;
+}
+
+export interface ScheduledEventException {
+    eventExceptionID: string;
+    eventID: string;
+    isCanceled: boolean;
+    scheduledEndTime: Date | null;
+    scheduledStartTime: Date | null;
 }
 
 export interface CreateScheduledEventOptions {
@@ -62,6 +79,30 @@ export interface EditScheduledEventOptions extends Omit<Partial<CreateScheduledE
     status?: GuildScheduledEventStatuses;
 }
 
+export interface CreateScheduledEventExceptionOptions {
+    /** Whether the scheduled event will be skipped on this recurrence. */
+    isCanceled?: boolean | null;
+    /** When the scheduled event would have started without the exception. */
+    originalScheduledStartTime: string;
+    /** The reason for creating the scheduled event exception. */
+    reason?: string;
+    /** The scheduled event's modified end time for this recurrence. */
+    scheduledEndTime?: string | null;
+    /** The scheduled event's modified start time for this recurrence. */
+    scheduledStartTime?: string | null;
+}
+
+export interface EditScheduledEventExceptionOptions {
+    /** Whether the scheduled event will be skipped on this recurrence. */
+    isCanceled?: boolean | null;
+    /** The reason for editing the scheduled event exception. */
+    reason?: string;
+    /** The scheduled event's modified end time for this recurrence. */
+    scheduledEndTime?: string | null;
+    /** The scheduled event's modified start time for this recurrence. */
+    scheduledStartTime?: string | null;
+}
+
 export interface GetScheduledEventUsersOptions {
     /** The ID of the entry to get users after. */
     after?: string;
@@ -73,15 +114,36 @@ export interface GetScheduledEventUsersOptions {
     withMember?: boolean;
 }
 
+export interface GetScheduledEventUserCountsOptions {
+    /** The IDs of the exceptions to return counts for. */
+    guildScheduledEventExceptionIDs?: Array<string>;
+}
+
 export interface RawScheduledEventUser {
+    guild_scheduled_event_exception_id?: string;
     guild_scheduled_event_id: string;
     member?: Types.Guilds.RawMember;
+    response: number;
     user: Types.Users.RawUser;
+    user_id: string;
 }
 
 export interface ScheduledEventUser {
     guildScheduledEvent?: GuildScheduledEvent;
+    guildScheduledEventExceptionID?: string;
     guildScheduledEventID: string;
     member?: Member;
+    response: number;
     user: User;
+    userID: string;
+}
+
+export interface RawScheduledEventUserCounts {
+    guild_scheduled_event_count: number;
+    guild_scheduled_event_exception_counts: Record<string, number>;
+}
+
+export interface ScheduledEventUserCounts {
+    guildScheduledEventCount: number;
+    guildScheduledEventExceptionCounts: Record<string, number>;
 }

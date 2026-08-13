@@ -324,6 +324,41 @@ export default class Guilds {
     }
 
     /**
+     * Create an exception to the recurrence rule for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for creating the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async createScheduledEventException(guildID: string, eventID: string, options: Types.ScheduledEvents.CreateScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventException>({
+            method: "POST",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTIONS(guildID, eventID),
+            json:   {
+                is_canceled:                   options.isCanceled,
+                original_scheduled_start_time: options.originalScheduledStartTime,
+                scheduled_end_time:            options.scheduledEndTime,
+                scheduled_start_time:          options.scheduledStartTime
+            },
+            reason: options.reason
+        }).then(data => {
+            const exception = this._manager.client.util.convertScheduledEventException(data);
+            const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+            if (event) {
+                const existing = event.exceptions.findIndex(e => e.eventExceptionID === exception.eventExceptionID);
+                if (existing === -1) {
+                    event.exceptions.push(exception);
+                } else {
+                    event.exceptions[existing] = exception;
+                }
+            }
+            return exception;
+        });
+    }
+
+    /**
      * Create a soundboard sound
      * @param guildID The ID of the guild
      * @param options The options for creating the soundboard sound
@@ -476,6 +511,27 @@ export default class Guilds {
             path:   Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
             reason
         });
+    }
+
+    /**
+     * Delete an exception to the recurrence rule for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param reason The reason for deleting the scheduled event exception.
+     * @caching This method **may** remove the result from cache. The result will not be removed if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async deleteScheduledEventException(guildID: string, eventID: string, exceptionID: string, reason?: string): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "DELETE",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
+            reason
+        });
+        const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+        if (event) {
+            event.exceptions = event.exceptions.filter(exception => exception.eventExceptionID !== exceptionID);
+        }
     }
 
     /**
@@ -888,6 +944,41 @@ export default class Guilds {
             },
             reason: options.reason
         }).then(data => this._manager.client.guilds.get(guildID)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this._manager.client));
+    }
+
+    /**
+     * Edit an exception to the recurrence rule for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for editing the scheduled event exception.
+     * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     */
+    async editScheduledEventException(guildID: string, eventID: string, exceptionID: string, options: Types.ScheduledEvents.EditScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventException>({
+            method: "PATCH",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
+            json:   {
+                is_canceled:          options.isCanceled,
+                scheduled_end_time:   options.scheduledEndTime,
+                scheduled_start_time: options.scheduledStartTime
+            },
+            reason: options.reason
+        }).then(data => {
+            const exception = this._manager.client.util.convertScheduledEventException(data);
+            const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+            if (event) {
+                const existing = event.exceptions.findIndex(e => e.eventExceptionID === exception.eventExceptionID);
+                if (existing === -1) {
+                    event.exceptions.push(exception);
+                } else {
+                    event.exceptions[existing] = exception;
+                }
+            }
+            return exception;
+        });
     }
 
     /**
@@ -1499,11 +1590,71 @@ export default class Guilds {
     }
 
     /**
+     * Get users subscribed to an exception for a scheduled event.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param exceptionID The ID of the scheduled event exception.
+     * @param options The options for getting the users.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
+     * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
+     */
+    async getScheduledEventExceptionUsers(guildID: string, eventID: string, exceptionID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
+        const guild = this._manager.client.guilds.get(guildID);
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options?.after);
+        query.setIfPresent("before", options?.before);
+        query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("with_member", options?.withMember);
+        return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
+            method: "GET",
+            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION_USERS(guildID, eventID, exceptionID),
+            query
+        }).then(data => data.map(d => ({
+            guildScheduledEvent:            guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEventExceptionID: d.guild_scheduled_event_exception_id,
+            guildScheduledEventID:          d.guild_scheduled_event_id,
+            member:                         d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
+            response:                       d.response,
+            user:                           this._manager.client.users.update(d.user),
+            userID:                         d.user_id
+        })));
+    }
+
+    /**
+     * Get user counts for a scheduled event and optionally specific exceptions.
+     * @param guildID The ID of the guild.
+     * @param eventID The ID of the scheduled event.
+     * @param options The options for getting the user counts.
+     * @caching This method **may** cache the event user count. The count will not be cached if the scheduled event is not cached.
+     * @caches {@link GuildScheduledEvent#userCount | GuildScheduledEvent#userCount}
+     */
+    async getScheduledEventUserCounts(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUserCountsOptions): Promise<Types.ScheduledEvents.ScheduledEventUserCounts> {
+        const query = new QueryBuilder();
+        for (const exceptionID of options?.guildScheduledEventExceptionIDs ?? []) {
+            query.append("guild_scheduled_event_exception_ids", exceptionID);
+        }
+        return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventUserCounts>({
+            method: "GET",
+            path:   Routes.GUILD_SCHEDULED_EVENT_USER_COUNTS(guildID, eventID),
+            query
+        }).then(data => {
+            const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
+            if (event) {
+                event.userCount = data.guild_scheduled_event_count;
+            }
+            return {
+                guildScheduledEventCount:           data.guild_scheduled_event_count,
+                guildScheduledEventExceptionCounts: data.guild_scheduled_event_exception_counts
+            };
+        });
+    }
+
+    /**
      * Get the users subscribed to a scheduled event.
      * @param guildID The ID of the guild.
      * @param eventID The ID of the scheduled event.
      * @param options The options for getting the users.
-     * @caching This method **does** cache part its result. Members will not be cached if the guild is not cached.
+     * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
      * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
      */
     async getScheduledEventUsers(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
@@ -1515,12 +1666,16 @@ export default class Guilds {
         query.setIfPresent("with_member", options?.withMember);
         return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
             method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID)
+            path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID),
+            query
         }).then(data => data.map(d => ({
-            guildScheduledEvent:   guild?.scheduledEvents.get(d.guild_scheduled_event_id),
-            guildScheduledEventID: d.guild_scheduled_event_id,
-            user:                  this._manager.client.users.update(d.user),
-            member:                d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined
+            guildScheduledEvent:            guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEventExceptionID: d.guild_scheduled_event_exception_id,
+            guildScheduledEventID:          d.guild_scheduled_event_id,
+            member:                         d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
+            response:                       d.response,
+            user:                           this._manager.client.users.update(d.user),
+            userID:                         d.user_id
         })));
     }
 

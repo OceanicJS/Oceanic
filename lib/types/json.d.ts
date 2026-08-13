@@ -714,6 +714,7 @@ export interface JSONScheduledEvent extends JSONBase {
     entityID: string | null;
     entityMetadata: Types.ScheduledEvents.ScheduledEventEntityMetadata | null;
     entityType: GuildScheduledEventEntityTypes;
+    exceptions: Array<Types.ScheduledEvents.ScheduledEventException>;
     guildID: string;
     image?: string | null;
     name: string;
