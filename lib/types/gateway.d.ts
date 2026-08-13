@@ -367,9 +367,9 @@ export interface RawAutoModerationActionExecution {
     action: Types.AutoModeration.RawAutoModerationAction;
     alert_system_message_id?: string;
     channel_id?: string;
-    content: string;
+    content?: string;
     guild_id: string;
-    matched_content: string;
+    matched_content?: string;
     matched_keyword: string | null;
     message_id?: string;
     rule_id: string;
@@ -380,8 +380,8 @@ export interface RawAutoModerationActionExecution {
 export interface AutoModerationActionExecution {
     action: Types.AutoModeration.AutoModerationAction;
     alertSystemMessageID?: string;
-    content: string;
-    matchedContent: string;
+    content?: string;
+    matchedContent?: string;
     matchedKeyword: string | null;
     messageID?: string;
     rule?: AutoModerationRule;
