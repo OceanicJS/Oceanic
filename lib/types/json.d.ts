@@ -216,6 +216,7 @@ export interface JSONChannel extends JSONBase {
 }
 export interface JSONClientApplication extends JSONBase {
     flags: number;
+    flagsNew: bigint;
 }
 export interface JSONClientUser extends JSONUser {
     email: string | null;

@@ -25,6 +25,7 @@ import type {
     StoreApplicationState
 } from "../Constants";
 import * as Routes from "../util/Routes";
+import { WithRequired } from "../types";
 
 /** Represents an application. */
 export default class Application extends ClientApplication {
@@ -169,7 +170,7 @@ export default class Application extends ClientApplication {
     /** The bot's hex encoded public key. */
     verifyKey: string;
     constructor(data: Types.Applications.RawApplication, client: Client) {
-        super(data, client);
+        super(data as Types.Shared.WithRequired<Types.Applications.RawApplication, "flags" | "flags_new">, client);
         this.description = data.description;
         this.hook = data.hook;
         this.icon = data.icon;

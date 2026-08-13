@@ -71,7 +71,8 @@ export interface RawApplication {
     event_webhooks_url?: string | null;
     executables?: Array<RawApplicationExecutable>;
     explicit_content_filter: ApplicationExplicitContentFilterLevel;
-    flags: number;
+    flags?: number;
+    flags_new?: string;
     guild?: Types.Guilds.RawOAuthGuild;
     guild_id?: string;
     hook: boolean;
@@ -195,9 +196,9 @@ export interface ApplicationCompany {
 }
 
 export interface RawPartialApplication extends Pick<RawApplication, "id" | "name" | "icon" | "description">, Partial<Pick<RawApplication, "bot_public" | "bot_require_code_grant" | "verify_key">> {}
-export interface RESTOAuthApplication extends Types.Shared.WithRequired<RawApplication, "cover_image" | "flags" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
-export interface RESTApplication extends Types.Shared.WithRequired<RawApplication, "flags" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
-export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags">> {}
+export interface RESTOAuthApplication extends Types.Shared.WithRequired<RawApplication, "cover_image" | "flags" | "flags_new" | "owner" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RESTApplication extends Types.Shared.WithRequired<RawApplication, "flags" | "flags_new" | "rpc_origins" | "install_params" | "integration_types" | "integration_types_config"> {}
+export interface RawClientApplication extends Required<Pick<RawApplication, "id" | "flags" | "flags_new">> {}
 
 export interface IntegrationTypesConfig extends Partial<Record<`${ApplicationIntegrationTypes}`, ApplicationIntegrationConfig>> {}
 

@@ -15,8 +15,14 @@ import TypedCollection from "../util/TypedCollection";
 export default class ClientApplication extends Base {
     /** The entitlements for this application. This will almost certainly be empty unless you fetch entitlements, or recieve new/updated entitlements. */
     entitlements: TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
-    /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    /** 
+     * This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags).
+     * 
+     * @deprecated See {@link flagsNew}. This will likely be made a bigint in the future.
+     */
     flags: number;
+    /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
+    flagsNew: bigint;
     constructor(data: Types.Applications.RawClientApplication, client: Client) {
         super(data.id, client);
         this.entitlements = new TypedCollection(BaseEntitlement, client, Infinity, {
@@ -28,7 +34,8 @@ export default class ClientApplication extends Base {
                 return new TestEntitlement(entitlement as Types.Applications.RawTestEntitlement, client);
             }
         }) as TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
-        this.flags = data.flags;
+        this.flags = data.flags ?? 0;
+        this.flagsNew = BigInt(data.flags_new ?? data.flags ?? "0");
         this.update(data);
     }
 
@@ -285,7 +292,8 @@ export default class ClientApplication extends Base {
     override toJSON(): Types.JSON.JSONClientApplication {
         return {
             ...super.toJSON(),
-            flags: this.flags
+            flags: this.flags,
+            flagsNew: this.flagsNew,
         };
     }
 

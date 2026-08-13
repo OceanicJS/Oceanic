@@ -55,7 +55,7 @@ import type CategoryChannel from "../structures/CategoryChannel";
 import type MediaChannel from "../structures/MediaChannel";
 
 export interface RawChannel {
-    application_id?: string;
+    application_id?: string | null;
     app_permissions?: string;
     applied_tags?: Array<string>;
     available_tags?: Array<RawForumTag>;
