@@ -15,23 +15,18 @@ jobs:
         runs-on: ubuntu-latest
         needs: [lint]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
             - uses: pnpm/action-setup@v4
 
             - name: Install Node
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v6
               with:
-                  node-version-file: .node-version
-                  cache: pnpm
+                  node-version: 24
                   registry-url: https://registry.npmjs.org/
-
-            - name: Update NPM # Needed for provenance
-              run: npm i -g npm@"^9.5"
+                  package-manager-cache: false
 
             - name: Install Dependencies
               run: pnpm i --frozen-lockfile --ignore-scripts --force
 
             - name: Publish
-              run: pnpm publish --provenance --no-git-checks --access public
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+              run: npm publish --access public
