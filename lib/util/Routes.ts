@@ -109,6 +109,7 @@ export const OAUTH_INFO                = "/oauth2/@me";
 export const OAUTH_CURRENT_USER        = "/users/@me";
 export const OAUTH_CHANNELS            = "/users/@me/channels";
 export const OAUTH_CONNECTIONS         = "/users/@me/connections";
+export const OAUTH_ENTITLEMENTS        = (applicationID: string) => encode`/users/@me/applications/${applicationID}/entitlements`;
 export const OAUTH_GUILD               = (guildID: string) => encode`/users/@me/guilds/${guildID}`;
 export const OAUTH_GUILD_MEMBER        = (guildID: string) => encode`${OAUTH_GUILD(guildID)}/member`;
 export const OAUTH_GUILDS              = "/users/@me/guilds";
@@ -148,7 +149,7 @@ export const GUILD_APPLICATION_COMMANDS            = (applicationID: string, gui
 export const GUILD_APPLICATION_COMMAND_PERMISSION  = (applicationID: string, guildID: string, commandID: string) => encode`/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions`;
 export const GUILD_APPLICATION_COMMAND_PERMISSIONS = (applicationID: string, guildID: string) => encode`/applications/${applicationID}/guilds/${guildID}/commands/permissions`;
 export const INTERACTION_CALLBACK                  = (interactionID: string, interactionToken: string) => encode`/interactions/${interactionID}/${interactionToken}/callback`;
-export const APPLICATION                           = (applicationID: string) => `/applications/${applicationID}`;
+export const APPLICATION                           = (applicationID: string) => encode`/applications/${applicationID}`;
 export const ENTITLEMENTS                          = (applicationID: string) => encode`/applications/${applicationID}/entitlements`;
 export const ENTITLEMENT                           = (applicationID: string, entitlementID: string) => encode`/applications/${applicationID}/entitlements/${entitlementID}`;
 export const CONSUME_ENTITLEMENT                   = (applicationID: string, entitlementID: string) => encode`/applications/${applicationID}/entitlements/${entitlementID}/consume`;

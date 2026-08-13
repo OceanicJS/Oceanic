@@ -11,6 +11,8 @@ import OAuthHelper from "../rest/OAuthHelper";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
 import QueryBuilder from "../util/QueryBuilder";
+import type Entitlement from "../structures/Entitlement";
+import type TestEntitlement from "../structures/TestEntitlement";
 
 /** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {
@@ -128,14 +130,14 @@ export default class OAuth {
      * Get the guild member information about the currently authenticated user.
      *
      * Note: OAuth only. Requires the `guilds.members.read` scope. Bots cannot use this.
-     * @param guild the ID of the guild
+     * @param guildID the ID of the guild
      * @caching This method **does not** cache its result.
      */
-    async getCurrentGuildMember(guild: string): Promise<Member> {
+    async getCurrentGuildMember(guildID: string): Promise<Member> {
         return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "GET",
-            path:   Routes.OAUTH_GUILD_MEMBER(guild)
-        }).then(data => new Member(data, this._manager.client, guild));
+            path:   Routes.OAUTH_GUILD_MEMBER(guildID)
+        }).then(data => new Member(data, this._manager.client, guildID));
     }
 
     /**
@@ -165,6 +167,18 @@ export default class OAuth {
             method: "GET",
             path:   Routes.OAUTH_CURRENT_USER
         }).then(data => new ExtendedUser(data, this._manager.client));
+    }
+
+    /**
+     * Get the currently authenticated user's entitlements for an application.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlements(applicationID: string): Promise<Array<Entitlement | TestEntitlement>> {
+        return this._manager.authRequest<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
+            method: "GET",
+            path:   Routes.OAUTH_ENTITLEMENTS(applicationID)
+        }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
     /**

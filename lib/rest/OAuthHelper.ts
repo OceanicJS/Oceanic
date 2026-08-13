@@ -9,6 +9,8 @@ import Member from "../structures/Member";
 import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
 import { BASE_URL } from "../Constants";
+import type Entitlement from "../structures/Entitlement";
+import type TestEntitlement from "../structures/TestEntitlement";
 
 /** A helper to make using authenticated oauth requests without needing a new client instance. */
 export default class OAuthHelper {
@@ -144,6 +146,19 @@ export default class OAuthHelper {
             path:   Routes.OAUTH_CURRENT_USER,
             auth:   this._token
         }).then(data => new ExtendedUser(data, this._manager.client));
+    }
+
+    /**
+     * Get the currently authenticated user's entitlements for an application.
+     * @caching This method **does not** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlements(applicationID: string): Promise<Array<Entitlement | TestEntitlement>> {
+        return this._manager.request<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
+            method: "GET",
+            path:   Routes.OAUTH_ENTITLEMENTS(applicationID),
+            auth:   this._token
+        }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
 
