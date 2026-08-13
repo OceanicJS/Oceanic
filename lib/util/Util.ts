@@ -830,17 +830,17 @@ export default class Util {
             description:              option.description,
             descriptionLocalizations: option.description_localizations,
             descriptionLocalized:     option.description_localized,
-            max_length:               option.max_length,
-            max_value:                option.max_value,
-            min_length:               option.min_length,
-            min_value:                option.min_value,
+            maxLength:                option.max_length,
+            maxValue:                 option.max_value,
+            minLength:                option.min_length,
+            minValue:                 option.min_value,
             name:                     option.name,
             nameLocalizations:        option.name_localizations,
             nameLocalized:            option.name_localized,
             options:                  option.options?.map(o => this.optionToParsed(o)),
             required:                 option.required,
             type:                     option.type
-        } as Types.Applications.ApplicationCommandOptions;
+        } satisfies Types.Shared.PartialKeysExist<Types.Applications.ApplicationCommandOptions> as Types.Applications.ApplicationCommandOptions;
     }
 
     optionToRaw(option: Types.Applications.ApplicationCommandOptions): Types.Applications.RawApplicationCommandOption {

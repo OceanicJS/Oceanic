@@ -22,3 +22,12 @@ export type WithRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K
 export type Nullable<T> = {
     [K in keyof T]: T[K] | null;
 };
+export type PartialUndefined<T> = {
+    [P in keyof T]?: T[P] | undefined;
+};
+export type PartialUndefinedNull<T> = {
+    [P in keyof T]?: T[P] | undefined | null;
+};
+export type PartialKeysExist<T> = {
+    [P in keyof T]: any;
+};
