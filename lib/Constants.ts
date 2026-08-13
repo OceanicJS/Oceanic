@@ -1233,6 +1233,7 @@ export enum GatewayOPCodes {
     HELLO                     = 10,
     HEARTBEAT_ACK             = 11,
     REQUEST_SOUNDBOARD_SOUNDS = 31,
+    REQUEST_CHANNEL_INFO      = 43,
 }
 
 export enum GatewayCloseCodes {

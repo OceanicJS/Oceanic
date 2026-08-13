@@ -40,6 +40,8 @@ export interface ClientEvents {
     channelCreate: [channel: Types.Channels.AnyGuildChannelWithoutThreads | GroupChannel];
     /** @event Emitted when channel is deleted. Requires the `GUILDS` intent. */
     channelDelete: [channel: Types.Channels.AnyGuildChannelWithoutThreads | PrivateChannel | Types.Gateway.DeletedPrivateChannel];
+    /** @event Emitted when a shard receives the CHANNEL_INFO packet. */
+    channelInfo: [guildID: string, channels: Array<Types.Gateway.ChannelInfoWithChannel>];
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
     channelPinsUpdate: [channel: Types.Channels.AnyTextableChannel | Types.Shared.Uncached, timestamp: Date | null];
     /** @event Emitted when a channel is updated. Requires the `GUILDS` intent. */
@@ -194,8 +196,10 @@ export interface ClientEvents {
     voiceChannelJoin: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached];
     /** @event Emitted when a user leaves a voice channel. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelLeave: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached | null];
+    /** @event Emitted when a voice channel's start time is updated. Requires the `GUILD_VOICE_STATES` intent. */
+    voiceChannelStartTimeUpdate: [channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, voiceStartTime: number | null];
     /** @event Emitted when a voice channel's status is updated. Requires the `GUILD_VOICE_STATES` intent. */
-    voiceChannelStatusUpdate: [channel: VoiceChannel | Types.Shared.Uncached, status: string | null];
+    voiceChannelStatusUpdate: [channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, status: string | null];
     /** @event Emitted when a user switches voice channels. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelSwitch: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached, oldChannel: VoiceChannel | StageChannel | Types.Shared.Uncached | null];
     /** @event Emitted when a user's voice state is updated. Requires the `GUILD_VOICE_STATES` intent. */

@@ -539,7 +539,7 @@ export interface VoiceChannelEffectSendPacket extends BaseDispatchPacket {
 }
 
 export interface VoiceChannelStatusUpdatePacket extends BaseDispatchPacket {
-    d: { id: string; status: string | null; };
+    d: { guild_id: string; id: string; status: string | null; };
     t: "VOICE_CHANNEL_STATUS_UPDATE";
 }
 
@@ -558,14 +558,27 @@ export interface EntitlementDeletePacket extends BaseDispatchPacket {
     t: "ENTITLEMENT_DELETE";
 }
 
-export interface MessagePollVoteAdd extends BaseDispatchPacket {
+export interface MessagePollVoteAddPacket extends BaseDispatchPacket {
     d: Types.Gateway.RawMessagePollVote;
     t: "MESSAGE_POLL_VOTE_ADD";
 }
 
-export interface MessagePollVoteRemove extends BaseDispatchPacket {
+export interface MessagePollVoteRemovePacket extends BaseDispatchPacket {
     d: Types.Gateway.RawMessagePollVote;
     t: "MESSAGE_POLL_VOTE_REMOVE";
+}
+
+export interface ChannelInfoPacket extends BaseDispatchPacket {
+    d: {
+        channels: Array<Types.Gateway.ChannelInfo>;
+        guild_id: string;
+    };
+    t: "CHANNEL_INFO";
+}
+
+export interface VoiceChannelStartTimeUpdatePacket extends BaseDispatchPacket {
+    d: { guild_id: string; id: string; voice_start_time?: number | null; };
+    t: "VOICE_CHANNEL_START_TIME_UPDATE";
 }
 
 export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
@@ -582,4 +595,4 @@ InviteCreatePacket | InviteDeletePacket |
 MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
 TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
 EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket |
-MessagePollVoteAdd | MessagePollVoteRemove;
+MessagePollVoteAddPacket | MessagePollVoteRemovePacket | ChannelInfoPacket | VoiceChannelStartTimeUpdatePacket;

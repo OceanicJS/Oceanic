@@ -20,6 +20,7 @@ import VoiceState from "../structures/VoiceState";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import type User from "../structures/User";
 import Soundboard from "../structures/Soundboard";
+import type Base from "../structures/Base";
 import { isDeepStrictEqual } from "node:util";
 
 export async function APPLICATION_COMMAND_PERMISSIONS_UPDATE(data: DispatchEventMap["APPLICATION_COMMAND_PERMISSIONS_UPDATE"], shard: Shard): Promise<void> {
@@ -107,6 +108,22 @@ export async function CHANNEL_DELETE(data: DispatchEventMap["CHANNEL_DELETE"], s
     }
     guild?.channels.delete(data.id);
     shard.client.emit("channelDelete", channel);
+}
+
+export async function CHANNEL_INFO(data: DispatchEventMap["CHANNEL_INFO"], shard: Shard): Promise<void> {
+    const guild = shard.client.guilds.get(data.guild_id);
+    const channels = data.channels.map(channelInfo => ({ channel: guild?.channels.update(channelInfo) as Types.Channels.AnyVoiceChannel, info: channelInfo }));
+    for (const nonce in shard["_requestChannelInfoPromise"]) {
+        if (data.guild_id === shard["_requestChannelInfoPromise"][nonce].guildID) {
+            shard["_requestChannelInfoPromise"][nonce].channels.push(...channels);
+            clearTimeout(shard["_requestChannelInfoPromise"][nonce].timeout);
+            shard["_requestChannelInfoPromise"][nonce].resolve(shard["_requestChannelInfoPromise"][nonce].channels);
+            delete shard["_requestChannelInfoPromise"][nonce];
+        }
+    }
+
+    shard.client.emit("channelInfo", data.guild_id, channels);
+    shard.lastHeartbeatAck = true;
 }
 
 export async function CHANNEL_PINS_UPDATE(data: DispatchEventMap["CHANNEL_PINS_UPDATE"], shard: Shard): Promise<void> {
@@ -969,8 +986,16 @@ export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPD
     }
 }
 
+export async function VOICE_CHANNEL_START_TIME_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_START_TIME_UPDATE"], shard: Shard): Promise<void> {
+    const channel = shard.client.getChannel<AnyVoiceChannel>(data.id);
+    if (channel) (channel as Base)["update"]({ voice_start_time: data.voice_start_time });
+    shard.client.emit("voiceChannelStartTimeUpdate", channel ?? { id: data.id }, data.voice_start_time ?? null);
+}
+
 export async function VOICE_CHANNEL_STATUS_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_STATUS_UPDATE"], shard: Shard): Promise<void> {
-    shard.client.emit("voiceChannelStatusUpdate", shard.client.getChannel<VoiceChannel>(data.id) ?? { id: data.id }, data.status);
+    const channel = shard.client.getChannel<AnyVoiceChannel>(data.id);
+    if (channel) (channel as Base)["update"]({ status: data.status });
+    shard.client.emit("voiceChannelStatusUpdate", channel ?? { id: data.id }, data.status);
 }
 
 export async function VOICE_SERVER_UPDATE(data: DispatchEventMap["VOICE_SERVER_UPDATE"], shard: Shard): Promise<void> {

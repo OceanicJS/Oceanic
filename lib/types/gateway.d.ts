@@ -1,5 +1,6 @@
 /** @module Types/Gateway */
 import type * as Types from "./namespaced";
+import { type AnyVoiceChannel } from "./channels";
 import type {
     ActivityTypes,
     AnimationTypes,
@@ -241,6 +242,27 @@ export interface RequestGuildMembersOptions {
 }
 
 export interface RequestSoundboardSoundsOptions {
+    /**
+     * The maximum amount of time in milliseconds to wait.
+     * @defaultValue `client.rest.options.requestTimeout`
+     */
+    timeout?: number;
+}
+
+export type RequestChannelInfoFields = "status" | "voice_start_time";
+export interface ChannelInfo {
+    id: string;
+    status?: string | null;
+    voice_start_time?: number | null;
+}
+export interface ChannelInfoWithChannel<T extends AnyVoiceChannel = AnyVoiceChannel> {
+    channel: T | null;
+    info: ChannelInfo;
+}
+
+
+export interface RequestChannelInfoOptions {
+    fields?: Array<RequestChannelInfoFields>;
     /**
      * The maximum amount of time in milliseconds to wait.
      * @defaultValue `client.rest.options.requestTimeout`
