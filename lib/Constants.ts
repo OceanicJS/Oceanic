@@ -365,6 +365,8 @@ export enum ChannelTypes {
     GUILD_DIRECTORY      = 14,
     GUILD_FORUM          = 15,
     GUILD_MEDIA          = 16,
+    LOBBY                = 17,
+    EPHEMERAL_DM         = 18,
 }
 
 function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: ReadonlyArray<T>, excludeTypes: ReadonlyArray<E>): Array<Exclude<T, E>> {
@@ -372,7 +374,7 @@ function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: Reado
 }
 
 export const AnyChannelTypes = Object.values(ChannelTypes).filter(v => typeof v === "number") as Array<ChannelTypes>;
-export const NotImplementedChannelTypes = [ChannelTypes.GUILD_STORE, ChannelTypes.GUILD_LFG, ChannelTypes.LFG_GROUP_DM, ChannelTypes.THREAD_ALPHA, ChannelTypes.GUILD_DIRECTORY] as const;
+export const NotImplementedChannelTypes = [ChannelTypes.GUILD_STORE, ChannelTypes.GUILD_LFG, ChannelTypes.LFG_GROUP_DM, ChannelTypes.THREAD_ALPHA, ChannelTypes.GUILD_DIRECTORY, ChannelTypes.LOBBY, ChannelTypes.EPHEMERAL_DM] as const;
 export const ImplementedChannelTypes = exclude(AnyChannelTypes, NotImplementedChannelTypes);
 export const GuildChannelTypes = [ChannelTypes.GUILD_TEXT, ChannelTypes.GUILD_VOICE, ChannelTypes.GUILD_CATEGORY, ChannelTypes.GUILD_ANNOUNCEMENT, ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD, ChannelTypes.GUILD_STAGE_VOICE, ChannelTypes.GUILD_DIRECTORY, ChannelTypes.GUILD_FORUM, ChannelTypes.GUILD_MEDIA] as const;
 export const ThreadChannelTypes = [ChannelTypes.ANNOUNCEMENT_THREAD, ChannelTypes.PUBLIC_THREAD, ChannelTypes.PRIVATE_THREAD] as const;
@@ -409,6 +411,8 @@ export interface ChannelTypeMap {
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: ForumChannel;
     [ChannelTypes.GUILD_MEDIA]: MediaChannel;
+    [ChannelTypes.LOBBY]: never;
+    [ChannelTypes.EPHEMERAL_DM]: never;
 }
 export interface RawChannelTypeMap {
     [ChannelTypes.GUILD_TEXT]: Types.Channels.RawTextChannel;
@@ -428,6 +432,8 @@ export interface RawChannelTypeMap {
     [ChannelTypes.GUILD_DIRECTORY]: never;
     [ChannelTypes.GUILD_FORUM]: Types.Channels.RawForumChannel;
     [ChannelTypes.GUILD_MEDIA]: Types.Channels.RawMediaChannel;
+    [ChannelTypes.LOBBY]: never;
+    [ChannelTypes.EPHEMERAL_DM]: never;
 }
 export interface JSONChannelTypeMap {
     [ChannelTypes.GUILD_TEXT]: Types.JSON.JSONTextChannel;
