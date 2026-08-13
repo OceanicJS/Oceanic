@@ -573,6 +573,7 @@ export namespace Permissions {
     export const USE_EXTERNAL_APPS                   = 1125899906842624n; // 1 << 50
     export const PIN_MESSAGES                        = 2251799813685248n; // 1 << 51
     export const BYPASS_SLOWMODE                     = 4503599627370496n; // 1 << 52
+    export const MANAGE_OFFICIAL_MESSAGES            = 9007199254740992n; // 1 << 53
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
@@ -723,6 +724,10 @@ export enum ChannelFlags {
     /** For media channls, hides the embedded media download options. */
     HIDE_MEDIA_DOWNLOAD_OPTIONS                   = 1 << 15,
     IS_JOIN_REQUEST_INTERVIEW_CHANNEL             = 1 << 16,
+    OBFUSCATED                                    = 1 << 17,
+
+    IS_MODERATOR_REPORT_CHANNEL = 1 << 19,
+
 
     IS_SPOILER_CHANNEL = 1 << 21,
 }
@@ -869,11 +874,16 @@ export enum MessageFlags {
     EPHEMERAL                              = 1 << 6,
     LOADING                                = 1 << 7,
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
+    GUILD_FEED_HIDDEN                      = 1 << 9,
     SHOULD_SHOW_LINK_NOT_DISCORD_WARNING   = 1 << 10,
     SUPPRESS_NOTIFICATIONS                 = 1 << 12,
     IS_VOICE_MESSAGE                       = 1 << 13,
     HAS_SNAPSHOT                           = 1 << 14,
     IS_COMPONENTS_V2                       = 1 << 15,
+    SENT_BY_SOCIAL_LAYER_INTEGRATION       = 1 << 16,
+    HIDDEN_SUSPENDED_USER                  = 1 << 17,
+    IS_FIRST_BOOSTER                       = 1 << 18,
+    IS_GUILD_OFFICIAL                      = 1 << 19,
 }
 
 export enum MessageTypes {
@@ -926,6 +936,28 @@ export enum MessageTypes {
     POLL_RESULT                                  = 46,
     CHANGELOG                                    = 47,
     NITRO_NOTIFICATION                           = 48,
+    CHANNEL_LINKED_TO_LOBBY                      = 49,
+    GIFTING_PROMPT                               = 50,
+    IN_GAME_MESSAGE_NUX                          = 51,
+    GUILD_JOIN_REQUEST_ACCEPT_NOTIFICATION       = 52,
+    GUILD_JOIN_REQUEST_REJECT_NOTIFICATION       = 53,
+    GUILD_JOIN_REQUEST_WITHDRAWN_NOTIFICATION    = 54,
+    HD_STREAMING_UPGRADED                        = 55,
+    /** @deprecated No longer used. */
+    CHAT_WALLPAPER_SET                           = 56,
+    /** @deprecated No longer used. */
+    CHAT_WALLPAPER_REMOVE                        = 57,
+    REPORT_TO_MOD_DELETED_MESSAGE                = 58,
+    REPORT_TO_MOD_TIMEOUT_USER                   = 59,
+    REPORT_TO_MOD_KICK_USER                      = 60,
+    REPORT_TO_MOD_BAN_USER                       = 61,
+    REPORT_TO_MOD_CLOSED_REPORT                  = 62,
+    EMOJI_ADDED                                  = 63,
+    PREMIUM_GROUP_INVITE                         = 64,
+    VOICE_SESSION                                = 65,
+    GUILD_BOOST_UPSELL                           = 66,
+    FRIEND_REQUEST_ACCEPTED                      = 67,
+    MEDIA_MENTION_MESSAGE                        = 68,
 }
 
 /** Messages of these types cannot be deleted. */
