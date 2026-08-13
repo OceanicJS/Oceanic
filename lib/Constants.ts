@@ -52,6 +52,7 @@ export enum WebhookTypes {
 }
 
 export enum PremiumTypes {
+    /** No Nitro, or Nitro state unavailable because the OAuth request did not include the approved `identify.premium` scope. */
     NONE          = 0,
     NITRO_CLASSIC = 1,
     NITRO         = 2,
@@ -776,8 +777,12 @@ export enum OAuthScopes {
     GUILDS_MEMBERS_READ = "guilds.members.read",
     /** allows [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user) without `email` */
     IDENTIFY = "identify",
+    /** allows your app to read a user's Nitro subscription type as defined by `premium_type` on the User object - only available to approved partners */
+    IDENTIFY_PREMIUM = "identify.premium",
     /** for local rpc server api access, this allows you to read messages from all client channels (otherwise restricted to channels/guilds your app creates) */
     MESSAGES_READ = "messages.read",
+    /** enables OpenID Connect endpoints and ID token claims */
+    OPENID = "openid",
     /** allows your app to know a user's friends and implicit relationships */
     RELATIONSHIPS_READ = "relationships.read",
     /** allows your app to update a user's connection and metadata for the app */

@@ -20,6 +20,7 @@ import type {
     MessageTypes,
     MFALevels,
     OverwriteTypes,
+    PremiumTypes,
     PremiumTiers,
     RESTMethod,
     GuildScheduledEventEntityTypes,
@@ -846,6 +847,7 @@ export interface JSONUser extends JSONBase {
     collectibles: Types.Users.Collectibles | null;
     discriminator: string;
     globalName: string | null;
+    premiumType?: PremiumTypes;
     publicFlags: number;
     system: boolean;
     username: string;

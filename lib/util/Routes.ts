@@ -90,7 +90,6 @@ export const CHANNEL_MESSAGES                        = (channelID: string) => en
 export const CHANNEL_MESSAGES_CROSSPOST              = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/crosspost`;
 export const CHANNEL_MESSAGE_THREADS                 = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/threads`;
 export const CHANNEL_PERMISSION                      = (channelID: string, overwriteID: string) => encode`/channels/${channelID}/permissions/${overwriteID}`;
-export const CHANNEL_PERMISSIONS                     = (channelID: string) => encode`/channels/${channelID}/permissions`;
 export const CHANNEL_PINNED_MESSAGE                  = (channelID: string, messageID: string) => encode`/channels/${channelID}/pins/${messageID}`;
 export const CHANNEL_PINS                            = (channelID: string) => encode`/channels/${channelID}/pins`;
 export const CHANNEL_PRIVATE_ARCHIVED_THREADS        = (channelID: string) => encode`/channels/${channelID}/threads/archived/private`;
