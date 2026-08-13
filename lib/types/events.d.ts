@@ -234,9 +234,9 @@ export interface ClientEvents {
     /** @event Emitted when a user leaves a voice channel. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelLeave: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached | null];
     /** @event Emitted when a voice channel's start time is updated. Requires the `GUILD_VOICE_STATES` intent. */
-    voiceChannelStartTimeUpdate: [channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, voiceStartTime: number | null];
+    voiceChannelStartTimeUpdate: [guild: Guild | Types.Shared.Uncached, channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, voiceStartTime: number | null];
     /** @event Emitted when a voice channel's status is updated. Requires the `GUILD_VOICE_STATES` intent. */
-    voiceChannelStatusUpdate: [channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, status: string | null];
+    voiceChannelStatusUpdate: [guild: Guild | Types.Shared.Uncached, channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, status: string | null];
     /** @event Emitted when a user switches voice channels. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelSwitch: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached, oldChannel: VoiceChannel | StageChannel | Types.Shared.Uncached | null];
     /** @event Emitted when a VOICE_SERVER_UPDATE packet is received. */

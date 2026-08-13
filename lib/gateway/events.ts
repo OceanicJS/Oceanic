@@ -1013,15 +1013,17 @@ export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPD
 }
 
 export async function VOICE_CHANNEL_START_TIME_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_START_TIME_UPDATE"], shard: Shard): Promise<void> {
+    const guild = shard.client.guilds.get(data.guild_id);
     const channel = shard.client.getChannel<Types.Channels.AnyVoiceChannel>(data.id);
     if (channel) (channel as Base)["update"]({ voice_start_time: data.voice_start_time });
-    shard.client.emit("voiceChannelStartTimeUpdate", channel ?? { id: data.id }, data.voice_start_time ?? null);
+    shard.client.emit("voiceChannelStartTimeUpdate", guild ?? { id: data.guild_id }, channel ?? { id: data.id }, data.voice_start_time ?? null);
 }
 
 export async function VOICE_CHANNEL_STATUS_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_STATUS_UPDATE"], shard: Shard): Promise<void> {
+    const guild = shard.client.guilds.get(data.guild_id);
     const channel = shard.client.getChannel<Types.Channels.AnyVoiceChannel>(data.id);
     if (channel) (channel as Base)["update"]({ status: data.status });
-    shard.client.emit("voiceChannelStatusUpdate", channel ?? { id: data.id }, data.status);
+    shard.client.emit("voiceChannelStatusUpdate", guild ?? { id: data.guild_id }, channel ?? { id: data.id }, data.status);
 }
 
 export async function VOICE_SERVER_UPDATE(data: DispatchEventMap["VOICE_SERVER_UPDATE"], shard: Shard): Promise<void> {
