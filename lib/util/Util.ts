@@ -378,7 +378,7 @@ export default class Util {
 
     /** @internal */
     updateEntitlement<T extends Entitlement | TestEntitlement = Entitlement | TestEntitlement>(data: Types.Applications.RawBaseEntitlement): T {
-        if (this._client["_application"] === undefined) {
+        if (this._client["_application"] === undefined || data.application_id !== this._client["_application"]!.id) {
             return "subscription_id" in data && data.subscription_id ?
                 new Entitlement(data as Types.Applications.RawEntitlement, this._client) as T :
                 new TestEntitlement(data as Types.Applications.RawTestEntitlement, this._client) as T;

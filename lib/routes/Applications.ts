@@ -4,7 +4,7 @@ import type * as Types from "../types/namespaced";
 import ApplicationCommand from "../structures/ApplicationCommand";
 import type RESTManager from "../rest/RESTManager";
 import SKU from "../structures/SKU";
-import Entitlement from "../structures/Entitlement";
+import type Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 import ClientApplication from "../structures/ClientApplication";
 import Application from "../structures/Application";
@@ -251,7 +251,7 @@ export default class Applications {
 
         return this._manager.authRequest<Types.Applications.RESTApplication>({
             method: "PATCH",
-            path:   Routes.APPLICATION,
+            path:   Routes.APPLICATION("@me"),
             json:   {
                 cover_image:                       coverImage,
                 custom_install_url:                options.customInstallURL,
@@ -366,6 +366,19 @@ export default class Applications {
     }
 
     /**
+     * Get an application's info.
+     * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
+     * @note This generally cannot be used on any application except the authenticated bot.
+     */
+    async get(applicationID: string): Promise<Application> {
+        return this._manager.authRequest<Types.Applications.RESTApplication>({
+            method: "GET",
+            path:   Routes.APPLICATION(applicationID)
+        }).then(data => new Application(data, this._manager.client));
+    }
+
+    /**
      * Get an activity instance.
      * @param applicationID The ID of the application.
      * @param instanceID The ID of the instance.
@@ -395,7 +408,7 @@ export default class Applications {
     async getClient(): Promise<ClientApplication> {
         return this._manager.authRequest<Types.Applications.RawClientApplication>({
             method: "GET",
-            path:   Routes.APPLICATION
+            path:   Routes.APPLICATION("@me")
         }).then(data => new ClientApplication(data, this._manager.client));
     }
 
@@ -404,10 +417,7 @@ export default class Applications {
      * @caching This method **does not** cache its result.
      */
     async getCurrent(): Promise<Application> {
-        return this._manager.authRequest<Types.Applications.RESTApplication>({
-            method: "GET",
-            path:   Routes.APPLICATION
-        }).then(data => new Application(data, this._manager.client));
+        return this.get("@me");
     }
 
     /**
@@ -438,9 +448,25 @@ export default class Applications {
     }
 
     /**
+     * Get an entitlement for an application.
+     * @param applicationID The ID of the application that the entitlement is for.
+     * @param entitlementID The ID of the entitlement.
+     * @caching This method **may** cache its result. If the entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlement(applicationID: string, entitlementID: string): Promise<Entitlement | TestEntitlement> {
+        return this._manager.authRequest<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>({
+            method: "GET",
+            path:   Routes.ENTITLEMENT(applicationID, entitlementID)
+        }).then(data => this._manager.client.util.updateEntitlement(data));
+    }
+
+    /**
      * Get the entitlements for an application.
      * @param applicationID The ID of the application to get the entitlements of.
      * @param options The options for getting the entitlements.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
      */
     async getEntitlements(applicationID: string, options: Types.Applications.SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         options = this._manager.client.util._freeze(options);
@@ -457,7 +483,7 @@ export default class Applications {
             method: "GET",
             path:   Routes.ENTITLEMENTS(applicationID),
             query
-        }).then(data => data.map(d => "subscription_id" in d && d.subscription_id ? new Entitlement(d, this._manager.client) : new TestEntitlement(d, this._manager.client)));
+        }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
     /**

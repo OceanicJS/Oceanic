@@ -212,8 +212,20 @@ export default class ClientApplication extends Base {
     }
 
     /**
+     * Get an entitlement for this application.
+     * @param entitlementID The ID of the entitlement.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     */
+    async getEntitlement(entitlementID: string): Promise<Entitlement | TestEntitlement> {
+        return this.client.rest.applications.getEntitlement(this.id, entitlementID);
+    }
+
+    /**
      * Get the entitlements for this application.
      * @param options The options for getting the entitlements.
+     * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
+     * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
      */
     async getEntitlements(options: Types.Applications.SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         return this.client.rest.applications.getEntitlements(this.id, options);
