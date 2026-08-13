@@ -180,6 +180,7 @@ export const GATEWAY_BOT                    = "/gateway/bot";
 export const USER                           = (userID: string) => encode`/users/${userID}`;
 export const MESSAGE_LINK                   = (guildID: string, channelID: string, messageID: string) => encode`/channels/${guildID}/${channelID}/${messageID}`;
 export const STICKER_PACKS                  = "/sticker-packs";
+export const STICKER_PACK                   = (stickerPackID: string) => `/sticker-packs/${stickerPackID}`;
 export const INVITE                         = (code: string) => encode`/invites/${code}`;
 export const INVITE_TARGET_USERS            = (code: string) => encode`/invites/${code}/target-users`;
 export const INVITE_TARGET_USERS_JOB_STATUS = (code: string) => encode`/invites/${code}/target-users/job-status`;

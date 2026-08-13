@@ -36,6 +36,25 @@ export default class Miscellaneous {
     }
 
     /**
+     * Get a default sticker pack.
+     * @caching This method **does not** cache its result.
+     */
+    async getStickerPack(stickerPackID: string): Promise<Types.Guilds.StickerPack> {
+        return this._manager.authRequest<Types.Guilds.RawStickerPack>({
+            method: "GET",
+            path:   Routes.STICKER_PACK(stickerPackID)
+        }).then(data => ({
+            bannerAssetID:  data.banner_asset_id,
+            coverStickerID: data.cover_sticker_id,
+            description:    data.description,
+            id:             data.id,
+            name:           data.name,
+            skuID:          data.sku_id,
+            stickers:       data.stickers.map(sticker => this._manager.client.util.convertSticker(sticker))
+        }));
+    }
+
+    /**
      * Get the default sticker packs.
      * @caching This method **does not** cache its result.
      */
