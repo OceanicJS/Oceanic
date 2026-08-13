@@ -175,7 +175,10 @@ export const APPLICATION_ACTIVITY_INSTANCE         = (applicationID: string, ins
 export const LOBBIES                           = "/lobbies";
 export const LOBBY                             = (lobbyID: string) => encode`/lobbies/${lobbyID}`;
 export const LOBBY_MEMBER                      = (lobbyID: string, userID: string) => encode`/lobbies/${lobbyID}/members/${userID}`;
+export const LOBBY_MEMBER_INVITES              = (lobbyID: string, userID: string) => encode`/lobbies/${lobbyID}/members/${userID}/invites`;
+export const LOBBY_MEMBERS_BULK                = (lobbyID: string) => encode`/lobbies/${lobbyID}/members/bulk`;
 export const LOBBY_CHANNEL_LINKING             = (lobbyID: string) => encode`/lobbies/${lobbyID}/channel-linking`;
+export const LOBBY_MESSAGES                    = (lobbyID: string) => encode`/lobbies/${lobbyID}/messages`;
 export const LOBBY_MESSAGE_MODERATION_METADATA = (lobbyID: string, messageID: string) => encode`/lobbies/${lobbyID}/messages/${messageID}/moderation-metadata`;
 
 // Misc

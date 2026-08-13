@@ -420,6 +420,7 @@ export interface JSONIntegration extends JSONBase {
 }
 export interface JSONLobby extends JSONBase {
     applicationID: string;
+    flags?: number;
     linkedChannel?: JSONGuildChannel | Uncached;
     members: Array<JSONLobbyMember>;
     metadata?: Record<string, string> | null;
