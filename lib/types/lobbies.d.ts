@@ -1,6 +1,7 @@
 import type { RawGuildChannel } from "./channels";
 import type * as Types from "./namespaced";
-import type Message from "../structures/Message";
+import type LobbyMessageStructure from "../structures/LobbyMessage";
+import type { MessageTypes } from "../Constants";
 
 export interface RawLobby {
     application_id: string;
@@ -12,6 +13,7 @@ export interface RawLobby {
 }
 
 export interface RawLobbyMember {
+    additional_name?: string | null;
     flags?: number;
     id: string;
     metadata?: Record<string, string> | null;
@@ -25,6 +27,7 @@ export interface CreateLobbyOptions {
 }
 
 export interface LobbyMemberOptions {
+    additionalName?: string | null;
     flags?: number | null;
     id: string;
     metadata?: Record<string, string> | null;
@@ -67,9 +70,31 @@ export interface GetLobbyMessagesOptions {
     limit?: number;
 }
 
-export interface CreateLobbyMessageOptions extends Types.Channels.CreateMessageOptions {
-    /** Custom metadata for the message. */
-    metadata?: Record<string, string>;
+export interface RawLobbyMessage {
+    application_id: string;
+    author: Types.Users.RawUser;
+    channel_id: string;
+    content: string;
+    flags: number;
+    id: string;
+    lobby_id: string;
+    lobby_member?: Pick<RawLobbyMember, "additional_name">;
+    metadata?: Record<string, string> | null;
+    moderation_metadata?: Record<string, string> | null;
+    type: MessageTypes;
 }
 
-export type LobbyMessage = Message<Types.Shared.Uncached>;
+export interface LobbyMessageMember {
+    additionalName?: string | null;
+}
+
+export interface CreateLobbyMessageOptions {
+    /** The message content. Must be non-empty. */
+    content: string;
+    /** The message flags. Only flags creatable by the Social SDK are accepted. */
+    flags?: number;
+    /** Custom metadata for the message. */
+    metadata?: Record<string, string> | null;
+}
+
+export type LobbyMessage = LobbyMessageStructure;

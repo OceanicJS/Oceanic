@@ -427,9 +427,22 @@ export interface JSONLobby extends JSONBase {
     metadata?: Record<string, string> | null;
 }
 export interface JSONLobbyMember extends JSONBase {
+    additionalName?: string | null;
     flags?: number;
     lobbyID: string;
     metadata?: Record<string, string> | null;
+}
+export interface JSONLobbyMessage extends JSONBase {
+    applicationID: string;
+    author: JSONUser;
+    channelID: string;
+    content: string;
+    flags: number;
+    lobbyID: string;
+    lobbyMember?: Types.Lobbies.LobbyMessageMember;
+    metadata?: Record<string, string> | null;
+    moderationMetadata?: Record<string, string> | null;
+    type: MessageTypes;
 }
 export interface JSONInteraction extends JSONBase {
     applicationID: string;

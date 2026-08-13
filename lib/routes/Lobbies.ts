@@ -6,7 +6,16 @@ import type * as Types from "../types/namespaced";
 import type { RawLobby, CreateLobbyOptions, AddLobbyMemberOptions, EditLobbyOptions } from "../types/lobbies";
 import Lobby from "../structures/Lobby";
 import LobbyMember from "../structures/LobbyMember";
-import Message from "../structures/Message";
+import LobbyMessage from "../structures/LobbyMessage";
+
+function formatLobbyMember(member: Types.Lobbies.LobbyMemberOptions): Types.Shared.KeysExist<Types.Lobbies.RawLobbyMember> {
+    return {
+        additional_name: member.additionalName,
+        flags:           member.flags,
+        id:              member.id,
+        metadata:        member.metadata
+    };
+}
 
 /** Various methods for interacting with lobbies. Located at {@link Client#rest | Client#rest}{@link RESTManager#lobbies | .lobbies}. */
 export default class Lobbies {
@@ -33,7 +42,11 @@ export default class Lobbies {
         return this._manager.authRequest<Types.Lobbies.RawLobbyMember>({
             method: "PUT",
             path:   Routes.LOBBY_MEMBER(lobbyID, userID),
-            json:   options
+            json:   options ? {
+                additional_name: options.additionalName,
+                flags:           options.flags,
+                metadata:        options.metadata
+            } : undefined
         }).then(data => new LobbyMember(data, this._manager.client, lobbyID));
     }
 
@@ -48,9 +61,7 @@ export default class Lobbies {
             method: "POST",
             path:   Routes.LOBBY_MEMBERS_BULK(lobbyID),
             json:   members.map(member => ({
-                flags:         member.flags,
-                id:            member.id,
-                metadata:      member.metadata,
+                ...formatLobbyMember(member),
                 remove_member: member.removeMember
             }))
         }).then(data => data.map(member => new LobbyMember(member, this._manager.client, lobbyID)));
@@ -69,7 +80,7 @@ export default class Lobbies {
             json:   {
                 flags:                options?.flags,
                 metadata:             options?.metadata,
-                members:              options?.members,
+                members:              options?.members?.map(formatLobbyMember),
                 idle_timeout_seconds: options?.idleTimeoutSeconds
             }
         }).then(data => new Lobby(data, this._manager.client));
@@ -110,46 +121,16 @@ export default class Lobbies {
      */
     async createMessage(lobbyID: string, options: Types.Lobbies.CreateLobbyMessageOptions, accessToken?: string): Promise<Types.Lobbies.LobbyMessage> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.request<Types.Channels.RawMessage>({
+        return this._manager.request<Types.Lobbies.RawLobbyMessage>({
             method: "POST",
             path:   Routes.LOBBY_MESSAGES(lobbyID),
             auth:   this._getBearerAuth(accessToken),
             json:   {
-                allowed_mentions: this._manager.client.util.formatAllowedMentions(options.allowedMentions),
-                attachments:      options.attachments?.map(attachment => ({
-                    description: attachment.description,
-                    filename:    attachment.filename,
-                    id:          attachment.id,
-                    is_spoiler:  attachment.isSpoiler
-                })),
-                components:        options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
-                content:           options.content,
-                embeds:            options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
-                enforce_nonce:     options.enforceNonce,
-                flags:             options.flags,
-                message_reference: options.messageReference ? {
-                    channel_id:         options.messageReference.channelID,
-                    fail_if_not_exists: options.messageReference.failIfNotExists,
-                    guild_id:           options.messageReference.guildID,
-                    message_id:         options.messageReference.messageID,
-                    type:               options.messageReference.type
-                } : undefined,
-                metadata: options.metadata,
-                nonce:    options.nonce,
-                poll:     options.poll ? {
-                    allow_multiselect: options.poll.allowMultiselect,
-                    answers:           options.poll.answers.map(a => ({
-                        poll_media: a.pollMedia
-                    })),
-                    duration:    options.poll.duration,
-                    layout_type: options.poll.layoutType,
-                    question:    options.poll.question
-                } : undefined,
-                sticker_ids: options.stickerIDs,
-                tts:         options.tts
-            },
-            files: options.files
-        }).then(data => new Message<Types.Shared.Uncached>(data, this._manager.client));
+                content:  options.content,
+                flags:    options.flags,
+                metadata: options.metadata
+            }
+        }).then(data => new LobbyMessage(data, this._manager.client));
     }
 
     /**
@@ -176,7 +157,7 @@ export default class Lobbies {
             json:   {
                 flags:                options?.flags,
                 metadata:             options?.metadata,
-                members:              options?.members,
+                members:              options?.members?.map(formatLobbyMember),
                 idle_timeout_seconds: options?.idleTimeoutSeconds
             }
         }).then(data => new Lobby(data, this._manager.client));
@@ -203,12 +184,12 @@ export default class Lobbies {
         options = this._manager.client.util._freeze(options);
         const query = new QueryBuilder();
         query.setIfPresent("limit", options?.limit);
-        return this._manager.request<Array<Types.Channels.RawMessage>>({
+        return this._manager.request<Array<Types.Lobbies.RawLobbyMessage>>({
             method: "GET",
             path:   Routes.LOBBY_MESSAGES(lobbyID),
             auth:   this._getBearerAuth(accessToken),
             query
-        }).then(data => data.map(message => new Message<Types.Shared.Uncached>(message, this._manager.client)));
+        }).then(data => data.map(message => new LobbyMessage(message, this._manager.client)));
     }
 
     /**

@@ -44,6 +44,7 @@ const InviteGuild = (await import("./dist/lib/structures/InviteGuild.js")).defau
 const InviteRole = (await import("./dist/lib/structures/InviteRole.js")).default.default;
 const Lobby = (await import("./dist/lib/structures/Lobby.js")).default.default;
 const LobbyMember = (await import("./dist/lib/structures/LobbyMember.js")).default.default;
+const LobbyMessage = (await import("./dist/lib/structures/LobbyMessage.js")).default.default;
 const MediaChannel = (await import("./dist/lib/structures/MediaChannel.js")).default.default;
 const Member = (await import("./dist/lib/structures/Member.js")).default.default;
 const Message = (await import("./dist/lib/structures/Message.js")).default.default;
@@ -141,6 +142,7 @@ export {
     InviteRole,
     Lobby,
     LobbyMember,
+    LobbyMessage,
     MediaChannel,
     Member,
     Message,
