@@ -189,6 +189,34 @@ export default class OAuth {
         return new OAuthHelper(this._manager, accessToken);
     }
 
+    /** Get the OIDC JWKS keys */
+    async getOIDCKeys(): Promise<Array<Types.OAuth.OIDCKey>> {
+        return this._manager.request<{ keys: Array<Types.OAuth.OIDCKey>; }>({
+            method: "GET",
+            path:   Routes.OAUTH_OIDC_KEYS
+        }).then(data => data.keys);
+    }
+
+    /**
+     * Get the OIDC userinfo.
+     *
+     * Note: requires the `openid` scope.
+     */
+    async getOIDCUserInfo(): Promise<Types.OAuth.OIDCUserInfo> {
+        return this._manager.authRequest<Types.OAuth.RawOIDCUserInfo>({
+            method: "GET",
+            path:   Routes.OAUTH_OIDC_USERINFO
+        }).then(data => ({
+            email:             data.email,
+            emailVerified:     data.email_verified,
+            locale:            data.locale,
+            nickname:          data.nickname,
+            picture:           data.picture,
+            preferredUsername: data.preferred_username,
+            sub:               data.sub
+        }));
+    }
+
     /**
      * Get an application's role connection metadata records.
      * @param applicationID The ID of the application.

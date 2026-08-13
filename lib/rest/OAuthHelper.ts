@@ -161,6 +161,27 @@ export default class OAuthHelper {
         }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
+    /**
+     * Get the OIDC userinfo.
+     *
+     * Note: requires the `openid` scope.
+     */
+    async getOIDCUserInfo(): Promise<Types.OAuth.OIDCUserInfo> {
+        return this._manager.request<Types.OAuth.RawOIDCUserInfo>({
+            method: "GET",
+            path:   Routes.OAUTH_OIDC_USERINFO,
+            auth:   this._token
+        }).then(data => ({
+            email:             data.email,
+            emailVerified:     data.email_verified,
+            locale:            data.locale,
+            nickname:          data.nickname,
+            picture:           data.picture,
+            preferredUsername: data.preferred_username,
+            sub:               data.sub
+        }));
+    }
+
 
     /**
      * Revoke the used access token.
