@@ -762,12 +762,124 @@ export default class Channels {
      * @param channelID The ID of the channel to get the pinned messages from.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @deprecated Use {@link Channels#getPins | getPins} instead.
      */
     async getPinnedMessages<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string): Promise<Array<Message<T>>> {
         return this._manager.authRequest<Array<Types.Channels.RawMessage>>({
             method: "GET",
             path:   Routes.CHANNEL_PINS(channelID)
         }).then(data => data.map(d => this._manager.client.util.updateMessage<T>(d)));
+    }
+
+    /**
+     * Get the pins in a channel.
+     * @param channelID The ID of the channel to get the pins from.
+     * @param options The options for getting pins.
+     * @caching This method **may** cache its result. The messages will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     */
+    async getPins<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelPinsOptions<T>): Promise<Array<Types.Channels.MessagePin<T>>> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        query.setIfPresent("before", options?.before);
+        if (options?.limit === undefined || options.limit <= 50) {
+            const filter = options?.filter?.bind(this) ?? ((): true => true);
+            query.setIfPresent("limit", options?.limit);
+            const pins = await this._manager.authRequest<Types.Channels.RawMessagePinsResponse>({
+                method: "GET",
+                path:   Routes.CHANNEL_MESSAGE_PINS(channelID),
+                query
+            }).then(data => data.items.map(pin => ({
+                message:         this._manager.client.util.updateMessage<T>(pin.message),
+                pinnedTimestamp: new Date(pin.pinned_at)
+            })));
+
+            for (const pin of Array.from(pins)) {
+                const f = await filter(pin);
+
+                if (f === false) {
+                    pins.splice(pins.indexOf(pin), 1);
+                }
+
+                if (f === "break") {
+                    pins.splice(pins.indexOf(pin));
+                    break;
+                }
+            }
+
+            return pins;
+        }
+
+        const results: Array<Types.Channels.MessagePin<T>> = [];
+        const it = this.getPinsIterator<T>(channelID, options);
+
+        for await (const pins of it) {
+            const limit = pins.length < 50 ? pins.length : it.limit + 50;
+            this._manager.client.emit("debug", `Getting ${limit} more pin${limit === 1 ? "" : "s"} for ${channelID}: ${it.lastPinTimestamp ?? ""}`);
+            results.push(...pins);
+        }
+
+        return results;
+    }
+
+    /**
+     * Get an async iterator for getting pins in a channel.
+     * @param channelID The ID of the channel to get pins from.
+     * @param options The options for getting pins.
+     * @caching This method **may** cache its result. The messages will not be cached if the channel is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     */
+    getPinsIterator<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelPinsIteratorOptions<T>): Types.Channels.MessagePinsIterator<T> {
+        options = this._manager.client.util._freeze(options);
+        const filter = options?.filter?.bind(this) ?? ((): true => true);
+
+        // arrow functions cannot be generator functions
+        // eslint-disable-next-line unicorn/no-this-assignment
+        const self = this;
+        const it = {
+            lastPinTimestamp: options?.before,
+            limit:            options?.limit ?? 50,
+            async *[Symbol.asyncIterator](): AsyncGenerator<Array<Types.Channels.MessagePin<T>>> {
+                loop: while (it.limit > 0) {
+                    const query = new QueryBuilder();
+                    query.setIfPresent("before", it.lastPinTimestamp);
+                    query.set("limit", Math.min(it.limit, 50));
+                    const data = await self._manager.authRequest<Types.Channels.RawMessagePinsResponse>({
+                        method: "GET",
+                        path:   Routes.CHANNEL_MESSAGE_PINS(channelID),
+                        query
+                    });
+                    const pins = data.items.map(pin => ({
+                        message:         self._manager.client.util.updateMessage<T>(pin.message),
+                        pinnedTimestamp: new Date(pin.pinned_at)
+                    }));
+
+                    it.limit -= pins.length;
+
+                    for (const pin of Array.from(pins)) {
+                        const f = await filter(pin);
+                        if (f === false) {
+                            pins.splice(pins.indexOf(pin), 1);
+                        }
+
+                        if (f === "break") {
+                            pins.splice(pins.indexOf(pin));
+                            yield pins;
+                            break loop;
+                        }
+                    }
+
+                    it.lastPinTimestamp = data.items.at(-1)?.pinned_at;
+                    yield pins;
+
+                    if (!data.has_more || it.limit <= 0) {
+                        break loop;
+                    }
+                }
+            }
+        };
+
+        return it;
     }
 
     /**
@@ -1034,7 +1146,7 @@ export default class Channels {
     async pinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.CHANNEL_PINNED_MESSAGE(channelID, messageID),
+            path:   Routes.CHANNEL_MESSAGE_PIN(channelID, messageID),
             reason
         });
     }
@@ -1253,7 +1365,7 @@ export default class Channels {
     async unpinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.CHANNEL_PINNED_MESSAGE(channelID, messageID),
+            path:   Routes.CHANNEL_MESSAGE_PIN(channelID, messageID),
             reason
         });
     }

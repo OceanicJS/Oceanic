@@ -802,6 +802,54 @@ export interface GetChannelMessagesIteratorOptions<T extends AnyTextableChannel 
     filter?(message: Message<T>): boolean | "break" | PromiseLike<boolean | "break">;
 }
 
+export interface GetChannelPinsOptions<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
+    /** Get messages pinned before this ISO8601 timestamp. */
+    before?: string;
+    /** The maximum amount of pins to get. Defaults to 50. Use Infinity if you wish to get as many pins as possible. */
+    limit?: number;
+    /**
+     * A function used to reject certain pins. If `"break"` is returned, further iteration of pins will stop and the previously allowed pins will be returned.
+     * @param pin The pin to filter.
+     */
+    filter?(pin: MessagePin<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface GetChannelPinsIteratorOptions<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
+    /** Get messages pinned before this ISO8601 timestamp. */
+    before?: string;
+    /** The maximum amount of pins to get. Defaults to 50. Use Infinity if you wish to get as many pins as possible. */
+    limit?: number;
+    /**
+     * A function used to reject certain pins. If `"break"` is returned, the iterator will immediately exit and yield the previously allowed pins.
+     * @param pin The pin to filter.
+     */
+    filter?(pin: MessagePin<T>): boolean | "break" | PromiseLike<boolean | "break">;
+}
+
+export interface RawMessagePin {
+    message: RawMessage;
+    pinned_at: string;
+}
+
+export interface RawMessagePinsResponse {
+    has_more: boolean;
+    items: Array<RawMessagePin>;
+}
+
+export interface MessagePin<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> {
+    /** The pinned message. */
+    message: Message<T>;
+    /** The timestamp this message was pinned at. */
+    pinnedTimestamp: Date;
+}
+
+export interface MessagePinsIterator<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> extends AsyncIterable<Array<MessagePin<T>>> {
+    /** The most recent "last" pin timestamp seen by the iterator, used for future requests. */
+    lastPinTimestamp?: string;
+    /** The current limit of remaining pins to get. */
+    limit: number;
+}
+
 export interface MessagesIterator<T extends AnyTextableChannel | Types.Shared.Uncached = AnyTextableChannel | Types.Shared.Uncached> extends AsyncIterable<Array<Message<T>>> {
     /** The most recent "last" message seen by the iterator, used for future requests. */
     lastMessage?: string;

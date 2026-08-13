@@ -76,6 +76,8 @@ export const CHANNEL_FOLLOWERS                       = (channelID: string) => en
 export const CHANNEL_INVITES                         = (channelID: string) => encode`/channels/${channelID}/invites`;
 export const CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS = (channelID: string) => encode`/channels/${channelID}/users/@me/threads/archived/private`;
 export const CHANNEL_MESSAGE                         = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}`;
+export const CHANNEL_MESSAGE_PIN                     = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/pins/${messageID}`;
+export const CHANNEL_MESSAGE_PINS                    = (channelID: string) => encode`/channels/${channelID}/messages/pins`;
 export const CHANNEL_MESSAGES                        = (channelID: string) => encode`/channels/${channelID}/messages`;
 export const CHANNEL_MESSAGES_CROSSPOST              = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/crosspost`;
 export const CHANNEL_MESSAGE_THREADS                 = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/threads`;

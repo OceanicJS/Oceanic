@@ -127,9 +127,26 @@ export default class PrivateChannel extends Channel {
 
     /**
      * Get the pinned messages in this channel.
+     * @deprecated Use {@link PrivateChannel#getPins | getPins} instead.
      */
     async getPinnedMessages(): Promise<Array<Message<this>>> {
         return this.client.rest.channels.getPinnedMessages<this>(this.id);
+    }
+
+    /**
+     * Get the pins in this channel.
+     * @param options The options for getting pins.
+     */
+    async getPins(options?: Types.Channels.GetChannelPinsOptions<this>): Promise<Array<Types.Channels.MessagePin<this>>> {
+        return this.client.rest.channels.getPins<this>(this.id, options);
+    }
+
+    /**
+     * Get an async iterator for getting pins in this channel.
+     * @param options The options for getting pins.
+     */
+    getPinsIterator(options?: Types.Channels.GetChannelPinsIteratorOptions<this>): Types.Channels.MessagePinsIterator<this> {
+        return this.client.rest.channels.getPinsIterator<this>(this.id, options);
     }
 
     /**

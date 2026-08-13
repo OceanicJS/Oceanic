@@ -228,9 +228,26 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
 
     /**
      * Get the pinned messages in this channel.
+     * @deprecated Use {@link TextableChannel#getPins | getPins} instead.
      */
     async getPinnedMessages(): Promise<Array<Message<CH>>> {
         return this.client.rest.channels.getPinnedMessages<CH>(this.id);
+    }
+
+    /**
+     * Get the pins in this channel.
+     * @param options The options for getting pins.
+     */
+    async getPins(options?: Types.Channels.GetChannelPinsOptions<CH>): Promise<Array<Types.Channels.MessagePin<CH>>> {
+        return this.client.rest.channels.getPins<CH>(this.id, options);
+    }
+
+    /**
+     * Get an async iterator for getting pins in this channel.
+     * @param options The options for getting pins.
+     */
+    getPinsIterator(options?: Types.Channels.GetChannelPinsIteratorOptions<CH>): Types.Channels.MessagePinsIterator<CH> {
+        return this.client.rest.channels.getPinsIterator<CH>(this.id, options);
     }
 
     /**

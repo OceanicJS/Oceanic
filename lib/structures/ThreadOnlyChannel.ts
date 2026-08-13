@@ -33,8 +33,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
     defaultSortOrder: SortOrderTypes | null;
     /** The default amount of seconds between non-moderators sending messages in threads. */
     defaultThreadRateLimitPerUser: number;
-    /** The flags for this channel, see {@link Constants.ChannelFlags | ChannelFlags}. */
-    flags: number;
     /** The ID of most recently created thread. */
     lastThreadID: string | null;
     /** If this channel is age gated. */
