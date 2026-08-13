@@ -715,6 +715,8 @@ export enum ChannelFlags {
     /** For media channls, hides the embedded media download options. */
     HIDE_MEDIA_DOWNLOAD_OPTIONS                   = 1 << 15,
     IS_JOIN_REQUEST_INTERVIEW_CHANNEL             = 1 << 16,
+
+    IS_SPOILER_CHANNEL = 1 << 21,
 }
 
 export enum SortOrderTypes {
