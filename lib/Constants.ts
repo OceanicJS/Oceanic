@@ -560,6 +560,7 @@ export namespace Permissions {
     export const CREATE_EVENTS                       = 17592186044416n;  // 1 << 44
     export const USE_EXTERNAL_SOUNDS                 = 35184372088832n;  // 1 << 45
     export const SEND_VOICE_MESSAGES                 = 70368744177664n;  // 1 << 46
+    /** @deprecated No longer in use. */
     export const USE_CLYDE_AI                        = 140737488355328n; // 1 << 47
     export const SET_VOICE_CHANNEL_STATUS            = 281474976710656n; // 1 << 48
     export const SEND_POLLS                          = 562949953421312n; // 1 << 49
