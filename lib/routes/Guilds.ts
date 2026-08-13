@@ -2123,7 +2123,7 @@ export default class Guilds {
             const guild = this._manager.client.guilds.get(guildID);
             return {
                 analyticsID:              data.analytics_id,
-                channels:                 data.channels?.map(c => guild?.channels.update(guild) ?? Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(c, this._manager.client)),
+                channels:                 data.channels?.map(c => guild?.channels.update(c as Types.Channels.RawGuildChannel) ?? Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(c, this._manager.client)),
                 doingDeepHistoricalIndex: data.doing_deep_historical_index,
                 documentsIndexed:         data.documents_indexed,
                 members:                  data.members?.map(m => ({

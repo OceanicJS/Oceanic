@@ -192,7 +192,7 @@ export default class Application extends ClientApplication {
         if (data.approximate_user_install_count !== undefined) this.approximateUserInstallCount = data.approximate_user_install_count;
         if (data.bot_approximate_guild_count !== undefined) this.botApproximateGuildCount = data.bot_approximate_guild_count;
         if (data.bot_disabled !== undefined) this.botDisabled = data.bot_disabled;
-        if (data.bot_quarantined !== undefined) this.botQuarantined = data.bot_disabled;
+        if (data.bot_quarantined !== undefined) this.botQuarantined = data.bot_quarantined;
         if (data.bot_public !== undefined) this.botPublic = data.bot_public;
         if (data.bot_require_code_grant !== undefined) this.botRequireCodeGrant = data.bot_require_code_grant;
         if (data.connection_entrypoint_url !== undefined) this.connectionEntrypointURL = data.connection_entrypoint_url;

@@ -661,7 +661,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             timeout:  setTimeout(() => {
                 resolve(this._requestChannelInfoPromise[opts.nonce].channels);
                 delete this._requestChannelInfoPromise[opts.nonce];
-            }, options?.timeout ?? this.client.rest.options.requestTimeout),
+            }, options.timeout ?? this.client.rest.options.requestTimeout),
             resolve,
             reject
         });

@@ -47,6 +47,9 @@ export default class ClientApplication extends Base {
         if (data.flags !== undefined) {
             this.flags = data.flags;
         }
+        if (data.flags_new !== undefined) {
+            this.flagsNew = BigInt(data.flags_new);
+        }
     }
 
     /**

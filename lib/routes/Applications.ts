@@ -350,7 +350,7 @@ export default class Applications {
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: Types.Applications.EditApplicationCommandPermissionsOptions): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         options = this._manager.client.util._freeze(options);
         return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
-            method: "PATCH",
+            method: "PUT",
             path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
             json:   { permissions: options.permissions },
             auth:   options.accessToken
