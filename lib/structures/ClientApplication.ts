@@ -7,6 +7,7 @@ import BaseEntitlement from "./BaseEntitlement";
 import type SKU from "./SKU";
 import type Application from "./Application";
 import Subscription from "./Subscription";
+import type Attachment from "./Attachment";
 import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { ApplicationCommandTypes } from "../Constants";
@@ -314,5 +315,16 @@ export default class ClientApplication extends Base {
      */
     async updateUserRoleConnection(data: Types.OAuth.UpdateUserApplicationRoleConnectionOptions): Promise<Types.OAuth.RoleConnection> {
         return this.client.rest.oauth.updateUserRoleConnection(this.id, data);
+    }
+
+    /**
+     * Upload an ephemeral attachment for this application.
+     * The application must have Activities enabled (the `EMBEDDED` application flag). Applications without Activities enabled currently return an "Unknown Application" error.
+     * This endpoint requires a user OAuth2 bearer token; client credentials grant tokens are not valid and currently produce a 500 error.
+     * @param options The options for uploading the attachment.
+     * @caching This method **does not** cache its result.
+     */
+    async uploadAttachment(options: Types.Applications.UploadApplicationAttachmentOptions): Promise<Attachment> {
+        return this.client.rest.applications.uploadAttachment(this.id, options);
     }
 }

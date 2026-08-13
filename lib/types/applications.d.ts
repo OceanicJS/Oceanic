@@ -190,6 +190,17 @@ export interface ApplicationExecutable {
     os: OperatingSystemType;
 }
 
+export interface RawApplicationAttachmentResponse {
+    attachment: Types.Channels.RawAttachment;
+}
+
+export interface UploadApplicationAttachmentOptions {
+    /** The user OAuth2 bearer token to use for the request. Client credentials grant tokens are not valid for this endpoint and currently produce a 500 error. This may be either raw or prefixed with `Bearer `. */
+    accessToken: string;
+    /** The file to upload. This will be sent as the `file` multipart field. */
+    file: Types.RequestHandler.File;
+}
+
 export interface ApplicationCompany {
     id: string;
     name: string;

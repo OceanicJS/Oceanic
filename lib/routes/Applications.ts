@@ -10,6 +10,7 @@ import ClientApplication from "../structures/ClientApplication";
 import Application from "../structures/Application";
 import Subscription from "../structures/Subscription";
 import QueryBuilder from "../util/QueryBuilder";
+import Attachment from "../structures/Attachment";
 
 /** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applications | .applications}. */
 export default class Applications {
@@ -612,5 +613,28 @@ export default class Applications {
             method: "GET",
             path:   Routes.SKUS(applicationID)
         }).then(data => data.map(d => new SKU(d, this._manager.client)));
+    }
+
+    /**
+     * Upload an ephemeral attachment for an application.
+     *
+     * The application must have Activities enabled (the {@link ApplicationFlags~EMBEDDED EMBEDDED} application flag). Applications without Activities enabled currently return an "Unknown Application" error.
+     *
+     * This endpoint requires a user OAuth2 bearer token; client credentials grant tokens are not valid and currently produce a 500 error.
+     *
+     * The returned url is only valid for 24 hours.
+     * @param applicationID The ID of the application.
+     * @param options The options for uploading the attachment.
+     * @caching This method **does not** cache its result.
+     */
+    async uploadAttachment(applicationID: string, options: Types.Applications.UploadApplicationAttachmentOptions): Promise<Attachment> {
+        options = this._manager.client.util._freeze(options);
+        const auth = options.accessToken.startsWith("Bearer ") ? options.accessToken : `Bearer ${options.accessToken}`;
+        return this._manager.request<Types.Applications.RawApplicationAttachmentResponse>({
+            method: "POST",
+            path:   Routes.APPLICATION_ATTACHMENT(applicationID),
+            files:  [{ ...options.file, field: "file" }],
+            auth
+        }).then(data => new Attachment(data.attachment, this._manager.client));
     }
 }

@@ -142,6 +142,7 @@ export const AVATAR_DECORATION           = (hash: string) => encode`/avatar-deco
 // Applications
 export const APPLICATION_COMMAND                   = (applicationID: string, commandID: string) => encode`/applications/${applicationID}/commands/${commandID}`;
 export const APPLICATION_COMMANDS                  = (applicationID: string) => encode`/applications/${applicationID}/commands`;
+export const APPLICATION_ATTACHMENT                = (applicationID: string) => encode`/applications/${applicationID}/attachment`;
 export const GUILD_APPLICATION_COMMAND             = (applicationID: string, guildID: string, commandID: string) => encode`/applications/${applicationID}/guilds/${guildID}/commands/${commandID}`;
 export const GUILD_APPLICATION_COMMANDS            = (applicationID: string, guildID: string) => encode`/applications/${applicationID}/guilds/${guildID}/commands`;
 export const GUILD_APPLICATION_COMMAND_PERMISSION  = (applicationID: string, guildID: string, commandID: string) => encode`/applications/${applicationID}/guilds/${guildID}/commands/${commandID}/permissions`;
