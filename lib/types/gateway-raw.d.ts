@@ -134,7 +134,7 @@ export interface ThreadUpdatePacket extends BaseDispatchPacket {
 
 export interface ThreadListSyncPacket extends BaseDispatchPacket {
     d: {
-        channel_ids: Array<string>;
+        channel_ids?: Array<string>;
         guild_id: string;
         members: Array<Types.Channels.RawThreadMember>;
         threads: Array<Types.Channels.RawThreadChannel>;
@@ -149,11 +149,11 @@ export interface ThreadMemberUpdatePacket extends BaseDispatchPacket {
 
 export interface ThreadMembersUpdatePacket extends BaseDispatchPacket {
     d: {
-        added_members: Array<Types.Channels.RawThreadMember & { member: Types.Guilds.RawMember; presence: Types.Gateway.PresenceUpdate | null; }>;
+        added_members?: Array<Types.Channels.RawThreadMember & { member: Types.Guilds.RawMember; presence: Types.Gateway.PresenceUpdate | null; }>;
         guild_id: string;
         id: string;
         member_count: number;
-        removed_member_ids: Array<string>;
+        removed_member_ids?: Array<string>;
     };
     t: "THREAD_MEMBERS_UPDATE";
 }
