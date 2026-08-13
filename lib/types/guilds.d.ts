@@ -21,7 +21,8 @@ import type {
     OnboardingModes,
     MemberSearchSortType,
     MemberJoinSourceType,
-    JSONErrorCodes
+    JSONErrorCodes,
+    StatusDisplayType
 } from "../Constants";
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
@@ -743,10 +744,13 @@ export interface RawOAuthGuild {
     permissions: string;
 }
 
-export interface PresenceActivity extends Omit<Types.Gateway.Activity, "application_id" | "assets" | "created_at"> {
+export interface PresenceActivity extends Omit<Types.Gateway.Activity, "application_id" | "assets" | "created_at" | "details_url" | "state_url" | "status_display_type"> {
     applicationID?: string;
     assets?: Partial<Record<"largeImage" | "largeText" | "smallImage" | "smallText", string>>;
     createdAt: number;
+    detailsURL?: string | null;
+    stateURL?: string | null;
+    statusDisplayType?: StatusDisplayType | null;
 }
 
 export interface Presence extends Omit<Types.Gateway.PresenceUpdate, "user" | "guild_id" | "client_status" | "activities"> {

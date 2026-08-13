@@ -720,17 +720,20 @@ export async function PRESENCE_UPDATE(data: DispatchEventMap["PRESENCE_UPDATE"],
                 smallImage: activity.assets.small_image,
                 smallText:  activity.assets.small_text
             } : undefined,
-            buttons:    activity.buttons,
-            details:    activity.details,
-            emoji:      activity.emoji,
-            flags:      activity.flags,
-            instance:   activity.instance,
-            party:      activity.party,
-            secrets:    activity.secrets,
-            state:      activity.state,
-            timestamps: activity.timestamps,
-            url:        activity.url
-        }))
+            buttons:           activity.buttons,
+            details:           activity.details,
+            detailsURL:        activity.details_url,
+            emoji:             activity.emoji,
+            flags:             activity.flags,
+            instance:          activity.instance,
+            party:             activity.party,
+            secrets:           activity.secrets,
+            state:             activity.state,
+            stateURL:          activity.state_url,
+            statusDisplayType: activity.status_display_type,
+            timestamps:        activity.timestamps,
+            url:               activity.url
+        } satisfies Types.Shared.KeysExist<Types.Guilds.PresenceActivity>))
     };
     const userID = data.user.id;
 

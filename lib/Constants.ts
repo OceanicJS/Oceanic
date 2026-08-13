@@ -1677,6 +1677,12 @@ export enum MessageReferenceType {
     FORWARD = 1,
 }
 
+export enum StatusDisplayType {
+    NAME = 0,
+    STATE = 1,
+    DETAILS = 2,
+}
+
 // entries are intentionally not aligned
 /** The error codes that can be received. See [Discord's Documentation](https://discord.com/developers/docs/topics/opcodes-and-status-codes#json). */
 export enum JSONErrorCodes {

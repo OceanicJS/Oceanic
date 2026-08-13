@@ -7,7 +7,8 @@ import type {
     AutoModerationTriggerTypes,
     ChannelTypes,
     GatewayOPCodes,
-    IntentNames
+    IntentNames,
+    StatusDisplayType
 } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
 import type Shard from "../gateway/Shard";
@@ -290,6 +291,7 @@ export interface Activity {
     buttons?: Array<ActivityButton>;
     created_at: number;
     details?: string | null;
+    details_url?: string | null;
     emoji?: ActivityEmoji | null;
     flags?: number;
     instance?: boolean;
@@ -297,6 +299,8 @@ export interface Activity {
     party?: ActivityParty;
     secrets?: Partial<Record<"join" | "spectate" | "match", string>>;
     state?: string | null;
+    state_url?: string | null;
+    status_display_type?: StatusDisplayType | null;
     timestamps?: Partial<Record<"end" | "start", number>>;
     type: ActivityTypes;
     url?: string | null;
