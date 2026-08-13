@@ -60,6 +60,19 @@ export default class OAuthHelper {
     }
 
     /**
+     * Delete the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
+     */
+    async deleteRoleConnection(applicationID: string): Promise<void> {
+        await this._manager.request<null>({
+            method: "DELETE",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
+            auth:   this._token
+        });
+    }
+
+    /**
      * Get the current OAuth2 application's information.
      */
     async getApplication(): Promise<OAuthApplication> {

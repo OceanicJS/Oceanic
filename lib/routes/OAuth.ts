@@ -46,6 +46,18 @@ export default class OAuth {
     }
 
     /**
+     * Delete the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
+     * @param applicationID The ID of the application.
+     * @caching This method **does not** cache its result.
+     */
+    async deleteUserRoleConnection(applicationID: string): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "DELETE",
+            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID)
+        });
+    }
+
+    /**
      * Exchange a code for an access token.
      * @param options The options for exchanging the code.
      * @caching This method **does not** cache its result.
@@ -260,6 +272,7 @@ export default class OAuth {
             platformUsername: data.platform_username
         }));
     }
+
     /**
      * Refresh an existing access token.
      * @param options The options for refreshing the token.
