@@ -45,6 +45,7 @@ export const GUILD_CHANNELS              = (guildID: string) => encode`/guilds/$
 export const GUILD_ACTIVE_THREADS        = (guildID: string) => encode`/guilds/${guildID}/threads/active`;
 export const GUILD_MEMBERS               = (guildID: string) => encode`/guilds/${guildID}/members`;
 export const GUILD_MEMBER                = (guildID: string, userID: string) => encode`/guilds/${guildID}/members/${userID}`;
+export const GUILD_MESSAGES_SEARCH       = (guildID: string) => encode`/guilds/${guildID}/messages/search`;
 export const GUILD_SEARCH_MEMBERS        = (guildID: string) => encode`/guilds/${guildID}/members/search`;
 export const GUILD_MEMBERS_SEARCH        = (guildID: string) => encode`/guilds/${guildID}/members-search`;
 export const GUILD_MEMBER_ROLE           = (guildID: string, userID: string, roleID: string) => encode`/guilds/${guildID}/members/${userID}/roles/${roleID}`;
@@ -91,6 +92,7 @@ export const CHANNEL_REACTION                        = (channelID: string, messa
 export const CHANNEL_REACTIONS                       = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/reactions`;
 export const CHANNEL_REACTION_USER                   = (channelID: string, messageID: string, reaction: string, user: string) => encode`/channels/${channelID}/messages/${messageID}/reactions/${reaction}/${user}`;
 export const CHANNEL_THREADS                         = (channelID: string) => encode`/channels/${channelID}/threads`;
+export const CHANNEL_THREADS_SEARCH                  = (channelID: string) => encode`/channels/${channelID}/threads/search`;
 export const CHANNEL_THREAD_MEMBER                   = (channelID: string, userID: string) => encode`/channels/${channelID}/thread-members/${userID}`;
 export const CHANNEL_THREAD_MEMBERS                  = (channelID: string) => encode`/channels/${channelID}/thread-members`;
 export const CHANNEL_TYPING                          = (channelID: string) => encode`/channels/${channelID}/typing`;

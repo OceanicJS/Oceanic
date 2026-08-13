@@ -18,6 +18,7 @@ import VoiceState from "../structures/VoiceState";
 import Webhook from "../structures/Webhook";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
+import Channel from "../structures/Channel";
 import { setTimeout } from "node:timers/promises";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
@@ -1827,6 +1828,79 @@ export default class Guilds {
             path:   Routes.GUILD_SEARCH_MEMBERS(guildID),
             query
         }).then(data => data.map(d => this._manager.client.util.updateMember(guildID, d.user.id, d)));
+    }
+
+    /**
+     * Search messages in a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     * @caching This method **may** cache its result. The messages, channels, and threads will not be cached if the guild is not cached.
+     * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}
+     */
+    async searchMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(guildID: string, options?: Types.Guilds.SearchMessagesOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MessageSearchResults<T>> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        const append = (name: string, value: string | Array<string> | undefined): void => {
+            if (Array.isArray(value)) {
+                for (const item of value) {
+                    query.append(name, item);
+                }
+            } else if (value !== undefined) {
+                query.append(name, value);
+            }
+        };
+        query.setIfPresent("content", options?.content);
+        query.setIfPresent("offset", options?.offset);
+        query.setIfPresent("min_id", options?.minID);
+        query.setIfPresent("max_id", options?.maxID);
+        query.setIfPresent("pinned", options?.pinned);
+        query.setIfPresent("command_id", options?.commandID);
+        query.setIfPresent("command_name", options?.commandName);
+        query.setIfPresent("include_nsfw", options?.includeNSFW);
+        query.setIfPresent("sort_by", options?.sortBy);
+        query.setIfPresent("sort_order", options?.sortOrder);
+        append("author_id", options?.authorIDs);
+        append("channel_id", options?.channelIDs);
+        append("has", options?.has);
+        append("mentions", options?.mentions);
+        return this._manager.authRequest<Types.Guilds.RawMessageSearchResults | Types.Guilds.MessageSearchNotIndexedResult>({
+            method: "GET",
+            path:   Routes.GUILD_MESSAGES_SEARCH(guildID),
+            query
+        }).then(async data => {
+            if ("retry_after" in data) {
+                if (!retryOnIndexNotAvailable) {
+                    throw new Error(`Message search for guild ${guildID} failed due to the index not being available.`);
+                }
+
+                let retryAfter = data.retry_after;
+                if (retryAfter === 0) {
+                    retryAfter = Math.floor(Math.random() * 30) + 15;
+                }
+                this._manager.client.emit("debug", `Retrying message search for guild ${guildID} in ${retryAfter} seconds...`);
+                await setTimeout(retryAfter * 1000);
+                return this.searchMessages<T>(guildID, options, false);
+            }
+
+            const guild = this._manager.client.guilds.get(guildID);
+            return {
+                analyticsID:              data.analytics_id,
+                channels:                 data.channels?.map(c => guild?.channels.update(guild) ?? Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(c, this._manager.client)),
+                doingDeepHistoricalIndex: data.doing_deep_historical_index,
+                documentsIndexed:         data.documents_indexed,
+                members:                  data.members?.map(m => ({
+                    flags:         m.flags,
+                    id:            m.id,
+                    joinTimestamp: new Date(m.join_timestamp),
+                    member:        m.member && guild?.members.update(m.member, guildID),
+                    userID:        m.user_id
+                })),
+                messages:     data.messages.map(messages => messages.map(message => this._manager.client.util.updateMessage<T>(message))),
+                threads:      data.threads?.map(thread => this._manager.client.util.updateThread(thread)),
+                totalResults: data.total_results
+            };
+        });
     }
 
     /**

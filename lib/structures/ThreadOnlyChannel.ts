@@ -223,6 +223,14 @@ export default class ThreadOnlyChannel extends GuildChannel {
         return new Permission(permission);
     }
 
+    /**
+     * Search threads in this channel.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     */
+    async searchThreads(options?: Types.Channels.SearchThreadsOptions, retryOnIndexNotAvailable = true): Promise<Types.Channels.ThreadSearchResults<PublicThreadChannel>> {
+        return this.client.rest.channels.searchThreads<PublicThreadChannel>(this.id, options, retryOnIndexNotAvailable);
+    }
 
     /**
      * Create a thread in this forum channel.

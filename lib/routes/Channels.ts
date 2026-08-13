@@ -20,6 +20,7 @@ import type User from "../structures/User";
 import StageInstance from "../structures/StageInstance";
 import { MessageFlags } from "../Constants";
 import QueryBuilder from "../util/QueryBuilder";
+import { setTimeout } from "node:timers/promises";
 
 /** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {
@@ -1235,6 +1236,74 @@ export default class Channels {
         await this._manager.authRequest<null>({
             method: "DELETE",
             path:   Routes.CHANNEL_THREAD_MEMBER(channelID, userID)
+        });
+    }
+
+    /**
+     * Search threads in a channel.
+     * @param channelID The ID of the channel to search threads in.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}<br>{@link ThreadChannel#messages | ThreadChannel#messages}
+     */
+    async searchThreads<T extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel>(channelID: string, options?: Types.Channels.SearchThreadsOptions, retryOnIndexNotAvailable = true): Promise<Types.Channels.ThreadSearchResults<T>> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        const append = (name: string, value: string | Array<string> | undefined): void => {
+            if (Array.isArray(value)) {
+                for (const item of value) {
+                    query.append(name, item);
+                }
+            } else if (value !== undefined) {
+                query.append(name, value);
+            }
+        };
+        query.setIfPresent("archived", options?.archived);
+        query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("max_id", options?.maxID);
+        query.setIfPresent("min_id", options?.minID);
+        query.setIfPresent("name", options?.name);
+        query.setIfPresent("offset", options?.offset);
+        query.setIfPresent("slop", options?.slop);
+        query.setIfPresent("sort_by", options?.sortBy);
+        query.setIfPresent("sort_order", options?.sortOrder);
+        query.setIfPresent("tag_setting", options?.tagSetting);
+        append("tag", options?.tag);
+        return this._manager.authRequest<Types.Channels.RawThreadSearchResults | Types.Guilds.MessageSearchNotIndexedResult>({
+            method: "GET",
+            path:   Routes.CHANNEL_THREADS_SEARCH(channelID),
+            query
+        }).then(async data => {
+            if ("retry_after" in data) {
+                if (!retryOnIndexNotAvailable) {
+                    throw new Error(`Thread search for channel ${channelID} failed due to the index not being available.`);
+                }
+
+                let retryAfter = data.retry_after;
+                if (retryAfter === 0) {
+                    retryAfter = Math.floor(Math.random() * 30) + 15;
+                }
+                this._manager.client.emit("debug", `Retrying thread search for channel ${channelID} in ${retryAfter} seconds...`);
+                await setTimeout(retryAfter * 1000);
+                return this.searchThreads<T>(channelID, options, false);
+            }
+
+            // eslint-disable-next-line @typescript-eslint/dot-notation
+            const guild = this._manager.client.getChannel<Types.Channels.AnyGuildChannel>(channelID)?.["_cachedGuild"];
+            return {
+                firstMessages: data.first_messages?.map(message => this._manager.client.util.updateMessage<T>(message)),
+                hasMore:       data.has_more,
+                members:       data.members?.map(m => ({
+                    flags:         m.flags,
+                    id:            m.id,
+                    joinTimestamp: new Date(m.join_timestamp),
+                    member:        m.member && guild?.members.update(m.member, guild.id),
+                    userID:        m.user_id
+                })),
+                threads:      data.threads.map(thread => this._manager.client.util.updateThread<T>(thread)),
+                totalResults: data.total_results
+            };
         });
     }
 

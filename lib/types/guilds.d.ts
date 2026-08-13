@@ -27,6 +27,7 @@ import type {
 import type User from "../structures/User";
 import type Integration from "../structures/Integration";
 import type Member from "../structures/Member";
+import type Message from "../structures/Message";
 
 // channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only
@@ -434,6 +435,41 @@ export interface SearchMembersOptions {
     limit?: number;
     /** The query to search for. */
     query: string;
+}
+
+export type MessageSearchSortBy = "relevance" | "timestamp";
+export type SearchSortOrder = "asc" | "desc";
+export type MessageSearchHasFilter = "link" | "embed" | "file" | "video" | "image" | "sound";
+
+export interface SearchMessagesOptions {
+    /** Restrict results to messages sent by these users. */
+    authorIDs?: string | Array<string>;
+    /** Restrict results to these channels. */
+    channelIDs?: string | Array<string>;
+    /** Restrict results to messages created by this application command. */
+    commandID?: string;
+    /** Restrict results to messages created by this application command name. */
+    commandName?: string;
+    /** The content to search for. */
+    content?: string;
+    /** Restrict results to messages containing these attachment/embed types. */
+    has?: MessageSearchHasFilter | Array<MessageSearchHasFilter>;
+    /** Include results from NSFW channels. */
+    includeNSFW?: boolean;
+    /** Search messages before this message ID. */
+    maxID?: string;
+    /** Search for messages mentioning these users. */
+    mentions?: string | Array<string>;
+    /** Search messages after this message ID. */
+    minID?: string;
+    /** The offset into the search results. */
+    offset?: number;
+    /** Restrict results to pinned messages. */
+    pinned?: boolean;
+    /** The field to sort by. */
+    sortBy?: MessageSearchSortBy;
+    /** The sort order. */
+    sortOrder?: SearchSortOrder;
 }
 
 export interface AddMemberOptions {
@@ -961,6 +997,43 @@ export interface RawMemberSearchResults {
     members: Array<RawSupplementalGuildMember>;
     page_result_count: number;
     total_result_count: number;
+}
+
+export interface RawMessageSearchResults {
+    analytics_id?: string;
+    channels?: Array<Types.Channels.RawChannel>;
+    documents_indexed?: number;
+    doing_deep_historical_index?: boolean;
+    members?: Array<Types.Channels.RawThreadMember>;
+    messages: Array<Array<Types.Channels.RawMessage>>;
+    threads?: Array<Types.Channels.RawThreadChannel>;
+    total_results: number;
+}
+
+export interface MessageSearchResults<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached> {
+    /** The search analytics ID returned by Discord, if present. */
+    analyticsID?: string;
+    /** The channels that contain the returned messages, if included. */
+    channels?: Array<Types.Channels.AnyGuildChannelWithoutThreads>;
+    /** The number of documents that have been indexed during the current indexing operation, if any. */
+    documentsIndexed?: number;
+    /** Whether the guild is undergoing a deep historical indexing operation. */
+    doingDeepHistoricalIndex?: boolean;
+    /** Thread members for returned threads, if included. */
+    members?: Array<Types.Channels.ThreadMember>;
+    /** The messages that matched the query. Discord returns this as nested arrays for search-context compatibility. */
+    messages: Array<Array<Message<T>>>;
+    /** Threads that contain the returned messages, if included. */
+    threads?: Array<Types.Channels.AnyThreadChannel>;
+    /** The total number of results that match the query. */
+    totalResults: number;
+}
+
+export interface MessageSearchNotIndexedResult {
+    code: JSONErrorCodes.INDEX_NOT_YET_AVAILABLE;
+    documents_indexed: number;
+    message: string;
+    retry_after: number;
 }
 
 export interface MemberSearchResults {

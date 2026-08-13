@@ -39,6 +39,15 @@ export default class ThreadableChannel<TC extends Types.Channels.AnyTextableGuil
     }
 
     /**
+     * Search threads in this channel.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     */
+    async searchThreads(options?: Types.Channels.SearchThreadsOptions, retryOnIndexNotAvailable = true): Promise<Types.Channels.ThreadSearchResults<TH>> {
+        return this.client.rest.channels.searchThreads<TH>(this.id, options, retryOnIndexNotAvailable);
+    }
+
+    /**
      * Create a thread from an existing message in this channel.
      * @param messageID The ID of the message to create a thread from.
      * @param options The options for creating the thread.

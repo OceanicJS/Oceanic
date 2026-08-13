@@ -1477,6 +1477,15 @@ export default class Guild extends Base {
     }
 
     /**
+     * Search messages in this guild.
+     * @param options The options to search with.
+     * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
+     */
+    async searchMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(options?: Types.Guilds.SearchMessagesOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MessageSearchResults<T>> {
+        return this.client.rest.guilds.searchMessages<T>(this.id, options, retryOnIndexNotAvailable);
+    }
+
+    /**
      * The url of this guild's invite splash.
      * @param format The format the url should be.
      * @param size The dimensions of the image.

@@ -180,6 +180,56 @@ export interface GetThreadMembersOptions {
     withMember?: boolean;
 }
 
+export type ThreadSearchSortBy = "relevance" | "creation_time" | "last_message_time" | "archive_time";
+export type ThreadSearchSortOrder = "asc" | "desc";
+export type ThreadSearchTagSetting = "match_all" | "match_some";
+
+export interface SearchThreadsOptions {
+    /** Include archived threads. */
+    archived?: boolean;
+    /** The maximum number of threads to return. */
+    limit?: number;
+    /** Search threads before this thread ID. */
+    maxID?: string;
+    /** Search threads after this thread ID. */
+    minID?: string;
+    /** The thread name to search for. */
+    name?: string;
+    /** The offset into the search results. */
+    offset?: number;
+    /** The matching tolerance for the name query. */
+    slop?: number;
+    /** The field to sort by. */
+    sortBy?: ThreadSearchSortBy;
+    /** The sort order. */
+    sortOrder?: ThreadSearchSortOrder;
+    /** Restrict results to threads with these forum/media tags. */
+    tag?: string | Array<string>;
+    /** Whether all or any provided tags should match. */
+    tagSetting?: ThreadSearchTagSetting;
+}
+
+export interface RawThreadSearchResults {
+    first_messages?: Array<RawMessage>;
+    has_more: boolean;
+    members?: Array<RawThreadMember>;
+    threads: Array<RawThreadChannel>;
+    total_results: number;
+}
+
+export interface ThreadSearchResults<T extends AnyThreadChannel = AnyThreadChannel> {
+    /** The first message for each returned thread, if included. */
+    firstMessages?: Array<Message<T>>;
+    /** Whether there are potentially additional threads that could be returned on a subsequent call. */
+    hasMore: boolean;
+    /** Thread members for returned threads, if included. */
+    members?: Array<ThreadMember>;
+    /** The resulting threads. */
+    threads: Array<T>;
+    /** The total number of results that match the query. */
+    totalResults: number;
+}
+
 export interface UncachedThreadMember {
     /** The ID of the thread this member is for. */
     id: string;
