@@ -643,6 +643,11 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         return Base.prototype[inspect.custom].call(this) as never;
     }
 
+    /**
+     * Request extended channel info for a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options.
+     */
     async requestChannelInfo(guildID: string, options: Types.Gateway.RequestChannelInfoOptions): Promise<Array<Types.Gateway.ChannelInfoWithChannel>> {
         const opts = {
             guild_id: guildID,
@@ -707,6 +712,11 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         });
     }
 
+    /**
+     * Request soundboard sounds for a guild.
+     * @param guildID The ID of the guild.
+     * @param options The options.
+     */
     async requestSoundboardSounds(guildID: string, options?: Types.Gateway.RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
         const opts = {
             guild_ids: [guildID],

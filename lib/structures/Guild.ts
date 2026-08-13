@@ -270,14 +270,12 @@ export default class Guild extends Base {
             }
         }
 
-
         if (data.threads) {
             for (const threadData of data.threads) {
                 threadData.guild_id = this.id;
                 this.threads.update(threadData);
             }
         }
-
 
         if (data.members) {
             for (const rawMember of data.members) {
@@ -294,7 +292,6 @@ export default class Guild extends Base {
                 this.stageInstances.update(stageInstance);
             }
         }
-
 
         if (data.presences) {
             for (const presence of data.presences) {
@@ -334,7 +331,6 @@ export default class Guild extends Base {
 
             }
         }
-
 
         if (data.voice_states) {
             for (const voiceState of data.voice_states) {
@@ -1053,9 +1049,10 @@ export default class Guild extends Base {
     /**
      * Request members from this guild.
      * @param options The options for fetching the members.
+     * @deprecated Use {@link requestMembers}. This will be removed in `1.16.0`.
      */
     async fetchMembers(options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
-        return this.shard.requestGuildMembers(this.id, options);
+        return this.requestMembers(options);
     }
 
     /**
@@ -1445,6 +1442,30 @@ export default class Guild extends Base {
      */
     async removeMemberRole(memberID: string, roleID: string, reason?: string): Promise<void> {
         return this.client.rest.guilds.removeMemberRole(this.id, memberID, roleID, reason);
+    }
+
+    /**
+     * Request extended channel info for this guild.
+     * @param options The options.
+     */
+    async requestChannelInfo(options: Types.Gateway.RequestChannelInfoOptions): Promise<Array<Types.Gateway.ChannelInfoWithChannel>> {
+        return this.shard.requestChannelInfo(this.id, options);
+    }
+
+    /**
+     * Request members from this guild.
+     * @param options The options for fetching the members.
+     */
+    async requestMembers(options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
+        return this.shard.requestGuildMembers(this.id, options);
+    }
+
+    /**
+     * Request soundboard sounds for this guild.
+     * @param options The options.
+     */
+    async requestSoundboardSounds(options?: Types.Gateway.RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
+        return this.shard.requestSoundboardSounds(this.id, options);
     }
 
     /**
