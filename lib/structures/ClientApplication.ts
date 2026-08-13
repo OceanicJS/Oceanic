@@ -6,6 +6,7 @@ import Entitlement from "./Entitlement";
 import BaseEntitlement from "./BaseEntitlement";
 import type SKU from "./SKU";
 import type Application from "./Application";
+import Subscription from "./Subscription";
 import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { ApplicationCommandTypes } from "../Constants";
@@ -22,6 +23,8 @@ export default class ClientApplication extends Base {
     flags: number;
     /** This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags). */
     flagsNew: bigint;
+    /** The subscriptions for this application. This will almost certainly be empty unless you fetch subscriptions, or recieve new/updated subscriptions. */
+    subscriptions: TypedCollection<Types.Applications.RawSubscription, Subscription>;
     constructor(data: Types.Applications.RawClientApplication, client: Client) {
         super(data.id, client);
         this.entitlements = new TypedCollection(BaseEntitlement, client, Infinity, {
@@ -35,6 +38,7 @@ export default class ClientApplication extends Base {
         }) as TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
         this.flags = data.flags ?? 0;
         this.flagsNew = BigInt(data.flags_new ?? data.flags ?? "0");
+        this.subscriptions = new TypedCollection(Subscription, client, Infinity);
         this.update(data);
     }
 

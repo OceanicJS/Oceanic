@@ -766,6 +766,23 @@ export async function SOUNDBOARD_SOUNDS(data: DispatchEventMap["SOUNDBOARD_SOUND
     shard.lastHeartbeatAck = true;
 }
 
+export async function SUBSCRIPTION_CREATE(data: DispatchEventMap["SUBSCRIPTION_CREATE"], shard: Shard): Promise<void> {
+    const subscription = shard.client.util.updateSubscription(data);
+    shard.client.emit("subscriptionCreate", subscription);
+}
+
+export async function SUBSCRIPTION_DELETE(data: DispatchEventMap["SUBSCRIPTION_DELETE"], shard: Shard): Promise<void> {
+    const subscription = shard.client.util.updateSubscription(data);
+    shard.client["_application"]?.subscriptions.delete(data.id);
+    shard.client.emit("subscriptionDelete", subscription);
+}
+
+export async function SUBSCRIPTION_UPDATE(data: DispatchEventMap["SUBSCRIPTION_UPDATE"], shard: Shard): Promise<void> {
+    const oldSubscription = shard.client["_application"]?.subscriptions.get(data.id)?.toJSON() ?? null;
+    const subscription = shard.client.util.updateSubscription(data);
+    shard.client.emit("subscriptionUpdate", subscription, oldSubscription);
+}
+
 export async function STAGE_INSTANCE_CREATE(data: DispatchEventMap["STAGE_INSTANCE_CREATE"], shard: Shard): Promise<void> {
     const guild = shard.client.guilds.get(data.guild_id);
     const stateInstance = guild?.stageInstances.update(data) ?? new StageInstance(data, shard.client);

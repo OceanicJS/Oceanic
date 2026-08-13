@@ -24,6 +24,7 @@ import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
 import TestEntitlement from "../structures/TestEntitlement";
 import type Poll from "../structures/Poll";
+import Subscription from "../structures/Subscription";
 import { types } from "node:util";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
@@ -439,6 +440,15 @@ export default class Util {
                     answerCount.meVoted = false;
                 }
             }
+        }
+    }
+
+    /** @internal */
+    updateSubscription(data: Types.Applications.RawSubscription): Subscription {
+        if (this._client["_application"] === undefined) {
+            return new Subscription(data, this._client);
+        } else {
+            return this._client.application.subscriptions.update(data);
         }
     }
 

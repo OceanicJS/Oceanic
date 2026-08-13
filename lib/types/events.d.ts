@@ -23,6 +23,7 @@ import type Entitlement from "../structures/Entitlement";
 import type TestEntitlement from "../structures/TestEntitlement";
 import type { JSONChannelTypeMap } from "../Constants";
 import type Soundboard from "../structures/Soundboard";
+import type Subscription from "../structures/Subscription";
 
 
 export interface ClientEvents {
@@ -172,6 +173,9 @@ export interface ClientEvents {
     stageInstanceDelete: [instance: StageInstance];
     /** @event Emitted when a stage instance is updated. */
     stageInstanceUpdate: [instance: StageInstance, oldInstance: Types.JSON.JSONStageInstance | null];
+    subscriptionCreate: [subscription: Subscription];
+    subscriptionDelete: [subscription: Subscription];
+    subscriptionUpdate: [subscription: Subscription, oldSubscription: Types.JSON.JSONSubscription | null];
     /** @event Emitted when a thread is created. Requires the `GUILDS` intent. */
     threadCreate: [thread: Types.Channels.AnyThreadChannel];
     /** @event Emitted when a thread is deleted. Requires the `GUILDS` intent. */

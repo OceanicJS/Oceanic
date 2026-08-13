@@ -581,7 +581,22 @@ export interface VoiceChannelStartTimeUpdatePacket extends BaseDispatchPacket {
     t: "VOICE_CHANNEL_START_TIME_UPDATE";
 }
 
-export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket |
+export interface SubscriptionCreatePacket extends BaseDispatchPacket {
+    d: Types.Applications.RawSubscription;
+    t: "SUBSCRIPTION_CREATE";
+}
+
+export interface SubscriptionUpdatePacket extends BaseDispatchPacket {
+    d: Types.Applications.RawSubscription;
+    t: "SUBSCRIPTION_UPDATE";
+}
+
+export interface SubscriptionDeletePacket extends BaseDispatchPacket {
+    d: Types.Applications.RawSubscription;
+    t: "SUBSCRIPTION_DELETE";
+}
+
+export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket | ChannelInfoPacket |
 GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
 ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket |
@@ -593,6 +608,7 @@ GuildScheduledEventCreatePacket | GuildScheduledEventDeletePacket | GuildSchedul
 IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket |
 InviteCreatePacket | InviteDeletePacket |
 MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
-TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
+TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceChannelStartTimeUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
 EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket |
-MessagePollVoteAddPacket | MessagePollVoteRemovePacket | ChannelInfoPacket | VoiceChannelStartTimeUpdatePacket;
+MessagePollVoteAddPacket | MessagePollVoteRemovePacket |
+SubscriptionCreatePacket | SubscriptionDeletePacket | SubscriptionUpdatePacket;

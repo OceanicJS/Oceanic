@@ -34,4 +34,19 @@ export default class Subscription extends Base {
         this.status = data.status;
         this.userID = data.user_id;
     }
+
+    override toJSON(): Types.JSON.JSONSubscription {
+        return {
+            ...super.toJSON(),
+            canceledAt:         this.canceledAt?.toISOString() ?? null,
+            country:            this.country,
+            currentPeriodEnd:   this.currentPeriodEnd.toISOString(),
+            currentPeriodStart: this.currentPeriodStart.toISOString(),
+            entitlementIDs:     this.entitlementIDs,
+            renewalSKUIDs:      this.renewalSKUIDs,
+            skuIDs:             this.skuIDs,
+            status:             this.status,
+            userID:             this.userID
+        };
+    }
 }

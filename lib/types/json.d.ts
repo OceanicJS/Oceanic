@@ -51,7 +51,8 @@ import type {
     StoreApplicationState,
     ApplicationVerificationState,
     ApplicationInteractionsVersion,
-    EntryPointCommandHandlerTypes
+    EntryPointCommandHandlerTypes,
+    SubscriptionStatuses
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
@@ -736,6 +737,17 @@ export interface JSONStageInstance extends JSONBase {
     privacyLevel: StageInstancePrivacyLevels;
     scheduledEventID: string | null;
     topic: string;
+}
+export interface JSONSubscription extends JSONBase {
+    canceledAt: string | null;
+    country?: string;
+    currentPeriodEnd: string;
+    currentPeriodStart: string;
+    entitlementIDs: Array<string>;
+    renewalSKUIDs: Array<string>;
+    skuIDs: Array<string>;
+    status: SubscriptionStatuses;
+    userID: string;
 }
 export interface JSONTeam extends JSONBase {
     icon: string | null;
