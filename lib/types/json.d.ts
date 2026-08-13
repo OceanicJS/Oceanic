@@ -407,6 +407,14 @@ export interface JSONInteraction extends JSONBase {
     type: InteractionTypes;
     version: 1;
 }
+export interface JSONInteractionResolvedChannel extends JSONChannel {
+    appPermissions: JSONPermissions;
+    name: string | null;
+    parentID: string | null;
+    permissions: JSONPermissions;
+    threadMetadata: Types.Channels.ThreadMetadata | Types.Channels.PrivateThreadMetadata | null;
+    type: Types.Channels.ImplementedChannels;
+}
 export interface JSONInvite {
     approximateMemberCount?: number;
     approximatePresenceCount?: number;

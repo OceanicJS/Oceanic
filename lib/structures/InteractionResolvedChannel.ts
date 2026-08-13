@@ -17,14 +17,17 @@ export default class InteractionResolvedChannel extends Channel {
     name: string | null;
     /** The ID of the parent of this channel, if this represents a thread. */
     parentID: string | null;
+    /** The permissions the user has in the channel. */
+    permissions: Permission;
     /** The [thread metadata](https://discord.com/developers/docs/resources/channel#thread-metadata-object-thread-metadata-structure) associated with this channel, if this represents a thread. */
     threadMetadata: Types.Channels.ThreadMetadata | Types.Channels.PrivateThreadMetadata | null;
     declare type: Types.Channels.ImplementedChannels;
     constructor(data: Types.Channels.RawInteractionResolvedChannel, client: Client) {
         super(data, client);
-        this.appPermissions = new Permission(data.permissions ?? "0");
+        this.appPermissions = new Permission(data.app_permissions ?? "0");
         this.name = data.name;
         this.parentID = data.parent_id ?? null;
+        this.permissions = new Permission(data.permissions ?? "0");
         this.threadMetadata = data.thread_metadata ? {
             archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
             archived:            !!data.thread_metadata.archived,
@@ -47,5 +50,17 @@ export default class InteractionResolvedChannel extends Channel {
         }
 
         return this._cachedParent === null ? this._cachedParent : (this._cachedParent = null);
+    }
+
+    override toJSON(): Types.JSON.JSONInteractionResolvedChannel {
+        return {
+            ...super.toJSON(),
+            appPermissions: this.appPermissions.toJSON(),
+            name: this.name,
+            parentID: this.parentID,
+            permissions: this.permissions.toJSON(),
+            threadMetadata: this.threadMetadata,
+            type: this.type,
+        }
     }
 }

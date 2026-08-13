@@ -56,6 +56,7 @@ import type MediaChannel from "../structures/MediaChannel";
 
 export interface RawChannel {
     application_id?: string;
+    app_permissions?: string;
     applied_tags?: Array<string>;
     available_tags?: Array<RawForumTag>;
     bitrate?: number;
@@ -115,7 +116,7 @@ export interface RawForumChannel extends Omit<RawThreadOnlyChannel, "type"> { ty
 export interface RawMediaChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_MEDIA; }
 
 export interface PartialChannel extends Pick<RawChannel, "id" | "name" | "type"> {}
-export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "thread_metadata" | "parent_id" | "permissions"> { name: string | null; }
+export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "thread_metadata" | "parent_id" | "permissions" | "app_permissions"> { name: string | null; }
 
 export interface RawOverwrite {
     allow: string;
