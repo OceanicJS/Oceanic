@@ -510,7 +510,7 @@ export default class Applications {
         query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method:  "GET",
-            path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, commandID, guildID),
+            path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
             query,
             headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
