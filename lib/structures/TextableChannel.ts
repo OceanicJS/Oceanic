@@ -19,6 +19,8 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
     lastMessage?: Message<CH> | null;
     /** The ID of last message sent in this channel. */
     lastMessageID: string | null;
+    /** The timestamp of the last pinned message in this channel. */
+    lastPinTimestamp: string | null;
     /** The cached messages in this channel. */
     messages: TypedCollection<Types.Channels.RawMessage, Message<CH>>;
     /** If this channel is age gated. */
@@ -35,6 +37,7 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
     constructor(data: Types.Channels.RawTextChannel | Types.Channels.RawAnnouncementChannel | Types.Channels.RawVoiceChannel | Types.Channels.RawStageChannel, client: Client) {
         super(data, client);
         this.lastMessageID = data.last_message_id;
+        this.lastPinTimestamp = data.last_pin_timestamp;
         this.messages = new TypedCollection(Message<CH>, client, this.client.util._getLimit("messages", this.id));
         this.nsfw = data.nsfw;
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
@@ -49,6 +52,9 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
         if (data.last_message_id !== undefined) {
             this.lastMessage = data.last_message_id === null ? null : this.messages.get(data.last_message_id);
             this.lastMessageID = data.last_message_id;
+        }
+        if (data.last_pin_timestamp !== undefined) {
+            this.lastPinTimestamp = data.last_pin_timestamp;
         }
         if (data.nsfw !== undefined) {
             this.nsfw = data.nsfw;
@@ -308,6 +314,7 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
         return {
             ...super.toJSON(),
             lastMessageID:        this.lastMessageID,
+            lastPinTimestamp:     this.lastPinTimestamp,
             messages:             this.messages.map(message => message.id),
             nsfw:                 this.nsfw,
             permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),

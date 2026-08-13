@@ -99,14 +99,14 @@ export interface RawChannel {
     video_quality_mode?: VideoQualityModes;
     voice_start_time?: number | null;
 }
-export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> { name: string; type: GuildChannels; }
-export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> { type: ChannelTypes.DM; }
+export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "flags">> { name: string; type: GuildChannels; }
+export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { type: ChannelTypes.DM; }
 // nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "icon" | "owner_id" | "nsfw" | "last_message_id">> { application_id: string; managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
-export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_TEXT; }
+export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "icon" | "owner_id" | "nsfw" | "last_message_id" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { application_id: string; managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
+export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "flags" | "topic" | "nsfw" | "permission_overwrites" | "position"  >> { type: ChannelTypes.GUILD_TEXT; }
 export interface RawCategoryChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel,  "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_CATEGORY; }
 export interface RawAnnouncementChannel extends Omit<RawTextChannel, "type"> { type: ChannelTypes.GUILD_ANNOUNCEMENT; }
-export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user">>, Pick<RawChannel, "status" | "voice_start_time"> { type: ChannelTypes.GUILD_VOICE; }
+export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user" | "flags" | "last_pin_timestamp">>, Pick<RawChannel, "status" | "voice_start_time"> { type: ChannelTypes.GUILD_VOICE; }
 export interface RawStageChannel extends Omit<RawVoiceChannel, "type"> { type: ChannelTypes.GUILD_STAGE_VOICE; }
 export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
 export interface RawAnnouncementThreadChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> { name: string; parent_id: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; }
@@ -117,7 +117,7 @@ export interface RawForumChannel extends Omit<RawThreadOnlyChannel, "type"> { ty
 export interface RawMediaChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_MEDIA; }
 
 export interface PartialChannel extends Pick<RawChannel, "id" | "name" | "type"> {}
-export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "thread_metadata" | "parent_id" | "permissions" | "app_permissions"> { name: string | null; }
+export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "name" | "permissions" | "app_permissions" | "last_message_id" | "last_pin_timestamp" | "nsfw" | "parent_id" | "guild_id" | "flags" | "rate_limit_per_user" | "topic" | "position" | "thread_metadata"> { name: string | null; }
 
 export interface RawOverwrite {
     allow: string;

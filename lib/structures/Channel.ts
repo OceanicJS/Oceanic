@@ -6,10 +6,13 @@ import type Client from "../Client";
 
 /** Represents a channel. */
 export default class Channel extends Base {
+    /** The {@link Constants~ChannelFlags | flags } of this channel. */
+    flags: number;
     /** The [type](https://discord.com/developers/docs/resources/channel#channel-object-channel-types) of this channel. */
     type: ChannelTypes;
     constructor(data: Types.Channels.RawChannel, client: Client) {
         super(data.id, client);
+        this.flags = data.flags ?? 0;
         this.type = data.type;
     }
 
@@ -57,6 +60,12 @@ export default class Channel extends Base {
         }
     }
 
+    protected override update(data: Partial<Types.Channels.RawChannel>): void {
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+    }
+
     /** A string that will mention this channel. */
     get mention(): string {
         return `<#${this.id}>`;
@@ -72,7 +81,8 @@ export default class Channel extends Base {
     override toJSON(): Types.JSON.JSONChannel {
         return {
             ...super.toJSON(),
-            type: this.type
+            flags: this.flags,
+            type:  this.type
         };
     }
 }

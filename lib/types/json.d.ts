@@ -220,6 +220,7 @@ export interface JSONCategoryChannel extends JSONGuildChannel {
     type: ChannelTypes.GUILD_CATEGORY;
 }
 export interface JSONChannel extends JSONBase {
+    flags: number;
     type: ChannelTypes;
 }
 export interface JSONClientApplication extends JSONBase {
@@ -293,6 +294,8 @@ export interface JSONForumChannel extends JSONThreadOnlyChannel {
 export interface JSONGroupChannel extends JSONChannel {
     applicationID: string;
     icon: string | null;
+    lastMessageID: string | null;
+    lastPinTimestamp: string | null;
     managed: boolean;
     name: string | null;
     nicks: Array<Record<"id" | "nick", string>>;
@@ -660,6 +663,7 @@ export interface JSONPrimaryGuild {
 }
 export interface JSONPrivateChannel extends JSONChannel {
     lastMessageID: string | null;
+    lastPinTimestamp: string | null;
     messages: Array<string>;
     recipient: JSONUser;
     type: ChannelTypes.DM;
@@ -758,6 +762,7 @@ export interface JSONTeam extends JSONBase {
 export interface JSONTestEntitlement extends JSONBaseEntitlement {}
 export interface JSONTextableChannel extends JSONGuildChannel {
     lastMessageID: string | null;
+    lastPinTimestamp: string | null;
     messages: Array<string>;
     nsfw: boolean;
     permissionOverwrites: Array<JSONPermissionOverwrite>;
