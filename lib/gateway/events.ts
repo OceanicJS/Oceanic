@@ -122,7 +122,7 @@ export async function CHANNEL_INFO(data: DispatchEventMap["CHANNEL_INFO"], shard
         }
     }
 
-    shard.client.emit("channelInfo", guild ?? { id: data.guild_id }, channels);
+    shard.client.emit("channelInfo", guild ?? { id: data.guild_id }, channels, shard);
     shard.lastHeartbeatAck = true;
 }
 
@@ -178,20 +178,20 @@ export async function GUILD_CREATE(data: DispatchEventMap["GUILD_CREATE"], shard
 
     if (data.unavailable) {
         shard.client.guilds.delete(data.id);
-        shard.client.emit("unavailableGuildCreate", shard.client.unavailableGuilds.update(data));
+        shard.client.emit("unavailableGuildCreate", shard.client.unavailableGuilds.update(data), shard);
     } else {
         const guild = shard["createGuild"](data);
         if (shard.ready) {
             if (shard.client.unavailableGuilds.delete(guild.id)) {
-                shard.client.emit("guildAvailable", guild);
+                shard.client.emit("guildAvailable", guild, shard);
             } else {
-                shard.client.emit("guildCreate", guild);
+                shard.client.emit("guildCreate", guild, shard);
             }
         } else {
             if (shard.client.unavailableGuilds.delete(guild.id)) {
                 void shard["restartGuildCreateTimeout"]();
             } else {
-                shard.client.emit("guildCreate", guild);
+                shard.client.emit("guildCreate", guild, shard);
             }
         }
     }
@@ -206,9 +206,9 @@ export async function GUILD_DELETE(data: DispatchEventMap["GUILD_DELETE"], shard
     guild?.threads.clear();
     shard.client.guilds.delete(data.id);
     if (data.unavailable) {
-        shard.client.emit("guildUnavailable", shard.client.unavailableGuilds.update(data));
+        shard.client.emit("guildUnavailable", shard.client.unavailableGuilds.update(data), shard);
     } else {
-        shard.client.emit("guildDelete", guild ?? { id: data.id });
+        shard.client.emit("guildDelete", guild ?? { id: data.id }, shard);
     }
 }
 
@@ -293,7 +293,7 @@ export async function GUILD_MEMBERS_CHUNK(data: DispatchEventMap["GUILD_MEMBERS_
         }
     }
 
-    shard.client.emit("guildMemberChunk", members);
+    shard.client.emit("guildMemberChunk", members, shard);
     shard.lastHeartbeatAck = true;
 }
 
@@ -766,7 +766,7 @@ export async function SOUNDBOARD_SOUNDS(data: DispatchEventMap["SOUNDBOARD_SOUND
         }
     }
 
-    shard.client.emit("soundboardSounds", guild ?? { id: data.guild_id }, soundboardSounds);
+    shard.client.emit("soundboardSounds", guild ?? { id: data.guild_id }, soundboardSounds, shard);
     shard.lastHeartbeatAck = true;
 }
 
