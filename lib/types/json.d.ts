@@ -362,6 +362,21 @@ export interface JSONGuildChannel extends JSONChannel {
     parentID: string | null;
     type: Types.Channels.GuildChannels;
 }
+export interface JSONGuildJoinRequest extends JSONBase {
+    actionedAt?: string;
+    actionedByUser?: JSONUser;
+    applicationStatus: Types.Guilds.GuildJoinRequestStatus;
+    createdAt: number;
+    formResponses?: Array<Record<string, unknown>> | null;
+    guildID: string;
+    interviewChannelID: string | null;
+    joinRequestID: string;
+    lastSeen: string | null;
+    rejectionReason: string | null;
+    reviewedAt?: string;
+    user?: JSONUser;
+    userID: string;
+}
 export interface JSONGuildPreview extends JSONBase {
     approximateMemberCount: number;
     approximatePresenceCount: number;

@@ -19,6 +19,7 @@ import Webhook from "../structures/Webhook";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
 import Channel from "../structures/Channel";
+import GuildJoinRequest from "../structures/GuildJoinRequest";
 import { setTimeout } from "node:timers/promises";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
@@ -26,6 +27,26 @@ export default class Guilds {
     private _manager: RESTManager;
     constructor(manager: RESTManager) {
         this._manager = manager;
+    }
+
+    /**
+     * Accept or deny a guild join request.
+     * @param guildID The ID of the guild.
+     * @param requestID The ID of the join request.
+     * @param options The options for actioning the join request.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async actionJoinRequest(guildID: string, requestID: string, options: Types.Guilds.ActionGuildJoinRequestOptions): Promise<Types.Guilds.GuildJoinRequest> {
+        options = this._manager.client.util._freeze(options);
+        return this._manager.authRequest<Types.Guilds.RawGuildJoinRequest>({
+            method: "PATCH",
+            path:   Routes.GUILD_JOIN_REQUEST(guildID, requestID),
+            json:   {
+                action:           options.action,
+                rejection_reason: options.rejectionReason
+            }
+        }).then(data => this._manager.client.guilds.get(guildID)?.joinRequests.update(data) ?? new GuildJoinRequest(data, this._manager.client));
     }
 
     /**
@@ -1264,6 +1285,33 @@ export default class Guilds {
     }
 
     /**
+     * Get guild join requests.
+     * @param guildID The ID of the guild.
+     * @param options The options for getting join requests.
+     * @caching This method **may** cache its result. The results will not be cached if the guild is not cached.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async getJoinRequests(guildID: string, options: Types.Guilds.GetGuildJoinRequestsOptions): Promise<Types.Guilds.GuildJoinRequests> {
+        options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        query.setIfPresent("after", options.after);
+        query.setIfPresent("before", options.before);
+        query.setIfPresent("limit", options.limit);
+        query.set("status", options.status);
+        return this._manager.authRequest<Types.Guilds.RawGuildJoinRequestsResponse>({
+            method: "GET",
+            path:   Routes.GUILD_JOIN_REQUESTS(guildID),
+            query
+        }).then(data => {
+            const guild = this._manager.client.guilds.get(guildID);
+            return {
+                guildJoinRequests: data.guild_join_requests.map(request => guild?.joinRequests.update(request) ?? new GuildJoinRequest(request, this._manager.client)),
+                total:             data.total
+            };
+        });
+    }
+
+    /**
      * Get a guild member.
      * @param guildID The ID of the guild.
      * @param memberID The ID of the member.
@@ -1293,6 +1341,40 @@ export default class Guilds {
             path:   Routes.GUILD_MEMBERS(guildID),
             query
         }).then(data => data.map(d => this._manager.client.util.updateMember(guildID, d.user.id, d)));
+    }
+
+    /**
+     * Get a guild's new member welcome info.
+     * @param guildID The ID of the guild.
+     * @caching This method **does not** cache its result.
+     */
+    async getNewMemberWelcome(guildID: string): Promise<Types.Guilds.NewMemberWelcome | null> {
+        return this._manager.authRequest<Types.Guilds.RawNewMemberWelcome | null>({
+            method: "GET",
+            path:   Routes.GUILD_NEW_MEMBER_WELCOME(guildID)
+        }).then(data => data === null ? null : {
+            enabled:          data.enabled,
+            guildID:          data.guild_id,
+            newMemberActions: data.new_member_actions.map(action => action === null ? null : {
+                actionType:  action.action_type,
+                channelID:   action.channel_id,
+                description: action.description,
+                emoji:       action.emoji,
+                icon:        action.icon,
+                title:       action.title
+            }),
+            resourceChannels: data.resource_channels.map(channel => channel === null ? null : {
+                channelID:   channel.channel_id,
+                description: channel.description,
+                emoji:       channel.emoji,
+                icon:        channel.icon,
+                title:       channel.title
+            }),
+            welcomeMessage: {
+                authorIDs: data.welcome_message.author_ids,
+                message:   data.welcome_message.message
+            }
+        });
     }
 
     /**

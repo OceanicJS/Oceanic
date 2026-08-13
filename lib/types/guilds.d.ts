@@ -28,6 +28,7 @@ import type User from "../structures/User";
 import type Integration from "../structures/Integration";
 import type Member from "../structures/Member";
 import type Message from "../structures/Message";
+import type GuildJoinRequestStructure from "../structures/GuildJoinRequest";
 
 // channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only
@@ -166,6 +167,136 @@ export interface WelcomeScreenChannel {
     emojiID: string | null;
     /** The name (or unicode characters) of the emoji to use on the welcome channel. */
     emojiName: string | null;
+}
+
+export type NewMemberActionType = "VIEW" | "CHAT";
+export type GuildJoinRequestStatus = "STARTED" | "SUBMITTED" | "REJECTED" | "APPROVED";
+export type GuildJoinRequestAction = "APPROVED" | "REJECTED";
+export type GuildJoinRequest = GuildJoinRequestStructure;
+
+export interface RawNewMemberWelcome {
+    enabled: boolean;
+    guild_id: string;
+    new_member_actions: Array<RawNewMemberWelcomeAction | null>;
+    resource_channels: Array<RawNewMemberResourceChannel | null>;
+    welcome_message: RawNewMemberWelcomeMessage;
+}
+
+export interface RawNewMemberWelcomeMessage {
+    author_ids: Array<string>;
+    message: string;
+}
+
+export interface RawNewMemberWelcomeAction {
+    action_type: NewMemberActionType;
+    channel_id: string;
+    description: string;
+    emoji?: PartialEmoji;
+    icon?: string;
+    title: string;
+}
+
+export interface RawNewMemberResourceChannel {
+    channel_id: string;
+    description: string;
+    emoji?: PartialEmoji;
+    icon?: string;
+    title: string;
+}
+
+export interface NewMemberWelcome {
+    /** If the new member welcome experience is enabled. */
+    enabled: boolean;
+    /** The ID of the guild this new member welcome is for. */
+    guildID: string;
+    /** Actions shown to new members of the guild. */
+    newMemberActions: Array<NewMemberWelcomeAction | null>;
+    /** Read-only channels that provide resources for new members. */
+    resourceChannels: Array<NewMemberResourceChannel | null>;
+    /** Welcome message shown to new members of the guild. */
+    welcomeMessage: NewMemberWelcomeMessage;
+}
+
+export interface NewMemberWelcomeMessage {
+    /** The IDs of the users who authored the welcome message. */
+    authorIDs: Array<string>;
+    /** The welcome message shown to new members. */
+    message: string;
+}
+
+export interface NewMemberWelcomeAction {
+    /** The action type. */
+    actionType: NewMemberActionType;
+    /** The ID of the channel for this action. */
+    channelID: string;
+    /** The action description. */
+    description: string;
+    /** The emoji for the action, if present. */
+    emoji?: PartialEmoji;
+    /** The action icon, if present. */
+    icon?: string;
+    /** The action title. */
+    title: string;
+}
+
+export interface NewMemberResourceChannel {
+    /** The ID of the resource channel. */
+    channelID: string;
+    /** The resource description. */
+    description: string;
+    /** The emoji for the resource channel, if present. */
+    emoji?: PartialEmoji;
+    /** The resource icon, if present. */
+    icon?: string;
+    /** The resource title. */
+    title: string;
+}
+
+export interface RawGuildJoinRequest {
+    actioned_at?: string;
+    actioned_by_user?: Types.Users.RawUser;
+    application_status: GuildJoinRequestStatus;
+    created_at: string;
+    form_responses?: Array<Record<string, unknown>> | null;
+    guild_id: string;
+    id: string;
+    interview_channel_id: string | null;
+    join_request_id: string;
+    last_seen: string | null;
+    rejection_reason: string | null;
+    reviewed_at?: string;
+    user?: Types.Users.RawUser;
+    user_id: string;
+}
+
+export interface RawGuildJoinRequestsResponse {
+    guild_join_requests: Array<RawGuildJoinRequest>;
+    total?: number;
+}
+
+export interface GetGuildJoinRequestsOptions {
+    /** Get requests after this request ID. */
+    after?: string;
+    /** Get requests before this request ID. */
+    before?: string;
+    /** The maximum number of requests to return. */
+    limit?: number;
+    /** Filter requests by status. */
+    status: Exclude<GuildJoinRequestStatus, "STARTED">;
+}
+
+export interface GuildJoinRequests {
+    /** The join requests for the guild. */
+    guildJoinRequests: Array<GuildJoinRequest>;
+    /** The total number of join requests that match the query, if included. */
+    total?: number;
+}
+
+export interface ActionGuildJoinRequestOptions {
+    /** The action to take on the join request. */
+    action: GuildJoinRequestAction;
+    /** The reason for rejecting the join request. */
+    rejectionReason?: string | null;
 }
 export interface RawSticker {
     /** @deprecated */

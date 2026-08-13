@@ -34,6 +34,7 @@ export { default as ForumChannel } from "./structures/ForumChannel";
 export { default as GroupChannel } from "./structures/GroupChannel";
 export { default as Guild } from "./structures/Guild";
 export { default as GuildChannel } from "./structures/GuildChannel";
+export { default as GuildJoinRequest } from "./structures/GuildJoinRequest";
 export { default as GuildPreview } from "./structures/GuildPreview";
 export { default as GuildScheduledEvent } from "./structures/GuildScheduledEvent";
 export { default as GuildTemplate } from "./structures/GuildTemplate";

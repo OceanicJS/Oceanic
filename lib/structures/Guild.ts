@@ -5,6 +5,7 @@ import GuildChannel from "./GuildChannel";
 import Member from "./Member";
 import GuildScheduledEvent from "./GuildScheduledEvent";
 import ThreadChannel from "./ThreadChannel";
+import GuildJoinRequest from "./GuildJoinRequest";
 import type User from "./User";
 import type VoiceChannel from "./VoiceChannel";
 import type ClientApplication from "./ClientApplication";
@@ -103,6 +104,8 @@ export default class Guild extends Base {
     inventorySettings: Types.Guilds.InventorySettings | null;
     /** The cached invites in this guild. This will only be populated by invites created while the client is active. */
     invites: SimpleCollection<string, Types.Invites.RawInvite, InviteWithMetadata<Types.Channels.AnyGuildInviteChannel>, "code">;
+    /** The cached join requests in this guild. This will be empty unless join requests have been fetched. */
+    joinRequests: TypedCollection<Types.Guilds.RawGuildJoinRequest, GuildJoinRequest>;
     /** The date at which this guild was joined. */
     joinedAt: Date | null;
     /** If this guild is considered large. */
@@ -218,6 +221,7 @@ export default class Guild extends Base {
         this.integrations = new TypedCollection(Integration, client, client.util._getLimit("integrations", this.id));
         this.inventorySettings = null;
         this.invites = new SimpleCollection(rawInvite => Invite.withMetadata(rawInvite, client), client.util._getLimit("invites", this.id), "update", "code");
+        this.joinRequests = new TypedCollection(GuildJoinRequest, client);
         this.joinedAt = null;
         this.large = (data.member_count ?? data.approximate_member_count ?? 0) >= client.shards.options.largeThreshold;
         this.latestOnboardingQuestionID = null;
@@ -613,6 +617,17 @@ export default class Guild extends Base {
                 destroy: () => this.client.voiceAdapters.delete(this.id)
             };
         };
+    }
+
+    /**
+     * Accept or deny a join request for this guild.
+     * @param requestID The ID of the join request.
+     * @param options The options for actioning the join request.
+     * @caching This method **does** cache its result.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async actionJoinRequest(requestID: string, options: Types.Guilds.ActionGuildJoinRequestOptions): Promise<Types.Guilds.GuildJoinRequest> {
+        return this.client.rest.guilds.actionJoinRequest(this.id, requestID, options);
     }
 
     /**
@@ -1150,6 +1165,16 @@ export default class Guild extends Base {
     }
 
     /**
+     * Get this guild's join requests.
+     * @param options The options for getting join requests.
+     * @caching This method **does** cache its result.
+     * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     */
+    async getJoinRequests(options: Types.Guilds.GetGuildJoinRequestsOptions): Promise<Types.Guilds.GuildJoinRequests> {
+        return this.client.rest.guilds.getJoinRequests(this.id, options);
+    }
+
+    /**
      * Get a member of this guild.
      * @param memberID The ID of the member.
      */
@@ -1163,6 +1188,13 @@ export default class Guild extends Base {
      */
     async getMembers(options?: Types.Guilds.GetMembersOptions): Promise<Array<Member>> {
         return this.client.rest.guilds.getMembers(this.id, options);
+    }
+
+    /**
+     * Get this guild's new member welcome info.
+     */
+    async getNewMemberWelcome(): Promise<Types.Guilds.NewMemberWelcome | null> {
+        return this.client.rest.guilds.getNewMemberWelcome(this.id);
     }
 
     /**

@@ -61,6 +61,9 @@ export const GUILD_VANITY_URL            = (guildID: string) => encode`/guilds/$
 export const GUILD_WIDGET_IMAGE          = (guildID: string) => encode`/guilds/${guildID}/widget.png`;
 export const GUILD_WIDGET_JSON           = (guildID: string) => encode`/guilds/${guildID}/widget.json`;
 export const GUILD_WELCOME_SCREEN        = (guildID: string) => encode`/guilds/${guildID}/welcome-screen`;
+export const GUILD_NEW_MEMBER_WELCOME    = (guildID: string) => encode`/guilds/${guildID}/new-member-welcome`;
+export const GUILD_JOIN_REQUEST          = (guildID: string, requestID: string) => encode`/guilds/${guildID}/requests/${requestID}`;
+export const GUILD_JOIN_REQUESTS         = (guildID: string) => encode`/guilds/${guildID}/requests`;
 export const GUILD_VOICE_STATE           = (guildID: string, userID: string) => encode`/guilds/${guildID}/voice-states/${userID}`;
 export const GUILD_STICKER			     = (guildID: string, stickerID: string) => encode`/guilds/${guildID}/stickers/${stickerID}`;
 export const GUILD_STICKERS			     = (guildID: string) => encode`/guilds/${guildID}/stickers`;
