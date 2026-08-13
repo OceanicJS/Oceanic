@@ -86,8 +86,6 @@ export enum UserFlags {
     HYPESQUAD_BALANCE          = 2 ** 8,
     EARLY_SUPPORTER            = 2 ** 9,
     PSEUDO_TEAM_USER           = 2 ** 10,
-    /** @deprecated Use `IS_HUBSPOT_CONTACT`. This will be removed in `1.15.0` */
-    INTERNAL_APPLICATION       = 2 ** 11,
     /** User is registered on Discord's HubSpot customer platform, used for official Discord programs (e.g. partner) */
     IS_HUBSPOT_CONTACT         = 2 ** 11,
     /** @deprecated User is a system user (i.e. official Discord account) */
@@ -189,8 +187,6 @@ export enum ApplicationFlags {
     ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 2 ** 10,
     /** Application has limited access to the social layer SDK */
     SOCIAL_LAYER_INTEGRATION_LIMITED              = 2 ** 10,
-    /** @deprecated Use `CLOUD_GAMING_DEMO`. This will be removed in `1.15.0`. */
-    RPC_HAS_CONNECTED_ACCOUNT                     = 2 ** 11,
     /** Application is trialing cloud gaming features */
     CLOUD_GAMING_DEMO                             = 2 ** 11,
     /** Intent required for bots in 100 or more guilds to receive Presence Update Gateway events */
@@ -1893,8 +1889,6 @@ export enum OnboardingModes {
 }
 
 export enum InviteFlags {
-    /** @deprecated Use `IS_GUEST_INVITE`. This will be removed in `1.15.0`. */
-    GUEST           = 1 << 0,
     /** Invite grants one-time access to a voice channel in the guild */
     IS_GUEST_INVITE = 1 << 0,
 }
