@@ -155,7 +155,7 @@ export interface JSONApplicationCommand extends JSONBase {
 }
 export interface JSONAttachment extends JSONBase {
     application?: JSONApplication;
-    clipCreatedAt?: string;
+    clipCreatedAt?: number;
     clipParticipants?: Array<JSONUser>;
     contentType?: string;
     description?: string;
@@ -372,9 +372,9 @@ export interface JSONGuildJoinRequest extends JSONBase {
     guildID: string;
     interviewChannelID: string | null;
     joinRequestID: string;
-    lastSeen: string | null;
+    lastSeen: number | null;
     rejectionReason: string | null;
-    reviewedAt?: string;
+    reviewedAt?: number;
     user?: JSONUser;
     userID: string;
 }
@@ -680,7 +680,7 @@ export interface JSONPingInteraction extends JSONInteraction {
 export interface JSONPoll {
     allowMultiselect: boolean;
     answers: Array<Types.Channels.PollAnswer>;
-    expiry: string;
+    expiry: number;
     layoutType: PollLayoutType;
     question: Types.Channels.PollQuestion;
     results: Types.Channels.PollResults;
@@ -774,10 +774,10 @@ export interface JSONStageInstance extends JSONBase {
     topic: string;
 }
 export interface JSONSubscription extends JSONBase {
-    canceledAt: string | null;
+    canceledAt: number | null;
     country?: string;
-    currentPeriodEnd: string;
-    currentPeriodStart: string;
+    currentPeriodEnd: number;
+    currentPeriodStart: number;
     entitlementIDs: Array<string>;
     renewalSKUIDs: Array<string>;
     skuIDs: Array<string>;

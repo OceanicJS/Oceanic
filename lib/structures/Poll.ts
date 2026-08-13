@@ -75,7 +75,7 @@ export default class Poll {
         return {
             allowMultiselect: this.allowMultiselect,
             answers:          this.answers,
-            expiry:           this.expiry.toISOString(),
+            expiry:           this.expiry.getTime(),
             layoutType:       this.layoutType,
             question:         this.question,
             results:          this.results

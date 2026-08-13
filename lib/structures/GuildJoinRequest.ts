@@ -109,9 +109,9 @@ export default class GuildJoinRequest extends Base {
             guildID:            this.guildID,
             interviewChannelID: this.interviewChannelID,
             joinRequestID:      this.joinRequestID,
-            lastSeen:           this.lastSeen?.toISOString() ?? null,
+            lastSeen:           this.lastSeen?.getTime() ?? null,
             rejectionReason:    this.rejectionReason,
-            reviewedAt:         this.reviewedAt?.toISOString(),
+            reviewedAt:         this.reviewedAt?.getTime(),
             user:               this.user?.toJSON(),
             userID:             this.userID
         };

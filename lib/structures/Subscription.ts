@@ -38,10 +38,10 @@ export default class Subscription extends Base {
     override toJSON(): Types.JSON.JSONSubscription {
         return {
             ...super.toJSON(),
-            canceledAt:         this.canceledAt?.toISOString() ?? null,
+            canceledAt:         this.canceledAt?.getTime() ?? null,
             country:            this.country,
-            currentPeriodEnd:   this.currentPeriodEnd.toISOString(),
-            currentPeriodStart: this.currentPeriodStart.toISOString(),
+            currentPeriodEnd:   this.currentPeriodEnd.getTime(),
+            currentPeriodStart: this.currentPeriodStart.getTime(),
             entitlementIDs:     this.entitlementIDs,
             renewalSKUIDs:      this.renewalSKUIDs,
             skuIDs:             this.skuIDs,

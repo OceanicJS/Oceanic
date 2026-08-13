@@ -66,7 +66,7 @@ export default class Attachment extends Base {
         return {
             ...super.toJSON(),
             application:        this.application?.toJSON(),
-            clipCreatedAt:      this.clipCreatedAt?.toISOString(),
+            clipCreatedAt:      this.clipCreatedAt?.getTime(),
             clipParticipants:   this.clipParticipants?.map(user => user.toJSON()),
             contentType:        this.contentType,
             description:        this.description,
