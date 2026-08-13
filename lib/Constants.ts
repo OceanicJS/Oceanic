@@ -45,6 +45,8 @@ export const ImageFormats = [
 ] as const;
 export type ImageFormat = typeof ImageFormats[number];
 
+export type FilterFileTypes = "image" | "video" | "audio" | `.${string}`;
+
 export enum WebhookTypes {
     /** Incoming webhooks can post messages to channels with a generated token */
     INCOMING         = 1,
