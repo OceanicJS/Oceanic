@@ -384,18 +384,20 @@ interface ModalComponentsLabel<T extends ModalSubmitComponents> {
     type: ComponentTypes.LABEL;
 }
 
-export type ToModalSubmitComponentFromRaw<T extends RawModalSubmitComponents> =
-T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
-    T extends RawModalSubmitStringSelectComponent ? ModalSubmitStringSelectComponent :
-        T extends RawModalSubmitUserSelectComponent ? ModalSubmitUserSelectComponent :
-            T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent :
-                T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
-                    T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
-                        T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
-                            T extends RawModalSubmitCheckboxComponent ? ModalSubmitCheckboxComponent :
-                                T extends RawModalSubmitCheckboxGroupComponent ? ModalSubmitCheckboxGroupComponent :
-                                    T extends RawModalSubmitRadioGroupComponent ? ModalSubmitRadioGroupComponent :
-                                        never;
+export type ToModalSubmitComponentFromRaw<T extends RawModalSubmitComponentsActionRow | RawModalSubmitComponentsLabel | RawModalSubmitComponents> =
+T extends RawModalSubmitComponentsActionRow ? ModalSubmitComponentsActionRow :
+    T extends RawModalSubmitComponentsLabel ? ModalSubmitComponentsLabel :
+        T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
+            T extends RawModalSubmitStringSelectComponent ? ModalSubmitStringSelectComponent :
+                T extends RawModalSubmitUserSelectComponent ? ModalSubmitUserSelectComponent :
+                    T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent :
+                        T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
+                            T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
+                                T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
+                                    T extends RawModalSubmitCheckboxComponent ? ModalSubmitCheckboxComponent :
+                                        T extends RawModalSubmitCheckboxGroupComponent ? ModalSubmitCheckboxGroupComponent :
+                                            T extends RawModalSubmitRadioGroupComponent ? ModalSubmitRadioGroupComponent :
+                                                never;
 
 /** @deprecated */
 export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
@@ -437,18 +439,20 @@ export interface ModalSubmitComponentsNullableStringValue<T extends ModalCompone
     value: string | null;
 }
 
-export type ToRawFromModalSubmitComponent<T extends ModalSubmitComponents> =
-T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
-    T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
-        T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
-            T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent :
-                T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
-                    T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
-                        T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent :
-                            T extends ModalSubmitCheckboxComponent ? RawModalSubmitCheckboxComponent :
-                                T extends ModalSubmitCheckboxGroupComponent ? RawModalSubmitCheckboxGroupComponent :
-                                    T extends ModalSubmitRadioGroupComponent ? RawModalSubmitRadioGroupComponent :
-                                        never;
+export type ToRawFromModalSubmitComponent<T extends ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel | ModalSubmitComponents> =
+T extends ModalSubmitComponentsActionRow ? RawModalSubmitComponentsActionRow :
+    T extends ModalSubmitComponentsLabel ? RawModalSubmitComponentsLabel :
+        T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
+            T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
+                T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
+                    T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent :
+                        T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
+                            T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
+                                T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent :
+                                    T extends ModalSubmitCheckboxComponent ? RawModalSubmitCheckboxComponent :
+                                        T extends ModalSubmitCheckboxGroupComponent ? RawModalSubmitCheckboxGroupComponent :
+                                            T extends ModalSubmitRadioGroupComponent ? RawModalSubmitRadioGroupComponent :
+                                                never;
 
 /** @deprecated */
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;
@@ -522,3 +526,37 @@ export interface InteractionCallbackResource<CH extends Types.Channels.AnyIntera
     message?: Message<CH>;
     type: InteractionResponseTypes;
 }
+
+/* eslint-disable @typescript-eslint/member-ordering */
+
+export interface ModalSubmitComponentTypeMap {
+    [ComponentTypes.ACTION_ROW]: ModalSubmitComponentsActionRow;
+    [ComponentTypes.STRING_SELECT]: ModalSubmitStringSelectComponent;
+    [ComponentTypes.TEXT_INPUT]: ModalSubmitTextInputComponent;
+    [ComponentTypes.USER_SELECT]: ModalSubmitUserSelectComponent;
+    [ComponentTypes.ROLE_SELECT]: ModalSubmitRoleSelectComponent;
+    [ComponentTypes.MENTIONABLE_SELECT]: ModalSubmitMentionableSelectComponent;
+    [ComponentTypes.CHANNEL_SELECT]: ModalSubmitChannelSelectComponent;
+    [ComponentTypes.LABEL]: ModalSubmitComponentsLabel;
+    [ComponentTypes.FILE_UPLOAD]: ModalSubmitFileUploadComponent;
+    [ComponentTypes.RADIO_GROUP]: ModalSubmitRadioGroupComponent;
+    [ComponentTypes.CHECKBOX_GROUP]: ModalSubmitCheckboxGroupComponent;
+    [ComponentTypes.CHECKBOX]: ModalSubmitCheckboxComponent;
+}
+
+export interface RawModalSubmitComponentTypeMap {
+    [ComponentTypes.ACTION_ROW]: RawModalSubmitComponentsActionRow;
+    [ComponentTypes.STRING_SELECT]: RawModalSubmitStringSelectComponent;
+    [ComponentTypes.TEXT_INPUT]: RawModalSubmitTextInputComponent;
+    [ComponentTypes.USER_SELECT]: RawModalSubmitUserSelectComponent;
+    [ComponentTypes.ROLE_SELECT]: RawModalSubmitRoleSelectComponent;
+    [ComponentTypes.MENTIONABLE_SELECT]: RawModalSubmitMentionableSelectComponent;
+    [ComponentTypes.CHANNEL_SELECT]: RawModalSubmitChannelSelectComponent;
+    [ComponentTypes.LABEL]: RawModalSubmitComponentsLabel;
+    [ComponentTypes.FILE_UPLOAD]: RawModalSubmitFileUploadComponent;
+    [ComponentTypes.RADIO_GROUP]: RawModalSubmitRadioGroupComponent;
+    [ComponentTypes.CHECKBOX_GROUP]: RawModalSubmitCheckboxGroupComponent;
+    [ComponentTypes.CHECKBOX]: RawModalSubmitCheckboxComponent;
+}
+
+/* eslint-enable @typescript-eslint/member-ordering */

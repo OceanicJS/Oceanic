@@ -272,6 +272,7 @@ export interface RawApplicationCommandOption {
     description: string;
     description_localizations?: LocaleMap | null;
     description_localized?: string;
+    file_types?: Array<string>;
     max_length?: number;
     max_value?: number;
     min_length?: number;
@@ -290,12 +291,15 @@ export interface CombinedApplicationCommandOption {
     choices?: Array<ApplicationCommandOptionsChoice<ApplicationCommandOptionsTypesWithChoices>>;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
+    descriptionLocalized?: string;
+    fileTypes?: Array<string>;
     maxLength?: number;
     maxValue?: number;
     minLength?: number;
     minValue?: number;
     name: string;
     nameLocalizations?: LocaleMap | null;
+    nameLocalized?: string;
     options?: Array<CombinedApplicationCommandOption>;
     required?: boolean;
     type: ApplicationCommandOptionTypes;
@@ -379,7 +383,10 @@ interface ApplicationCommandOptionsSubCommandGroup extends ApplicationCommandOpt
     options?: Array<ApplicationCommandOptionsSubCommand | ApplicationCommandOptionsWithValue>;
 }
 
-export interface ApplicationCommandOptionsAttachment extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT> {}
+export interface ApplicationCommandOptionsAttachment extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.ATTACHMENT> {
+    fileTypes?: Array<string>;
+}
+
 export interface ApplicationCommandOptionsBoolean extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.BOOLEAN> {}
 export interface ApplicationCommandOptionsChannel extends ApplicationCommandOptionBase<ApplicationCommandOptionTypes.CHANNEL>, ApplicationCommandOptionsChannelTypes {}
 export type ApplicationCommandOptionsInteger = ApplicationCommandOptionBase<ApplicationCommandOptionTypes.INTEGER> & Types.Shared.ExclusifyUnion<ApplicationCommandOptionsAutocomplete | ApplicationCommandOptionsMinMaxValue | ApplicationCommandOptionsChoices<ApplicationCommandOptionTypes.INTEGER>>;

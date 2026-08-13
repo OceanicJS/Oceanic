@@ -15,9 +15,8 @@ import TypedCollection from "../util/TypedCollection";
 export default class ClientApplication extends Base {
     /** The entitlements for this application. This will almost certainly be empty unless you fetch entitlements, or recieve new/updated entitlements. */
     entitlements: TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
-    /** 
+    /**
      * This application's [flags](https://discord.com/developers/docs/resources/application#application-object-application-flags).
-     * 
      * @deprecated See {@link flagsNew}. This will likely be made a bigint in the future.
      */
     flags: number;
@@ -292,8 +291,8 @@ export default class ClientApplication extends Base {
     override toJSON(): Types.JSON.JSONClientApplication {
         return {
             ...super.toJSON(),
-            flags: this.flags,
-            flagsNew: this.flagsNew,
+            flags:    this.flags,
+            flagsNew: this.flagsNew
         };
     }
 

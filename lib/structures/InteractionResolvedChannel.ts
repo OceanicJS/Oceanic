@@ -56,11 +56,11 @@ export default class InteractionResolvedChannel extends Channel {
         return {
             ...super.toJSON(),
             appPermissions: this.appPermissions.toJSON(),
-            name: this.name,
-            parentID: this.parentID,
-            permissions: this.permissions.toJSON(),
+            name:           this.name,
+            parentID:       this.parentID,
+            permissions:    this.permissions.toJSON(),
             threadMetadata: this.threadMetadata,
-            type: this.type,
-        }
+            type:           this.type
+        };
     }
 }

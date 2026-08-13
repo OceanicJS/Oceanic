@@ -55,8 +55,8 @@ import type CategoryChannel from "../structures/CategoryChannel";
 import type MediaChannel from "../structures/MediaChannel";
 
 export interface RawChannel {
-    application_id?: string | null;
     app_permissions?: string;
+    application_id?: string | null;
     applied_tags?: Array<string>;
     available_tags?: Array<RawForumTag>;
     bitrate?: number;
@@ -1546,6 +1546,7 @@ export interface RawModalLabel extends Omit<BaseComponent, "id"> {
 
 export interface ModalFileUploadComponent extends BaseComponent {
     customID: string;
+    fileTypes?: Array<string>;
     maxValues?: number;
     minValues?: number;
     required?: boolean;
@@ -1554,6 +1555,7 @@ export interface ModalFileUploadComponent extends BaseComponent {
 
 export interface RawModalFileUploadComponent extends BaseComponent {
     custom_id: string;
+    file_types?: Array<string>;
     max_values?: number;
     min_values?: number;
     required?: boolean;
@@ -1569,3 +1571,54 @@ export type ParentChannelType<CH extends GuildChannel> =
     CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel :
         CH extends Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel :
             TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
+
+
+/* eslint-disable @typescript-eslint/member-ordering */
+export interface MessageComponentTypeMap {
+    [ComponentTypes.ACTION_ROW]: MessageActionRow;
+    [ComponentTypes.BUTTON]: ButtonComponent;
+    [ComponentTypes.STRING_SELECT]: StringSelectMenu;
+    [ComponentTypes.TEXT_INPUT]: TextInput;
+    [ComponentTypes.USER_SELECT]: UserSelectMenu;
+    [ComponentTypes.ROLE_SELECT]: RoleSelectMenu;
+    [ComponentTypes.MENTIONABLE_SELECT]: MentionableSelectMenu;
+    [ComponentTypes.CHANNEL_SELECT]: ChannelSelectMenu;
+    [ComponentTypes.SECTION]: SectionComponent;
+    [ComponentTypes.TEXT_DISPLAY]: TextDisplayComponent;
+    [ComponentTypes.THUMBNAIL]: ThumbnailComponent;
+    [ComponentTypes.MEDIA_GALLERY]: MediaGalleryComponent;
+    [ComponentTypes.FILE]: FileComponent;
+    [ComponentTypes.SEPARATOR]: SeparatorComponent;
+    [ComponentTypes.CONTENT_INVENTORY_ENTRY]: never;
+    [ComponentTypes.CONTAINER]: ContainerComponent;
+    [ComponentTypes.LABEL]: ModalLabel;
+    [ComponentTypes.FILE_UPLOAD]: ModalFileUploadComponent;
+    [ComponentTypes.RADIO_GROUP]: RadioGroupComponent;
+    [ComponentTypes.CHECKBOX_GROUP]: CheckboxGroupComponent;
+    [ComponentTypes.CHECKBOX]: CheckboxComponent;
+}
+export interface RawMessageComponentTypeMap {
+    [ComponentTypes.ACTION_ROW]: RawMessageActionRow;
+    [ComponentTypes.BUTTON]: RawButtonComponent;
+    [ComponentTypes.STRING_SELECT]: RawStringSelectMenu;
+    [ComponentTypes.TEXT_INPUT]: RawTextInput;
+    [ComponentTypes.USER_SELECT]: RawUserSelectMenu;
+    [ComponentTypes.ROLE_SELECT]: RawRoleSelectMenu;
+    [ComponentTypes.MENTIONABLE_SELECT]: RawMentionableSelectMenu;
+    [ComponentTypes.CHANNEL_SELECT]: RawChannelSelectMenu;
+    [ComponentTypes.SECTION]: RawSectionComponent;
+    [ComponentTypes.TEXT_DISPLAY]: RawTextDisplayComponent;
+    [ComponentTypes.THUMBNAIL]: RawThumbnailComponent;
+    [ComponentTypes.MEDIA_GALLERY]: RawMediaGalleryComponent;
+    [ComponentTypes.FILE]: RawFileComponent;
+    [ComponentTypes.SEPARATOR]: RawSeparatorComponent;
+    [ComponentTypes.CONTENT_INVENTORY_ENTRY]: never;
+    [ComponentTypes.CONTAINER]: RawContainerComponent;
+    [ComponentTypes.LABEL]: RawModalLabel;
+    [ComponentTypes.FILE_UPLOAD]: RawModalFileUploadComponent;
+    [ComponentTypes.RADIO_GROUP]: RawRadioGroupComponent;
+    [ComponentTypes.CHECKBOX_GROUP]: RawCheckboxGroupComponent;
+    [ComponentTypes.CHECKBOX]: RawCheckboxComponent;
+}
+
+/* eslint-enable @typescript-eslint/member-ordering */

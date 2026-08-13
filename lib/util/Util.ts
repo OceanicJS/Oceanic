@@ -1,11 +1,13 @@
 /** @module Util */
 import { CDN_URL } from "./Routes";
 import { FrozenModificationError } from "./Errors";
+import { fromRaw as messageComponentsFromRaw, toRaw as messageComponentsToRaw } from "./parsing/message-components";
+import { fromRaw as modalSubmitComponentsFromRaw, toRaw as modalSubmitComponentsToRaw } from "./parsing/modal-components";
+import { fromRaw as embedFromRaw, toRaw as embedToRaw } from "./parsing/embeds";
+import { fromRaw as applicationCommandOptionFromRaw, toRaw as applicationCommandOptionToRaw } from "./parsing/application-command-options";
 import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import {
-    ButtonStyles,
-    ComponentTypes,
     ImageFormats,
     MEDIA_PROXY_SIZES,
     type ImageFormat,
@@ -63,8 +65,9 @@ export default class Util {
         return {
             name:     `${name}.csv`,
             field:    name,
-            contents: this._arrayToCSV(data, header)
-        };
+            contents: this._arrayToCSV(data, header),
+            index:    undefined
+        } satisfies Types.Shared.KeysExist<Types.RequestHandler.File>;
     }
 
     /** @hidden intentionally not documented - this is an internal function */
@@ -135,406 +138,11 @@ export default class Util {
     }
 
     componentToParsed<T extends Types.Channels.RawComponent>(component: T): Types.Channels.ToComponentFromRaw<T> {
-        switch (component.type) {
-            case ComponentTypes.ACTION_ROW: {
-                return {
-                    components: component.components.map(c => this.componentToParsed(c)),
-                    type:       component.type
-                } as never;
-            }
-            case ComponentTypes.BUTTON: {
-                if (component.style === ButtonStyles.LINK) return component as never;
-
-                if (component.style === ButtonStyles.PREMIUM) {
-                    return {
-                        disabled: component.disabled,
-                        skuID:    component.sku_id,
-                        style:    component.style,
-                        type:     component.type
-                    } as never;
-                }
-
-                return {
-                    customID: component.custom_id,
-                    disabled: component.disabled,
-                    emoji:    component.emoji,
-                    label:    component.label,
-                    style:    component.style,
-                    type:     component.type
-                } as never;
-            }
-            case ComponentTypes.TEXT_INPUT: {
-                return {
-                    customID:    component.custom_id,
-                    label:       component.label,
-                    maxLength:   component.max_length,
-                    minLength:   component.min_length,
-                    placeholder: component.placeholder,
-                    required:    component.required,
-                    style:       component.style,
-                    type:        component.type,
-                    value:       component.value
-                } as never;
-            }
-            case ComponentTypes.STRING_SELECT:
-            case ComponentTypes.USER_SELECT:
-            case ComponentTypes.ROLE_SELECT:
-            case ComponentTypes.MENTIONABLE_SELECT:
-            case ComponentTypes.CHANNEL_SELECT: {
-                const parsedComponent  = {
-                    customID:    component.custom_id,
-                    disabled:    component.disabled,
-                    maxValues:   component.max_values,
-                    minValues:   component.min_values,
-                    placeholder: component.placeholder,
-                    type:        component.type
-                };
-
-                if (component.type !== ComponentTypes.STRING_SELECT && component.default_values !== undefined) {
-                    (parsedComponent as Exclude<Types.Channels.SelectMenuComponent, Types.Channels.StringSelectMenu>).defaultValues = component.default_values;
-                }
-
-                if (component.type === ComponentTypes.STRING_SELECT) {
-                    return { ...parsedComponent, options: component.options } as never;
-                } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                    return { ...parsedComponent, channelTypes: component.channel_types } as never;
-                } else {
-                    return parsedComponent as never;
-                }
-            }
-
-            case ComponentTypes.TEXT_DISPLAY: {
-                return component as never;
-            }
-
-            case ComponentTypes.THUMBNAIL: {
-                return {
-                    description: component.description,
-                    media:       {
-                        attachmentID: component.media.attachment_id,
-                        contentType:  component.media.content_type,
-                        height:       component.media.height,
-                        proxyURL:     component.media.proxy_url,
-                        url:          component.media.url,
-                        width:        component.media.width
-                    },
-                    spoiler: component.spoiler,
-                    type:    component.type
-                } as never;
-            }
-
-            case ComponentTypes.MEDIA_GALLERY: {
-                return {
-                    items: component.items.map(i => ({
-                        description: i.description,
-                        media:       {
-                            attachmentID: i.media.attachment_id,
-                            contentType:  i.media.content_type,
-                            height:       i.media.height,
-                            proxyURL:     i.media.proxy_url,
-                            url:          i.media.url,
-                            width:        i.media.width
-                        },
-                        spoiler: i.spoiler
-                    })),
-                    type: component.type
-                } as never;
-            }
-
-            case ComponentTypes.FILE: {
-                return {
-                    file: {
-                        attachmentID: component.file.attachment_id,
-                        contentType:  component.file.content_type,
-                        height:       component.file.height,
-                        proxyURL:     component.file.proxy_url,
-                        url:          component.file.url,
-                        width:        component.file.width
-                    },
-                    spoiler: component.spoiler,
-                    type:    component.type
-                } as never;
-            }
-
-            case ComponentTypes.SEPARATOR: {
-                return component as never;
-            }
-
-            case ComponentTypes.CONTAINER: {
-                return {
-                    accentColor: component.accent_color,
-                    components:  component.components.map(c => this.componentToParsed(c)),
-                    spoiler:     component.spoiler,
-                    type:        component.type
-                } as never;
-            }
-
-            case ComponentTypes.SECTION: {
-                return {
-                    type:       component.type,
-                    accessory:  component.accessory ? this.componentToParsed(component.accessory) : undefined,
-                    components: component.components.map(c => this.componentToParsed(c))
-                } as never;
-            }
-
-            case ComponentTypes.LABEL: {
-                return {
-                    type:        component.type,
-                    label:       component.label,
-                    description: component.description,
-                    component:   this.componentToParsed(component.component)
-                } as never;
-            }
-            case ComponentTypes.FILE_UPLOAD: {
-                return {
-                    customID:  component.custom_id,
-                    maxValues: component.max_values,
-                    minValues: component.min_values,
-                    required:  component.required,
-                    type:      component.type
-                } as never;
-            }
-            case ComponentTypes.RADIO_GROUP: {
-                return {
-                    customID: component.custom_id,
-                    required: component.required,
-                    options:  component.options.map(o => ({
-                        default:     o.default,
-                        description: o.description,
-                        label:       o.label,
-                        value:       o.value
-                    })),
-                    type: component.type
-                } as never;
-            }
-            case ComponentTypes.CHECKBOX: {
-                return {
-                    customID: component.custom_id,
-                    default:  component.default,
-                    type:     component.type
-                } as never;
-            }
-            case ComponentTypes.CHECKBOX_GROUP: {
-                return {
-                    customID:  component.custom_id,
-                    maxValues: component.max_values,
-                    minValues: component.min_values,
-                    options:   component.options.map(o => ({
-                        default:     o.default,
-                        description: o.description,
-                        label:       o.label,
-                        value:       o.value
-                    })),
-                    required: component.required,
-                    type:     component.type
-                } as never;
-            }
-            default: {
-                return component as never;
-            }
-        }
+        return messageComponentsFromRaw<T>(component);
     }
 
     componentToRaw<T extends Types.Channels.Component>(component: T): Types.Channels.ToRawFromComponent<T> {
-        switch (component.type) {
-            case ComponentTypes.ACTION_ROW: {
-                return {
-                    type:       component.type,
-                    components: component.components.map(c => this.componentToRaw(c))
-                } as never;
-            }
-
-            case ComponentTypes.BUTTON: {
-                if (component.style === ButtonStyles.LINK) return component as never;
-
-                if (component.style === ButtonStyles.PREMIUM) {
-                    return {
-                        disabled: component.disabled,
-                        sku_id:   component.skuID,
-                        style:    component.style,
-                        type:     component.type
-                    } as never;
-                }
-
-                return {
-                    custom_id: component.customID,
-                    disabled:  component.disabled,
-                    emoji:     component.emoji,
-                    label:     component.label,
-                    style:     component.style,
-                    type:      component.type
-                } as never;
-            }
-            case ComponentTypes.TEXT_INPUT: {
-                return {
-                    custom_id:   component.customID,
-                    label:       component.label,
-                    max_length:  component.maxLength,
-                    min_length:  component.minLength,
-                    placeholder: component.placeholder,
-                    required:    component.required,
-                    style:       component.style,
-                    type:        component.type,
-                    value:       component.value
-                } as never;
-            }
-            case ComponentTypes.STRING_SELECT:
-            case ComponentTypes.USER_SELECT:
-            case ComponentTypes.ROLE_SELECT:
-            case ComponentTypes.MENTIONABLE_SELECT:
-            case ComponentTypes.CHANNEL_SELECT: {
-                const rawComponent = {
-                    custom_id:   component.customID,
-                    disabled:    component.disabled,
-                    max_values:  component.maxValues,
-                    min_values:  component.minValues,
-                    placeholder: component.placeholder,
-                    required:    component.required,
-                    type:        component.type
-                };
-
-                if (component.type !== ComponentTypes.STRING_SELECT && component.defaultValues !== undefined) {
-                    (rawComponent as Exclude<Types.Channels.RawSelectMenuComponent, Types.Channels.RawStringSelectMenu>).default_values = component.defaultValues;
-                }
-
-                if (component.type === ComponentTypes.STRING_SELECT) {
-                    return { ...rawComponent, options: component.options } as never;
-                } else if (component.type === ComponentTypes.CHANNEL_SELECT) {
-                    return { ...rawComponent, channel_types: component.channelTypes } as never;
-                } else {
-                    return rawComponent as never;
-                }
-            }
-
-            case ComponentTypes.TEXT_DISPLAY: {
-                return component as never;
-            }
-
-            case ComponentTypes.THUMBNAIL: {
-                return {
-                    description: component.description,
-                    media:       {
-                        attachment_id: component.media.attachmentID,
-                        content_type:  component.media.contentType,
-                        height:        component.media.height,
-                        proxy_url:     component.media.proxyURL,
-                        url:           component.media.url,
-                        width:         component.media.width
-                    },
-                    spoiler: component.spoiler,
-                    type:    component.type
-                } as never;
-            }
-
-            case ComponentTypes.MEDIA_GALLERY: {
-                return {
-                    items: component.items.map(i => ({
-                        description: i.description,
-                        media:       {
-                            attachment_id: i.media.attachmentID,
-                            content_type:  i.media.contentType,
-                            height:        i.media.height,
-                            proxy_url:     i.media.proxyURL,
-                            url:           i.media.url,
-                            width:         i.media.width
-                        },
-                        spoiler: i.spoiler
-                    })),
-                    type: component.type
-                } as never;
-            }
-
-            case ComponentTypes.FILE: {
-                return {
-                    file: {
-                        attachment_id: component.file.attachmentID,
-                        content_type:  component.file.contentType,
-                        height:        component.file.height,
-                        proxy_url:     component.file.proxyURL,
-                        url:           component.file.url,
-                        width:         component.file.width
-                    },
-                    spoiler: component.spoiler,
-                    type:    component.type
-                } as never;
-            }
-
-            case ComponentTypes.SEPARATOR: {
-                return component as never;
-            }
-
-            case ComponentTypes.CONTAINER: {
-                return {
-                    accent_color: component.accentColor,
-                    components:   component.components.map(c => this.componentToRaw(c)),
-                    spoiler:      component.spoiler,
-                    type:         component.type
-                } as never;
-            }
-
-            case ComponentTypes.SECTION: {
-                return {
-                    type:       component.type,
-                    accessory:  component.accessory ? this.componentToRaw(component.accessory) : undefined,
-                    components: component.components.map(c => this.componentToRaw(c))
-                } as never;
-            }
-
-            case ComponentTypes.LABEL: {
-                return {
-                    type:        component.type,
-                    label:       component.label,
-                    description: component.description,
-                    component:   this.componentToRaw(component.component)
-                } as never;
-            }
-            case ComponentTypes.FILE_UPLOAD:
-                return {
-                    custom_id:  component.customID,
-                    max_values: component.maxValues,
-                    min_values: component.minValues,
-                    required:   component.required,
-                    type:       component.type
-                } as never;
-            case ComponentTypes.RADIO_GROUP: {
-                return {
-                    custom_id: component.customID,
-                    required:  component.required,
-                    options:   component.options.map(o => ({
-                        default:     o.default,
-                        description: o.description,
-                        label:       o.label,
-                        value:       o.value
-                    })),
-                    type: component.type
-                } as never;
-            }
-            case ComponentTypes.CHECKBOX: {
-                return {
-                    custom_id: component.customID,
-                    default:   component.default,
-                    type:      component.type
-                } as never;
-            }
-            case ComponentTypes.CHECKBOX_GROUP: {
-                return {
-                    custom_id:  component.customID,
-                    max_values: component.maxValues,
-                    min_values: component.minValues,
-                    options:    component.options.map(o => ({
-                        default:     o.default,
-                        description: o.description,
-                        label:       o.label,
-                        value:       o.value
-                    })),
-                    required: component.required,
-                    type:     component.type
-                } as never;
-            }
-            default: {
-                return component as never;
-            }
-        }
+        return messageComponentsToRaw<T>(component);
     }
 
     componentsToParsed<T extends Types.Channels.AnyRawBaseComponent>(components: Array<T>): Array<Types.Channels.ToComponentFromRaw<T>> {
@@ -559,7 +167,7 @@ export default class Util {
             requireColons: raw.require_colons,
             roles:         raw.roles,
             user:          raw.user ? this._client.users.update(raw.user) : undefined
-        };
+        } satisfies Types.Shared.KeysExist<Types.Guilds.GuildEmoji>;
     }
 
     convertImage(img: Buffer | string): string {
@@ -632,7 +240,7 @@ export default class Util {
             tags:        raw.tags,
             type:        raw.type,
             user:        raw.user ? this._client.users.update(raw.user) : undefined
-        };
+        } satisfies Types.Shared.KeysExist<Types.Guilds.Sticker>;
     }
 
     async detectMissingPrivilegedIntents(intents?: number): Promise<Array<PrivilegedIntentNames>> {
@@ -654,84 +262,20 @@ export default class Util {
     }
 
     embedsToParsed(embeds: Array<Types.Channels.RawEmbed>): Array<Types.Channels.Embed> {
-        return embeds.map(embed => ({
-            author: embed.author === undefined ? undefined : {
-                name:         embed.author.name,
-                iconURL:      embed.author.icon_url,
-                proxyIconURL: embed.author.proxy_icon_url
-            },
-            color:       embed.color,
-            description: embed.description,
-            fields:      embed.fields?.map(field => ({
-                inline: field.inline,
-                name:   field.name,
-                value:  field.value
-            })),
-            flags:  embed.flags,
-            footer: embed.footer === undefined ? undefined : {
-                flags:        embed.footer.flags,
-                iconURL:      embed.footer.icon_url,
-                proxyIconURL: embed.footer.proxy_icon_url,
-                text:         embed.footer.text
-            },
-            timestamp: embed.timestamp,
-            title:     embed.title,
-            image:     embed.image === undefined ? undefined : {
-                flags:    embed.image.flags,
-                height:   embed.image.height,
-                proxyURL: embed.image.proxy_url,
-                url:      embed.image.url,
-                width:    embed.image.width
-            },
-            provider: embed.provider === undefined ? undefined : {
-                name: embed.provider.name,
-                url:  embed.provider.url
-            },
-            thumbnail: embed.thumbnail === undefined ? undefined : {
-                url:      embed.thumbnail.url,
-                height:   embed.thumbnail.height,
-                proxyURL: embed.thumbnail.proxy_url,
-                width:    embed.thumbnail.width
-            },
-            url:   embed.url,
-            type:  embed.type,
-            video: embed.video === undefined ? undefined : {
-                height:   embed.video.height,
-                proxyURL: embed.video.proxy_url,
-                url:      embed.video.url,
-                width:    embed.video.width
-            }
-        }));
+        return embeds.map(embed => embedFromRaw(embed));
     }
 
     embedsToRaw(embeds: Array<Types.Channels.EmbedOptions>): Array<Types.Channels.RawEmbedOptions> {
-        return embeds.map(embed => ({
-            author: embed.author === undefined ? undefined :  {
-                name:     embed.author.name,
-                icon_url: embed.author.iconURL,
-                url:      embed.author.url
-            },
-            color:       embed.color,
-            description: embed.description,
-            fields:      embed.fields?.map(field => ({
-                inline: field.inline,
-                name:   field.name,
-                value:  field.value
-            })),
-            footer: embed.footer === undefined ? undefined : {
-                text:     embed.footer.text,
-                icon_url: embed.footer.iconURL
-            },
-            timestamp: embed.timestamp,
-            title:     embed.title,
-            image:     embed.image === undefined ? undefined : { url: embed.image.url },
-            thumbnail: embed.thumbnail === undefined ? undefined : { url: embed.thumbnail.url },
-            url:       embed.url
-        }));
+        return embeds.map(embed => embedToRaw(embed));
     }
 
     formatAllowedMentions(allowed?: Types.Channels.AllowedMentions | null): Types.Channels.RawAllowedMentions {
-        const result: Types.Channels.RawAllowedMentions = { parse: [] };
+        const result: Types.Channels.RawAllowedMentions = {
+            parse:        [],
+            replied_user: undefined,
+            roles:        undefined,
+            users:        undefined
+        } satisfies Types.Shared.KeysExist<Types.Channels.RawAllowedMentions>;
 
         if (!allowed) {
             return this.formatAllowedMentions(this._client.options.allowedMentions);
@@ -774,97 +318,20 @@ export default class Util {
         return [...new Uint8Array(file.subarray(0, len))].map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
     }
 
-    modalSubmitComponentToParsed<T extends Types.Interactions.RawModalSubmitComponents>(component: T): Types.Interactions.ToModalSubmitComponentFromRaw<T> {
-        switch (component.type) {
-            case ComponentTypes.CHECKBOX:
-            case ComponentTypes.RADIO_GROUP:
-            case ComponentTypes.TEXT_INPUT: {
-                return {
-                    customID: component.custom_id,
-                    type:     component.type,
-                    value:    component.value
-                } as never;
-            }
-
-            case ComponentTypes.STRING_SELECT:
-            case ComponentTypes.USER_SELECT:
-            case ComponentTypes.ROLE_SELECT:
-            case ComponentTypes.MENTIONABLE_SELECT:
-            case ComponentTypes.CHANNEL_SELECT:
-            case ComponentTypes.CHECKBOX_GROUP:
-            case ComponentTypes.FILE_UPLOAD: {
-                return {
-                    customID: component.custom_id,
-                    type:     component.type,
-                    values:   component.values
-                } as never;
-            }
-
-            default: {
-                return component as never;
-            }
-        }
+    modalSubmitComponentsToParsed<T extends Types.Interactions.RawModalSubmitComponentsActionRow | Types.Interactions.RawModalSubmitComponentsLabel | Types.Interactions.RawModalSubmitComponents>(components: Array<T>): Array<Types.Interactions.ToModalSubmitComponentFromRaw<T>> {
+        return components.map(component => modalSubmitComponentsFromRaw(component));
     }
 
-    modalSubmitComponentsToParsed<T extends Types.Interactions.RawModalSubmitComponentsActionRow | Types.Interactions.RawModalSubmitComponentsLabel>(components: Array<T>): Array<Types.Interactions.ModalSubmitComponentsActionRow | Types.Interactions.ModalSubmitComponentsLabel> {
-        return components.map(row => {
-            if (row.type === ComponentTypes.ACTION_ROW) {
-                return {
-                    type:       row.type,
-                    components: row.components ? row.components.map(component => this.modalSubmitComponentToParsed(component)) : undefined
-                };
-            } else {
-                return {
-                    type:      row.type,
-                    component: row.component ? this.modalSubmitComponentToParsed(row.component) : undefined
-                };
-            }
-        }) as never;
+    modalSubmitComponentsToRaw<T extends Types.Interactions.ModalSubmitComponentsActionRow | Types.Interactions.ModalSubmitComponentsLabel | Types.Interactions.ModalSubmitComponents>(components: Array<T>): Array<Types.Interactions.ToRawFromModalSubmitComponent<T>> {
+        return components.map(component => modalSubmitComponentsToRaw(component));
     }
 
     optionToParsed(option: Types.Applications.RawApplicationCommandOption): Types.Applications.ApplicationCommandOptions {
-        return {
-            autocomplete:             option.autocomplete,
-            channelTypes:             option.channel_types,
-            choices:                  option.choices,
-            description:              option.description,
-            descriptionLocalizations: option.description_localizations,
-            descriptionLocalized:     option.description_localized,
-            maxLength:                option.max_length,
-            maxValue:                 option.max_value,
-            minLength:                option.min_length,
-            minValue:                 option.min_value,
-            name:                     option.name,
-            nameLocalizations:        option.name_localizations,
-            nameLocalized:            option.name_localized,
-            options:                  option.options?.map(o => this.optionToParsed(o)),
-            required:                 option.required,
-            type:                     option.type
-        } satisfies Types.Shared.PartialKeysExist<Types.Applications.ApplicationCommandOptions> as Types.Applications.ApplicationCommandOptions;
+        return applicationCommandOptionFromRaw(option);
     }
 
     optionToRaw(option: Types.Applications.ApplicationCommandOptions): Types.Applications.RawApplicationCommandOption {
-        const opt = option as Types.Applications.CombinedApplicationCommandOption;
-        return {
-            autocomplete:  opt.autocomplete,
-            channel_types: opt.channelTypes,
-            choices:       opt.choices?.map(choice => ({
-                name:               choice.name,
-                name_localizations: choice.nameLocalizations,
-                value:              choice.value
-            })),
-            description:               opt.description,
-            description_localizations: opt.descriptionLocalizations,
-            max_length:                opt.maxLength,
-            max_value:                 opt.maxValue,
-            min_length:                opt.minLength,
-            min_value:                 opt.minValue,
-            name:                      opt.name,
-            name_localizations:        opt.nameLocalizations,
-            options:                   opt.options?.map(o => this.optionToRaw(o as Types.Applications.ApplicationCommandOptions)),
-            required:                  opt.required,
-            type:                      opt.type
-        } satisfies Types.Applications.RawApplicationCommandOption as Types.Applications.RawApplicationCommandOption;
+        return applicationCommandOptionToRaw(option);
     }
 
     /** @internal */
@@ -876,7 +343,7 @@ export default class Util {
                 id:      answerID,
                 users:   [],
                 meVoted: false
-            };
+            } satisfies Types.Shared.KeysExist<Types.Channels.PollAnswerCount>;
         }
 
         answerCount.count = count;
@@ -956,7 +423,7 @@ export default class Util {
                 id:      answerID,
                 users:   user ? [user] : [],
                 meVoted: user === this._client["_user"]?.id
-            };
+            } satisfies Types.Shared.KeysExist<Types.Channels.PollAnswerCount>;
             poll.results.answerCounts.push(answerCount);
             return;
         }

@@ -25,7 +25,6 @@ import type {
     StoreApplicationState
 } from "../Constants";
 import * as Routes from "../util/Routes";
-import { WithRequired } from "../types";
 
 /** Represents an application. */
 export default class Application extends ClientApplication {
