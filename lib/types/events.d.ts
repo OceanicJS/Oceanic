@@ -41,7 +41,7 @@ export interface ClientEvents {
     /** @event Emitted when channel is deleted. Requires the `GUILDS` intent. */
     channelDelete: [channel: Types.Channels.AnyGuildChannelWithoutThreads | PrivateChannel | Types.Gateway.DeletedPrivateChannel];
     /** @event Emitted when a shard receives the CHANNEL_INFO packet. */
-    channelInfo: [guildID: string, channels: Array<Types.Gateway.ChannelInfoWithChannel>];
+    channelInfo: [guild: Guild | Types.Shared.Uncached, channels: Array<Types.Gateway.ChannelInfoWithChannel>];
     /** @event Emitted when a channel's pins are updated (message pinned, message unpinned). Requires the `GUILDS` intent for guild channels, and `DIRECT_MESSAGES` for direct messages. */
     channelPinsUpdate: [channel: Types.Channels.AnyTextableChannel | Types.Shared.Uncached, timestamp: Date | null];
     /** @event Emitted when a channel is updated. Requires the `GUILDS` intent. */
@@ -165,7 +165,7 @@ export interface ClientEvents {
     /** @event Emitted when a shard resumes a connection. */
     shardResume: [id: number];
     /** @event Emitted when a shard receives the SOUNDBOARD_SOUNDS packet. */
-    soundboardSounds: [guildID: string, soundboardSounds: Array<Soundboard>];
+    soundboardSounds: [guild: Guild | Types.Shared.Uncached, soundboardSounds: Array<Soundboard>];
     /** @event Emitted when a stage instance is created. */
     stageInstanceCreate: [instance: StageInstance];
     /** @event Emitted when a stage instance is deleted. */
@@ -202,6 +202,8 @@ export interface ClientEvents {
     voiceChannelStatusUpdate: [channel: Types.Channels.AnyVoiceChannel | Types.Shared.Uncached, status: string | null];
     /** @event Emitted when a user switches voice channels. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelSwitch: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached, oldChannel: VoiceChannel | StageChannel | Types.Shared.Uncached | null];
+    /** @event Emitted when a VOICE_SERVER_UPDATE packet is received. */
+    voiceServerUpdate: [guild: Guild | Types.Shared.Uncached, endpoint: string | null, token: string];
     /** @event Emitted when a user's voice state is updated. Requires the `GUILD_VOICE_STATES` intent. */
     voiceStateUpdate: [member: Member, oldState: Types.JSON.JSONVoiceState | null];
     /** @event Emitted with various warning information. */

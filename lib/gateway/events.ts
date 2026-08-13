@@ -122,7 +122,7 @@ export async function CHANNEL_INFO(data: DispatchEventMap["CHANNEL_INFO"], shard
         }
     }
 
-    shard.client.emit("channelInfo", data.guild_id, channels);
+    shard.client.emit("channelInfo", guild ?? { id: data.guild_id }, channels);
     shard.lastHeartbeatAck = true;
 }
 
@@ -762,7 +762,7 @@ export async function SOUNDBOARD_SOUNDS(data: DispatchEventMap["SOUNDBOARD_SOUND
         }
     }
 
-    shard.client.emit("soundboardSounds", data.guild_id, soundboardSounds);
+    shard.client.emit("soundboardSounds", guild ?? { id: data.guild_id }, soundboardSounds);
     shard.lastHeartbeatAck = true;
 }
 
@@ -987,13 +987,13 @@ export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPD
 }
 
 export async function VOICE_CHANNEL_START_TIME_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_START_TIME_UPDATE"], shard: Shard): Promise<void> {
-    const channel = shard.client.getChannel<AnyVoiceChannel>(data.id);
+    const channel = shard.client.getChannel<Types.Channels.AnyVoiceChannel>(data.id);
     if (channel) (channel as Base)["update"]({ voice_start_time: data.voice_start_time });
     shard.client.emit("voiceChannelStartTimeUpdate", channel ?? { id: data.id }, data.voice_start_time ?? null);
 }
 
 export async function VOICE_CHANNEL_STATUS_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_STATUS_UPDATE"], shard: Shard): Promise<void> {
-    const channel = shard.client.getChannel<AnyVoiceChannel>(data.id);
+    const channel = shard.client.getChannel<Types.Channels.AnyVoiceChannel>(data.id);
     if (channel) (channel as Base)["update"]({ status: data.status });
     shard.client.emit("voiceChannelStatusUpdate", channel ?? { id: data.id }, data.status);
 }
@@ -1001,6 +1001,7 @@ export async function VOICE_CHANNEL_STATUS_UPDATE(data: DispatchEventMap["VOICE_
 export async function VOICE_SERVER_UPDATE(data: DispatchEventMap["VOICE_SERVER_UPDATE"], shard: Shard): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     shard.client.voiceAdapters.get(data.guild_id)?.onVoiceServerUpdate(data);
+    shard.client.emit("voiceServerUpdate", shard.client.guilds.get(data.guild_id) ?? { id: data.guild_id }, data.endpoint, data.token);
 }
 
 export async function WEBHOOKS_UPDATE(data: DispatchEventMap["WEBHOOKS_UPDATE"], shard: Shard): Promise<void> {
