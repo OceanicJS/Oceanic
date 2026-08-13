@@ -120,7 +120,7 @@ export default class Lobbies {
             auth = accessToken;
         }
         return this._manager.request<RawLobby>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.LOBBY_CHANNEL_LINKING(lobbyID),
             auth,
             json:   { channel_id: channelID }

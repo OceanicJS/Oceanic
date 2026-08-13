@@ -735,7 +735,7 @@ export default class Guilds {
     async editOnboarding(guildID: string, options: Types.Guilds.EditOnboardingOptions): Promise<Types.Guilds.Onboarding> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawOnboarding>({
-            method: "PATCH",
+            method: "PUT",
             path:   Routes.GUILD_ONBOARDING(guildID),
             json:   {
                 enabled:             options.enabled,
@@ -922,7 +922,7 @@ export default class Guilds {
     async editTemplate(guildID: string, code: string, options: Types.GuildTemplate.EditGuildTemplateOptions): Promise<GuildTemplate> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.GUILD_TEMPLATE(guildID, code),
             json:   {
                 code,
@@ -993,7 +993,7 @@ export default class Guilds {
     async editWidget(guildID: string, options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.Widget> {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawWidget>({
-            method: "POST",
+            method: "PATCH",
             path:   Routes.GUILD_WIDGET(guildID),
             json:   {
                 channel_id: options.channelID,
@@ -1837,7 +1837,7 @@ export default class Guilds {
      */
     async syncTemplate(guildID: string, code: string): Promise<GuildTemplate> {
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
-            method: "POST",
+            method: "PUT",
             path:   Routes.GUILD_TEMPLATE(guildID, code)
         }).then(data => new GuildTemplate(data, this._manager.client));
     }
