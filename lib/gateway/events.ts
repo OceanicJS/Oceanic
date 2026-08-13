@@ -962,7 +962,9 @@ export async function VOICE_CHANNEL_EFFECT_SEND(data: DispatchEventMap["VOICE_CH
     const user = guild?.members.get(data.user_id) ?? shard.client.users.get(data.user_id);
     shard.client.emit("voiceChannelEffectSend", channel ?? { id: data.channel_id, guild: guild ?? { id: data.guild_id } }, user ?? { id: data.user_id }, {
         animationID:   data.animation_id,
-        animationType: data.animation_type
+        animationType: data.animation_type,
+        soundID:       data.sound_id,
+        soundVolume:   data.sound_volume
     });
 }
 

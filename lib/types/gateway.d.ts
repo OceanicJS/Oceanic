@@ -407,12 +407,17 @@ export interface RawVoiceChannelEffect {
     channel_id: string;
     emoji?: Types.Guilds.PartialEmoji | null;
     guild_id: string;
+    sound_id?: string | number;
+    sound_volume?: number;
     user_id: string;
 }
 
 export interface VoiceChannelEffect {
     animationID?: number;
     animationType?: AnimationTypes;
+    soundID?: string | number;
+    /** 0-1 */
+    soundVolume?: number;
 }
 
 export interface RawMessagePollVote {
