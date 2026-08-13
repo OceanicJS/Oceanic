@@ -101,7 +101,7 @@ export interface RawChannel {
 export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id">> { name: string; type: GuildChannels; }
 export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients">> { type: ChannelTypes.DM; }
 // nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "application_id" | "icon" | "owner_id" | "nsfw" | "last_message_id">> { managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
+export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "icon" | "owner_id" | "nsfw" | "last_message_id">> { application_id: string; managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
 export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "topic" | "nsfw" | "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_TEXT; }
 export interface RawCategoryChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel,  "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_CATEGORY; }
 export interface RawAnnouncementChannel extends Omit<RawTextChannel, "type"> { type: ChannelTypes.GUILD_ANNOUNCEMENT; }
