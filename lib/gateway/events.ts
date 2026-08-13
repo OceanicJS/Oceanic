@@ -750,6 +750,10 @@ export async function RESUMED(data: DispatchEventMap["RESUMED"], shard: Shard): 
     shard["_resume"]();
 }
 
+export async function RATE_LIMITED(data: DispatchEventMap["RATE_LIMITED"], shard: Shard): Promise<void> {
+    shard.client.emit("rateLimited", data, shard);
+}
+
 export async function SOUNDBOARD_SOUNDS(data: DispatchEventMap["SOUNDBOARD_SOUNDS"], shard: Shard): Promise<void> {
     const guild = shard.client.guilds.get(data.guild_id);
     const soundboardSounds = data.soundboard_sounds.map(soundboardSound => guild?.soundboardSounds.update(soundboardSound) ?? new Soundboard(soundboardSound, shard.client));

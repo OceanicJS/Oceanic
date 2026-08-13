@@ -24,6 +24,7 @@ import type TestEntitlement from "../structures/TestEntitlement";
 import type { JSONChannelTypeMap } from "../Constants";
 import type Soundboard from "../structures/Soundboard";
 import type Subscription from "../structures/Subscription";
+import type Shard from "../gateway/Shard";
 
 
 export interface ClientEvents {
@@ -153,6 +154,8 @@ export interface ClientEvents {
     packet: [data: Types.GatewayRaw.AnyDispatchPacket, shard: number];
     /** @event Emitted when a guild member's presence, or user is updated. Requires the `GUILD_PRESENCES` intent. */
     presenceUpdate: [guild: Guild | Types.Shared.Uncached, member: Member | Types.Shared.Uncached, presence: Types.Guilds.Presence, oldPresence: Types.Guilds.Presence | null];
+    /** @event Emitted when a shard is ratelimited. */
+    rateLimited: [info: Types.Gateway.RateLimitInfo, shard: Shard];
     /** @event Emitted when all shards are ready. */
     ready: [];
     /** @event Emitted when a request is made. */
@@ -173,8 +176,11 @@ export interface ClientEvents {
     stageInstanceDelete: [instance: StageInstance];
     /** @event Emitted when a stage instance is updated. */
     stageInstanceUpdate: [instance: StageInstance, oldInstance: Types.JSON.JSONStageInstance | null];
+    /** @event Emitted when a subscription is created. */
     subscriptionCreate: [subscription: Subscription];
+    /** @event Emitted when a subscription is deleted. */
     subscriptionDelete: [subscription: Subscription];
+    /** @event Emitted when a subscription is updated. */
     subscriptionUpdate: [subscription: Subscription, oldSubscription: Types.JSON.JSONSubscription | null];
     /** @event Emitted when a thread is created. Requires the `GUILDS` intent. */
     threadCreate: [thread: Types.Channels.AnyThreadChannel];

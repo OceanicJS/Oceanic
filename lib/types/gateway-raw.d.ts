@@ -596,7 +596,12 @@ export interface SubscriptionDeletePacket extends BaseDispatchPacket {
     t: "SUBSCRIPTION_DELETE";
 }
 
-export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket | ChannelInfoPacket |
+export interface RateLimitedPacket extends BaseDispatchPacket {
+    d: Types.Gateway.RateLimitInfo;
+    t: "RATE_LIMITED";
+}
+
+export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket | RateLimitedPacket | ChannelInfoPacket |
 GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
 AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
 ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket |

@@ -6,6 +6,7 @@ import type {
     AnimationTypes,
     AutoModerationTriggerTypes,
     ChannelTypes,
+    GatewayOPCodes,
     IntentNames
 } from "../Constants";
 import type AutoModerationRule from "../structures/AutoModerationRule";
@@ -420,4 +421,15 @@ export interface RawMessagePollVote {
     guild_id?: string;
     message_id: string;
     user_id: string;
+}
+
+export interface RateLimitInfo {
+    meta: RateLimitInfoOPCode8Meta | Record<string, never>;
+    opcode: GatewayOPCodes;
+    retry_after: number;
+}
+
+export interface RateLimitInfoOPCode8Meta {
+    guild_id: string;
+    nonce?: string;
 }
