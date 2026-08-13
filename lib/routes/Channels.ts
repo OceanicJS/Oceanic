@@ -134,8 +134,13 @@ export default class Channels {
             method: "POST",
             path:   Routes.CHANNEL_MESSAGES(channelID),
             json:   {
-                allowed_mentions:  this._manager.client.util.formatAllowedMentions(options.allowedMentions),
-                attachments:       options.attachments,
+                allowed_mentions: this._manager.client.util.formatAllowedMentions(options.allowedMentions),
+                attachments:      options.attachments?.map(attachment => ({
+                    description: attachment.description,
+                    filename:    attachment.filename,
+                    id:          attachment.id,
+                    is_spoiler:  attachment.isSpoiler
+                })),
                 components:        options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
                 content:           options.content,
                 embeds:            options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
@@ -430,11 +435,16 @@ export default class Channels {
                 allowed_mentions: options.content !== undefined || options.allowedMentions || ((options.flags ?? 0) & MessageFlags.IS_COMPONENTS_V2) !== 0
                     ? this._manager.client.util.formatAllowedMentions(options.allowedMentions)
                     : undefined,
-                attachments: options.attachments,
-                components:  options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
-                content:     options.content,
-                embeds:      options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
-                flags:       options.flags
+                attachments: options.attachments?.map(attachment => ({
+                    description: attachment.description,
+                    filename:    attachment.filename,
+                    id:          attachment.id,
+                    is_spoiler:  attachment.isSpoiler
+                })),
+                components: options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
+                content:    options.content,
+                embeds:     options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
+                flags:      options.flags
             },
             files: options.files ?? undefined
         }).then(data => this._manager.client.util.updateMessage<T>(data));

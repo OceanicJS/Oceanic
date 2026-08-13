@@ -510,17 +510,20 @@ export interface RawAttachment {
     flags?: number;
     height?: number;
     id: string;
+    placeholder?: string;
+    placeholder_version?: number;
     proxy_url: string;
     size: number;
     title?: string;
     url: string;
-    waveform?: string | null;
+    waveform?: string;
     width?: number;
 }
 // @TODO verify what can be sent with `attachments` in message creation/deletion, this is an assumption
 export interface MessageAttachment extends Partial<Pick<RawAttachment, "description" | "filename">> {
     /** The id of the attachment to edit, or the index of `files` to reference. */
     id?: string | number;
+    isSpoiler?: boolean;
 }
 
 export interface RawAllowedMentions {

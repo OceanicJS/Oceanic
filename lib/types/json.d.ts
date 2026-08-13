@@ -152,16 +152,23 @@ export interface JSONApplicationCommand extends JSONBase {
     version: string;
 }
 export interface JSONAttachment extends JSONBase {
+    application?: JSONApplication;
+    clipCreatedAt?: string;
+    clipParticipants?: Array<JSONUser>;
     contentType?: string;
     description?: string;
+    durationSecs?: number;
     ephemeral?: boolean;
     filename: string;
     flags: number;
     height?: number;
+    placeholder?: string;
+    placeholderVersion?: number;
     proxyURL: string;
     size: number;
     title?: string;
     url: string;
+    waveform?: string;
     width?: number;
 }
 export interface JSONAutocompleteInteraction extends JSONInteraction {
