@@ -65,7 +65,7 @@
     "typedoc-plugin-mdn-links": "^3.3.8",
     "typedoc-plugin-merge-modules": "5.1.0",
     "typescript": "~5.4.5",
-    "typescript-eslint": "^8.67.0",
+    "typescript-eslint": "^8.71.1",
     "undici-types": "~5.28.4"
   },
   "dependencies": {
