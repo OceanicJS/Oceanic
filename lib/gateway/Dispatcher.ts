@@ -20,13 +20,13 @@ export default class Dispatcher {
             configurable: false
         });
 
-        const type = this.manager.options.dispatcher.blacklist === null ? "blacklist" :
-            (this.manager.options.dispatcher.whitelist === null ? "whitelist" : "none");
+        const options = this.manager.options.dispatcher;
+        const type = options.blacklist !== null ? "blacklist" : (options.whitelist !== null ? "whitelist" : "none");
 
         for (const [event, fn] of Object.entries(DefaultDispatchEvents) as Array<[DispatchEvent, DispatchFunction]>) {
             if (type === "none" ||
-                (type === "whitelist" && this.manager.options.dispatcher.whitelist?.includes(event)) ||
-                (type === "blacklist" && !this.manager.options.dispatcher.blacklist?.includes(event))) {
+                (type === "whitelist" && options.whitelist?.includes(event)) ||
+                (type === "blacklist" && !options.blacklist?.includes(event))) {
                 this.register(event, fn);
             }
         }
