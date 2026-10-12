@@ -1,8 +1,9 @@
 /** @module AnnouncementThreadChannel */
 import ThreadChannel from "./ThreadChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes } from "../Constants";
+
 import type Client from "../Client";
+import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a public thread channel in an announcement channel. */
 export default class AnnouncementThreadChannel extends ThreadChannel<AnnouncementThreadChannel> {
@@ -24,7 +25,7 @@ export default class AnnouncementThreadChannel extends ThreadChannel<Announcemen
         return {
             ...super.toJSON(),
             threadMetadata: this.threadMetadata,
-            type:           this.type
+            type: this.type,
         };
     }
 }

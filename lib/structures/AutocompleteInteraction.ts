@@ -1,18 +1,20 @@
 /** @module AutocompleteInteraction */
-import Interaction from "./Interaction";
-import type Member from "./Member";
-import type User from "./User";
-import type Guild from "./Guild";
-import Permission from "./Permission";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import type Entitlement from "./Entitlement";
-import type TestEntitlement from "./TestEntitlement";
-import type * as Types from "../types/namespaced";
 import { InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
-import type Client from "../Client";
-import InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
 import { UncachedError } from "../util/Errors";
+import InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
+
+import GuildChannel from "./GuildChannel";
+import Interaction from "./Interaction";
+import Permission from "./Permission";
+
+import type Entitlement from "./Entitlement";
+import type Guild from "./Guild";
+import type Member from "./Member";
+import type PrivateChannel from "./PrivateChannel";
+import type TestEntitlement from "./TestEntitlement";
+import type User from "./User";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents an autocomplete interaction. */
 export default class AutocompleteInteraction<T extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached> extends Interaction {
@@ -49,6 +51,7 @@ export default class AutocompleteInteraction<T extends Types.Channels.AnyInterac
     user: User;
     constructor(data: Types.Interactions.RawAutocompleteInteraction, client: Client) {
         super(data, client);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.appPermissions = new Permission(data.app_permissions ?? "0");
         this.attachmentSizeLimit = data.attachment_size_limit;
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
@@ -56,10 +59,10 @@ export default class AutocompleteInteraction<T extends Types.Channels.AnyInterac
         this.context = data.context;
         this.data = {
             guildID: data.data.guild_id,
-            id:      data.data.id,
-            name:    data.data.name,
+            id: data.data.id,
+            name: data.data.name,
             options: new InteractionOptionsWrapper(data.data.options ?? [], null),
-            type:    data.data.type
+            type: data.data.type,
         };
         this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
         this.guildID = (data.guild_id ?? null) as T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
@@ -115,18 +118,18 @@ export default class AutocompleteInteraction<T extends Types.Channels.AnyInterac
     override toJSON(): Types.JSON.JSONAutocompleteInteraction {
         return {
             ...super.toJSON(),
-            appPermissions:               this.appPermissions.toJSON(),
-            attachmentSizeLimit:          this.attachmentSizeLimit,
+            appPermissions: this.appPermissions.toJSON(),
+            attachmentSizeLimit: this.attachmentSizeLimit,
             authorizingIntegrationOwners: this.authorizingIntegrationOwners,
-            channelID:                    this.channelID,
-            context:                      this.context,
-            data:                         this.data,
-            guildID:                      this.guildID ?? undefined,
-            guildLocale:                  this.guildLocale,
-            locale:                       this.locale,
-            member:                       this.member?.toJSON(),
-            type:                         this.type,
-            user:                         this.user.toJSON()
+            channelID: this.channelID,
+            context: this.context,
+            data: this.data,
+            guildID: this.guildID ?? undefined,
+            guildLocale: this.guildLocale,
+            locale: this.locale,
+            member: this.member?.toJSON(),
+            type: this.type,
+            user: this.user.toJSON(),
         };
     }
 }

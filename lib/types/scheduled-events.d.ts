@@ -1,9 +1,9 @@
 /** @module Types/ScheduledEvents */
 import type * as Types from "./namespaced";
 import type { GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type Member from "../structures/Member";
 import type User from "../structures/User";
-import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 
 export interface RawScheduledEvent {
     channel_id: string | null;
@@ -70,7 +70,6 @@ export interface CreateScheduledEventOptions {
     /** The time the event starts. ISO8601 Timestamp. */
     scheduledStartTime: string;
 }
-
 
 export interface EditScheduledEventOptions extends Omit<Partial<CreateScheduledEventOptions>, "channelID"> {
     /** The ID of the stage channel the event is taking place in. Required to be `null` if changing `entityType` to `EXTERNAL`. */

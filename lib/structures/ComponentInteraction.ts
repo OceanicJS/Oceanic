@@ -1,29 +1,31 @@
 /** @module ComponentInteraction */
-import Interaction from "./Interaction";
-import Message from "./Message";
-import type Guild from "./Guild";
-import Member from "./Member";
-import Permission from "./Permission";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import Role from "./Role";
-import User from "./User";
-import InteractionResolvedChannel from "./InteractionResolvedChannel";
-import type Entitlement from "./Entitlement";
-import type TestEntitlement from "./TestEntitlement";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import {
     ComponentTypes,
     InteractionResponseTypes,
     type SelectMenuTypes,
     type InteractionTypes,
-    type InteractionContextTypes
+    type InteractionContextTypes,
 } from "../Constants";
-import SelectMenuValuesWrapper from "../util/interactions/SelectMenuValuesWrapper";
-import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
 import MessageInteractionResponse, { type InitialMessagedInteractionResponse, type FollowupMessageInteractionResponse } from "../util/interactions/MessageInteractionResponse";
+import SelectMenuValuesWrapper from "../util/interactions/SelectMenuValuesWrapper";
+import TypedCollection from "../util/TypedCollection";
+
+import GuildChannel from "./GuildChannel";
+import Interaction from "./Interaction";
+import InteractionResolvedChannel from "./InteractionResolvedChannel";
+import Member from "./Member";
+import Message from "./Message";
+import Permission from "./Permission";
+import Role from "./Role";
+import User from "./User";
+
+import type Entitlement from "./Entitlement";
+import type Guild from "./Guild";
+import type PrivateChannel from "./PrivateChannel";
+import type TestEntitlement from "./TestEntitlement";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a component interaction. */
 export default class ComponentInteraction<V extends ComponentTypes.BUTTON | SelectMenuTypes = ComponentTypes.BUTTON | SelectMenuTypes, T extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached> extends Interaction {
@@ -62,10 +64,12 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     user: User;
     constructor(data: Types.Interactions.RawMessageComponentInteraction, client: Client) {
         super(data, client);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (data.message !== undefined && data.guild_id !== undefined) {
             data.message.guild_id = data.guild_id;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.appPermissions = new Permission(data.app_permissions ?? "0");
         this.attachmentSizeLimit = data.attachment_size_limit;
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
@@ -78,14 +82,15 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         this.locale = data.locale!;
         this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | null;
         this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends Types.Channels.AnyTextableGuildChannel ? Permission : Permission | null;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.message = (this.channel && "messages" in this.channel && (this.channel.messages.update(data.message) as Message<T>)) || new Message<T>(data.message, client);
-        this.user = client.users.update((data.user ?? data.member!.user)!);
+        this.user = client.users.update((data.user ?? data.member!.user));
 
         switch (data.data.component_type) {
             case ComponentTypes.BUTTON: {
                 this.data = {
                     componentType: data.data.component_type,
-                    customID:      data.data.custom_id
+                    customID: data.data.custom_id,
                 } as V extends ComponentTypes.BUTTON ? Types.Interactions.MessageComponentButtonInteractionData : Types.Interactions.MessageComponentSelectMenuInteractionData;
                 break;
             }
@@ -96,9 +101,9 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
             case ComponentTypes.CHANNEL_SELECT: {
                 const resolved: Types.Interactions.MessageComponentInteractionResolvedData = {
                     channels: new TypedCollection(InteractionResolvedChannel, client),
-                    members:  new TypedCollection(Member, client),
-                    roles:    new TypedCollection(Role, client),
-                    users:    new TypedCollection(User, client)
+                    members: new TypedCollection(Member, client),
+                    roles: new TypedCollection(Role, client),
+                    users: new TypedCollection(User, client),
                 };
 
                 if (data.data.resolved) {
@@ -108,7 +113,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
 
                     if (data.data.resolved.members) {
                         for (const [id, member] of Object.entries(data.data.resolved.members)) {
-                            const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser; };
+                            const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser };
                             m.user = data.data.resolved.users![id];
                             resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                         }
@@ -131,9 +136,9 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
 
                 this.data = {
                     componentType: data.data.component_type,
-                    customID:      data.data.custom_id,
-                    values:        new SelectMenuValuesWrapper(resolved, data.data.values!),
-                    resolved
+                    customID: data.data.custom_id,
+                    values: new SelectMenuValuesWrapper(resolved, data.data.values!),
+                    resolved,
                 } as V extends ComponentTypes.BUTTON ? Types.Interactions.MessageComponentButtonInteractionData : Types.Interactions.MessageComponentSelectMenuInteractionData;
                 break;
             }
@@ -176,7 +181,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         const message = await this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
@@ -200,7 +205,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
 
@@ -280,7 +285,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
@@ -301,7 +306,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
@@ -322,7 +327,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
 
@@ -414,7 +419,7 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.acknowledged ? this.createFollowup(options) : this.createMessage(options);
@@ -423,18 +428,18 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
     override toJSON(): Types.JSON.JSONComponentInteraction {
         return {
             ...super.toJSON(),
-            appPermissions:               this.appPermissions.toJSON(),
-            attachmentSizeLimit:          this.attachmentSizeLimit,
+            appPermissions: this.appPermissions.toJSON(),
+            attachmentSizeLimit: this.attachmentSizeLimit,
             authorizingIntegrationOwners: this.authorizingIntegrationOwners,
-            channelID:                    this.channelID,
-            context:                      this.context,
-            data:                         this.data,
-            guildID:                      this.guildID ?? undefined,
-            guildLocale:                  this.guildLocale,
-            locale:                       this.locale,
-            member:                       this.member?.toJSON(),
-            type:                         this.type,
-            user:                         this.user.toJSON()
+            channelID: this.channelID,
+            context: this.context,
+            data: this.data,
+            guildID: this.guildID ?? undefined,
+            guildLocale: this.guildLocale,
+            locale: this.locale,
+            member: this.member?.toJSON(),
+            type: this.type,
+            user: this.user.toJSON(),
         };
     }
 }

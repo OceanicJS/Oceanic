@@ -22,13 +22,13 @@ import type {
     MemberSearchSortType,
     MemberJoinSourceType,
     JSONErrorCodes,
-    StatusDisplayType
+    StatusDisplayType,
 } from "../Constants";
-import type User from "../structures/User";
+import type GuildJoinRequestStructure from "../structures/GuildJoinRequest";
 import type Integration from "../structures/Integration";
 import type Member from "../structures/Member";
 import type Message from "../structures/Message";
-import type GuildJoinRequestStructure from "../structures/GuildJoinRequest";
+import type User from "../structures/User";
 
 // channels, guild_scheduled_events, joined_at, large, member_count, members, presences,
 // stage_instances, threads, unavailable, voice_states - all gateway only
@@ -140,8 +140,8 @@ export interface RoleColors {
     tertiaryColor: number | null;
 }
 
-export interface RawGuildEmoji extends Required<Omit<Types.Misc.Emoji, "user" | "id">>  { id: string; user?: Types.Users.RawUser; }
-export interface GuildEmoji extends Omit<RawGuildEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User; }
+export interface RawGuildEmoji extends Required<Omit<Types.Misc.Emoji, "user" | "id">> { id: string; user?: Types.Users.RawUser }
+export interface GuildEmoji extends Omit<RawGuildEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User }
 export interface RawWelcomeScreen {
     description: string | null;
     welcome_channels: Array<RawWelcomeScreenChannel>;
@@ -349,7 +349,7 @@ export interface RawMember {
     roles: Array<string>;
     user?: Types.Users.RawUser;
 }
-export interface RESTMember extends Required<Omit<RawMember, "permissions" | "joined_at">> { joined_at: string; }
+export interface RESTMember extends Required<Omit<RawMember, "permissions" | "joined_at">> { joined_at: string }
 export interface InteractionMember extends Required<RawMember> {}
 
 export interface RawIntegration {
@@ -639,7 +639,7 @@ export interface EditCurrentMemberOptions extends Pick<EditMemberOptions, "nick"
     /** The new avatar (buffer, or full data url). `null` to reset. */
     avatar?: Buffer | string | null;
     /** The new banner (buffer, or full data url). `null` to reset. */
-    banner?:  Buffer | string | null;
+    banner?: Buffer | string | null;
     /** The new bio. `null` to reset. */
     bio?: string | null;
 }
@@ -798,7 +798,7 @@ export interface RawUnavailableGuild {
     unavailable: true;
 }
 
-export type PossiblyUncachedIntegration = Integration | { applicationID?: string; id: string; };
+export type PossiblyUncachedIntegration = Integration | { applicationID?: string; id: string };
 
 export interface RawStageInstance {
     channel_id: string;

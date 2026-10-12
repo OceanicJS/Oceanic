@@ -1,18 +1,18 @@
 /** @module Types/OAuth */
-import type * as Types from "./namespaced";
 import { type Locale } from "./applications";
+
+import type * as Types from "./namespaced";
 import type {
     ConnectionService,
     PermissionName,
     RoleConnectionMetadataTypes,
     ConnectionVisibilityTypes,
-    ApplicationIntegrationTypes
+    ApplicationIntegrationTypes,
 } from "../Constants";
+import type Integration from "../structures/Integration";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
-import type Integration from "../structures/Integration";
-
 
 export interface InstallParams {
     permissions: Array<PermissionName>;

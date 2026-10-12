@@ -1,14 +1,16 @@
 /** @module Webhook */
-import Base from "./Base";
-import type User from "./User";
-import type Message from "./Message";
-import type Guild from "./Guild";
-import type ClientApplication from "./ClientApplication";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import { API_URL, type ImageFormat, type WebhookTypes } from "../Constants";
-import * as Routes from "../util/Routes";
 import { UncachedError } from "../util/Errors";
+import * as Routes from "../util/Routes";
+
+import Base from "./Base";
+
+import type ClientApplication from "./ClientApplication";
+import type Guild from "./Guild";
+import type Message from "./Message";
+import type User from "./User";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a webhook. */
 export default class Webhook extends Base {
@@ -184,9 +186,9 @@ export default class Webhook extends Base {
      * @param options The options to send. See GitHub's documentation for more information.
      * @param token The token for the webhook, if not already present.
      */
-    async executeGithub(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
-    async executeGithub<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
-    async executeGithub<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
+    async executeGithub(options: Record<string, unknown> & { wait: false }, token?: string): Promise<void>;
+    async executeGithub<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: true }, token?: string): Promise<Message<T>>;
+    async executeGithub<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: boolean }, token?: string): Promise<Message<T> | void> {
         const t = this.token ?? token;
         if (!t) {
             throw new TypeError("Token is not present on webhook, and was not provided in options.");
@@ -199,9 +201,9 @@ export default class Webhook extends Base {
      * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
      * @param token The token for the webhook, if not already present.
      */
-    async executeSlack(options: Record<string, unknown> & { wait: false; }, token?: string): Promise<void>;
-    async executeSlack<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: true; }, token?: string): Promise<Message<T>>;
-    async executeSlack<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: boolean; }, token?: string): Promise<Message<T> | void> {
+    async executeSlack(options: Record<string, unknown> & { wait: false }, token?: string): Promise<void>;
+    async executeSlack<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: true }, token?: string): Promise<Message<T>>;
+    async executeSlack<T extends Types.Channels.AnyTextableGuildChannel>(options: Record<string, unknown> & { wait?: boolean }, token?: string): Promise<Message<T> | void> {
         const t = this.token ?? token;
         if (!t) {
             throw new TypeError("Token is not present on webhook, and was not provided in options.");
@@ -229,22 +231,22 @@ export default class Webhook extends Base {
      * @param size The dimensions of the image.
      */
     sourceGuildIconURL(format?: ImageFormat, size?: number): string | null {
-        return this.sourceGuild?.icon ? this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild?.icon), format, size) : null;
+        return this.sourceGuild?.icon ? this.client.util.formatImage(Routes.GUILD_ICON(this.id, this.sourceGuild.icon), format, size) : null;
     }
 
     override toJSON(): Types.JSON.JSONWebhook {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
-            avatar:        this.avatar,
-            channelID:     this.channelID ?? null,
-            guildID:       this.guildID,
-            name:          this.name,
+            avatar: this.avatar,
+            channelID: this.channelID ?? null,
+            guildID: this.guildID,
+            name: this.name,
             sourceChannel: this.sourceChannel,
-            sourceGuild:   this.sourceGuild,
-            token:         this.token,
-            type:          this.type,
-            user:          this.user?.toJSON()
+            sourceGuild: this.sourceGuild,
+            token: this.token,
+            type: this.type,
+            user: this.user?.toJSON(),
         };
     }
 }

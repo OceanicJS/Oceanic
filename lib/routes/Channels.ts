@@ -1,26 +1,28 @@
 /** @module REST/Channels */
-import type * as Types from "../types/namespaced";
-import * as Routes from "../util/Routes";
-import type Message from "../structures/Message";
+import { setTimeout } from "node:timers/promises";
+
+import { MessageFlags } from "../Constants";
 import Invite, {
     type InviteWithoutCounts,
     type InviteWithMetadata,
     type InviteWithCountsAndScheduledEvent,
     type InviteWithCounts,
-    type InviteWithScheduledEvent
+    type InviteWithScheduledEvent,
 } from "../structures/Invite";
-import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type AnnouncementChannel from "../structures/AnnouncementChannel";
-import type RESTManager from "../rest/RESTManager";
-import type PrivateChannel from "../structures/PrivateChannel";
-import type GroupChannel from "../structures/GroupChannel";
-import type User from "../structures/User";
 import StageInstance from "../structures/StageInstance";
-import { MessageFlags } from "../Constants";
 import QueryBuilder from "../util/QueryBuilder";
-import { setTimeout } from "node:timers/promises";
+import * as Routes from "../util/Routes";
+
+import type RESTManager from "../rest/RESTManager";
+import type AnnouncementChannel from "../structures/AnnouncementChannel";
+import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
+import type GroupChannel from "../structures/GroupChannel";
+import type Message from "../structures/Message";
+import type PrivateChannel from "../structures/PrivateChannel";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
+import type PublicThreadChannel from "../structures/PublicThreadChannel";
+import type User from "../structures/User";
+import type * as Types from "../types/namespaced";
 
 /** Various methods for interacting with channels. Located at {@link Client#rest | Client#rest}{@link RESTManager#channels | .channels}. */
 export default class Channels {
@@ -39,11 +41,11 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.GROUP_RECIPIENT(groupID, options.userID),
-            json:   {
+            path: Routes.GROUP_RECIPIENT(groupID, options.userID),
+            json: {
                 access_token: options.accessToken,
-                nick:         options.nick
-            }
+                nick: options.nick,
+            },
         });
     }
 
@@ -56,9 +58,10 @@ export default class Channels {
     async addThreadMember(channelID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.CHANNEL_THREAD_MEMBER(channelID, userID)
+            path: Routes.CHANNEL_THREAD_MEMBER(channelID, userID),
         });
     }
+
     /**
      * Create a direct message. This will not create a new channel if you have already started a dm with the user.
      * @param recipient The ID of the recipient of the direct message.
@@ -72,9 +75,9 @@ export default class Channels {
         }
         return this._manager.authRequest<Types.Channels.RawPrivateChannel>({
             method: "POST",
-            path:   Routes.OAUTH_CHANNELS,
-            json:   { recipient_id: recipient }
-        }
+            path: Routes.OAUTH_CHANNELS,
+            json: { recipient_id: recipient },
+        },
         ).then(data => this._manager.client.privateChannels.update(data));
     }
 
@@ -88,11 +91,11 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawGroupChannel>({
             method: "POST",
-            path:   Routes.OAUTH_CHANNELS,
-            json:   {
+            path: Routes.OAUTH_CHANNELS,
+            json: {
                 access_tokens: options.accessTokens,
-                nicks:         options.nicks
-            }
+                nicks: options.nicks,
+            },
         }).then(data => this._manager.client.groupChannels.update(data));
     }
 
@@ -106,18 +109,18 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "POST",
-            path:   Routes.CHANNEL_INVITES(channelID),
-            json:   {
-                max_age:               options.maxAge,
-                max_uses:              options.maxUses,
+            path: Routes.CHANNEL_INVITES(channelID),
+            json: {
+                max_age: options.maxAge,
+                max_uses: options.maxUses,
                 target_application_id: options.targetApplicationID,
-                target_type:           options.targetType,
-                target_user_id:        options.targetUserID,
-                temporary:             options.temporary,
-                unique:                options.unique
+                target_type: options.targetType,
+                target_user_id: options.targetUserID,
+                temporary: options.temporary,
+                unique: options.unique,
             },
             reason: options.reason,
-            files:  options.targetUsers ? [this._manager.client.util._arrayToCSVFile(options.targetUsers, "target_users_file", "user_id")] : undefined
+            files: options.targetUsers ? [this._manager.client.util._arrayToCSVFile(options.targetUsers, "target_users_file", "user_id")] : undefined,
 
         }).then(data => Invite.withMetadata<CH>(data, this._manager.client));
     }
@@ -133,41 +136,41 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "POST",
-            path:   Routes.CHANNEL_MESSAGES(channelID),
-            json:   {
+            path: Routes.CHANNEL_MESSAGES(channelID),
+            json: {
                 allowed_mentions: this._manager.client.util.formatAllowedMentions(options.allowedMentions),
-                attachments:      options.attachments?.map(attachment => ({
+                attachments: options.attachments?.map(attachment => ({
                     description: attachment.description,
-                    filename:    attachment.filename,
-                    id:          attachment.id,
-                    is_spoiler:  attachment.isSpoiler
+                    filename: attachment.filename,
+                    id: attachment.id,
+                    is_spoiler: attachment.isSpoiler,
                 })),
-                components:        options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
-                content:           options.content,
-                embeds:            options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
-                enforce_nonce:     options.enforceNonce,
-                flags:             options.flags,
-                sticker_ids:       options.stickerIDs,
+                components: options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
+                content: options.content,
+                embeds: options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
+                enforce_nonce: options.enforceNonce,
+                flags: options.flags,
+                sticker_ids: options.stickerIDs,
                 message_reference: options.messageReference ? {
-                    channel_id:         options.messageReference.channelID,
+                    channel_id: options.messageReference.channelID,
                     fail_if_not_exists: options.messageReference.failIfNotExists,
-                    guild_id:           options.messageReference.guildID,
-                    message_id:         options.messageReference.messageID,
-                    type:               options.messageReference.type
+                    guild_id: options.messageReference.guildID,
+                    message_id: options.messageReference.messageID,
+                    type: options.messageReference.type,
                 } : undefined,
                 nonce: options.nonce,
-                poll:  options.poll ? {
+                poll: options.poll ? {
                     allow_multiselect: options.poll.allowMultiselect,
-                    answers:           options.poll.answers.map(a => ({
-                        poll_media: a.pollMedia
+                    answers: options.poll.answers.map(a => ({
+                        poll_media: a.pollMedia,
                     })),
-                    duration:    options.poll.duration,
+                    duration: options.poll.duration,
                     layout_type: options.poll.layoutType,
-                    question:    options.poll.question
+                    question: options.poll.question,
                 } : undefined,
-                tts: options.tts
+                tts: options.tts,
             },
-            files: options.files
+            files: options.files,
         }).then(data => this._manager.client.util.updateMessage<T>(data));
     }
 
@@ -181,7 +184,7 @@ export default class Channels {
     async createReaction(channelID: string, messageID: string, emoji: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.CHANNEL_REACTION_USER(channelID, messageID, emoji, "@me")
+            path: Routes.CHANNEL_REACTION_USER(channelID, messageID, emoji, "@me"),
         });
     }
 
@@ -195,14 +198,14 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawStageInstance>({
             method: "POST",
-            path:   Routes.STAGE_INSTANCES,
-            json:   {
-                channel_id:              channelID,
-                topic:                   options.topic,
-                privacy_level:           options.privacyLevel,
-                send_start_notification: options.sendStartNotification
+            path: Routes.STAGE_INSTANCES,
+            json: {
+                channel_id: channelID,
+                topic: options.topic,
+                privacy_level: options.privacyLevel,
+                send_start_notification: options.sendStartNotification,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => new StageInstance(data, this._manager.client));
     }
 
@@ -216,7 +219,7 @@ export default class Channels {
     async crosspostMessage<T extends AnnouncementChannel | Types.Shared.Uncached = AnnouncementChannel | Types.Shared.Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "POST",
-            path:   Routes.CHANNEL_MESSAGES_CROSSPOST(channelID, messageID)
+            path: Routes.CHANNEL_MESSAGES_CROSSPOST(channelID, messageID),
         }).then(data => this._manager.client.util.updateMessage<T>(data));
     }
 
@@ -229,8 +232,8 @@ export default class Channels {
     async delete(channelID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<Types.Channels.RawChannel>({
             method: "DELETE",
-            path:   Routes.CHANNEL(channelID),
-            reason
+            path: Routes.CHANNEL(channelID),
+            reason,
         });
     }
 
@@ -243,8 +246,8 @@ export default class Channels {
     async deleteInvite<T extends Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached>(code: string, reason?: string): Promise<Invite<T>> {
         return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "DELETE",
-            path:   Routes.INVITE(code),
-            reason
+            path: Routes.INVITE(code),
+            reason,
         }).then(data => new Invite<T>(data, this._manager.client));
     }
 
@@ -258,8 +261,8 @@ export default class Channels {
     async deleteMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<Types.Channels.RawMessage>({
             method: "DELETE",
-            path:   Routes.CHANNEL_MESSAGE(channelID, messageID),
-            reason
+            path: Routes.CHANNEL_MESSAGE(channelID, messageID),
+            reason,
         });
     }
 
@@ -293,9 +296,9 @@ export default class Channels {
 
             await this._manager.authRequest<null>({
                 method: "POST",
-                path:   Routes.CHANNEL_BULK_DELETE_MESSAGES(channelID),
-                json:   { messages: chunk },
-                reason
+                path: Routes.CHANNEL_BULK_DELETE_MESSAGES(channelID),
+                json: { messages: chunk },
+                reason,
             });
             done += chunk.length;
         }
@@ -313,8 +316,8 @@ export default class Channels {
     async deletePermission(channelID: string, overwriteID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.CHANNEL_PERMISSION(channelID, overwriteID),
-            reason
+            path: Routes.CHANNEL_PERMISSION(channelID, overwriteID),
+            reason,
         });
     }
 
@@ -329,7 +332,7 @@ export default class Channels {
     async deleteReaction(channelID: string, messageID: string, emoji: string, user = "@me"): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.CHANNEL_REACTION_USER(channelID, messageID, emoji, user)
+            path: Routes.CHANNEL_REACTION_USER(channelID, messageID, emoji, user),
         });
     }
 
@@ -343,7 +346,7 @@ export default class Channels {
     async deleteReactions(channelID: string, messageID: string, emoji?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   emoji ? Routes.CHANNEL_REACTION(channelID, messageID, emoji) : Routes.CHANNEL_REACTIONS(channelID, messageID)
+            path: emoji ? Routes.CHANNEL_REACTION(channelID, messageID, emoji) : Routes.CHANNEL_REACTIONS(channelID, messageID),
         });
     }
 
@@ -356,8 +359,8 @@ export default class Channels {
     async deleteStageInstance(channelID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.STAGE_INSTANCE(channelID),
-            reason
+            path: Routes.STAGE_INSTANCE(channelID),
+            reason,
         });
     }
 
@@ -381,41 +384,41 @@ export default class Channels {
 
         return this._manager.authRequest<Types.Channels.RawChannel>({
             method: "PATCH",
-            path:   Routes.CHANNEL(channelID),
-            json:   {
-                applied_tags:          options.appliedTags,
-                archived:              options.archived,
+            path: Routes.CHANNEL(channelID),
+            json: {
+                applied_tags: options.appliedTags,
+                archived: options.archived,
                 auto_archive_duration: options.autoArchiveDuration,
-                available_tags:        options.availableTags?.map(tag => ({
-                    emoji_id:   tag.emoji?.id,
+                available_tags: options.availableTags?.map(tag => ({
+                    emoji_id: tag.emoji?.id,
                     emoji_name: tag.emoji?.name,
-                    moderated:  tag.moderated,
-                    name:       tag.name,
-                    id:         tag.id
+                    moderated: tag.moderated,
+                    name: tag.name,
+                    id: tag.id,
                 })),
-                bitrate:                            options.bitrate,
-                default_auto_archive_duration:      options.defaultAutoArchiveDuration,
-                default_forum_layout:               options.defaultForumLayout,
-                default_reaction_emoji:             options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
-                default_sort_order:                 options.defaultSortOrder,
+                bitrate: options.bitrate,
+                default_auto_archive_duration: options.defaultAutoArchiveDuration,
+                default_forum_layout: options.defaultForumLayout,
+                default_reaction_emoji: options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
+                default_sort_order: options.defaultSortOrder,
                 default_thread_rate_limit_per_user: options.defaultThreadRateLimitPerUser,
-                flags:                              options.flags,
+                flags: options.flags,
                 icon,
-                invitable:                          options.invitable,
-                locked:                             options.locked,
-                name:                               options.name,
-                nsfw:                               options.nsfw,
-                parent_id:                          options.parentID,
-                permission_overwrites:              options.permissionOverwrites,
-                position:                           options.position,
-                rate_limit_per_user:                options.rateLimitPerUser,
-                rtc_region:                         options.rtcRegion,
-                topic:                              options.topic,
-                type:                               options.type,
-                user_limit:                         options.userLimit,
-                video_quality_mode:                 options.videoQualityMode
+                invitable: options.invitable,
+                locked: options.locked,
+                name: options.name,
+                nsfw: options.nsfw,
+                parent_id: options.parentID,
+                permission_overwrites: options.permissionOverwrites,
+                position: options.position,
+                rate_limit_per_user: options.rateLimitPerUser,
+                rtc_region: options.rtcRegion,
+                topic: options.topic,
+                type: options.type,
+                user_limit: options.userLimit,
+                video_quality_mode: options.videoQualityMode,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.util.updateChannel<T>(data));
     }
 
@@ -431,23 +434,23 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "PATCH",
-            path:   Routes.CHANNEL_MESSAGE(channelID, messageID),
-            json:   {
+            path: Routes.CHANNEL_MESSAGE(channelID, messageID),
+            json: {
                 allowed_mentions: options.content !== undefined || options.allowedMentions || ((options.flags ?? 0) & MessageFlags.IS_COMPONENTS_V2) !== 0
                     ? this._manager.client.util.formatAllowedMentions(options.allowedMentions)
                     : undefined,
                 attachments: options.attachments?.map(attachment => ({
                     description: attachment.description,
-                    filename:    attachment.filename,
-                    id:          attachment.id,
-                    is_spoiler:  attachment.isSpoiler
+                    filename: attachment.filename,
+                    id: attachment.id,
+                    is_spoiler: attachment.isSpoiler,
                 })),
                 components: options.components ? this._manager.client.util.componentsToRaw(options.components) : undefined,
-                content:    options.content,
-                embeds:     options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
-                flags:      options.flags
+                content: options.content,
+                embeds: options.embeds ? this._manager.client.util.embedsToRaw(options.embeds) : undefined,
+                flags: options.flags,
             },
-            files: options.files ?? undefined
+            files: options.files ?? undefined,
         }).then(data => this._manager.client.util.updateMessage<T>(data));
     }
 
@@ -462,13 +465,13 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.CHANNEL_PERMISSION(channelID, overwriteID),
-            json:   {
+            path: Routes.CHANNEL_PERMISSION(channelID, overwriteID),
+            json: {
                 allow: options.allow,
-                deny:  options.deny,
-                type:  options.type
+                deny: options.deny,
+                type: options.type,
             },
-            reason: options.reason
+            reason: options.reason,
         });
     }
 
@@ -482,13 +485,13 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawStageInstance>({
             method: "PATCH",
-            path:   Routes.STAGE_INSTANCE(channelID),
-            json:   {
-                channel_id:    channelID,
-                topic:         options.topic,
-                privacy_level: options.privacyLevel
+            path: Routes.STAGE_INSTANCE(channelID),
+            json: {
+                channel_id: channelID,
+                topic: options.topic,
+                privacy_level: options.privacyLevel,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => new StageInstance(data, this._manager.client));
     }
 
@@ -501,7 +504,7 @@ export default class Channels {
     async expirePoll(channelID: string, messageID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "POST",
-            path:   Routes.POLL_EXPIRE(channelID, messageID)
+            path: Routes.POLL_EXPIRE(channelID, messageID),
         });
     }
 
@@ -516,11 +519,11 @@ export default class Channels {
         return this._manager.authRequest<Types.Channels.RawFollowedChannel>({
             method: "POST",
             reason,
-            path:   Routes.CHANNEL_FOLLOWERS(channelID),
-            json:   { webhook_channel_id: webhookChannelID }
+            path: Routes.CHANNEL_FOLLOWERS(channelID),
+            json: { webhook_channel_id: webhookChannelID },
         }).then(data => ({
             channelID: data.channel_id,
-            webhookID: data.webhook_id
+            webhookID: data.webhook_id,
         }));
     }
 
@@ -533,7 +536,7 @@ export default class Channels {
     async get<T extends Types.Channels.AnyChannel = Types.Channels.AnyChannel>(channelID: string): Promise<T> {
         return this._manager.authRequest<Types.Channels.RawChannel>({
             method: "GET",
-            path:   Routes.CHANNEL(channelID)
+            path: Routes.CHANNEL(channelID),
         }).then(data => this._manager.client.util.updateChannel<T>(data));
     }
 
@@ -554,38 +557,9 @@ export default class Channels {
         query.setIfPresent("with_counts", options?.withCounts);
         return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "GET",
-            path:   Routes.INVITE(code),
-            query
+            path: Routes.INVITE(code),
+            query,
         }).then(data => new Invite<CH>(data, this._manager.client));
-    }
-
-    /**
-     * Get the target users for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
-     * @param code The code of the invite.
-     */
-    async getInviteTargetUsers(code: string): Promise<Array<string>> {
-        return this._manager.authRequest<Buffer>({
-            method: "GET",
-            path:   Routes.INVITE_TARGET_USERS(code)
-        }).then(data => data.toString().split(/\r?\n/).filter(line => /^\d{15,}$/.test(line)));
-    }
-
-    /**
-     * Get the target users job status for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
-     * @param code The code of the invite.
-     */
-    async getInviteTargetUsersJobStatus(code: string): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
-        return this._manager.authRequest<Types.Invites.RawInviteTargetUsersJobStatusResponse>({
-            method: "GET",
-            path:   Routes.INVITE_TARGET_USERS_JOB_STATUS(code)
-        }).then(data => ({
-            completedAt:    data.completed_at ? new Date(data.completed_at) : null,
-            createdAt:      new Date(data.created_at),
-            errorMessage:   data.error_message,
-            processedUsers: data.processed_users,
-            status:         data.status,
-            totalUsers:     data.total_users
-        }));
     }
 
     /**
@@ -596,8 +570,37 @@ export default class Channels {
     async getInvites<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(channelID: string): Promise<Array<InviteWithMetadata<CH>>> {
         return this._manager.authRequest<Array<Types.Invites.RawInvite>>({
             method: "GET",
-            path:   Routes.CHANNEL_INVITES(channelID)
+            path: Routes.CHANNEL_INVITES(channelID),
         }).then(data => data.map(invite => Invite.withMetadata<CH>(invite, this._manager.client)));
+    }
+
+    /**
+     * Get the target users for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
+     * @param code The code of the invite.
+     */
+    async getInviteTargetUsers(code: string): Promise<Array<string>> {
+        return this._manager.authRequest<Buffer>({
+            method: "GET",
+            path: Routes.INVITE_TARGET_USERS(code),
+        }).then(data => data.toString().split(/\r?\n/).filter(line => /^\d{15,}$/.test(line)));
+    }
+
+    /**
+     * Get the target users job status for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
+     * @param code The code of the invite.
+     */
+    async getInviteTargetUsersJobStatus(code: string): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
+        return this._manager.authRequest<Types.Invites.RawInviteTargetUsersJobStatusResponse>({
+            method: "GET",
+            path: Routes.INVITE_TARGET_USERS_JOB_STATUS(code),
+        }).then(data => ({
+            completedAt: data.completed_at ? new Date(data.completed_at) : null,
+            createdAt: new Date(data.created_at),
+            errorMessage: data.error_message,
+            processedUsers: data.processed_users,
+            status: data.status,
+            totalUsers: data.total_users,
+        }));
     }
 
     /**
@@ -610,20 +613,20 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
-            path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
-            json:   {
+            path: Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
+            json: {
                 before: options?.before,
-                limit:  options?.limit
-            }
+                limit: options?.limit,
+            },
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
-                flags:         m.flags,
-                id:            m.id,
+                flags: m.flags,
+                id: m.id,
                 joinTimestamp: new Date(m.join_timestamp),
-                userID:        m.user_id
-            }) as Types.Channels.ThreadMember),
-            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
+                userID: m.user_id,
+            })),
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d)),
         }));
     }
 
@@ -637,7 +640,7 @@ export default class Channels {
     async getMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this._manager.authRequest<Types.Channels.RawMessage>({
             method: "GET",
-            path:   Routes.CHANNEL_MESSAGE(channelID, messageID)
+            path: Routes.CHANNEL_MESSAGE(channelID, messageID),
         }).then(data => this._manager.client.util.updateMessage<T>(data));
     }
 
@@ -655,7 +658,6 @@ export default class Channels {
         if (options?.around !== undefined) {
             query.set("around", options.around);
             chosenOption = "around";
-        // eslint-disable-next-line unicorn/no-negated-condition
         } else if (options?.after !== undefined) {
             query.set("after", options.after);
             chosenOption = "after";
@@ -672,8 +674,8 @@ export default class Channels {
 
             const messages = await this._manager.authRequest<Array<Types.Channels.RawMessage>>({
                 method: "GET",
-                path:   Routes.CHANNEL_MESSAGES(channelID),
-                query
+                path: Routes.CHANNEL_MESSAGES(channelID),
+                query,
             }).then(data => data.map(d => this._manager.client.util.updateMessage<T>(d)));
 
             for (const message of Array.from(messages)) {
@@ -717,16 +719,16 @@ export default class Channels {
         const chosenOption = options?.after === undefined ? "before" : "after";
 
         // arrow functions cannot be generator functions
-        // eslint-disable-next-line unicorn/no-this-assignment
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
         const it = {
             lastMessage: chosenOption === "after" ? options?.after : options?.before,
-            limit:       options?.limit ?? 100,
-            async *[Symbol.asyncIterator](): AsyncGenerator<Array<Message<T>>> {
+            limit: options?.limit ?? 100,
+            async* [Symbol.asyncIterator](): AsyncGenerator<Array<Message<T>>> {
                 loop: while (it.limit > 0) {
                     const messages = await self.getMessages<T>(channelID, {
-                        limit:          Math.min(it.limit, 100),
-                        [chosenOption]: it.lastMessage
+                        limit: Math.min(it.limit, 100),
+                        [chosenOption]: it.lastMessage,
                     });
 
                     const originalCount = messages.length;
@@ -752,7 +754,7 @@ export default class Channels {
                         break loop;
                     }
                 }
-            }
+            },
         };
 
         return it;
@@ -768,7 +770,7 @@ export default class Channels {
     async getPinnedMessages<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string): Promise<Array<Message<T>>> {
         return this._manager.authRequest<Array<Types.Channels.RawMessage>>({
             method: "GET",
-            path:   Routes.CHANNEL_PINS(channelID)
+            path: Routes.CHANNEL_PINS(channelID),
         }).then(data => data.map(d => this._manager.client.util.updateMessage<T>(d)));
     }
 
@@ -788,11 +790,11 @@ export default class Channels {
             query.setIfPresent("limit", options?.limit);
             const pins = await this._manager.authRequest<Types.Channels.RawMessagePinsResponse>({
                 method: "GET",
-                path:   Routes.CHANNEL_MESSAGE_PINS(channelID),
-                query
+                path: Routes.CHANNEL_MESSAGE_PINS(channelID),
+                query,
             }).then(data => data.items.map(pin => ({
-                message:         this._manager.client.util.updateMessage<T>(pin.message),
-                pinnedTimestamp: new Date(pin.pinned_at)
+                message: this._manager.client.util.updateMessage<T>(pin.message),
+                pinnedTimestamp: new Date(pin.pinned_at),
             })));
 
             for (const pin of Array.from(pins)) {
@@ -835,24 +837,24 @@ export default class Channels {
         const filter = options?.filter?.bind(this) ?? ((): true => true);
 
         // arrow functions cannot be generator functions
-        // eslint-disable-next-line unicorn/no-this-assignment
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
         const it = {
             lastPinTimestamp: options?.before,
-            limit:            options?.limit ?? 50,
-            async *[Symbol.asyncIterator](): AsyncGenerator<Array<Types.Channels.MessagePin<T>>> {
+            limit: options?.limit ?? 50,
+            async* [Symbol.asyncIterator](): AsyncGenerator<Array<Types.Channels.MessagePin<T>>> {
                 loop: while (it.limit > 0) {
                     const query = new QueryBuilder();
                     query.setIfPresent("before", it.lastPinTimestamp);
                     query.set("limit", Math.min(it.limit, 50));
                     const data = await self._manager.authRequest<Types.Channels.RawMessagePinsResponse>({
                         method: "GET",
-                        path:   Routes.CHANNEL_MESSAGE_PINS(channelID),
-                        query
+                        path: Routes.CHANNEL_MESSAGE_PINS(channelID),
+                        query,
                     });
                     const pins = data.items.map(pin => ({
-                        message:         self._manager.client.util.updateMessage<T>(pin.message),
-                        pinnedTimestamp: new Date(pin.pinned_at)
+                        message: self._manager.client.util.updateMessage<T>(pin.message),
+                        pinnedTimestamp: new Date(pin.pinned_at),
                     }));
 
                     it.limit -= pins.length;
@@ -877,7 +879,7 @@ export default class Channels {
                         break loop;
                     }
                 }
-            }
+            },
         };
 
         return it;
@@ -897,11 +899,11 @@ export default class Channels {
         const query = new QueryBuilder();
         query.setIfPresent("after", options?.after);
         query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<{ users: Array<Types.Users.RawUser>; }>({
+        return this._manager.authRequest<{ users: Array<Types.Users.RawUser> }>({
             method: "GET",
-            path:   Routes.POLL_ANSWER_USERS(channelID, messageID, answerID),
-            query
-        }).then(data => {
+            path: Routes.POLL_ANSWER_USERS(channelID, messageID, answerID),
+            query,
+        }).then((data) => {
             const users = data.users.map(user => this._manager.client.users.update(user));
             const message = this._manager.client.getChannel<Types.Channels.AnyTextableChannel>(channelID)?.messages.get(messageID);
             if (message?.poll) {
@@ -925,17 +927,17 @@ export default class Channels {
         query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
-            path:   Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
-            query
+            path: Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
+            query,
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
-                flags:         m.flags,
-                id:            m.id,
+                flags: m.flags,
+                id: m.id,
                 joinTimestamp: new Date(m.join_timestamp),
-                userID:        m.user_id
-            }) as Types.Channels.ThreadMember),
-            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
+                userID: m.user_id,
+            })),
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d)),
         }));
     }
 
@@ -953,17 +955,17 @@ export default class Channels {
         query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
-            path:   Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
-            query
+            path: Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
+            query,
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
-                flags:         m.flags,
-                id:            m.id,
+                flags: m.flags,
+                id: m.id,
                 joinTimestamp: new Date(m.join_timestamp),
-                userID:        m.user_id
-            }) as Types.Channels.ThreadMember),
-            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
+                userID: m.user_id,
+            })),
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d)),
         }));
     }
 
@@ -981,17 +983,17 @@ export default class Channels {
         query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawAnnouncementThreadChannel | Types.Channels.RawPublicThreadChannel>>({
             method: "GET",
-            path:   Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(channelID),
-            query
+            path: Routes.CHANNEL_PUBLIC_ARCHIVED_THREADS(channelID),
+            query,
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
-                flags:         m.flags,
-                id:            m.id,
+                flags: m.flags,
+                id: m.id,
                 joinTimestamp: new Date(m.join_timestamp),
-                userID:        m.user_id
-            }) as Types.Channels.ThreadMember),
-            threads: data.threads.map(d => this._manager.client.util.updateThread(d))
+                userID: m.user_id,
+            })),
+            threads: data.threads.map(d => this._manager.client.util.updateThread(d)),
         }));
     }
 
@@ -1012,8 +1014,8 @@ export default class Channels {
             query.setIfPresent("type", options?.type);
             return this._manager.authRequest<Array<Types.Users.RawUser>>({
                 method: "GET",
-                path:   Routes.CHANNEL_REACTION(channelID, messageID, emoji),
-                query
+                path: Routes.CHANNEL_REACTION(channelID, messageID, emoji),
+                query,
             }).then(data => data.map(d => this._manager.client.users.update(d)));
         };
 
@@ -1027,7 +1029,7 @@ export default class Channels {
             this._manager.client.emit("debug", `Getting ${limitLeft} more ${emoji} reactions for message ${messageID} on ${channelID}: ${after ?? ""}`);
             const reactionsChunk = await _getReactions({
                 after,
-                limit: limitToFetch
+                limit: limitToFetch,
             });
 
             if (reactionsChunk.length === 0) {
@@ -1053,7 +1055,7 @@ export default class Channels {
     async getStageInstance(channelID: string): Promise<StageInstance> {
         return this._manager.authRequest<Types.Guilds.RawStageInstance>({
             method: "GET",
-            path:   Routes.STAGE_INSTANCE(channelID)
+            path: Routes.STAGE_INSTANCE(channelID),
         }).then(data => new StageInstance(data, this._manager.client));
     }
 
@@ -1066,12 +1068,12 @@ export default class Channels {
     async getThreadMember(channelID: string, userID: string): Promise<Types.Channels.ThreadMember> {
         return this._manager.authRequest<Types.Channels.RawThreadMember>({
             method: "GET",
-            path:   Routes.CHANNEL_THREAD_MEMBER(channelID, userID)
+            path: Routes.CHANNEL_THREAD_MEMBER(channelID, userID),
         }).then(data => ({
-            flags:         data.flags,
-            id:            data.id,
+            flags: data.flags,
+            id: data.id,
             joinTimestamp: new Date(data.join_timestamp),
-            userID:        data.user_id
+            userID: data.user_id,
         }));
     }
 
@@ -1089,18 +1091,17 @@ export default class Channels {
         query.setIfPresent("with_member", options?.withMember);
         return this._manager.authRequest<Array<Types.Channels.RawThreadMember>>({
             method: "GET",
-            path:   Routes.CHANNEL_THREAD_MEMBERS(channelID),
-            query
-        }).then(data => data.map(d => {
-            // eslint-disable-next-line @typescript-eslint/dot-notation
+            path: Routes.CHANNEL_THREAD_MEMBERS(channelID),
+            query,
+        }).then(data => data.map((d) => {
             const guild = this._manager.client.getChannel<Types.Channels.AnyGuildChannel>(channelID)?.["_cachedGuild"];
             const member = guild && options?.withMember ? guild.members.update(d.member!, guild.id) : undefined;
             return {
-                flags:         d.flags,
-                id:            d.id,
+                flags: d.flags,
+                id: d.id,
                 joinTimestamp: new Date(d.join_timestamp),
                 member,
-                userID:        d.user_id
+                userID: d.user_id,
             };
         }));
     }
@@ -1109,7 +1110,7 @@ export default class Channels {
     async getVoiceRegions(): Promise<Array<Types.Voice.VoiceRegion>> {
         return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
             method: "GET",
-            path:   Routes.VOICE_REGIONS
+            path: Routes.VOICE_REGIONS,
         });
     }
 
@@ -1121,7 +1122,7 @@ export default class Channels {
     async joinThread(channelID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.CHANNEL_THREAD_MEMBER(channelID, "@me")
+            path: Routes.CHANNEL_THREAD_MEMBER(channelID, "@me"),
         });
     }
 
@@ -1133,7 +1134,7 @@ export default class Channels {
     async leaveThread(channelID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.CHANNEL_THREAD_MEMBER(channelID, "@me")
+            path: Routes.CHANNEL_THREAD_MEMBER(channelID, "@me"),
         });
     }
 
@@ -1147,8 +1148,8 @@ export default class Channels {
     async pinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.CHANNEL_MESSAGE_PIN(channelID, messageID),
-            reason
+            path: Routes.CHANNEL_MESSAGE_PIN(channelID, messageID),
+            reason,
         });
     }
 
@@ -1169,7 +1170,7 @@ export default class Channels {
                 return "break";
             }
 
-            return options?.filter?.(message) ?? true;
+            return options.filter?.(message) ?? true;
         };
         let chosenOption: "after" | "around" | "before";
         if (options.after) {
@@ -1182,8 +1183,8 @@ export default class Channels {
 
         if (chosenOption === "around" || options.limit <= 100) {
             const messages = await this.getMessages<T>(channelID, {
-                limit:          options.limit,
-                [chosenOption]: options[chosenOption]
+                limit: options.limit,
+                [chosenOption]: options[chosenOption],
             });
             for (const message of Array.from(messages)) {
                 const f = filter(message);
@@ -1200,10 +1201,10 @@ export default class Channels {
         }
 
         const it = this.getMessagesIterator<T>(channelID, {
-            after:  options.after,
+            after: options.after,
             before: options.before,
-            limit:  options.limit,
-            filter
+            limit: options.limit,
+            filter,
         });
 
         let deleted = 0;
@@ -1222,7 +1223,7 @@ export default class Channels {
     async removeGroupRecipient(groupID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GROUP_RECIPIENT(groupID, userID)
+            path: Routes.GROUP_RECIPIENT(groupID, userID),
         });
     }
 
@@ -1235,7 +1236,7 @@ export default class Channels {
     async removeThreadMember(channelID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.CHANNEL_THREAD_MEMBER(channelID, userID)
+            path: Routes.CHANNEL_THREAD_MEMBER(channelID, userID),
         });
     }
 
@@ -1272,9 +1273,9 @@ export default class Channels {
         append("tag", options?.tag);
         return this._manager.authRequest<Types.Channels.RawThreadSearchResults | Types.Guilds.MessageSearchNotIndexedResult>({
             method: "GET",
-            path:   Routes.CHANNEL_THREADS_SEARCH(channelID),
-            query
-        }).then(async data => {
+            path: Routes.CHANNEL_THREADS_SEARCH(channelID),
+            query,
+        }).then(async (data) => {
             if ("retry_after" in data) {
                 if (!retryOnIndexNotAvailable) {
                     throw new Error(`Thread search for channel ${channelID} failed due to the index not being available.`);
@@ -1289,20 +1290,19 @@ export default class Channels {
                 return this.searchThreads<T>(channelID, options, false);
             }
 
-            // eslint-disable-next-line @typescript-eslint/dot-notation
             const guild = this._manager.client.getChannel<Types.Channels.AnyGuildChannel>(channelID)?.["_cachedGuild"];
             return {
                 firstMessages: data.first_messages?.map(message => this._manager.client.util.updateMessage<T>(message)),
-                hasMore:       data.has_more,
-                members:       data.members?.map(m => ({
-                    flags:         m.flags,
-                    id:            m.id,
+                hasMore: data.has_more,
+                members: data.members?.map(m => ({
+                    flags: m.flags,
+                    id: m.id,
                     joinTimestamp: new Date(m.join_timestamp),
-                    member:        m.member && guild?.members.update(m.member, guild.id),
-                    userID:        m.user_id
+                    member: m.member && guild?.members.update(m.member, guild.id),
+                    userID: m.user_id,
                 })),
-                threads:      data.threads.map(thread => this._manager.client.util.updateThread<T>(thread)),
-                totalResults: data.total_results
+                threads: data.threads.map(thread => this._manager.client.util.updateThread<T>(thread)),
+                totalResults: data.total_results,
             };
         });
     }
@@ -1317,8 +1317,8 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "POST",
-            path:   Routes.SEND_SOUNDBOARD_SOUND(channelID),
-            json:   { sound_id: options.soundID, source_guild_id: options.sourceGuildID }
+            path: Routes.SEND_SOUNDBOARD_SOUND(channelID),
+            json: { sound_id: options.soundID, source_guild_id: options.sourceGuildID },
         });
     }
 
@@ -1330,7 +1330,7 @@ export default class Channels {
     async sendTyping(channelID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "POST",
-            path:   Routes.CHANNEL_TYPING(channelID)
+            path: Routes.CHANNEL_TYPING(channelID),
         });
     }
 
@@ -1342,8 +1342,8 @@ export default class Channels {
     async setVoiceStatus(channelID: string, status: string | null): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.VOICE_STATUS(channelID),
-            json:   { status }
+            path: Routes.VOICE_STATUS(channelID),
+            json: { status },
         });
     }
 
@@ -1359,13 +1359,13 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawThreadChannel>({
             method: "POST",
-            path:   Routes.CHANNEL_MESSAGE_THREADS(channelID, messageID),
-            json:   {
+            path: Routes.CHANNEL_MESSAGE_THREADS(channelID, messageID),
+            json: {
                 auto_archive_duration: options.autoArchiveDuration,
-                name:                  options.name,
-                rate_limit_per_user:   options.rateLimitPerUser
+                name: options.name,
+                rate_limit_per_user: options.rateLimitPerUser,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.util.updateThread<T>(data));
     }
 
@@ -1380,24 +1380,24 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawThreadChannel>({
             method: "POST",
-            path:   Routes.CHANNEL_THREADS(channelID),
-            json:   {
+            path: Routes.CHANNEL_THREADS(channelID),
+            json: {
                 auto_archive_duration: options.autoArchiveDuration,
-                message:               {
+                message: {
                     allowed_mentions: this._manager.client.util.formatAllowedMentions(options.message.allowedMentions),
-                    attachments:      options.message.attachments,
-                    components:       options.message.components ? this._manager.client.util.componentsToRaw(options.message.components) : undefined,
-                    content:          options.message.content,
-                    embeds:           options.message.embeds ? this._manager.client.util.embedsToRaw(options.message.embeds) : undefined,
-                    flags:            options.message.flags,
-                    sticker_ids:      options.message.stickerIDs
+                    attachments: options.message.attachments,
+                    components: options.message.components ? this._manager.client.util.componentsToRaw(options.message.components) : undefined,
+                    content: options.message.content,
+                    embeds: options.message.embeds ? this._manager.client.util.embedsToRaw(options.message.embeds) : undefined,
+                    flags: options.message.flags,
+                    sticker_ids: options.message.stickerIDs,
                 },
-                name:                options.name,
+                name: options.name,
                 rate_limit_per_user: options.rateLimitPerUser,
-                applied_tags:        options.appliedTags
+                applied_tags: options.appliedTags,
             },
             reason: options.reason,
-            files:  options.message.files
+            files: options.message.files,
         }).then(data => this._manager.client.util.updateThread<PublicThreadChannel>(data));
     }
 
@@ -1412,15 +1412,15 @@ export default class Channels {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawThreadChannel>({
             method: "POST",
-            path:   Routes.CHANNEL_THREADS(channelID),
-            json:   {
+            path: Routes.CHANNEL_THREADS(channelID),
+            json: {
                 auto_archive_duration: options.autoArchiveDuration,
-                invitable:             options.invitable,
-                name:                  options.name,
-                rate_limit_per_user:   options.rateLimitPerUser,
-                type:                  options.type
+                invitable: options.invitable,
+                name: options.name,
+                rate_limit_per_user: options.rateLimitPerUser,
+                type: options.type,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.util.updateThread<T>(data));
     }
 
@@ -1434,8 +1434,8 @@ export default class Channels {
     async unpinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.CHANNEL_MESSAGE_PIN(channelID, messageID),
-            reason
+            path: Routes.CHANNEL_MESSAGE_PIN(channelID, messageID),
+            reason,
         });
     }
 
@@ -1447,10 +1447,10 @@ export default class Channels {
     async updateInviteTargetUsers(code: string, users: Array<string>): Promise<null> {
         return this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.INVITE_TARGET_USERS(code),
-            files:  [
-                this._manager.client.util._arrayToCSVFile(users, "target_users_file", "user_id")
-            ]
+            path: Routes.INVITE_TARGET_USERS(code),
+            files: [
+                this._manager.client.util._arrayToCSVFile(users, "target_users_file", "user_id"),
+            ],
         });
     }
 }

@@ -5,7 +5,6 @@ import type * as Types from "../types/namespaced";
  * https://github.com/abalabahaha/eris/blob/dev/lib/util/SequentialBucket.js (eb403730855714eafa36c541dbe2cb84c9979158)
  */
 
-
 /** A ratelimit bucket. */
 export default class SequentialBucket {
     private _queue: Array<(cb: () => void) => void> = [];
@@ -45,6 +44,7 @@ export default class SequentialBucket {
             this.processing = setTimeout(() => {
                 this.processing = false;
                 this.check(true);
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             }, Math.max(0, (this.reset ?? 0) - now + offset) + 1);
             return;
         }
@@ -64,7 +64,7 @@ export default class SequentialBucket {
      * @param func The function to queue.
      * @param priority- If true, the item will be added to the front of the queue/
      */
-    queue(func: (cb: () => void) => void, priority = false): void {
+    queue(func: (cb: () => void) => unknown, priority = false): void {
         if (priority) {
             this._queue.unshift(func);
         } else {

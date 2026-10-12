@@ -1,9 +1,10 @@
 /** @module Team */
 import Base from "./Base";
+
 import type User from "./User";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { TeamPayoutAccountStatus } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents an OAuth team. */
 export default class Team extends Base {
@@ -58,9 +59,9 @@ export default class Team extends Base {
                 if (!this.members.some(m => m.user.id === member.user.id)) {
                     this.members.push({
                         membershipState: member.membership_state,
-                        role:            member.role,
-                        teamID:          member.team_id,
-                        user:            this.client.users.update(member.user)
+                        role: member.role,
+                        teamID: member.team_id,
+                        user: this.client.users.update(member.user),
                     });
                 }
             }
@@ -79,10 +80,10 @@ export default class Team extends Base {
     override toJSON(): Types.JSON.JSONTeam {
         return {
             ...super.toJSON(),
-            icon:    this.icon,
+            icon: this.icon,
             members: this.members,
-            name:    this.name,
-            ownerID: this.ownerID
+            name: this.name,
+            ownerID: this.ownerID,
         };
     }
 }

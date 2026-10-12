@@ -1,13 +1,15 @@
 /** @module ModalSubmitInteractionComponentsWrapper */
-import { mapRawToResolved } from "./shared";
-import type * as Types from "../../types/namespaced";
-import { WrapperError } from "../Errors";
 import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
+import Collection from "../Collection";
+import { WrapperError } from "../Errors";
+
+import { mapRawToResolved } from "./shared";
+
+import type Attachment from "../../structures/Attachment";
+import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
 import type Role from "../../structures/Role";
 import type User from "../../structures/User";
-import Collection from "../Collection";
-import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
-import type Attachment from "../../structures/Attachment";
+import type * as Types from "../../types/namespaced";
 
 /** A wrapper for interaction components. */
 export default class ModalSubmitInteractionComponentsWrapper {
@@ -99,6 +101,7 @@ export default class ModalSubmitInteractionComponentsWrapper {
     getComponents(): Array<Types.Interactions.ModalSubmitComponents> {
         return this.raw
             .flatMap(r => r.type === ComponentTypes.ACTION_ROW ? r.components : r.component)
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             .filter(c => c !== undefined);
     }
 

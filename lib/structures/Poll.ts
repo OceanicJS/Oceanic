@@ -1,8 +1,8 @@
 import type Message from "./Message";
 import type User from "./User";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
 import type { PollLayoutType } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 export default class Poll {
     allowMultiselect: boolean;
@@ -15,38 +15,38 @@ export default class Poll {
     results: Types.Channels.PollResults;
     constructor(data: Types.Channels.RawPoll, client: Client, message: Message) {
         Object.defineProperty(this, "client", {
-            value:        client,
-            enumerable:   false,
-            writable:     false,
-            configurable: false
+            value: client,
+            enumerable: false,
+            writable: false,
+            configurable: false,
         });
         this.allowMultiselect = data.allow_multiselect;
         this.answers = data.answers.map(a => ({
-            answerID:  a.answer_id,
-            pollMedia: a.poll_media
+            answerID: a.answer_id,
+            pollMedia: a.poll_media,
         }));
         this.expiry = new Date(data.expiry);
         this.layoutType = data.layout_type;
         this.message = message;
         this.question = data.question;
-        const res = data.results || { answer_counts: [], is_finalized: false };
+        const res = data.results ?? { answer_counts: [], is_finalized: false };
         this.results = {
             answerCounts: res.answer_counts.map(a => ({
-                count:   a.count,
-                id:      a.id,
+                count: a.count,
+                id: a.id,
                 meVoted: a.me_voted,
-                users:   []
+                users: [],
             })),
-            isFinalized: res.is_finalized
+            isFinalized: res.is_finalized,
         };
         // this makes working with this much easier as a developer. We still have systems in place to insert missing answerCounts, if needs be
         for (const answer of data.answers) {
             if (!this.results.answerCounts.some(a => a.id === answer.answer_id)) {
                 this.results.answerCounts.push({
-                    count:   0,
-                    id:      answer.answer_id,
+                    count: 0,
+                    id: answer.answer_id,
                     meVoted: false,
-                    users:   []
+                    users: [],
                 });
             }
         }
@@ -74,11 +74,11 @@ export default class Poll {
     toJSON(): Types.JSON.JSONPoll {
         return {
             allowMultiselect: this.allowMultiselect,
-            answers:          this.answers,
-            expiry:           this.expiry.getTime(),
-            layoutType:       this.layoutType,
-            question:         this.question,
-            results:          this.results
+            answers: this.answers,
+            expiry: this.expiry.getTime(),
+            layoutType: this.layoutType,
+            question: this.question,
+            results: this.results,
         };
     }
 }

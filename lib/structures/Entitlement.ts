@@ -1,6 +1,7 @@
 import BaseEntitlement from "./BaseEntitlement";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents an entitlement. */
 export default class Entitlement extends BaseEntitlement {
@@ -17,9 +18,9 @@ export default class Entitlement extends BaseEntitlement {
     override toJSON(): Types.JSON.JSONEntitlement {
         return {
             ...super.toJSON(),
-            endsAt:         this.endsAt?.getTime() || null,
-            startsAt:       this.startsAt?.getTime() || null,
-            subscriptionID: this.subscriptionID
+            endsAt: this.endsAt?.getTime() ?? null,
+            startsAt: this.startsAt?.getTime() ?? null,
+            subscriptionID: this.subscriptionID,
         };
     }
 }

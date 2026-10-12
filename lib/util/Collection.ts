@@ -13,12 +13,11 @@ export default class Collection<K, V> extends Map<K, V> {
         return this.toArray().every(predicate, thisArg);
     }
 
-
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter | Array#filter } */
     filter<S extends V, ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, array: Array<V>) => value is S, thisArg?: ThisArg): Array<S>;
     filter<ThisArg = Collection<K, V>>(predicate: (this: ThisArg, value: V, index: number, array: Array<V>) => unknown, thisArg?: ThisArg): Array<V>;
     filter(predicate: (value: V, index: number, array: Array<V>) => unknown, thisArg?: unknown): Array<V> {
-        return this.toArray().filter(predicate, thisArg) ;
+        return this.toArray().filter(predicate, thisArg);
     }
 
     /** See: {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find | Array#find } */

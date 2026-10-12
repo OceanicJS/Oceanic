@@ -1,9 +1,11 @@
+import { UncachedError } from "../util/Errors";
+
 import Base from "./Base";
+
 import type Guild from "./Guild";
 import type User from "./User";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild join request. */
 export default class GuildJoinRequest extends Base {
@@ -101,19 +103,19 @@ export default class GuildJoinRequest extends Base {
     override toJSON(): Types.JSON.JSONGuildJoinRequest {
         return {
             ...super.toJSON(),
-            actionedAt:         this.actionedAt,
-            actionedByUser:     this.actionedByUser?.toJSON(),
-            applicationStatus:  this.applicationStatus,
-            createdAt:          this._createdAt.getTime(),
-            formResponses:      this.formResponses,
-            guildID:            this.guildID,
+            actionedAt: this.actionedAt,
+            actionedByUser: this.actionedByUser?.toJSON(),
+            applicationStatus: this.applicationStatus,
+            createdAt: this._createdAt.getTime(),
+            formResponses: this.formResponses,
+            guildID: this.guildID,
             interviewChannelID: this.interviewChannelID,
-            joinRequestID:      this.joinRequestID,
-            lastSeen:           this.lastSeen?.getTime() ?? null,
-            rejectionReason:    this.rejectionReason,
-            reviewedAt:         this.reviewedAt?.getTime(),
-            user:               this.user?.toJSON(),
-            userID:             this.userID
+            joinRequestID: this.joinRequestID,
+            lastSeen: this.lastSeen?.getTime() ?? null,
+            rejectionReason: this.rejectionReason,
+            reviewedAt: this.reviewedAt?.getTime(),
+            user: this.user?.toJSON(),
+            userID: this.userID,
         };
     }
 }

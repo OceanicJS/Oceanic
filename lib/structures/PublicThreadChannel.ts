@@ -1,8 +1,9 @@
 /** @module PublicThreadChannel */
 import ThreadChannel from "./ThreadChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes } from "../Constants";
+
 import type Client from "../Client";
+import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a public thread channel. */
 export default class PublicThreadChannel extends ThreadChannel<PublicThreadChannel> {
@@ -33,9 +34,9 @@ export default class PublicThreadChannel extends ThreadChannel<PublicThreadChann
     override toJSON(): Types.JSON.JSONPublicThreadChannel {
         return {
             ...super.toJSON(),
-            appliedTags:    this.appliedTags,
+            appliedTags: this.appliedTags,
             threadMetadata: this.threadMetadata,
-            type:           this.type
+            type: this.type,
         };
     }
 }

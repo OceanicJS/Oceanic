@@ -1,10 +1,12 @@
 /** @module InviteGuild */
-import Base from "./Base";
-import type Guild from "./Guild";
-import type * as Types from "../types/namespaced";
-import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants";
-import type Client from "../Client";
 import * as Routes from "../util/Routes";
+
+import Base from "./Base";
+
+import type Guild from "./Guild";
+import type Client from "../Client";
+import type { GuildFeature, GuildNSFWLevels, ImageFormat, VerificationLevels } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild received via an invite. */
 export default class InviteGuild extends Base {
@@ -86,16 +88,16 @@ export default class InviteGuild extends Base {
     override toJSON(): Types.JSON.JSONInviteGuild {
         return {
             ...super.toJSON(),
-            banner:                   this.banner,
-            description:              this.description,
-            features:                 this.features,
-            icon:                     this.icon,
-            name:                     this.name,
-            nsfwLevel:                this.nsfwLevel,
+            banner: this.banner,
+            description: this.description,
+            features: this.features,
+            icon: this.icon,
+            name: this.name,
+            nsfwLevel: this.nsfwLevel,
             premiumSubscriptionCount: this.premiumSubscriptionCount,
-            splash:                   this.splash,
-            vanityURLCode:            this.vanityURLCode,
-            verificationLevel:        this.verificationLevel
+            splash: this.splash,
+            vanityURLCode: this.vanityURLCode,
+            verificationLevel: this.verificationLevel,
         };
     }
 }

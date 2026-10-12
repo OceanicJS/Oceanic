@@ -1,30 +1,31 @@
-import type * as Types from "./types/namespaced";
-/* eslint-disable unicorn/prefer-math-trunc, @typescript-eslint/no-duplicate-enum-values */
-/** @module Constants */
-import type PrivateChannel from "./structures/PrivateChannel";
-import type TextChannel from "./structures/TextChannel";
-import type VoiceChannel from "./structures/VoiceChannel";
-import type GroupChannel from "./structures/GroupChannel";
-import type CategoryChannel from "./structures/CategoryChannel";
-import type AnnouncementChannel from "./structures/AnnouncementChannel";
-import type AnnouncementThreadChannel from "./structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "./structures/PublicThreadChannel";
-import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
-import type StageChannel from "./structures/StageChannel";
-import type ForumChannel from "./structures/ForumChannel";
-import type MediaChannel from "./structures/MediaChannel";
 import pkg from "../package.json";
 
+import type AnnouncementChannel from "./structures/AnnouncementChannel";
+import type AnnouncementThreadChannel from "./structures/AnnouncementThreadChannel";
+import type CategoryChannel from "./structures/CategoryChannel";
+import type ForumChannel from "./structures/ForumChannel";
+import type GroupChannel from "./structures/GroupChannel";
+import type MediaChannel from "./structures/MediaChannel";
+import type PrivateChannel from "./structures/PrivateChannel";
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
+/** @module Constants */
+import type PrivateThreadChannel from "./structures/PrivateThreadChannel";
+import type PublicThreadChannel from "./structures/PublicThreadChannel";
+import type StageChannel from "./structures/StageChannel";
+import type TextChannel from "./structures/TextChannel";
+import type VoiceChannel from "./structures/VoiceChannel";
+import type * as Types from "./types/namespaced";
+
 export const GATEWAY_VERSION = 10;
-export const REST_VERSION    = 10;
-export const BASE_URL        = "https://discord.com";
-export const API_URL         = `${BASE_URL}/api/v${REST_VERSION}`;
-export const VERSION         = pkg.version;
-export const USER_AGENT      = `Oceanic/${VERSION} (https://github.com/OceanicJS/Oceanic)`;
+export const REST_VERSION = 10;
+export const BASE_URL = "https://discord.com";
+export const API_URL = `${BASE_URL}/api/v${REST_VERSION}`;
+export const VERSION = pkg.version;
+export const USER_AGENT = `Oceanic/${VERSION} (https://github.com/OceanicJS/Oceanic)`;
 export const MEDIA_PROXY_SIZES = [
     16, 20, 22, 24, 28, 32, 40, 44, 48, 56, 60, 64, 80, 96, 100,
     128, 160, 240, 256, 300, 320, 480, 512, 600, 640, 1024, 1280, 1536,
-    2048, 3072, 4096
+    2048, 3072, 4096,
 ];
 
 export const RESTMethods = [
@@ -32,7 +33,7 @@ export const RESTMethods = [
     "POST",
     "PUT",
     "PATCH",
-    "DELETE"
+    "DELETE",
 ] as const;
 export type RESTMethod = typeof RESTMethods[number];
 
@@ -41,7 +42,7 @@ export const ImageFormats = [
     "jpeg",
     "png",
     "webp",
-    "gif"
+    "gif",
 ] as const;
 export type ImageFormat = typeof ImageFormats[number];
 
@@ -49,98 +50,98 @@ export type FilterFileTypes = "image" | "video" | "audio" | `.${string}`;
 
 export enum WebhookTypes {
     /** Incoming webhooks can post messages to channels with a generated token */
-    INCOMING         = 1,
+    INCOMING = 1,
     /** Channel Follower webhooks are internal webhooks used to post new messages into channels */
     CHANNEL_FOLLOWER = 2,
     /** Application webhooks are webhooks used with interactions */
-    APPLICATION      = 3,
+    APPLICATION = 3,
 }
 
 export enum PremiumTypes {
     /** No Nitro. Also returned when the OAuth request did not include the approved `identify.premium` scope. */
-    NONE          = 0,
+    NONE = 0,
     /** Nitro Classic */
     NITRO_CLASSIC = 1,
     /** Nitro */
-    NITRO         = 2,
+    NITRO = 2,
     /** Nitro Basic */
-    NITRO_BASIC   = 3,
+    NITRO_BASIC = 3,
 }
 
 // @TODO: bigints?
 export enum UserFlags {
     /** Discord Staff */
-    STAFF                      = 2 ** 0,
+    STAFF = 2 ** 0,
     /** Partnered Server Owner */
-    PARTNER                    = 2 ** 1,
+    PARTNER = 2 ** 1,
     /** HypeSquad Events */
-    HYPESQUAD                  = 2 ** 2,
+    HYPESQUAD = 2 ** 2,
     /** Level 1 Discord Bug Hunter */
-    BUG_HUNTER_LEVEL_1         = 2 ** 3,
+    BUG_HUNTER_LEVEL_1 = 2 ** 3,
     /** SMS enabled as a multi-factor authentication backup */
-    MFA_SMS                    = 2 ** 4,
+    MFA_SMS = 2 ** 4,
     /** User has dismissed the current premium (Nitro) promotion */
-    PREMIUM_PROMO_DISMISSED    = 2 ** 5,
-    HYPESQUAD_BRAVERY          = 2 ** 6,
-    HYPESQUAD_BRILLIANCE       = 2 ** 7,
-    HYPESQUAD_BALANCE          = 2 ** 8,
-    EARLY_SUPPORTER            = 2 ** 9,
-    PSEUDO_TEAM_USER           = 2 ** 10,
+    PREMIUM_PROMO_DISMISSED = 2 ** 5,
+    HYPESQUAD_BRAVERY = 2 ** 6,
+    HYPESQUAD_BRILLIANCE = 2 ** 7,
+    HYPESQUAD_BALANCE = 2 ** 8,
+    EARLY_SUPPORTER = 2 ** 9,
+    PSEUDO_TEAM_USER = 2 ** 10,
     /** User is registered on Discord's HubSpot customer platform, used for official Discord programs (e.g. partner) */
-    IS_HUBSPOT_CONTACT         = 2 ** 11,
+    IS_HUBSPOT_CONTACT = 2 ** 11,
     /** @deprecated User is a system user (i.e. official Discord account) */
-    SYSTEM                     = 2 ** 12,
+    SYSTEM = 2 ** 12,
     /** User has unread urgent system messages; an urgent message is one sent from Trust and Safety */
     HAS_UNREAD_URGENT_MESSAGES = 2 ** 13,
     /** Level 2 Discord Bug Hunter */
-    BUG_HUNTER_LEVEL_2         = 2 ** 14,
+    BUG_HUNTER_LEVEL_2 = 2 ** 14,
     /** User is scheduled for deletion for being under the minimum required age */
-    UNDERAGE_DELETED           = 2 ** 15,
+    UNDERAGE_DELETED = 2 ** 15,
     /** Verified Bot */
-    VERIFIED_BOT               = 2 ** 16,
+    VERIFIED_BOT = 2 ** 16,
     /** Early Verified Bot Developer */
-    VERIFIED_DEVELOPER         = 2 ** 17,
+    VERIFIED_DEVELOPER = 2 ** 17,
     /** Moderator Programs Alumni */
-    CERTIFIED_MODERATOR        = 2 ** 18,
+    CERTIFIED_MODERATOR = 2 ** 18,
     /** Bot uses only HTTP interactions and is shown in the online member list */
-    BOT_HTTP_INTERACTIONS      = 2 ** 19,
+    BOT_HTTP_INTERACTIONS = 2 ** 19,
     /** User is marked as a spammer and has their messages collapsed in the UI */
-    SPAMMER                    = 2 ** 20,
+    SPAMMER = 2 ** 20,
     /** @deprecated User has manually disabled premium (Nitro) features */
-    DISABLE_PREMIUM            = 2 ** 21,
+    DISABLE_PREMIUM = 2 ** 21,
     /** @deprecated Active Developer */
-    ACTIVE_DEVELOPER           = 2 ** 22,
+    ACTIVE_DEVELOPER = 2 ** 22,
     /** User is a provisional account used with the social layer integration */
-    PROVISIONAL_ACCOUNT        = 2 ** 23,
+    PROVISIONAL_ACCOUNT = 2 ** 23,
 
     /** User has their global ratelimit raised to 1,200 requests per second */
-    HIGH_GLOBAL_RATE_LIMIT       = 2 ** 33,
+    HIGH_GLOBAL_RATE_LIMIT = 2 ** 33,
     /** User's account is deleted */
-    DELETED                      = 2 ** 34,
+    DELETED = 2 ** 34,
     /** User's account is disabled for suspicious activity and must reset their password to regain access */
     DISABLED_SUSPICIOUS_ACTIVITY = 2 ** 35,
     /** User deleted their own account */
-    SELF_DELETED                 = 2 ** 36,
+    SELF_DELETED = 2 ** 36,
     /** @deprecated User has a premium (Nitro) custom discriminator */
-    PREMIUM_DISCRIMINATOR        = 2 ** 37,
+    PREMIUM_DISCRIMINATOR = 2 ** 37,
     /** User has used the desktop client */
-    USED_DESKTOP_CLIENT          = 2 ** 38,
+    USED_DESKTOP_CLIENT = 2 ** 38,
     /** User has used the web client */
-    USED_WEB_CLIENT              = 2 ** 39,
+    USED_WEB_CLIENT = 2 ** 39,
     /** User has used the mobile client */
-    USED_MOBILE_CLIENT           = 2 ** 40,
+    USED_MOBILE_CLIENT = 2 ** 40,
     /** User's account is disabled */
-    DISABLED                     = 2 ** 41,
+    DISABLED = 2 ** 41,
 
     VERIFIED_EMAIL = 2 ** 43,
     /** User is quarantined and cannot create DMs or accept invites */
-    QUARANTINED    = 2 ** 44,
+    QUARANTINED = 2 ** 44,
 
     /** User is eligible for early access to unique usernames */
     PREMIUM_ELIGIBLE_FOR_UNIQUE_USERNAME = 2 ** 47,
 
     /** User is a collaborator and is considered staff */
-    COLLABORATOR            = 2 ** 50,
+    COLLABORATOR = 2 ** 50,
     /** User is a restricted collaborator and is considered staff */
     RESTRICTED_COLLABORATOR = 2 ** 51,
 }
@@ -149,84 +150,84 @@ export enum ApplicationIntegrationTypes {
     /** Guild installation context */
     GUILD_INSTALL = 0,
     /** User installation context */
-    USER_INSTALL  = 1,
+    USER_INSTALL = 1,
 }
 
 export enum InteractionContextTypes {
     /** The interaction can be triggered within guilds */
-    GUILD           = 0,
+    GUILD = 0,
     /** The interaction can be triggered within DM channel with the application */
-    BOT_DM          = 1,
+    BOT_DM = 1,
     /** The interaction can be triggered in all DM and group DMs */
     PRIVATE_CHANNEL = 2,
 }
 
 export enum ApplicationFlags {
     /** Embedded application is released to the public (see also release phases) */
-    EMBEDDED_RELEASED                             = 2 ** 1,
+    EMBEDDED_RELEASED = 2 ** 1,
     /** Application can create managed emoji */
-    MANAGED_EMOJI                                 = 2 ** 2,
+    MANAGED_EMOJI = 2 ** 2,
     /** Embedded application can use in-app purchases */
-    EMBEDDED_IAP                                  = 2 ** 3,
+    EMBEDDED_IAP = 2 ** 3,
     /** Application can create group DMs without limit */
-    GROUP_DM_CREATE                               = 2 ** 4,
+    GROUP_DM_CREATE = 2 ** 4,
     /** Application can use the `rpc` scope without limitation */
-    RPC_PRIVATE_BETA                              = 2 ** 5,
+    RPC_PRIVATE_BETA = 2 ** 5,
     APPLICATION_AUTO_MODERATION_RULE_CREATE_BADGE = 2 ** 6,
     /** Application has its game profile page disabled */
-    GAME_PROFILE_DISABLED                         = 2 ** 7,
+    GAME_PROFILE_DISABLED = 2 ** 7,
     /** @deprecated Application can use activity assets */
-    ALLOW_ASSETS                                  = 2 ** 8,
+    ALLOW_ASSETS = 2 ** 8,
     /** Application's OAuth2 credentials are considered public and a client secret is not required */
-    PUBLIC_OAUTH2_CLIENT                          = 2 ** 8,
+    PUBLIC_OAUTH2_CLIENT = 2 ** 8,
     /** @deprecated Application can enable spectating activities */
-    ALLOW_ACTIVITY_ACTION_SPECTATE                = 2 ** 9,
+    ALLOW_ACTIVITY_ACTION_SPECTATE = 2 ** 9,
     /** Embedded application's activity can be launched without a context */
-    CONTEXTLESS_ACTIVITY                          = 2 ** 9,
+    CONTEXTLESS_ACTIVITY = 2 ** 9,
     /** @deprecated Application can enable activity join requests */
-    ALLOW_ACTIVITY_ACTION_JOIN_REQUEST            = 2 ** 10,
+    ALLOW_ACTIVITY_ACTION_JOIN_REQUEST = 2 ** 10,
     /** Application has limited access to the social layer SDK */
-    SOCIAL_LAYER_INTEGRATION_LIMITED              = 2 ** 10,
+    SOCIAL_LAYER_INTEGRATION_LIMITED = 2 ** 10,
     /** Application is trialing cloud gaming features */
-    CLOUD_GAMING_DEMO                             = 2 ** 11,
+    CLOUD_GAMING_DEMO = 2 ** 11,
     /** Intent required for bots in 100 or more guilds to receive Presence Update Gateway events */
-    GATEWAY_PRESENCE                              = 2 ** 12,
+    GATEWAY_PRESENCE = 2 ** 12,
     /** Intent required for bots in under 100 guilds to receive Presence Update Gateway events */
-    GATEWAY_PRESENCE_LIMITED                      = 2 ** 13,
+    GATEWAY_PRESENCE_LIMITED = 2 ** 13,
     /** Intent required for bots in 100 or more guilds to receive guild member-related events like Guild Member Add */
-    GATEWAY_GUILD_MEMBERS                         = 2 ** 14,
+    GATEWAY_GUILD_MEMBERS = 2 ** 14,
     /** Intent required for bots in under 100 guilds to receive guild member-related events like Guild Member Add */
-    GATEWAY_GUILD_MEMBERS_LIMITED                 = 2 ** 15,
+    GATEWAY_GUILD_MEMBERS_LIMITED = 2 ** 15,
     /** Indicates unusual growth of an application that prevents verification */
-    VERIFICATION_PENDING_GUILD_LIMIT              = 2 ** 16,
+    VERIFICATION_PENDING_GUILD_LIMIT = 2 ** 16,
     /** Application can be embedded within the Discord client */
-    EMBEDDED                                      = 2 ** 17,
+    EMBEDDED = 2 ** 17,
     /** Intent required for bots in 100 or more guilds to receive message content */
-    GATEWAY_MESSAGE_CONTENT                       = 2 ** 18,
+    GATEWAY_MESSAGE_CONTENT = 2 ** 18,
     /** Intent required for bots in under 100 guilds to receive message content */
-    GATEWAY_MESSAGE_CONTENT_LIMITED               = 2 ** 19,
+    GATEWAY_MESSAGE_CONTENT_LIMITED = 2 ** 19,
     /** Embedded application is created by Discord */
-    EMBEDDED_FIRST_PARTY                          = 2 ** 20,
-    APPLICATION_COMMAND_MIGRATED                  = 2 ** 21,
+    EMBEDDED_FIRST_PARTY = 2 ** 20,
+    APPLICATION_COMMAND_MIGRATED = 2 ** 21,
 
     /** Application has registered global application commands */
     APPLICATION_COMMAND_BADGE = 2 ** 23,
     /** Application has had at least one global application command used in the last 30 days */
-    ACTIVE                    = 2 ** 24,
+    ACTIVE = 2 ** 24,
     /** Application has not had any global application commands used in the last 30 days and has lost the `ACTIVE` flag */
-    ACTIVE_GRACE_PERIOD       = 2 ** 25,
+    ACTIVE_GRACE_PERIOD = 2 ** 25,
     /** Application can use IFrames within modals */
-    IFRAME_MODAL              = 2 ** 26,
+    IFRAME_MODAL = 2 ** 26,
     /** Application can use the social layer SDK */
-    SOCIAL_LAYER_INTEGRATION  = 2 ** 27,
+    SOCIAL_LAYER_INTEGRATION = 2 ** 27,
 
     /** Application is promoted by Discord in the application directory */
     PROMOTED = 2 ** 28,
     /** Application is a Discord partner */
-    PARTNER  = 2 ** 29,
+    PARTNER = 2 ** 29,
 
     /** Application is a parent of a child application */
-    PARENT                      = 2 ** 33,
+    PARENT = 2 ** 33,
     /** Application cannot access relationship information */
     DISABLE_RELATIONSHIP_ACCESS = 2 ** 34,
 }
@@ -330,64 +331,64 @@ export const GuildFeatures = [
     "VERIFIED",
     "VIP_REGIONS",
     "VOICE_IN_THREADS",
-    "WELCOME_SCREEN_ENABLED"
+    "WELCOME_SCREEN_ENABLED",
 ] as const;
 export type GuildFeature = typeof GuildFeatures[number];
 export type MutableGuildFeatures = "COMMUNITY" | "DISCOVERABLE" | "INVITES_DISABLED" | "RAID_ALERTS_ENABLED";
 
 export enum DefaultMessageNotificationLevels {
     /** Receive notifications for all messages */
-    ALL_MESSAGES  = 0,
+    ALL_MESSAGES = 0,
     /** Receive notifications only for messages that @mention you */
     ONLY_MENTIONS = 1,
     /** Don't receive notifications */
-    NO_MESSAGES   = 2,
-    NULL          = 3,
+    NO_MESSAGES = 2,
+    NULL = 3,
 }
 
 export enum ExplicitContentFilterLevels {
     /** Media content will not be scanned */
-    DISABLED              = 0,
+    DISABLED = 0,
     /** Media content sent by members without roles will be scanned */
     MEMBERS_WITHOUT_ROLES = 1,
     /** Media content sent by all members will be scanned */
-    ALL_MEMBERS           = 2,
+    ALL_MEMBERS = 2,
 }
 
 export enum MFALevels {
     /** Guild has no MFA requirement for moderation actions */
-    NONE     = 0,
+    NONE = 0,
     /** Guild has a MFA requirement for moderation actions */
     ELEVATED = 1,
 }
 
 export enum VerificationLevels {
     /** Unrestricted */
-    NONE      = 0,
+    NONE = 0,
     /** Must have a verified email on file */
-    LOW       = 1,
+    LOW = 1,
     /** Must be registered on Discord for longer than 5 minutes */
-    MEDIUM    = 2,
+    MEDIUM = 2,
     /** Must be a member of the server for longer than 10 minutes */
-    HIGH      = 3,
+    HIGH = 3,
     /** Must have a verified phone number on file */
     VERY_HIGH = 4,
 }
 
 export enum GuildNSFWLevels {
     /** Guild is not yet rated by Discord */
-    DEFAULT        = 0,
+    DEFAULT = 0,
     /** Guild has mature content only suitable for users over 18 */
-    EXPLICIT       = 1,
+    EXPLICIT = 1,
     /** Guild is safe for work */
-    SAFE           = 2,
+    SAFE = 2,
     /** Guild has mildly mature content that may not be suitable for users under 18 */
     AGE_RESTRICTED = 3,
 }
 
 export enum PremiumTiers {
     /** Guild has not unlocked any Server Boost perks */
-    NONE   = 0,
+    NONE = 0,
     /** Guild has unlocked Server Boost level 1 perks */
     TIER_1 = 1,
     /** Guild has unlocked Server Boost level 2 perks */
@@ -398,15 +399,15 @@ export enum PremiumTiers {
 
 export enum SystemChannelFlags {
     /** Suppress member join notifications */
-    SUPPRESS_JOIN_NOTIFICATIONS                              = 1 << 0,
+    SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0,
     /** Suppress premium subscription (boost) notifications */
-    SUPPRESS_PREMIUM_SUBSCRIPTIONS                           = 1 << 1,
+    SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1,
     /** Suppress guild setup tips */
-    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS                    = 1 << 2,
+    SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2,
     /** Hide member join sticker reply buttons */
-    SUPPRESS_JOIN_NOTIFICATION_REPLIES                       = 1 << 3,
+    SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3,
     /** Suppress role subscription purchase and renewal notifications */
-    SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS        = 1 << 4,
+    SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATIONS = 1 << 4,
     /** Hide role subscription sticker reply buttons */
     SUPPRESS_ROLE_SUBSCRIPTION_PURCHASE_NOTIFICATION_REPLIES = 1 << 5,
 
@@ -418,59 +419,59 @@ export enum StickerTypes {
     /** An official sticker in a current or legacy purchasable pack */
     STANDARD = 1,
     /** A sticker uploaded to a guild for the guild's members */
-    GUILD    = 2,
+    GUILD = 2,
 }
 
 export enum StickerFormatTypes {
     /** A PNG image */
-    PNG    = 1,
+    PNG = 1,
     /** An animated PNG image, using the APNG format */
-    APNG   = 2,
+    APNG = 2,
     /** A lottie animation; requires the `VERIFIED` and/or `PARTNERED` guild feature */
     LOTTIE = 3,
     /** An animated GIF image */
-    GIF    = 4,
+    GIF = 4,
 }
 
 export enum ChannelTypes {
     /** A text channel within a guild */
-    GUILD_TEXT           = 0,
+    GUILD_TEXT = 0,
     /** A private channel between two users */
-    DM                   = 1,
+    DM = 1,
     /** A voice channel within a guild */
-    GUILD_VOICE          = 2,
+    GUILD_VOICE = 2,
     /** A private channel between multiple users */
-    GROUP_DM             = 3,
+    GROUP_DM = 3,
     /** An organizational category that contains up to 50 channels */
-    GUILD_CATEGORY       = 4,
+    GUILD_CATEGORY = 4,
     /** Almost identical to `GUILD_TEXT`, a channel that users can follow and crosspost into their own guild */
-    GUILD_ANNOUNCEMENT   = 5,
+    GUILD_ANNOUNCEMENT = 5,
     /** @deprecated A channel in which developers can showcase their SKUs */
-    GUILD_STORE          = 6,
+    GUILD_STORE = 6,
     /** @deprecated A channel where users can match up for various games */
-    GUILD_LFG            = 7,
+    GUILD_LFG = 7,
     /** @deprecated A private channel between multiple users for a group within an LFG channel */
-    LFG_GROUP_DM         = 8,
+    LFG_GROUP_DM = 8,
     /** @deprecated The first iteration of the threads feature, never widely used */
-    THREAD_ALPHA         = 9,
+    THREAD_ALPHA = 9,
     /** A temporary sub-channel within a `GUILD_NEWS` channel */
-    ANNOUNCEMENT_THREAD  = 10,
+    ANNOUNCEMENT_THREAD = 10,
     /** a temporary sub-channel within a `GUILD_TEXT`, `GUILD_FORUM`, or `GUILD_MEDIA` channel */
-    PUBLIC_THREAD        = 11,
+    PUBLIC_THREAD = 11,
     /** a temporary sub-channel within a `GUILD_TEXT` channel that is only viewable by those invited and those with the `MANAGE_THREADS` permission */
-    PRIVATE_THREAD       = 12,
+    PRIVATE_THREAD = 12,
     /** A voice channel for hosting events with an audience in a guild */
-    GUILD_STAGE_VOICE    = 13,
+    GUILD_STAGE_VOICE = 13,
     /** The main channel in a hub containing the listed guilds */
-    GUILD_DIRECTORY      = 14,
+    GUILD_DIRECTORY = 14,
     /** A channel that can only contain threads */
-    GUILD_FORUM          = 15,
+    GUILD_FORUM = 15,
     /** A channel that can only contain threads in a gallery view */
-    GUILD_MEDIA          = 16,
+    GUILD_MEDIA = 16,
     /** A game lobby channel */
-    LOBBY                = 17,
+    LOBBY = 17,
     /** A private channel created by the social layer SDK */
-    EPHEMERAL_DM         = 18,
+    EPHEMERAL_DM = 18,
 }
 
 function exclude<T extends ChannelTypes, E extends ChannelTypes>(original: ReadonlyArray<T>, excludeTypes: ReadonlyArray<E>): Array<Exclude<T, E>> {
@@ -557,7 +558,7 @@ export interface JSONChannelTypeMap {
 /* eslint-enable @typescript-eslint/member-ordering */
 
 export enum OverwriteTypes {
-    ROLE   = 0,
+    ROLE = 0,
     MEMBER = 1,
 }
 
@@ -572,13 +573,13 @@ export const ThreadAutoArchiveDurations = [
     60,
     1440,
     4320,
-    10080
+    10080,
 ] as const;
 export type ThreadAutoArchiveDuration = typeof ThreadAutoArchiveDurations[number];
 
 export enum ConnectionVisibilityTypes {
     /** Connection is not visible. */
-    NONE     = 0,
+    NONE = 0,
     /** Connection is visible to everyone. */
     EVERYONE = 1,
 }
@@ -607,7 +608,7 @@ export const ConnectionServices = [
     "twitter_legacy",
     "twitter",
     "xbox",
-    "youtube"
+    "youtube",
 ] as const;
 export type ConnectionService = typeof ConnectionServices[number];
 
@@ -615,7 +616,7 @@ export const IntegrationTypes = [
     "twitch",
     "youtube",
     "discord",
-    "guild_subscription"
+    "guild_subscription",
 ] as const;
 export type IntegrationType = typeof IntegrationTypes[number];
 
@@ -623,68 +624,68 @@ export enum IntegrationExpireBehaviors {
     /** Remove the integration role when a subscription lapses. */
     REMOVE_ROLE = 0,
     /** Kick the member when a subscription lapses. */
-    KICK        = 1,
+    KICK = 1,
 }
 
 // values won't be statically typed if we use bit shifting, and enums can't use bigints
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Permissions {
-    export const CREATE_INSTANT_INVITE               = 1n;               // 1 << 0
-    export const KICK_MEMBERS                        = 2n;               // 1 << 1
-    export const BAN_MEMBERS                         = 4n;               // 1 << 2
-    export const ADMINISTRATOR                       = 8n;               // 1 << 3
-    export const MANAGE_CHANNELS                     = 16n;              // 1 << 4
-    export const MANAGE_GUILD                        = 32n;              // 1 << 5
-    export const ADD_REACTIONS                       = 64n;              // 1 << 6
-    export const VIEW_AUDIT_LOG                      = 128n;             // 1 << 7
-    export const PRIORITY_SPEAKER                    = 256n;             // 1 << 8
-    export const STREAM                              = 512n;             // 1 << 9
-    export const VIEW_CHANNEL                        = 1024n;            // 1 << 10
-    export const SEND_MESSAGES                       = 2048n;            // 1 << 11
-    export const SEND_TTS_MESSAGES                   = 4096n;            // 1 << 12
-    export const MANAGE_MESSAGES                     = 8192n;            // 1 << 13
-    export const EMBED_LINKS                         = 16384n;           // 1 << 14
-    export const ATTACH_FILES                        = 32768n;           // 1 << 15
-    export const READ_MESSAGE_HISTORY                = 65536n;           // 1 << 16
-    export const MENTION_EVERYONE                    = 131072n;          // 1 << 17
-    export const USE_EXTERNAL_EMOJIS                 = 262144n;          // 1 << 18
-    export const VIEW_GUILD_INSIGHTS                 = 524288n;          // 1 << 19
-    export const CONNECT                             = 1048576n;         // 1 << 20
-    export const SPEAK                               = 2097152n;         // 1 << 21
-    export const MUTE_MEMBERS                        = 4194304n;         // 1 << 22
-    export const DEAFEN_MEMBERS                      = 8388608n;         // 1 << 23
-    export const MOVE_MEMBERS                        = 16777216n;        // 1 << 24
-    export const USE_VAD                             = 33554432n;        // 1 << 25
-    export const CHANGE_NICKNAME                     = 67108864n;        // 1 << 26
-    export const MANAGE_NICKNAMES                    = 134217728n;       // 1 << 27
-    export const MANAGE_ROLES                        = 268435456n;       // 1 << 28
-    export const MANAGE_WEBHOOKS                     = 536870912n;       // 1 << 29
-    export const MANAGE_GUILD_EXPRESSIONS            = 1073741824n;      // 1 << 30
-    export const USE_APPLICATION_COMMANDS            = 2147483648n;      // 1 << 31
-    export const REQUEST_TO_SPEAK                    = 4294967296n;      // 1 << 32
-    export const MANAGE_EVENTS                       = 8589934592n;      // 1 << 33
-    export const MANAGE_THREADS                      = 17179869184n;     // 1 << 34
-    export const CREATE_PUBLIC_THREADS               = 34359738368n;     // 1 << 35
-    export const CREATE_PRIVATE_THREADS              = 68719476736n;     // 1 << 36
-    export const USE_EXTERNAL_STICKERS               = 137438953472n;    // 1 << 37
-    export const SEND_MESSAGES_IN_THREADS            = 274877906944n;    // 1 << 38
-    export const USE_EMBEDDED_ACTIVITIES             = 549755813888n;    // 1 << 39
-    export const MODERATE_MEMBERS                    = 1099511627776n;   // 1 << 40
-    export const VIEW_CREATOR_MONETIZATION_ANALYTICS = 2199023255552n;   // 1 << 41
-    export const USE_SOUNDBOARD                      = 4398046511104n;   // 1 << 42
-    export const CREATE_GUILD_EXPRESSIONS            = 8796093022208n;   // 1 << 43
-    export const CREATE_EVENTS                       = 17592186044416n;  // 1 << 44
-    export const USE_EXTERNAL_SOUNDS                 = 35184372088832n;  // 1 << 45
-    export const SEND_VOICE_MESSAGES                 = 70368744177664n;  // 1 << 46
+    export const CREATE_INSTANT_INVITE = 1n; // 1 << 0
+    export const KICK_MEMBERS = 2n; // 1 << 1
+    export const BAN_MEMBERS = 4n; // 1 << 2
+    export const ADMINISTRATOR = 8n; // 1 << 3
+    export const MANAGE_CHANNELS = 16n; // 1 << 4
+    export const MANAGE_GUILD = 32n; // 1 << 5
+    export const ADD_REACTIONS = 64n; // 1 << 6
+    export const VIEW_AUDIT_LOG = 128n; // 1 << 7
+    export const PRIORITY_SPEAKER = 256n; // 1 << 8
+    export const STREAM = 512n; // 1 << 9
+    export const VIEW_CHANNEL = 1024n; // 1 << 10
+    export const SEND_MESSAGES = 2048n; // 1 << 11
+    export const SEND_TTS_MESSAGES = 4096n; // 1 << 12
+    export const MANAGE_MESSAGES = 8192n; // 1 << 13
+    export const EMBED_LINKS = 16384n; // 1 << 14
+    export const ATTACH_FILES = 32768n; // 1 << 15
+    export const READ_MESSAGE_HISTORY = 65536n; // 1 << 16
+    export const MENTION_EVERYONE = 131072n; // 1 << 17
+    export const USE_EXTERNAL_EMOJIS = 262144n; // 1 << 18
+    export const VIEW_GUILD_INSIGHTS = 524288n; // 1 << 19
+    export const CONNECT = 1048576n; // 1 << 20
+    export const SPEAK = 2097152n; // 1 << 21
+    export const MUTE_MEMBERS = 4194304n; // 1 << 22
+    export const DEAFEN_MEMBERS = 8388608n; // 1 << 23
+    export const MOVE_MEMBERS = 16777216n; // 1 << 24
+    export const USE_VAD = 33554432n; // 1 << 25
+    export const CHANGE_NICKNAME = 67108864n; // 1 << 26
+    export const MANAGE_NICKNAMES = 134217728n; // 1 << 27
+    export const MANAGE_ROLES = 268435456n; // 1 << 28
+    export const MANAGE_WEBHOOKS = 536870912n; // 1 << 29
+    export const MANAGE_GUILD_EXPRESSIONS = 1073741824n; // 1 << 30
+    export const USE_APPLICATION_COMMANDS = 2147483648n; // 1 << 31
+    export const REQUEST_TO_SPEAK = 4294967296n; // 1 << 32
+    export const MANAGE_EVENTS = 8589934592n; // 1 << 33
+    export const MANAGE_THREADS = 17179869184n; // 1 << 34
+    export const CREATE_PUBLIC_THREADS = 34359738368n; // 1 << 35
+    export const CREATE_PRIVATE_THREADS = 68719476736n; // 1 << 36
+    export const USE_EXTERNAL_STICKERS = 137438953472n; // 1 << 37
+    export const SEND_MESSAGES_IN_THREADS = 274877906944n; // 1 << 38
+    export const USE_EMBEDDED_ACTIVITIES = 549755813888n; // 1 << 39
+    export const MODERATE_MEMBERS = 1099511627776n; // 1 << 40
+    export const VIEW_CREATOR_MONETIZATION_ANALYTICS = 2199023255552n; // 1 << 41
+    export const USE_SOUNDBOARD = 4398046511104n; // 1 << 42
+    export const CREATE_GUILD_EXPRESSIONS = 8796093022208n; // 1 << 43
+    export const CREATE_EVENTS = 17592186044416n; // 1 << 44
+    export const USE_EXTERNAL_SOUNDS = 35184372088832n; // 1 << 45
+    export const SEND_VOICE_MESSAGES = 70368744177664n; // 1 << 46
     /** @deprecated Allows members to interact with the Clyde AI integration. */
-    export const USE_CLYDE_AI                        = 140737488355328n; // 1 << 47
-    export const SET_VOICE_CHANNEL_STATUS            = 281474976710656n; // 1 << 48
-    export const SEND_POLLS                          = 562949953421312n; // 1 << 49
-    export const USE_EXTERNAL_APPS                   = 1125899906842624n; // 1 << 50
-    export const PIN_MESSAGES                        = 2251799813685248n; // 1 << 51
-    export const BYPASS_SLOWMODE                     = 4503599627370496n; // 1 << 52
+    export const USE_CLYDE_AI = 140737488355328n; // 1 << 47
+    export const SET_VOICE_CHANNEL_STATUS = 281474976710656n; // 1 << 48
+    export const SEND_POLLS = 562949953421312n; // 1 << 49
+    export const USE_EXTERNAL_APPS = 1125899906842624n; // 1 << 50
+    export const PIN_MESSAGES = 2251799813685248n; // 1 << 51
+    export const BYPASS_SLOWMODE = 4503599627370496n; // 1 << 52
     /** Allows members to mark messages as official in verified guilds */
-    export const MANAGE_OFFICIAL_MESSAGES            = 9007199254740992n; // 1 << 53
+    export const MANAGE_OFFICIAL_MESSAGES = 9007199254740992n; // 1 << 53
 }
 
 // bigints can't be used as object keys, so we need to convert them to strings
@@ -717,7 +718,7 @@ export const TextPermissions = [
     Permissions.SEND_POLLS,
     Permissions.USE_EXTERNAL_APPS,
     Permissions.PIN_MESSAGES,
-    Permissions.BYPASS_SLOWMODE
+    Permissions.BYPASS_SLOWMODE,
 ] as const;
 export const AllTextPermissions = TextPermissions.reduce((all, p) => all | p, 0n);
 export const AllTextPermissionNames = TextPermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -756,7 +757,7 @@ export const VoicePermissions = [
     Permissions.SET_VOICE_CHANNEL_STATUS,
     Permissions.SEND_POLLS,
     Permissions.USE_EXTERNAL_APPS,
-    Permissions.BYPASS_SLOWMODE
+    Permissions.BYPASS_SLOWMODE,
 ] as const;
 export const AllVoicePermissions = VoicePermissions.reduce((all, p) => all | p, 0n);
 export const AllVoicePermissionNames = VoicePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -788,7 +789,7 @@ export const StagePermissions = [
     Permissions.USE_CLYDE_AI,
     Permissions.SEND_POLLS,
     Permissions.USE_EXTERNAL_APPS,
-    Permissions.BYPASS_SLOWMODE
+    Permissions.BYPASS_SLOWMODE,
 ] as const;
 export const AllStagePermissions = StagePermissions.reduce((all, p) => all | p, 0n);
 export const AllStagePermissionNames = StagePermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -806,7 +807,7 @@ export const ModeratorPermissions = [
     Permissions.MANAGE_GUILD_EXPRESSIONS,
     Permissions.MANAGE_THREADS,
     Permissions.MODERATE_MEMBERS,
-    Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS
+    Permissions.VIEW_CREATOR_MONETIZATION_ANALYTICS,
 ] as const;
 export const AllModeratorPermissions = ModeratorPermissions.reduce((all, p) => all | p, 0n);
 export const AllModeratorPermissionNames = ModeratorPermissions.map(p => PermissionValueToName[String(p) as `${typeof p}`]);
@@ -816,39 +817,39 @@ export type PermissionName = keyof typeof Permissions;
 
 export enum ChannelFlags {
     /** Guild channel is hidden from the guild's feed */
-    GUILD_FEED_REMOVED                            = 1 << 0,
+    GUILD_FEED_REMOVED = 1 << 0,
     /** Thread is pinned to the top of its parent thread-only channel */
-    PINNED                                        = 1 << 1,
+    PINNED = 1 << 1,
     /** Guild channel has been removed from the guild's active channels */
-    ACTIVE_CHANNELS_REMOVED                       = 1 << 2,
+    ACTIVE_CHANNELS_REMOVED = 1 << 2,
 
     /** Thread-only channel requires a tag to create threads in */
-    REQUIRE_TAG                                   = 1 << 4,
+    REQUIRE_TAG = 1 << 4,
     /** Channel is marked as spam */
-    IS_SPAM                                       = 1 << 5,
+    IS_SPAM = 1 << 5,
 
     /** Guild channel is used as a read-only resource for onboarding and is not shown in the channel list */
-    IS_GUILD_RESOURCE_CHANNEL                     = 1 << 7,
+    IS_GUILD_RESOURCE_CHANNEL = 1 << 7,
     /** Channel is created by Clyde AI, which has full access to all message content */
-    CLYDE_AI                                      = 1 << 8,
+    CLYDE_AI = 1 << 8,
     /** Guild channel is scheduled for deletion and is not shown in the UI */
-    IS_SCHEDULED_FOR_DELETION                     = 1 << 9,
+    IS_SCHEDULED_FOR_DELETION = 1 << 9,
     /** @deprecated Forum channel is a media channel */
-    IS_MEDIA_CHANNEL                              = 1 << 10,
+    IS_MEDIA_CHANNEL = 1 << 10,
     /** Guild channel has summaries disabled */
-    SUMMARIES_DISABLED                            = 1 << 11,
+    SUMMARIES_DISABLED = 1 << 11,
     /** @deprecated Private channel's recipients consented to the application shelf */
-    APPLICATION_SHELF_CONSENT                     = 1 << 12,
+    APPLICATION_SHELF_CONSENT = 1 << 12,
     /** Role subscription tier for this guild channel has not been published yet */
     IS_ROLE_SUBSCRIPTION_TEMPLATE_PREVIEW_CHANNEL = 1 << 13,
     /** Group DM is used for broadcasting a live stream */
-    IS_BROADCASTING                               = 1 << 14,
+    IS_BROADCASTING = 1 << 14,
     /** Media channel has the embedded download options hidden for media attachments */
-    HIDE_MEDIA_DOWNLOAD_OPTIONS                   = 1 << 15,
+    HIDE_MEDIA_DOWNLOAD_OPTIONS = 1 << 15,
     /** Group DM is used for guild join request interviews */
-    IS_JOIN_REQUEST_INTERVIEW_CHANNEL             = 1 << 16,
+    IS_JOIN_REQUEST_INTERVIEW_CHANNEL = 1 << 16,
     /** User does not have permission to view the channel */
-    OBFUSCATED                                    = 1 << 17,
+    OBFUSCATED = 1 << 17,
 
     /** Forum channel is the guild's moderator queue */
     IS_MODERATOR_REPORT_CHANNEL = 1 << 19,
@@ -860,21 +861,21 @@ export enum ChannelFlags {
 export enum SortOrderTypes {
     /** Sort by the most recently active threads */
     LATEST_ACTIVITY = 0,
-    CREATION_DATE   = 1,
+    CREATION_DATE = 1,
 }
 
 export enum ForumLayoutTypes {
     /** No layout type explicitly set */
     DEFAULT = 0,
     /** Threads are displayed in a list */
-    LIST    = 1,
+    LIST = 1,
     /** Threads are displayed in a collection of tiles */
-    GRID    = 2,
+    GRID = 2,
 }
 
 export enum TeamMembershipState {
     /** The user is invited */
-    INVITED  = 1,
+    INVITED = 1,
     /** The user has accepted the invite */
     ACCEPTED = 2,
 }
@@ -945,49 +946,49 @@ export enum OAuthScopes {
 
 export enum ComponentTypes {
     /** A container for other components */
-    ACTION_ROW         = 1,
+    ACTION_ROW = 1,
     /** A button object */
-    BUTTON             = 2,
+    BUTTON = 2,
     /** Select menu for picking from defined text options */
-    STRING_SELECT      = 3,
+    STRING_SELECT = 3,
     /** Text input object */
-    TEXT_INPUT         = 4,
+    TEXT_INPUT = 4,
     /** Select menu for users */
-    USER_SELECT        = 5,
+    USER_SELECT = 5,
     /** Select menu for roles */
-    ROLE_SELECT        = 6,
+    ROLE_SELECT = 6,
     /** Select menu for mentionables (users and roles) */
     MENTIONABLE_SELECT = 7,
     /** Select menu for channels */
-    CHANNEL_SELECT     = 8,
+    CHANNEL_SELECT = 8,
     /** Container to display text alongside an accessory component */
-    SECTION            = 9,
+    SECTION = 9,
     /** Markdown text */
-    TEXT_DISPLAY       = 10,
+    TEXT_DISPLAY = 10,
     /** Small image that can be used as an accessory */
-    THUMBNAIL          = 11,
+    THUMBNAIL = 11,
     /** Display images and other media */
-    MEDIA_GALLERY      = 12,
+    MEDIA_GALLERY = 12,
     /** Displays an attached file */
-    FILE               = 13,
+    FILE = 13,
     /** Component to add vertical padding between other components */
-    SEPARATOR          = 14,
+    SEPARATOR = 14,
 
     /** Displays an activity feed entry */
     CONTENT_INVENTORY_ENTRY = 16,
     /** Container that visually groups a set of components */
-    CONTAINER               = 17,
+    CONTAINER = 17,
     /** Container associating a label and description with a component */
-    LABEL                   = 18,
+    LABEL = 18,
     /** Component to upload one or more files */
-    FILE_UPLOAD             = 19,
+    FILE_UPLOAD = 19,
 
     /** Single-choice set of radio options */
-    RADIO_GROUP    = 21,
+    RADIO_GROUP = 21,
     /** Multi-select group of checkboxes */
     CHECKBOX_GROUP = 22,
     /** Single checkbox for binary choice */
-    CHECKBOX       = 23,
+    CHECKBOX = 23,
 }
 
 export type SelectMenuNonResolvedTypes = ComponentTypes.STRING_SELECT;
@@ -999,204 +1000,204 @@ export type ModalComponentTypes = ComponentTypes.CHECKBOX | ComponentTypes.CHECK
 
 export enum ButtonStyles {
     /** The most important or recommended action in a group of options */
-    PRIMARY   = 1,
+    PRIMARY = 1,
     /** Alternative or supporting actions */
     SECONDARY = 2,
     /** Positive confirmation or completion actions */
-    SUCCESS   = 3,
+    SUCCESS = 3,
     /** An action with irreversible consequences */
-    DANGER    = 4,
+    DANGER = 4,
     /** Navigates to a URL */
-    LINK      = 5,
+    LINK = 5,
     /** Purchase */
-    PREMIUM   = 6,
+    PREMIUM = 6,
 }
 
 export enum TextInputStyles {
     /** Single-line input */
-    SHORT     = 1,
+    SHORT = 1,
     /** Multi-line input */
     PARAGRAPH = 2,
 }
 
 export enum MessageFlags {
     /** Message has been published to subscribed channels (via Channel Following) */
-    CROSSPOSTED                            = 1 << 0,
+    CROSSPOSTED = 1 << 0,
     /** Message originated from a message in another channel (via Channel Following) */
-    IS_CROSSPOST                           = 1 << 1,
+    IS_CROSSPOST = 1 << 1,
     /** Embeds will not be included when serializing this message */
-    SUPPRESS_EMBEDS                        = 1 << 2,
+    SUPPRESS_EMBEDS = 1 << 2,
     /** Source message for this crosspost has been deleted (via Channel Following) */
-    SOURCE_MESSAGE_DELETED                 = 1 << 3,
+    SOURCE_MESSAGE_DELETED = 1 << 3,
     /** Message came from the urgent message system */
-    URGENT                                 = 1 << 4,
+    URGENT = 1 << 4,
     /** Message has an associated thread, with the same ID as the message */
-    HAS_THREAD                             = 1 << 5,
+    HAS_THREAD = 1 << 5,
     /** Message is only visible to the user who invoked the interaction */
-    EPHEMERAL                              = 1 << 6,
+    EPHEMERAL = 1 << 6,
     /** Message is an interaction response and the bot is "thinking" */
-    LOADING                                = 1 << 7,
+    LOADING = 1 << 7,
     /** Some roles were not mentioned and added to the thread (caps at 250) */
     FAILED_TO_MENTION_SOME_ROLES_IN_THREAD = 1 << 8,
     /** Message is hidden from the guild's feed */
-    GUILD_FEED_HIDDEN                      = 1 << 9,
+    GUILD_FEED_HIDDEN = 1 << 9,
     /** Message contains a link that impersonates Discord */
-    SHOULD_SHOW_LINK_NOT_DISCORD_WARNING   = 1 << 10,
+    SHOULD_SHOW_LINK_NOT_DISCORD_WARNING = 1 << 10,
     /** Message will not trigger push and desktop notifications */
-    SUPPRESS_NOTIFICATIONS                 = 1 << 12,
+    SUPPRESS_NOTIFICATIONS = 1 << 12,
     /** Message's audio attachment is rendered as a voice message */
-    IS_VOICE_MESSAGE                       = 1 << 13,
+    IS_VOICE_MESSAGE = 1 << 13,
     /** Message has a forwarded message snapshot attached */
-    HAS_SNAPSHOT                           = 1 << 14,
+    HAS_SNAPSHOT = 1 << 14,
     /** Message contains components from version 2 of the UI kit */
-    IS_COMPONENTS_V2                       = 1 << 15,
+    IS_COMPONENTS_V2 = 1 << 15,
     /** Message was triggered by the social layer integration */
-    SENT_BY_SOCIAL_LAYER_INTEGRATION       = 1 << 16,
+    SENT_BY_SOCIAL_LAYER_INTEGRATION = 1 << 16,
     /** Message is hidden because the author is suspended */
-    HIDDEN_SUSPENDED_USER                  = 1 << 17,
+    HIDDEN_SUSPENDED_USER = 1 << 17,
     /** Marks guild boosted message as the first person to boost the guild */
-    IS_FIRST_BOOSTER                       = 1 << 18,
+    IS_FIRST_BOOSTER = 1 << 18,
     /** Message is marked as official for the verified guild */
-    IS_GUILD_OFFICIAL                      = 1 << 19,
+    IS_GUILD_OFFICIAL = 1 << 19,
 }
 
 export enum MessageTypes {
     /** A default message (see below) */
-    DEFAULT                                      = 0,
+    DEFAULT = 0,
     /** A message sent when a user is added to a group DM or thread */
-    RECIPIENT_ADD                                = 1,
+    RECIPIENT_ADD = 1,
     /** A message sent when a user is removed from a group DM or thread */
-    RECIPIENT_REMOVE                             = 2,
+    RECIPIENT_REMOVE = 2,
     /** A message sent when a user creates a call in a private channel */
-    CALL                                         = 3,
+    CALL = 3,
     /** A message sent when a group DM or thread's name is changed */
-    CHANNEL_NAME_CHANGE                          = 4,
+    CHANNEL_NAME_CHANGE = 4,
     /** A message sent when a group DM's icon is changed */
-    CHANNEL_ICON_CHANGE                          = 5,
+    CHANNEL_ICON_CHANGE = 5,
     /** A message sent when a message is pinned in a channel */
-    CHANNEL_PINNED_MESSAGE                       = 6,
+    CHANNEL_PINNED_MESSAGE = 6,
     /** A message sent when a user joins a guild */
-    USER_JOIN                                    = 7,
+    USER_JOIN = 7,
     /** A message sent when a user subscribes to (boosts) a guild */
-    GUILD_BOOST                                  = 8,
+    GUILD_BOOST = 8,
     /** A message sent when a user subscribes to (boosts) a guild to tier 1 */
-    GUILD_BOOST_TIER_1                           = 9,
+    GUILD_BOOST_TIER_1 = 9,
     /** A message sent when a user subscribes to (boosts) a guild to tier 2 */
-    GUILD_BOOST_TIER_2                           = 10,
+    GUILD_BOOST_TIER_2 = 10,
     /** A message sent when a user subscribes to (boosts) a guild to tier 3 */
-    GUILD_BOOST_TIER_3                           = 11,
+    GUILD_BOOST_TIER_3 = 11,
     /** A message sent when a news channel is followed */
-    CHANNEL_FOLLOW_ADD                           = 12,
+    CHANNEL_FOLLOW_ADD = 12,
     /** @deprecated A message sent when a user starts streaming in a guild */
-    GUILD_STREAM                                 = 13,
+    GUILD_STREAM = 13,
     /** A message sent when a guild is disqualified from discovery */
-    GUILD_DISCOVERY_DISQUALIFIED                 = 14,
+    GUILD_DISCOVERY_DISQUALIFIED = 14,
     /** A message sent when a guild requalifies for discovery */
-    GUILD_DISCOVERY_REQUALIFIED                  = 15,
+    GUILD_DISCOVERY_REQUALIFIED = 15,
     /** A message sent when a guild has failed discovery requirements for a week */
     GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING = 16,
     /** A message sent when a guild has failed discovery requirements for 3 weeks */
-    GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING   = 17,
+    GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING = 17,
     /** A message sent when a thread is created */
-    THREAD_CREATED                               = 18,
+    THREAD_CREATED = 18,
     /** A message sent when a user replies to a message */
-    REPLY                                        = 19,
+    REPLY = 19,
     /** A message sent when a user uses a slash command */
-    CHAT_INPUT_COMMAND                           = 20,
+    CHAT_INPUT_COMMAND = 20,
     /** A message sent when a thread starter message is added to a thread */
-    THREAD_STARTER_MESSAGE                       = 21,
+    THREAD_STARTER_MESSAGE = 21,
     /** A message sent to remind users to invite friends to a guild */
-    GUILD_INVITE_REMINDER                        = 22,
+    GUILD_INVITE_REMINDER = 22,
     /** A message sent when a user uses a context menu command */
-    CONTEXT_MENU_COMMAND                         = 23,
+    CONTEXT_MENU_COMMAND = 23,
     /** A message sent when auto moderation takes an action */
-    AUTO_MODERATION_ACTION                       = 24,
+    AUTO_MODERATION_ACTION = 24,
     /** A message sent when a user purchases or renews a role subscription */
-    ROLE_SUBSCRIPTION_PURCHASE                   = 25,
+    ROLE_SUBSCRIPTION_PURCHASE = 25,
     /** A message sent when a user is upsold to a premium interaction */
-    INTERACTION_PREMIUM_UPSELL                   = 26,
+    INTERACTION_PREMIUM_UPSELL = 26,
     /** A message sent when a stage channel starts */
-    STAGE_START                                  = 27,
+    STAGE_START = 27,
     /** A message sent when a stage channel ends */
-    STAGE_END                                    = 28,
+    STAGE_END = 28,
     /** A message sent when a user starts speaking in a stage channel */
-    STAGE_SPEAKER                                = 29,
+    STAGE_SPEAKER = 29,
     /** A message sent when a user raises their hand in a stage channel */
-    STAGE_RAISE_HAND                             = 30,
+    STAGE_RAISE_HAND = 30,
     /** A message sent when a stage channel's topic is changed */
-    STAGE_TOPIC_CHANGE                           = 31,
+    STAGE_TOPIC_CHANGE = 31,
     /** A message sent when a user purchases an application premium subscription */
-    GUILD_APPLICATION_PREMIUM_SUBSCRIPTION       = 32,
+    GUILD_APPLICATION_PREMIUM_SUBSCRIPTION = 32,
     /** @deprecated A message sent when a user adds an application to group DM */
-    PRIVATE_CHANNEL_INTEGRATION_ADDED            = 33,
+    PRIVATE_CHANNEL_INTEGRATION_ADDED = 33,
     /** @deprecated A message sent when a user removed an application from a group DM */
-    PRIVATE_CHANNEL_INTEGRATION_REMOVED          = 34,
+    PRIVATE_CHANNEL_INTEGRATION_REMOVED = 34,
     /** A message sent when a user gifts a premium (Nitro) referral */
-    PREMIUM_REFERRAL                             = 35,
+    PREMIUM_REFERRAL = 35,
     /** A message sent when a user enabled lockdown for the guild */
-    GUILD_INCIDENT_ALERT_MODE_ENABLED            = 36,
+    GUILD_INCIDENT_ALERT_MODE_ENABLED = 36,
     /** A message sent when a user disables lockdown for the guild */
-    GUILD_INCIDENT_ALERT_MODE_DISABLED           = 37,
+    GUILD_INCIDENT_ALERT_MODE_DISABLED = 37,
     /** A message sent when a user reports a raid for the guild */
-    GUILD_INCIDENT_REPORT_RAID                   = 38,
+    GUILD_INCIDENT_REPORT_RAID = 38,
     /** A message sent when a user reports a false alarm for the guild */
-    GUILD_INCIDENT_REPORT_FALSE_ALARM            = 39,
+    GUILD_INCIDENT_REPORT_FALSE_ALARM = 39,
     /** A message sent when no one sends a message in the current channel for 1 hour */
-    GUILD_DEADCHAT_REVIVE_PROMPT                 = 40,
+    GUILD_DEADCHAT_REVIVE_PROMPT = 40,
     /** A message sent when a user buys another user a gift */
-    CUSTOM_GIFT                                  = 41,
-    GUILD_GAMING_STATS_PROMPT                    = 42,
+    CUSTOM_GIFT = 41,
+    GUILD_GAMING_STATS_PROMPT = 42,
     /** @deprecated A message sent when a user posts a poll */
-    POLL                                         = 43,
+    POLL = 43,
     /** A message sent when a user purchases a guild product */
-    PURCHASE_NOTIFICATION                        = 44,
+    PURCHASE_NOTIFICATION = 44,
     /** @deprecated A message sent when a user invites another user to hangout in a voice channel */
-    VOICE_HANGOUT_INVITE                         = 45,
+    VOICE_HANGOUT_INVITE = 45,
     /** A message sent when a poll is finalized */
-    POLL_RESULT                                  = 46,
+    POLL_RESULT = 46,
     /** A message sent by the Discord Updates account when a new changelog is posted */
-    CHANGELOG                                    = 47,
+    CHANGELOG = 47,
     /** A message sent when a Nitro promotion is triggered */
-    NITRO_NOTIFICATION                           = 48,
+    NITRO_NOTIFICATION = 48,
     /** A message sent when a voice channel is linked to a lobby */
-    CHANNEL_LINKED_TO_LOBBY                      = 49,
+    CHANNEL_LINKED_TO_LOBBY = 49,
     /** A local-only ephemeral message sent when a user is prompted to gift Nitro to a friend on their friendship anniversary */
-    GIFTING_PROMPT                               = 50,
+    GIFTING_PROMPT = 50,
     /** A local-only message sent when a user receives an in-game message NUX */
-    IN_GAME_MESSAGE_NUX                          = 51,
+    IN_GAME_MESSAGE_NUX = 51,
     /** A message sent when a user accepts a guild join request */
-    GUILD_JOIN_REQUEST_ACCEPT_NOTIFICATION       = 52,
+    GUILD_JOIN_REQUEST_ACCEPT_NOTIFICATION = 52,
     /** A message sent when a user rejects a guild join request */
-    GUILD_JOIN_REQUEST_REJECT_NOTIFICATION       = 53,
+    GUILD_JOIN_REQUEST_REJECT_NOTIFICATION = 53,
     /** A message sent when a user withdraws a guild join request */
-    GUILD_JOIN_REQUEST_WITHDRAWN_NOTIFICATION    = 54,
+    GUILD_JOIN_REQUEST_WITHDRAWN_NOTIFICATION = 54,
     /** A message sent when a user upgrades to HD streaming */
-    HD_STREAMING_UPGRADED                        = 55,
+    HD_STREAMING_UPGRADED = 55,
     /** @deprecated A message sent when a user sets a DM wallpaper */
-    CHAT_WALLPAPER_SET                           = 56,
+    CHAT_WALLPAPER_SET = 56,
     /** @deprecated A message sent when a user removes a DM wallpaper */
-    CHAT_WALLPAPER_REMOVE                        = 57,
+    CHAT_WALLPAPER_REMOVE = 57,
     /** A message sent when a user resolves a moderation report by deleting the offending message */
-    REPORT_TO_MOD_DELETED_MESSAGE                = 58,
+    REPORT_TO_MOD_DELETED_MESSAGE = 58,
     /** A message sent when a user resolves a moderation report by timing out the offending user */
-    REPORT_TO_MOD_TIMEOUT_USER                   = 59,
+    REPORT_TO_MOD_TIMEOUT_USER = 59,
     /** A message sent when a user resolves a moderation report by kicking the offending user */
-    REPORT_TO_MOD_KICK_USER                      = 60,
+    REPORT_TO_MOD_KICK_USER = 60,
     /** A message sent when a user resolves a moderation report by banning the offending user */
-    REPORT_TO_MOD_BAN_USER                       = 61,
+    REPORT_TO_MOD_BAN_USER = 61,
     /** A message sent when a user resolves a moderation report */
-    REPORT_TO_MOD_CLOSED_REPORT                  = 62,
+    REPORT_TO_MOD_CLOSED_REPORT = 62,
     /** @deprecated A message sent when a user adds a new emoji to a guild */
-    EMOJI_ADDED                                  = 63,
+    EMOJI_ADDED = 63,
     /** A message sent when a user invites another user to join a group Nitro subscription */
-    PREMIUM_GROUP_INVITE                         = 64,
+    PREMIUM_GROUP_INVITE = 64,
     /** A message sent when a user starts a voice channel in a small guild */
-    VOICE_SESSION                                = 65,
+    VOICE_SESSION = 65,
     /** A local-only ephemeral message asking the user to be the first to boost a guild */
-    GUILD_BOOST_UPSELL                           = 66,
+    GUILD_BOOST_UPSELL = 66,
     /** A message sent when a user accepts another user's friend request */
-    FRIEND_REQUEST_ACCEPTED                      = 67,
-    MEDIA_MENTION_MESSAGE                        = 68,
+    FRIEND_REQUEST_ACCEPTED = 67,
+    MEDIA_MENTION_MESSAGE = 68,
 }
 
 /** Messages of these types cannot be deleted. */
@@ -1206,49 +1207,49 @@ export const UndeletableMessageTypes = [
     MessageTypes.CALL,
     MessageTypes.CHANNEL_NAME_CHANGE,
     MessageTypes.CHANNEL_ICON_CHANGE,
-    MessageTypes.THREAD_STARTER_MESSAGE
+    MessageTypes.THREAD_STARTER_MESSAGE,
 ] as const;
 
 export enum MessageActivityTypes {
     /** Join activity invite. */
-    JOIN         = 1,
+    JOIN = 1,
     /** Spectate activity invite. */
-    SPECTATE     = 2,
+    SPECTATE = 2,
     /** Listen activity invite. */
-    LISTEN       = 3,
+    LISTEN = 3,
     /** Watch activity invite. */
-    WATCH        = 4,
+    WATCH = 4,
     /** Join request activity invite. */
     JOIN_REQUEST = 5,
 }
 
 export enum InteractionTypes {
     /** Discord is pinging the application */
-    PING                             = 1,
+    PING = 1,
     /** User uses an application command */
-    APPLICATION_COMMAND              = 2,
+    APPLICATION_COMMAND = 2,
     /** User triggers a message component */
-    MESSAGE_COMPONENT                = 3,
+    MESSAGE_COMPONENT = 3,
     /** User is requesting an application command option to be auto-completed */
     APPLICATION_COMMAND_AUTOCOMPLETE = 4,
     /** User submits a modal */
-    MODAL_SUBMIT                     = 5,
+    MODAL_SUBMIT = 5,
 }
 
 export enum InviteTypes {
     /** Joins the user to a guild */
-    GUILD =     0,
+    GUILD = 0,
     /** Joins the user to a group DM */
-    GROUP_DM =  1,
+    GROUP_DM = 1,
     /** Adds the user as a friend to the inviter */
-    FRIEND =    2,
+    FRIEND = 2,
 }
 
 export enum InviteTargetTypes {
     /** The invite is for a stream in a voice channel */
-    STREAM                      = 1,
+    STREAM = 1,
     /** The invite is for an embedded application (activity) in a voice channel */
-    EMBEDDED_APPLICATION        = 2,
+    EMBEDDED_APPLICATION = 2,
     ROLE_SUBSCRIPTIONS_PURCHASE = 3,
 }
 
@@ -1261,62 +1262,62 @@ export enum GuildScheduledEventStatuses {
     /** Scheduled event has not started. */
     SCHEDULED = 1,
     /** Scheduled event is currently active. */
-    ACTIVE    = 2,
+    ACTIVE = 2,
     /** Scheduled event completed. */
     COMPLETED = 3,
     /** Scheduled event was canceled. */
-    CANCELED  = 4,
+    CANCELED = 4,
 }
 
 export enum GuildScheduledEventEntityTypes {
     /** Scheduled event is for a stage instance. */
     STAGE_INSTANCE = 1,
     /** Scheduled event is for a voice channel. */
-    VOICE          = 2,
+    VOICE = 2,
     /** Scheduled event is external. */
-    EXTERNAL       = 3,
+    EXTERNAL = 3,
 }
 
 export enum StageInstancePrivacyLevels {
     /** @deprecated Scheduled event or stage instance is visible publicly */
-    PUBLIC     = 1,
+    PUBLIC = 1,
     /** Scheduled event or stage instance is only visible to guild members */
     GUILD_ONLY = 2,
 }
 
 export enum AutoModerationEventTypes {
     /** When a member sends or edits a message in the guild */
-    MESSAGE_SEND  = 1,
+    MESSAGE_SEND = 1,
     MEMBER_UPDATE = 2,
 }
 
 export enum AutoModerationTriggerTypes {
     /** When message content contains words from a user defined list of keywords (max 6) */
-    KEYWORD        = 1,
+    KEYWORD = 1,
     /** When message content represents generic spam (max 1) */
-    SPAM           = 3,
+    SPAM = 3,
     /** When message content contains words from internal predefined wordsets (max 1) */
     KEYWORD_PRESET = 4,
     /** When message content contains more unique mentions than allowed (max 1) */
-    MENTION_SPAM   = 5,
+    MENTION_SPAM = 5,
     MEMBER_PROFILE = 6,
 }
 
 export enum AutoModerationKeywordPresetTypes {
     /** Words that may be considered forms of swearing or cursing */
-    PROFANITY      = 1,
+    PROFANITY = 1,
     /** Words that refer to sexually explicit behavior or activity */
     SEXUAL_CONTENT = 2,
     /** Personal insults or words that may be considered hate speech */
-    SLURS          = 3,
+    SLURS = 3,
 }
 
 export enum AutoModerationActionTypes {
     /** Block a member's message and prevent it from being posted; a custom explanation can be specified and shown to members whenever their message is blocked */
-    BLOCK_MESSAGE            = 1,
+    BLOCK_MESSAGE = 1,
     /** Log user content to a specified channel */
-    SEND_ALERT_MESSAGE       = 2,
-    TIMEOUT                  = 3,
+    SEND_ALERT_MESSAGE = 2,
+    TIMEOUT = 3,
     BLOCK_MEMBER_INTERACTION = 4,
 }
 
@@ -1325,11 +1326,11 @@ export enum AuditLogActionTypes {
     GUILD_UPDATE = 1,
 
     /** Channel was created */
-    CHANNEL_CREATE           = 10,
+    CHANNEL_CREATE = 10,
     /** Channel settings were updated */
-    CHANNEL_UPDATE           = 11,
+    CHANNEL_UPDATE = 11,
     /** Channel was deleted */
-    CHANNEL_DELETE           = 12,
+    CHANNEL_DELETE = 12,
     /** Permission overwrite was added to a channel */
     CHANNEL_OVERWRITE_CREATE = 13,
     /** Permission overwrite was updated for a channel */
@@ -1338,23 +1339,23 @@ export enum AuditLogActionTypes {
     CHANNEL_OVERWRITE_DELETE = 15,
 
     /** Member was removed from guild */
-    MEMBER_KICK        = 20,
+    MEMBER_KICK = 20,
     /** Members were pruned from guild */
-    MEMBER_PRUNE       = 21,
+    MEMBER_PRUNE = 21,
     /** Member was banned from guild */
-    MEMBER_BAN_ADD     = 22,
+    MEMBER_BAN_ADD = 22,
     /** Member was unbanned from guild */
-    MEMBER_BAN_REMOVE  = 23,
+    MEMBER_BAN_REMOVE = 23,
     /** Member was updated in guild */
-    MEMBER_UPDATE      = 24,
+    MEMBER_UPDATE = 24,
     /** Member was added or removed from a role */
     MEMBER_ROLE_UPDATE = 25,
     /** Member was moved to a different voice channel */
-    MEMBER_MOVE        = 26,
+    MEMBER_MOVE = 26,
     /** Member was disconnected from a voice channel */
-    MEMBER_DISCONNECT  = 27,
+    MEMBER_DISCONNECT = 27,
     /** Bot user was added to guild */
-    BOT_ADD            = 28,
+    BOT_ADD = 28,
 
     /** Role was created */
     ROLE_CREATE = 30,
@@ -1385,20 +1386,20 @@ export enum AuditLogActionTypes {
     EMOJI_DELETE = 62,
 
     /** Single message was deleted */
-    MESSAGE_DELETE      = 72,
+    MESSAGE_DELETE = 72,
     /** Multiple messages were deleted */
     MESSAGE_BULK_DELETE = 73,
     /** Message was pinned to a channel */
-    MESSAGE_PIN         = 74,
+    MESSAGE_PIN = 74,
     /** Message was unpinned from a channel */
-    MESSAGE_UNPIN       = 75,
+    MESSAGE_UNPIN = 75,
 
     /** Integration was added to guild */
-    INTEGRATION_CREATE    = 80,
+    INTEGRATION_CREATE = 80,
     /** Integration was updated (e.g. its scopes were updated) */
-    INTEGRATION_UPDATE    = 81,
+    INTEGRATION_UPDATE = 81,
     /** Integration was removed from guild */
-    INTEGRATION_DELETE    = 82,
+    INTEGRATION_DELETE = 82,
     /** Stage instance was created (stage channel becomes live) */
     STAGE_INSTANCE_CREATE = 83,
     /** Stage instance details were updated */
@@ -1438,28 +1439,28 @@ export enum AuditLogActionTypes {
     SOUNDBOARD_SOUND_DELETE = 132,
 
     /** AutoMod rule was created */
-    AUTO_MODERATION_RULE_CREATE                 = 140,
+    AUTO_MODERATION_RULE_CREATE = 140,
     /** AutoMod rule was updated */
-    AUTO_MODERATION_RULE_UPDATE                 = 141,
+    AUTO_MODERATION_RULE_UPDATE = 141,
     /** AutoMod rule was deleted */
-    AUTO_MODERATION_RULE_DELETE                 = 142,
+    AUTO_MODERATION_RULE_DELETE = 142,
     /** Message was blocked by AutoMod */
-    AUTO_MODERATION_BLOCK_MESSAGE               = 143,
+    AUTO_MODERATION_BLOCK_MESSAGE = 143,
     /** Message was flagged by AutoMod */
-    AUTO_MODERATION_FLAG_TO_CHANNEL             = 144,
+    AUTO_MODERATION_FLAG_TO_CHANNEL = 144,
     /** Member was timed out by AutoMod */
     AUTO_MODERATION_USER_COMMUNICATION_DISABLED = 145,
     /** Member was quarantined by AutoMod */
-    AUTO_MODERATION_QUARANTINE_USER             = 146,
+    AUTO_MODERATION_QUARANTINE_USER = 146,
 
     /** Creator monetization request was created */
     CREATOR_MONETIZATION_REQUEST_CREATED = 150,
     /** Creator monetization terms were accepted */
-    CREATOR_MONETIZATION_TERMS_ACCEPTED  = 151,
+    CREATOR_MONETIZATION_TERMS_ACCEPTED = 151,
 
-    ROLE_PROMPT_CREATE       = 160,
-    ROLE_PROMPT_UPDATE       = 161,
-    ROLE_PROMPT_DELETE       = 162,
+    ROLE_PROMPT_CREATE = 160,
+    ROLE_PROMPT_UPDATE = 161,
+    ROLE_PROMPT_DELETE = 162,
     /** Onboarding prompt was created */
     ONBOARDING_PROMPT_CREATE = 163,
     /** Onboarding prompt was updated */
@@ -1467,28 +1468,28 @@ export enum AuditLogActionTypes {
     /** Onboarding prompt was deleted */
     ONBOARDING_PROMPT_DELETE = 165,
     /** Onboarding was initialized */
-    ONBOARDING_CREATE        = 166,
+    ONBOARDING_CREATE = 166,
     /** Onboarding was updated */
-    ONBOARDING_UPDATE        = 167,
+    ONBOARDING_UPDATE = 167,
 
     /** Message was featured in guild home */
     GUILD_HOME_FEATURE_ITEM = 171,
     /** Message was removed from guild home */
-    GUILD_HOME_REMOVE_ITEM  = 172,
+    GUILD_HOME_REMOVE_ITEM = 172,
 
     /** @deprecated Message blocked by harmful links filter */
     HARMFUL_LINKS_BLOCKED_MESSAGE = 180,
 
     /** New member welcome was initialized */
-    HOME_SETTINGS_CREATE        = 190,
+    HOME_SETTINGS_CREATE = 190,
     /** New member welcome was updated */
-    HOME_SETTINGS_UPDATE        = 191,
+    HOME_SETTINGS_UPDATE = 191,
     /** Voice channel status was updated */
     VOICE_CHANNEL_STATUS_CREATE = 192,
     /** Voice channel status was deleted */
     VOICE_CHANNEL_STATUS_DELETE = 193,
     /** @deprecated Clyde AI profile was updated */
-    CLYDE_AI_PROFILE_UPDATE     = 194,
+    CLYDE_AI_PROFILE_UPDATE = 194,
 
     /** Exception was created for a guild scheduled event */
     GUILD_SCHEDULED_EVENT_EXCEPTION_CREATE = 200,
@@ -1498,131 +1499,131 @@ export enum AuditLogActionTypes {
     GUILD_SCHEDULED_EVENT_EXCEPTION_DELETE = 202,
 
     /** Member verification settings were updated */
-    GUILD_MEMBER_VERIFICATION_UPDATE         = 210,
+    GUILD_MEMBER_VERIFICATION_UPDATE = 210,
     /** Guild profile was updated */
-    GUILD_PROFILE_UPDATE                     = 211,
-    PIN_PERMISSION_MIGRATION_COMPLETE        = 212,
+    GUILD_PROFILE_UPDATE = 211,
+    PIN_PERMISSION_MIGRATION_COMPLETE = 212,
     BYPASS_SLOWMODE_PERMISSION_MIGRATION_COM = 213,
 }
 
 export enum ApplicationCommandTypes {
     /** Slash commands; a text-based command that shows up when a user types `/` */
-    CHAT_INPUT          = 1,
+    CHAT_INPUT = 1,
     /** An UI-based command that shows up when you right click or tap on an user */
-    USER                = 2,
+    USER = 2,
     /** An UI-based command that shows up when you right click or tap on a message */
-    MESSAGE             = 3,
+    MESSAGE = 3,
     /** An UI-based command that represents the primary way to invoke an app's activity */
     PRIMARY_ENTRY_POINT = 4,
 }
 
 export enum ApplicationCommandOptionTypes {
     /** A subcommand */
-    SUB_COMMAND       = 1,
+    SUB_COMMAND = 1,
     /** A group of subcommands */
     SUB_COMMAND_GROUP = 2,
     /** A string */
-    STRING            = 3,
+    STRING = 3,
     /** An integer between -253 and */
-    INTEGER           = 4,
+    INTEGER = 4,
     /** A boolean */
-    BOOLEAN           = 5,
+    BOOLEAN = 5,
     /** An user */
-    USER              = 6,
+    USER = 6,
     /** A channel (includes all channel types by default) */
-    CHANNEL           = 7,
+    CHANNEL = 7,
     /** A role */
-    ROLE              = 8,
+    ROLE = 8,
     /** A mentionable entity (currently only users and roles) */
-    MENTIONABLE       = 9,
+    MENTIONABLE = 9,
     /** A float/integer between -253 and */
-    NUMBER            = 10,
+    NUMBER = 10,
     /** An attachment */
-    ATTACHMENT        = 11,
+    ATTACHMENT = 11,
 }
 
 export enum ApplicationCommandPermissionTypes {
     /** A role within a guild */
-    ROLE    = 1,
+    ROLE = 1,
     /** A guild member */
-    USER    = 2,
+    USER = 2,
     /** A channel within a guild */
     CHANNEL = 3,
 }
 
 export enum InteractionResponseTypes {
     /** Acknowledge a `PING` interaction */
-    PONG                                    = 1,
+    PONG = 1,
     /** Respond to an interaction with a message */
-    CHANNEL_MESSAGE_WITH_SOURCE             = 4,
+    CHANNEL_MESSAGE_WITH_SOURCE = 4,
     /** Acknowledge an interaction and send a message later; the user sees a loading state */
-    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE    = 5,
+    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5,
     /** Acknowledge an interaction and edit the original message later; the user does not see a loading state */
-    DEFERRED_UPDATE_MESSAGE                 = 6,
+    DEFERRED_UPDATE_MESSAGE = 6,
     /** Edit the message that the interacted component was attached to */
-    UPDATE_MESSAGE                          = 7,
+    UPDATE_MESSAGE = 7,
     /** Respond to an autocomplete interaction with suggested choices */
     APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
     /** Respond to an interaction with a popup modal */
-    MODAL                                   = 9,
+    MODAL = 9,
     /** @deprecated */
-    PREMIUM_REQUIRED                        = 10,
+    PREMIUM_REQUIRED = 10,
     /** Launch an embedded activity associated with the application */
-    LAUNCH_ACTIVITY                         = 12,
+    LAUNCH_ACTIVITY = 12,
 }
 
 export enum EntryPointCommandHandlerTypes {
     /** The application handles the interaction using an interaction token */
-    APP_HANDLER             = 1,
+    APP_HANDLER = 1,
     /** Discord handles the interaction by launching an embedded activity and sending a follow-up message without coordinating with the app */
     DISCORD_LAUNCH_ACTIVITY = 2,
 }
 
 export enum Intents {
     /** Guilds and unavailable guild events. */
-    GUILDS                        = 1 << 0,
+    GUILDS = 1 << 0,
     /** Guild member events. */
-    GUILD_MEMBERS                 = 1 << 1,
+    GUILD_MEMBERS = 1 << 1,
     /** Guild moderation events, including bans. */
-    GUILD_MODERATION              = 1 << 2,
+    GUILD_MODERATION = 1 << 2,
     /** @deprecated Guild emoji and sticker events. Use `GUILD_EXPRESSIONS`. */
-    GUILD_EMOJIS_AND_STICKERS     = 1 << 3,
+    GUILD_EMOJIS_AND_STICKERS = 1 << 3,
     /** Guild emoji, sticker, and soundboard expression events. */
-    GUILD_EXPRESSIONS             = 1 << 3,
+    GUILD_EXPRESSIONS = 1 << 3,
     /** Guild integration events. */
-    GUILD_INTEGRATIONS            = 1 << 4,
+    GUILD_INTEGRATIONS = 1 << 4,
     /** Guild webhook events. */
-    GUILD_WEBHOOKS                = 1 << 5,
+    GUILD_WEBHOOKS = 1 << 5,
     /** Guild invite events. */
-    GUILD_INVITES                 = 1 << 6,
+    GUILD_INVITES = 1 << 6,
     /** Guild voice state events. */
-    GUILD_VOICE_STATES            = 1 << 7,
+    GUILD_VOICE_STATES = 1 << 7,
     /** Guild presence events. */
-    GUILD_PRESENCES               = 1 << 8,
+    GUILD_PRESENCES = 1 << 8,
     /** Guild message create/update/delete events. */
-    GUILD_MESSAGES                = 1 << 9,
+    GUILD_MESSAGES = 1 << 9,
     /** Guild message reaction events. */
-    GUILD_MESSAGE_REACTIONS       = 1 << 10,
+    GUILD_MESSAGE_REACTIONS = 1 << 10,
     /** Guild message typing events. */
-    GUILD_MESSAGE_TYPING          = 1 << 11,
+    GUILD_MESSAGE_TYPING = 1 << 11,
     /** Direct message create/update/delete events. */
-    DIRECT_MESSAGES               = 1 << 12,
+    DIRECT_MESSAGES = 1 << 12,
     /** Direct message reaction events. */
-    DIRECT_MESSAGE_REACTIONS      = 1 << 13,
+    DIRECT_MESSAGE_REACTIONS = 1 << 13,
     /** Direct message typing events. */
-    DIRECT_MESSAGE_TYPING         = 1 << 14,
+    DIRECT_MESSAGE_TYPING = 1 << 14,
     /** Message content fields for message events. */
-    MESSAGE_CONTENT               = 1 << 15,
+    MESSAGE_CONTENT = 1 << 15,
     /** Guild scheduled event events. */
-    GUILD_SCHEDULED_EVENTS        = 1 << 16,
+    GUILD_SCHEDULED_EVENTS = 1 << 16,
     /** Auto Moderation rule create/update/delete events. */
     AUTO_MODERATION_CONFIGURATION = 1 << 20,
     /** Auto Moderation action execution events. */
-    AUTO_MODERATION_EXECUTION     = 1 << 21,
+    AUTO_MODERATION_EXECUTION = 1 << 21,
     /** Guild poll vote events. */
-    GUILD_MESSAGE_POLLS           = 1 << 24,
+    GUILD_MESSAGE_POLLS = 1 << 24,
     /** Direct message poll vote events. */
-    DIRECT_MESSAGE_POLLS          = 1 << 25,
+    DIRECT_MESSAGE_POLLS = 1 << 25,
 }
 
 export type IntentNames = keyof typeof Intents;
@@ -1647,13 +1648,13 @@ export const NonPrivilegedIntents = [
     Intents.AUTO_MODERATION_CONFIGURATION,
     Intents.AUTO_MODERATION_EXECUTION,
     Intents.GUILD_MESSAGE_POLLS,
-    Intents.DIRECT_MESSAGE_POLLS
+    Intents.DIRECT_MESSAGE_POLLS,
 ] as const;
 export const AllNonPrivilegedIntents = NonPrivilegedIntents.reduce((all, p) => all | p, 0);
 export const PrivilegedIntents = [
     Intents.GUILD_MEMBERS,
     Intents.GUILD_PRESENCES,
-    Intents.MESSAGE_CONTENT
+    Intents.MESSAGE_CONTENT,
 ] as const;
 export const AllPrivilegedIntents = PrivilegedIntents.reduce((all, p) => all | p, 0);
 export const AllIntents = AllNonPrivilegedIntents | AllPrivilegedIntents;
@@ -1661,230 +1662,230 @@ export const AllIntents = AllNonPrivilegedIntents | AllPrivilegedIntents;
 export const PrivilegedIntentMapping = [
     [Intents.GUILD_PRESENCES, [ApplicationFlags.GATEWAY_PRESENCE, ApplicationFlags.GATEWAY_PRESENCE_LIMITED]],
     [Intents.GUILD_MEMBERS, [ApplicationFlags.GATEWAY_GUILD_MEMBERS, ApplicationFlags.GATEWAY_GUILD_MEMBERS_LIMITED]],
-    [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]]
+    [Intents.MESSAGE_CONTENT, [ApplicationFlags.GATEWAY_MESSAGE_CONTENT, ApplicationFlags.GATEWAY_MESSAGE_CONTENT_LIMITED]],
 ] as Array<[intent: Intents, allowed: Array<ApplicationFlags>]>;
 
 export enum GatewayOPCodes {
     /** An event was dispatched */
-    DISPATCH                  = 0,
+    DISPATCH = 0,
     /** Keep the WebSocket connection alive */
-    HEARTBEAT                 = 1,
+    HEARTBEAT = 1,
     /** Start a new session during the initial handshake */
-    IDENTIFY                  = 2,
+    IDENTIFY = 2,
     /** Update the client's presence */
-    PRESENCE_UPDATE           = 3,
+    PRESENCE_UPDATE = 3,
     /** Join/leave or move between voice channels and calls */
-    VOICE_STATE_UPDATE        = 4,
+    VOICE_STATE_UPDATE = 4,
     /** Resume a previous session that was disconnected */
-    RESUME                    = 6,
+    RESUME = 6,
     /** You should attempt to reconnect and resume immediately */
-    RECONNECT                 = 7,
+    RECONNECT = 7,
     /** Request information about guild members */
-    REQUEST_GUILD_MEMBERS     = 8,
+    REQUEST_GUILD_MEMBERS = 8,
     /** The session has been invalidated. You should reconnect and identify/resume accordingly */
-    INVALID_SESSION           = 9,
+    INVALID_SESSION = 9,
     /** Sent immediately after connecting, contains the `heartbeat_interval` to use */
-    HELLO                     = 10,
+    HELLO = 10,
     /** Acknowledge a received heartbeat */
-    HEARTBEAT_ACK             = 11,
+    HEARTBEAT_ACK = 11,
     /** Request soundboard sounds for guilds */
     REQUEST_SOUNDBOARD_SOUNDS = 31,
     /** Request extra voice channel fields for a guild */
-    REQUEST_CHANNEL_INFO      = 43,
+    REQUEST_CHANNEL_INFO = 43,
 }
 
 export enum GatewayCloseCodes {
     /** We're not sure what went wrong. Try reconnecting? */
-    UNKNOWN_ERROR         = 4000,
+    UNKNOWN_ERROR = 4000,
     /** You sent an invalid Gateway opcode or an invalid payload for an opcode. Don't do that! */
-    UNKNOWN_OPCODE        = 4001,
+    UNKNOWN_OPCODE = 4001,
     /** You sent an invalid payload. Don't do that! */
-    DECODE_ERROR          = 4002,
+    DECODE_ERROR = 4002,
     /** You sent us a payload prior to identifying, or this session has been invalidated */
-    NOT_AUTHENTICATED     = 4003,
+    NOT_AUTHENTICATED = 4003,
     /** The account token sent with your identify payload is incorrect */
     AUTHENTICATION_FAILED = 4004,
     /** You sent more than one identify payload. Don't do that! */
     ALREADY_AUTHENTICATED = 4005,
     /** The sequence sent when resuming the session was invalid. Reconnect and start a new session */
-    INVALID_SEQUENCE      = 4007,
+    INVALID_SEQUENCE = 4007,
     /** Woah nelly! You're sending payloads too quickly. Slow it down! You will be disconnected on receiving this */
-    RATE_LIMITED          = 4008,
+    RATE_LIMITED = 4008,
     /** Your session timed out. Reconnect and start a new one */
-    SESSION_TIMEOUT       = 4009,
+    SESSION_TIMEOUT = 4009,
     /** You sent us an invalid shard when identifying */
-    INVALID_SHARD         = 4010,
+    INVALID_SHARD = 4010,
     /** The session would have handled too many guilds—you are required to shard your connection in order to connect */
-    SHARDING_REQUIRED     = 4011,
+    SHARDING_REQUIRED = 4011,
     /** You sent an invalid version for the Gateway */
-    INVALID_API_VERSION   = 4012,
+    INVALID_API_VERSION = 4012,
     /** You sent an invalid intent for a Gateway intent. You may have incorrectly calculated the bitwise value */
-    INVALID_INTENTS       = 4013,
+    INVALID_INTENTS = 4013,
     /** You sent a disallowed intent for a Gateway intent. You may have tried to specify an intent that you have not enabled or are not approved for */
-    DISALLOWED_INTENTS    = 4014,
+    DISALLOWED_INTENTS = 4014,
 }
 
 export enum VoiceOPCodes {
     /** Start a new voice WebSocket connection */
-    IDENTIFY            = 0,
+    IDENTIFY = 0,
     /** Select the voice protocol */
-    SELECT_PROTOCOL     = 1,
+    SELECT_PROTOCOL = 1,
     /** Complete the WebSocket handshake */
-    READY               = 2,
+    READY = 2,
     /** Keep the WebSocket connection alive */
-    HEARTBEAT           = 3,
+    HEARTBEAT = 3,
     /** Describe the session */
     SESSION_DESCRIPTION = 4,
     /** Indicate which users are speaking */
-    SPEAKING            = 5,
+    SPEAKING = 5,
     /** Acknowledge a received heartbeat */
-    HEARTBEAT_ACK       = 6,
+    HEARTBEAT_ACK = 6,
     /** Resume a previous session that was disconnected */
-    RESUME              = 7,
+    RESUME = 7,
     /** Sent immediately after connecting, contains the `heartbeat_interval` to use */
-    HELLO               = 8,
+    HELLO = 8,
     /** Response to acknowledging a successful resume */
-    RESUMED             = 9,
+    RESUMED = 9,
     /** Indicate that clients have connected to the voice channel */
-    CLIENTS_CONNECT     = 11,
+    CLIENTS_CONNECT = 11,
     /** Indicate that a client has disconnected from the voice channel */
-    CLIENT_DISCONNECT   = 13,
+    CLIENT_DISCONNECT = 13,
 }
 
 export enum VoiceCloseCodes {
     /** You sent an invalid opcode */
-    UNKNOWN_OPCODE          = 4001,
+    UNKNOWN_OPCODE = 4001,
     /** You sent a invalid payload in your identifying to the Gateway */
-    DECODE_ERROR            = 4002,
+    DECODE_ERROR = 4002,
     /** You sent a payload before identifying with the Gateway */
-    NOT_AUTHENTICATED       = 4003,
+    NOT_AUTHENTICATED = 4003,
     /** The token you sent in your identify payload is incorrect */
-    AUTHENTICATION_FAILED   = 4004,
+    AUTHENTICATION_FAILED = 4004,
     /** You sent more than one identify payload. Stahp */
-    ALREADY_AUTHENTICATED   = 4005,
+    ALREADY_AUTHENTICATED = 4005,
     /** Your session is no longer valid */
-    INVALID_SESSION         = 4006,
+    INVALID_SESSION = 4006,
     /** Your session has timed out */
-    SESSION_TIMEOUT         = 4009,
+    SESSION_TIMEOUT = 4009,
     /** We can't find the server you're trying to connect to */
-    SERVER_NOT_FOUND        = 4011,
+    SERVER_NOT_FOUND = 4011,
     /** We didn't recognize the protocol you sent */
-    UNKNOWN_PROTOCOL        = 4012,
+    UNKNOWN_PROTOCOL = 4012,
     /** Disconnect individual client (you were kicked, the main Gateway session was dropped, etc.). Should not reconnect */
-    DISCONNECTED            = 4013,
+    DISCONNECTED = 4013,
     /** The server crashed. Our bad! Try resuming */
-    VOICE_SERVER_CRASHED    = 4014,
+    VOICE_SERVER_CRASHED = 4014,
     /** We didn't recognize your encryption */
     UNKNOWN_ENCRYPTION_MODE = 4015,
 }
 
 export enum HubTypes {
     /** Student hub is not categorized as a high school or post-secondary institution */
-    DEFAULT     = 0,
+    DEFAULT = 0,
     /** Student hub is for a high school */
     HIGH_SCHOOL = 1,
     /** Student hub is for a post-secondary institution (college or university) */
-    COLLEGE     = 2,
+    COLLEGE = 2,
 }
 
 export enum ActivityTypes {
-    GAME        = 0,
-    STREAMING   = 1,
-    LISTENING   = 2,
-    WATCHING    = 3,
-    CUSTOM      = 4,
-    COMPETING   = 5,
+    GAME = 0,
+    STREAMING = 1,
+    LISTENING = 2,
+    WATCHING = 3,
+    CUSTOM = 4,
+    COMPETING = 5,
     HANG_STATUS = 6,
 }
 
 export enum ActivityFlags {
     /** Activity is an instanced game session (a match that will end) */
-    INSTANCE                    = 1 << 0,
+    INSTANCE = 1 << 0,
     /** Activity can be joined by other users */
-    JOIN                        = 1 << 1,
-    SPECTATE                    = 1 << 2,
+    JOIN = 1 << 1,
+    SPECTATE = 1 << 2,
     /** @deprecated Activity requires a request to join */
-    JOIN_REQUEST                = 1 << 3,
+    JOIN_REQUEST = 1 << 3,
     /** Activity can be synced */
-    SYNC                        = 1 << 4,
+    SYNC = 1 << 4,
     /** Activity can be played */
-    PLAY                        = 1 << 5,
-    PARTY_PRIVACY_FRIENDS_ONLY  = 1 << 6,
+    PLAY = 1 << 5,
+    PARTY_PRIVACY_FRIENDS_ONLY = 1 << 6,
     /** Activity's party can be joined by users in the same voice channel */
     PARTY_PRIVACY_VOICE_CHANNEL = 1 << 7,
     /** Activity is embedded within the Discord client */
-    EMBEDDED                    = 1 << 8,
+    EMBEDDED = 1 << 8,
 }
 
 export enum ThreadMemberFlags {
     /** User has interacted with the thread */
     HAS_INTERACTED = 1 << 0,
     /** User receives notifications for all messages */
-    ALL_MESSAGES   = 1 << 1,
+    ALL_MESSAGES = 1 << 1,
     /** User receives notifications only for messages that @mention them */
-    ONLY_MENTIONS  = 1 << 2,
+    ONLY_MENTIONS = 1 << 2,
     /** User does not receive any notifications */
-    NO_MESSAGES    = 1 << 3,
+    NO_MESSAGES = 1 << 3,
 }
 
 export enum RoleConnectionMetadataTypes {
     /** The metadata value (`integer`) is less than or equal to the guild's configured value (`integer`) */
-    INTEGER_LESS_THAN_OR_EQUAL     = 1,
+    INTEGER_LESS_THAN_OR_EQUAL = 1,
     /** The metadata value (`integer`) is greater than or equal to the guild's configured value (`integer`) */
-    INTEGER_GREATER_THAN_OR_EQUAL  = 2,
+    INTEGER_GREATER_THAN_OR_EQUAL = 2,
     /** The metadata value (`integer`) is equal to the guild's configured value (`integer`) */
-    INTEGER_EQUAL                  = 3,
+    INTEGER_EQUAL = 3,
     /** The metadata value (`integer`) is not equal to the guild's configured value (`integer`) */
-    INTEGER_NOT_EQUAL              = 4,
+    INTEGER_NOT_EQUAL = 4,
     /** The metadata value (`ISO8601 string`) is less than or equal to the guild's configured value (`integer`; `days before current date`) */
-    DATETIME_LESS_THAN_OR_EQUAL    = 5,
+    DATETIME_LESS_THAN_OR_EQUAL = 5,
     /** The metadata value (`ISO8601 string`) is greater than or equal to the guild's configured value (`integer`; `days before current date`) */
     DATETIME_GREATER_THAN_OR_EQUAL = 6,
     /** The metadata value (`integer`) is equal to the guild's configured value (`integer`; `1`) */
-    BOOLEAN_EQUAL                  = 7,
+    BOOLEAN_EQUAL = 7,
     /** The metadata value (`integer`) is not equal to the guild's configured value (`integer`; `1`) */
-    BOOLEAN_NOT_EQUAL              = 8,
+    BOOLEAN_NOT_EQUAL = 8,
 }
 
 export enum GuildMemberFlags {
     /** Guild member has left and rejoined the guild */
-    DID_REJOIN                                     = 1 << 0,
+    DID_REJOIN = 1 << 0,
     /** Guild member has completed onboarding */
-    COMPLETED_ONBOARDING                           = 1 << 1,
+    COMPLETED_ONBOARDING = 1 << 1,
     /** Guild member bypasses guild verification requirements and member verification */
-    BYPASSES_VERIFICATION                          = 1 << 2,
+    BYPASSES_VERIFICATION = 1 << 2,
     /** Guild member has started onboarding */
-    STARTED_ONBOARDING                             = 1 << 3,
+    STARTED_ONBOARDING = 1 << 3,
     /** Guild member is a guest and not a true member */
-    IS_GUEST                                       = 1 << 4,
+    IS_GUEST = 1 << 4,
     /** Guild member has started the new member actions in the server guide */
-    STARTED_HOME_ACTIONS                           = 1 << 5,
+    STARTED_HOME_ACTIONS = 1 << 5,
     /** Guild member has completed all of the new member actions in the server guide */
-    COMPLETED_HOME_ACTIONS                         = 1 << 6,
+    COMPLETED_HOME_ACTIONS = 1 << 6,
     AUTOMOD_QUARANTINED_USERNAME_OR_GUILD_NICKNAME = 1 << 7,
     /** @deprecated Guild member has been indefinitely quarantined by an AutoMod Rule for their bio */
-    AUTOMOD_QUARANTINED_BIO                        = 1 << 8,
+    AUTOMOD_QUARANTINED_BIO = 1 << 8,
     /** Guild member has acknowledged the DM privacy settings upsell modal */
-    DM_SETTINGS_UPSELL_ACKNOWLEDGED                = 1 << 9,
-    AUTOMOD_QUARANTINED_CLAN_TAG                   = 1 << 10,
+    DM_SETTINGS_UPSELL_ACKNOWLEDGED = 1 << 9,
+    AUTOMOD_QUARANTINED_CLAN_TAG = 1 << 10,
 }
 
 export enum OnboardingPromptTypes {
     /** Prompt offers multiple options to select from */
     MULTIPLE_CHOICE = 0,
     /** Prompt offers a dropdown menu to select from */
-    DROPDOWN        = 1,
+    DROPDOWN = 1,
 }
 
 export enum AnimationTypes {
     /** Premium animation type. */
     PREMIUM = 0,
     /** Basic animation type. */
-    BASIC   = 1,
+    BASIC = 1,
 }
 
 export enum OnboardingModes {
-    DEFAULT  = 0,
+    DEFAULT = 0,
     ADVANCED = 1,
 }
 
@@ -1896,76 +1897,76 @@ export enum InviteFlags {
 export enum ReactionType {
     /** A normal reaction */
     NORMAL = 0,
-    SUPER  = 1,
+    SUPER = 1,
 }
 
 export enum AttachmentFlags {
     /** Attachment is a clipped recording of a stream */
-    IS_CLIP                 = 1 << 0,
+    IS_CLIP = 1 << 0,
     /** Attachment is a thumbnail */
-    IS_THUMBNAIL            = 1 << 1,
+    IS_THUMBNAIL = 1 << 1,
     /** Attachment has been remixed */
-    IS_REMIX                = 1 << 2,
+    IS_REMIX = 1 << 2,
     /** Attachment is a spoiler */
-    IS_SPOILER              = 1 << 3,
+    IS_SPOILER = 1 << 3,
     /** Attachment was flagged as sensitive content */
     CONTAINS_EXPLICIT_MEDIA = 1 << 4,
     /** Attachment is an animated image */
-    IS_ANIMATED             = 1 << 5,
+    IS_ANIMATED = 1 << 5,
 }
 
 export enum SKUTypes {
     /** Primary durable item */
-    DURABLE_PRIMARY    = 1,
+    DURABLE_PRIMARY = 1,
     /** Durable item */
-    DURABLE            = 2,
+    DURABLE = 2,
     /** Consumable item */
-    CONSUMABLE         = 3,
+    CONSUMABLE = 3,
     /** Bundle of items */
-    BUNDLE             = 4,
+    BUNDLE = 4,
     /** Subscription item */
-    SUBSCRIPTION       = 5,
+    SUBSCRIPTION = 5,
     /** Group of subscription items */
     SUBSCRIPTION_GROUP = 6,
 }
 
 export enum SKUFlags {
     /** SKU is available for free to premium users */
-    PREMIUM_PURCHASE                   = 1 << 0,
+    PREMIUM_PURCHASE = 1 << 0,
     /** SKU has free content for premium users */
-    HAS_FREE_PREMIUM_CONTENT           = 1 << 1,
+    HAS_FREE_PREMIUM_CONTENT = 1 << 1,
     /** SKU is available for purchase */
-    AVAILABLE                          = 1 << 2,
+    AVAILABLE = 1 << 2,
     /** SKU is available for free to premium users and purchasable normally */
-    PREMIUM_AND_DISTRIBUTION           = 1 << 3,
-    STICKER_PACK                       = 1 << 4,
+    PREMIUM_AND_DISTRIBUTION = 1 << 3,
+    STICKER_PACK = 1 << 4,
     /** SKU is a guild role subscription or ticketed event */
-    GUILD_ROLE                         = 1 << 5,
+    GUILD_ROLE = 1 << 5,
     /** SKU is a giftable Discord premium subscription */
     AVAILABLE_FOR_SUBSCRIPTION_GIFTING = 1 << 6,
     /** SKU is an application subscription for guilds */
-    APPLICATION_GUILD_SUBSCRIPTION     = 1 << 7,
-    GUILD_SUBSCRIPTION                 = 1 << 7,
+    APPLICATION_GUILD_SUBSCRIPTION = 1 << 7,
+    GUILD_SUBSCRIPTION = 1 << 7,
     /** SKU is an application subscription for users */
-    APPLICATION_USER_SUBSCRIPTION      = 1 << 8,
-    USER_SUBSCRIPTION                  = 1 << 8,
+    APPLICATION_USER_SUBSCRIPTION = 1 << 8,
+    USER_SUBSCRIPTION = 1 << 8,
 }
 
 export enum EntitlementTypes {
     /** Entitlement was purchased by a user */
-    PURCHASE                 = 1,
+    PURCHASE = 1,
     /** Entitlement is for a premium (Nitro) subscription */
-    PREMIUM_SUBSCRIPTION     = 2,
+    PREMIUM_SUBSCRIPTION = 2,
     /** Entitlement was gifted by a developer */
-    DEVELOPER_GIFT           = 3,
+    DEVELOPER_GIFT = 3,
     /** Entitlement was purchased by a developer in application test mode */
-    TEST_MODE_PURCHASE       = 4,
+    TEST_MODE_PURCHASE = 4,
     /** Entitlement was granted when the SKU was free */
-    FREE_PURCHASE            = 5,
+    FREE_PURCHASE = 5,
     /** Entitlement was gifted by another user */
-    USER_GIFT                = 6,
+    USER_GIFT = 6,
     /** Entitlement was claimed for free via a premium subscription */
-    PREMIUM_PURCHASE         = 7,
+    PREMIUM_PURCHASE = 7,
     /** Entitlement is for an application subscription */
     APPLICATION_SUBSCRIPTION = 8,
 }
@@ -1974,7 +1975,7 @@ export enum EntitlementOwnerTypes {
     /** Entitlement is for a guild */
     GUILD = 1,
     /** Entitlement is for a user */
-    USER  = 2,
+    USER = 2,
 }
 
 export enum SKUAccessTypes {
@@ -1983,9 +1984,9 @@ export enum SKUAccessTypes {
 
 export enum SubscriptionStatuses {
     /** Subscription is active */
-    ACTIVE   = 0,
+    ACTIVE = 0,
     INACTIVE = 1,
-    ENDING   = 2,
+    ENDING = 2,
 }
 
 export enum PollLayoutType {
@@ -1995,7 +1996,7 @@ export enum PollLayoutType {
 
 export enum ApplicationMonetizationState {
     /** This application does not have monetization set up */
-    NONE    = 1,
+    NONE = 1,
     /** This application has monetization set up */
     ENABLED = 2,
     /** This application has been blocked from monetizing */
@@ -2004,54 +2005,54 @@ export enum ApplicationMonetizationState {
 
 export enum ApplicationDiscoverabilityState {
     /** This application is ineligible for the application directory */
-    INELIGIBLE       = 1,
+    INELIGIBLE = 1,
     /** This application is not listed in the application directory */
     NOT_DISCOVERABLE = 2,
     /** This application is listed in the application directory */
-    DISCOVERABLE     = 3,
-    FEATURABLE       = 4,
+    DISCOVERABLE = 3,
+    FEATURABLE = 4,
     /** This application has been blocked from appearing in the application directory */
-    BLOCKED          = 5,
+    BLOCKED = 5,
 }
 
 export enum ApplicationDiscoveryEligibilityFlags {
     /** Application is verified */
-    VERIFIED                = 1 << 0,
+    VERIFIED = 1 << 0,
     /** Application has at least one tag set */
-    TAG                     = 1 << 1,
+    TAG = 1 << 1,
     /** Application has a description */
-    DESCRIPTION             = 1 << 2,
+    DESCRIPTION = 1 << 2,
     /** Application has terms of service set */
-    TERMS_OF_SERVICE        = 1 << 3,
+    TERMS_OF_SERVICE = 1 << 3,
     /** Application has a privacy policy set */
-    PRIVACY_POLICY          = 1 << 4,
+    PRIVACY_POLICY = 1 << 4,
     /** Application has a custom install URL or install parameters */
-    INSTALL_PARAMS          = 1 << 5,
+    INSTALL_PARAMS = 1 << 5,
     /** Application's name is safe for work */
-    SAFE_NAME               = 1 << 6,
+    SAFE_NAME = 1 << 6,
     /** Application's description is safe for work */
-    SAFE_DESCRIPTION        = 1 << 7,
+    SAFE_DESCRIPTION = 1 << 7,
     /** Application has the message content intent approved or utilizes application commands */
-    APPROVED_COMMANDS       = 1 << 8,
+    APPROVED_COMMANDS = 1 << 8,
     /** Application has a support guild set */
-    SUPPORT_GUILD           = 1 << 9,
+    SUPPORT_GUILD = 1 << 9,
     /** Application's commands are safe for work */
-    SAFE_COMMANDS           = 1 << 10,
+    SAFE_COMMANDS = 1 << 10,
     /** Application's owner has MFA enabled */
-    MFA                     = 1 << 11,
+    MFA = 1 << 11,
     /** Application's directory long description is safe for work */
     SAFE_DIRECTORY_OVERVIEW = 1 << 12,
     /** Application has at least one supported locale set */
-    SUPPORTED_LOCALES       = 1 << 13,
+    SUPPORTED_LOCALES = 1 << 13,
     /** Application's directory short description is safe for work */
-    SAFE_SHORT_DESCRIPTION  = 1 << 14,
+    SAFE_SHORT_DESCRIPTION = 1 << 14,
     /** Application's role connections metadata is safe for work */
-    SAFE_ROLE_CONNECTIONS   = 1 << 15,
+    SAFE_ROLE_CONNECTIONS = 1 << 15,
 }
 
 export enum ApplicationExplicitContentFilterLevel {
     DISABLED = 0,
-    ENABLED  = 1,
+    ENABLED = 1,
 }
 
 export enum ApplicationInteractionsVersion {
@@ -2063,77 +2064,77 @@ export enum ApplicationInteractionsVersion {
 
 export enum ApplicationMonetizationEligibilityFlags {
     /** Application is verified */
-    VERIFIED                    = 1 << 0,
+    VERIFIED = 1 << 0,
     /** Application is owned by a team */
-    HAS_TEAM                    = 1 << 1,
+    HAS_TEAM = 1 << 1,
     /** Application has the message content intent approved or utilizes application commands */
-    APPROVED_COMMANDS           = 1 << 2,
+    APPROVED_COMMANDS = 1 << 2,
     /** Application has terms of service set */
-    TERMS_OF_SERVICE            = 1 << 3,
+    TERMS_OF_SERVICE = 1 << 3,
     /** Application has a privacy policy set */
-    PRIVACY_POLICY              = 1 << 4,
+    PRIVACY_POLICY = 1 << 4,
     /** Application's name is safe for work */
-    SAFE_NAME                   = 1 << 5,
+    SAFE_NAME = 1 << 5,
     /** Application's description is safe for work */
-    SAFE_DESCRIPTION            = 1 << 6,
+    SAFE_DESCRIPTION = 1 << 6,
     /** Application's role connections metadata is safe for work */
-    SAFE_ROLE_CONNECTIONS       = 1 << 7,
+    SAFE_ROLE_CONNECTIONS = 1 << 7,
     /** Application is not quarantined */
-    NOT_QUARANTINED             = 1 << 9,
+    NOT_QUARANTINED = 1 << 9,
     /** User's locale is supported by monetization */
-    USER_LOCALE_SUPPORTED       = 1 << 10,
+    USER_LOCALE_SUPPORTED = 1 << 10,
     /** User is old enough to use monetization */
-    USER_AGE_SUPPORTED          = 1 << 11,
+    USER_AGE_SUPPORTED = 1 << 11,
     /** User has a date of birth defined on their account */
-    USER_DATE_OF_BIRTH_DEFINED  = 1 << 12,
+    USER_DATE_OF_BIRTH_DEFINED = 1 << 12,
     /** User has MFA enabled */
-    USER_MFA_ENABLED            = 1 << 13,
+    USER_MFA_ENABLED = 1 << 13,
     /** User's email is verified */
-    USER_EMAIL_VERIFIED         = 1 << 14,
+    USER_EMAIL_VERIFIED = 1 << 14,
     /** All members of the team that owns the application have verified emails */
     TEAM_MEMBERS_EMAIL_VERIFIED = 1 << 15,
     /** All members of the team that owns the application have MFA enabled */
-    TEAM_MEMBERS_MFA_ENABLED    = 1 << 16,
+    TEAM_MEMBERS_MFA_ENABLED = 1 << 16,
     /** This application has no issues blocking monetization */
-    NO_BLOCKING_ISSUES          = 1 << 17,
+    NO_BLOCKING_ISSUES = 1 << 17,
     /** Owning team has a valid payout status */
-    VALID_PAYOUT_STATUS         = 1 << 18,
+    VALID_PAYOUT_STATUS = 1 << 18,
 }
 
 export enum RPCApplicationState {
     /** This application does not have access to RPC */
-    DISABLED    = 0,
+    DISABLED = 0,
     /** This application has not yet been applied for RPC access */
     UNSUBMITTED = 1,
     /** This application has submitted a RPC access request */
-    SUBMITTED   = 2,
+    SUBMITTED = 2,
     /** This application has been approved for RPC access */
-    APPROVED    = 3,
+    APPROVED = 3,
     /** This application has been rejected from RPC access */
-    REJECTED    = 4,
+    REJECTED = 4,
 }
 
 export enum StoreApplicationState {
     /** This application does not have a commerce license */
-    NONE      = 1,
+    NONE = 1,
     /** This application has a commerce license but has not yet submitted a store approval request */
-    PAID      = 2,
+    PAID = 2,
     /** This application has submitted a store approval request */
     SUBMITTED = 3,
     /** This application has been approved for the store */
-    APPROVED  = 4,
+    APPROVED = 4,
     /** This application has been rejected from the store */
-    REJECTED  = 5,
+    REJECTED = 5,
 }
 
 export enum ApplicationVerificationState {
     /** This application is ineligible for verification */
-    INELIGIBLE  = 1,
+    INELIGIBLE = 1,
     /** This application has not yet been applied for verification */
     UNSUBMITTED = 2,
     /** This application has submitted a verification request */
-    SUBMITTED   = 3,
-    SUCCEEDED   = 4,
+    SUBMITTED = 3,
+    SUCCEEDED = 4,
 }
 
 export enum RoleFlags {
@@ -2143,44 +2144,44 @@ export enum RoleFlags {
 
 export enum MemberSearchSortType {
     /** Sort by when the user joined the guild descending (default) */
-    JOINED_AT_DESC  = 1,
+    JOINED_AT_DESC = 1,
     /** Sort by when the user joined the guild ascending */
-    JOINED_AT_ASC   = 2,
+    JOINED_AT_ASC = 2,
     /** Sort by when the user joined Discord descending */
-    USER_ID_DESC    = 3,
+    USER_ID_DESC = 3,
     /** Sort by when the user joined Discord ascending */
-    USER_ID_ASC     = 4,
+    USER_ID_ASC = 4,
 }
 
 export enum MemberJoinSourceType {
     /** The user joined the guild through an unknown source */
-    UNSPECIFIED                = 0,
+    UNSPECIFIED = 0,
     /** The user was added to the guild by a bot using the `guilds.join` OAuth2 scope */
-    BOT                        = 1,
+    BOT = 1,
     /** The user was added to the guild by an integration (e.g. Twitch) */
-    INTEGRATION                = 2,
+    INTEGRATION = 2,
     /** The user joined the guild through guild discovery */
-    DISCOVERY                  = 3,
+    DISCOVERY = 3,
     /** The user joined the guild through a student hub */
-    HUB                        = 4,
+    HUB = 4,
     /** The user joined the guild through an invite */
-    INVITE                     = 5,
+    INVITE = 5,
     /** The user joined the guild through a vanity URL */
-    VANITY_URL                 = 6,
+    VANITY_URL = 6,
     /** The user was accepted into the guild after applying for membership */
     MANUAL_MEMBER_VERIFICATION = 7,
 }
 
 export enum ActivityLocationKind {
-    GUILD_CHANNEL   = "gc",
+    GUILD_CHANNEL = "gc",
     PRIVATE_CHANNEL = "pc",
 }
 
 export enum ApplicationEventWebhookStatus {
     /** Event webhooks are disabled */
-    DISABLED            = 1,
+    DISABLED = 1,
     /** Event webhooks are enabled */
-    ENABLED             = 2,
+    ENABLED = 2,
     DISABLED_BY_DISCORD = 3,
 }
 
@@ -2188,13 +2189,13 @@ export const ApplicationEventWebhookEventTypes = [
     "APPLICATION_AUTHORIZED",
     "APPLICATION_DEAUTHORIZED",
     "ENTITLEMENT_CREATE",
-    "QUEST_USER_ENROLLMENT"
+    "QUEST_USER_ENROLLMENT",
 ] as const;
 export type ApplicationEventWebhookEventType = typeof ApplicationEventWebhookEventTypes[number];
 
 export enum EmbedFlags {
     /** Embed was flagged as sensitive content */
-    CONTAINS_EXPLICIT_MEDIA    = 1 << 4,
+    CONTAINS_EXPLICIT_MEDIA = 1 << 4,
     IS_CONTENT_INVENTORY_ENTRY = 1 << 5,
 }
 
@@ -2211,76 +2212,76 @@ export enum SeparatorSpacingSize {
 
 export enum DisplayNameFont {
     /** Bangers */
-    BANGERS       = 1,
+    BANGERS = 1,
     /** BioRhyme */
-    BIO_RHYME     = 2,
+    BIO_RHYME = 2,
     /** Cherry Bomb One */
-    CHERRY_BOMB   = 3,
+    CHERRY_BOMB = 3,
     /** Chicle */
-    CHICLE        = 4,
+    CHICLE = 4,
     /** Compagnon */
-    COMPAGNON     = 5,
+    COMPAGNON = 5,
     /** MuseoModerno */
     MUSEO_MODERNO = 6,
     /** Néo-Castel */
-    NEO_CASTEL    = 7,
-    PIXELFY       = 8,
+    NEO_CASTEL = 7,
+    PIXELFY = 8,
     /** Ribes */
-    RIBES         = 9,
+    RIBES = 9,
     /** Sinistre */
-    SINISTRE      = 10,
+    SINISTRE = 10,
     /** Default font */
-    DEFAULT       = 11,
+    DEFAULT = 11,
     /** Zilla Slab */
-    ZILLA_SLAB    = 12,
+    ZILLA_SLAB = 12,
 }
 
 export enum DisplayNameEffect {
     /** Displays the first color provided */
-    SOLID    = 1,
+    SOLID = 1,
     /** Two color gradient */
     GRADIENT = 2,
     /** Glow around the name */
-    NEON     = 3,
+    NEON = 3,
     /** Subtle vertical gradient and stroke */
-    TOON     = 4,
+    TOON = 4,
     /** Colored dropshadow */
-    POP      = 5,
+    POP = 5,
     /** Alternate gradient style */
-    GLOW     = 6,
+    GLOW = 6,
 }
 
 export enum InviteTargetUsersJobStatus {
     /** Job status is unspecified */
     UNSPECIFIED = 0,
     /** Job is currently being processed */
-    PROCESSING  = 1,
+    PROCESSING = 1,
     /** Job has been completed */
-    COMPLETED   = 2,
+    COMPLETED = 2,
     /** Job has failed (see `error_message`) */
-    FAILED      = 3,
+    FAILED = 3,
 }
 
 export enum ApplicationInternalGuildRestriction {
-    JOIN_ALL           = 1,
+    JOIN_ALL = 1,
     JOIN_EXTERNAL_ONLY = 2,
     JOIN_INTERNAL_ONLY = 3,
 }
 
 export enum EmbeddedActivityOrientationLockStateType {
     /** Unrestricted orientation */
-    UNLOCKED  = 1,
+    UNLOCKED = 1,
     /** Portrait only */
-    PORTRAIT  = 2,
+    PORTRAIT = 2,
     /** Landscape only */
     LANDSCAPE = 3,
 }
 
 export enum EmbeddedActivityLabelType {
     /** No special label */
-    NONE    = 0,
+    NONE = 0,
     /** The activity is new */
-    NEW     = 1,
+    NEW = 1,
     /** The activity has been recently updated */
     UPDATED = 2,
 }
@@ -2300,7 +2301,7 @@ export type TeamMemberRoleType = typeof TeamMemberRoleTypes[number];
 
 export enum ApprovableConsoleType {
     /** Xbox */
-    XBOX          = 1,
+    XBOX = 1,
     /** PlayStation */
     PLAYSTATION_5 = 2,
     /** PlayStation */
@@ -2314,39 +2315,39 @@ export enum OverlayMethodFlags {
 
 export enum TeamPayoutAccountStatus {
     /** Team has not submitted a payout account application */
-    UNSUBMITTED     = 1,
+    UNSUBMITTED = 1,
     /** Team's payout account application is pending approval */
-    PENDING         = 2,
+    PENDING = 2,
     /** Team's payout account requires action to receive payouts */
     ACTION_REQUIRED = 3,
     /** Team's payout account is active and can receive payouts */
-    ACTIVE          = 4,
+    ACTIVE = 4,
     /** Team's payout account is blocked and cannot receive payouts */
-    BLOCKED         = 5,
+    BLOCKED = 5,
     /** Team's payout account is suspended and cannot receive payouts */
-    SUSPENDED       = 6,
+    SUSPENDED = 6,
 }
 
 export enum TeamPayoutGateway {
     /** Stripe Top-Up */
-    STRIPE_TOPUP   = 1,
+    STRIPE_TOPUP = 1,
     /** Tipalti */
-    TIPALTI        = 2,
+    TIPALTI = 2,
     /** Stripe */
     STRIPE_PRIMARY = 3,
 }
 
 export enum ApplicationType {
     /** A game integrating with Discord through the legacy GameSDK or sold on the defunct game store */
-    DEPRECATED_GAME      = 1,
+    DEPRECATED_GAME = 1,
     /** @deprecated A music service integrating with Discord */
-    MUSIC                = 2,
+    MUSIC = 2,
     /** A limited application used for ticketed event SKUs */
-    TICKETED_EVENTS      = 3,
+    TICKETED_EVENTS = 3,
     /** A limited application used for creator monetization (e.g. role subscription) SKUs */
     CREATOR_MONETIZATION = 4,
     /** A game integrating with Discord */
-    GAME                 = 5,
+    GAME = 5,
 }
 
 export enum LobbyMemberFlags {

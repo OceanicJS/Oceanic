@@ -30,14 +30,12 @@ export interface RawInvite {
     uses?: number;
 }
 
-
 export interface RawInviteStageInstance {
     members: Array<Types.Guilds.RawMember>;
     participant_count: number;
     speaker_count: number;
     topic: string;
 }
-
 
 export interface InviteStageInstance {
     members: Array<Member>;
@@ -86,7 +84,6 @@ export interface InviteTargetUsersJobStatusResponse {
     status: InviteTargetUsersJobStatus;
     totalUsers: number;
 }
-
 
 export interface GetInviteOptions {
     /** The id of the guild scheduled event to include with the invite. */

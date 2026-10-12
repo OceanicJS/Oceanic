@@ -1,13 +1,15 @@
 /** @module GuildScheduledEvent */
+import { UncachedError } from "../util/Errors";
+import * as Routes from "../util/Routes";
+
 import Base from "./Base";
-import type User from "./User";
+
 import type Guild from "./Guild";
 import type StageChannel from "./StageChannel";
-import type * as Types from "../types/namespaced";
+import type User from "./User";
 import type Client from "../Client";
 import type { ImageFormat, GuildScheduledEventEntityTypes, GuildScheduledEventPrivacyLevels, GuildScheduledEventStatuses } from "../Constants";
-import * as Routes from "../util/Routes";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild scheduled event. */
 export default class GuildScheduledEvent extends Base {
@@ -64,6 +66,33 @@ export default class GuildScheduledEvent extends Base {
         this.update(data);
     }
 
+    /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
+    get channel(): StageChannel | null | undefined {
+        if (this.channelID !== null) {
+            return this._cachedChannel ??= this.client.getChannel<StageChannel>(this.channelID);
+        }
+
+        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+    }
+
+    /** The guild this scheduled event belongs to. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
+        if (!this._cachedGuild) {
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client.shards.connected) {
+                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
+        }
+
+        return this._cachedGuild;
+    }
+
     protected override update(data: Partial<Types.ScheduledEvents.RawScheduledEvent>): void {
         if (data.channel_id !== undefined) {
             this.channelID = data.channel_id;
@@ -105,33 +134,6 @@ export default class GuildScheduledEvent extends Base {
             this.userCount = data.user_count;
         }
     }
-
-    /** The channel in which the event will be hosted. `null` if entityType is `EXTERNAL` */
-    get channel(): StageChannel | null | undefined {
-        if (this.channelID !== null) {
-            return this._cachedChannel ??= this.client.getChannel<StageChannel>(this.channelID);
-        }
-
-        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
-    }
-    /** The guild this scheduled event belongs to. This will throw an error if the guild is not cached. */
-    get guild(): Guild {
-        this._cachedGuild ??= this.client.guilds.get(this.guildID);
-        if (!this._cachedGuild) {
-            if (this.client.options.restMode) {
-                throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
-            }
-
-            if (!this.client.shards.connected) {
-                throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
-            }
-
-            throw new UncachedError(`${this.constructor.name}#guild is not present.`);
-        }
-
-        return this._cachedGuild;
-    }
-
 
     /**
      * Create an exception to the recurrence rule for this scheduled event.
@@ -216,21 +218,21 @@ export default class GuildScheduledEvent extends Base {
     override toJSON(): Types.JSON.JSONScheduledEvent {
         return {
             ...super.toJSON(),
-            channelID:          this.channelID,
-            creator:            this.creator?.toJSON(),
-            description:        this.description,
-            entityID:           this.entityID,
-            entityMetadata:     this.entityMetadata,
-            entityType:         this.entityType,
-            exceptions:         this.exceptions,
-            guildID:            this.guildID,
-            image:              this.image,
-            name:               this.name,
-            privacyLevel:       this.privacyLevel,
-            scheduledEndTime:   this.scheduledEndTime?.getTime() ?? null,
+            channelID: this.channelID,
+            creator: this.creator?.toJSON(),
+            description: this.description,
+            entityID: this.entityID,
+            entityMetadata: this.entityMetadata,
+            entityType: this.entityType,
+            exceptions: this.exceptions,
+            guildID: this.guildID,
+            image: this.image,
+            name: this.name,
+            privacyLevel: this.privacyLevel,
+            scheduledEndTime: this.scheduledEndTime?.getTime() ?? null,
             scheduledStartTime: this.scheduledStartTime.getTime(),
-            status:             this.status,
-            userCount:          this.userCount
+            status: this.status,
+            userCount: this.userCount,
         };
     }
 }

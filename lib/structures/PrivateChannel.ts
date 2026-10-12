@@ -1,11 +1,13 @@
 /** @module PrivateChannel */
-import Channel from "./Channel";
-import type User from "./User";
-import Message from "./Message";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes } from "../Constants";
-import type Client from "../Client";
 import TypedCollection from "../util/TypedCollection";
+
+import Channel from "./Channel";
+import Message from "./Message";
+
+import type User from "./User";
+import type Client from "../Client";
+import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a direct message with a user. */
 export default class PrivateChannel extends Channel {
@@ -53,7 +55,7 @@ export default class PrivateChannel extends Channel {
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.createMessage<this>(this.id, options);
@@ -103,7 +105,7 @@ export default class PrivateChannel extends Channel {
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.editMessage<this>(this.id, messageID, options);
@@ -178,11 +180,11 @@ export default class PrivateChannel extends Channel {
     override toJSON(): Types.JSON.JSONPrivateChannel {
         return {
             ...super.toJSON(),
-            lastMessageID:    this.lastMessageID,
+            lastMessageID: this.lastMessageID,
             lastPinTimestamp: this.lastPinTimestamp,
-            messages:         this.messages.map(message => message.id),
-            recipient:        this.recipient?.toJSON(),
-            type:             this.type
+            messages: this.messages.map(message => message.id),
+            recipient: this.recipient.toJSON(),
+            type: this.type,
         };
     }
 

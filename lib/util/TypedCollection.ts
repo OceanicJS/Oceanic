@@ -1,8 +1,10 @@
 /** @module TypedCollection */
-import Collection from "./Collection";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import Base from "../structures/Base";
+
+import Collection from "./Collection";
+
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ExtraOptions<M extends Record<string, any>, C extends Base, E extends Array<unknown> = []> {
@@ -25,7 +27,7 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
         this.limit = limit;
         this.extraOptions = {
             construct: extraOptions?.construct ?? ((data, ...extra): C => new baseObject(data, client, ...extra)),
-            delete:    extraOptions?.delete ?? ((): void => {})
+            delete: extraOptions?.delete ?? ((): void => {}),
         };
     }
 
@@ -46,7 +48,6 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
                     }
                     this.delete(val);
                 }
-
             }
 
             return value;
@@ -70,7 +71,7 @@ export default class TypedCollection<M extends Record<string, any>, C extends Ba
     }
 
     /** @hidden */
-    update(value: C | Partial<M> & { id?: string; }, ...extra: E): C {
+    update(value: C | Partial<M> & { id?: string }, ...extra: E): C {
         if (value instanceof this._baseObject) {
             if ("update" in value) {
                 value["update"].call(value, value);

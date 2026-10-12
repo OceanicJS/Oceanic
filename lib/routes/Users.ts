@@ -1,10 +1,11 @@
 /** @module REST/Users */
-import type Channels from "./Channels";
-import type * as Types from "../types/namespaced";
-import * as Routes from "../util/Routes";
 import ExtendedUser from "../structures/ExtendedUser";
+import * as Routes from "../util/Routes";
+
+import type Channels from "./Channels";
 import type RESTManager from "../rest/RESTManager";
 import type User from "../structures/User";
+import type * as Types from "../types/namespaced";
 
 /** Various methods for interacting with users. Located at {@link Client#rest | Client#rest}{@link RESTManager#users | .users}. */
 export default class Users {
@@ -39,12 +40,12 @@ export default class Users {
 
         return this._manager.authRequest<Types.Users.RawOAuthUser>({
             method: "PATCH",
-            path:   Routes.USER("@me"),
-            json:   {
+            path: Routes.USER("@me"),
+            json: {
                 avatar,
                 banner,
-                username: options.username
-            }
+                username: options.username,
+            },
         }).then(data => new ExtendedUser(data, this._manager.client));
     }
 
@@ -57,7 +58,7 @@ export default class Users {
     async get(userID: string): Promise<User> {
         return this._manager.authRequest<Types.Users.RawUser>({
             method: "GET",
-            path:   Routes.USER(userID)
+            path: Routes.USER(userID),
         }).then(data => this._manager.client.users.update(data));
     }
 
@@ -69,7 +70,7 @@ export default class Users {
     async leaveGuild(guildID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.OAUTH_GUILD(guildID)
+            path: Routes.OAUTH_GUILD(guildID),
         });
     }
 }

@@ -1,12 +1,14 @@
 /** @module ApplicationCommand */
-import Base from "./Base";
-import Permission from "./Permission";
-import type Guild from "./Guild";
-import type ClientApplication from "./ClientApplication";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import { ApplicationCommandTypes, type InteractionContextTypes, type ApplicationIntegrationTypes, type EntryPointCommandHandlerTypes } from "../Constants";
 import { UncachedError } from "../util/Errors";
+
+import Base from "./Base";
+import Permission from "./Permission";
+
+import type ClientApplication from "./ClientApplication";
+import type Guild from "./Guild";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents an application command. */
 export default class ApplicationCommand<T extends ApplicationCommandTypes = ApplicationCommandTypes> extends Base {
@@ -65,6 +67,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
         this.nameLocalized = data.name_localized;
         this.nsfw = data.nsfw;
         this.options = data.options?.map(o => client.util.optionToParsed(o));
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.type = (data.type ?? ApplicationCommandTypes.CHAT_INPUT) as T;
         this.version = data.version;
     }
@@ -124,7 +127,7 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
      * @param sub The subcommand group and/or subcommand to include (["subcommand"] or ["subcommand-group", "subcommand"]).
      */
     mention(sub?: [subcommand: string] | [subcommandGroup: string, subcommand: string]): string {
-        let text = `${this.name}`;
+        let text = this.name;
         if (sub?.length) {
             text += ` ${sub.slice(0, 2).join(" ")}`;
         }
@@ -134,21 +137,21 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     override toJSON(): Types.JSON.JSONApplicationCommand {
         return {
             ...super.toJSON(),
-            applicationID:            this.applicationID,
-            contexts:                 this.contexts,
+            applicationID: this.applicationID,
+            contexts: this.contexts,
             defaultMemberPermissions: this.defaultMemberPermissions?.toJSON(),
-            description:              this.description,
+            description: this.description,
             descriptionLocalizations: this.descriptionLocalizations,
-            dmPermission:             this.dmPermission,
-            guildID:                  this.guildID ?? undefined,
-            handler:                  this.handler,
-            integrationTypes:         this.integrationTypes,
-            name:                     this.name,
-            nameLocalizations:        this.nameLocalizations,
-            nsfw:                     this.nsfw,
-            options:                  this.options,
-            type:                     this.type,
-            version:                  this.version
+            dmPermission: this.dmPermission,
+            guildID: this.guildID ?? undefined,
+            handler: this.handler,
+            integrationTypes: this.integrationTypes,
+            name: this.name,
+            nameLocalizations: this.nameLocalizations,
+            nsfw: this.nsfw,
+            options: this.options,
+            type: this.type,
+            version: this.version,
         };
     }
 }

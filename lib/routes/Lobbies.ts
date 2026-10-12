@@ -1,19 +1,20 @@
 /** @module REST/Channels */
-import * as Routes from "../util/Routes";
-import QueryBuilder from "../util/QueryBuilder";
-import type RESTManager from "../rest/RESTManager";
-import type * as Types from "../types/namespaced";
-import type { RawLobby, CreateLobbyOptions, AddLobbyMemberOptions, EditLobbyOptions } from "../types/lobbies";
 import Lobby from "../structures/Lobby";
 import LobbyMember from "../structures/LobbyMember";
 import LobbyMessage from "../structures/LobbyMessage";
+import QueryBuilder from "../util/QueryBuilder";
+import * as Routes from "../util/Routes";
+
+import type RESTManager from "../rest/RESTManager";
+import type { RawLobby, CreateLobbyOptions, AddLobbyMemberOptions, EditLobbyOptions } from "../types/lobbies";
+import type * as Types from "../types/namespaced";
 
 function formatLobbyMember(member: Types.Lobbies.LobbyMemberOptions): Types.Shared.KeysExist<Types.Lobbies.RawLobbyMember> {
     return {
         additional_name: member.additionalName,
-        flags:           member.flags,
-        id:              member.id,
-        metadata:        member.metadata
+        flags: member.flags,
+        id: member.id,
+        metadata: member.metadata,
     };
 }
 
@@ -41,12 +42,12 @@ export default class Lobbies {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Lobbies.RawLobbyMember>({
             method: "PUT",
-            path:   Routes.LOBBY_MEMBER(lobbyID, userID),
-            json:   options ? {
+            path: Routes.LOBBY_MEMBER(lobbyID, userID),
+            json: options ? {
                 additional_name: options.additionalName,
-                flags:           options.flags,
-                metadata:        options.metadata
-            } : undefined
+                flags: options.flags,
+                metadata: options.metadata,
+            } : undefined,
         }).then(data => new LobbyMember(data, this._manager.client, lobbyID));
     }
 
@@ -59,11 +60,11 @@ export default class Lobbies {
         members = this._manager.client.util._freeze(members);
         return this._manager.authRequest<Array<Types.Lobbies.RawLobbyMember>>({
             method: "POST",
-            path:   Routes.LOBBY_MEMBERS_BULK(lobbyID),
-            json:   members.map(member => ({
+            path: Routes.LOBBY_MEMBERS_BULK(lobbyID),
+            json: members.map(member => ({
                 ...formatLobbyMember(member),
-                remove_member: member.removeMember
-            }))
+                remove_member: member.removeMember,
+            })),
         }).then(data => data.map(member => new LobbyMember(member, this._manager.client, lobbyID)));
     }
 
@@ -76,13 +77,13 @@ export default class Lobbies {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawLobby>({
             method: "POST",
-            path:   Routes.LOBBIES,
-            json:   {
-                flags:                options?.flags,
-                metadata:             options?.metadata,
-                members:              options?.members?.map(formatLobbyMember),
-                idle_timeout_seconds: options?.idleTimeoutSeconds
-            }
+            path: Routes.LOBBIES,
+            json: {
+                flags: options?.flags,
+                metadata: options?.metadata,
+                members: options?.members?.map(formatLobbyMember),
+                idle_timeout_seconds: options?.idleTimeoutSeconds,
+            },
         }).then(data => new Lobby(data, this._manager.client));
     }
 
@@ -94,8 +95,8 @@ export default class Lobbies {
     async createCurrentUserInvite(lobbyID: string, accessToken?: string): Promise<Types.Lobbies.LobbyInvite> {
         return this._manager.request<Types.Lobbies.RawLobbyInvite>({
             method: "POST",
-            path:   Routes.LOBBY_MEMBER_INVITES(lobbyID, "@me"),
-            auth:   this._getBearerAuth(accessToken)
+            path: Routes.LOBBY_MEMBER_INVITES(lobbyID, "@me"),
+            auth: this._getBearerAuth(accessToken),
         });
     }
 
@@ -108,8 +109,8 @@ export default class Lobbies {
     async createInvite(lobbyID: string, userID: string, accessToken?: string): Promise<Types.Lobbies.LobbyInvite> {
         return this._manager.request<Types.Lobbies.RawLobbyInvite>({
             method: "POST",
-            path:   Routes.LOBBY_MEMBER_INVITES(lobbyID, userID),
-            auth:   this._getBearerAuth(accessToken)
+            path: Routes.LOBBY_MEMBER_INVITES(lobbyID, userID),
+            auth: this._getBearerAuth(accessToken),
         });
     }
 
@@ -123,13 +124,13 @@ export default class Lobbies {
         options = this._manager.client.util._freeze(options);
         return this._manager.request<Types.Lobbies.RawLobbyMessage>({
             method: "POST",
-            path:   Routes.LOBBY_MESSAGES(lobbyID),
-            auth:   this._getBearerAuth(accessToken),
-            json:   {
-                content:  options.content,
-                flags:    options.flags,
-                metadata: options.metadata
-            }
+            path: Routes.LOBBY_MESSAGES(lobbyID),
+            auth: this._getBearerAuth(accessToken),
+            json: {
+                content: options.content,
+                flags: options.flags,
+                metadata: options.metadata,
+            },
         }).then(data => new LobbyMessage(data, this._manager.client));
     }
 
@@ -140,7 +141,7 @@ export default class Lobbies {
     async delete(lobbyID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.LOBBY(lobbyID)
+            path: Routes.LOBBY(lobbyID),
         });
     }
 
@@ -153,13 +154,13 @@ export default class Lobbies {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<RawLobby>({
             method: "PATCH",
-            path:   Routes.LOBBY(lobbyID),
-            json:   {
-                flags:                options?.flags,
-                metadata:             options?.metadata,
-                members:              options?.members?.map(formatLobbyMember),
-                idle_timeout_seconds: options?.idleTimeoutSeconds
-            }
+            path: Routes.LOBBY(lobbyID),
+            json: {
+                flags: options.flags,
+                metadata: options.metadata,
+                members: options.members?.map(formatLobbyMember),
+                idle_timeout_seconds: options.idleTimeoutSeconds,
+            },
         }).then(data => new Lobby(data, this._manager.client));
     }
 
@@ -170,7 +171,7 @@ export default class Lobbies {
     async get(lobbyID: string): Promise<Lobby> {
         return this._manager.authRequest<RawLobby>({
             method: "GET",
-            path:   Routes.LOBBY(lobbyID)
+            path: Routes.LOBBY(lobbyID),
         }).then(data => new Lobby(data, this._manager.client));
     }
 
@@ -186,9 +187,9 @@ export default class Lobbies {
         query.setIfPresent("limit", options?.limit);
         return this._manager.request<Array<Types.Lobbies.RawLobbyMessage>>({
             method: "GET",
-            path:   Routes.LOBBY_MESSAGES(lobbyID),
-            auth:   this._getBearerAuth(accessToken),
-            query
+            path: Routes.LOBBY_MESSAGES(lobbyID),
+            auth: this._getBearerAuth(accessToken),
+            query,
         }).then(data => data.map(message => new LobbyMessage(message, this._manager.client)));
     }
 
@@ -201,14 +202,14 @@ export default class Lobbies {
         options = this._manager.client.util._freeze(options);
         const requestOptions = {
             method: "PUT",
-            path:   Routes.LOBBIES,
-            json:   {
-                flags:                options.flags,
+            path: Routes.LOBBIES,
+            json: {
+                flags: options.flags,
                 idle_timeout_seconds: options.idleTimeoutSeconds,
-                lobby_metadata:       options.lobbyMetadata,
-                member_metadata:      options.memberMetadata,
-                secret:               options.secret
-            }
+                lobby_metadata: options.lobbyMetadata,
+                member_metadata: options.memberMetadata,
+                secret: options.secret,
+            },
         } as const;
         if (options.accessToken === undefined) {
             return this._manager.authRequest<RawLobby>(requestOptions).then(data => new Lobby(data, this._manager.client));
@@ -216,7 +217,7 @@ export default class Lobbies {
 
         return this._manager.request<RawLobby>({
             ...requestOptions,
-            auth: this._getBearerAuth(options.accessToken)
+            auth: this._getBearerAuth(options.accessToken),
         }).then(data => new Lobby(data, this._manager.client));
     }
 
@@ -228,8 +229,8 @@ export default class Lobbies {
     async leave(lobbyID: string, accessToken?: string): Promise<void> {
         await this._manager.request<null>({
             method: "DELETE",
-            path:   Routes.LOBBY_MEMBER(lobbyID, "@me"),
-            auth:   this._getBearerAuth(accessToken)
+            path: Routes.LOBBY_MEMBER(lobbyID, "@me"),
+            auth: this._getBearerAuth(accessToken),
         });
     }
 
@@ -242,9 +243,9 @@ export default class Lobbies {
     async linkChannel(lobbyID: string, channelID: string | undefined, accessToken?: string): Promise<Lobby> {
         return this._manager.request<RawLobby>({
             method: "PATCH",
-            path:   Routes.LOBBY_CHANNEL_LINKING(lobbyID),
-            auth:   this._getBearerAuth(accessToken),
-            json:   { channel_id: channelID }
+            path: Routes.LOBBY_CHANNEL_LINKING(lobbyID),
+            auth: this._getBearerAuth(accessToken),
+            json: { channel_id: channelID },
         }).then(data => new Lobby(data, this._manager.client));
     }
 
@@ -256,7 +257,7 @@ export default class Lobbies {
     async removeMember(lobbyID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.LOBBY_MEMBER(lobbyID, userID)
+            path: Routes.LOBBY_MEMBER(lobbyID, userID),
         });
     }
 
@@ -278,8 +279,8 @@ export default class Lobbies {
     async updateMessageModerationMetadata(lobbyID: string, messageID: string, metadata: Record<string, string>): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.LOBBY_MESSAGE_MODERATION_METADATA(lobbyID, messageID),
-            json:   metadata
+            path: Routes.LOBBY_MESSAGE_MODERATION_METADATA(lobbyID, messageID),
+            json: metadata,
         });
     }
 }

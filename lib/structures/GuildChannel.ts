@@ -1,14 +1,16 @@
 /** @module GuildChannel */
-import Channel from "./Channel";
-import type Guild from "./Guild";
-import type CategoryChannel from "./CategoryChannel";
-import type TextChannel from "./TextChannel";
-import type AnnouncementChannel from "./AnnouncementChannel";
-import type ForumChannel from "./ForumChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypeMap } from "../Constants";
-import type Client from "../Client";
 import { UncachedError } from "../util/Errors";
+
+import Channel from "./Channel";
+
+import type AnnouncementChannel from "./AnnouncementChannel";
+import type CategoryChannel from "./CategoryChannel";
+import type ForumChannel from "./ForumChannel";
+import type Guild from "./Guild";
+import type TextChannel from "./TextChannel";
+import type Client from "../Client";
+import type { ChannelTypeMap } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
@@ -26,19 +28,6 @@ export default class GuildChannel extends Channel {
         this.guildID = data.guild_id;
         this.name = data.name;
         this.parentID = data.parent_id;
-    }
-
-    protected override update(data: Partial<Types.Channels.RawGuildChannel>): void {
-        super.update(data);
-        if (data.guild_id !== undefined) {
-            this.guildID = data.guild_id;
-        }
-        if (data.name !== undefined) {
-            this.name = data.name;
-        }
-        if (data.parent_id !== undefined) {
-            this.parentID = data.parent_id;
-        }
     }
 
     /** The guild associated with this channel. This will throw an error if the guild is not cached. */
@@ -82,6 +71,19 @@ export default class GuildChannel extends Channel {
         return undefined;
     }
 
+    protected override update(data: Partial<Types.Channels.RawGuildChannel>): void {
+        super.update(data);
+        if (data.guild_id !== undefined) {
+            this.guildID = data.guild_id;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.parent_id !== undefined) {
+            this.parentID = data.parent_id;
+        }
+    }
+
     /**
      * Edit this channel.
      * @param options The options for editing the channel.
@@ -94,10 +96,10 @@ export default class GuildChannel extends Channel {
     override toJSON(): Types.JSON.JSONGuildChannel {
         return {
             ...super.toJSON(),
-            guildID:  this.guildID,
-            name:     this.name,
+            guildID: this.guildID,
+            name: this.name,
             parentID: this.parentID,
-            type:     this.type
+            type: this.type,
         };
     }
 }

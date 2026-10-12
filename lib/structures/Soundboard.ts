@@ -1,8 +1,9 @@
 /** @module Soundboard */
 import Base from "./Base";
 import User from "./User";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a soundboard. */
 export default class Soundboard extends Base {
@@ -63,13 +64,13 @@ export default class Soundboard extends Base {
         return {
             ...super.toJSON(),
             available: this.available,
-            emojiID:   this.emojiID,
+            emojiID: this.emojiID,
             emojiName: this.emojiName,
-            guildID:   this.guildID,
-            name:      this.name,
-            soundID:   this.soundID,
-            user:      this.user?.toJSON(),
-            volume:    this.volume
+            guildID: this.guildID,
+            name: this.name,
+            soundID: this.soundID,
+            user: this.user?.toJSON(),
+            volume: this.volume,
         };
     }
 }

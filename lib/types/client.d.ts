@@ -152,17 +152,17 @@ export interface CollectionLimitsOptions {
      */
     groupChannels?: number;
     /**
-     * The maximum number of threads to cache per guild. Setting this too low might cause channels to have missing threads, as they all pull from the guild.
-     * @dictionaryKey guild id
-     * @defaultValue Infinity
-     */
-    guildThreads?: number | Record<string, number>;
-    /**
      * The maximum number of guilds to cache.
      * @defaultValue Infinity
      * @note Changing this WILL silently break a lot of things which rely on caching.
      */
     guilds?: number;
+    /**
+     * The maximum number of threads to cache per guild. Setting this too low might cause channels to have missing threads, as they all pull from the guild.
+     * @dictionaryKey guild id
+     * @defaultValue Infinity
+     */
+    guildThreads?: number | Record<string, number>;
     /**
      * The maximum number of guild integrations to cache.
      * @dictionaryKey guild id

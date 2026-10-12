@@ -1,7 +1,10 @@
-import Compressor from "./base";
-import type Shard from "../Shard";
-import { GatewayError } from "../../util/Errors";
 import ZlibSync from "zlib-sync";
+
+import { GatewayError } from "../../util/Errors";
+
+import Compressor from "./base";
+
+import type Shard from "../Shard";
 
 export default class ZlibSyncCompressor extends Compressor {
     _sharedZLib: ZlibSync.Inflate;

@@ -1,16 +1,16 @@
 /** @module Types/AuditLog */
 import type * as Types from "./namespaced";
 import type { AuditLogActionTypes, OverwriteTypes } from "../Constants";
-import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
+import type ApplicationCommand from "../structures/ApplicationCommand";
+import type AuditLogEntry from "../structures/AuditLogEntry";
+import type AutoModerationRule from "../structures/AutoModerationRule";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
+import type Integration from "../structures/Integration";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
+import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
-import type Integration from "../structures/Integration";
-import type AutoModerationRule from "../structures/AutoModerationRule";
-import type AuditLogEntry from "../structures/AuditLogEntry";
-import type ApplicationCommand from "../structures/ApplicationCommand";
 
 export interface RawAuditLog {
     application_commands: Array<Types.Applications.RawApplicationCommand>;
@@ -101,7 +101,7 @@ export interface StandardAuditLogChange {
 
 export interface RoleAuditLogChange {
     key: "$add" | "$remove";
-    new_value: Array<{ id: string; name: string; }>;
+    new_value: Array<{ id: string; name: string }>;
 }
 
 export interface GetAuditLogOptions {

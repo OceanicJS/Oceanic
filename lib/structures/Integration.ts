@@ -1,13 +1,15 @@
 /** @module Integration */
+import { UncachedError } from "../util/Errors";
+
 import Base from "./Base";
 import PartialApplication from "./PartialApplication";
-import type User from "./User";
+
 import type Guild from "./Guild";
 import type Role from "./Role";
-import type * as Types from "../types/namespaced";
-import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
+import type User from "./User";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type { IntegrationExpireBehaviors, IntegrationType } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild integration. */
 export default class Integration extends Base {
@@ -17,10 +19,10 @@ export default class Integration extends Base {
     account: Types.Guilds.IntegrationAccount;
     /** The application associated with this integration. */
     application: PartialApplication | null;
-    /** If emoticons should be synced for this integration. */
-    enableEmoticons: boolean;
     /** If this integration is enabled. */
     enabled: boolean;
+    /** If emoticons should be synced for this integration. */
+    enableEmoticons: boolean;
     /** The [behavior](https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors) of expiring subscribers. */
     expireBehavior?: IntegrationExpireBehaviors;
     /** The grace period (in days) before expiring subscribers. */
@@ -51,13 +53,48 @@ export default class Integration extends Base {
         this.application = null;
         this.enableEmoticons = !!data.enable_emoticons;
         this.enabled = !!data.enabled;
-        this.guildID = guildID === undefined ? null : guildID;
+        this.guildID = guildID ?? null;
         this.name = data.name;
         this.revoked = !!data.revoked;
-        this.roleID = data.role_id === undefined ? null : data.role_id;
+        this.roleID = data.role_id ?? null;
         this.syncing = !!data.syncing;
         this.type = data.type;
         this.update(data);
+    }
+
+    /** The guild this integration belongs to, if applicable. This will throw an error if the guild is not cached. */
+    get guild(): Guild | null {
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            this._cachedGuild ??= this.client.guilds.get(this.guildID);
+            if (!this._cachedGuild) {
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client.shards.connected) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
+            }
+
+            return this._cachedGuild;
+        }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
+    }
+
+    /** The role this integration uses for subscribers, if any. */
+    get role(): Role | null | undefined {
+        if (this.roleID !== null && this._cachedRole !== null) {
+            try {
+                return this._cachedRole ?? (this._cachedRole = this.guild?.roles.get(this.roleID));
+            } catch {
+                return (this._cachedRole = undefined);
+            }
+        }
+
+        return this._cachedRole === null ? this._cachedRole : (this._cachedRole = null);
     }
 
     protected override update(data: Partial<Types.Guilds.RawIntegration>): void {
@@ -108,59 +145,24 @@ export default class Integration extends Base {
         }
     }
 
-    /** The guild this integration belongs to, if applicable. This will throw an error if the guild is not cached. */
-    get guild(): Guild | null {
-        if (this.guildID !== null && this._cachedGuild !== null) {
-            this._cachedGuild ??= this.client.guilds.get(this.guildID);
-            if (!this._cachedGuild) {
-                if (this.client.options.restMode) {
-                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
-                }
-
-                if (!this.client.shards.connected) {
-                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
-                }
-
-                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
-            }
-
-            return this._cachedGuild;
-        }
-
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
-    }
-
-    /** The role this integration uses for subscribers, if any. */
-    get role(): Role | null | undefined {
-        if (this.roleID !== null && this._cachedRole !== null) {
-            try {
-                return this._cachedRole ?? (this._cachedRole = this.guild?.roles.get(this.roleID));
-            } catch {
-                return (this._cachedRole = undefined);
-            }
-        }
-
-        return this._cachedRole === null ? this._cachedRole : (this._cachedRole = null);
-    }
-
     override toJSON(): Types.JSON.JSONIntegration {
         return {
             ...super.toJSON(),
-            account:           this.account,
-            application:       this.application?.toJSON(),
-            enableEmoticons:   this.enableEmoticons,
-            enabled:           this.enabled,
-            expireBehavior:    this.expireBehavior,
+            account: this.account,
+            application: this.application?.toJSON(),
+            enableEmoticons: this.enableEmoticons,
+            enabled: this.enabled,
+            expireBehavior: this.expireBehavior,
             expireGracePeriod: this.expireGracePeriod,
-            name:              this.name,
-            revoked:           this.revoked,
-            roleID:            this.roleID,
-            scopes:            this.scopes,
-            subscriberCount:   this.subscriberCount,
-            syncedAt:          this.syncedAt?.getTime(),
-            syncing:           this.syncing,
-            type:              this.type,
-            user:              this.user?.toJSON()
+            name: this.name,
+            revoked: this.revoked,
+            roleID: this.roleID,
+            scopes: this.scopes,
+            subscriberCount: this.subscriberCount,
+            syncedAt: this.syncedAt?.getTime(),
+            syncing: this.syncing,
+            type: this.type,
+            user: this.user?.toJSON(),
         };
     }
 }

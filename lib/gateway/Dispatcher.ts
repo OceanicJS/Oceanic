@@ -1,7 +1,8 @@
 /** @module Dispatcher */
+import * as DefaultDispatchEvents from "./events";
+
 import type Shard from "./Shard";
 import type ShardManager from "./ShardManager";
-import * as DefaultDispatchEvents from "./events";
 import type * as Types from "../types/namespaced";
 
 export type DispatchEvent = Types.GatewayRaw.AnyDispatchPacket["t"];
@@ -11,22 +12,22 @@ export type DispatchEventMap = {
 export type DispatchFunction<K extends DispatchEvent = DispatchEvent> = (data: DispatchEventMap[K], shard: Shard) => void;
 export default class Dispatcher {
     private manager!: ShardManager;
-    events: Map<DispatchEvent, Array<DispatchFunction>> = new Map();
+    events = new Map<DispatchEvent, Array<DispatchFunction>>();
     constructor(manager: ShardManager) {
         Object.defineProperty(this, "manager", {
-            value:        manager,
-            writable:     false,
-            enumerable:   false,
-            configurable: false
+            value: manager,
+            writable: false,
+            enumerable: false,
+            configurable: false,
         });
 
         const options = this.manager.options.dispatcher;
         const type = options.blacklist !== null ? "blacklist" : (options.whitelist !== null ? "whitelist" : "none");
 
         for (const [event, fn] of Object.entries(DefaultDispatchEvents) as Array<[DispatchEvent, DispatchFunction]>) {
-            if (type === "none" ||
-                (type === "whitelist" && options.whitelist?.includes(event)) ||
-                (type === "blacklist" && !options.blacklist?.includes(event))) {
+            if (type === "none"
+                || (type === "whitelist" && options.whitelist?.includes(event))
+                || (type === "blacklist" && !options.blacklist?.includes(event))) {
                 this.register(event, fn);
             }
         }

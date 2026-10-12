@@ -37,7 +37,7 @@ import type {
     TeamPayoutGateway,
     TeamMemberRoleType,
     ApplicationType,
-    FilterFileTypes
+    FilterFileTypes,
 } from "../Constants";
 import type ApplicationCommand from "../structures/ApplicationCommand";
 import type ClientApplication from "../structures/ClientApplication";
@@ -300,7 +300,7 @@ export interface RawApplicationCommandOption {
 export interface CombinedApplicationCommandOption {
     autocomplete?: boolean;
     channelTypes?: Array<Types.Channels.ImplementedChannels>;
-    choices?: Array<ApplicationCommandOptionsChoice<ApplicationCommandOptionsTypesWithChoices>>;
+    choices?: Array<ApplicationCommandOptionsChoice>;
     description: string;
     descriptionLocalizations?: LocaleMap | null;
     descriptionLocalized?: string;
@@ -332,13 +332,12 @@ export type UserApplicationCommand = ApplicationCommand<ApplicationCommandTypes.
 export type MessageApplicationCommand = ApplicationCommand<ApplicationCommandTypes.MESSAGE>;
 export type PrimaryEntryPointApplicationCommand = ApplicationCommand<ApplicationCommandTypes.PRIMARY_ENTRY_POINT>;
 
-export type ApplicationCommandOptionConversion<T extends EditApplicationCommandOptions | CreateApplicationCommandOptions> =
-    T extends EditChatInputApplicationCommandOptions | CreateChatInputApplicationCommandOptions ? ChatInputApplicationCommand :
-        T extends EditUserApplicationCommandOptions | CreateUserApplicationCommandOptions ? UserApplicationCommand :
-            T extends EditMessageApplicationCommandOptions | CreateMessageApplicationCommandOptions ? MessageApplicationCommand :
-                T extends EditPrimaryEntryPointApplicationCommandOptions | CreatePrimaryEntryPointApplicationCommandOptions ? PrimaryEntryPointApplicationCommand :
-                    never;
-
+export type ApplicationCommandOptionConversion<T extends EditApplicationCommandOptions | CreateApplicationCommandOptions>
+    = T extends EditChatInputApplicationCommandOptions | CreateChatInputApplicationCommandOptions ? ChatInputApplicationCommand
+        : T extends EditUserApplicationCommandOptions | CreateUserApplicationCommandOptions ? UserApplicationCommand
+            : T extends EditMessageApplicationCommandOptions | CreateMessageApplicationCommandOptions ? MessageApplicationCommand
+                : T extends EditPrimaryEntryPointApplicationCommandOptions | CreatePrimaryEntryPointApplicationCommandOptions ? PrimaryEntryPointApplicationCommand
+                    : never;
 
 export interface ApplicationCommandOptionBase<T extends ApplicationCommandOptionTypes = ApplicationCommandOptionTypes> {
     description: string;
@@ -364,9 +363,9 @@ interface ApplicationCommandOptionsChoice<T extends ApplicationCommandOptionsTyp
     name: string;
     nameLocalizations?: LocaleMap;
     value:
-    T extends ApplicationCommandOptionTypes.STRING ? string :
-        T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER ? number :
-            unknown;
+    T extends ApplicationCommandOptionTypes.STRING ? string
+        : T extends ApplicationCommandOptionTypes.INTEGER | ApplicationCommandOptionTypes.NUMBER ? number
+            : unknown;
 }
 
 interface ApplicationCommandOptionsChannelTypes {
@@ -501,12 +500,11 @@ export interface EditApplicationCommandPermissionsOptions {
     permissions: Array<ApplicationCommandPermission>;
 }
 
-export type TypeToEdit<T extends ApplicationCommandTypes> =
-T extends ApplicationCommandTypes.CHAT_INPUT ? EditChatInputApplicationCommandOptions :
-    T extends ApplicationCommandTypes.USER ? EditUserApplicationCommandOptions :
-        T extends ApplicationCommandTypes.MESSAGE ? EditMessageApplicationCommandOptions :
-            never;
-
+export type TypeToEdit<T extends ApplicationCommandTypes>
+    = T extends ApplicationCommandTypes.CHAT_INPUT ? EditChatInputApplicationCommandOptions
+        : T extends ApplicationCommandTypes.USER ? EditUserApplicationCommandOptions
+            : T extends ApplicationCommandTypes.MESSAGE ? EditMessageApplicationCommandOptions
+                : never;
 
 export interface GetApplicationCommandOptions {
     /** The [locale](https://discord.com/developers/docs/reference#locales) to receive localized responses for (`descriptionLocalized`, `nameLocalized`). If no localization for the locale is present, the properties will not be present. */
@@ -515,39 +513,39 @@ export interface GetApplicationCommandOptions {
     withLocalizations?: boolean;
 }
 
-export type Locale =
-    "id" |
-    "da" |
-    "de" |
-    "en-GB" |
-    "en-US" |
-    "es-ES" |
-    "es-419" |
-    "fr" |
-    "hr" |
-    "it" |
-    "lt" |
-    "hu" |
-    "nl" |
-    "no" |
-    "pl" |
-    "pt-BR" |
-    "ro" |
-    "fi" |
-    "sv-SE" |
-    "vi" |
-    "tr" |
-    "cs" |
-    "el" |
-    "bg" |
-    "ru" |
-    "uk" |
-    "hi" |
-    "th" |
-    "zh-CN" |
-    "ja" |
-    "zh-TW" |
-    "ko";
+export type Locale
+    = "id"
+        | "da"
+        | "de"
+        | "en-GB"
+        | "en-US"
+        | "es-ES"
+        | "es-419"
+        | "fr"
+        | "hr"
+        | "it"
+        | "lt"
+        | "hu"
+        | "nl"
+        | "no"
+        | "pl"
+        | "pt-BR"
+        | "ro"
+        | "fi"
+        | "sv-SE"
+        | "vi"
+        | "tr"
+        | "cs"
+        | "el"
+        | "bg"
+        | "ru"
+        | "uk"
+        | "hi"
+        | "th"
+        | "zh-CN"
+        | "ja"
+        | "zh-TW"
+        | "ko";
 export type LocaleMap = Partial<Record<Locale, string>>;
 
 export interface CreateTestEntitlementOptions {
@@ -631,8 +629,8 @@ export interface EditApplicationOptions {
     tags?: Array<string>;
 }
 
-export interface RawApplicationEmoji extends Required<Omit<Types.Misc.Emoji, "user" | "id">>  { id: string; user?: Types.Users.RawUser; }
-export interface ApplicationEmoji extends Omit<RawApplicationEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User; }
+export interface RawApplicationEmoji extends Required<Omit<Types.Misc.Emoji, "user" | "id">> { id: string; user?: Types.Users.RawUser }
+export interface ApplicationEmoji extends Omit<RawApplicationEmoji, "user" | "id" | "require_colons"> { id: string; requireColons?: boolean; user?: User }
 
 export interface RawApplicationEmojis {
     items: Array<RawApplicationEmoji>;
@@ -682,7 +680,6 @@ export interface RawActivityInstance {
     users: Array<string>;
 }
 
-
 export interface RawActivityLocation {
     channel_id: string;
     guild_id?: string | null;
@@ -703,14 +700,13 @@ export interface ActivityInstance {
     users: Array<string>;
 }
 
-
 export interface ActivityLocation {
-    /**	ID of the Channel. */
+    /** ID of the Channel. */
     channelID: string;
     /** ID of the Guild. */
     guildID?: string | null;
     /** Unique identifier for the location. */
     id: string;
-    /**	Enum describing kind of location. `gc` = guild channel, `pc` = private channel (dm, gdm). */
+    /** Enum describing kind of location. `gc` = guild channel, `pc` = private channel (dm, gdm). */
     kind: ActivityLocationKind;
 }

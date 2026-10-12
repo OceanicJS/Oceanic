@@ -11,26 +11,26 @@ import type {
     InteractionTypes,
     MessageComponentTypes,
     ModalComponentTypes,
-    SelectMenuTypes
+    SelectMenuTypes,
 } from "../Constants";
 import type Attachment from "../structures/Attachment";
-import type Member from "../structures/Member";
-import type Message from "../structures/Message";
-import type Role from "../structures/Role";
-import type User from "../structures/User";
-import type PingInteraction from "../structures/PingInteraction";
+import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
 import type CommandInteraction from "../structures/CommandInteraction";
 import type ComponentInteraction from "../structures/ComponentInteraction";
-import type AutocompleteInteraction from "../structures/AutocompleteInteraction";
-import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
-import type InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
-import type TypedCollection from "../util/TypedCollection";
-import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
-import type SelectMenuValuesWrapper from "../util/interactions/SelectMenuValuesWrapper";
-import type Interaction from "../structures/Interaction";
 import type Guild from "../structures/Guild";
+import type Interaction from "../structures/Interaction";
+import type InteractionResolvedChannel from "../structures/InteractionResolvedChannel";
+import type Member from "../structures/Member";
+import type Message from "../structures/Message";
+import type ModalSubmitInteraction from "../structures/ModalSubmitInteraction";
 import type Permission from "../structures/Permission";
+import type PingInteraction from "../structures/PingInteraction";
+import type Role from "../structures/Role";
+import type User from "../structures/User";
+import type InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
 import type ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
+import type SelectMenuValuesWrapper from "../util/interactions/SelectMenuValuesWrapper";
+import type TypedCollection from "../util/TypedCollection";
 
 export interface InteractionContent extends Pick<Types.Webhooks.ExecuteWebhookOptions, "tts" | "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
 export interface EditInteractionContent extends Pick<Types.Webhooks.EditWebhookMessageOptions, "content" | "embeds" | "allowedMentions" | "flags" | "components" | "attachments" | "files" | "poll"> {}
@@ -48,13 +48,13 @@ export interface MessageInteractionResponse {
 
 export interface DeferredInteractionResponse {
     /** The response data. Only [flags](https://discord.com/developers/docs/resources/channel#message-object-message-flags) can be sent. */
-    data?: { flags?: number; };
+    data?: { flags?: number };
     type: InteractionResponseTypes.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE | InteractionResponseTypes.DEFERRED_UPDATE_MESSAGE;
 }
 
 export interface AutocompleteInteractionResponse {
     /** The [response data](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-autocomplete). */
-    data: { choices: Array<AutocompleteChoice>; };
+    data: { choices: Array<AutocompleteChoice> };
     type: InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT;
 }
 
@@ -71,7 +71,6 @@ export interface PremiumRequiredResponse {
 export interface LaunchActivityResponse {
     type: InteractionResponseTypes.LAUNCH_ACTIVITY;
 }
-
 
 export interface ModalData {
     /** The components of the modal. Each component needs its own row. `snake_case` keys should be converted to `camelCase`, or passed through {@link Util.rawModalComponents | Util#rawModalComponents}. */
@@ -109,10 +108,10 @@ export interface AuthorizingIntegrationOwners extends Partial<Record<`${Applicat
 export type AnyRawInteraction = RawPingInteraction | AnyRawGatewayInteraction;
 export type AnyRawGatewayInteraction = RawApplicationCommandInteraction | RawMessageComponentInteraction | RawAutocompleteInteraction | RawModalSubmitInteraction;
 export interface RawPingInteraction extends Pick<RawInteraction, "application_id" | "id" | "token" | "type" | "version"> {}
-export interface RawApplicationCommandInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawApplicationCommandInteractionData; }
-export interface RawMessageComponentInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawMessageComponentInteractionData; message: Types.Channels.RawMessage; }
-export interface RawAutocompleteInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawAutocompleteInteractionData; }
-export interface RawModalSubmitInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawModalSubmitInteractionData; message?: Types.Channels.RawMessage; }
+export interface RawApplicationCommandInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawApplicationCommandInteractionData }
+export interface RawMessageComponentInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawMessageComponentInteractionData; message: Types.Channels.RawMessage }
+export interface RawAutocompleteInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawAutocompleteInteractionData }
+export interface RawModalSubmitInteraction extends Omit<RawInteraction, "data" | "message"> { data: RawModalSubmitInteractionData; message?: Types.Channels.RawMessage }
 
 export type RawInteractionData = RawApplicationCommandInteractionData | RawMessageComponentInteractionData | RawAutocompleteInteractionData | RawModalSubmitInteractionData;
 export type InteractionData = ApplicationCommandInteractionData | MessageComponentInteractionData | AutocompleteInteractionData | ModalSubmitInteractionData;
@@ -258,7 +257,7 @@ type InteractionOptionsBooleanTypes = ApplicationCommandOptionTypes.BOOLEAN;
 
 export type InteractionOptionsString = InteractionOptionsStringValue<ApplicationCommandOptionTypes.STRING>;
 export type InteractionOptionsInteger = InteractionOptionsNumberValue<ApplicationCommandOptionTypes.INTEGER>;
-export type InteractionOptionsBoolean = InteractionOptionsBooleanValue<ApplicationCommandOptionTypes.BOOLEAN>;
+export type InteractionOptionsBoolean = InteractionOptionsBooleanValue;
 export type InteractionOptionsUser = InteractionOptionsStringValue<ApplicationCommandOptionTypes.USER>;
 export type InteractionOptionsChannel = InteractionOptionsStringValue<ApplicationCommandOptionTypes.CHANNEL>;
 export type InteractionOptionsRole = InteractionOptionsStringValue<ApplicationCommandOptionTypes.ROLE>;
@@ -268,7 +267,6 @@ export type InteractionOptionsAttachment = InteractionOptionsStringValue<Applica
 
 export type AnyInteraction = PingInteraction | AnyInteractionGateway;
 export type AnyInteractionGateway = AutocompleteInteraction | CommandInteraction | ComponentInteraction | ModalSubmitInteraction;
-
 
 export interface AutocompleteChoice {
     /** The name of the choice. */
@@ -331,7 +329,6 @@ export interface InteractionGuild {
 export type AnyGuildInteraction = GuildAutocompleteInteraction | GuildCommandInteraction | GuildComponentInteraction | GuildModalSubmitInteraction;
 export type AnyPrivateInteraction = PrivateAutocompleteInteraction | PrivateCommandInteraction | PrivateComponentInteraction | PrivateModalSubmitInteraction;
 
-
 export type SelectMenuDefaultValueTypes = "user" | "role" | "channel";
 export interface SelectMenuDefaultValue {
     id: string;
@@ -384,20 +381,20 @@ interface ModalComponentsLabel<T extends ModalSubmitComponents> {
     type: ComponentTypes.LABEL;
 }
 
-export type ToModalSubmitComponentFromRaw<T extends RawModalSubmitComponentsActionRow | RawModalSubmitComponentsLabel | RawModalSubmitComponents> =
-T extends RawModalSubmitComponentsActionRow ? ModalSubmitComponentsActionRow :
-    T extends RawModalSubmitComponentsLabel ? ModalSubmitComponentsLabel :
-        T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent :
-            T extends RawModalSubmitStringSelectComponent ? ModalSubmitStringSelectComponent :
-                T extends RawModalSubmitUserSelectComponent ? ModalSubmitUserSelectComponent :
-                    T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent :
-                        T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent :
-                            T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent :
-                                T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent :
-                                    T extends RawModalSubmitCheckboxComponent ? ModalSubmitCheckboxComponent :
-                                        T extends RawModalSubmitCheckboxGroupComponent ? ModalSubmitCheckboxGroupComponent :
-                                            T extends RawModalSubmitRadioGroupComponent ? ModalSubmitRadioGroupComponent :
-                                                never;
+export type ToModalSubmitComponentFromRaw<T extends RawModalSubmitComponentsActionRow | RawModalSubmitComponentsLabel | RawModalSubmitComponents>
+    = T extends RawModalSubmitComponentsActionRow ? ModalSubmitComponentsActionRow
+        : T extends RawModalSubmitComponentsLabel ? ModalSubmitComponentsLabel
+            : T extends RawModalSubmitTextInputComponent ? ModalSubmitTextInputComponent
+                : T extends RawModalSubmitStringSelectComponent ? ModalSubmitStringSelectComponent
+                    : T extends RawModalSubmitUserSelectComponent ? ModalSubmitUserSelectComponent
+                        : T extends RawModalSubmitRoleSelectComponent ? ModalSubmitRoleSelectComponent
+                            : T extends RawModalSubmitMentionableSelectComponent ? ModalSubmitMentionableSelectComponent
+                                : T extends RawModalSubmitChannelSelectComponent ? ModalSubmitChannelSelectComponent
+                                    : T extends RawModalSubmitFileUploadComponent ? ModalSubmitFileUploadComponent
+                                        : T extends RawModalSubmitCheckboxComponent ? ModalSubmitCheckboxComponent
+                                            : T extends RawModalSubmitCheckboxGroupComponent ? ModalSubmitCheckboxGroupComponent
+                                                : T extends RawModalSubmitRadioGroupComponent ? ModalSubmitRadioGroupComponent
+                                                    : never;
 
 /** @deprecated */
 export type RawModalSubmitComponentsActionRow = RawModalComponentsActionRow<RawModalSubmitComponents>;
@@ -439,20 +436,20 @@ export interface ModalSubmitComponentsNullableStringValue<T extends ModalCompone
     value: string | null;
 }
 
-export type ToRawFromModalSubmitComponent<T extends ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel | ModalSubmitComponents> =
-T extends ModalSubmitComponentsActionRow ? RawModalSubmitComponentsActionRow :
-    T extends ModalSubmitComponentsLabel ? RawModalSubmitComponentsLabel :
-        T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent :
-            T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent :
-                T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent :
-                    T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent :
-                        T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent :
-                            T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent :
-                                T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent :
-                                    T extends ModalSubmitCheckboxComponent ? RawModalSubmitCheckboxComponent :
-                                        T extends ModalSubmitCheckboxGroupComponent ? RawModalSubmitCheckboxGroupComponent :
-                                            T extends ModalSubmitRadioGroupComponent ? RawModalSubmitRadioGroupComponent :
-                                                never;
+export type ToRawFromModalSubmitComponent<T extends ModalSubmitComponentsActionRow | ModalSubmitComponentsLabel | ModalSubmitComponents>
+    = T extends ModalSubmitComponentsActionRow ? RawModalSubmitComponentsActionRow
+        : T extends ModalSubmitComponentsLabel ? RawModalSubmitComponentsLabel
+            : T extends ModalSubmitTextInputComponent ? RawModalSubmitTextInputComponent
+                : T extends ModalSubmitStringSelectComponent ? RawModalSubmitStringSelectComponent
+                    : T extends ModalSubmitUserSelectComponent ? RawModalSubmitUserSelectComponent
+                        : T extends ModalSubmitRoleSelectComponent ? RawModalSubmitRoleSelectComponent
+                            : T extends ModalSubmitMentionableSelectComponent ? RawModalSubmitMentionableSelectComponent
+                                : T extends ModalSubmitChannelSelectComponent ? RawModalSubmitChannelSelectComponent
+                                    : T extends ModalSubmitFileUploadComponent ? RawModalSubmitFileUploadComponent
+                                        : T extends ModalSubmitCheckboxComponent ? RawModalSubmitCheckboxComponent
+                                            : T extends ModalSubmitCheckboxGroupComponent ? RawModalSubmitCheckboxGroupComponent
+                                                : T extends ModalSubmitRadioGroupComponent ? RawModalSubmitRadioGroupComponent
+                                                    : never;
 
 /** @deprecated */
 export type ModalSubmitComponentsActionRow = ModalComponentsActionRow<ModalSubmitComponents>;

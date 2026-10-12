@@ -1,11 +1,13 @@
 /** @module AnnouncementChannel */
-import type TextChannel from "./TextChannel";
+import { ChannelTypes } from "../Constants";
+
+import ThreadableChannel from "./ThreadableChannel";
+
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
 import type Message from "./Message";
-import ThreadableChannel from "./ThreadableChannel";
-import type * as Types from "../types/namespaced";
-import { ChannelTypes } from "../Constants";
+import type TextChannel from "./TextChannel";
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /**
  * Represents a guild announcement channel.
@@ -48,7 +50,7 @@ export default class AnnouncementChannel extends ThreadableChannel<AnnouncementC
         return {
             ...super.toJSON(),
             rateLimitPerUser: 0,
-            type:             this.type
+            type: this.type,
         };
     }
 }

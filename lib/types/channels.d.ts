@@ -37,23 +37,23 @@ import type {
     GuildInviteChannelTypes,
     DMInviteChannelTypes,
     MessageReferenceType,
-    FilterFileTypes
+    FilterFileTypes,
 } from "../Constants";
-import type Member from "../structures/Member";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
+import type Attachment from "../structures/Attachment";
+import type CategoryChannel from "../structures/CategoryChannel";
+import type ForumChannel from "../structures/ForumChannel";
+import type Guild from "../structures/Guild";
+import type GuildChannel from "../structures/GuildChannel";
+import type Invite from "../structures/Invite";
+import type MediaChannel from "../structures/MediaChannel";
+import type Member from "../structures/Member";
+import type Message from "../structures/Message";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
 import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type TextChannel from "../structures/TextChannel";
 import type User from "../structures/User";
-import type ForumChannel from "../structures/ForumChannel";
-import type Message from "../structures/Message";
-import type Guild from "../structures/Guild";
-import type Invite from "../structures/Invite";
-import type Attachment from "../structures/Attachment";
-import type GuildChannel from "../structures/GuildChannel";
-import type CategoryChannel from "../structures/CategoryChannel";
-import type MediaChannel from "../structures/MediaChannel";
 
 export interface RawChannel {
     app_permissions?: string;
@@ -100,25 +100,25 @@ export interface RawChannel {
     video_quality_mode?: VideoQualityModes;
     voice_start_time?: number | null;
 }
-export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "flags">> { name: string; type: GuildChannels; }
-export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { type: ChannelTypes.DM; }
+export interface RawGuildChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "flags">> { name: string; type: GuildChannels }
+export interface RawPrivateChannel extends Required<Pick<RawChannel, "id" | "last_message_id" | "recipients" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { type: ChannelTypes.DM }
 // nicks is undocumented, creating a group dm DOES work, and they show in the client, so we're supporting them
-export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "icon" | "owner_id" | "nsfw" | "last_message_id" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { application_id: string; managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM; }
-export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "flags" | "topic" | "nsfw" | "permission_overwrites" | "position"  >> { type: ChannelTypes.GUILD_TEXT; }
-export interface RawCategoryChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel,  "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_CATEGORY; }
-export interface RawAnnouncementChannel extends Omit<RawTextChannel, "type"> { type: ChannelTypes.GUILD_ANNOUNCEMENT; }
-export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user" | "flags" | "last_pin_timestamp">>, Pick<RawChannel, "status" | "voice_start_time"> { type: ChannelTypes.GUILD_VOICE; }
-export interface RawStageChannel extends Omit<RawVoiceChannel, "type"> { type: ChannelTypes.GUILD_STAGE_VOICE; }
+export interface RawGroupChannel extends Required<Pick<RawChannel, "id" | "recipients" | "icon" | "owner_id" | "nsfw" | "last_message_id" | "flags">>, Pick<RawChannel, "last_pin_timestamp"> { application_id: string; managed: boolean; name: string; nicks?: Array<Record<"id" | "nick", string>>; type: ChannelTypes.GROUP_DM }
+export interface RawTextChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "default_auto_archive_duration" | "last_message_id" | "last_pin_timestamp" | "rate_limit_per_user" | "flags" | "topic" | "nsfw" | "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_TEXT }
+export interface RawCategoryChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "permission_overwrites" | "position">> { type: ChannelTypes.GUILD_CATEGORY }
+export interface RawAnnouncementChannel extends Omit<RawTextChannel, "type"> { type: ChannelTypes.GUILD_ANNOUNCEMENT }
+export interface RawVoiceChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "bitrate" | "user_limit" | "video_quality_mode" | "rtc_region" | "nsfw" | "topic" | "permission_overwrites" | "position" | "last_message_id" | "rate_limit_per_user" | "flags" | "last_pin_timestamp">>, Pick<RawChannel, "status" | "voice_start_time"> { type: ChannelTypes.GUILD_VOICE }
+export interface RawStageChannel extends Omit<RawVoiceChannel, "type"> { type: ChannelTypes.GUILD_STAGE_VOICE }
 export type RawThreadChannel = RawAnnouncementThreadChannel | RawPublicThreadChannel | RawPrivateThreadChannel;
-export interface RawAnnouncementThreadChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> { name: string; parent_id: string; type: ChannelTypes.ANNOUNCEMENT_THREAD; }
-export interface RawPublicThreadChannel extends Omit<RawAnnouncementThreadChannel, "type">, Required<Pick<RawChannel, "applied_tags">> { type: ChannelTypes.PUBLIC_THREAD; }
-export interface RawPrivateThreadChannel extends Omit<RawAnnouncementThreadChannel, "type" | "member"> { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD; }
-export interface RawThreadOnlyChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> { type: ThreadOnlyChannels; }
-export interface RawForumChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_FORUM; }
-export interface RawMediaChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_MEDIA; }
+export interface RawAnnouncementThreadChannel extends Required<Pick<RawChannel, "id" | "guild_id" | "parent_id" | "owner_id" | "last_message_id" | "thread_metadata" | "message_count" | "member_count" | "rate_limit_per_user" | "flags" | "total_message_sent" | "newly_created" | "member">> { name: string; parent_id: string; type: ChannelTypes.ANNOUNCEMENT_THREAD }
+export interface RawPublicThreadChannel extends Omit<RawAnnouncementThreadChannel, "type">, Required<Pick<RawChannel, "applied_tags">> { type: ChannelTypes.PUBLIC_THREAD }
+export interface RawPrivateThreadChannel extends Omit<RawAnnouncementThreadChannel, "type" | "member"> { member: RawChannel["member"]; type: ChannelTypes.PRIVATE_THREAD }
+export interface RawThreadOnlyChannel extends Omit<RawGuildChannel, "type">, Required<Pick<RawChannel, "position" | "topic" | "flags" | "permission_overwrites" | "rate_limit_per_user" | "nsfw" | "available_tags" | "default_reaction_emoji" | "last_message_id" | "default_sort_order" | "default_thread_rate_limit_per_user" | "default_auto_archive_duration" | "default_forum_layout">> { type: ThreadOnlyChannels }
+export interface RawForumChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_FORUM }
+export interface RawMediaChannel extends Omit<RawThreadOnlyChannel, "type"> { type: ChannelTypes.GUILD_MEDIA }
 
 export interface PartialChannel extends Pick<RawChannel, "id" | "name" | "type"> {}
-export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "name" | "permissions" | "app_permissions" | "last_message_id" | "last_pin_timestamp" | "nsfw" | "parent_id" | "guild_id" | "flags" | "rate_limit_per_user" | "topic" | "position" | "thread_metadata"> { name: string | null; }
+export interface RawInteractionResolvedChannel extends Omit<Required<Pick<RawChannel, "id" | "type">>, "name">, Pick<RawChannel, "name" | "permissions" | "app_permissions" | "last_message_id" | "last_pin_timestamp" | "nsfw" | "parent_id" | "guild_id" | "flags" | "rate_limit_per_user" | "topic" | "position" | "thread_metadata"> { name: string | null }
 
 export interface RawOverwrite {
     allow: string;
@@ -307,15 +307,15 @@ export interface EditGuildChannelOptions {
 
 export interface EditChannelOptions extends EditGroupDMOptions, EditGuildChannelOptions {}
 export interface EditAnyGuildChannelOptions extends Pick<EditGuildChannelOptions, "name" | "position" | "permissionOverwrites" | "reason"> {}
-export interface EditTextChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "topic" | "nsfw" | "rateLimitPerUser" | "parentID" | "defaultAutoArchiveDuration"> { type?: ChannelTypes.GUILD_ANNOUNCEMENT; }
-export interface EditAnnouncementChannelOptions extends Omit<EditTextChannelOptions, "rateLimitPerUser" | "type"> { type?: ChannelTypes.GUILD_TEXT; }
+export interface EditTextChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "topic" | "nsfw" | "rateLimitPerUser" | "parentID" | "defaultAutoArchiveDuration"> { type?: ChannelTypes.GUILD_ANNOUNCEMENT }
+export interface EditAnnouncementChannelOptions extends Omit<EditTextChannelOptions, "rateLimitPerUser" | "type"> { type?: ChannelTypes.GUILD_TEXT }
 export interface EditVoiceChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "nsfw" | "bitrate" | "userLimit" | "parentID" | "rtcRegion" | "videoQualityMode"> {}
 export interface EditStageChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "bitrate" | "rtcRegion"> {}
 export interface EditThreadChannelOptions extends EditPublicThreadChannelOptions, EditPrivateThreadChannelOptions {}
 export interface EditPublicThreadChannelOptions extends Pick<EditGuildChannelOptions, "name" | "archived" | "autoArchiveDuration" | "locked" | "rateLimitPerUser" | "flags" | "appliedTags"> {}
 export interface EditPrivateThreadChannelOptions extends EditPublicThreadChannelOptions, Pick<EditGuildChannelOptions, "invitable"> {}
-export interface EditForumChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic" | "defaultForumLayout"> {}
-export interface EditMediaChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" |"defaultThreadRateLimitPerUser" | "flags" | "nsfw"  | "rateLimitPerUser" | "topic"> {}
+export interface EditForumChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" | "defaultThreadRateLimitPerUser" | "flags" | "nsfw" | "rateLimitPerUser" | "topic" | "defaultForumLayout"> {}
+export interface EditMediaChannelOptions extends EditAnyGuildChannelOptions, Pick<EditGuildChannelOptions, "availableTags" | "defaultReactionEmoji" | "defaultSortOrder" | "defaultThreadRateLimitPerUser" | "flags" | "nsfw" | "rateLimitPerUser" | "topic"> {}
 
 /* eslint-disable @typescript-eslint/member-ordering */
 export interface EditChannelOptionsMap {
@@ -546,7 +546,7 @@ export interface MessageReference {
     guildID?: string;
     /** The ID of the message to reply to. */
     messageID?: string;
-    /** Determines how associated data is populated. `FORWARD` can only be used for basic messages. {@link Constants~MessageTypes.DEFAULT | DEFAULT}, {@link Constants~MessageTypes.REPLY | REPLY}, {@link Constants~MessageTypes.CONTEXT_MENU_COMMAND | CONTEXT_MENU_COMMAND}, {@link Constants~MessageTypes.DEFAULT | DEFAULT}*/
+    /** Determines how associated data is populated. `FORWARD` can only be used for basic messages. {@link Constants~MessageTypes.DEFAULT | DEFAULT}, {@link Constants~MessageTypes.REPLY | REPLY}, {@link Constants~MessageTypes.CONTEXT_MENU_COMMAND | CONTEXT_MENU_COMMAND}, {@link Constants~MessageTypes.DEFAULT | DEFAULT} */
     type?: MessageReferenceType;
 }
 
@@ -682,7 +682,6 @@ export interface MessageActivity {
     type: MessageActivityTypes;
 }
 
-
 export interface RawMessageReference {
     channel_id: string;
     fail_if_not_exists: boolean;
@@ -755,7 +754,6 @@ export interface ModalSubmitMessageInteractionMetadata extends Omit<MessageInter
 }
 
 export type AnyMessageInteractionMetadata = ApplicationCommandMessageInteractionMetadata | ComponentMessageInteractionMetadata | ModalSubmitMessageInteractionMetadata;
-
 
 export interface StickerItem {
     format_type: StickerFormatTypes;
@@ -994,8 +992,8 @@ export interface ArchivedThreads<T extends AnnouncementThreadChannel | PublicThr
 }
 
 export interface ThreadMetadata {
-    archiveTimestamp: Date;
     archived: boolean;
+    archiveTimestamp: Date;
     autoArchiveDuration: ThreadAutoArchiveDuration;
     createTimestamp: Date | null;
     locked: boolean;
@@ -1211,7 +1209,6 @@ export interface MessageMentions {
     users: Array<User>;
 }
 
-
 export interface MessagePollResults {
     questionText: string;
     totalVotes: number;
@@ -1242,54 +1239,54 @@ export type RawModalComponent = RawModalActionRow | RawModalLabel | RawTextDispl
 export type RawButtonComponent = RawTextButton | URLButton | RawPremiumButton;
 export type RawSelectMenuComponent = RawStringSelectMenu | RawUserSelectMenu | RawRoleSelectMenu | RawMentionableSelectMenu | RawChannelSelectMenu;
 
-export type ToComponentFromRaw<T extends RawComponent> =
-    T extends RawMessageActionRow ? MessageActionRow :
-        T extends RawModalActionRow ? ModalActionRow :
-            T extends RawTextButton ? TextButton :
-                T extends URLButton ? URLButton :
-                    T extends RawStringSelectMenu ? StringSelectMenu :
-                        T extends RawUserSelectMenu ? UserSelectMenu :
-                            T extends RawRoleSelectMenu ? RoleSelectMenu :
-                                T extends RawMentionableSelectMenu ? MentionableSelectMenu :
-                                    T extends RawChannelSelectMenu ? ChannelSelectMenu :
-                                        T extends RawTextInput ? TextInput :
-                                            T extends RawSectionComponent ? SectionComponent :
-                                                T extends RawTextDisplayComponent ? TextDisplayComponent :
-                                                    T extends RawThumbnailComponent ? ThumbnailComponent :
-                                                        T extends RawMediaGalleryComponent ? MediaGalleryComponent :
-                                                            T extends RawSeparatorComponent ? SeparatorComponent :
-                                                                T extends RawFileComponent ? FileComponent :
-                                                                    T extends RawContainerComponent ? ContainerComponent :
-                                                                        T extends RawModalLabel ? ModalLabel :
-                                                                            T extends RawModalFileUploadComponent ? ModalFileUploadComponent :
-                                                                                T extends RawRadioGroupComponent ? RadioGroupComponent :
-                                                                                    T extends RawCheckboxComponent ? CheckboxComponent :
-                                                                                        T extends RawCheckboxGroupComponent ? CheckboxGroupComponent :
-                                                                                            never;
-export type ToRawFromComponent<T extends Component> =
-    T extends MessageActionRow ? RawMessageActionRow :
-        T extends ModalActionRow ? RawModalActionRow :
-            T extends TextButton ? RawTextButton :
-                T extends URLButton ? URLButton :
-                    T extends StringSelectMenu ? RawStringSelectMenu :
-                        T extends UserSelectMenu ? RawUserSelectMenu :
-                            T extends RoleSelectMenu ? RawRoleSelectMenu :
-                                T extends MentionableSelectMenu ? RawMentionableSelectMenu :
-                                    T extends ChannelSelectMenu ? RawChannelSelectMenu :
-                                        T extends TextInput ? RawTextInput :
-                                            T extends SectionComponent ? RawSectionComponent :
-                                                T extends TextDisplayComponent ? RawTextDisplayComponent :
-                                                    T extends ThumbnailComponent ? RawThumbnailComponent :
-                                                        T extends MediaGalleryComponent ? RawMediaGalleryComponent :
-                                                            T extends SeparatorComponent ? RawSeparatorComponent :
-                                                                T extends FileComponent ? RawFileComponent :
-                                                                    T extends ContainerComponent ? RawContainerComponent :
-                                                                        T extends ModalLabel ? RawModalLabel :
-                                                                            T extends ModalFileUploadComponent ? RawModalFileUploadComponent :
-                                                                                T extends RadioGroupComponent ? RawRadioGroupComponent :
-                                                                                    T extends CheckboxComponent ? RawCheckboxComponent :
-                                                                                        T extends CheckboxGroupComponent ? RawCheckboxGroupComponent :
-                                                                                            never;
+export type ToComponentFromRaw<T extends RawComponent>
+    = T extends RawMessageActionRow ? MessageActionRow
+        : T extends RawModalActionRow ? ModalActionRow
+            : T extends RawTextButton ? TextButton
+                : T extends URLButton ? URLButton
+                    : T extends RawStringSelectMenu ? StringSelectMenu
+                        : T extends RawUserSelectMenu ? UserSelectMenu
+                            : T extends RawRoleSelectMenu ? RoleSelectMenu
+                                : T extends RawMentionableSelectMenu ? MentionableSelectMenu
+                                    : T extends RawChannelSelectMenu ? ChannelSelectMenu
+                                        : T extends RawTextInput ? TextInput
+                                            : T extends RawSectionComponent ? SectionComponent
+                                                : T extends RawTextDisplayComponent ? TextDisplayComponent
+                                                    : T extends RawThumbnailComponent ? ThumbnailComponent
+                                                        : T extends RawMediaGalleryComponent ? MediaGalleryComponent
+                                                            : T extends RawSeparatorComponent ? SeparatorComponent
+                                                                : T extends RawFileComponent ? FileComponent
+                                                                    : T extends RawContainerComponent ? ContainerComponent
+                                                                        : T extends RawModalLabel ? ModalLabel
+                                                                            : T extends RawModalFileUploadComponent ? ModalFileUploadComponent
+                                                                                : T extends RawRadioGroupComponent ? RadioGroupComponent
+                                                                                    : T extends RawCheckboxComponent ? CheckboxComponent
+                                                                                        : T extends RawCheckboxGroupComponent ? CheckboxGroupComponent
+                                                                                            : never;
+export type ToRawFromComponent<T extends Component>
+    = T extends MessageActionRow ? RawMessageActionRow
+        : T extends ModalActionRow ? RawModalActionRow
+            : T extends TextButton ? RawTextButton
+                : T extends URLButton ? URLButton
+                    : T extends StringSelectMenu ? RawStringSelectMenu
+                        : T extends UserSelectMenu ? RawUserSelectMenu
+                            : T extends RoleSelectMenu ? RawRoleSelectMenu
+                                : T extends MentionableSelectMenu ? RawMentionableSelectMenu
+                                    : T extends ChannelSelectMenu ? RawChannelSelectMenu
+                                        : T extends TextInput ? RawTextInput
+                                            : T extends SectionComponent ? RawSectionComponent
+                                                : T extends TextDisplayComponent ? RawTextDisplayComponent
+                                                    : T extends ThumbnailComponent ? RawThumbnailComponent
+                                                        : T extends MediaGalleryComponent ? RawMediaGalleryComponent
+                                                            : T extends SeparatorComponent ? RawSeparatorComponent
+                                                                : T extends FileComponent ? RawFileComponent
+                                                                    : T extends ContainerComponent ? RawContainerComponent
+                                                                        : T extends ModalLabel ? RawModalLabel
+                                                                            : T extends ModalFileUploadComponent ? RawModalFileUploadComponent
+                                                                                : T extends RadioGroupComponent ? RawRadioGroupComponent
+                                                                                    : T extends CheckboxComponent ? RawCheckboxComponent
+                                                                                        : T extends CheckboxGroupComponent ? RawCheckboxGroupComponent
+                                                                                            : never;
 
 export interface RawActionRowBase<T extends RawComponent> {
     components: Array<T>;
@@ -1299,9 +1296,9 @@ export interface RawActionRowBase<T extends RawComponent> {
 export interface RawMessageActionRow extends RawActionRowBase<RawMessageActionRowComponent> {}
 /** @deprecated */
 export interface RawModalActionRow extends RawActionRowBase<RawModalActionRowComponent> {}
-export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow> =
-    T extends MessageActionRow ? RawMessageActionRow :
-        T extends ModalActionRow ? RawModalActionRow : never;
+export type ActionRowToRaw<T extends MessageActionRow | ModalActionRow>
+    = T extends MessageActionRow ? RawMessageActionRow
+        : T extends ModalActionRow ? RawModalActionRow : never;
 
 export type Component = AnyMessageComponent | AnyModalComponent;
 export type AnyMessageComponent = MessageComponent | MessageActionRowComponent | ThumbnailComponent;
@@ -1466,7 +1463,6 @@ export interface RawUserSelectMenu extends RawSelectMenuBase<ComponentTypes.USER
 export interface RawRoleSelectMenu extends RawSelectMenuBase<ComponentTypes.ROLE_SELECT>, DefaultValuesRaw {}
 export interface RawMentionableSelectMenu extends RawSelectMenuBase<ComponentTypes.MENTIONABLE_SELECT>, DefaultValuesRaw {}
 export interface RawChannelSelectMenu extends RawSelectMenuBase<ComponentTypes.CHANNEL_SELECT>, RawChannelSelectMenuOptions, DefaultValuesRaw {}
-
 
 export interface SelectMenuBase<T extends SelectMenuTypes> extends BaseComponent {
     customID: string;
@@ -1670,11 +1666,10 @@ export interface IconEmoji {
     name: string | null;
 }
 
-export type ParentChannelType<CH extends GuildChannel> =
-    CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel :
-        CH extends Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel :
-            TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
-
+export type ParentChannelType<CH extends GuildChannel>
+    = CH extends ThreadChannels ? TextChannel | AnnouncementChannel | ForumChannel | MediaChannel
+        : CH extends Exclude<GuildChannels, ThreadChannels | ForumChannel | MediaChannel> ? CategoryChannel
+            : TextChannel | AnnouncementChannel | ForumChannel | MediaChannel | CategoryChannel;
 
 /* eslint-disable @typescript-eslint/member-ordering */
 export interface MessageComponentTypeMap {

@@ -4,11 +4,12 @@
 /docs-plugin
 /examples
 /.github
-.eslintignore
-.eslintrc.json
+eslint.config.mts
+eslint.d.ts
 .ncurc.json
 .prettierrc.json
 tsconfig.json
+tsconfig.eslint.json
 /scripts
 dark.js
 favicon.ico

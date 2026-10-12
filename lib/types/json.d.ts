@@ -1,8 +1,7 @@
 /** @module Types/JSON */
-import type * as Types from "./namespaced";
-/* eslint-disable @typescript-eslint/no-empty-interface */
-import type { InstallParams } from "./oauth";
 import type { ApplicationCompany, ApplicationExecutable, EmbeddedActivityConfig, IntegrationTypesConfig } from "./applications";
+import type * as Types from "./namespaced";
+import type { InstallParams } from "./oauth";
 import type { Uncached } from "./shared";
 import type {
     ApplicationCommandTypes,
@@ -53,7 +52,7 @@ import type {
     ApplicationVerificationState,
     ApplicationInteractionsVersion,
     EntryPointCommandHandlerTypes,
-    SubscriptionStatuses
+    SubscriptionStatuses,
 } from "../Constants";
 
 export interface JSONAnnouncementChannel extends JSONThreadableChannel {
@@ -405,8 +404,8 @@ export interface JSONGuildTemplate {
 export interface JSONIntegration extends JSONBase {
     account: Types.Guilds.IntegrationAccount;
     application?: JSONPartialApplication;
-    enableEmoticons?: boolean;
     enabled?: boolean;
+    enableEmoticons?: boolean;
     expireBehavior?: IntegrationExpireBehaviors;
     expireGracePeriod?: number;
     name: string;

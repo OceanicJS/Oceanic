@@ -1,26 +1,28 @@
 /** @module REST/Guilds */
-import type * as Types from "../types/namespaced";
-import type { ChannelTypeMap } from "../Constants";
-import type RESTManager from "../rest/RESTManager";
+import { setTimeout } from "node:timers/promises";
+
 import ApplicationCommand from "../structures/ApplicationCommand";
 import AuditLogEntry from "../structures/AuditLogEntry";
 import AutoModerationRule from "../structures/AutoModerationRule";
+import Channel from "../structures/Channel";
 import Guild from "../structures/Guild";
+import GuildJoinRequest from "../structures/GuildJoinRequest";
 import GuildPreview from "../structures/GuildPreview";
 import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import GuildTemplate from "../structures/GuildTemplate";
 import Integration from "../structures/Integration";
 import Invite, { type InviteWithMetadata } from "../structures/Invite";
-import type Member from "../structures/Member";
 import Role from "../structures/Role";
 import Soundboard from "../structures/Soundboard";
 import VoiceState from "../structures/VoiceState";
 import Webhook from "../structures/Webhook";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
-import Channel from "../structures/Channel";
-import GuildJoinRequest from "../structures/GuildJoinRequest";
-import { setTimeout } from "node:timers/promises";
+
+import type { ChannelTypeMap } from "../Constants";
+import type RESTManager from "../rest/RESTManager";
+import type Member from "../structures/Member";
+import type * as Types from "../types/namespaced";
 
 /** Various methods for interacting with guilds. Located at {@link Client#rest | Client#rest}{@link RESTManager#guilds | .guilds}. */
 export default class Guilds {
@@ -41,11 +43,11 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawGuildJoinRequest>({
             method: "PATCH",
-            path:   Routes.GUILD_JOIN_REQUEST(guildID, requestID),
-            json:   {
-                action:           options.action,
-                rejection_reason: options.rejectionReason
-            }
+            path: Routes.GUILD_JOIN_REQUEST(guildID, requestID),
+            json: {
+                action: options.action,
+                rejection_reason: options.rejectionReason,
+            },
         }).then(data => this._manager.client.guilds.get(guildID)?.joinRequests.update(data) ?? new GuildJoinRequest(data, this._manager.client));
     }
 
@@ -63,14 +65,14 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RESTMember | null>({
             method: "PUT",
-            path:   Routes.GUILD_MEMBER(guildID, userID),
-            json:   {
+            path: Routes.GUILD_MEMBER(guildID, userID),
+            json: {
                 access_token: options.accessToken,
-                deaf:         options.deaf,
-                mute:         options.mute,
-                nick:         options.nick,
-                roles:        options.roles
-            }
+                deaf: options.deaf,
+                mute: options.mute,
+                nick: options.nick,
+                roles: options.roles,
+            },
         }).then(data => data === null ? undefined : this._manager.client.util.updateMember(guildID, userID, data));
     }
 
@@ -85,8 +87,8 @@ export default class Guilds {
     async addMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
-            reason
+            path: Routes.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
+            reason,
         });
     }
 
@@ -98,15 +100,15 @@ export default class Guilds {
      */
     async beginPrune(guildID: string, options?: Types.Guilds.BeginPruneOptions): Promise<number | null> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<{ pruned: number | null; }>({
+        return this._manager.authRequest<{ pruned: number | null }>({
             method: "POST",
-            path:   Routes.GUILD_PRUNE(guildID),
-            json:   {
-                days:                options?.days,
+            path: Routes.GUILD_PRUNE(guildID),
+            json: {
+                days: options?.days,
                 compute_prune_count: options?.computePruneCount,
-                include_roles:       options?.includeRoles
+                include_roles: options?.includeRoles,
             },
-            reason: options?.reason
+            reason: options?.reason,
         }).then(data => data.pruned);
     }
 
@@ -121,15 +123,15 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawBulkBanResponse>({
             method: "POST",
-            path:   Routes.GUILD_BULK_BAN(guildID),
-            json:   {
+            path: Routes.GUILD_BULK_BAN(guildID),
+            json: {
                 delete_message_seconds: options.deleteMessageSeconds,
-                user_ids:               options.userIDs
+                user_ids: options.userIDs,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => ({
             bannedUsers: data.banned_users,
-            failedUsers: data.failed_users
+            failedUsers: data.failed_users,
         }));
     }
 
@@ -144,32 +146,32 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
             method: "POST",
-            path:   Routes.GUILD_AUTOMOD_RULES(guildID),
-            json:   {
+            path: Routes.GUILD_AUTOMOD_RULES(guildID),
+            json: {
                 actions: options.actions.map(a => ({
                     metadata: {
-                        channel_id:       a.metadata.channelID,
-                        custom_message:   a.metadata.customMessage,
-                        duration_seconds: a.metadata.durationSeconds
+                        channel_id: a.metadata.channelID,
+                        custom_message: a.metadata.customMessage,
+                        duration_seconds: a.metadata.durationSeconds,
                     },
-                    type: a.type
+                    type: a.type,
                 })),
-                enabled:          options.enabled,
-                event_type:       options.eventType,
-                exempt_channels:  options.exemptChannels,
-                exempt_roles:     options.exemptRoles,
-                name:             options.name,
+                enabled: options.enabled,
+                event_type: options.eventType,
+                exempt_channels: options.exemptChannels,
+                exempt_roles: options.exemptRoles,
+                name: options.name,
                 trigger_metadata: options.triggerMetadata ? {
-                    allow_list:                      options.triggerMetadata.allowList,
-                    keyword_filter:                  options.triggerMetadata.keywordFilter,
+                    allow_list: options.triggerMetadata.allowList,
+                    keyword_filter: options.triggerMetadata.keywordFilter,
                     mention_raid_protection_enabled: options.triggerMetadata.mentionRaidProtectionEnabled,
-                    mention_total_limit:             options.triggerMetadata.mentionTotalLimit,
-                    presets:                         options.triggerMetadata.presets,
-                    regex_patterns:                  options.triggerMetadata.regexPatterns
+                    mention_total_limit: options.triggerMetadata.mentionTotalLimit,
+                    presets: options.triggerMetadata.presets,
+                    regex_patterns: options.triggerMetadata.regexPatterns,
                 } : undefined,
-                trigger_type: options.triggerType
+                trigger_type: options.triggerType,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
     }
 
@@ -184,13 +186,13 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         let deleteMessageSeconds: number | undefined = options?.deleteMessageSeconds;
         if (options?.deleteMessageDays !== undefined && !Object.hasOwn(options, "deleteMessageSeconds")) {
-            deleteMessageSeconds = options.deleteMessageDays! * 86400;
+            deleteMessageSeconds = options.deleteMessageDays * 86400;
         }
         await this._manager.authRequest<null>({
             method: "PUT",
-            path:   Routes.GUILD_BAN(guildID, userID),
-            json:   { delete_message_seconds: deleteMessageSeconds },
-            reason: options?.reason
+            path: Routes.GUILD_BAN(guildID, userID),
+            json: { delete_message_seconds: deleteMessageSeconds },
+            reason: options?.reason,
         });
     }
 
@@ -205,32 +207,32 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawGuildChannel>({
             method: "POST",
-            path:   Routes.GUILD_CHANNELS(guildID),
-            json:   {
+            path: Routes.GUILD_CHANNELS(guildID),
+            json: {
                 available_tags: options.availableTags ? options.availableTags.map(tag => ({
-                    emoji_id:   tag.emoji?.id,
+                    emoji_id: tag.emoji?.id,
                     emoji_name: tag.emoji?.name,
-                    moderated:  tag.moderated,
-                    name:       tag.name
+                    moderated: tag.moderated,
+                    name: tag.name,
                 })) : options.availableTags,
-                bitrate:                       options.bitrate,
+                bitrate: options.bitrate,
                 default_auto_archive_duration: options.defaultAutoArchiveDuration,
-                default_forum_layout:          options.defaultForumLayout,
-                default_reaction_emoji:        options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
-                default_sort_order:            options.defaultSortOrder,
-                name:                          options.name,
-                nsfw:                          options.nsfw,
-                parent_id:                     options.parentID,
-                permission_overwrites:         options.permissionOverwrites,
-                position:                      options.position,
-                rate_limit_per_user:           options.rateLimitPerUser,
-                rtc_region:                    options.rtcRegion,
-                topic:                         options.topic,
+                default_forum_layout: options.defaultForumLayout,
+                default_reaction_emoji: options.defaultReactionEmoji ? { emoji_id: options.defaultReactionEmoji.id, emoji_name: options.defaultReactionEmoji.name } : options.defaultReactionEmoji,
+                default_sort_order: options.defaultSortOrder,
+                name: options.name,
+                nsfw: options.nsfw,
+                parent_id: options.parentID,
+                permission_overwrites: options.permissionOverwrites,
+                position: options.position,
+                rate_limit_per_user: options.rateLimitPerUser,
+                rtc_region: options.rtcRegion,
+                topic: options.topic,
                 type,
-                user_limit:                    options.userLimit,
-                video_quality_mode:            options.videoQualityMode
+                user_limit: options.userLimit,
+                video_quality_mode: options.videoQualityMode,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.util.updateChannel(data)) as never;
     }
 
@@ -249,13 +251,13 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
             method: "POST",
-            path:   Routes.GUILD_EMOJIS(guildID),
-            json:   {
+            path: Routes.GUILD_EMOJIS(guildID),
+            json: {
                 image,
-                name:  options.name,
-                roles: options.roles
+                name: options.name,
+                roles: options.roles,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
     }
 
@@ -274,21 +276,21 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.Guilds.RawRole>({
             method: "POST",
-            path:   Routes.GUILD_ROLES(guildID),
-            json:   {
+            path: Routes.GUILD_ROLES(guildID),
+            json: {
                 colors: options?.colors || options?.color ? {
-                    primary_color:   options.colors?.primaryColor ?? options.color,
+                    primary_color: options.colors?.primaryColor ?? options.color,
                     secondary_color: options.colors?.secondaryColor,
-                    tertiary_color:  options.colors?.tertiaryColor
+                    tertiary_color: options.colors?.tertiaryColor,
                 } : undefined,
-                hoist:         options?.hoist,
+                hoist: options?.hoist,
                 icon,
-                mentionable:   options?.mentionable,
-                name:          options?.name,
-                permissions:   options?.permissions,
-                unicode_emoji: options?.unicodeEmoji
+                mentionable: options?.mentionable,
+                name: options?.name,
+                permissions: options?.permissions,
+                unicode_emoji: options?.unicodeEmoji,
             },
-            reason: options?.reason
+            reason: options?.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.roles.update(data, guildID) ?? new Role(data, this._manager.client, guildID));
     }
 
@@ -307,19 +309,19 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEvent>({
             method: "POST",
-            path:   Routes.GUILD_SCHEDULED_EVENTS(guildID),
-            json:   {
-                channel_id:           options.channelID,
-                description:          options.description,
-                entity_metadata:      options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
-                entity_type:          options.entityType,
+            path: Routes.GUILD_SCHEDULED_EVENTS(guildID),
+            json: {
+                channel_id: options.channelID,
+                description: options.description,
+                entity_metadata: options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
+                entity_type: options.entityType,
                 image,
-                name:                 options.name,
-                privacy_level:        options.privacyLevel,
-                scheduled_end_time:   options.scheduledEndTime,
-                scheduled_start_time: options.scheduledStartTime
+                name: options.name,
+                privacy_level: options.privacyLevel,
+                scheduled_end_time: options.scheduledEndTime,
+                scheduled_start_time: options.scheduledStartTime,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this._manager.client));
     }
 
@@ -335,15 +337,15 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventException>({
             method: "POST",
-            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTIONS(guildID, eventID),
-            json:   {
-                is_canceled:                   options.isCanceled,
+            path: Routes.GUILD_SCHEDULED_EVENT_EXCEPTIONS(guildID, eventID),
+            json: {
+                is_canceled: options.isCanceled,
                 original_scheduled_start_time: options.originalScheduledStartTime,
-                scheduled_end_time:            options.scheduledEndTime,
-                scheduled_start_time:          options.scheduledStartTime
+                scheduled_end_time: options.scheduledEndTime,
+                scheduled_start_time: options.scheduledStartTime,
             },
-            reason: options.reason
-        }).then(data => {
+            reason: options.reason,
+        }).then((data) => {
             const exception = this._manager.client.util.convertScheduledEventException(data);
             const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
             if (event) {
@@ -373,15 +375,15 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.Channels.RawSoundboard>({
             method: "POST",
-            path:   Routes.SOUNDBOARD_SOUNDS(guildID),
-            json:   {
-                emoji_id:   options.emojiID,
+            path: Routes.SOUNDBOARD_SOUNDS(guildID),
+            json: {
+                emoji_id: options.emojiID,
                 emoji_name: options.emojiName,
-                name:       options.name,
+                name: options.name,
                 sound,
-                volume:     options.volume
+                volume: options.volume,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.soundboardSounds.update(data) ?? new Soundboard(data, this._manager.client));
     }
 
@@ -415,9 +417,9 @@ export default class Guilds {
 
         return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "POST",
-            path:   Routes.GUILD_STICKERS(guildID),
+            path: Routes.GUILD_STICKERS(guildID),
             form,
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.stickers.update(data) ?? this._manager.client.util.convertSticker(data));
     }
 
@@ -430,11 +432,11 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "POST",
-            path:   Routes.GUILD_TEMPLATES(guildID),
-            json:   {
+            path: Routes.GUILD_TEMPLATES(guildID),
+            json: {
                 description: options.description,
-                name:        options.name
-            }
+                name: options.name,
+            },
         }).then(data => new GuildTemplate(data, this._manager.client));
     }
 
@@ -448,8 +450,8 @@ export default class Guilds {
     async deleteAutoModerationRule(guildID: string, ruleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
-            reason
+            path: Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
+            reason,
         });
     }
 
@@ -463,8 +465,8 @@ export default class Guilds {
     async deleteEmoji(guildID: string, emojiID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_EMOJI(guildID, emojiID),
-            reason
+            path: Routes.GUILD_EMOJI(guildID, emojiID),
+            reason,
         });
     }
 
@@ -478,8 +480,8 @@ export default class Guilds {
     async deleteIntegration(guildID: string, integrationID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_INTEGRATION(guildID, integrationID),
-            reason
+            path: Routes.GUILD_INTEGRATION(guildID, integrationID),
+            reason,
         });
     }
 
@@ -493,8 +495,8 @@ export default class Guilds {
     async deleteRole(guildID: string, roleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_ROLE(guildID, roleID),
-            reason
+            path: Routes.GUILD_ROLE(guildID, roleID),
+            reason,
         });
     }
 
@@ -508,8 +510,8 @@ export default class Guilds {
     async deleteScheduledEvent(guildID: string, eventID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
-            reason
+            path: Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
+            reason,
         });
     }
 
@@ -525,8 +527,8 @@ export default class Guilds {
     async deleteScheduledEventException(guildID: string, eventID: string, exceptionID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
-            reason
+            path: Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
+            reason,
         });
         const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
         if (event) {
@@ -544,8 +546,8 @@ export default class Guilds {
     async deleteSoundboardSound(guildID: string, soundID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.SOUNDBOARD_SOUND(guildID, soundID),
-            reason
+            path: Routes.SOUNDBOARD_SOUND(guildID, soundID),
+            reason,
         });
     }
 
@@ -559,8 +561,8 @@ export default class Guilds {
     async deleteSticker(guildID: string, stickerID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_STICKER(guildID, stickerID),
-            reason
+            path: Routes.GUILD_STICKER(guildID, stickerID),
+            reason,
         });
     }
 
@@ -573,7 +575,7 @@ export default class Guilds {
     async deleteTemplate(guildID: string, code: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_TEMPLATE(guildID, code)
+            path: Routes.GUILD_TEMPLATE(guildID, code),
         });
     }
 
@@ -601,30 +603,30 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.Guilds.RawGuild>({
             method: "PATCH",
-            path:   Routes.GUILD(guildID),
-            json:   {
-                afk_channel_id:                options.afkChannelID,
-                afk_timeout:                   options.afkTimeout,
+            path: Routes.GUILD(guildID),
+            json: {
+                afk_channel_id: options.afkChannelID,
+                afk_timeout: options.afkTimeout,
                 banner,
                 default_message_notifications: options.defaultMessageNotifications,
-                description:                   options.description,
-                discovery_splash:              discoverySplash,
-                explicit_content_filter:       options.explicitContentFilter,
-                features:                      options.features,
+                description: options.description,
+                discovery_splash: discoverySplash,
+                explicit_content_filter: options.explicitContentFilter,
+                features: options.features,
                 icon,
-                name:                          options.name,
-                preferred_locale:              options.preferredLocale,
-                premium_progress_bar_enabled:  options.premiumProgressBarEnabled,
-                public_updates_channel_id:     options.publicUpdatesChannelID,
-                region:                        options.region,
-                rules_channel_id:              options.rulesChannelID,
-                safety_alerts_channel_id:      options.safetyAlertsChannelID,
+                name: options.name,
+                preferred_locale: options.preferredLocale,
+                premium_progress_bar_enabled: options.premiumProgressBarEnabled,
+                public_updates_channel_id: options.publicUpdatesChannelID,
+                region: options.region,
+                rules_channel_id: options.rulesChannelID,
+                safety_alerts_channel_id: options.safetyAlertsChannelID,
                 splash,
-                system_channel_flags:          options.systemChannelFlags,
-                system_channel_id:             options.systemChannelID,
-                verification_level:            options.verificationLevel
+                system_channel_flags: options.systemChannelFlags,
+                system_channel_id: options.systemChannelID,
+                verification_level: options.verificationLevel,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.has(guildID) ? this._manager.client.guilds.update(data, true) : new Guild(data, this._manager.client, true));
     }
 
@@ -640,32 +642,32 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
             method: "PATCH",
-            path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
-            json:   {
+            path: Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
+            json: {
                 actions: options.actions?.map(a => ({
                     metadata: {
-                        channel_id:       a.metadata.channelID,
-                        custom_message:   a.metadata.customMessage,
-                        duration_seconds: a.metadata.durationSeconds
+                        channel_id: a.metadata.channelID,
+                        custom_message: a.metadata.customMessage,
+                        duration_seconds: a.metadata.durationSeconds,
                     },
-                    type: a.type
+                    type: a.type,
                 })),
-                enabled:          options.enabled,
-                event_type:       options.eventType,
-                exempt_channels:  options.exemptChannels,
-                exempt_roles:     options.exemptRoles,
-                name:             options.name,
+                enabled: options.enabled,
+                event_type: options.eventType,
+                exempt_channels: options.exemptChannels,
+                exempt_roles: options.exemptRoles,
+                name: options.name,
                 trigger_metadata: options.triggerMetadata ? {
-                    allow_list:                      options.triggerMetadata.allowList,
-                    keyword_filter:                  options.triggerMetadata.keywordFilter,
+                    allow_list: options.triggerMetadata.allowList,
+                    keyword_filter: options.triggerMetadata.keywordFilter,
                     mention_raid_protection_enabled: options.triggerMetadata.mentionRaidProtectionEnabled,
-                    mention_total_limit:             options.triggerMetadata.mentionTotalLimit,
-                    presets:                         options.triggerMetadata.presets,
-                    regex_patterns:                  options.triggerMetadata.regexPatterns
-                } : undefined
+                    mention_total_limit: options.triggerMetadata.mentionTotalLimit,
+                    presets: options.triggerMetadata.presets,
+                    regex_patterns: options.triggerMetadata.regexPatterns,
+                } : undefined,
             },
-            reason: options.reason
-        }).then(data =>  this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
+            reason: options.reason,
+        }).then(data => this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
     }
 
     /**
@@ -678,13 +680,13 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
-            path:   Routes.GUILD_CHANNELS(guildID),
-            json:   options.map(o => ({
-                id:       o.id,
+            path: Routes.GUILD_CHANNELS(guildID),
+            json: options.map(o => ({
+                id: o.id,
                 // lock_permissions: o.lockPermissions ?? null,
                 // parent_id:        o.parentID ?? null,
-                position: o.position ?? null
-            }))
+                position: o.position ?? null,
+            })),
         });
     }
 
@@ -711,9 +713,9 @@ export default class Guilds {
 
         return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "PATCH",
-            path:   Routes.GUILD_MEMBER(guildID, "@me"),
-            json:   { nick: options.nick, banner, avatar, bio: options.bio },
-            reason: options.reason
+            path: Routes.GUILD_MEMBER(guildID, "@me"),
+            json: { nick: options.nick, banner, avatar, bio: options.bio },
+            reason: options.reason,
         }).then(data => this._manager.client.util.updateMember(guildID, data.user.id, data));
     }
 
@@ -727,12 +729,12 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
-            path:   Routes.GUILD_VOICE_STATE(guildID, "@me"),
-            json:   {
-                channel_id:                 options.channelID,
-                suppress:                   options.suppress,
-                request_to_speak_timestamp: options.requestToSpeakTimestamp
-            }
+            path: Routes.GUILD_VOICE_STATE(guildID, "@me"),
+            json: {
+                channel_id: options.channelID,
+                suppress: options.suppress,
+                request_to_speak_timestamp: options.requestToSpeakTimestamp,
+            },
         });
     }
 
@@ -747,12 +749,12 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
             method: "PATCH",
-            path:   Routes.GUILD_EMOJI(guildID, emojiID),
-            json:   {
-                name:  options.name,
-                roles: options.roles
+            path: Routes.GUILD_EMOJI(guildID, emojiID),
+            json: {
+                name: options.name,
+                roles: options.roles,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
     }
 
@@ -766,15 +768,15 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawIncidentActions>({
             method: "PUT",
-            path:   Routes.GUILD_INCIDENT_ACTIONS(guildID),
-            json:   {
-                dms_disabled_until:     options.dmsDisabledUntil,
-                invites_disabled_until: options.invitesDisabledUntil
+            path: Routes.GUILD_INCIDENT_ACTIONS(guildID),
+            json: {
+                dms_disabled_until: options.dmsDisabledUntil,
+                invites_disabled_until: options.invitesDisabledUntil,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => ({
-            dmsDisabledUntil:     data.dms_disabled_until,
-            invitesDisabledUntil: data.invites_disabled_until
+            dmsDisabledUntil: data.dms_disabled_until,
+            invitesDisabledUntil: data.invites_disabled_until,
         }));
     }
 
@@ -790,17 +792,17 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "PATCH",
-            path:   Routes.GUILD_MEMBER(guildID, memberID),
-            json:   {
-                channel_id:                   options.channelID,
+            path: Routes.GUILD_MEMBER(guildID, memberID),
+            json: {
+                channel_id: options.channelID,
                 communication_disabled_until: options.communicationDisabledUntil,
-                deaf:                         options.deaf,
-                flags:                        options.flags,
-                mute:                         options.mute,
-                nick:                         options.nick,
-                roles:                        options.roles
+                deaf: options.deaf,
+                flags: options.flags,
+                mute: options.mute,
+                nick: options.nick,
+                roles: options.roles,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.util.updateMember(guildID, memberID, data));
     }
 
@@ -814,48 +816,48 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawOnboarding>({
             method: "PUT",
-            path:   Routes.GUILD_ONBOARDING(guildID),
-            json:   {
-                enabled:             options.enabled,
+            path: Routes.GUILD_ONBOARDING(guildID),
+            json: {
+                enabled: options.enabled,
                 default_channel_ids: options.defaultChannelIDs,
-                prompts:             options.prompts?.map(p => ({
-                    id:           p.id,
+                prompts: options.prompts?.map(p => ({
+                    id: p.id,
                     in_oboarding: p.inOnboarding,
-                    options:      p.options.map(o => ({
+                    options: p.options.map(o => ({
                         channel_ids: o.channelIDs,
                         description: o.description,
-                        emoji:       o.emoji,
-                        id:          o.id,
-                        role_ids:    o.roleIDs,
-                        title:       o.title
+                        emoji: o.emoji,
+                        id: o.id,
+                        role_ids: o.roleIDs,
+                        title: o.title,
                     })),
-                    required:      p.required,
+                    required: p.required,
                     single_select: p.singleSelect,
-                    title:         p.title
+                    title: p.title,
                 })),
-                mode: options.mode
+                mode: options.mode,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => ({
             defaultChannelIDs: data.default_channel_ids,
-            enabled:           data.enabled,
-            guildID:           data.guild_id,
-            mode:              data.mode,
-            prompts:           data.prompts.map(p => ({
-                id:           p.id,
+            enabled: data.enabled,
+            guildID: data.guild_id,
+            mode: data.mode,
+            prompts: data.prompts.map(p => ({
+                id: p.id,
                 inOnboarding: p.in_onboarding,
-                options:      p.options.map(o => ({
-                    channelIDs:  o.channel_ids,
+                options: p.options.map(o => ({
+                    channelIDs: o.channel_ids,
                     description: o.description,
-                    emoji:       o.emoji,
-                    id:          o.id,
-                    roleIDs:     o.role_ids,
-                    title:       o.title
+                    emoji: o.emoji,
+                    id: o.id,
+                    roleIDs: o.role_ids,
+                    title: o.title,
                 })),
-                required:     p.required,
+                required: p.required,
                 singleSelect: p.single_select,
-                title:        p.title
-            }))
+                title: p.title,
+            })),
         }));
     }
 
@@ -874,21 +876,21 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.Guilds.RawRole>({
             method: "PATCH",
-            path:   Routes.GUILD_ROLE(guildID, roleID),
-            json:   {
-                colors: options?.colors || options?.color ? {
-                    primary_color:   options.colors?.primaryColor ?? options.color,
+            path: Routes.GUILD_ROLE(guildID, roleID),
+            json: {
+                colors: options.colors || options.color ? {
+                    primary_color: options.colors?.primaryColor ?? options.color,
                     secondary_color: options.colors?.secondaryColor,
-                    tertiary_color:  options.colors?.tertiaryColor
+                    tertiary_color: options.colors?.tertiaryColor,
                 } : undefined,
-                hoist:         options.hoist,
+                hoist: options.hoist,
                 icon,
-                mentionable:   options.mentionable,
-                name:          options.name,
-                permissions:   options.permissions,
-                unicode_emoji: options.unicodeEmoji
+                mentionable: options.mentionable,
+                name: options.name,
+                permissions: options.permissions,
+                unicode_emoji: options.unicodeEmoji,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.roles.update(data, guildID) ?? new Role(data, this._manager.client, guildID));
     }
 
@@ -904,12 +906,12 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<Types.Guilds.RawRole>>({
             method: "PATCH",
-            path:   Routes.GUILD_ROLES(guildID),
-            json:   options.map(o => ({
-                id:       o.id,
-                position: o.position
+            path: Routes.GUILD_ROLES(guildID),
+            json: options.map(o => ({
+                id: o.id,
+                position: o.position,
             })),
-            reason
+            reason,
         }).then(data => data.map(role => guild?.roles.update(role, guildID) ?? new Role(role, this._manager.client, guildID)));
     }
 
@@ -929,20 +931,20 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEvent>({
             method: "PATCH",
-            path:   Routes.GUILD_SCHEDULED_EVENT(guildID, scheduledEventID),
-            json:   {
-                channel_id:           options.channelID,
-                description:          options.description,
-                entity_metadata:      options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
-                entity_type:          options.entityType,
+            path: Routes.GUILD_SCHEDULED_EVENT(guildID, scheduledEventID),
+            json: {
+                channel_id: options.channelID,
+                description: options.description,
+                entity_metadata: options.entityMetadata ? { location: options.entityMetadata.location } : undefined,
+                entity_type: options.entityType,
                 image,
-                name:                 options.name,
-                privacy_level:        options.privacyLevel,
-                status:               options.status,
-                scheduled_end_time:   options.scheduledEndTime,
-                scheduled_start_time: options.scheduledStartTime
+                name: options.name,
+                privacy_level: options.privacyLevel,
+                status: options.status,
+                scheduled_end_time: options.scheduledEndTime,
+                scheduled_start_time: options.scheduledStartTime,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this._manager.client));
     }
 
@@ -959,14 +961,14 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventException>({
             method: "PATCH",
-            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
-            json:   {
-                is_canceled:          options.isCanceled,
-                scheduled_end_time:   options.scheduledEndTime,
-                scheduled_start_time: options.scheduledStartTime
+            path: Routes.GUILD_SCHEDULED_EVENT_EXCEPTION(guildID, eventID, exceptionID),
+            json: {
+                is_canceled: options.isCanceled,
+                scheduled_end_time: options.scheduledEndTime,
+                scheduled_start_time: options.scheduledStartTime,
             },
-            reason: options.reason
-        }).then(data => {
+            reason: options.reason,
+        }).then((data) => {
             const exception = this._manager.client.util.convertScheduledEventException(data);
             const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
             if (event) {
@@ -993,14 +995,14 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Channels.RawSoundboard>({
             method: "PATCH",
-            path:   Routes.SOUNDBOARD_SOUND(guildID, soundID),
-            json:   {
-                emoji_id:   options.emojiID,
+            path: Routes.SOUNDBOARD_SOUND(guildID, soundID),
+            json: {
+                emoji_id: options.emojiID,
                 emoji_name: options.emojiName,
-                name:       options.name,
-                volume:     options.volume
+                name: options.name,
+                volume: options.volume,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.soundboardSounds.update(data) ?? new Soundboard(data, this._manager.client));
     }
 
@@ -1015,13 +1017,13 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "PATCH",
-            path:   Routes.GUILD_STICKER(guildID, stickerID),
-            json:   {
+            path: Routes.GUILD_STICKER(guildID, stickerID),
+            json: {
                 description: options.description,
-                name:        options.name,
-                tags:        options.tags
+                name: options.name,
+                tags: options.tags,
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => this._manager.client.guilds.get(guildID)?.stickers.update(data) ?? this._manager.client.util.convertSticker(data));
     }
 
@@ -1036,12 +1038,12 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "PATCH",
-            path:   Routes.GUILD_TEMPLATE(guildID, code),
-            json:   {
+            path: Routes.GUILD_TEMPLATE(guildID, code),
+            json: {
                 code,
                 description: options.description,
-                name:        options.name
-            }
+                name: options.name,
+            },
         }).then(data => new GuildTemplate(data, this._manager.client));
     }
 
@@ -1056,11 +1058,11 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
-            path:   Routes.GUILD_VOICE_STATE(guildID, memberID),
-            json:   {
+            path: Routes.GUILD_VOICE_STATE(guildID, memberID),
+            json: {
                 channel_id: options.channelID,
-                suppress:   options.suppress
-            }
+                suppress: options.suppress,
+            },
         });
     }
 
@@ -1074,26 +1076,26 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawWelcomeScreen>({
             method: "PATCH",
-            path:   Routes.GUILD_WELCOME_SCREEN(guildID),
-            json:   {
-                description:      options.description,
-                enabled:          options.enabled,
+            path: Routes.GUILD_WELCOME_SCREEN(guildID),
+            json: {
+                description: options.description,
+                enabled: options.enabled,
                 welcome_channels: options.welcomeChannels.map(ch => ({
-                    channel_id:  ch.channelID,
+                    channel_id: ch.channelID,
                     description: ch.description,
-                    emoji_id:    ch.emojiID,
-                    emoji_name:  ch.emojiName
-                }))
+                    emoji_id: ch.emojiID,
+                    emoji_name: ch.emojiName,
+                })),
             },
-            reason: options.reason
+            reason: options.reason,
         }).then(data => ({
-            description:     data.description,
+            description: data.description,
             welcomeChannels: data.welcome_channels.map(channel => ({
-                channelID:   channel.channel_id,
+                channelID: channel.channel_id,
                 description: channel.description,
-                emojiID:     channel.emoji_id,
-                emojiName:   channel.emoji_name
-            }))
+                emojiID: channel.emoji_id,
+                emojiName: channel.emoji_name,
+            })),
         }));
     }
 
@@ -1107,27 +1109,27 @@ export default class Guilds {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Guilds.RawWidget>({
             method: "PATCH",
-            path:   Routes.GUILD_WIDGET(guildID),
-            json:   {
+            path: Routes.GUILD_WIDGET(guildID),
+            json: {
                 channel_id: options.channelID,
-                enabled:    options.enabled
-            }
+                enabled: options.enabled,
+            },
         }).then(data => ({
-            channels:      data.channels,
-            id:            data.id,
+            channels: data.channels,
+            id: data.id,
             instantInvite: data.instant_invite,
-            members:       data.members.map(m => ({
-                activity:      m.activity,
-                avatar:        m.avatar,
-                avatarURL:     m.avatar_url,
+            members: data.members.map(m => ({
+                activity: m.activity,
+                avatar: m.avatar,
+                avatarURL: m.avatar_url,
                 discriminator: m.discriminator,
-                id:            m.id,
-                status:        m.status,
-                tag:           m.username,
-                username:      m.username
+                id: m.id,
+                status: m.status,
+                tag: m.username,
+                username: m.username,
             })),
-            name:          data.name,
-            presenceCount: data.presence_count
+            name: data.name,
+            presenceCount: data.presence_count,
         }));
     }
 
@@ -1143,8 +1145,8 @@ export default class Guilds {
         query.setIfPresent("with_counts", withCounts);
         return this._manager.authRequest<Types.Guilds.RawGuild>({
             method: "GET",
-            path:   Routes.GUILD(guildID),
-            query
+            path: Routes.GUILD(guildID),
+            query,
         }).then(data => this._manager.client.guilds.has(guildID) ? this._manager.client.guilds.update(data, true) : new Guild(data, this._manager.client, true));
     }
 
@@ -1155,17 +1157,17 @@ export default class Guilds {
      * @caches {@link Guild#threads | Guild#threads}
      */
     async getActiveThreads(guildID: string): Promise<Types.Guilds.GetActiveThreadsResponse> {
-        return this._manager.authRequest<{ members: Array<Types.Channels.RawThreadMember>; threads: Array<Types.Channels.RawThreadChannel>; }>({
+        return this._manager.authRequest<{ members: Array<Types.Channels.RawThreadMember>; threads: Array<Types.Channels.RawThreadChannel> }>({
             method: "GET",
-            path:   Routes.GUILD_ACTIVE_THREADS(guildID)
+            path: Routes.GUILD_ACTIVE_THREADS(guildID),
         }).then(data => ({
             members: data.members.map(member => ({
-                flags:         member.flags,
-                id:            member.id,
+                flags: member.flags,
+                id: member.id,
                 joinTimestamp: new Date(member.join_timestamp),
-                userID:        member.user_id
+                userID: member.user_id,
             })),
-            threads: data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread))
+            threads: data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread)),
         }));
     }
 
@@ -1185,17 +1187,17 @@ export default class Guilds {
         query.setIfPresent("user_id", options?.userID);
         return this._manager.authRequest<Types.AuditLog.RawAuditLog>({
             method: "GET",
-            path:   Routes.GUILD_AUDIT_LOG(guildID),
-            query
+            path: Routes.GUILD_AUDIT_LOG(guildID),
+            query,
         }).then(data => ({
-            applicationCommands:  data.application_commands.map(command => new ApplicationCommand(command, this._manager.client)),
-            autoModerationRules:  data.auto_moderation_rules.map(rule => guild?.autoModerationRules.update(rule) ?? new AutoModerationRule(rule, this._manager.client)),
-            entries:              data.audit_log_entries.map(entry => new AuditLogEntry(entry, this._manager.client)),
+            applicationCommands: data.application_commands.map(command => new ApplicationCommand(command, this._manager.client)),
+            autoModerationRules: data.auto_moderation_rules.map(rule => guild?.autoModerationRules.update(rule) ?? new AutoModerationRule(rule, this._manager.client)),
+            entries: data.audit_log_entries.map(entry => new AuditLogEntry(entry, this._manager.client)),
             guildScheduledEvents: data.guild_scheduled_events.map(event => guild?.scheduledEvents.update(event) ?? new GuildScheduledEvent(event, this._manager.client)),
-            integrations:         data.integrations.map(integration => guild?.integrations.update(integration, guildID) ?? new Integration(integration, this._manager.client, guildID)),
-            threads:              data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread)),
-            users:                data.users.map(user => this._manager.client.users.update(user)),
-            webhooks:             data.webhooks.map(webhook => new Webhook(webhook, this._manager.client))
+            integrations: data.integrations.map(integration => guild?.integrations.update(integration, guildID) ?? new Integration(integration, this._manager.client, guildID)),
+            threads: data.threads.map(rawThread => this._manager.client.util.updateThread(rawThread)),
+            users: data.users.map(user => this._manager.client.users.update(user)),
+            webhooks: data.webhooks.map(webhook => new Webhook(webhook, this._manager.client)),
         }));
     }
 
@@ -1209,7 +1211,7 @@ export default class Guilds {
     async getAutoModerationRule(guildID: string, ruleID: string): Promise<AutoModerationRule> {
         return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
             method: "GET",
-            path:   Routes.GUILD_AUTOMOD_RULE(guildID, ruleID)
+            path: Routes.GUILD_AUTOMOD_RULE(guildID, ruleID),
         }).then(data => this._manager.client.guilds.get(guildID)?.autoModerationRules.update(data) ?? new AutoModerationRule(data, this._manager.client));
     }
 
@@ -1223,7 +1225,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<Types.AutoModeration.RawAutoModerationRule>>({
             method: "GET",
-            path:   Routes.GUILD_AUTOMOD_RULES(guildID)
+            path: Routes.GUILD_AUTOMOD_RULES(guildID),
         }).then(data => data.map(rule => guild?.autoModerationRules.update(rule) ?? new AutoModerationRule(rule, this._manager.client)));
     }
 
@@ -1237,10 +1239,10 @@ export default class Guilds {
     async getBan(guildID: string, userID: string): Promise<Types.Guilds.Ban> {
         return this._manager.authRequest<Types.Guilds.RawBan>({
             method: "GET",
-            path:   Routes.GUILD_BAN(guildID, userID)
+            path: Routes.GUILD_BAN(guildID, userID),
         }).then(data => ({
             reason: data.reason,
-            user:   this._manager.client.users.update(data.user)
+            user: this._manager.client.users.update(data.user),
         }));
     }
 
@@ -1259,11 +1261,11 @@ export default class Guilds {
             query.setIfPresent("limit", _options?.limit);
             return this._manager.authRequest<Array<Types.Guilds.RawBan>>({
                 method: "GET",
-                path:   Routes.GUILD_BANS(guildID),
-                query
+                path: Routes.GUILD_BANS(guildID),
+                query,
             }).then(data => data.map(ban => ({
                 reason: ban.reason,
-                user:   this._manager.client.users.update(ban.user)
+                user: this._manager.client.users.update(ban.user),
             })));
         };
 
@@ -1284,8 +1286,8 @@ export default class Guilds {
             const limitToFetch = Math.min(limitLeft, 1000);
             this._manager.client.emit("debug", `Getting ${limitLeft} more ban${limitLeft === 1 ? "" : "s"} for ${guildID}: ${optionValue ?? ""}`);
             const bansChunk = await _getBans({
-                limit:          limitToFetch,
-                [chosenOption]: optionValue
+                limit: limitToFetch,
+                [chosenOption]: optionValue,
             });
 
             if (bansChunk.length === 0) {
@@ -1312,7 +1314,7 @@ export default class Guilds {
     async getChannels(guildID: string): Promise<Array<Types.Channels.AnyGuildChannelWithoutThreads>> {
         return this._manager.authRequest<Array<Types.Channels.RawGuildChannel>>({
             method: "GET",
-            path:   Routes.GUILD_CHANNELS(guildID)
+            path: Routes.GUILD_CHANNELS(guildID),
         }).then(data => data.map(d => this._manager.client.util.updateChannel(d)));
     }
 
@@ -1326,7 +1328,7 @@ export default class Guilds {
     async getEmoji(guildID: string, emojiID: string): Promise<Types.Guilds.GuildEmoji> {
         return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
             method: "GET",
-            path:   Routes.GUILD_EMOJI(guildID, emojiID)
+            path: Routes.GUILD_EMOJI(guildID, emojiID),
         }).then(data => this._manager.client.guilds.get(guildID)?.emojis.update(data) ?? this._manager.client.util.convertGuildEmoji(data));
     }
 
@@ -1339,8 +1341,8 @@ export default class Guilds {
     async getEmojis(guildID: string): Promise<Array<Types.Guilds.GuildEmoji>> {
         return this._manager.authRequest<Array<Types.Guilds.RawGuildEmoji>>({
             method: "GET",
-            path:   Routes.GUILD_EMOJIS(guildID)
-        }).then(data => {
+            path: Routes.GUILD_EMOJIS(guildID),
+        }).then((data) => {
             const guild = this._manager.client.guilds.get(guildID);
             guild?.emojis.clear();
             return data.map(emoji => guild?.emojis.update(emoji) ?? this._manager.client.util.convertGuildEmoji(emoji));
@@ -1357,7 +1359,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<Types.Guilds.RawIntegration>>({
             method: "GET",
-            path:   Routes.GUILD_INTEGRATIONS(guildID)
+            path: Routes.GUILD_INTEGRATIONS(guildID),
         }).then(data => data.map(integration => guild?.integrations.update(integration, guildID) ?? new Integration(integration, this._manager.client, guildID)));
     }
 
@@ -1371,7 +1373,8 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<Types.Invites.RawInvite>>({
             method: "GET",
-            path:   Routes.GUILD_INVITES(guildID)
+            path: Routes.GUILD_INVITES(guildID),
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         }).then(data => data.map(invite => guild?.invites.update(invite) as InviteWithMetadata<CH> ?? Invite.withMetadata<CH>(invite, this._manager.client)));
     }
 
@@ -1391,13 +1394,13 @@ export default class Guilds {
         query.set("status", options.status);
         return this._manager.authRequest<Types.Guilds.RawGuildJoinRequestsResponse>({
             method: "GET",
-            path:   Routes.GUILD_JOIN_REQUESTS(guildID),
-            query
-        }).then(data => {
+            path: Routes.GUILD_JOIN_REQUESTS(guildID),
+            query,
+        }).then((data) => {
             const guild = this._manager.client.guilds.get(guildID);
             return {
                 guildJoinRequests: data.guild_join_requests.map(request => guild?.joinRequests.update(request) ?? new GuildJoinRequest(request, this._manager.client)),
-                total:             data.total
+                total: data.total,
             };
         });
     }
@@ -1412,7 +1415,7 @@ export default class Guilds {
     async getMember(guildID: string, memberID: string): Promise<Member> {
         return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "GET",
-            path:   Routes.GUILD_MEMBER(guildID, memberID)
+            path: Routes.GUILD_MEMBER(guildID, memberID),
         }).then(data => this._manager.client.util.updateMember(guildID, memberID, data));
     }
 
@@ -1429,8 +1432,8 @@ export default class Guilds {
         query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<Array<Types.Guilds.RESTMember>>({
             method: "GET",
-            path:   Routes.GUILD_MEMBERS(guildID),
-            query
+            path: Routes.GUILD_MEMBERS(guildID),
+            query,
         }).then(data => data.map(d => this._manager.client.util.updateMember(guildID, d.user.id, d)));
     }
 
@@ -1442,29 +1445,29 @@ export default class Guilds {
     async getNewMemberWelcome(guildID: string): Promise<Types.Guilds.NewMemberWelcome | null> {
         return this._manager.authRequest<Types.Guilds.RawNewMemberWelcome | null>({
             method: "GET",
-            path:   Routes.GUILD_NEW_MEMBER_WELCOME(guildID)
+            path: Routes.GUILD_NEW_MEMBER_WELCOME(guildID),
         }).then(data => data === null ? null : {
-            enabled:          data.enabled,
-            guildID:          data.guild_id,
+            enabled: data.enabled,
+            guildID: data.guild_id,
             newMemberActions: data.new_member_actions.map(action => action === null ? null : {
-                actionType:  action.action_type,
-                channelID:   action.channel_id,
+                actionType: action.action_type,
+                channelID: action.channel_id,
                 description: action.description,
-                emoji:       action.emoji,
-                icon:        action.icon,
-                title:       action.title
+                emoji: action.emoji,
+                icon: action.icon,
+                title: action.title,
             }),
             resourceChannels: data.resource_channels.map(channel => channel === null ? null : {
-                channelID:   channel.channel_id,
+                channelID: channel.channel_id,
                 description: channel.description,
-                emoji:       channel.emoji,
-                icon:        channel.icon,
-                title:       channel.title
+                emoji: channel.emoji,
+                icon: channel.icon,
+                title: channel.title,
             }),
             welcomeMessage: {
                 authorIDs: data.welcome_message.author_ids,
-                message:   data.welcome_message.message
-            }
+                message: data.welcome_message.message,
+            },
         });
     }
 
@@ -1476,27 +1479,27 @@ export default class Guilds {
     async getOnboarding(guildID: string): Promise<Types.Guilds.Onboarding> {
         return this._manager.authRequest<Types.Guilds.RawOnboarding>({
             method: "GET",
-            path:   Routes.GUILD_ONBOARDING(guildID)
+            path: Routes.GUILD_ONBOARDING(guildID),
         }).then(data => ({
             defaultChannelIDs: data.default_channel_ids,
-            enabled:           data.enabled,
-            guildID:           data.guild_id,
-            mode:              data.mode,
-            prompts:           data.prompts.map(p => ({
-                id:           p.id,
+            enabled: data.enabled,
+            guildID: data.guild_id,
+            mode: data.mode,
+            prompts: data.prompts.map(p => ({
+                id: p.id,
                 inOnboarding: p.in_onboarding,
-                options:      p.options.map(o => ({
-                    channelIDs:  o.channel_ids,
+                options: p.options.map(o => ({
+                    channelIDs: o.channel_ids,
                     description: o.description,
-                    emoji:       o.emoji,
-                    id:          o.id,
-                    roleIDs:     o.role_ids,
-                    title:       o.title
+                    emoji: o.emoji,
+                    id: o.id,
+                    roleIDs: o.role_ids,
+                    title: o.title,
                 })),
-                required:     p.required,
+                required: p.required,
                 singleSelect: p.single_select,
-                title:        p.title
-            }))
+                title: p.title,
+            })),
         }));
     }
 
@@ -1508,7 +1511,7 @@ export default class Guilds {
     async getPreview(guildID: string): Promise<GuildPreview> {
         return this._manager.authRequest<Types.Guilds.RawGuildPreview>({
             method: "GET",
-            path:   Routes.GUILD_PREVIEW(guildID)
+            path: Routes.GUILD_PREVIEW(guildID),
         }).then(data => new GuildPreview(data, this._manager.client));
     }
 
@@ -1522,10 +1525,10 @@ export default class Guilds {
         const query = new QueryBuilder();
         query.setIfPresent("days", options?.days);
         query.setIfPresent("include_roles", options?.includeRoles?.join(","));
-        return this._manager.authRequest<{ pruned: number; }>({
+        return this._manager.authRequest<{ pruned: number }>({
             method: "GET",
-            path:   Routes.GUILD_PRUNE(guildID),
-            query
+            path: Routes.GUILD_PRUNE(guildID),
+            query,
         }).then(data => data.pruned);
     }
 
@@ -1540,7 +1543,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Types.Guilds.RawRole>({
             method: "GET",
-            path:   Routes.GUILD_ROLE(guildID, roleID)
+            path: Routes.GUILD_ROLE(guildID, roleID),
         }).then(data => guild?.roles.update(data, guildID) ?? new Role(data, this._manager.client, guildID));
     }
 
@@ -1552,7 +1555,7 @@ export default class Guilds {
     async getRoleMemberCounts(guildID: string): Promise<Record<string, number>> {
         return this._manager.authRequest<Record<string, number>>({
             method: "GET",
-            path:   Routes.GUILD_ROLE_MEMBER_COUNTS(guildID)
+            path: Routes.GUILD_ROLE_MEMBER_COUNTS(guildID),
         });
     }
 
@@ -1566,7 +1569,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Array<Types.Guilds.RawRole>>({
             method: "GET",
-            path:   Routes.GUILD_ROLES(guildID)
+            path: Routes.GUILD_ROLES(guildID),
         }).then(data => data.map(role => guild?.roles.update(role, guildID) ?? new Role(role, this._manager.client, guildID)));
     }
 
@@ -1584,8 +1587,8 @@ export default class Guilds {
         query.setIfPresent("with_user_count", withUserCount);
         return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEvent>({
             method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
-            query
+            path: Routes.GUILD_SCHEDULED_EVENT(guildID, eventID),
+            query,
         }).then(data => guild?.scheduledEvents.update(data) ?? new GuildScheduledEvent(data, this._manager.client));
     }
 
@@ -1607,17 +1610,35 @@ export default class Guilds {
         query.setIfPresent("with_member", options?.withMember);
         return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
             method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENT_EXCEPTION_USERS(guildID, eventID, exceptionID),
-            query
+            path: Routes.GUILD_SCHEDULED_EVENT_EXCEPTION_USERS(guildID, eventID, exceptionID),
+            query,
         }).then(data => data.map(d => ({
-            guildScheduledEvent:            guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEvent: guild?.scheduledEvents.get(d.guild_scheduled_event_id),
             guildScheduledEventExceptionID: d.guild_scheduled_event_exception_id,
-            guildScheduledEventID:          d.guild_scheduled_event_id,
-            member:                         d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
-            response:                       d.response,
-            user:                           this._manager.client.users.update(d.user),
-            userID:                         d.user_id
+            guildScheduledEventID: d.guild_scheduled_event_id,
+            member: d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
+            response: d.response,
+            user: this._manager.client.users.update(d.user),
+            userID: d.user_id,
         })));
+    }
+
+    /**
+     * Get a guild's scheduled events.
+     * @param guildID The ID of the guild.
+     * @param withUserCount If the number of users subscribed to the event should be included.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
+     */
+    async getScheduledEvents(guildID: string, withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
+        const guild = this._manager.client.guilds.get(guildID);
+        const query = new QueryBuilder();
+        query.setIfPresent("with_user_count", withUserCount);
+        return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEvent>>({
+            method: "GET",
+            path: Routes.GUILD_SCHEDULED_EVENTS(guildID),
+            query,
+        }).then(data => data.map(d => guild?.scheduledEvents.update(d) ?? new GuildScheduledEvent(d, this._manager.client)));
     }
 
     /**
@@ -1635,16 +1656,16 @@ export default class Guilds {
         }
         return this._manager.authRequest<Types.ScheduledEvents.RawScheduledEventUserCounts>({
             method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENT_USER_COUNTS(guildID, eventID),
-            query
-        }).then(data => {
+            path: Routes.GUILD_SCHEDULED_EVENT_USER_COUNTS(guildID, eventID),
+            query,
+        }).then((data) => {
             const event = this._manager.client.guilds.get(guildID)?.scheduledEvents.get(eventID);
             if (event) {
                 event.userCount = data.guild_scheduled_event_count;
             }
             return {
-                guildScheduledEventCount:           data.guild_scheduled_event_count,
-                guildScheduledEventExceptionCounts: data.guild_scheduled_event_exception_counts
+                guildScheduledEventCount: data.guild_scheduled_event_count,
+                guildScheduledEventExceptionCounts: data.guild_scheduled_event_exception_counts,
             };
         });
     }
@@ -1666,35 +1687,17 @@ export default class Guilds {
         query.setIfPresent("with_member", options?.withMember);
         return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEventUser>>({
             method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID),
-            query
+            path: Routes.GUILD_SCHEDULED_EVENT_USERS(guildID, eventID),
+            query,
         }).then(data => data.map(d => ({
-            guildScheduledEvent:            guild?.scheduledEvents.get(d.guild_scheduled_event_id),
+            guildScheduledEvent: guild?.scheduledEvents.get(d.guild_scheduled_event_id),
             guildScheduledEventExceptionID: d.guild_scheduled_event_exception_id,
-            guildScheduledEventID:          d.guild_scheduled_event_id,
-            member:                         d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
-            response:                       d.response,
-            user:                           this._manager.client.users.update(d.user),
-            userID:                         d.user_id
+            guildScheduledEventID: d.guild_scheduled_event_id,
+            member: d.member ? this._manager.client.util.updateMember(guildID, d.member.user!.id, d.member) : undefined,
+            response: d.response,
+            user: this._manager.client.users.update(d.user),
+            userID: d.user_id,
         })));
-    }
-
-    /**
-     * Get a guild's scheduled events.
-     * @param guildID The ID of the guild.
-     * @param withUserCount If the number of users subscribed to the event should be included.
-     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
-     * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
-     */
-    async getScheduledEvents(guildID: string, withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
-        const guild = this._manager.client.guilds.get(guildID);
-        const query = new QueryBuilder();
-        query.setIfPresent("with_user_count", withUserCount);
-        return this._manager.authRequest<Array<Types.ScheduledEvents.RawScheduledEvent>>({
-            method: "GET",
-            path:   Routes.GUILD_SCHEDULED_EVENTS(guildID),
-            query
-        }).then(data => data.map(d => guild?.scheduledEvents.update(d) ?? new GuildScheduledEvent(d, this._manager.client)));
     }
 
     /**
@@ -1708,7 +1711,7 @@ export default class Guilds {
         const guild = this._manager.client.guilds.get(guildID);
         return this._manager.authRequest<Types.Channels.RawSoundboard>({
             method: "GET",
-            path:   Routes.SOUNDBOARD_SOUND(guildID, soundID)
+            path: Routes.SOUNDBOARD_SOUND(guildID, soundID),
         }).then(data => guild?.soundboardSounds.update(data) ?? new Soundboard(data, this._manager.client));
     }
 
@@ -1720,9 +1723,9 @@ export default class Guilds {
      */
     async getSoundboardSounds(guildID: string): Promise<Array<Soundboard>> {
         const guild = this._manager.client.guilds.get(guildID);
-        return this._manager.authRequest<{ items: Array<Types.Channels.RawSoundboard>; }>({
+        return this._manager.authRequest<{ items: Array<Types.Channels.RawSoundboard> }>({
             method: "GET",
-            path:   Routes.SOUNDBOARD_SOUNDS(guildID)
+            path: Routes.SOUNDBOARD_SOUNDS(guildID),
         }).then(data => data.items.map(d => guild?.soundboardSounds.update(d) ?? new Soundboard(d, this._manager.client)));
     }
 
@@ -1736,7 +1739,7 @@ export default class Guilds {
     async getSticker(guildID: string, stickerID: string): Promise<Types.Guilds.Sticker> {
         return this._manager.authRequest<Types.Guilds.RawSticker>({
             method: "GET",
-            path:   Routes.GUILD_STICKER(guildID, stickerID)
+            path: Routes.GUILD_STICKER(guildID, stickerID),
         }).then(data => this._manager.client.guilds.get(guildID)?.stickers.update(data) ?? this._manager.client.util.convertSticker(data));
     }
 
@@ -1749,8 +1752,8 @@ export default class Guilds {
     async getStickers(guildID: string): Promise<Array<Types.Guilds.Sticker>> {
         return this._manager.authRequest<Array<Types.Guilds.RawSticker>>({
             method: "GET",
-            path:   Routes.GUILD_STICKERS(guildID)
-        }).then(data => {
+            path: Routes.GUILD_STICKERS(guildID),
+        }).then((data) => {
             const guild = this._manager.client.guilds.get(guildID);
             guild?.stickers.clear();
             return data.map(sticker => guild?.stickers.update(sticker) ?? this._manager.client.util.convertSticker(sticker));
@@ -1765,7 +1768,7 @@ export default class Guilds {
     async getTemplate(code: string): Promise<GuildTemplate> {
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "GET",
-            path:   Routes.GUILD_TEMPLATE_CODE(code)
+            path: Routes.GUILD_TEMPLATE_CODE(code),
         }).then(data => new GuildTemplate(data, this._manager.client));
     }
 
@@ -1777,7 +1780,7 @@ export default class Guilds {
     async getTemplates(guildID: string): Promise<Array<GuildTemplate>> {
         return this._manager.authRequest<Array<Types.GuildTemplate.RawGuildTemplate>>({
             method: "GET",
-            path:   Routes.GUILD_TEMPLATES(guildID)
+            path: Routes.GUILD_TEMPLATES(guildID),
         }).then(data => data.map(d => new GuildTemplate(d, this._manager.client)));
     }
 
@@ -1789,7 +1792,7 @@ export default class Guilds {
     async getVanityURL(guildID: string): Promise<Types.Guilds.GetVanityURLResponse> {
         return this._manager.authRequest<Types.Guilds.GetVanityURLResponse>({
             method: "GET",
-            path:   Routes.GUILD_VANITY_URL(guildID)
+            path: Routes.GUILD_VANITY_URL(guildID),
         });
     }
 
@@ -1801,7 +1804,7 @@ export default class Guilds {
     async getVoiceRegions(guildID: string): Promise<Array<Types.Voice.VoiceRegion>> {
         return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
             method: "GET",
-            path:   Routes.GUILD_VOICE_REGIONS(guildID)
+            path: Routes.GUILD_VOICE_REGIONS(guildID),
         });
     }
 
@@ -1815,7 +1818,7 @@ export default class Guilds {
     async getVoiceState(guildID: string, memberID: string): Promise<VoiceState> {
         return this._manager.authRequest<Types.Voice.RawVoiceState>({
             method: "GET",
-            path:   Routes.GUILD_VOICE_STATE(guildID, memberID)
+            path: Routes.GUILD_VOICE_STATE(guildID, memberID),
         }).then(data => this._manager.client.guilds.get(guildID)?.voiceStates.update(data) ?? new VoiceState(data, this._manager.client));
     }
 
@@ -1827,15 +1830,15 @@ export default class Guilds {
     async getWelcomeScreen(guildID: string): Promise<Types.Guilds.WelcomeScreen> {
         return this._manager.authRequest<Types.Guilds.RawWelcomeScreen>({
             method: "GET",
-            path:   Routes.GUILD_WELCOME_SCREEN(guildID)
+            path: Routes.GUILD_WELCOME_SCREEN(guildID),
         }).then(data => ({
-            description:     data.description,
+            description: data.description,
             welcomeChannels: data.welcome_channels.map(channel => ({
-                channelID:   channel.channel_id,
+                channelID: channel.channel_id,
                 description: channel.description,
-                emojiID:     channel.emoji_id,
-                emojiName:   channel.emoji_name
-            }))
+                emojiID: channel.emoji_id,
+                emojiName: channel.emoji_name,
+            })),
         }));
     }
 
@@ -1847,23 +1850,23 @@ export default class Guilds {
     async getWidget(guildID: string): Promise<Types.Guilds.Widget> {
         return this._manager.authRequest<Types.Guilds.RawWidget>({
             method: "GET",
-            path:   Routes.GUILD_WIDGET(guildID)
+            path: Routes.GUILD_WIDGET(guildID),
         }).then(data => ({
-            channels:      data.channels,
-            id:            data.id,
+            channels: data.channels,
+            id: data.id,
             instantInvite: data.instant_invite,
-            members:       data.members.map(m => ({
-                activity:      m.activity,
-                avatar:        m.avatar,
-                avatarURL:     m.avatar_url,
+            members: data.members.map(m => ({
+                activity: m.activity,
+                avatar: m.avatar,
+                avatarURL: m.avatar_url,
                 discriminator: m.discriminator,
-                id:            m.id,
-                status:        m.status,
-                tag:           m.username,
-                username:      m.username
+                id: m.id,
+                status: m.status,
+                tag: m.username,
+                username: m.username,
             })),
-            name:          data.name,
-            presenceCount: data.presence_count
+            name: data.name,
+            presenceCount: data.presence_count,
         }));
     }
 
@@ -1878,8 +1881,8 @@ export default class Guilds {
         query.setIfPresent("style", style);
         return this._manager.request<Buffer>({
             method: "GET",
-            path:   Routes.GUILD_WIDGET_IMAGE(guildID),
-            query
+            path: Routes.GUILD_WIDGET_IMAGE(guildID),
+            query,
         });
     }
 
@@ -1891,7 +1894,7 @@ export default class Guilds {
     async getWidgetJSON(guildID: string): Promise<Types.Guilds.RawWidget> {
         return this._manager.request<Types.Guilds.RawWidget>({
             method: "GET",
-            path:   Routes.GUILD_WIDGET_JSON(guildID)
+            path: Routes.GUILD_WIDGET_JSON(guildID),
         });
     }
 
@@ -1903,10 +1906,10 @@ export default class Guilds {
     async getWidgetSettings(guildID: string): Promise<Types.Guilds.WidgetSettings> {
         return this._manager.authRequest<Types.Guilds.RawWidgetSettings>({
             method: "GET",
-            path:   Routes.GUILD_WIDGET(guildID)
+            path: Routes.GUILD_WIDGET(guildID),
         }).then(data => ({
             channelID: data.channel_id,
-            enabled:   data.enabled
+            enabled: data.enabled,
         }));
     }
 
@@ -1919,60 +1922,60 @@ export default class Guilds {
      * @caches {@link Guild#members | Guild#members}
      */
     async memberSearch(guildID: string, options?: Types.Guilds.MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MemberSearchResults> {
-        /* eslint-disable @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping */
+        /* eslint-disable @typescript-eslint/explicit-function-return-type */
         const formatRange = <T>(data: Types.Guilds.MemberSearchRangeQuery<T>) => ({
             range: data.range === undefined ? undefined : {
                 gte: data.range.gte,
-                lte: data.range.lte
-            }
+                lte: data.range.lte,
+            },
         });
         const formatOrQuery = <T>(data: Types.Guilds.MemberSearchOrQuery<T>) => ({
-            or_query: data.orQuery
+            or_query: data.orQuery,
         });
         const formatOrQueryRange = <T>(data: Types.Guilds.MemberSearchOrQueryRange<T>) => ({
             or_query: data.orQuery,
-            range:    data.range === undefined ? undefined : {
+            range: data.range === undefined ? undefined : {
                 gte: data.range.gte,
-                lte: data.range.lte
-            }
+                lte: data.range.lte,
+            },
         });
         const formatAndOrQuery = <T>(data: Types.Guilds.MemberSearchAndOrQuery<T>) => ({
             and_query: data.andQuery,
-            or_query:  data.orQuery
+            or_query: data.orQuery,
         });
         const formatSearchFilter = (data: Types.Guilds.MemberSearchFilter) => ({
-            did_rejoin:       data.didRejoin,
-            guild_joined_at:  data.guildJoinedAt === undefined ? undefined : formatRange(data.guildJoinedAt),
-            is_pending:       data.isPending,
+            did_rejoin: data.didRejoin,
+            guild_joined_at: data.guildJoinedAt === undefined ? undefined : formatRange(data.guildJoinedAt),
+            is_pending: data.isPending,
             join_source_type: data.joinSourceType === undefined ? undefined : formatOrQuery(data.joinSourceType),
-            role_ids:         data.roleIDs === undefined ? undefined : formatAndOrQuery(data.roleIDs),
-            safety_signals:   data.safetySignals === undefined ? undefined : {
+            role_ids: data.roleIDs === undefined ? undefined : formatAndOrQuery(data.roleIDs),
+            safety_signals: data.safetySignals === undefined ? undefined : {
                 automod_quarantined_username: data.safetySignals.automodQuarantinedUsername,
                 communication_disabled_until: data.safetySignals.communicationDisabledUntil === undefined ? undefined : formatRange(data.safetySignals.communicationDisabledUntil),
-                unusual_account_activity:     data.safetySignals.unusualAccountActivity,
-                unusual_dm_activity_until:    data.safetySignals.unusualDmActivityUntil === undefined ? undefined : formatRange(data.safetySignals.unusualDmActivityUntil)
+                unusual_account_activity: data.safetySignals.unusualAccountActivity,
+                unusual_dm_activity_until: data.safetySignals.unusualDmActivityUntil === undefined ? undefined : formatRange(data.safetySignals.unusualDmActivityUntil),
             },
             source_invite_code: data.sourceInviteCode === undefined ? undefined : formatOrQuery(data.sourceInviteCode),
-            user_id:            data.userID === undefined ? undefined : formatOrQueryRange(data.userID),
-            usernames:          data.usernames === undefined ? undefined : formatOrQuery(data.usernames)
+            user_id: data.userID === undefined ? undefined : formatOrQueryRange(data.userID),
+            usernames: data.usernames === undefined ? undefined : formatOrQuery(data.usernames),
         });
         const formatPaginationFilter = (data: Types.Guilds.MemberSearchPaginationFilter) => ({
             guild_joined_at: data.guildJoinedAt,
-            user_id:         data.userID
+            user_id: data.userID,
         });
-        /* eslint-enable @typescript-eslint/explicit-function-return-type, unicorn/consistent-function-scoping */
+        /* eslint-enable @typescript-eslint/explicit-function-return-type */
         return this._manager.authRequest<Types.Guilds.RawMemberSearchResults | Types.Guilds.MemberSearchNotIndexedResult>({
             method: "POST",
-            path:   Routes.GUILD_MEMBERS_SEARCH(guildID),
-            json:   {
-                after:     options?.after === undefined ? undefined : formatPaginationFilter(options.after),
+            path: Routes.GUILD_MEMBERS_SEARCH(guildID),
+            json: {
+                after: options?.after === undefined ? undefined : formatPaginationFilter(options.after),
                 and_query: options?.andQuery === undefined ? undefined : formatSearchFilter(options.andQuery),
-                before:    options?.before === undefined ? undefined : formatPaginationFilter(options.before),
-                limit:     options?.limit,
-                or_query:  options?.orQuery === undefined ? undefined : formatSearchFilter(options.orQuery),
-                sort:      options?.sort
-            }
-        }).then(async data => {
+                before: options?.before === undefined ? undefined : formatPaginationFilter(options.before),
+                limit: options?.limit,
+                or_query: options?.orQuery === undefined ? undefined : formatSearchFilter(options.orQuery),
+                sort: options?.sort,
+            },
+        }).then(async (data) => {
             if ("retry_after" in data) {
                 if (!retryOnIndexNotAvailable) {
                     throw new Error(`Member search for guild ${guildID} failed due to the index not being available.`);
@@ -1990,14 +1993,14 @@ export default class Guilds {
             return {
                 guildID: data.guild_id,
                 members: data.members.map(m => ({
-                    integrationType:  m.integration_type,
-                    inviterID:        m.inviter_id,
-                    joinSourceType:   m.join_source_type,
-                    member:           this._manager.client.util.updateMember(guildID, m.member.user.id, m.member),
-                    sourceInviteCode: m.source_invite_code
+                    integrationType: m.integration_type,
+                    inviterID: m.inviter_id,
+                    joinSourceType: m.join_source_type,
+                    member: this._manager.client.util.updateMember(guildID, m.member.user.id, m.member),
+                    sourceInviteCode: m.source_invite_code,
                 })),
-                pageResultCount:  data.page_result_count,
-                totalResultCount: data.total_result_count
+                pageResultCount: data.page_result_count,
+                totalResultCount: data.total_result_count,
             };
         });
     }
@@ -2012,8 +2015,8 @@ export default class Guilds {
     async removeBan(guildID: string, userID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_BAN(guildID, userID),
-            reason
+            path: Routes.GUILD_BAN(guildID, userID),
+            reason,
         });
     }
 
@@ -2027,8 +2030,8 @@ export default class Guilds {
     async removeMember(guildID: string, memberID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_MEMBER(guildID, memberID),
-            reason
+            path: Routes.GUILD_MEMBER(guildID, memberID),
+            reason,
         });
     }
 
@@ -2043,8 +2046,8 @@ export default class Guilds {
     async removeMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
-            reason
+            path: Routes.GUILD_MEMBER_ROLE(guildID, memberID, roleID),
+            reason,
         });
     }
 
@@ -2062,8 +2065,8 @@ export default class Guilds {
         query.setIfPresent("limit", options.limit);
         return this._manager.authRequest<Array<Types.Guilds.RESTMember>>({
             method: "GET",
-            path:   Routes.GUILD_SEARCH_MEMBERS(guildID),
-            query
+            path: Routes.GUILD_SEARCH_MEMBERS(guildID),
+            query,
         }).then(data => data.map(d => this._manager.client.util.updateMember(guildID, d.user.id, d)));
     }
 
@@ -2103,9 +2106,9 @@ export default class Guilds {
         append("mentions", options?.mentions);
         return this._manager.authRequest<Types.Guilds.RawMessageSearchResults | Types.Guilds.MessageSearchNotIndexedResult>({
             method: "GET",
-            path:   Routes.GUILD_MESSAGES_SEARCH(guildID),
-            query
-        }).then(async data => {
+            path: Routes.GUILD_MESSAGES_SEARCH(guildID),
+            query,
+        }).then(async (data) => {
             if ("retry_after" in data) {
                 if (!retryOnIndexNotAvailable) {
                     throw new Error(`Message search for guild ${guildID} failed due to the index not being available.`);
@@ -2122,20 +2125,20 @@ export default class Guilds {
 
             const guild = this._manager.client.guilds.get(guildID);
             return {
-                analyticsID:              data.analytics_id,
-                channels:                 data.channels?.map(c => guild?.channels.update(c as Types.Channels.RawGuildChannel) ?? Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(c, this._manager.client)),
+                analyticsID: data.analytics_id,
+                channels: data.channels?.map(c => guild?.channels.update(c as Types.Channels.RawGuildChannel) ?? Channel.from<Types.Channels.AnyGuildChannelWithoutThreads>(c, this._manager.client)),
                 doingDeepHistoricalIndex: data.doing_deep_historical_index,
-                documentsIndexed:         data.documents_indexed,
-                members:                  data.members?.map(m => ({
-                    flags:         m.flags,
-                    id:            m.id,
+                documentsIndexed: data.documents_indexed,
+                members: data.members?.map(m => ({
+                    flags: m.flags,
+                    id: m.id,
                     joinTimestamp: new Date(m.join_timestamp),
-                    member:        m.member && guild?.members.update(m.member, guildID),
-                    userID:        m.user_id
+                    member: m.member && guild?.members.update(m.member, guildID),
+                    userID: m.user_id,
                 })),
-                messages:     data.messages.map(messages => messages.map(message => this._manager.client.util.updateMessage<T>(message))),
-                threads:      data.threads?.map(thread => this._manager.client.util.updateThread(thread)),
-                totalResults: data.total_results
+                messages: data.messages.map(messages => messages.map(message => this._manager.client.util.updateMessage<T>(message))),
+                threads: data.threads?.map(thread => this._manager.client.util.updateThread(thread)),
+                totalResults: data.total_results,
             };
         });
     }
@@ -2149,7 +2152,7 @@ export default class Guilds {
     async syncTemplate(guildID: string, code: string): Promise<GuildTemplate> {
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
             method: "PUT",
-            path:   Routes.GUILD_TEMPLATE(guildID, code)
+            path: Routes.GUILD_TEMPLATE(guildID, code),
         }).then(data => new GuildTemplate(data, this._manager.client));
     }
 }

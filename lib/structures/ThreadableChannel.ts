@@ -1,10 +1,12 @@
 /** @module TextableChannel */
-import TextableChannel from "./TextableChannel";
-import type PrivateThreadChannel from "./PrivateThreadChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
-import type Client from "../Client";
 import Collection from "../util/Collection";
+
+import TextableChannel from "./TextableChannel";
+
+import type PrivateThreadChannel from "./PrivateThreadChannel";
+import type Client from "../Client";
+import type { ChannelTypes, ThreadAutoArchiveDuration } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild textable channel. */
 export default class ThreadableChannel<TC extends Types.Channels.AnyTextableGuildChannel = Types.Channels.AnyTextableGuildChannel, TH extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel> extends TextableChannel<TC> {
@@ -18,16 +20,16 @@ export default class ThreadableChannel<TC extends Types.Channels.AnyTextableGuil
         this.update(data);
     }
 
+    /** The threads in this channel. The returned collection is disposable. */
+    get threads(): Collection<string, TH> {
+        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as TH]));
+    }
+
     protected override update(data: Partial<Types.Channels.RawTextChannel | Types.Channels.RawAnnouncementChannel>): void {
         super.update(data);
         if (data.default_auto_archive_duration !== undefined) {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         }
-    }
-
-    /** The threads in this channel. The returned collection is disposable. */
-    get threads(): Collection<string, TH> {
-        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as TH]));
     }
 
     /**
@@ -64,13 +66,12 @@ export default class ThreadableChannel<TC extends Types.Channels.AnyTextableGuil
         return this.client.rest.channels.startThreadWithoutMessage<TH>(this.id, options);
     }
 
-
     override toJSON(): Types.JSON.JSONThreadableChannel {
         return {
             ...super.toJSON(),
             defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
-            threads:                    this.threads.map(thread => thread.id),
-            type:                       this.type
+            threads: this.threads.map(thread => thread.id),
+            type: this.type,
         };
     }
 }

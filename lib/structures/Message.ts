@@ -1,24 +1,26 @@
 /** @module Message */
-import Base from "./Base";
+import { BASE_URL, MessageReferenceType, type MessageTypes } from "../Constants";
+import { UncachedError } from "../util/Errors";
+import * as Routes from "../util/Routes";
+import TypedCollection from "../util/TypedCollection";
+
 import Attachment from "./Attachment";
-import User from "./User";
-import type Guild from "./Guild";
-import type Member from "./Member";
+import Base from "./Base";
+import GuildChannel from "./GuildChannel";
 import PartialApplication from "./PartialApplication";
-import type ClientApplication from "./ClientApplication";
+import Poll from "./Poll";
+import User from "./User";
+
 import type AnnouncementChannel from "./AnnouncementChannel";
 import type AnnouncementThreadChannel from "./AnnouncementThreadChannel";
+import type ClientApplication from "./ClientApplication";
+import type Guild from "./Guild";
+import type Member from "./Member";
+import type PrivateChannel from "./PrivateChannel";
 import type PublicThreadChannel from "./PublicThreadChannel";
 import type TextChannel from "./TextChannel";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import Poll from "./Poll";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
-import { BASE_URL, MessageReferenceType, type MessageTypes } from "../Constants";
-import * as Routes from "../util/Routes";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a message. */
 export default class Message<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached> extends Base {
@@ -109,24 +111,28 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         this.attachments = new TypedCollection(Attachment, client);
         this.channelID = data.channel_id;
         this.components = [];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.content = data.content ?? "";
         this.editedTimestamp = null;
         this.embeds = [];
         this.flags = 0;
-        this.guildID = (data.guild_id === undefined ? null : data.guild_id) as T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
+        this.guildID = data.guild_id ?? null as T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
         this.member = (data.member === undefined ? undefined : this.client.util.updateMember(data.guild_id!, data.author.id, { ...data.member, user: data.author })) as T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | undefined;
         this.mentions = {
             channels: [],
             everyone: false,
-            members:  [],
-            roles:    [],
-            users:    []
+            members: [],
+            roles: [],
+            users: [],
         };
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
         this.pinned = !!data.pinned;
         this.poll = data.poll ? new Poll(data.poll, client, this) : undefined;
         this.reactions = [];
         // message updates can be missing a timestamp
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.timestamp = data.timestamp === undefined ? Base.getCreatedAt(this.id) : new Date(data.timestamp);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
         this.tts = !!data.tts;
         this.type = data.type;
         this.webhookID = data.webhook_id;
@@ -145,192 +151,6 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
                 this.application = data.application ? new PartialApplication(data.application, client) : undefined;
             }
             this.applicationID = data.application_id;
-        }
-    }
-
-    protected override update(data: Partial<Types.Channels.RawMessage>): void {
-        if (data.mention_everyone !== undefined) {
-            this.mentions.everyone = data.mention_everyone;
-        }
-        if (data.mention_roles !== undefined) {
-            this.mentions.roles = data.mention_roles;
-        }
-        if (data.mentions !== undefined) {
-            const members: Array<Member> = [];
-            this.mentions.users = data.mentions.map(user => {
-                if (this.channel && "guildID" in (this.channel as T) && user.member) {
-                    members.push(this.client.util.updateMember((this.channel as Types.Channels.AnyTextableGuildChannel).guildID, user.id, { ...user.member, user }));
-                }
-                return this.client.users.update(user);
-            });
-            this.mentions.members = members;
-        }
-        if (data.activity !== undefined) {
-            this.activity = data.activity;
-        }
-        if (data.attachments !== undefined) {
-            if (this.attachments.size !== 0) {
-                for (const id of this.attachments.keys()) {
-                    if (!data.attachments.some(attachment => attachment.id === id)) {
-                        this.attachments.delete(id);
-                    }
-                }
-            }
-
-            for (const attachment of data.attachments) {
-                this.attachments.update(attachment);
-            }
-        }
-        if (data.call !== undefined) {
-            this.call = {
-                endedTimestamp: data.call.ended_timestamp ? new Date(data.call.ended_timestamp) : null,
-                participants:   data.call.participants
-            };
-        }
-        if (data.components !== undefined) {
-            this.components = this.client.util.componentsToParsed(data.components);
-        }
-        if (data.content !== undefined) {
-            this.content = data.content;
-            this.mentions.channels = (data.content.match(/<#\d{17,21}>/g) ?? []).map(mention => mention.slice(2, -1));
-        }
-        if (data.edited_timestamp !== undefined) {
-            this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
-        }
-        if (data.embeds !== undefined) {
-            this.embeds = this.client.util.embedsToParsed(data.embeds);
-            const pollResultEmbed = this.embeds.find(embed => embed.type === "poll_result");
-            if (pollResultEmbed) {
-                const questionText = pollResultEmbed.fields!.find(field => field.name === "poll_question_text")!.value;
-                const totalVotes = pollResultEmbed.fields!.find(field => field.name === "total_votes")!.value;
-                const victorAnswerID = pollResultEmbed.fields!.find(field => field.name === "victor_answer_id")?.value;
-                const victorAnswerText = pollResultEmbed.fields!.find(field => field.name === "victor_answer_text")?.value;
-                const victorAnswerVotes = pollResultEmbed.fields!.find(field => field.name === "victor_answer_votes")!.value;
-                this.pollResults = {
-                    questionText,
-                    totalVotes:        Number(totalVotes),
-                    victorAnswerID:    victorAnswerID === undefined ? undefined : Number(victorAnswerID),
-                    victorAnswerText:  victorAnswerText === undefined ? undefined : victorAnswerText,
-                    victorAnswerVotes: Number(victorAnswerVotes)
-                };
-            }
-        }
-        if (data.flags !== undefined) {
-            this.flags = data.flags;
-        }
-        if (data.interaction !== undefined) {
-            let member: Types.Guilds.RawMember | undefined;
-            if (data.interaction.member) {
-                member = {
-                    ...data.interaction.member,
-                    user: data.interaction.user
-                };
-            }
-            this.interaction = {
-                id:     data.interaction.id,
-                member: member ? this.client.util.updateMember(data.guild_id!, member.user!.id, member) : undefined,
-                name:   data.interaction.name,
-                type:   data.interaction.type,
-                user:   this.client.users.update(data.interaction.user)
-            };
-        }
-        if (data.interaction_metadata !== undefined) {
-            this.interactionMetadata = {
-                authorizingIntegrationOwners:  data.interaction_metadata.authorizing_integration_owners,
-                id:                            data.interaction_metadata.id,
-                interactedMessageID:           data.interaction_metadata.interacted_message_id,
-                name:                          data.interaction_metadata.name,
-                originalResponseMessageID:     data.interaction_metadata.original_response_message_id,
-                targetMessageID:               data.interaction_metadata.target_message_id,
-                targetUser:                    data.interaction_metadata.target_user ? this.client.users.update(data.interaction_metadata.target_user) : undefined,
-                type:                          data.interaction_metadata.type,
-                user:                          this.client.users.update(data.interaction_metadata.user),
-                triggeringInteractionMetadata: data.interaction_metadata.triggering_interaction_metadata === undefined ? undefined : {
-                    authorizingIntegrationOwners: data.interaction_metadata.triggering_interaction_metadata.authorizing_integration_owners,
-                    id:                           data.interaction_metadata.triggering_interaction_metadata.id,
-                    interactedMessageID:          data.interaction_metadata.triggering_interaction_metadata.interacted_message_id,
-                    originalResponseMessageID:    data.interaction_metadata.triggering_interaction_metadata.original_response_message_id,
-                    targetMessageID:              data.interaction_metadata.triggering_interaction_metadata.target_message_id,
-                    targetUser:                   data.interaction_metadata.triggering_interaction_metadata.target_user ? this.client.users.update(data.interaction_metadata.triggering_interaction_metadata.target_user) : undefined,
-                    type:                         data.interaction_metadata.triggering_interaction_metadata.type,
-                    user:                         this.client.users.update(data.interaction_metadata.triggering_interaction_metadata.user)
-                }
-            } as Types.Channels.AnyMessageInteractionMetadata;
-        }
-        if (data.message_reference) {
-            this.messageReference = {
-                channelID:       data.message_reference.channel_id,
-                failIfNotExists: data.message_reference.fail_if_not_exists,
-                guildID:         data.message_reference.guild_id,
-                messageID:       data.message_reference.message_id
-            };
-        }
-
-        if (data.message_snapshots) {
-            this.messageSnapshots = data.message_snapshots.map(s => ({
-                message: {
-                    attachments:     s.message.attachments.map(a => new Attachment(a, this.client)),
-                    components:      s.message.components ? this.client.util.componentsToParsed(s.message.components) : [],
-                    content:         s.message.content,
-                    editedTimestamp: s.message.edited_timestamp ? new Date(s.message.edited_timestamp) : null,
-                    embeds:          this.client.util.embedsToParsed(s.message.embeds),
-                    flags:           s.message.flags ?? 0,
-                    mentions:        {
-                        channels: (s.message.content.match(/<#\d{17,21}>/g) ?? []).map(mention => mention.slice(2, -1)),
-                        roles:    s.message.mention_roles,
-                        users:    s.message.mentions.map(u => this.client.users.update(u))
-                    },
-                    stickerItems: s.message.sticker_items ?? [],
-                    timestamp:    new Date(s.message.timestamp),
-                    type:         s.message.type
-                }
-            }));
-        }
-
-        if (data.nonce !== undefined) {
-            this.nonce = data.nonce;
-        }
-        if (data.pinned !== undefined) {
-            this.pinned = data.pinned;
-        }
-        if (data.position !== undefined) {
-            this.position = data.position;
-        }
-        if (data.reactions) {
-            this.reactions = data.reactions.map(r => ({
-                burstColors:  r.burst_colors,
-                count:        r.count,
-                countDetails: r.count_details,
-                emoji:        r.emoji,
-                me:           r.me,
-                meBurst:      r.me_burst
-            }));
-        }
-
-        if (data.referenced_message !== undefined) {
-            if (data.referenced_message === null) {
-                this.referencedMessage = null;
-            } else {
-                this.referencedMessage = this.channel ? this.channel.messages?.update(data.referenced_message) : new Message(data.referenced_message, this.client);
-            }
-        }
-
-        if (data.role_subscription_data !== undefined) {
-            this.roleSubscriptionData = {
-                isRenewal:                 data.role_subscription_data.is_renewal,
-                roleSubscriptionListingID: data.role_subscription_data.role_subscription_listing_id,
-                tierName:                  data.role_subscription_data.tier_name,
-                totalMonthsSubscribed:     data.role_subscription_data.total_months_subscribed
-            };
-        }
-
-
-        if (data.sticker_items !== undefined) {
-            this.stickerItems = data.sticker_items;
-        }
-        if (data.thread !== undefined) {
-            this.thread = this.client.util.updateThread(data.thread);
-
         }
     }
 
@@ -364,6 +184,190 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
     /** A link to this message. */
     get jumpLink(): string {
         return `${BASE_URL}${Routes.MESSAGE_LINK(this.guildID ?? "@me", this.channelID, this.id)}`;
+    }
+
+    protected override update(data: Partial<Types.Channels.RawMessage>): void {
+        if (data.mention_everyone !== undefined) {
+            this.mentions.everyone = data.mention_everyone;
+        }
+        if (data.mention_roles !== undefined) {
+            this.mentions.roles = data.mention_roles;
+        }
+        if (data.mentions !== undefined) {
+            const members: Array<Member> = [];
+            this.mentions.users = data.mentions.map((user) => {
+                if (this.channel && "guildID" in (this.channel as T) && user.member) {
+                    members.push(this.client.util.updateMember((this.channel as Types.Channels.AnyTextableGuildChannel).guildID, user.id, { ...user.member, user }));
+                }
+                return this.client.users.update(user);
+            });
+            this.mentions.members = members;
+        }
+        if (data.activity !== undefined) {
+            this.activity = data.activity;
+        }
+        if (data.attachments !== undefined) {
+            if (this.attachments.size !== 0) {
+                for (const id of this.attachments.keys()) {
+                    if (!data.attachments.some(attachment => attachment.id === id)) {
+                        this.attachments.delete(id);
+                    }
+                }
+            }
+
+            for (const attachment of data.attachments) {
+                this.attachments.update(attachment);
+            }
+        }
+        if (data.call !== undefined) {
+            this.call = {
+                endedTimestamp: data.call.ended_timestamp ? new Date(data.call.ended_timestamp) : null,
+                participants: data.call.participants,
+            };
+        }
+        if (data.components !== undefined) {
+            this.components = this.client.util.componentsToParsed(data.components);
+        }
+        if (data.content !== undefined) {
+            this.content = data.content;
+            this.mentions.channels = (data.content.match(/<#\d{17,21}>/g) ?? []).map(mention => mention.slice(2, -1));
+        }
+        if (data.edited_timestamp !== undefined) {
+            this.editedTimestamp = data.edited_timestamp ? new Date(data.edited_timestamp) : null;
+        }
+        if (data.embeds !== undefined) {
+            this.embeds = this.client.util.embedsToParsed(data.embeds);
+            const pollResultEmbed = this.embeds.find(embed => embed.type === "poll_result");
+            if (pollResultEmbed) {
+                const questionText = pollResultEmbed.fields!.find(field => field.name === "poll_question_text")!.value;
+                const totalVotes = pollResultEmbed.fields!.find(field => field.name === "total_votes")!.value;
+                const victorAnswerID = pollResultEmbed.fields!.find(field => field.name === "victor_answer_id")?.value;
+                const victorAnswerText = pollResultEmbed.fields!.find(field => field.name === "victor_answer_text")?.value;
+                const victorAnswerVotes = pollResultEmbed.fields!.find(field => field.name === "victor_answer_votes")!.value;
+                this.pollResults = {
+                    questionText,
+                    totalVotes: Number(totalVotes),
+                    victorAnswerID: victorAnswerID === undefined ? undefined : Number(victorAnswerID),
+                    victorAnswerText: victorAnswerText,
+                    victorAnswerVotes: Number(victorAnswerVotes),
+                };
+            }
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.interaction !== undefined) {
+            let member: Types.Guilds.RawMember | undefined;
+            if (data.interaction.member) {
+                member = {
+                    ...data.interaction.member,
+                    user: data.interaction.user,
+                };
+            }
+            this.interaction = {
+                id: data.interaction.id,
+                member: member ? this.client.util.updateMember(data.guild_id!, member.user!.id, member) : undefined,
+                name: data.interaction.name,
+                type: data.interaction.type,
+                user: this.client.users.update(data.interaction.user),
+            };
+        }
+        if (data.interaction_metadata !== undefined) {
+            this.interactionMetadata = {
+                authorizingIntegrationOwners: data.interaction_metadata.authorizing_integration_owners,
+                id: data.interaction_metadata.id,
+                interactedMessageID: data.interaction_metadata.interacted_message_id,
+                name: data.interaction_metadata.name,
+                originalResponseMessageID: data.interaction_metadata.original_response_message_id,
+                targetMessageID: data.interaction_metadata.target_message_id,
+                targetUser: data.interaction_metadata.target_user ? this.client.users.update(data.interaction_metadata.target_user) : undefined,
+                type: data.interaction_metadata.type,
+                user: this.client.users.update(data.interaction_metadata.user),
+                triggeringInteractionMetadata: data.interaction_metadata.triggering_interaction_metadata === undefined ? undefined : {
+                    authorizingIntegrationOwners: data.interaction_metadata.triggering_interaction_metadata.authorizing_integration_owners,
+                    id: data.interaction_metadata.triggering_interaction_metadata.id,
+                    interactedMessageID: data.interaction_metadata.triggering_interaction_metadata.interacted_message_id,
+                    originalResponseMessageID: data.interaction_metadata.triggering_interaction_metadata.original_response_message_id,
+                    targetMessageID: data.interaction_metadata.triggering_interaction_metadata.target_message_id,
+                    targetUser: data.interaction_metadata.triggering_interaction_metadata.target_user ? this.client.users.update(data.interaction_metadata.triggering_interaction_metadata.target_user) : undefined,
+                    type: data.interaction_metadata.triggering_interaction_metadata.type,
+                    user: this.client.users.update(data.interaction_metadata.triggering_interaction_metadata.user),
+                },
+            } as Types.Channels.AnyMessageInteractionMetadata;
+        }
+        if (data.message_reference) {
+            this.messageReference = {
+                channelID: data.message_reference.channel_id,
+                failIfNotExists: data.message_reference.fail_if_not_exists,
+                guildID: data.message_reference.guild_id,
+                messageID: data.message_reference.message_id,
+            };
+        }
+
+        if (data.message_snapshots) {
+            this.messageSnapshots = data.message_snapshots.map(s => ({
+                message: {
+                    attachments: s.message.attachments.map(a => new Attachment(a, this.client)),
+                    components: s.message.components ? this.client.util.componentsToParsed(s.message.components) : [],
+                    content: s.message.content,
+                    editedTimestamp: s.message.edited_timestamp ? new Date(s.message.edited_timestamp) : null,
+                    embeds: this.client.util.embedsToParsed(s.message.embeds),
+                    flags: s.message.flags ?? 0,
+                    mentions: {
+                        channels: (s.message.content.match(/<#\d{17,21}>/g) ?? []).map(mention => mention.slice(2, -1)),
+                        roles: s.message.mention_roles,
+                        users: s.message.mentions.map(u => this.client.users.update(u)),
+                    },
+                    stickerItems: s.message.sticker_items ?? [],
+                    timestamp: new Date(s.message.timestamp),
+                    type: s.message.type,
+                },
+            }));
+        }
+
+        if (data.nonce !== undefined) {
+            this.nonce = data.nonce;
+        }
+        if (data.pinned !== undefined) {
+            this.pinned = data.pinned;
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.reactions) {
+            this.reactions = data.reactions.map(r => ({
+                burstColors: r.burst_colors,
+                count: r.count,
+                countDetails: r.count_details,
+                emoji: r.emoji,
+                me: r.me,
+                meBurst: r.me_burst,
+            }));
+        }
+
+        if (data.referenced_message !== undefined) {
+            if (data.referenced_message === null) {
+                this.referencedMessage = null;
+            } else {
+                this.referencedMessage = this.channel ? this.channel.messages.update(data.referenced_message) : new Message(data.referenced_message, this.client);
+            }
+        }
+
+        if (data.role_subscription_data !== undefined) {
+            this.roleSubscriptionData = {
+                isRenewal: data.role_subscription_data.is_renewal,
+                roleSubscriptionListingID: data.role_subscription_data.role_subscription_listing_id,
+                tierName: data.role_subscription_data.tier_name,
+                totalMonthsSubscribed: data.role_subscription_data.total_months_subscribed,
+            };
+        }
+
+        if (data.sticker_items !== undefined) {
+            this.stickerItems = data.sticker_items;
+        }
+        if (data.thread !== undefined) {
+            this.thread = this.client.util.updateThread(data.thread);
+        }
     }
 
     /**
@@ -422,18 +426,18 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
      * Edit this message.
      * @param options The options for editing the message.
      */
-    async edit(options: Types.Channels.EditMessageOptions):  Promise<Message<T>>;
+    async edit(options: Types.Channels.EditMessageOptions): Promise<Message<T>>;
     /**
      * Edit this message.
      * @param content The content for editing the message
      * @param options The options for editing the message.
      */
-    async edit(content: string, options?: Types.Channels.EditMessageOptions):  Promise<Message<T>>;
-    async edit(content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions):  Promise<Message<T>> {
+    async edit(content: string, options?: Types.Channels.EditMessageOptions): Promise<Message<T>>;
+    async edit(content: Types.Channels.EditMessageOptions | string, options?: Types.Channels.EditMessageOptions): Promise<Message<T>> {
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.editMessage<T>(this.channelID, this.id, options);
@@ -456,7 +460,7 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         if (!this.webhookID) {
@@ -491,7 +495,7 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.createMessage(channelID, {
@@ -499,8 +503,8 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
             messageReference: {
                 channelID: this.channelID,
                 messageID: this.id,
-                type:      MessageReferenceType.FORWARD
-            }
+                type: MessageReferenceType.FORWARD,
+            },
         });
     }
 
@@ -559,15 +563,15 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.createMessage(this.channelID, {
             ...options,
             messageReference: {
                 messageID: this.id,
-                type:      MessageReferenceType.DEFAULT
-            }
+                type: MessageReferenceType.DEFAULT,
+            },
         });
     }
 
@@ -583,83 +587,84 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
         const im = this.interactionMetadata as Types.Channels.MessageInteractionMetadata;
         return {
             ...super.toJSON(),
-            activity:        this.activity,
-            applicationID:   this.applicationID ?? undefined,
-            attachments:     this.attachments.map(attachment => attachment.toJSON()),
-            author:          this.author.toJSON(),
-            channelID:       this.channelID,
-            components:      this.components,
-            content:         this.content,
+            activity: this.activity,
+            applicationID: this.applicationID ?? undefined,
+            attachments: this.attachments.map(attachment => attachment.toJSON()),
+            author: this.author.toJSON(),
+            channelID: this.channelID,
+            components: this.components,
+            content: this.content,
             editedTimestamp: this.editedTimestamp?.getTime() ?? null,
-            embeds:          this.embeds,
-            flags:           this.flags,
-            guildID:         this.guildID ?? undefined,
-            interaction:     this.interaction === undefined ? undefined : {
-                id:     this.interaction.id,
+            embeds: this.embeds,
+            flags: this.flags,
+            guildID: this.guildID ?? undefined,
+            interaction: this.interaction === undefined ? undefined : {
+                id: this.interaction.id,
                 member: this.interaction.member?.toJSON(),
-                name:   this.interaction.name,
-                type:   this.interaction.type,
-                user:   this.interaction.user.toJSON()
+                name: this.interaction.name,
+                type: this.interaction.type,
+                user: this.interaction.user.toJSON(),
             },
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             interactionMetadata: im === undefined ? undefined : {
-                authorizingIntegrationOwners:  im.authorizingIntegrationOwners,
-                id:                            im.id,
-                interactedMessageID:           im.interactedMessageID,
-                name:                          im.name,
-                originalResponseMessageID:     im.originalResponseMessageID,
-                targetMessageID:               im.targetMessageID,
-                targetUser:                    im.targetUser instanceof User ? im.targetUser.toJSON() : im.targetUser,
-                type:                          im.type,
-                user:                          im.user instanceof User ? im.user.toJSON() : im.user,
+                authorizingIntegrationOwners: im.authorizingIntegrationOwners,
+                id: im.id,
+                interactedMessageID: im.interactedMessageID,
+                name: im.name,
+                originalResponseMessageID: im.originalResponseMessageID,
+                targetMessageID: im.targetMessageID,
+                targetUser: im.targetUser instanceof User ? im.targetUser.toJSON() : im.targetUser,
+                type: im.type,
+                user: im.user instanceof User ? im.user.toJSON() : im.user,
                 triggeringInteractionMetadata: im.triggeringInteractionMetadata === undefined ? undefined : {
                     authorizingIntegrationOwners: im.triggeringInteractionMetadata.authorizingIntegrationOwners,
-                    id:                           im.triggeringInteractionMetadata.id,
-                    interactedMessageID:          im.triggeringInteractionMetadata.interactedMessageID,
-                    originalResponseMessageID:    im.triggeringInteractionMetadata.originalResponseMessageID,
-                    targetMessageID:              im.triggeringInteractionMetadata.targetMessageID,
-                    targetUser:                   im.triggeringInteractionMetadata.targetUser instanceof User ? im.triggeringInteractionMetadata.targetUser.toJSON() : im.triggeringInteractionMetadata.targetUser,
-                    type:                         im.triggeringInteractionMetadata.type,
-                    user:                         im.triggeringInteractionMetadata.user instanceof User ? im.triggeringInteractionMetadata.user.toJSON() : im.triggeringInteractionMetadata.user
-                }
+                    id: im.triggeringInteractionMetadata.id,
+                    interactedMessageID: im.triggeringInteractionMetadata.interactedMessageID,
+                    originalResponseMessageID: im.triggeringInteractionMetadata.originalResponseMessageID,
+                    targetMessageID: im.triggeringInteractionMetadata.targetMessageID,
+                    targetUser: im.triggeringInteractionMetadata.targetUser instanceof User ? im.triggeringInteractionMetadata.targetUser.toJSON() : im.triggeringInteractionMetadata.targetUser,
+                    type: im.triggeringInteractionMetadata.type,
+                    user: im.triggeringInteractionMetadata.user instanceof User ? im.triggeringInteractionMetadata.user.toJSON() : im.triggeringInteractionMetadata.user,
+                },
             },
             mentionChannels: this.mentionChannels,
-            mentions:        {
+            mentions: {
                 channels: this.mentions.channels,
                 everyone: this.mentions.everyone,
-                members:  this.mentions.members.map(member => member.toJSON()),
-                roles:    this.mentions.roles,
-                users:    this.mentions.users.map(user => user.toJSON())
+                members: this.mentions.members.map(member => member.toJSON()),
+                roles: this.mentions.roles,
+                users: this.mentions.users.map(user => user.toJSON()),
             },
             messageReference: this.messageReference,
             messageSnapshots: this.messageSnapshots?.map(s => ({
                 message: {
-                    attachments:     s.message.attachments.map(a => a.toJSON()),
-                    content:         s.message.content,
+                    attachments: s.message.attachments.map(a => a.toJSON()),
+                    content: s.message.content,
                     editedTimestamp: s.message.editedTimestamp?.getTime() ?? null,
-                    embeds:          s.message.embeds,
-                    flags:           s.message.flags,
-                    mentions:        {
+                    embeds: s.message.embeds,
+                    flags: s.message.flags,
+                    mentions: {
                         channels: s.message.mentions.channels,
-                        roles:    s.message.mentions.roles,
-                        users:    s.message.mentions.users.map(u => u.toJSON())
+                        roles: s.message.mentions.roles,
+                        users: s.message.mentions.users.map(u => u.toJSON()),
                     },
                     timestamp: s.message.timestamp.getTime(),
-                    type:      s.message.type
-                }
+                    type: s.message.type,
+                },
             })),
-            nonce:             this.nonce,
-            pinned:            this.pinned,
-            position:          this.position,
-            poll:              this.poll?.toJSON(),
-            pollResults:       this.pollResults,
-            reactions:         this.reactions,
+            nonce: this.nonce,
+            pinned: this.pinned,
+            position: this.position,
+            poll: this.poll?.toJSON(),
+            pollResults: this.pollResults,
+            reactions: this.reactions,
             referencedMessage: this.referencedMessage?.toJSON(),
-            stickerItems:      this.stickerItems,
-            thread:            this.thread?.toJSON(),
-            timestamp:         this.timestamp.getTime(),
-            tts:               this.tts,
-            type:              this.type,
-            webhook:           this.webhookID
+            stickerItems: this.stickerItems,
+            thread: this.thread?.toJSON(),
+            timestamp: this.timestamp.getTime(),
+            tts: this.tts,
+            type: this.type,
+            webhook: this.webhookID,
         };
     }
 

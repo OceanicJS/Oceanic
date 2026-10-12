@@ -1,30 +1,35 @@
 /** @module Shard */
-import type ShardManager from "./ShardManager";
-import type Compressor from "./compression/base";
-import CompressionConfigs from "./compression/config";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
-import TypedEmitter from "../util/TypedEmitter";
-import Bucket from "../rest/Bucket";
-import { GatewayCloseCodes, GatewayOPCodes, GATEWAY_VERSION, Intents } from "../Constants";
-import type Member from "../structures/Member";
-import Base from "../structures/Base";
-import ExtendedUser from "../structures/ExtendedUser";
-import type Guild from "../structures/Guild";
-import { GatewayError } from "../util/Errors";
-import ClientApplication from "../structures/ClientApplication";
-import type Soundboard from "../structures/Soundboard";
-import WebSocket, { type Data } from "ws";
 import { randomBytes } from "node:crypto";
 import { inspect } from "node:util";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module, @typescript-eslint/no-unsafe-member-access */
+import WebSocket, { type Data } from "ws";
+
+import { GatewayCloseCodes, GatewayOPCodes, GATEWAY_VERSION, Intents } from "../Constants";
+import Bucket from "../rest/Bucket";
+import Base from "../structures/Base";
+import ClientApplication from "../structures/ClientApplication";
+import ExtendedUser from "../structures/ExtendedUser";
+import { GatewayError } from "../util/Errors";
+import TypedEmitter from "../util/TypedEmitter";
+
+import CompressionConfigs from "./compression/config";
+
+import type Compressor from "./compression/base";
+import type ShardManager from "./ShardManager";
+import type Client from "../Client";
+import type Guild from "../structures/Guild";
+import type Member from "../structures/Member";
+import type Soundboard from "../structures/Soundboard";
+import type * as Types from "../types/namespaced";
+
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports */
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
     Erlpack = require("erlpack");
+// eslint-disable-next-line no-empty
 } catch {}
-/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports */
 
 /** Represents a gateway connection to Discord. See {@link Types.Events.ShardEvents | Shard Events} for a list of events. */
 export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
@@ -34,9 +39,9 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     private _getAllUsersQueue: Array<string>;
     private _guildCreateTimeout: NodeJS.Timeout | null;
     private _heartbeatInterval: NodeJS.Timeout | null;
-    private _requestChannelInfoPromise: Record<string, { channels: Array<Types.Gateway.ChannelInfoWithChannel>; guildID: string; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
-    private _requestMembersPromise: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
-    private _requestSoundboardSoundsPromise: Record<string, { guildID: string; soundboardSounds: Array<Soundboard>; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void; }>;
+    private _requestChannelInfoPromise: Record<string, { channels: Array<Types.Gateway.ChannelInfoWithChannel>; guildID: string; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void }>;
+    private _requestMembersPromise: Record<string, { members: Array<Member>; received: number; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void }>;
+    private _requestSoundboardSoundsPromise: Record<string, { guildID: string; soundboardSounds: Array<Soundboard>; timeout: NodeJS.Timeout; reject(reason?: unknown): void; resolve(value: unknown): void }>;
     client!: Client;
     connectAttempts: number;
     connecting: boolean;
@@ -61,23 +66,23 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         super();
         Object.defineProperties(this, {
             client: {
-                value:        manager.client,
-                enumerable:   false,
-                writable:     false,
-                configurable: false
+                value: manager.client,
+                enumerable: false,
+                writable: false,
+                configurable: false,
             },
             manager: {
-                value:        manager,
-                enumerable:   false,
-                writable:     true,
-                configurable: false
+                value: manager,
+                enumerable: false,
+                writable: true,
+                configurable: false,
             },
             ws: {
-                value:        null,
-                enumerable:   false,
-                writable:     true,
-                configurable: false
-            }
+                value: null,
+                enumerable: false,
+                writable: true,
+                configurable: false,
+            },
         });
 
         this.onPacket = this.onPacket.bind(this);
@@ -110,6 +115,10 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.hardReset();
     }
 
+    private get _token(): string {
+        return this.client.options.auth!;
+    }
+
     private _ready(data: Types.GatewayRaw.ReadyPacket["d"]): void {
         this.connectAttempts = 0;
         this.reconnectInterval = 1000;
@@ -121,7 +130,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.client.shards["_ready"](this.id);
         this.client["_application"] = new ClientApplication(data.application, this.client);
         if (this.client["_user"]) {
-            this.client.users.update(data.user as unknown as Types.Users.RawUser);
+            this.client.users.update(data.user);
         } else {
             this.client["_user"] = this.client.users.add(new ExtendedUser(data.user as Types.Users.RawOAuthUser, this.client));
         }
@@ -186,22 +195,21 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.client.guildShardMap.set(data.id, this.id);
         const guild = this.client.guilds.update(data);
         if (this.client.shards.options.getAllUsers && guild.members.size < guild.memberCount) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
             void this.requestGuildMembers(guild.id, { presences: (this.client.shards.options.intents & Intents.GUILD_PRESENCES) === Intents.GUILD_PRESENCES });
         }
-
 
         return guild;
     }
 
     private async initialize(): Promise<void> {
         if (!this._token) {
-            return this.disconnect(false, new TypeError("Invalid Token."));
+            this.disconnect(false, new TypeError("Invalid Token.")); return;
         }
         this.status = "connecting";
         if (this.client.shards.options.compress) {
             const type = this.client.shards.options.compress;
             const library = this.client.shards.options.compressLibrary;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             const config = CompressionConfigs[type]?.find(cnf => cnf.name === library);
             if (!config) {
                 throw new Error("Invalid compression config");
@@ -220,19 +228,17 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             this.ws = new WebSocket(await this.client.shards["_gatewayURLForShard"](this), this.client.shards.options.ws);
         }
 
-
-        /* eslint-disable @typescript-eslint/unbound-method */
+        /* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-misused-promises */
         this.ws.on("close", this.onWSClose);
         this.ws.on("error", this.onWSError);
         this.ws.on("message", this.onWSMessage);
         this.ws.on("open", this.onWSOpen);
-        /* eslint-enable @typescript-eslint/unbound-method */
+        /* eslint-enable @typescript-eslint/unbound-method, @typescript-eslint/no-misused-promises */
 
         this._connectTimeout = setTimeout(() => {
             if (this.connecting) {
                 this.disconnect(undefined, new Error("Connection timeout."));
             }
-
         }, this.client.shards.options.connectionTimeout);
     }
 
@@ -280,7 +286,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                 if (this._heartbeatInterval) {
                     clearInterval(this._heartbeatInterval);
                 }
-                this._heartbeatInterval = setInterval(() => this.heartbeat(false), packet.d.heartbeat_interval);
+                this._heartbeatInterval = setInterval(() => { this.heartbeat(false); }, packet.d.heartbeat_interval);
 
                 this.connecting = false;
                 if (this._connectTimeout) {
@@ -308,7 +314,6 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                 break;
             }
 
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             default: { this.client.emit("warn", `Unrecognized gateway packet: ${packet}`, this.id);
             }
         }
@@ -402,7 +407,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                     let message = "Disallowed intents specified. Make sure any privileged intents you're trying to access have been enabled in the developer portal.";
                     if (disallowed.length !== 0) {
                         // application should always be present after the call to detectMissingPrivilegedIntents, but just in case it isn't, we don't want to swallow this disallowed intents error with a lib error
-                        message = `Disallowed intents specified. You are missing: ${disallowed.join(", ")}. Make sure they are enabled here: https://discord.com/developers/applications/${this.client["_application"]?.id || "unknown"}/bot`;
+                        message = `Disallowed intents specified. You are missing: ${disallowed.join(", ")}. Make sure they are enabled here: https://discord.com/developers/applications/${this.client["_application"]?.id ?? "unknown"}/bot`;
                     }
                     err = new GatewayError(message, code);
                     this.sessionID = null;
@@ -424,7 +429,6 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.client.emit("error", err, this.id);
     }
 
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
     private async onWSMessage(data: Data): Promise<void> {
         if (typeof data === "string") {
             data = Buffer.from(data);
@@ -434,7 +438,6 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                 if (this.client.shards.options.compress || Erlpack) {
                     data = Buffer.from(data);
                 }
-
             } else if (Array.isArray(data)) {
                 data = Buffer.concat(data);
             }
@@ -447,7 +450,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                 }
 
                 if (Erlpack) {
-                    return this.onPacket(Erlpack.unpack(result) as Types.GatewayRaw.AnyReceivePacket);
+                    this.onPacket(Erlpack.unpack(result) as Types.GatewayRaw.AnyReceivePacket); return;
                 } else {
                     // After the valid data, all the remaining octets are filled with zero, so remove them.
                     let last = result.length - 1;
@@ -455,18 +458,17 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                         while (result[last - 1] === 0 && last > 0) last--;
                         result = result.subarray(0, last);
                     }
-                    return this.onPacket(JSON.parse(String(result)) as Types.GatewayRaw.AnyReceivePacket);
+                    this.onPacket(JSON.parse(String(result)) as Types.GatewayRaw.AnyReceivePacket); return;
                 }
             } else if (Erlpack) {
-                return this.onPacket(Erlpack.unpack(buf) as Types.GatewayRaw.AnyReceivePacket);
+                this.onPacket(Erlpack.unpack(buf) as Types.GatewayRaw.AnyReceivePacket); return;
             } else {
-                return this.onPacket(JSON.parse(String(buf)) as Types.GatewayRaw.AnyReceivePacket);
+                this.onPacket(JSON.parse(String(buf)) as Types.GatewayRaw.AnyReceivePacket); return;
             }
         } catch (err) {
             this.client.emit("error", err as Error, this.id);
         }
     }
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
 
     private onWSOpen(): void {
         this.status = "handshaking";
@@ -484,6 +486,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                 return this.checkReady();
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             this._guildCreateTimeout = setTimeout(this.checkReady.bind(this), this.client.shards.options.guildCreateTimeout);
         }
     }
@@ -491,14 +494,11 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     private sendPresenceUpdate(): void {
         this.send(GatewayOPCodes.PRESENCE_UPDATE, {
             activities: this.presence.activities,
-            afk:        !!this.presence.afk,
-            since:      this.presence.status === "idle" ? Date.now() : null,
-            status:     this.presence.status
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
+            afk: !!this.presence.afk,
+            since: this.presence.status === "idle" ? Date.now() : null,
+            status: this.presence.status,
         });
-    }
-
-    private get _token(): string {
-        return this.client.options.auth!;
     }
 
     /** Connect this shard. */
@@ -535,7 +535,6 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
                 } else {
                     this.ws.close(1000, "Normal Close");
                 }
-
             } catch (err) {
                 this.client.emit("error", err as Error, this.id);
             }
@@ -552,7 +551,6 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             }
         }
 
-
         this.emit("disconnect", error);
 
         if (this.sessionID && this.connectAttempts >= this.client.shards.options.maxReconnectAttempts) {
@@ -563,11 +561,11 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         if (reconnect) {
             if (this.sessionID) {
                 this.client.emit("debug", `Immediately reconnecting for potential resume | Attempt ${this.connectAttempts}`, this.id);
-                void this.client.shards["_connect"](this);
+                this.client.shards["_connect"](this);
             } else {
                 this.client.emit("debug", `Queueing reconnect in ${this.reconnectInterval}ms | Attempt ${this.connectAttempts}`, this.id);
                 setTimeout(() => {
-                    void this.client.shards["_connect"](this);
+                    this.client.shards["_connect"](this);
                 }, this.reconnectInterval);
                 this.reconnectInterval = Math.min(Math.round(this.reconnectInterval * (Math.random() * 2 + 1)), 30000);
             }
@@ -584,12 +582,12 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     async editStatus(status: Types.Gateway.SendStatuses, activities: Array<Types.Gateway.BotActivity> = []): Promise<void> {
         this.presence.status = status;
         this.presence.activities = activities;
-        return this.sendPresenceUpdate();
+        this.sendPresenceUpdate();
     }
 
     hardReset(): void {
         this.reset();
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
         for (const [,voiceAdapter] of this.client.voiceAdapters) voiceAdapter.destroy();
         this.sequence = 0;
         this.sessionID = null;
@@ -599,7 +597,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this._heartbeatInterval = null;
         this._guildCreateTimeout = null;
         this.globalBucket = new Bucket(120, 60000, { reservedTokens: 5 });
-        this.presence = structuredClone(this.client.shards.options.presence) as Shard["presence"];
+        this.presence = structuredClone(this.client.shards.options.presence);
         this.presenceUpdateBucket = new Bucket(5, 20000);
         this.resumeURL = null;
     }
@@ -613,12 +611,12 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             if (!this.lastHeartbeatAck) {
                 this.client.emit("debug", "Heartbeat timeout; " + JSON.stringify({
                     lastReceived: this.lastHeartbeatReceived,
-                    lastSent:     this.lastHeartbeatSent,
-                    interval:     this._heartbeatInterval,
-                    status:       this.status,
-                    timestamp:    Date.now()
+                    lastSent: this.lastHeartbeatSent,
+                    interval: this._heartbeatInterval,
+                    status: this.status,
+                    timestamp: Date.now(),
                 }));
-                return this.disconnect(undefined, new Error("Server didn't acknowledge previous heartbeat, possible lost connection."));
+                this.disconnect(undefined, new Error("Server didn't acknowledge previous heartbeat, possible lost connection.")); return;
             }
             this.lastHeartbeatAck = false;
         }
@@ -628,13 +626,13 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
 
     identify(): void {
         const data = {
-            token:           this._token,
-            properties:      this.client.shards.options.connectionProperties,
-            compress:        this.client.shards.options.compress,
+            token: this._token,
+            properties: this.client.shards.options.connectionProperties,
+            compress: this.client.shards.options.compress,
             large_threshold: this.client.shards.options.largeThreshold,
-            shard:           [this.id, this.client.shards.options.maxShards],
-            presence:        this.presence,
-            intents:         this.client.shards.options.intents
+            shard: [this.id, this.client.shards.options.maxShards],
+            presence: this.presence,
+            intents: this.client.shards.options.intents,
         };
         this.send(GatewayOPCodes.IDENTIFY, data);
     }
@@ -651,19 +649,19 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     async requestChannelInfo(guildID: string, options: Types.Gateway.RequestChannelInfoOptions): Promise<Array<Types.Gateway.ChannelInfoWithChannel>> {
         const opts = {
             guild_id: guildID,
-            fields:   options.fields,
-            nonce:    randomBytes(16).toString("hex")
+            fields: options.fields,
+            nonce: randomBytes(16).toString("hex"),
         };
         this.send(GatewayOPCodes.REQUEST_CHANNEL_INFO, opts);
         return new Promise<Array<Types.Gateway.ChannelInfoWithChannel>>((resolve, reject) => this._requestChannelInfoPromise[opts.nonce] = {
             guildID,
             channels: [],
-            timeout:  setTimeout(() => {
+            timeout: setTimeout(() => {
                 resolve(this._requestChannelInfoPromise[opts.nonce].channels);
                 delete this._requestChannelInfoPromise[opts.nonce];
             }, options.timeout ?? this.client.rest.options.requestTimeout),
             resolve,
-            reject
+            reject,
         });
     }
 
@@ -674,12 +672,12 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
      */
     async requestGuildMembers(guildID: string, options?: Types.Gateway.RequestGuildMembersOptions): Promise<Array<Member>> {
         const opts = {
-            guild_id:  guildID,
-            limit:     options?.limit ?? 0,
-            user_ids:  options?.userIDs,
-            query:     options?.query,
-            nonce:     randomBytes(16).toString("hex"),
-            presences: options?.presences ?? false
+            guild_id: guildID,
+            limit: options?.limit ?? 0,
+            user_ids: options?.userIDs,
+            query: options?.query,
+            nonce: randomBytes(16).toString("hex"),
+            presences: options?.presences ?? false,
         };
         if (!opts.user_ids && !opts.query) {
             opts.query = "";
@@ -701,14 +699,14 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         }
         this.send(GatewayOPCodes.REQUEST_GUILD_MEMBERS, opts);
         return new Promise<Array<Member>>((resolve, reject) => this._requestMembersPromise[opts.nonce] = {
-            members:  [],
+            members: [],
             received: 0,
-            timeout:  setTimeout(() => {
+            timeout: setTimeout(() => {
                 resolve(this._requestMembersPromise[opts.nonce].members);
                 delete this._requestMembersPromise[opts.nonce];
             }, options?.timeout ?? this.client.rest.options.requestTimeout),
             resolve,
-            reject
+            reject,
         });
     }
 
@@ -720,18 +718,18 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     async requestSoundboardSounds(guildID: string, options?: Types.Gateway.RequestSoundboardSoundsOptions): Promise<Array<Soundboard>> {
         const opts = {
             guild_ids: [guildID],
-            nonce:     randomBytes(16).toString("hex")
+            nonce: randomBytes(16).toString("hex"),
         };
         this.send(GatewayOPCodes.REQUEST_SOUNDBOARD_SOUNDS, opts);
         return new Promise((resolve, reject) => this._requestSoundboardSoundsPromise[opts.nonce] = {
             guildID,
             soundboardSounds: [],
-            timeout:          setTimeout(() => {
+            timeout: setTimeout(() => {
                 resolve(this._requestSoundboardSoundsPromise[opts.nonce].soundboardSounds);
                 delete this._requestSoundboardSoundsPromise[opts.nonce];
             }, options?.timeout ?? this.client.rest.options.requestTimeout),
             resolve,
-            reject
+            reject,
         });
     }
 
@@ -739,8 +737,10 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
         this.connecting = false;
         this.ready = false;
         this.preReady = false;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (this._requestMembersPromise !== undefined) {
             for (const guildID in this._requestMembersPromise) {
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                 if (!this._requestMembersPromise[guildID]) {
                     continue;
                 }
@@ -767,22 +767,21 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     resume(): void {
         this.status = "resuming";
         this.send(GatewayOPCodes.RESUME, {
-            token:      this._token,
+            token: this._token,
             session_id: this.sessionID,
-            seq:        this.sequence
+            seq: this.sequence,
         });
     }
 
     send(op: GatewayOPCodes, data: unknown, priority = false): void {
-        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        if (this.ws?.readyState === WebSocket.OPEN) {
             let i = 0, waitFor = 1;
             const func = (): void => {
-                if (++i >= waitFor && this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+                if (++i >= waitFor && this.ws?.readyState === WebSocket.OPEN) {
                     const d: string | Buffer = Erlpack ? Erlpack.pack({ op, d: data }) : JSON.stringify({ op, d: data });
                     this.ws.send(d);
                     if (typeof data === "object" && data && "token" in data) {
-                        (data as { token: string; }).token = "[REMOVED]";
+                        (data as { token: string }).token = "[REMOVED]";
                     }
                     this.client.emit("debug", JSON.stringify({ op, d: data }), this.id);
                 }
@@ -808,9 +807,9 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
     updateVoiceState(guildID: string, channelID: string | null, options?: Types.Gateway.UpdateVoiceStateOptions): void {
         this.send(GatewayOPCodes.VOICE_STATE_UPDATE, {
             channel_id: channelID,
-            guild_id:   guildID,
-            self_deaf:  options?.selfDeaf ?? false,
-            self_mute:  options?.selfMute ?? false
+            guild_id: guildID,
+            self_deaf: options?.selfDeaf ?? false,
+            self_mute: options?.selfMute ?? false,
         });
     }
 }

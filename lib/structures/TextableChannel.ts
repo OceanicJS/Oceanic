@@ -1,17 +1,19 @@
 /** @module TextableChannel */
+import { AllPermissions, Permissions } from "../Constants";
+import { UncachedError } from "../util/Errors";
+import TypedCollection from "../util/TypedCollection";
+
 import GuildChannel from "./GuildChannel";
-import PermissionOverwrite from "./PermissionOverwrite";
 import Message from "./Message";
+import Permission from "./Permission";
+import PermissionOverwrite from "./PermissionOverwrite";
+
 import type { InviteWithMetadata } from "./Invite";
 import type Member from "./Member";
-import Permission from "./Permission";
 import type User from "./User";
 import type Webhook from "./Webhook";
-import type * as Types from "../types/namespaced";
-import { AllPermissions, Permissions } from "../Constants";
 import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild textable channel. Not used for threads. */
 export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildChannel = Types.Channels.AnyTextableGuildChannel> extends GuildChannel {
@@ -102,7 +104,7 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.createMessage<CH>(this.id, options);
@@ -188,7 +190,7 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.channels.editMessage<CH>(this.id, messageID, options);
@@ -273,11 +275,13 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
      */
     permissionsOf(member: string | Member): Permission {
         if (typeof member === "string") {
-            member = this.guild.members.get(member)!;
+            const guildMember = this.guild.members.get(member);
+            if (!guildMember) {
+                throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
+            }
+            member = guildMember;
         }
-        if (!member) {
-            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
-        }
+
         let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
             return new Permission(AllPermissions);
@@ -330,15 +334,15 @@ export default class TextableChannel<CH extends Types.Channels.AnyTextableGuildC
     override toJSON(): Types.JSON.JSONTextableChannel {
         return {
             ...super.toJSON(),
-            lastMessageID:        this.lastMessageID,
-            lastPinTimestamp:     this.lastPinTimestamp,
-            messages:             this.messages.map(message => message.id),
-            nsfw:                 this.nsfw,
+            lastMessageID: this.lastMessageID,
+            lastPinTimestamp: this.lastPinTimestamp,
+            messages: this.messages.map(message => message.id),
+            nsfw: this.nsfw,
             permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
-            position:             this.position,
-            rateLimitPerUser:     this.rateLimitPerUser,
-            topic:                this.topic,
-            type:                 this.type
+            position: this.position,
+            rateLimitPerUser: this.rateLimitPerUser,
+            topic: this.topic,
+            type: this.type,
         };
     }
 

@@ -1,7 +1,8 @@
 /** @module ExtendedUser */
 import User from "./User";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents the currently authenticated user. */
 export default class ExtendedUser extends User {
@@ -19,8 +20,8 @@ export default class ExtendedUser extends User {
         super(data, client);
         this.email = data.email;
         this.flags = data.flags;
-        this.verified = !!data.verified;
-        this.mfaEnabled = !!data.mfa_enabled;
+        this.verified = data.verified;
+        this.mfaEnabled = data.mfa_enabled;
         this.update(data);
     }
 
@@ -48,11 +49,11 @@ export default class ExtendedUser extends User {
     override toJSON(): Types.JSON.JSONExtendedUser {
         return {
             ...super.toJSON(),
-            email:      this.email,
-            flags:      this.flags,
-            locale:     this.locale,
+            email: this.email,
+            flags: this.flags,
+            locale: this.locale,
             mfaEnabled: this.mfaEnabled,
-            verified:   this.verified
+            verified: this.verified,
         };
     }
 }

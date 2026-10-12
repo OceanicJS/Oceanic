@@ -1,10 +1,11 @@
 /** @module REST/Interactions */
-import type * as Types from "../types/namespaced";
-import * as Routes from "../util/Routes";
 import { InteractionResponseTypes } from "../Constants";
+import QueryBuilder from "../util/QueryBuilder";
+import * as Routes from "../util/Routes";
+
 import type RESTManager from "../rest/RESTManager";
 import type Message from "../structures/Message";
-import QueryBuilder from "../util/QueryBuilder";
+import type * as Types from "../types/namespaced";
 
 /** Various methods for interacting with interactions. Located at {@link Client#rest | Client#rest}{@link RESTManager#interactions | .interactions}. */
 export default class Interactions {
@@ -47,20 +48,20 @@ export default class Interactions {
             case InteractionResponseTypes.UPDATE_MESSAGE: {
                 data = {
                     allowed_mentions: this._manager.client.util.formatAllowedMentions(options.data.allowedMentions),
-                    attachments:      options.data.attachments,
-                    content:          options.data.content,
-                    components:       options.data.components ? this._manager.client.util.componentsToRaw(options.data.components) : undefined,
-                    embeds:           options.data.embeds ? this._manager.client.util.embedsToRaw(options.data.embeds) : undefined,
-                    flags:            options.data.flags,
-                    poll:             options.data.poll ? {
+                    attachments: options.data.attachments,
+                    content: options.data.content,
+                    components: options.data.components ? this._manager.client.util.componentsToRaw(options.data.components) : undefined,
+                    embeds: options.data.embeds ? this._manager.client.util.embedsToRaw(options.data.embeds) : undefined,
+                    flags: options.data.flags,
+                    poll: options.data.poll ? {
                         allow_multiselect: options.data.poll.allowMultiselect,
-                        answers:           options.data.poll.answers.map(a => ({
-                            poll_media: a.pollMedia
+                        answers: options.data.poll.answers.map(a => ({
+                            poll_media: a.pollMedia,
                         })),
-                        duration:    options.data.poll.duration,
+                        duration: options.data.poll.duration,
                         layout_type: options.data.poll.layoutType,
-                        question:    options.data.poll.question
-                    } : undefined
+                        question: options.data.poll.question,
+                    } : undefined,
                 };
                 break;
             }
@@ -68,19 +69,19 @@ export default class Interactions {
             case InteractionResponseTypes.APPLICATION_COMMAND_AUTOCOMPLETE_RESULT: {
                 data = {
                     choices: options.data.choices.map(d => ({
-                        name:               d.name,
+                        name: d.name,
                         name_localizations: d.nameLocalizations,
-                        value:              d.value
-                    }))
+                        value: d.value,
+                    })),
                 };
                 break;
             }
 
             case InteractionResponseTypes.MODAL: {
                 data = {
-                    custom_id:  options.data.customID,
+                    custom_id: options.data.customID,
                     components: this._manager.client.util.componentsToRaw(options.data.components),
-                    title:      options.data.title
+                    title: options.data.title,
                 };
                 break;
             }
@@ -94,30 +95,30 @@ export default class Interactions {
         if (withResponse) query.set("with_response", "true");
         return this._manager.authRequest<Types.Interactions.RawInteractionCallbackResponse>({
             method: "POST",
-            path:   Routes.INTERACTION_CALLBACK(interactionID, interactionToken),
-            route:  "/interactions/:id/:token/callback",
-            json:   {
+            path: Routes.INTERACTION_CALLBACK(interactionID, interactionToken),
+            route: "/interactions/:id/:token/callback",
+            json: {
                 data,
-                type: options.type
+                type: options.type,
             },
             query,
-            files: ("data" in options && options.data && "files" in options.data && options.data.files) || undefined
-        }).then(d => {
+            files: "data" in options && options.data && "files" in options.data ? options.data.files : undefined,
+        }).then((d) => {
             if (withResponse) {
                 return {
                     interaction: {
-                        activityInstanceID:       d.interaction.activity_instance_id,
-                        id:                       d.interaction.id,
+                        activityInstanceID: d.interaction.activity_instance_id,
+                        id: d.interaction.id,
                         responseMessageEphemeral: d.interaction.response_message_ephemeral,
-                        responseMessageID:        d.interaction.response_message_id,
-                        responseMessageLoading:   d.interaction.response_message_loading,
-                        type:                     d.interaction.type
+                        responseMessageID: d.interaction.response_message_id,
+                        responseMessageLoading: d.interaction.response_message_loading,
+                        type: d.interaction.type,
                     },
                     resource: d.resource ? {
-                        type:             d.resource.type,
+                        type: d.resource.type,
                         activityInstance: d.resource.activity_instance,
-                        message:          d.resource.message ? this._manager.client.util.updateMessage(d.resource.message) : undefined
-                    } : undefined
+                        message: d.resource.message ? this._manager.client.util.updateMessage(d.resource.message) : undefined,
+                    } : undefined,
                 };
             }
 

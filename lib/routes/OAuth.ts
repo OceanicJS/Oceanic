@@ -1,18 +1,19 @@
 /** @module REST/OAuth */
-import type * as Types from "../types/namespaced";
-import * as Routes from "../util/Routes";
-import OAuthApplication from "../structures/OAuthApplication";
-import PartialApplication from "../structures/PartialApplication";
-import Member from "../structures/Member";
-import Webhook from "../structures/Webhook";
-import Integration from "../structures/Integration";
-import type RESTManager from "../rest/RESTManager";
 import OAuthHelper from "../rest/OAuthHelper";
-import OAuthGuild from "../structures/OAuthGuild";
 import ExtendedUser from "../structures/ExtendedUser";
+import Integration from "../structures/Integration";
+import Member from "../structures/Member";
+import OAuthApplication from "../structures/OAuthApplication";
+import OAuthGuild from "../structures/OAuthGuild";
+import PartialApplication from "../structures/PartialApplication";
+import Webhook from "../structures/Webhook";
 import QueryBuilder from "../util/QueryBuilder";
+import * as Routes from "../util/Routes";
+
+import type RESTManager from "../rest/RESTManager";
 import type Entitlement from "../structures/Entitlement";
 import type TestEntitlement from "../structures/TestEntitlement";
+import type * as Types from "../types/namespaced";
 
 /** Various methods for interacting with oauth. Located at {@link Client#rest | Client#rest}{@link RESTManager#oauth | .oauth}. */
 export default class OAuth {
@@ -33,15 +34,15 @@ export default class OAuth {
         form.append("scope", options.scopes.join(" "));
         return this._manager.request<Types.OAuth.RawClientCredentialsTokenResponse>({
             method: "POST",
-            path:   Routes.OAUTH_TOKEN,
+            path: Routes.OAUTH_TOKEN,
             form,
-            auth:   (options.clientID ?? this._manager.client["_application"]) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this._manager.client["_application"]!.id}:${options.clientSecret}`).toString("base64")}` : true
+            auth: (options.clientID ?? this._manager.client["_application"]) && options.clientSecret ? `Basic ${Buffer.from(`${options.clientID ?? this._manager.client["_application"]!.id}:${options.clientSecret}`).toString("base64")}` : true,
         }).then(data => ({
             accessToken: data.access_token,
-            expiresIn:   data.expires_in,
-            scopes:      data.scope.split(" "),
-            tokenType:   data.token_type,
-            webhook:     data.webhook ? new Webhook(data.webhook, this._manager.client) : null
+            expiresIn: data.expires_in,
+            scopes: data.scope.split(" "),
+            tokenType: data.token_type,
+            webhook: data.webhook ? new Webhook(data.webhook, this._manager.client) : null,
         }));
     }
 
@@ -53,7 +54,7 @@ export default class OAuth {
     async deleteUserRoleConnection(applicationID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID)
+            path: Routes.OAUTH_ROLE_CONNECTION(applicationID),
         });
     }
 
@@ -72,15 +73,15 @@ export default class OAuth {
         form.append("redirect_uri", options.redirectURI);
         return this._manager.authRequest<Types.OAuth.RawExchangeCodeResponse>({
             method: "POST",
-            path:   Routes.OAUTH_TOKEN,
-            form
+            path: Routes.OAUTH_TOKEN,
+            form,
         }).then(data => ({
-            accessToken:  data.access_token,
-            expiresIn:    data.expires_in,
+            accessToken: data.access_token,
+            expiresIn: data.expires_in,
             refreshToken: data.refresh_token,
-            scopes:       data.scope.split(" "),
-            tokenType:    data.token_type,
-            webhook:      data.webhook ? new Webhook(data.webhook, this._manager.client) : null
+            scopes: data.scope.split(" "),
+            tokenType: data.token_type,
+            webhook: data.webhook ? new Webhook(data.webhook, this._manager.client) : null,
         }));
     }
 
@@ -91,7 +92,7 @@ export default class OAuth {
     async getApplication(): Promise<OAuthApplication> {
         return this._manager.authRequest<Types.Applications.RESTOAuthApplication>({
             method: "GET",
-            path:   Routes.OAUTH_APPLICATION
+            path: Routes.OAUTH_APPLICATION,
         }).then(data => new OAuthApplication(data, this._manager.client));
     }
 
@@ -105,12 +106,12 @@ export default class OAuth {
     async getCurrentAuthorizationInformation(): Promise<Types.OAuth.AuthorizationInformation> {
         return this._manager.authRequest<Types.OAuth.RawAuthorizationInformation>({
             method: "GET",
-            path:   Routes.OAUTH_INFO
+            path: Routes.OAUTH_INFO,
         }).then(data => ({
             application: new PartialApplication(data.application, this._manager.client),
-            expires:     new Date(data.expires),
-            scopes:      data.scopes,
-            user:        this._manager.client.users.update(data.user)
+            expires: new Date(data.expires),
+            scopes: data.scopes,
+            user: this._manager.client.users.update(data.user),
         }));
     }
 
@@ -123,18 +124,18 @@ export default class OAuth {
     async getCurrentConnections(): Promise<Array<Types.OAuth.Connection>> {
         return this._manager.authRequest<Array<Types.OAuth.RawConnection>>({
             method: "GET",
-            path:   Routes.OAUTH_CONNECTIONS
+            path: Routes.OAUTH_CONNECTIONS,
         }).then(data => data.map(connection => ({
-            friendSync:   connection.friend_sync,
-            id: 	         connection.id,
+            friendSync: connection.friend_sync,
+            id: connection.id,
             integrations: connection.integrations?.map(integration => new Integration(integration, this._manager.client)),
-            name:         connection.name,
-            revoked:      connection.revoked,
+            name: connection.name,
+            revoked: connection.revoked,
             showActivity: connection.show_activity,
-            twoWayLink:   connection.two_way_link,
-            type:         connection.type,
-            verified:     connection.verified,
-            visibility:   connection.visibility
+            twoWayLink: connection.two_way_link,
+            type: connection.type,
+            verified: connection.verified,
+            visibility: connection.visibility,
         })));
     }
 
@@ -148,7 +149,7 @@ export default class OAuth {
     async getCurrentGuildMember(guildID: string): Promise<Member> {
         return this._manager.authRequest<Types.Guilds.RESTMember>({
             method: "GET",
-            path:   Routes.OAUTH_GUILD_MEMBER(guildID)
+            path: Routes.OAUTH_GUILD_MEMBER(guildID),
         }).then(data => new Member(data, this._manager.client, guildID));
     }
 
@@ -165,8 +166,8 @@ export default class OAuth {
         query.setIfPresent("with_counts", options?.withCounts);
         return this._manager.authRequest<Array<Types.Guilds.RawOAuthGuild>>({
             method: "GET",
-            path:   Routes.OAUTH_GUILDS,
-            query
+            path: Routes.OAUTH_GUILDS,
+            query,
         }).then(data => data.map(d => new OAuthGuild(d, this._manager.client)));
     }
 
@@ -177,7 +178,7 @@ export default class OAuth {
     async getCurrentUser(): Promise<ExtendedUser> {
         return this._manager.authRequest<Types.Users.RawOAuthUser>({
             method: "GET",
-            path:   Routes.OAUTH_CURRENT_USER
+            path: Routes.OAUTH_CURRENT_USER,
         }).then(data => new ExtendedUser(data, this._manager.client));
     }
 
@@ -189,7 +190,7 @@ export default class OAuth {
     async getEntitlements(applicationID: string): Promise<Array<Entitlement | TestEntitlement>> {
         return this._manager.authRequest<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
             method: "GET",
-            path:   Routes.OAUTH_ENTITLEMENTS(applicationID)
+            path: Routes.OAUTH_ENTITLEMENTS(applicationID),
         }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
@@ -203,9 +204,9 @@ export default class OAuth {
 
     /** Get the OIDC JWKS keys */
     async getOIDCKeys(): Promise<Array<Types.OAuth.OIDCKey>> {
-        return this._manager.request<{ keys: Array<Types.OAuth.OIDCKey>; }>({
+        return this._manager.request<{ keys: Array<Types.OAuth.OIDCKey> }>({
             method: "GET",
-            path:   Routes.OAUTH_OIDC_KEYS
+            path: Routes.OAUTH_OIDC_KEYS,
         }).then(data => data.keys);
     }
 
@@ -217,15 +218,15 @@ export default class OAuth {
     async getOIDCUserInfo(): Promise<Types.OAuth.OIDCUserInfo> {
         return this._manager.authRequest<Types.OAuth.RawOIDCUserInfo>({
             method: "GET",
-            path:   Routes.OAUTH_OIDC_USERINFO
+            path: Routes.OAUTH_OIDC_USERINFO,
         }).then(data => ({
-            email:             data.email,
-            emailVerified:     data.email_verified,
-            locale:            data.locale,
-            nickname:          data.nickname,
-            picture:           data.picture,
+            email: data.email,
+            emailVerified: data.email_verified,
+            locale: data.locale,
+            nickname: data.nickname,
+            picture: data.picture,
             preferredUsername: data.preferred_username,
-            sub:               data.sub
+            sub: data.sub,
         }));
     }
 
@@ -237,14 +238,14 @@ export default class OAuth {
     async getRoleConnectionsMetadata(applicationID: string): Promise<Array<Types.OAuth.RoleConnectionMetadata>> {
         return this._manager.authRequest<Array<Types.OAuth.RawRoleConnectionMetadata>>({
             method: "GET",
-            path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID)
+            path: Routes.ROLE_CONNECTIONS_METADATA(applicationID),
         }).then(data => data.map(d => ({
-            description:              d.description,
+            description: d.description,
             descriptionLocalizations: d.description_localizations,
-            key:                      d.key,
-            name:                     d.name,
-            nameLocalizations:        d.name_localizations,
-            type:                     d.type
+            key: d.key,
+            name: d.name,
+            nameLocalizations: d.name_localizations,
+            type: d.type,
         })));
     }
 
@@ -256,20 +257,20 @@ export default class OAuth {
     async getUserRoleConnection(applicationID: string): Promise<Types.OAuth.RoleConnection> {
         return this._manager.authRequest<Types.OAuth.RawRoleConnection>({
             method: "GET",
-            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID)
+            path: Routes.OAUTH_ROLE_CONNECTION(applicationID),
         }).then(data => ({
             metadata: Object.entries(data.metadata).map(([key, value]) => ({
                 [key]: {
-                    description:              value.description,
+                    description: value.description,
                     descriptionLocalizations: value.description_localizations,
-                    key:                      value.key,
-                    name:                     value.name,
-                    nameLocalizations:        value.name_localizations,
-                    type:                     value.type
-                }
+                    key: value.key,
+                    name: value.name,
+                    nameLocalizations: value.name_localizations,
+                    type: value.type,
+                },
             })).reduce((a, b) => ({ ...a, ...b })),
-            platformName:     data.platform_name,
-            platformUsername: data.platform_username
+            platformName: data.platform_name,
+            platformUsername: data.platform_username,
         }));
     }
 
@@ -287,17 +288,16 @@ export default class OAuth {
         form.append("refresh_token", options.refreshToken);
         return this._manager.authRequest<Types.OAuth.RawRefreshTokenResponse>({
             method: "POST",
-            path:   Routes.OAUTH_TOKEN,
-            form
+            path: Routes.OAUTH_TOKEN,
+            form,
         }).then(data => ({
-            accessToken:  data.access_token,
-            expiresIn:    data.expires_in,
+            accessToken: data.access_token,
+            expiresIn: data.expires_in,
             refreshToken: data.refresh_token,
-            scopes:       data.scope.split(" "),
-            tokenType:    data.token_type
+            scopes: data.scope.split(" "),
+            tokenType: data.token_type,
         }));
     }
-
 
     /**
      * Revoke an access token.
@@ -312,8 +312,8 @@ export default class OAuth {
         form.append("token", options.token);
         await this._manager.authRequest<null>({
             method: "POST",
-            path:   Routes.OAUTH_TOKEN_REVOKE,
-            form
+            path: Routes.OAUTH_TOKEN_REVOKE,
+            form,
         });
     }
 
@@ -326,22 +326,22 @@ export default class OAuth {
     async updateRoleConnectionsMetadata(applicationID: string, metadata: Array<Types.OAuth.RoleConnectionMetadata>): Promise<Array<Types.OAuth.RoleConnectionMetadata>> {
         return this._manager.authRequest<Array<Types.OAuth.RawRoleConnectionMetadata>>({
             method: "PUT",
-            path:   Routes.ROLE_CONNECTIONS_METADATA(applicationID),
-            json:   metadata.map(d => ({
-                description:               d.description,
+            path: Routes.ROLE_CONNECTIONS_METADATA(applicationID),
+            json: metadata.map(d => ({
+                description: d.description,
                 description_localizations: d.descriptionLocalizations,
-                key:                       d.key,
-                name:                      d.name,
-                name_localizations:        d.nameLocalizations,
-                type:                      d.type
-            }))
+                key: d.key,
+                name: d.name,
+                name_localizations: d.nameLocalizations,
+                type: d.type,
+            })),
         }).then(data => data.map(d => ({
-            description:              d.description,
+            description: d.description,
             descriptionLocalizations: d.description_localizations,
-            key:                      d.key,
-            name:                     d.name,
-            nameLocalizations:        d.name_localizations,
-            type:                     d.type
+            key: d.key,
+            name: d.name,
+            nameLocalizations: d.name_localizations,
+            type: d.type,
         })));
     }
 
@@ -354,25 +354,25 @@ export default class OAuth {
     async updateUserRoleConnection(applicationID: string, data: Types.OAuth.UpdateUserApplicationRoleConnectionOptions): Promise<Types.OAuth.RoleConnection> {
         return this._manager.authRequest<Types.OAuth.RawRoleConnection>({
             method: "PUT",
-            path:   Routes.OAUTH_ROLE_CONNECTION(applicationID),
-            json:   {
-                metadata:          data.metadata,
-                platform_name:     data.platformName,
-                platform_username: data.platformUsername
-            }
+            path: Routes.OAUTH_ROLE_CONNECTION(applicationID),
+            json: {
+                metadata: data.metadata,
+                platform_name: data.platformName,
+                platform_username: data.platformUsername,
+            },
         }).then(d => ({
             metadata: Object.entries(d.metadata).map(([key, value]) => ({
                 [key]: {
-                    description:              value.description,
+                    description: value.description,
                     descriptionLocalizations: value.description_localizations,
-                    key:                      value.key,
-                    name:                     value.name,
-                    nameLocalizations:        value.name_localizations,
-                    type:                     value.type
-                }
+                    key: value.key,
+                    name: value.name,
+                    nameLocalizations: value.name_localizations,
+                    type: value.type,
+                },
             })).reduce((a, b) => ({ ...a, ...b })),
-            platformName:     d.platform_name,
-            platformUsername: d.platform_username
+            platformName: d.platform_name,
+            platformUsername: d.platform_username,
         }));
     }
 }

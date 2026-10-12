@@ -13,8 +13,8 @@ export default class SimpleCollection<K extends string | number, M extends Recor
         this.limit = limit;
         Object.defineProperties(this, {
             conversionFunc: { value: conversionFunc, enumerable: false },
-            key:            { value: key ?? "id", enumerable: false },
-            onDuplicate:    { value: onDuplicate, enumerable: false }
+            key: { value: key ?? "id", enumerable: false },
+            onDuplicate: { value: onDuplicate, enumerable: false },
         });
     }
 
@@ -46,7 +46,6 @@ export default class SimpleCollection<K extends string | number, M extends Recor
                 while (this.size > this.limit) {
                     this.delete(iter.next().value as K);
                 }
-
             }
 
             return value;

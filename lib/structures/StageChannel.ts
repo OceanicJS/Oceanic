@@ -1,9 +1,10 @@
 /** @module StageChannel */
-import type StageInstance from "./StageInstance";
 import TextableVoiceChannel from "./TextableVoiceChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes } from "../Constants";
+
+import type StageInstance from "./StageInstance";
 import type Client from "../Client";
+import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 

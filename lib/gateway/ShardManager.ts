@@ -1,27 +1,30 @@
 /** @module ShardManager */
-import Shard from "./Shard";
-import Dispatcher from "./Dispatcher";
-import CompressionConfigs from "./compression/config";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import {
     AllIntents,
     AllNonPrivilegedIntents,
     type ApplicationFlags,
     GATEWAY_VERSION,
     Intents,
-    PrivilegedIntentMapping
+    PrivilegedIntentMapping,
 } from "../Constants";
 import Collection from "../util/Collection";
 import { DependencyError } from "../util/Errors";
 
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+import CompressionConfigs from "./compression/config";
+import Dispatcher from "./Dispatcher";
+import Shard from "./Shard";
+
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
+
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports */
 // @ts-ignore
 let Erlpack: typeof import("erlpack") | undefined;
 try {
     Erlpack = require("erlpack");
+// eslint-disable-next-line no-empty
 } catch {}
-/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports */
 
 /** A manager for all the client's shards. */
 export default class ShardManager extends Collection<number, Shard> {
@@ -36,55 +39,56 @@ export default class ShardManager extends Collection<number, Shard> {
     constructor(client: Client, options: Types.Gateway.GatewayOptions = {}) {
         super();
         Object.defineProperty(this, "client", {
-            value:        client,
-            writable:     false,
-            enumerable:   false,
-            configurable: false
+            value: client,
+            writable: false,
+            enumerable: false,
+            configurable: false,
         });
 
         this._buckets = {};
         this._connectQueue = [];
         this._connectTimeout = null;
         this.options = {
-            autoReconnect:        options.autoReconnect ?? true,
-            compress:             options.compress ?? false,
-            compressLibrary:      options.compressLibrary ?? null,
+            autoReconnect: options.autoReconnect ?? true,
+            compress: options.compress ?? false,
+            compressLibrary: options.compressLibrary ?? null,
             connectionProperties: {
                 browser: options.connectionProperties?.browser ?? "Oceanic",
-                device:  options.connectionProperties?.device ?? "Oceanic",
-                os:      options.connectionProperties?.os ?? process.platform
+                device: options.connectionProperties?.device ?? "Oceanic",
+                os: options.connectionProperties?.os ?? process.platform,
             },
-            concurrency:       options.concurrency === "auto" || options.concurrency && options.concurrency < 1 ? -1 : options.concurrency ?? -1,
+            concurrency: options.concurrency === "auto" || (options.concurrency && options.concurrency < 1) ? -1 : options.concurrency ?? -1,
             connectionTimeout: options.connectionTimeout ?? 30000,
-            dispatcher:        {
-                blacklist: options.dispatcher?.blacklist === undefined ? null : options.dispatcher.blacklist,
-                whitelist: options.dispatcher?.whitelist === undefined ? null : options.dispatcher.whitelist
+            dispatcher: {
+                blacklist: options.dispatcher?.blacklist ?? null,
+                whitelist: options.dispatcher?.whitelist ?? null,
             },
             firstShardID: options.firstShardID && options.firstShardID < 0 ? 0 : options.firstShardID ?? 0,
-            getAllUsers:  options.getAllUsers ?? false,
-            override:     options.override as Types.Gateway.ShardManagerInstanceOptions["override"] ?? {
-                appendQuery:              true,
-                gatewayURLIsResumeURL:    false,
-                timeBetweenShardConnects: 5000
+            getAllUsers: options.getAllUsers ?? false,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            override: options.override as Types.Gateway.ShardManagerInstanceOptions["override"] ?? {
+                appendQuery: true,
+                gatewayURLIsResumeURL: false,
+                timeBetweenShardConnects: 5000,
             },
-            guildCreateTimeout:      options.guildCreateTimeout ?? 2000,
-            intents:                 typeof options.intents === "number" ? options.intents : 0,
-            largeThreshold:          options.largeThreshold ?? 250,
-            lastShardID:             options.lastShardID ?? -1,
+            guildCreateTimeout: options.guildCreateTimeout ?? 2000,
+            intents: typeof options.intents === "number" ? options.intents : 0,
+            largeThreshold: options.largeThreshold ?? 250,
+            lastShardID: options.lastShardID ?? -1,
             lookupDisallowedIntents: options.lookupDisallowedIntents ?? false,
-            maxReconnectAttempts:    options.maxReconnectAttempts ?? Infinity,
-            maxResumeAttempts:       options.maxResumeAttempts ?? 10,
-            maxShards:               options.maxShards === "auto" || options.maxShards && options.maxShards < 1 ? -1 : options.maxShards ?? -1,
-            presence:			             {
+            maxReconnectAttempts: options.maxReconnectAttempts ?? Infinity,
+            maxResumeAttempts: options.maxResumeAttempts ?? 10,
+            maxShards: options.maxShards === "auto" || (options.maxShards && options.maxShards < 1) ? -1 : options.maxShards ?? -1,
+            presence: {
                 activities: options.presence?.activities ?? [],
-                afk:		      options.presence?.afk ?? false,
-                status:		   options.presence?.status ?? "online"
+                afk: options.presence?.afk ?? false,
+                status: options.presence?.status ?? "online",
             },
-            reconnectDelay:          options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
+            reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts): number => Math.pow(attempts + 1, 0.7) * 20000),
             removeDisallowedIntents: options.removeDisallowedIntents ?? false,
-            seedVoiceConnections:    options.seedVoiceConnections ?? false,
-            shardIDs:                options.shardIDs ?? [],
-            ws:                      options.ws ?? {}
+            seedVoiceConnections: options.seedVoiceConnections ?? false,
+            shardIDs: options.shardIDs ?? [],
+            ws: options.ws ?? {},
         };
 
         if (this.options.compress) {
@@ -112,8 +116,11 @@ export default class ShardManager extends Collection<number, Shard> {
             }
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.options.override.appendQuery ??= (this.options.override.getBot === undefined && this.options.override.url === undefined);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.options.override.gatewayURLIsResumeURL ??= (this.options.override.getBot !== undefined || this.options.override.url !== undefined);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.options.override.timeBetweenShardConnects ??= 5000;
         if (this.options.lastShardID === -1 && this.options.maxShards !== -1) {
             this.options.lastShardID = this.options.maxShards - 1;
@@ -129,6 +136,7 @@ export default class ShardManager extends Collection<number, Shard> {
                 for (const intent of options.intents) {
                     if (typeof intent === "number") {
                         bitmask |= intent;
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                     } else if (Intents[intent as keyof typeof Intents]) {
                         bitmask |= Intents[intent as keyof typeof Intents];
                     } else {
@@ -154,10 +162,10 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         Object.defineProperty(this, "dispatcher", {
-            value:        new Dispatcher(this),
-            writable:     false,
-            enumerable:   false,
-            configurable: false
+            value: new Dispatcher(this),
+            writable: false,
+            enumerable: false,
+            configurable: false,
         });
     }
 
@@ -204,7 +212,7 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         let url: string | null, data: Types.Gateway.GetBotGatewayResponse | undefined;
-        const overrideURL = (this.options.override.getBot || this.options.override.url) !== undefined;
+        const overrideURL = (this.options.override.getBot ?? this.options.override.url) !== undefined;
         try {
             if (this.options.maxShards === -1 || this.options.concurrency === -1) {
                 data = await (this.options.override.getBot?.() ?? this.client.rest.getBotGateway());
@@ -224,7 +232,6 @@ export default class ShardManager extends Collection<number, Shard> {
             }
         }
 
-        /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
         if (this.options.removeDisallowedIntents && PrivilegedIntentMapping.some(([intent]) => (this.options.intents & intent) === intent)) {
             const { flags } = await this.client.rest.applications.getCurrent();
             const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
@@ -237,7 +244,6 @@ export default class ShardManager extends Collection<number, Shard> {
                 check(intent, allowed);
             }
         }
-        /* eslint-enable @typescript-eslint/no-unsafe-enum-comparison */
 
         if (url && this.options.override.appendQuery) {
             url += `?v=${GATEWAY_VERSION}&encoding=${Erlpack ? "etf" : "json"}`;
@@ -249,7 +255,7 @@ export default class ShardManager extends Collection<number, Shard> {
         }
 
         if (this.options.maxShards === -1) {
-            if (!data || !data.shards) {
+            if (!data?.shards) {
                 throw new TypeError("AutoSharding failed, missing required information from Discord.");
             }
             this.options.maxShards = data.shards;
@@ -265,6 +271,7 @@ export default class ShardManager extends Collection<number, Shard> {
             this.options.concurrency = data.sessionStartLimit.maxConcurrency;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (this.options.shardIDs.length === 0 && this.options.firstShardID !== undefined && this.options.lastShardID !== undefined) {
             for (let i = this.options.firstShardID; i <= this.options.lastShardID; i++) {
                 this.options.shardIDs.push(i);
@@ -328,7 +335,7 @@ export default class ShardManager extends Collection<number, Shard> {
                     this.client.ready = true;
                     this.client.emit("ready");
                 })
-                .on("disconnect", error => {
+                .on("disconnect", (error) => {
                     this.client.time.set("disconnect", Date.now());
                     this.client.emit("shardDisconnect", error, id);
                     for (const other of this.values()) {
@@ -378,6 +385,5 @@ export default class ShardManager extends Collection<number, Shard> {
                 this.tryConnect();
             }, 500);
         }
-
     }
 }

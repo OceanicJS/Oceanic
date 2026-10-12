@@ -1,6 +1,9 @@
 /** @module Types/Gateway */
-import type * as Types from "./namespaced";
+import { type CompressionLibrary, type CompressionType } from "../gateway/compression/config";
+
 import { type AnyVoiceChannel } from "./channels";
+
+import type * as Types from "./namespaced";
 import type {
     ActivityTypes,
     AnimationTypes,
@@ -8,12 +11,11 @@ import type {
     ChannelTypes,
     GatewayOPCodes,
     IntentNames,
-    StatusDisplayType
+    StatusDisplayType,
 } from "../Constants";
-import type AutoModerationRule from "../structures/AutoModerationRule";
-import type Shard from "../gateway/Shard";
 import type { DispatchEvent } from "../gateway/Dispatcher";
-import { type CompressionLibrary, type CompressionType } from "../gateway/compression/config";
+import type Shard from "../gateway/Shard";
+import type AutoModerationRule from "../structures/AutoModerationRule";
 import type { ClientOptions as WSClientOptions } from "ws";
 
 export type ReconnectDelayFunction = (lastDelay: number, attempts: number) => number;
@@ -218,7 +220,6 @@ export interface SessionStartLimit {
     total: number;
 }
 
-
 export interface GetBotGatewayResponse extends GetGatewayResponse {
     sessionStartLimit: SessionStartLimit;
     shards: number;
@@ -261,7 +262,6 @@ export interface ChannelInfoWithChannel<T extends AnyVoiceChannel = AnyVoiceChan
     channel: T | null;
     info: ChannelInfo;
 }
-
 
 export interface RequestChannelInfoOptions {
     fields?: Array<RequestChannelInfoFields>;
@@ -322,7 +322,7 @@ export interface BotOtherActivity {
     type: ActivityTypes.GAME | ActivityTypes.LISTENING | ActivityTypes.WATCHING | ActivityTypes.COMPETING;
 }
 
-export type BotActivity  = BotStreamingActivity | BotCustomActivity | BotOtherActivity;
+export type BotActivity = BotStreamingActivity | BotCustomActivity | BotOtherActivity;
 
 export interface ActivityEmoji {
     animated?: boolean;
@@ -345,7 +345,7 @@ export interface PresenceUpdate {
     client_status: ClientStatus;
     guild_id: string;
     status: ReceiveStatuses;
-    user: { id: string; } & Partial<Omit<Types.Users.RawUser, "id">>;
+    user: { id: string } & Partial<Omit<Types.Users.RawUser, "id">>;
 }
 
 export interface ClientStatus {

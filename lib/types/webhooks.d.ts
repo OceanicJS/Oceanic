@@ -31,7 +31,7 @@ export interface CreateWebhookOptions {
     reason?: string;
 }
 
-export interface EditWebhookTokenOptions  {
+export interface EditWebhookTokenOptions {
     /** The new avatar (buffer, or full data url). `null` to reset. */
     avatar?: Buffer | string | null;
     /** The name of the webhook. */
@@ -57,7 +57,7 @@ export interface ExecuteWebhookOptions extends Pick<Types.Channels.CreateMessage
     wait?: boolean;
     withComponents?: boolean;
 }
-export interface ExecuteWebhookWaitOptions extends Omit<ExecuteWebhookOptions, "wait"> { wait: true; }
+export interface ExecuteWebhookWaitOptions extends Omit<ExecuteWebhookOptions, "wait"> { wait: true }
 
 export interface GetWebhookMessageOptions {
     messageID: string;

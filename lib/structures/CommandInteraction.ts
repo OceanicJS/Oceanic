@@ -1,24 +1,26 @@
 /** @module CommandInteraction */
-import Interaction from "./Interaction";
+import { ApplicationCommandTypes, InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
+import { UncachedError } from "../util/Errors";
+import InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
+import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
+import TypedCollection from "../util/TypedCollection";
+
 import Attachment from "./Attachment";
+import GuildChannel from "./GuildChannel";
+import Interaction from "./Interaction";
+import InteractionResolvedChannel from "./InteractionResolvedChannel";
 import Member from "./Member";
 import Message from "./Message";
+import Permission from "./Permission";
 import Role from "./Role";
 import User from "./User";
-import type Guild from "./Guild";
-import Permission from "./Permission";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import InteractionResolvedChannel from "./InteractionResolvedChannel";
+
 import type Entitlement from "./Entitlement";
+import type Guild from "./Guild";
+import type PrivateChannel from "./PrivateChannel";
 import type TestEntitlement from "./TestEntitlement";
-import type * as Types from "../types/namespaced";
-import TypedCollection from "../util/TypedCollection";
-import { ApplicationCommandTypes, InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
 import type Client from "../Client";
-import InteractionOptionsWrapper from "../util/interactions/InteractionOptionsWrapper";
-import { UncachedError } from "../util/Errors";
-import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
+import type * as Types from "../types/namespaced";
 
 /** Represents a command interaction. */
 export default class CommandInteraction<T extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached, C extends ApplicationCommandTypes = ApplicationCommandTypes> extends Interaction {
@@ -55,6 +57,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
     user: User;
     constructor(data: Types.Interactions.RawApplicationCommandInteraction, client: Client) {
         super(data, client);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.appPermissions = new Permission(data.app_permissions ?? "0");
         this.attachmentSizeLimit = data.attachment_size_limit;
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
@@ -62,11 +65,11 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         this.context = data.context;
         const resolved: Types.Interactions.ApplicationCommandInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionResolvedChannel, client),
-            members:     new TypedCollection(Member, client),
-            messages:    new TypedCollection(Message, client),
-            roles:       new TypedCollection(Role, client),
-            users:       new TypedCollection(User, client)
+            channels: new TypedCollection(InteractionResolvedChannel, client),
+            members: new TypedCollection(Member, client),
+            messages: new TypedCollection(Message, client),
+            roles: new TypedCollection(Role, client),
+            users: new TypedCollection(User, client),
         };
         this.entitlements = data.entitlements?.map(entitlement => client.util.updateEntitlement(entitlement)) ?? [];
         this.guildID = (data.guild_id ?? null) as T extends Types.Channels.AnyTextableGuildChannel ? string : string | null;
@@ -75,7 +78,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         this.locale = data.locale!;
         this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | null;
         this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends Types.Channels.AnyTextableGuildChannel ? Permission : Permission | null;
-        this.user = client.users.update((data.user ?? data.member!.user)!);
+        this.user = client.users.update((data.user ?? data.member!.user));
 
         if (data.data.resolved) {
             if (data.data.resolved.attachments) {
@@ -88,7 +91,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
 
             if (data.data.resolved.members) {
                 for (const [id, member] of Object.entries(data.data.resolved.members)) {
-                    const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser; };
+                    const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser };
                     m.user = data.data.resolved.users![id];
                     resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                 }
@@ -121,14 +124,15 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         }
 
         this.data = {
-            guildID:  data.data.guild_id,
-            id:       data.data.id,
-            name:     data.data.name,
-            options:  new InteractionOptionsWrapper(data.data.options ?? [], resolved ?? null),
+            guildID: data.data.guild_id,
+            id: data.data.id,
+            name: data.data.name,
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            options: new InteractionOptionsWrapper(data.data.options ?? [], resolved ?? null),
             resolved,
-            target:   null as never,
+            target: null as never,
             targetID: data.data.target_id as never,
-            type:     data.data.type as C
+            type: data.data.type as C,
         };
 
         if (this.data.targetID) {
@@ -176,7 +180,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         const message = await this.client.rest.interactions.createFollowupMessage<T>(this.applicationID, this.token, options);
@@ -200,7 +204,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
 
@@ -268,7 +272,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.interactions.editFollowupMessage<T>(this.applicationID, this.token, messageID, options);
@@ -289,7 +293,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.client.rest.interactions.editOriginalMessage<T>(this.applicationID, this.token, options);
@@ -382,7 +386,7 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.acknowledged ? this.createFollowup(options) : this.createMessage(options);
@@ -391,18 +395,18 @@ export default class CommandInteraction<T extends Types.Channels.AnyInteractionC
     override toJSON(): Types.JSON.JSONCommandInteraction {
         return {
             ...super.toJSON(),
-            appPermissions:               this.appPermissions.toJSON(),
-            attachmentSizeLimit:          this.attachmentSizeLimit,
+            appPermissions: this.appPermissions.toJSON(),
+            attachmentSizeLimit: this.attachmentSizeLimit,
             authorizingIntegrationOwners: this.authorizingIntegrationOwners,
-            channelID:                    this.channelID,
-            context:                      this.context,
-            data:                         this.data,
-            guildID:                      this.guildID ?? undefined,
-            guildLocale:                  this.guildLocale,
-            locale:                       this.locale,
-            member:                       this.member?.toJSON(),
-            type:                         this.type,
-            user:                         this.user.toJSON()
+            channelID: this.channelID,
+            context: this.context,
+            data: this.data,
+            guildID: this.guildID ?? undefined,
+            guildLocale: this.guildLocale,
+            locale: this.locale,
+            member: this.member?.toJSON(),
+            type: this.type,
+            user: this.user.toJSON(),
         };
     }
 }

@@ -1,12 +1,13 @@
 /** @module InteractionOptionsWrapper */
-import type * as Types from "../../types/namespaced";
-import { WrapperError } from "../Errors";
 import { ApplicationCommandOptionTypes, ChannelTypes } from "../../Constants";
+import { WrapperError } from "../Errors";
+
+import type Attachment from "../../structures/Attachment";
+import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
 import type Member from "../../structures/Member";
 import type Role from "../../structures/Role";
 import type User from "../../structures/User";
-import type Attachment from "../../structures/Attachment";
-import type InteractionResolvedChannel from "../../structures/InteractionResolvedChannel";
+import type * as Types from "../../types/namespaced";
 
 /** A wrapper for interaction options. */
 export default class InteractionOptionsWrapper {
@@ -71,7 +72,6 @@ export default class InteractionOptionsWrapper {
     getBoolean(name: string, required?: boolean): boolean | undefined {
         return this.getBooleanOption(name, required as false)?.value;
     }
-
 
     /**
      * Get a boolean option.
@@ -337,6 +337,7 @@ export default class InteractionOptionsWrapper {
     getSubCommand<T extends Types.Interactions.SubCommandArray = Types.Interactions.SubCommandArray>(required: true): T;
     getSubCommand(required?: boolean): Types.Interactions.SubCommandArray | undefined {
         const opt = this.raw.find(o => o.type === ApplicationCommandOptionTypes.SUB_COMMAND || o.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) as Types.Interactions.InteractionOptionsSubCommand | Types.Interactions.InteractionOptionsSubCommandGroup;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (opt?.options) {
         // nested
             if (opt.options.length === 1 && opt.type === ApplicationCommandOptionTypes.SUB_COMMAND_GROUP) {

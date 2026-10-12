@@ -1,17 +1,18 @@
 /** @module ClientApplication */
-import Base from "./Base";
-import type ApplicationCommand from "./ApplicationCommand";
-import TestEntitlement from "./TestEntitlement";
-import Entitlement from "./Entitlement";
-import BaseEntitlement from "./BaseEntitlement";
-import type SKU from "./SKU";
-import type Application from "./Application";
-import Subscription from "./Subscription";
-import type Attachment from "./Attachment";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
-import type { ApplicationCommandTypes } from "../Constants";
 import TypedCollection from "../util/TypedCollection";
+
+import Base from "./Base";
+import BaseEntitlement from "./BaseEntitlement";
+import Entitlement from "./Entitlement";
+import Subscription from "./Subscription";
+import TestEntitlement from "./TestEntitlement";
+
+import type Application from "./Application";
+import type ApplicationCommand from "./ApplicationCommand";
+import type Attachment from "./Attachment";
+import type SKU from "./SKU";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** A representation of the authorized client's application (typically received via gateway). */
 export default class ClientApplication extends Base {
@@ -34,10 +35,12 @@ export default class ClientApplication extends Base {
                     return new Entitlement(entitlement as Types.Applications.RawEntitlement, client);
                 }
 
-                return new TestEntitlement(entitlement as Types.Applications.RawTestEntitlement, client);
-            }
+                return new TestEntitlement(entitlement, client);
+            },
         }) as TypedCollection<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement, Entitlement | TestEntitlement>;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.flags = data.flags ?? 0;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.flagsNew = BigInt(data.flags_new ?? data.flags ?? "0");
         this.subscriptions = new TypedCollection(Subscription, client, Infinity);
         this.update(data);
@@ -56,7 +59,7 @@ export default class ClientApplication extends Base {
      * Overwrite all existing global application commands.
      * @param options The commands.
      */
-    async bulkEditGlobalCommands(options: Array<Types.Applications.CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand<ApplicationCommandTypes>>> {
+    async bulkEditGlobalCommands(options: Array<Types.Applications.CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
         return this.client.rest.applications.bulkEditGlobalCommands(this.id, options);
     }
 
@@ -65,7 +68,7 @@ export default class ClientApplication extends Base {
      * @param guildID The ID of the guild.
      * @param options The commands.
      */
-    async bulkEditGuildCommands(guildID: string, options: Array<Types.Applications.CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand<ApplicationCommandTypes>>> {
+    async bulkEditGuildCommands(guildID: string, options: Array<Types.Applications.CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
         return this.client.rest.applications.bulkEditGuildCommands(this.id, guildID, options);
     }
 
@@ -110,6 +113,7 @@ export default class ClientApplication extends Base {
     async createTestEntitlement(options: Types.Applications.CreateTestEntitlementOptions): Promise<TestEntitlement> {
         return this.client.rest.applications.createTestEntitlement(this.id, options);
     }
+
     /**
      * Delete an emoji for this application.
      * @param emojiID The ID of the emoji to be deleted.
@@ -311,8 +315,8 @@ export default class ClientApplication extends Base {
     override toJSON(): Types.JSON.JSONClientApplication {
         return {
             ...super.toJSON(),
-            flags:    this.flags,
-            flagsNew: this.flagsNew
+            flags: this.flags,
+            flagsNew: this.flagsNew,
         };
     }
 

@@ -1,8 +1,9 @@
 /** @module PrimaryGuild */
-import type * as Types from "../types/namespaced";
 import * as Routes from "../util/Routes";
+
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a primary guild. */
 export default class PrimaryGuild {
@@ -15,10 +16,10 @@ export default class PrimaryGuild {
     tag: string | null;
     constructor(data: Types.Users.RawClan, client: Client) {
         Object.defineProperty(this, "client", {
-            value:        client,
-            enumerable:   false,
-            writable:     false,
-            configurable: false
+            value: client,
+            enumerable: false,
+            writable: false,
+            configurable: false,
         });
         this.badge = data.badge;
         this.identityEnabled = data.identity_enabled;
@@ -57,10 +58,10 @@ export default class PrimaryGuild {
 
     toJSON(): Types.JSON.JSONPrimaryGuild {
         return {
-            badge:           this.badge,
+            badge: this.badge,
             identityEnabled: this.identityEnabled,
             identityGuildID: this.identityGuildID,
-            tag:             this.tag
+            tag: this.tag,
         };
     }
 }

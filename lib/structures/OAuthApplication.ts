@@ -1,13 +1,15 @@
 /** @module OAuthApplication */
-import type User from "./User";
-import Team from "./Team";
-import type Guild from "./Guild";
+import { UncachedError } from "../util/Errors";
+import * as Routes from "../util/Routes";
+
 import Base from "./Base";
-import type * as Types from "../types/namespaced";
+import Team from "./Team";
+
+import type Guild from "./Guild";
+import type User from "./User";
 import type Client from "../Client";
 import type { ApplicationIntegrationTypes, ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents an oauth application. */
 export default class OAuthApplication extends Base {
@@ -81,6 +83,28 @@ export default class OAuthApplication extends Base {
         this.update(data);
     }
 
+    /** If this application is a game sold on Discord, the guild to which it has been linked. This will throw an error if the guild is not cached. */
+    get guild(): Guild | null {
+        if (this.guildID !== null && this._cachedGuild !== null) {
+            this._cachedGuild ??= this.client.guilds.get(this.guildID);
+            if (!this._cachedGuild) {
+                if (this.client.options.restMode) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
+                }
+
+                if (!this.client.shards.connected) {
+                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
+                }
+
+                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
+            }
+
+            return this._cachedGuild;
+        }
+
+        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
+    }
+
     protected override update(data: Partial<Types.Applications.RESTOAuthApplication>): void {
         super.update(data);
         if (data.bot_public !== undefined) {
@@ -101,7 +125,7 @@ export default class OAuthApplication extends Base {
         if (data.flags !== undefined) {
             this.flags = data.flags;
         }
-        this.guildID = data.guild_id === undefined ? null : data.guild_id;
+        this.guildID = data.guild_id ?? null;
         if (data.icon !== undefined) {
             this.icon = data.icon;
         }
@@ -150,28 +174,6 @@ export default class OAuthApplication extends Base {
         }
     }
 
-    /** If this application is a game sold on Discord, the guild to which it has been linked. This will throw an error if the guild is not cached. */
-    get guild(): Guild | null {
-        if (this.guildID !== null && this._cachedGuild !== null) {
-            this._cachedGuild ??= this.client.guilds.get(this.guildID);
-            if (!this._cachedGuild) {
-                if (this.client.options.restMode) {
-                    throw new UncachedError(`${this.constructor.name}#guild is not present when rest mode is enabled.`);
-                }
-
-                if (!this.client.shards.connected) {
-                    throw new UncachedError(`${this.constructor.name}#guild is not present without a gateway connection.`);
-                }
-
-                throw new UncachedError(`${this.constructor.name}#guild is not present.`);
-            }
-
-            return this._cachedGuild;
-        }
-
-        return this._cachedGuild === null ? this._cachedGuild : (this._cachedGuild = null);
-    }
-
     /**
      * The url of this application's cover image.
      * @param format The format the url should be.
@@ -193,29 +195,29 @@ export default class OAuthApplication extends Base {
     override toJSON(): Types.JSON.JSONOAuthApplication {
         return {
             ...super.toJSON(),
-            botPublic:              this.botPublic,
-            botRequireCodeGrant:    this.botRequireCodeGrant,
-            coverImage:             this.coverImage,
-            customInstallURL:       this.customInstallURL,
-            description:            this.description,
-            flags:                  this.flags,
-            guildID:                this.guildID,
-            icon:                   this.icon,
-            installParams:          this.installParams,
-            integrationTypes:       this.integrationTypes,
+            botPublic: this.botPublic,
+            botRequireCodeGrant: this.botRequireCodeGrant,
+            coverImage: this.coverImage,
+            customInstallURL: this.customInstallURL,
+            description: this.description,
+            flags: this.flags,
+            guildID: this.guildID,
+            icon: this.icon,
+            installParams: this.installParams,
+            integrationTypes: this.integrationTypes,
             integrationTypesConfig: this.integrationTypesConfig,
-            name:                   this.name,
-            owner:                  this.owner.toJSON(),
-            ownerID:                this.ownerID,
-            primarySKUID:           this.primarySKUID,
-            privacyPolicyURL:       this.privacyPolicyURL,
-            rpcOrigins:             this.rpcOrigins,
-            slug:                   this.slug,
-            tags:                   this.tags,
-            team:                   this.team?.toJSON() ?? null,
-            termsOfServiceURL:      this.termsOfServiceURL,
-            type:                   this.type,
-            verifyKey:              this.verifyKey
+            name: this.name,
+            owner: this.owner.toJSON(),
+            ownerID: this.ownerID,
+            primarySKUID: this.primarySKUID,
+            privacyPolicyURL: this.privacyPolicyURL,
+            rpcOrigins: this.rpcOrigins,
+            slug: this.slug,
+            tags: this.tags,
+            team: this.team?.toJSON() ?? null,
+            termsOfServiceURL: this.termsOfServiceURL,
+            type: this.type,
+            verifyKey: this.verifyKey,
 
         };
     }
