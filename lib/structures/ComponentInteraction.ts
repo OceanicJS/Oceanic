@@ -82,7 +82,6 @@ export default class ComponentInteraction<V extends ComponentTypes.BUTTON | Sele
         this.locale = data.locale!;
         this.member = (data.member === undefined ? null : this.client.util.updateMember(data.guild_id!, data.member.user.id, data.member)) as T extends Types.Channels.AnyTextableGuildChannel ? Member : Member | null;
         this.memberPermissions = (data.member === undefined ? null : new Permission(data.member.permissions)) as T extends Types.Channels.AnyTextableGuildChannel ? Permission : Permission | null;
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.message = (this.channel && "messages" in this.channel && (this.channel.messages.update(data.message) as Message<T>)) || new Message<T>(data.message, client);
         this.user = client.users.update((data.user ?? data.member!.user));
 
