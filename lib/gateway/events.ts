@@ -1010,6 +1010,11 @@ export async function VOICE_STATE_UPDATE(data: DispatchEventMap["VOICE_STATE_UPD
     if (!isDeepStrictEqual(oldState, state.toJSON())) {
         shard.client.emit("voiceStateUpdate", member, oldState);
     }
+
+    // remove after emitting so listeners still get the old state
+    if (state.channelID === null) {
+        guild?.voiceStates.delete(member.id);
+    }
 }
 
 export async function VOICE_CHANNEL_START_TIME_UPDATE(data: DispatchEventMap["VOICE_CHANNEL_START_TIME_UPDATE"], shard: Shard): Promise<void> {
