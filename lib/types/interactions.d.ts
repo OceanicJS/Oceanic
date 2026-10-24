@@ -411,6 +411,7 @@ export interface RawModalSubmitFileUploadComponent extends RawModalSubmitCompone
 export interface RawModalSubmitCheckboxComponent extends RawModalSubmitComponentsBooleanValue<ComponentTypes.CHECKBOX> { }
 export interface RawModalSubmitCheckboxGroupComponent extends RawModalSubmitComponentsStringValues<ComponentTypes.CHECKBOX_GROUP> {}
 export interface RawModalSubmitRadioGroupComponent extends RawModalSubmitComponentsNullableStringValue<ComponentTypes.RADIO_GROUP> {}
+export type RawModalSubmitTextDisplayComponent = Omit<Types.Channels.TextDisplayComponent, "content">;
 
 interface ModalSubmitComponentsBase {
     customID: string;
@@ -466,6 +467,7 @@ export interface ModalSubmitFileUploadComponent extends ModalSubmitComponentsStr
 export interface ModalSubmitCheckboxComponent extends ModalSubmitComponentsBooleanValue<ComponentTypes.CHECKBOX> {}
 export interface ModalSubmitCheckboxGroupComponent extends ModalSubmitComponentsStringValues<ComponentTypes.CHECKBOX_GROUP> { }
 export interface ModalSubmitRadioGroupComponent extends ModalSubmitComponentsNullableStringValue<ComponentTypes.RADIO_GROUP> {}
+export type ModalSubmitTextDisplayComponent = Omit<Types.Channels.TextDisplayComponent, "content">;
 
 export type ApplicationCommandTypesWithTarget = ApplicationCommandTypes.USER | ApplicationCommandTypes.MESSAGE;
 
@@ -528,6 +530,7 @@ export interface InteractionCallbackResource<CH extends Types.Channels.AnyIntera
 
 export interface ModalSubmitComponentTypeMap {
     [ComponentTypes.ACTION_ROW]: ModalSubmitComponentsActionRow;
+    [ComponentTypes.TEXT_DISPLAY]: ModalSubmitTextDisplayComponent;
     [ComponentTypes.STRING_SELECT]: ModalSubmitStringSelectComponent;
     [ComponentTypes.TEXT_INPUT]: ModalSubmitTextInputComponent;
     [ComponentTypes.USER_SELECT]: ModalSubmitUserSelectComponent;
@@ -543,6 +546,7 @@ export interface ModalSubmitComponentTypeMap {
 
 export interface RawModalSubmitComponentTypeMap {
     [ComponentTypes.ACTION_ROW]: RawModalSubmitComponentsActionRow;
+    [ComponentTypes.TEXT_DISPLAY]: RawModalSubmitTextDisplayComponent;
     [ComponentTypes.STRING_SELECT]: RawModalSubmitStringSelectComponent;
     [ComponentTypes.TEXT_INPUT]: RawModalSubmitTextInputComponent;
     [ComponentTypes.USER_SELECT]: RawModalSubmitUserSelectComponent;

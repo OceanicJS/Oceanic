@@ -2,7 +2,7 @@ import { ComponentTypes, type ModalComponentTypes } from "../../Constants";
 
 import type * as Types from "../../types/namespaced";
 
-const FROM_RAW: { [K in ComponentTypes.ACTION_ROW | ComponentTypes.LABEL | ModalComponentTypes]: (input: Types.Interactions.RawModalSubmitComponentTypeMap[K]) => Types.Interactions.ModalSubmitComponentTypeMap[K] } = {
+const FROM_RAW: { [K in ComponentTypes.ACTION_ROW | ComponentTypes.LABEL | ComponentTypes.TEXT_DISPLAY | ModalComponentTypes]: (input: Types.Interactions.RawModalSubmitComponentTypeMap[K]) => Types.Interactions.ModalSubmitComponentTypeMap[K] } = {
     [ComponentTypes.ACTION_ROW]: component => ({
         components: component.components.map(c => fromRaw(c) as never),
         type: component.type,
@@ -37,6 +37,7 @@ const FROM_RAW: { [K in ComponentTypes.ACTION_ROW | ComponentTypes.LABEL | Modal
         type: component.type,
         values: component.values,
     }),
+    [ComponentTypes.TEXT_DISPLAY]: component => component,
     [ComponentTypes.LABEL]: component => ({
         component: fromRaw(component.component),
         type: component.type,
