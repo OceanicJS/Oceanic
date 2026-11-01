@@ -407,6 +407,8 @@ export interface EmbedBase extends EmbedOptionsBase {
 
 export interface RawEmbed extends EmbedBase {
     author?: RawEmbedAuthor;
+    /** The components that make up the embed. Only present on `components` type embeds. */
+    components?: Array<RawContainerComponent>;
     fields?: Array<EmbedField>;
     /** The {@link Constants.EmbedFlags | Embed Flags} for the embed. */
     flags?: number;
@@ -419,6 +421,8 @@ export interface RawEmbed extends EmbedBase {
 
 export interface Embed extends EmbedBase {
     author?: EmbedAuthor;
+    /** The components that make up the embed. Only present on `components` type embeds. */
+    components?: Array<ContainerComponent>;
     fields?: Array<EmbedField>;
     /** The {@link Constants.EmbedFlags | Embed Flags} for the embed. */
     flags?: number;
@@ -429,7 +433,7 @@ export interface Embed extends EmbedBase {
     video?: EmbedVideo;
 }
 
-export type EmbedType = "rich" | "image" | "video" | "gifv" | "article" | "link" | "poll_result";
+export type EmbedType = "rich" | "image" | "video" | "gifv" | "article" | "link" | "poll_result" | "components";
 
 export interface EmbedAuthorBase {
     name: string;

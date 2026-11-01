@@ -1,3 +1,5 @@
+import { fromRaw as componentFromRaw } from "./message-components";
+
 import type * as Types from "../../types/namespaced";
 
 export function fromRaw(embed: Types.Channels.RawEmbed): Types.Channels.Embed {
@@ -9,6 +11,7 @@ export function fromRaw(embed: Types.Channels.RawEmbed): Types.Channels.Embed {
             url: embed.author.url,
         },
         color: embed.color,
+        components: embed.components?.map(component => componentFromRaw(component)),
         description: embed.description,
         fields: embed.fields?.map(field => ({
             inline: field.inline,
