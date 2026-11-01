@@ -13,6 +13,7 @@ import Permission from "../structures/Permission";
 import StageInstance from "../structures/StageInstance";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
+import { warning, WarningCodes } from "../util/warning";
 
 import type RESTManager from "../rest/RESTManager";
 import type AnnouncementChannel from "../structures/AnnouncementChannel";
@@ -654,17 +655,18 @@ export default class Channels {
      * Get the private archived threads the current user has joined in a channel.
      * @param channelID The ID of the channel to get the archived threads from.
      * @param options The options for getting the archived threads.
-     * @caching This method **does not** cache its result.
+     * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
+     * @caches {@link Guild#threads | Guild#threads}
      */
     async getJoinedPrivateArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         options = this._manager.client.util._freeze(options);
+        const query = new QueryBuilder();
+        query.setIfPresent("before", options?.before);
+        query.setIfPresent("limit", options?.limit);
         return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
             method: "GET",
-            path: Routes.CHANNEL_PRIVATE_ARCHIVED_THREADS(channelID),
-            json: {
-                before: options?.before,
-                limit: options?.limit,
-            },
+            path: Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
+            query,
         }).then(data => ({
             hasMore: data.has_more,
             members: data.members.map(m => ({
@@ -1011,26 +1013,11 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @deprecated Use {@link Channels#getJoinedPrivateArchivedThreads | getJoinedPrivateArchivedThreads} instead. This will be removed in `1.17.0`.
      */
     async getPrivateJoinedArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
-        options = this._manager.client.util._freeze(options);
-        const query = new QueryBuilder();
-        query.setIfPresent("before", options?.before);
-        query.setIfPresent("limit", options?.limit);
-        return this._manager.authRequest<Types.Channels.RawArchivedThreads<Types.Channels.RawPrivateThreadChannel>>({
-            method: "GET",
-            path: Routes.CHANNEL_JOINED_PRIVATE_ARCHIVED_THREADS(channelID),
-            query,
-        }).then(data => ({
-            hasMore: data.has_more,
-            members: data.members.map(m => ({
-                flags: m.flags,
-                id: m.id,
-                joinTimestamp: new Date(m.join_timestamp),
-                userID: m.user_id,
-            })),
-            threads: data.threads.map(d => this._manager.client.util.updateThread(d)),
-        }));
+        warning(WarningCodes.OCEANIC_CHANNELS_GET_PRIVATE_JOINED_ARCHIVED_THREADS_DEPRECATED);
+        return this.getJoinedPrivateArchivedThreads(channelID, options);
     }
 
     /**

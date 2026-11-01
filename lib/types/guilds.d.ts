@@ -709,13 +709,13 @@ export interface BeginPruneOptions extends GetPruneCountOptions {
 }
 
 export interface RawWidgetSettings {
-    channel_id: string;
+    channel_id: string | null;
     enabled: boolean;
 }
 
 export interface WidgetSettings {
     /** The ID of the channel the widget should lead to. */
-    channelID: string;
+    channelID: string | null;
     /** If the widget is enabled. */
     enabled: boolean;
 }

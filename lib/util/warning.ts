@@ -3,6 +3,7 @@ export enum WarningCodes {
     OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED = "OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED",
     OCEANIC_AUTH_AND_TOKEN_PROVIDED = "OCEANIC_AUTH_AND_TOKEN_PROVIDED",
     OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED = "OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED",
+    OCEANIC_CHANNELS_GET_PRIVATE_JOINED_ARCHIVED_THREADS_DEPRECATED = "OCEANIC_CHANNELS_GET_PRIVATE_JOINED_ARCHIVED_THREADS_DEPRECATED",
 }
 
 const WarningOptions = {
@@ -20,6 +21,10 @@ const WarningOptions = {
     },
     [WarningCodes.OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED]: {
         message: "Invite#updateInviteTargetUsers is deprecated and will be removed in 1.17.0. Use Invite#updateTargetUsers instead.",
+        type: "DeprecationWarning",
+    },
+    [WarningCodes.OCEANIC_CHANNELS_GET_PRIVATE_JOINED_ARCHIVED_THREADS_DEPRECATED]: {
+        message: "Channels#getPrivateJoinedArchivedThreads is deprecated and will be removed in 1.17.0. Use Channels#getJoinedPrivateArchivedThreads instead.",
         type: "DeprecationWarning",
     },
 } satisfies Record<WarningCodes, { detail?: string; message: string; type?: string }>;

@@ -1079,7 +1079,7 @@ export default class Guild extends Base {
      * Edit the widget of this guild.
      * @param options The options for editing the widget.
      */
-    async editWidget(options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.Widget> {
+    async editWidget(options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.WidgetSettings> {
         return this.client.rest.guilds.editWidget(this.id, options);
     }
 

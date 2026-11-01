@@ -1108,9 +1108,9 @@ export default class Guilds {
      * @param options The options for editing the widget.
      * @caching This method **does not** cache its result.
      */
-    async editWidget(guildID: string, options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.Widget> {
+    async editWidget(guildID: string, options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.WidgetSettings> {
         options = this._manager.client.util._freeze(options);
-        return this._manager.authRequest<Types.Guilds.RawWidget>({
+        return this._manager.authRequest<Types.Guilds.RawWidgetSettings>({
             method: "PATCH",
             path: Routes.GUILD_WIDGET(guildID),
             json: {
@@ -1118,21 +1118,8 @@ export default class Guilds {
                 enabled: options.enabled,
             },
         }).then(data => ({
-            channels: data.channels,
-            id: data.id,
-            instantInvite: data.instant_invite,
-            members: data.members.map(m => ({
-                activity: m.activity,
-                avatar: m.avatar,
-                avatarURL: m.avatar_url,
-                discriminator: m.discriminator,
-                id: m.id,
-                status: m.status,
-                tag: m.username,
-                username: m.username,
-            })),
-            name: data.name,
-            presenceCount: data.presence_count,
+            channelID: data.channel_id,
+            enabled: data.enabled,
         }));
     }
 
@@ -1879,7 +1866,7 @@ export default class Guilds {
     async getWidget(guildID: string): Promise<Types.Guilds.Widget> {
         return this._manager.authRequest<Types.Guilds.RawWidget>({
             method: "GET",
-            path: Routes.GUILD_WIDGET(guildID),
+            path: Routes.GUILD_WIDGET_JSON(guildID),
         }).then(data => ({
             channels: data.channels,
             id: data.id,
