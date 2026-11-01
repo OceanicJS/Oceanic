@@ -9,6 +9,7 @@ import type {
     AnimationTypes,
     AutoModerationTriggerTypes,
     ChannelTypes,
+    GatewayCapabilityNames,
     GatewayOPCodes,
     IntentNames,
     StatusDisplayType,
@@ -30,6 +31,11 @@ export interface GatewayOptions {
      * @defaultValue true
      */
     autoReconnect?: boolean;
+    /**
+     * The {@link Constants~GatewayCapabilities | capabilities} to send when identifying. Either a number, or an array of capability names or numbers.
+     * @defaultValue 0
+     */
+    capabilities?: number | Array<GatewayCapabilityNames | number>;
     /**
      * If packets to and from Discord should be compressed.
      * @defaultValue false
@@ -175,7 +181,8 @@ export interface OverrideOptions {
     url?(shard: Shard, totalShards: number): Promise<string>;
 }
 
-export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence" | "dispatcher">> {
+export interface ShardManagerInstanceOptions extends Required<Omit<GatewayOptions, "capabilities" | "concurrency" | "connectionProperties" | "intents" | "maxShards" | "presence" | "dispatcher">> {
+    capabilities: number;
     concurrency: number;
     connectionProperties: Required<GatewayOptions["connectionProperties"]>;
     dispatcher: DispatcherInstanceOptions;

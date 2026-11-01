@@ -633,6 +633,7 @@ export default class Shard extends TypedEmitter<Types.Events.ShardEvents> {
             shard: [this.id, this.client.shards.options.maxShards],
             presence: this.presence,
             intents: this.client.shards.options.intents,
+            capabilities: this.client.shards.options.capabilities,
         };
         this.send(GatewayOPCodes.IDENTIFY, data);
     }

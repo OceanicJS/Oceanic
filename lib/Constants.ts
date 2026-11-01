@@ -848,8 +848,10 @@ export enum ChannelFlags {
     HIDE_MEDIA_DOWNLOAD_OPTIONS = 1 << 15,
     /** Group DM is used for guild join request interviews */
     IS_JOIN_REQUEST_INTERVIEW_CHANNEL = 1 << 16,
-    /** User does not have permission to view the channel */
+    /** @deprecated Use `CHANNEL_OBFUSCATED`. This will be removed in `1.17.0` */
     OBFUSCATED = 1 << 17,
+    /** Channel's metadata has been obfuscated because the current user cannot view it */
+    CHANNEL_OBFUSCATED = 1 << 17,
 
     /** Forum channel is the guild's moderator queue */
     IS_MODERATOR_REPORT_CHANNEL = 1 << 19,
@@ -1627,6 +1629,13 @@ export enum Intents {
     /** Direct message poll vote events. */
     DIRECT_MESSAGE_POLLS = 1 << 25,
 }
+
+export enum GatewayCapabilities {
+    /** Receive channels the client can't view over the gateway, with their metadata obfuscated. */
+    CHANNEL_OBFUSCATION = 1 << 15,
+}
+
+export type GatewayCapabilityNames = keyof typeof GatewayCapabilities;
 
 export type IntentNames = keyof typeof Intents;
 export type PrivilegedIntentNames = "GUILD_MEMBERS" | "GUILD_PRESENCES" | "MESSAGE_CONTENT";

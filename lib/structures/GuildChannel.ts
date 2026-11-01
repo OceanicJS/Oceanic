@@ -1,4 +1,5 @@
 /** @module GuildChannel */
+import { ChannelFlags } from "../Constants";
 import { UncachedError } from "../util/Errors";
 
 import Channel from "./Channel";
@@ -46,6 +47,11 @@ export default class GuildChannel extends Channel {
         }
 
         return this._cachedGuild;
+    }
+
+    /** If this channel's metadata has been obfuscated because the client can't view it. Requires the {@link Constants~GatewayCapabilities.CHANNEL_OBFUSCATION | CHANNEL_OBFUSCATION } capability. */
+    get isObfuscated(): boolean {
+        return (this.flags & ChannelFlags.CHANNEL_OBFUSCATED) === ChannelFlags.CHANNEL_OBFUSCATED;
     }
 
     /**

@@ -3,6 +3,7 @@ import {
     AllIntents,
     AllNonPrivilegedIntents,
     type ApplicationFlags,
+    GatewayCapabilities,
     GATEWAY_VERSION,
     Intents,
     PrivilegedIntentMapping,
@@ -50,6 +51,7 @@ export default class ShardManager extends Collection<number, Shard> {
         this._connectTimeout = null;
         this.options = {
             autoReconnect: options.autoReconnect ?? true,
+            capabilities: typeof options.capabilities === "number" ? options.capabilities : 0,
             compress: options.compress ?? false,
             compressLibrary: options.compressLibrary ?? null,
             connectionProperties: {
@@ -155,6 +157,22 @@ export default class ShardManager extends Collection<number, Shard> {
             }
         } else {
             this.options.intents = AllNonPrivilegedIntents;
+        }
+
+        if (Array.isArray(options.capabilities)) {
+            let bitmask = 0;
+            for (const capability of options.capabilities) {
+                if (typeof capability === "number") {
+                    bitmask |= capability;
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                } else if (GatewayCapabilities[capability]) {
+                    bitmask |= GatewayCapabilities[capability];
+                } else {
+                    client.emit("warn", `Unknown gateway capability: ${capability as string}`);
+                }
+            }
+
+            this.options.capabilities = bitmask;
         }
 
         if (this.options.getAllUsers && !(this.options.intents & Intents.GUILD_MEMBERS)) {
