@@ -50,6 +50,19 @@ export default class Channels {
     }
 
     /**
+     * Add a target user to an invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param code The code of the invite.
+     * @param userID The ID of the user to add.
+     * @caching This method **does not** cache its result.
+     */
+    async addInviteTargetUser(code: string, userID: string): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "PUT",
+            path: Routes.INVITE_TARGET_USER(code, userID),
+        });
+    }
+
+    /**
      * Add a member to a thread.
      * @param channelID The ID of the thread to add them to.
      * @param userID The ID of the user to add to the thread.
@@ -59,6 +72,34 @@ export default class Channels {
         await this._manager.authRequest<null>({
             method: "PUT",
             path: Routes.CHANNEL_THREAD_MEMBER(channelID, userID),
+        });
+    }
+
+    /**
+     * Add multiple target users to an invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param code The code of the invite.
+     * @param userIDs The IDs of the users to add. Max 1000.
+     * @caching This method **does not** cache its result.
+     */
+    async bulkAddInviteTargetUsers(code: string, userIDs: Array<string>): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "POST",
+            path: Routes.INVITE_TARGET_USERS_BULK_ADD(code),
+            json: { user_ids: userIDs },
+        });
+    }
+
+    /**
+     * Remove multiple target users from an invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param code The code of the invite.
+     * @param userIDs The IDs of the users to remove. Max 1000.
+     * @caching This method **does not** cache its result.
+     */
+    async bulkRemoveInviteTargetUsers(code: string, userIDs: Array<string>): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "POST",
+            path: Routes.INVITE_TARGET_USERS_BULK_DELETE(code),
+            json: { user_ids: userIDs },
         });
     }
 
@@ -107,20 +148,24 @@ export default class Channels {
      */
     async createInvite<CH extends Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached>(channelID: string, options: Types.Invites.CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
         options = this._manager.client.util._freeze(options);
+        // target_user_ids is capped at 1000, so larger lists still go through the csv upload
+        const useTargetUsersFile = options.targetUsers !== undefined && options.targetUsers.length > 1000;
         return this._manager.authRequest<Types.Invites.RawInvite>({
             method: "POST",
             path: Routes.CHANNEL_INVITES(channelID),
             json: {
                 max_age: options.maxAge,
                 max_uses: options.maxUses,
+                role_ids: options.roleIDs,
                 target_application_id: options.targetApplicationID,
                 target_type: options.targetType,
                 target_user_id: options.targetUserID,
+                target_user_ids: useTargetUsersFile ? undefined : options.targetUsers,
                 temporary: options.temporary,
                 unique: options.unique,
             },
             reason: options.reason,
-            files: options.targetUsers ? [this._manager.client.util._arrayToCSVFile(options.targetUsers, "target_users_file", "user_id")] : undefined,
+            files: useTargetUsersFile ? [this._manager.client.util._arrayToCSVFile(options.targetUsers!, "target_users_file", "user_id")] : undefined,
 
         }).then(data => Invite.withMetadata<CH>(data, this._manager.client));
     }
@@ -1224,6 +1269,19 @@ export default class Channels {
         await this._manager.authRequest<null>({
             method: "DELETE",
             path: Routes.GROUP_RECIPIENT(groupID, userID),
+        });
+    }
+
+    /**
+     * Remove a target user from an invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param code The code of the invite.
+     * @param userID The ID of the user to remove.
+     * @caching This method **does not** cache its result.
+     */
+    async removeInviteTargetUser(code: string, userID: string): Promise<void> {
+        await this._manager.authRequest<null>({
+            method: "DELETE",
+            path: Routes.INVITE_TARGET_USER(code, userID),
         });
     }
 

@@ -2,6 +2,7 @@ export enum WarningCodes {
     OCEANIC_CACHE_DISABLED = "OCEANIC_CACHE_DISABLED",
     OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED = "OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED",
     OCEANIC_AUTH_AND_TOKEN_PROVIDED = "OCEANIC_AUTH_AND_TOKEN_PROVIDED",
+    OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED = "OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED",
 }
 
 const WarningOptions = {
@@ -17,15 +18,21 @@ const WarningOptions = {
         detail: "Remove either the auth or token option to disable this warning.",
         message: "Providing both the token and auth options is redundant. The auth option will be used over token.",
     },
-} satisfies Record<WarningCodes, { detail?: string; message: string }>;
+    [WarningCodes.OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED]: {
+        message: "Invite#updateInviteTargetUsers is deprecated and will be removed in 1.17.0. Use Invite#updateTargetUsers instead.",
+        type: "DeprecationWarning",
+    },
+} satisfies Record<WarningCodes, { detail?: string; message: string; type?: string }>;
 
 const warnedCodes = new Set<WarningCodes>();
 export function warning(code: WarningCodes): void {
     if (warnedCodes.has(code)) return;
+    warnedCodes.add(code);
 
-    const options = WarningOptions[code];
+    const options: { detail?: string; message: string; type?: string } = WarningOptions[code];
     process.emitWarning(options.message, {
         code,
         detail: options.detail,
+        type: options.type,
     });
 }

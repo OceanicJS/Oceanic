@@ -59,7 +59,7 @@ export interface CreateInviteOptions {
     targetType?: InviteTargetTypes;
     /** The ID of the user whose stream to display for this invite. */
     targetUserID?: string;
-    /** The IDs of users able to accept this invite. */
+    /** The IDs of users able to accept this invite. Up to 1000 are sent directly, more than that are uploaded as a CSV file. */
     targetUsers?: Array<string>;
     /** If the invite should be temporary. */
     temporary?: boolean;

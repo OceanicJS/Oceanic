@@ -191,6 +191,9 @@ export const STICKER_PACK = (stickerPackID: string) => `/sticker-packs/${sticker
 export const INVITE = (code: string) => encode`/invites/${code}`;
 export const INVITE_TARGET_USERS = (code: string) => encode`/invites/${code}/target-users`;
 export const INVITE_TARGET_USERS_JOB_STATUS = (code: string) => encode`/invites/${code}/target-users/job-status`;
+export const INVITE_TARGET_USER = (code: string, userID: string) => encode`/invites/${code}/target-users/${userID}`;
+export const INVITE_TARGET_USERS_BULK_ADD = (code: string) => encode`/invites/${code}/target-users/bulk-add`;
+export const INVITE_TARGET_USERS_BULK_DELETE = (code: string) => encode`/invites/${code}/target-users/bulk-delete`;
 export const SOUNDBOARD_DEFAULT_SOUNDS = "/soundboard-default-sounds";
 export const STAGE_INSTANCES = "/stage-instances";
 export const STAGE_INSTANCE = (channelID: string) => encode`/stage-instances/${channelID}`;

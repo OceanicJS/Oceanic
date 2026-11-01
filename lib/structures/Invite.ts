@@ -1,5 +1,6 @@
 /** @module Invite */
 import { DMInviteChannelTypes, type InviteTargetTypes, type InviteTypes } from "../Constants";
+import { warning, WarningCodes } from "../util/warning";
 
 import Channel from "./Channel";
 import Guild from "./Guild";
@@ -189,6 +190,30 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
     }
 
     /**
+     * Add a target user to this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userID The ID of the user to add.
+     */
+    async addTargetUser(userID: string): Promise<void> {
+        return this.client.rest.channels.addInviteTargetUser(this.code, userID);
+    }
+
+    /**
+     * Add multiple target users to this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userIDs The IDs of the users to add. Max 1000.
+     */
+    async bulkAddTargetUsers(userIDs: Array<string>): Promise<void> {
+        return this.client.rest.channels.bulkAddInviteTargetUsers(this.code, userIDs);
+    }
+
+    /**
+     * Remove multiple target users from this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userIDs The IDs of the users to remove. Max 1000.
+     */
+    async bulkRemoveTargetUsers(userIDs: Array<string>): Promise<void> {
+        return this.client.rest.channels.bulkRemoveInviteTargetUsers(this.code, userIDs);
+    }
+
+    /**
      * Delete this invite.
      * @param reason The reason for deleting this invite.
      */
@@ -201,7 +226,7 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
         return this.client.rest.channels.getInviteTargetUsers(this.code);
     }
 
-    /** et the target users job status for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
+    /** Get the target users job status for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
     async getTargetUsersJobStatus(): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
         return this.client.rest.channels.getInviteTargetUsersJobStatus(this.code);
     }
@@ -217,6 +242,14 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
 
     inDMChannel(): this is Invite<Exclude<Types.Invites.DMInviteChannel, Types.Shared.Uncached>> {
         return this.channel !== null && DMInviteChannelTypes.includes(this.channel.type as never);
+    }
+
+    /**
+     * Remove a target user from this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userID The ID of the user to remove.
+     */
+    async removeTargetUser(userID: string): Promise<void> {
+        return this.client.rest.channels.removeInviteTargetUser(this.code, userID);
     }
 
     toJSON(): Types.JSON.JSONInvite {
@@ -251,8 +284,18 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
     /**
      * Update the target users for this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
      * @param users The IDs of the users to allow accepting the invite.
+     * @deprecated Use {@link Invite#updateTargetUsers | updateTargetUsers} instead. This will be removed in `1.17.0`.
      */
     async updateInviteTargetUsers(users: Array<string>): Promise<null> {
+        warning(WarningCodes.OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED);
+        return this.updateTargetUsers(users);
+    }
+
+    /**
+     * Update the target users for this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param users The IDs of the users to allow accepting the invite.
+     */
+    async updateTargetUsers(users: Array<string>): Promise<null> {
         return this.client.rest.channels.updateInviteTargetUsers(this.code, users);
     }
 }
