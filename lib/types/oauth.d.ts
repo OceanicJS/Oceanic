@@ -151,6 +151,8 @@ export interface GetCurrentGuildsOptions {
     before?: string;
     /** Max number of guilds to return (1-200). */
     limit?: number;
+    /** Only return guilds in this shard (`0` to `max_concurrency - 1`). Required for bots using large bot sharding. This is not the same as the gateway shard ID. */
+    shard?: number;
     /** Whether to include approximate member and presence counts. */
     withCounts?: boolean;
 }

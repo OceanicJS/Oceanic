@@ -163,6 +163,7 @@ export default class OAuth {
         query.setIfPresent("after", options?.after);
         query.setIfPresent("before", options?.before);
         query.setIfPresent("limit", options?.limit);
+        query.setIfPresent("shard", options?.shard);
         query.setIfPresent("with_counts", options?.withCounts);
         return this._manager.authRequest<Array<Types.Guilds.RawOAuthGuild>>({
             method: "GET",
