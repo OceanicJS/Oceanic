@@ -73,10 +73,12 @@ export default class PrivateChannel extends Channel {
     /**
      * Delete a message in this channel.
      * @param messageID The ID of the message to delete.
-     * @param reason The reason for deleting the message.
      */
-    async deleteMessage(messageID: string, reason?: string): Promise<void> {
-        return this.client.rest.channels.deleteMessage(this.id, messageID, reason);
+    async deleteMessage(messageID: string): Promise<void>;
+    /** @deprecated Discord no longer supports audit log reasons for deleting messages. This will be removed in `1.17.0`. */
+    async deleteMessage(messageID: string, reason?: string): Promise<void>;
+    async deleteMessage(messageID: string): Promise<void> {
+        return this.client.rest.channels.deleteMessage(this.id, messageID);
     }
 
     /**

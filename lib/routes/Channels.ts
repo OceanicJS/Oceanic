@@ -300,14 +300,15 @@ export default class Channels {
      * Delete a message.
      * @param channelID The ID of the channel to delete the message in.
      * @param messageID The ID of the message to delete.
-     * @param reason The reason for deleting the message.
      * @caching This method **does not** cache its result.
      */
-    async deleteMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
+    async deleteMessage(channelID: string, messageID: string): Promise<void>;
+    /** @deprecated Discord no longer supports audit log reasons for deleting messages. This will be removed in `1.17.0`. */
+    async deleteMessage(channelID: string, messageID: string, reason?: string): Promise<void>;
+    async deleteMessage(channelID: string, messageID: string): Promise<void> {
         await this._manager.authRequest<Types.Channels.RawMessage>({
             method: "DELETE",
             path: Routes.CHANNEL_MESSAGE(channelID, messageID),
-            reason,
         });
     }
 
@@ -335,7 +336,7 @@ export default class Channels {
 
             if (chunk.length === 1) {
                 this._manager.client.emit("debug", "deleteMessages created a chunk with only 1 element, using deleteMessage instead.");
-                await this.deleteMessage(channelID, chunk[0], reason);
+                await this.deleteMessage(channelID, chunk[0]);
                 continue;
             }
 

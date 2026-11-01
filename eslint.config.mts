@@ -21,6 +21,8 @@ export default defineConfig(
             "jsdoc/no-types": "error",
             "jsdoc/tag-lines": "error",
             "import/extensions": "off",
+            // allows a separate @deprecated overload for a deprecated parameter
+            "@typescript-eslint/unified-signatures": ["error", { ignoreOverloadsWithDifferentJSDoc: true }],
             // bracket notation is used to access private/protected members of other classes
             "@typescript-eslint/dot-notation": [
                 "error",

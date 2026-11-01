@@ -387,10 +387,12 @@ export default class Message<T extends Types.Channels.AnyTextableChannel | Types
 
     /**
      * Delete this message.
-     * @param reason The reason for deleting the message.
      */
-    async delete(reason?: string): Promise<void> {
-        return this.client.rest.channels.deleteMessage(this.channelID, this.id, reason);
+    async delete(): Promise<void>;
+    /** @deprecated Discord no longer supports audit log reasons for deleting messages. This will be removed in `1.17.0`. */
+    async delete(reason?: string): Promise<void>;
+    async delete(): Promise<void> {
+        return this.client.rest.channels.deleteMessage(this.channelID, this.id);
     }
 
     /**
