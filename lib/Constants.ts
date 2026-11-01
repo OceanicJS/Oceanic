@@ -1921,10 +1921,16 @@ export enum AttachmentFlags {
     IS_REMIX = 1 << 2,
     /** Attachment is a spoiler */
     IS_SPOILER = 1 << 3,
-    /** Attachment was flagged as sensitive content */
+    /** @deprecated Use `CONTAINS_EXPLICIT_CONTENT`. This will be removed in `1.17.0` */
     CONTAINS_EXPLICIT_MEDIA = 1 << 4,
+    /** Attachment was flagged as explicit by Discord's content scanning */
+    CONTAINS_EXPLICIT_CONTENT = 1 << 4,
     /** Attachment is an animated image */
     IS_ANIMATED = 1 << 5,
+    /** Attachment was flagged as gore by Discord's content scanning */
+    CONTAINS_GORE_CONTENT = 1 << 6,
+    /** Attachment was flagged as self-harm by Discord's content scanning */
+    CONTAINS_SELF_HARM_CONTENT = 1 << 7,
 }
 
 export enum SKUTypes {
@@ -2206,13 +2212,34 @@ export const ApplicationEventWebhookEventTypes = [
 export type ApplicationEventWebhookEventType = typeof ApplicationEventWebhookEventTypes[number];
 
 export enum EmbedFlags {
-    /** Embed was flagged as sensitive content */
+    /** @deprecated Use `CONTAINS_EXPLICIT_CONTENT`. This will be removed in `1.17.0` */
     CONTAINS_EXPLICIT_MEDIA = 1 << 4,
+    /** Embed's media was flagged as explicit by Discord's content scanning */
+    CONTAINS_EXPLICIT_CONTENT = 1 << 4,
+    /** Embed is a fallback for a reply to an activity card */
     IS_CONTENT_INVENTORY_ENTRY = 1 << 5,
+    /** Embed's media was flagged as gore by Discord's content scanning */
+    CONTAINS_GORE_CONTENT = 1 << 6,
+    /** Embed's media was flagged as self-harm by Discord's content scanning */
+    CONTAINS_SELF_HARM_CONTENT = 1 << 7,
 }
 
 export enum EmbedMediaFlags {
     IS_ANIMATED = 1 << 5,
+}
+
+export enum UnfurledMediaItemFlags {
+    /** Media is an animated image */
+    IS_ANIMATED = 1 << 0,
+}
+
+export enum ContentScanMetadataFlags {
+    /** Media was flagged as explicit by Discord's content scanning */
+    IS_EXPLICIT_CONTENT = 1 << 0,
+    /** Media was flagged as gore by Discord's content scanning */
+    IS_GORE_CONTENT = 1 << 1,
+    /** Media was flagged as self-harm by Discord's content scanning */
+    IS_SELF_HARM_CONTENT = 1 << 2,
 }
 
 export enum SeparatorSpacingSize {

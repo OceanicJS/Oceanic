@@ -2,6 +2,36 @@ import { ButtonStyles, ComponentTypes } from "../../Constants";
 
 import type * as Types from "../../types/namespaced";
 
+function unfurledMediaItemFromRaw(media: Types.Channels.RawUnfurledMediaItem): Types.Channels.UnfurledMediaItem {
+    return {
+        attachmentID: media.attachment_id,
+        contentScanMetadata: media.content_scan_metadata === undefined ? undefined : { flags: media.content_scan_metadata.flags },
+        contentType: media.content_type,
+        flags: media.flags,
+        height: media.height,
+        placeholder: media.placeholder,
+        placeholderVersion: media.placeholder_version,
+        proxyURL: media.proxy_url,
+        url: media.url,
+        width: media.width,
+    };
+}
+
+function unfurledMediaItemToRaw(media: Types.Channels.UnfurledMediaItem): Types.Channels.RawUnfurledMediaItem {
+    return {
+        attachment_id: media.attachmentID,
+        content_scan_metadata: media.contentScanMetadata === undefined ? undefined : { flags: media.contentScanMetadata.flags },
+        content_type: media.contentType,
+        flags: media.flags,
+        height: media.height,
+        placeholder: media.placeholder,
+        placeholder_version: media.placeholderVersion,
+        proxy_url: media.proxyURL,
+        url: media.url,
+        width: media.width,
+    };
+}
+
 const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageComponentTypeMap[K]) => Types.Channels.MessageComponentTypeMap[K] } = {
     [ComponentTypes.ACTION_ROW]: component => ({
         components: component.components.map(c => fromRaw(c) as never),
@@ -96,41 +126,20 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
     }),
     [ComponentTypes.THUMBNAIL]: component => ({
         description: component.description,
-        media: {
-            attachmentID: component.media.attachment_id,
-            contentType: component.media.content_type,
-            height: component.media.height,
-            proxyURL: component.media.proxy_url,
-            url: component.media.url,
-            width: component.media.width,
-        },
+        media: unfurledMediaItemFromRaw(component.media),
         spoiler: component.spoiler,
         type: component.type,
     }),
     [ComponentTypes.MEDIA_GALLERY]: component => ({
         items: component.items.map(i => ({
             description: i.description,
-            media: {
-                attachmentID: i.media.attachment_id,
-                contentType: i.media.content_type,
-                height: i.media.height,
-                proxyURL: i.media.proxy_url,
-                url: i.media.url,
-                width: i.media.width,
-            },
+            media: unfurledMediaItemFromRaw(i.media),
             spoiler: i.spoiler,
         })),
         type: component.type,
     }),
     [ComponentTypes.FILE]: component => ({
-        file: {
-            attachmentID: component.file.attachment_id,
-            contentType: component.file.content_type,
-            height: component.file.height,
-            proxyURL: component.file.proxy_url,
-            url: component.file.url,
-            width: component.file.width,
-        },
+        file: unfurledMediaItemFromRaw(component.file),
         spoiler: component.spoiler,
         type: component.type,
     }),
@@ -291,41 +300,20 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
     }),
     [ComponentTypes.THUMBNAIL]: component => ({
         description: component.description,
-        media: {
-            attachment_id: component.media.attachmentID,
-            content_type: component.media.contentType,
-            height: component.media.height,
-            proxy_url: component.media.proxyURL,
-            url: component.media.url,
-            width: component.media.width,
-        },
+        media: unfurledMediaItemToRaw(component.media),
         spoiler: component.spoiler,
         type: component.type,
     }),
     [ComponentTypes.MEDIA_GALLERY]: component => ({
         items: component.items.map(i => ({
             description: i.description,
-            media: {
-                attachment_id: i.media.attachmentID,
-                content_type: i.media.contentType,
-                height: i.media.height,
-                proxy_url: i.media.proxyURL,
-                url: i.media.url,
-                width: i.media.width,
-            },
+            media: unfurledMediaItemToRaw(i.media),
             spoiler: i.spoiler,
         })),
         type: component.type,
     }),
     [ComponentTypes.FILE]: component => ({
-        file: {
-            attachment_id: component.file.attachmentID,
-            content_type: component.file.contentType,
-            height: component.file.height,
-            proxy_url: component.file.proxyURL,
-            url: component.file.url,
-            width: component.file.width,
-        },
+        file: unfurledMediaItemToRaw(component.file),
         spoiler: component.spoiler,
         type: component.type,
     }),

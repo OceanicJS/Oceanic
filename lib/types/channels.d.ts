@@ -1536,20 +1536,40 @@ export interface TextInput extends BaseComponent {
 
 export interface RawUnfurledMediaItem {
     attachment_id?: string;
+    content_scan_metadata?: RawContentScanMetadata;
     content_type?: string;
-    height?: number;
+    flags?: number;
+    height?: number | null;
+    placeholder?: string;
+    placeholder_version?: number;
     proxy_url?: string;
     url: string;
-    width?: number;
+    width?: number | null;
+}
+
+export interface RawContentScanMetadata {
+    flags: number;
 }
 
 export interface UnfurledMediaItem {
     attachmentID?: string;
+    /** The results of Discord's content scanning, if the media has been scanned. This may be added later in a message update. */
+    contentScanMetadata?: ContentScanMetadata;
     contentType?: string;
-    height?: number;
+    /** The {@link Constants~UnfurledMediaItemFlags | Unfurled Media Item Flags} for this media. */
+    flags?: number;
+    height?: number | null;
+    /** A [thumbhash](https://evanw.github.io/thumbhash/) placeholder, if this is an image or video. */
+    placeholder?: string;
+    placeholderVersion?: number;
     proxyURL?: string;
     url: string;
-    width?: number;
+    width?: number | null;
+}
+
+export interface ContentScanMetadata {
+    /** The {@link Constants~ContentScanMetadataFlags | Content Scan Metadata Flags} for this media. */
+    flags: number;
 }
 
 export interface SectionComponent extends BaseComponent {
