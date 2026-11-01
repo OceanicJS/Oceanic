@@ -450,6 +450,10 @@ export interface CreateChatInputApplicationCommandOptions extends CreateApplicat
 export interface CreateUserApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.USER> {}
 export interface CreateMessageApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.MESSAGE> {}
 export interface CreatePrimaryEntryPointApplicationCommandOptions extends CreateApplicationCommandOptionsBase<ApplicationCommandTypes.PRIMARY_ENTRY_POINT> {
+    /** The description of the command. */
+    description?: string;
+    /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
+    descriptionLocalizations?: LocaleMap | null;
     handler: EntryPointCommandHandlerTypes;
 }
 

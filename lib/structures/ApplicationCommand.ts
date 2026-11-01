@@ -21,8 +21,8 @@ export default class ApplicationCommand<T extends ApplicationCommandTypes = Appl
     contexts: Array<InteractionContextTypes>;
     /** The default permissions for this command. */
     defaultMemberPermissions: Permission | null;
-    /** The description of this command. Empty string for non `CHAT_INPUT` commands. */
-    description: T extends ApplicationCommandTypes.CHAT_INPUT ? string : "";
+    /** The description of this command. Empty string for `USER` and `MESSAGE` commands. */
+    description: T extends ApplicationCommandTypes.CHAT_INPUT | ApplicationCommandTypes.PRIMARY_ENTRY_POINT ? string : "";
     /** A dictionary of [locales](https://discord.com/developers/docs/reference#locales) to localized descriptions. */
     descriptionLocalizations?: Types.Applications.LocaleMap | null;
     /** The description of this application command in the requested locale. */
