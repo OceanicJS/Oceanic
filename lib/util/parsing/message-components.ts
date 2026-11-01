@@ -35,6 +35,7 @@ function unfurledMediaItemToRaw(media: Types.Channels.UnfurledMediaItem): Types.
 const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageComponentTypeMap[K]) => Types.Channels.MessageComponentTypeMap[K] } = {
     [ComponentTypes.ACTION_ROW]: component => ({
         components: component.components.map(c => fromRaw(c) as never),
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.BUTTON]: (component) => {
@@ -45,6 +46,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
                 disabled: component.disabled,
                 skuID: component.sku_id,
                 style: component.style,
+                id: component.id,
                 type: component.type,
             };
         }
@@ -55,6 +57,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
             emoji: component.emoji,
             label: component.label,
             style: component.style,
+            id: component.id,
             type: component.type,
         };
     },
@@ -65,6 +68,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         minValues: component.min_values,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
         options: component.options,
     }),
@@ -76,6 +80,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         placeholder: component.placeholder,
         required: component.required,
         style: component.style,
+        id: component.id,
         type: component.type,
         value: component.value,
     }),
@@ -87,6 +92,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         minValues: component.min_values,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.ROLE_SELECT]: component => ({
@@ -97,6 +103,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         minValues: component.min_values,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.MENTIONABLE_SELECT]: component => ({
@@ -107,6 +114,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         minValues: component.min_values,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CHANNEL_SELECT]: component => ({
@@ -118,16 +126,19 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         minValues: component.min_values,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.TEXT_DISPLAY]: component => ({
         content: component.content,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.THUMBNAIL]: component => ({
         description: component.description,
         media: unfurledMediaItemFromRaw(component.media),
         spoiler: component.spoiler,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.MEDIA_GALLERY]: component => ({
@@ -136,16 +147,21 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
             media: unfurledMediaItemFromRaw(i.media),
             spoiler: i.spoiler,
         })),
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.FILE]: component => ({
         file: unfurledMediaItemFromRaw(component.file),
+        name: component.name,
+        size: component.size,
         spoiler: component.spoiler,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.SEPARATOR]: component => ({
         divider: component.divider,
         spacing: component.spacing,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CONTENT_INVENTORY_ENTRY]: component => component,
@@ -153,14 +169,17 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
         accentColor: component.accent_color,
         components: component.components.map(c => fromRaw(c)),
         spoiler: component.spoiler,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.SECTION]: component => ({
+        id: component.id,
         type: component.type,
         accessory: fromRaw(component.accessory),
         components: component.components.map(c => fromRaw(c)),
     }),
     [ComponentTypes.LABEL]: component => ({
+        id: component.id,
         type: component.type,
         label: component.label,
         description: component.description,
@@ -184,11 +203,13 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
             label: o.label,
             value: o.value,
         })),
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CHECKBOX]: component => ({
         customID: component.custom_id,
         default: component.default,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CHECKBOX_GROUP]: component => ({
@@ -202,6 +223,7 @@ const FROM_RAW: { [K in ComponentTypes]: (input: Types.Channels.RawMessageCompon
             value: o.value,
         })),
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
 };
@@ -212,6 +234,7 @@ export function fromRaw<T extends Types.Channels.RawComponent>(component: T): Ty
 
 const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTypeMap[K]) => Types.Channels.RawMessageComponentTypeMap[K] } = {
     [ComponentTypes.ACTION_ROW]: component => ({
+        id: component.id,
         type: component.type,
         components: component.components.map(c => toRaw(c) as never),
     }),
@@ -223,6 +246,7 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
                 disabled: component.disabled,
                 sku_id: component.skuID,
                 style: component.style,
+                id: component.id,
                 type: component.type,
             };
         }
@@ -233,6 +257,7 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
             emoji: component.emoji,
             label: component.label,
             style: component.style,
+            id: component.id,
             type: component.type,
         };
     },
@@ -244,6 +269,7 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
         placeholder: component.placeholder,
         required: component.required,
         options: component.options,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.TEXT_INPUT]: component => ({
@@ -254,54 +280,65 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
         placeholder: component.placeholder,
         required: component.required,
         style: component.style,
+        id: component.id,
         type: component.type,
         value: component.value,
     }),
     [ComponentTypes.USER_SELECT]: component => ({
         custom_id: component.customID,
+        default_values: component.defaultValues,
         disabled: component.disabled,
         max_values: component.maxValues,
         min_values: component.minValues,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.ROLE_SELECT]: component => ({
         custom_id: component.customID,
+        default_values: component.defaultValues,
         disabled: component.disabled,
         max_values: component.maxValues,
         min_values: component.minValues,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.MENTIONABLE_SELECT]: component => ({
         custom_id: component.customID,
+        default_values: component.defaultValues,
         disabled: component.disabled,
         max_values: component.maxValues,
         min_values: component.minValues,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CHANNEL_SELECT]: component => ({
         channel_types: component.channelTypes,
         custom_id: component.customID,
+        default_values: component.defaultValues,
         disabled: component.disabled,
         max_values: component.maxValues,
         min_values: component.minValues,
         placeholder: component.placeholder,
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.TEXT_DISPLAY]: component => ({
         content: component.content,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.THUMBNAIL]: component => ({
         description: component.description,
         media: unfurledMediaItemToRaw(component.media),
         spoiler: component.spoiler,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.MEDIA_GALLERY]: component => ({
@@ -310,16 +347,21 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
             media: unfurledMediaItemToRaw(i.media),
             spoiler: i.spoiler,
         })),
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.FILE]: component => ({
         file: unfurledMediaItemToRaw(component.file),
+        name: component.name,
+        size: component.size,
         spoiler: component.spoiler,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.SEPARATOR]: component => ({
         divider: component.divider,
         spacing: component.spacing,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CONTENT_INVENTORY_ENTRY]: component => component,
@@ -327,14 +369,17 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
         accent_color: component.accentColor,
         components: component.components.map(c => toRaw(c)),
         spoiler: component.spoiler,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.SECTION]: component => ({
+        id: component.id,
         type: component.type,
         accessory: toRaw(component.accessory),
         components: component.components.map(c => toRaw(c)),
     }),
     [ComponentTypes.LABEL]: component => ({
+        id: component.id,
         type: component.type,
         label: component.label,
         description: component.description,
@@ -358,11 +403,13 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
             label: o.label,
             value: o.value,
         })),
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CHECKBOX]: component => ({
         custom_id: component.customID,
         default: component.default,
+        id: component.id,
         type: component.type,
     }),
     [ComponentTypes.CHECKBOX_GROUP]: component => ({
@@ -376,6 +423,7 @@ const TO_RAW: { [K in ComponentTypes]: (input: Types.Channels.MessageComponentTy
             value: o.value,
         })),
         required: component.required,
+        id: component.id,
         type: component.type,
     }),
 };

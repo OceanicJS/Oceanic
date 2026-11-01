@@ -1230,8 +1230,8 @@ export interface MessagePollResults {
     victorAnswerVotes: number;
 }
 
-export interface RawTextDisplayComponent extends Omit<TextDisplayComponent, "id"> {}
-export interface RawSeparatorComponent extends Omit<SeparatorComponent, "id"> {}
+export interface RawTextDisplayComponent extends TextDisplayComponent {}
+export interface RawSeparatorComponent extends SeparatorComponent {}
 
 export interface RawSectionComponent extends BaseComponent {
     accessory: RawThumbnailComponent | RawButtonComponent;
@@ -1301,7 +1301,7 @@ export type ToRawFromComponent<T extends Component>
                                                                                         : T extends CheckboxGroupComponent ? RawCheckboxGroupComponent
                                                                                             : never;
 
-export interface RawActionRowBase<T extends RawComponent> {
+export interface RawActionRowBase<T extends RawComponent> extends BaseComponent {
     components: Array<T>;
     type: ComponentTypes.ACTION_ROW;
 }
@@ -1453,7 +1453,7 @@ export interface PremiumButton extends Omit<ButtonBase, "label" | "emoji"> {
     style: ButtonStyles.PREMIUM;
 }
 
-export interface RawSelectMenuBase<T extends SelectMenuTypes> {
+export interface RawSelectMenuBase<T extends SelectMenuTypes> extends BaseComponent {
     custom_id: string;
     disabled?: boolean;
     max_values?: number;
@@ -1517,7 +1517,7 @@ export interface SelectOption {
     value: string;
 }
 
-export interface RawTextInput {
+export interface RawTextInput extends BaseComponent {
     custom_id: string;
     /** @deprecated */
     label?: string;
@@ -1599,7 +1599,7 @@ export interface ThumbnailComponent extends BaseComponent {
     type: ComponentTypes.THUMBNAIL;
 }
 
-export interface RawThumbnailComponent extends Omit<BaseComponent, "id"> {
+export interface RawThumbnailComponent extends BaseComponent {
     description?: string | null;
     media: RawUnfurledMediaItem;
     spoiler?: boolean;
@@ -1623,7 +1623,7 @@ export interface MediaGalleryComponent extends BaseComponent {
     type: ComponentTypes.MEDIA_GALLERY;
 }
 
-export interface RawMediaGalleryComponent extends Omit<BaseComponent, "id"> {
+export interface RawMediaGalleryComponent extends BaseComponent {
     items: Array<RawMediaGalleryItem>;
     type: ComponentTypes.MEDIA_GALLERY;
 }
@@ -1637,13 +1637,21 @@ export interface SeparatorComponent extends BaseComponent {
 export interface FileComponent extends BaseComponent {
     // The UnfurledMediaItem ONLY supports attachment://<filename> references
     file: UnfurledMediaItem;
+    /** Only present in responses. */
+    name?: string;
+    /** Only present in responses. */
+    size?: number;
     spoiler?: boolean;
     type: ComponentTypes.FILE;
 }
 
-export interface RawFileComponent extends Omit<BaseComponent, "id"> {
+export interface RawFileComponent extends BaseComponent {
     // The RawUnfurledMediaItem ONLY supports attachment://<filename> references
     file: RawUnfurledMediaItem;
+    /** Only present in responses. */
+    name?: string;
+    /** Only present in responses. */
+    size?: number;
     spoiler?: boolean;
     type: ComponentTypes.FILE;
 }
@@ -1655,7 +1663,7 @@ export interface ContainerComponent extends BaseComponent {
     type: ComponentTypes.CONTAINER;
 }
 
-export interface RawContainerComponent extends Omit<BaseComponent, "id"> {
+export interface RawContainerComponent extends BaseComponent {
     accent_color?: number;
     components: Array<RawMessageActionRow | RawTextDisplayComponent | RawSectionComponent | RawMediaGalleryComponent | RawSeparatorComponent | RawFileComponent>;
     spoiler?: boolean;
@@ -1669,7 +1677,7 @@ export interface ModalLabel extends BaseComponent {
     type: ComponentTypes.LABEL;
 }
 
-export interface RawModalLabel extends Omit<BaseComponent, "id"> {
+export interface RawModalLabel extends BaseComponent {
     component: RawModalLabelComponent;
     description?: string;
     label: string;

@@ -337,6 +337,7 @@ export interface SelectMenuDefaultValue {
 
 interface RawModalSubmitComponentsBase {
     custom_id: string;
+    id: number;
 }
 
 export interface RawModalSubmitComponentsStringValue<T extends ModalComponentTypes = ModalComponentTypes> extends RawModalSubmitComponentsBase {
@@ -362,22 +363,26 @@ export interface RawModalSubmitComponentsNullableStringValue<T extends ModalComp
 /** @deprecated */
 interface RawModalComponentsActionRow<T extends RawModalSubmitComponents> {
     components: Array<T>;
+    id: number;
     type: ComponentTypes.ACTION_ROW;
 }
 
 /** @deprecated */
 interface ModalComponentsActionRow<T extends ModalSubmitComponents> {
     components: Array<T>;
+    id: number;
     type: ComponentTypes.ACTION_ROW;
 }
 
 interface RawModalComponentsLabel<T extends RawModalSubmitComponents> {
     component: T;
+    id: number;
     type: ComponentTypes.LABEL;
 }
 
 interface ModalComponentsLabel<T extends ModalSubmitComponents> {
     component: T;
+    id: number;
     type: ComponentTypes.LABEL;
 }
 
@@ -415,6 +420,7 @@ export type RawModalSubmitTextDisplayComponent = Omit<Types.Channels.TextDisplay
 
 interface ModalSubmitComponentsBase {
     customID: string;
+    id: number;
 }
 
 export interface ModalSubmitComponentsStringValue<T extends ModalComponentTypes = ModalComponentTypes> extends ModalSubmitComponentsBase {
