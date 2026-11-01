@@ -1230,7 +1230,7 @@ export default class Guilds {
     }
 
     /**
-     * Get a ban.
+     * Get a ban. Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
      * @param guildID The ID of the guild.
      * @param userID The ID of the user to get the ban of.
      * @caching This method **does** cache part of its result.
@@ -1247,7 +1247,7 @@ export default class Guilds {
     }
 
     /**
-     * Get the bans in a guild.
+     * Get the bans in a guild. Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
      * @param guildID The ID of the guild.
      * @param options The options for getting the bans.
      * @caching This method **does** cache part of its result.

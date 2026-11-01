@@ -1154,7 +1154,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Get a ban in this guild.
+     * Get a ban in this guild. Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
      * @param userID The ID of the user to get the ban of.
      */
     async getBan(userID: string): Promise<Types.Guilds.Ban> {
@@ -1162,7 +1162,7 @@ export default class Guild extends Base {
     }
 
     /**
-     * Get the bans in this guild.
+     * Get the bans in this guild. Requires the `BAN_MEMBERS` or `VIEW_AUDIT_LOG` permission.
      * @param options The options for getting the bans.
      */
     async getBans(options?: Types.Guilds.GetBansOptions): Promise<Array<Types.Guilds.Ban>> {
