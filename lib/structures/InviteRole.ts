@@ -1,12 +1,14 @@
 /** @module InviteRole */
+import { UncachedError } from "../util/Errors";
+
 import Base from "./Base";
 import Permission from "./Permission";
+
 import type Guild from "./Guild";
 import type InviteGuild from "./InviteGuild";
 import type Role from "./Role";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a partial role for an invite. */
 export default class InviteRole extends Base {
@@ -36,9 +38,9 @@ export default class InviteRole extends Base {
         super(data.id, client);
         this.color = data.color;
         this.colors = {
-            primaryColor:   data.colors.primary_color,
+            primaryColor: data.colors.primary_color,
             secondaryColor: data.colors.secondary_color,
-            tertiaryColor:  data.colors.tertiary_color
+            tertiaryColor: data.colors.tertiary_color,
         };
         this.guild = guild;
         this.guildID = guildID;
@@ -105,15 +107,15 @@ export default class InviteRole extends Base {
     override toJSON(): Types.JSON.JSONInviteRole {
         return {
             ...super.toJSON(),
-            color:        this.color,
-            colors:       this.colors,
-            guild:        this.guild.toJSON(),
-            guildID:      this.guildID,
-            icon:         this.icon,
-            name:         this.name,
-            permissions:  this.permissions.toJSON(),
-            position:     this.position,
-            unicodeEmoji: this.unicodeEmoji
+            color: this.color,
+            colors: this.colors,
+            guild: this.guild.toJSON(),
+            guildID: this.guildID,
+            icon: this.icon,
+            name: this.name,
+            permissions: this.permissions.toJSON(),
+            position: this.position,
+            unicodeEmoji: this.unicodeEmoji,
         };
     }
 }

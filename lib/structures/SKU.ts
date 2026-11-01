@@ -1,9 +1,10 @@
 import Base from "./Base";
-import type TestEntitlement from "./TestEntitlement";
+
 import type Entitlement from "./Entitlement";
-import type * as Types from "../types/namespaced";
+import type TestEntitlement from "./TestEntitlement";
 import type Client from "../Client";
 import type { EntitlementOwnerTypes, SKUAccessTypes, SKUTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 export default class SKU extends Base {
     accessType: SKUAccessTypes; // undocumented
@@ -42,7 +43,7 @@ export default class SKU extends Base {
         return this.client.rest.applications.createTestEntitlement(this.applicationID, {
             ownerID,
             ownerType,
-            skuID: this.id
+            skuID: this.id,
         });
     }
 
@@ -57,17 +58,17 @@ export default class SKU extends Base {
     override toJSON(): Types.JSON.JSONSKU {
         return {
             ...super.toJSON(),
-            accessType:     this.accessType,
-            applicationID:  this.applicationID,
+            accessType: this.accessType,
+            applicationID: this.applicationID,
             dependentSKUID: this.dependentSKUID,
-            features:       this.features,
-            flags:          this.flags,
+            features: this.features,
+            flags: this.flags,
             manifestLabels: this.manifestLabels,
-            name:           this.name,
-            releaseDate:    this.releaseDate,
-            showAgeGate:    this.showAgeGate,
-            slug:           this.slug,
-            type:           this.type
+            name: this.name,
+            releaseDate: this.releaseDate,
+            showAgeGate: this.showAgeGate,
+            slug: this.slug,
+            type: this.type,
         };
     }
 }

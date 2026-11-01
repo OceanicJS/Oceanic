@@ -1,24 +1,26 @@
 /** @module ModalSubmitInteraction */
-import Interaction from "./Interaction";
-import Member from "./Member";
-import User from "./User";
-import type Guild from "./Guild";
-import Permission from "./Permission";
-import Message from "./Message";
-import GuildChannel from "./GuildChannel";
-import type PrivateChannel from "./PrivateChannel";
-import type Entitlement from "./Entitlement";
-import type TestEntitlement from "./TestEntitlement";
-import InteractionResolvedChannel from "./InteractionResolvedChannel";
-import Role from "./Role";
-import Attachment from "./Attachment";
-import type * as Types from "../types/namespaced";
 import { InteractionResponseTypes, type InteractionTypes, type InteractionContextTypes } from "../Constants";
-import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
 import { UncachedError } from "../util/Errors";
 import MessageInteractionResponse, { type FollowupMessageInteractionResponse, type InitialMessagedInteractionResponse } from "../util/interactions/MessageInteractionResponse";
 import ModalSubmitInteractionComponentsWrapper from "../util/interactions/ModalSubmitInteractionComponentsWrapper";
+import TypedCollection from "../util/TypedCollection";
+
+import Attachment from "./Attachment";
+import GuildChannel from "./GuildChannel";
+import Interaction from "./Interaction";
+import InteractionResolvedChannel from "./InteractionResolvedChannel";
+import Member from "./Member";
+import Message from "./Message";
+import Permission from "./Permission";
+import Role from "./Role";
+import User from "./User";
+
+import type Entitlement from "./Entitlement";
+import type Guild from "./Guild";
+import type PrivateChannel from "./PrivateChannel";
+import type TestEntitlement from "./TestEntitlement";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a modal submit interaction. */
 export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached> extends Interaction {
@@ -26,7 +28,7 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
     private _cachedGuild?: T extends Types.Channels.AnyTextableGuildChannel ? Guild : Guild | null;
     /** The permissions the bot has in the channel this interaction was sent from. If in a dm/group dm, this will contain `ATTACH_FILES`, `EMBED_LINKS`, and `MENTION_EVERYONE`. In addition, `USE_EXTERNAL_EMOJIS` will be included for DMs with the app's bot user. */
     appPermissions: Permission;
-    /** The maximum size limit per attachment. This will be 10MiB by default, unless the user that created this interaction has a Nitro subscription or the guild it was sent from has been boosted to level 2 or above. */
+    /** The maximum size limit per attachment. This will be 20MiB by default, unless the user that created this interaction has a Nitro subscription or the guild it was sent from has been boosted to level 2 or above. */
     attachmentSizeLimit: number;
     /** Details about the authorizing user or server for the installation(s) relevant to the interaction. See [Discord's docs](https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-authorizing-integration-owners-object) for more information. */
     authorizingIntegrationOwners: Types.Interactions.AuthorizingIntegrationOwners;
@@ -61,6 +63,7 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
             data.message.guild_id = data.guild_id;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         this.appPermissions = new Permission(data.app_permissions ?? "0");
         this.attachmentSizeLimit = data.attachment_size_limit;
         this.authorizingIntegrationOwners = data.authorizing_integration_owners;
@@ -80,10 +83,10 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
 
         const resolved: Types.Interactions.ModalSubmitInteractionResolvedData = {
             attachments: new TypedCollection(Attachment, client),
-            channels:    new TypedCollection(InteractionResolvedChannel, client),
-            members:     new TypedCollection(Member, client),
-            roles:       new TypedCollection(Role, client),
-            users:       new TypedCollection(User, client)
+            channels: new TypedCollection(InteractionResolvedChannel, client),
+            members: new TypedCollection(Member, client),
+            roles: new TypedCollection(Role, client),
+            users: new TypedCollection(User, client),
         };
 
         if (data.data.resolved) {
@@ -97,7 +100,7 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
 
             if (data.data.resolved.members) {
                 for (const [id, member] of Object.entries(data.data.resolved.members)) {
-                    const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser; };
+                    const m = member as unknown as Types.Guilds.RawMember & { user: Types.Users.RawUser };
                     m.user = data.data.resolved.users![id];
                     resolved.members.add(client.util.updateMember(data.guild_id!, id, m));
                 }
@@ -120,8 +123,8 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
 
         this.data = {
             components: new ModalSubmitInteractionComponentsWrapper(resolved, client.util.modalSubmitComponentsToParsed(data.data.components)),
-            customID:   data.data.custom_id,
-            resolved
+            customID: data.data.custom_id,
+            resolved,
         };
     }
 
@@ -311,7 +314,7 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
         if (typeof content === "string") {
             options = {
                 ...options,
-                content
+                content,
             };
         } else options = content;
         return this.acknowledged ? this.createFollowup(options) : this.createMessage(options);
@@ -320,18 +323,18 @@ export default class ModalSubmitInteraction<T extends Types.Channels.AnyInteract
     override toJSON(): Types.JSON.JSONModalSubmitInteraction {
         return {
             ...super.toJSON(),
-            appPermissions:               this.appPermissions.toJSON(),
-            attachmentSizeLimit:          this.attachmentSizeLimit,
+            appPermissions: this.appPermissions.toJSON(),
+            attachmentSizeLimit: this.attachmentSizeLimit,
             authorizingIntegrationOwners: this.authorizingIntegrationOwners,
-            channelID:                    this.channelID,
-            context:                      this.context,
-            data:                         this.data,
-            guildID:                      this.guildID ?? undefined,
-            guildLocale:                  this.guildLocale,
-            locale:                       this.locale,
-            member:                       this.member?.toJSON(),
-            type:                         this.type,
-            user:                         this.user.toJSON()
+            channelID: this.channelID,
+            context: this.context,
+            data: this.data,
+            guildID: this.guildID ?? undefined,
+            guildLocale: this.guildLocale,
+            locale: this.locale,
+            member: this.member?.toJSON(),
+            type: this.type,
+            user: this.user.toJSON(),
         };
     }
 }

@@ -1,9 +1,10 @@
 /** @module Attachment */
-import Base from "./Base";
-import type User from "./User";
 import Application from "./Application";
-import type * as Types from "../types/namespaced";
+import Base from "./Base";
+
+import type User from "./User";
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a file attachment. */
 export default class Attachment extends Base {
@@ -65,24 +66,24 @@ export default class Attachment extends Base {
     override toJSON(): Types.JSON.JSONAttachment {
         return {
             ...super.toJSON(),
-            application:        this.application?.toJSON(),
-            clipCreatedAt:      this.clipCreatedAt?.getTime(),
-            clipParticipants:   this.clipParticipants?.map(user => user.toJSON()),
-            contentType:        this.contentType,
-            description:        this.description,
-            durationSecs:       this.durationSecs,
-            ephemeral:          this.ephemeral,
-            filename:           this.filename,
-            flags:              this.flags,
-            height:             this.height,
-            placeholder:        this.placeholder,
+            application: this.application?.toJSON(),
+            clipCreatedAt: this.clipCreatedAt?.getTime(),
+            clipParticipants: this.clipParticipants?.map(user => user.toJSON()),
+            contentType: this.contentType,
+            description: this.description,
+            durationSecs: this.durationSecs,
+            ephemeral: this.ephemeral,
+            filename: this.filename,
+            flags: this.flags,
+            height: this.height,
+            placeholder: this.placeholder,
             placeholderVersion: this.placeholderVersion,
-            proxyURL:           this.proxyURL,
-            size:               this.size,
-            title:              this.title,
-            url:                this.url,
-            waveform:           this.waveform,
-            width:              this.width
+            proxyURL: this.proxyURL,
+            size: this.size,
+            title: this.title,
+            url: this.url,
+            waveform: this.waveform,
+            width: this.width,
         };
     }
 }

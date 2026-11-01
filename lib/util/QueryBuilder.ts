@@ -5,6 +5,8 @@ export default class QueryBuilder extends URLSearchParams {
                 this.delete(name);
             }
         } else {
+            // `value` is intentionally `unknown` - every real call site passes a string/number/boolean
+            // eslint-disable-next-line @typescript-eslint/no-base-to-string
             super.set(name, String(value));
         }
     }

@@ -1,9 +1,11 @@
 /** @module GuildPreview */
+import * as Routes from "../util/Routes";
+
 import Base from "./Base";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
 import type { GuildFeature, ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
+import type * as Types from "../types/namespaced";
 
 /** Represents a preview of a guild. */
 export default class GuildPreview extends Base {
@@ -42,7 +44,7 @@ export default class GuildPreview extends Base {
         this.update(data);
     }
 
-    protected override update(data: Types.Guilds.RawGuildPreview): void {
+    protected override update(data: Partial<Types.Guilds.RawGuildPreview>): void {
         if (data.approximate_member_count !== undefined) {
             this.approximateMemberCount = data.approximate_member_count;
         }
@@ -58,7 +60,7 @@ export default class GuildPreview extends Base {
         if (data.emojis !== undefined) {
             this.emojis = data.emojis.map(emoji => ({
                 ...emoji,
-                user: emoji.user === undefined ? undefined : this.client.users.update(emoji.user)
+                user: emoji.user === undefined ? undefined : this.client.users.update(emoji.user),
             }));
         }
         if (data.features !== undefined) {
@@ -108,16 +110,16 @@ export default class GuildPreview extends Base {
     override toJSON(): Types.JSON.JSONGuildPreview {
         return {
             ...super.toJSON(),
-            approximateMemberCount:   this.approximateMemberCount,
+            approximateMemberCount: this.approximateMemberCount,
             approximatePresenceCount: this.approximatePresenceCount,
-            description:              this.description,
-            discoverySplash:          this.discoverySplash,
-            emojis:                   this.emojis,
-            features:                 this.features,
-            icon:                     this.icon,
-            name:                     this.name,
-            splash:                   this.splash,
-            stickers:                 this.stickers
+            description: this.description,
+            discoverySplash: this.discoverySplash,
+            emojis: this.emojis,
+            features: this.features,
+            icon: this.icon,
+            name: this.name,
+            splash: this.splash,
+            stickers: this.stickers,
         };
     }
 }

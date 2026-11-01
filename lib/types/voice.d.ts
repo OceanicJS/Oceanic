@@ -1,4 +1,8 @@
 /** @module Types/Voice */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { type DiscordGatewayAdapterCreator } from "@discordjs/voice";
+
 import type * as Types from "./namespaced";
 
 export interface RawVoiceState {
@@ -24,10 +28,6 @@ export interface VoiceRegion {
     name: string;
     optimal: boolean;
 }
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { type DiscordGatewayAdapterCreator } from "@discordjs/voice";
 
 export interface JoinVoiceChannelOptions {
     /** The ID of the channel to join. */

@@ -1,16 +1,16 @@
 /** @module Types/AuditLog */
 import type * as Types from "./namespaced";
 import type { AuditLogActionTypes, OverwriteTypes } from "../Constants";
-import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
+import type ApplicationCommand from "../structures/ApplicationCommand";
+import type AuditLogEntry from "../structures/AuditLogEntry";
+import type AutoModerationRule from "../structures/AutoModerationRule";
+import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
+import type Integration from "../structures/Integration";
 import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
+import type PublicThreadChannel from "../structures/PublicThreadChannel";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
-import type Integration from "../structures/Integration";
-import type AutoModerationRule from "../structures/AutoModerationRule";
-import type AuditLogEntry from "../structures/AuditLogEntry";
-import type ApplicationCommand from "../structures/ApplicationCommand";
 
 export interface RawAuditLog {
     application_commands: Array<Types.Applications.RawApplicationCommand>;
@@ -62,13 +62,13 @@ export interface RawAuditLogEntryOptions {
 export interface AuditLogEntryOptions {
     /** ID of the app whose permissions were targeted - valid for: `APPLICATION_COMMAND_PERMISSION_UPDATE` */
     applicationID?: string;
-    /** Name of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED` */
+    /** Name of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER` */
     autoModerationRuleName?: string;
-    /** Trigger type of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED` */
+    /** Trigger type of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER` */
     autoModerationRuleTriggerType?: string;
-    /** Channel in which the entities were targeted - valid for: `MEMBER_MOVE`,  `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE` */
+    /** Channel in which the entities were targeted - valid for: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`, `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER` */
     channelID?: string;
-    /** Number of entities that were targeted - valid for: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE` */
+    /** Number of entities that were targeted, or number of position updates - valid for: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`, `CHANNEL_POSITION_UPDATE`, `ROLE_POSITION_UPDATE` */
     count?: number;
     /** Number of days after which inactive members were kicked - valid for: `MEMBER_PRUNE` */
     deleteMemberDays?: number;
@@ -101,7 +101,7 @@ export interface StandardAuditLogChange {
 
 export interface RoleAuditLogChange {
     key: "$add" | "$remove";
-    new_value: Array<{ id: string; name: string; }>;
+    new_value: Array<{ id: string; name: string }>;
 }
 
 export interface GetAuditLogOptions {

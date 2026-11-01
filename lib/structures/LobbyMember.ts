@@ -1,5 +1,6 @@
 /** @module LobbyMember */
 import Base from "./Base";
+
 import type Client from "../Client";
 import type * as Types from "../types/namespaced";
 
@@ -27,9 +28,9 @@ export default class LobbyMember extends Base {
         return {
             ...super.toJSON(),
             additionalName: this.additionalName,
-            flags:          this.flags,
-            lobbyID:        this.lobbyID,
-            metadata:       this.metadata
+            flags: this.flags,
+            lobbyID: this.lobbyID,
+            metadata: this.metadata,
         };
     }
 }

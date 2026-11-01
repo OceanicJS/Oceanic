@@ -23,10 +23,10 @@ export default class Time {
     start: number | null = null;
     constructor(client: Client) {
         Object.defineProperty(this, "client", {
-            value:        client,
-            writable:     false,
-            enumerable:   false,
-            configurable: false
+            value: client,
+            writable: false,
+            enumerable: false,
+            configurable: false,
         });
     }
 
@@ -34,9 +34,7 @@ export default class Time {
     private _setConnect(value: number): void {
         this.shardConnect = value;
         this.disconnect = null;
-        if (!this.connect) {
-            this.connect = value;
-        }
+        this.connect ??= value;
     }
 
     /** @internal */
@@ -59,7 +57,7 @@ export default class Time {
     /** @internal */
     private _setReady(value: number): void {
         this.shardReady = value;
-        if (!this.ready) this.ready = value;
+        this.ready ??= value;
     }
 
     /** @internal */
@@ -69,9 +67,7 @@ export default class Time {
 
     /** @internal */
     private _setStart(value: number): void {
-        if (!this.start) {
-            this.start = value;
-        }
+        this.start ??= value;
     }
 
     reset(): void {
@@ -89,12 +85,12 @@ export default class Time {
     /** @internal */
     set(type: "connect" | "disconnect" | "preReady" | "ready" | "resume" | "start", value: number): void {
         switch (type) {
-            case "connect": return this._setConnect(value);
-            case "disconnect": return this._setDisconnect(value);
-            case "preReady": return this._setPreReady(value);
-            case "ready": return this._setReady(value);
-            case "resume": return this._setResume(value);
-            case "start": return this._setStart(value);
+            case "connect": { this._setConnect(value); return; }
+            case "disconnect": { this._setDisconnect(value); return; }
+            case "preReady": { this._setPreReady(value); return; }
+            case "ready": { this._setReady(value); return; }
+            case "resume": { this._setResume(value); return; }
+            case "start": { this._setStart(value); return; }
         }
     }
 }

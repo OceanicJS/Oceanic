@@ -36,5 +36,6 @@
     "resolveJsonModule": true
   },
   "include": ["lib/**/*.ts"],
-  "exclude": ["node_modules", "dist", "test"]
+  "exclude": ["node_modules", "dist", "test"],
+  "references": [{ "path": "./tsconfig.eslint.json" }]
 }

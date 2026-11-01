@@ -5,10 +5,10 @@ export default abstract class Compressor {
     abstract decompress(data: Buffer): Promise<Buffer | null>;
     constructor(shard: Shard) {
         Object.defineProperty(this, "shard", {
-            value:        shard,
+            value: shard,
             configurable: false,
-            enumerable:   false,
-            writable:     false
+            enumerable: false,
+            writable: false,
         });
     }
 }

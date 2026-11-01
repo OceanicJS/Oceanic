@@ -1,14 +1,16 @@
 /** @module Member */
+import { GuildMemberFlags, type ImageFormat } from "../Constants";
+import { UncachedError } from "../util/Errors";
+import * as Routes from "../util/Routes";
+
 import Base from "./Base";
-import type User from "./User";
+
 import type Guild from "./Guild";
 import type Permission from "./Permission";
+import type User from "./User";
 import type VoiceState from "./VoiceState";
-import type * as Types from "../types/namespaced";
-import { GuildMemberFlags, type ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a member of a guild. */
 export default class Member extends Base {
@@ -45,7 +47,7 @@ export default class Member extends Base {
     roles: Array<string>;
     /** The user associated with this member. */
     user: User;
-    constructor(data: (Types.Guilds.RawMember | Types.Guilds.RESTMember) & { id?: string; }, client: Client, guildID: string) {
+    constructor(data: (Types.Guilds.RawMember | Types.Guilds.RESTMember) & { id?: string }, client: Client, guildID: string) {
         let user: User | undefined;
         let id: string | undefined;
         if (!data.user && data.id) {
@@ -61,69 +63,17 @@ export default class Member extends Base {
         this.avatarDecorationData = null;
         this.banner = null;
         this.communicationDisabledUntil = null;
-        this.deaf = !!data.deaf;
+        this.deaf = data.deaf;
         this.flags = 0;
         this.guildID = guildID;
         this.joinedAt = null;
-        this.mute = !!data.mute;
+        this.mute = data.mute;
         this.nick = null;
         this.pending = false;
         this.premiumSince = null;
         this.roles = [];
         this.user = user;
         this.update(data);
-    }
-
-    private toggleFlag(flag: GuildMemberFlags, enable: boolean, reason?: string): Promise<Member> {
-        return this.edit({ flags: enable ? this.flags | flag : this.flags & ~flag, reason });
-    }
-
-    protected override update(data: Partial<Types.Guilds.RawMember | Types.Guilds.RESTMember>): void {
-        if (data.avatar !== undefined) {
-            this.avatar = data.avatar;
-        }
-        if (data.avatar_decoration_data !== undefined) {
-            this.avatarDecorationData = data.avatar_decoration_data ? {
-                asset: data.avatar_decoration_data.asset,
-                skuID: data.avatar_decoration_data.sku_id
-            } : null;
-        }
-        if (data.banner !== undefined) {
-            this.banner = data.banner;
-        }
-        if (data.communication_disabled_until !== undefined) {
-            this.communicationDisabledUntil = data.communication_disabled_until === null ? null : new Date(data.communication_disabled_until);
-        }
-        if (data.deaf !== undefined) {
-            this.deaf = data.deaf;
-        }
-        if (data.flags !== undefined) {
-            this.flags = data.flags;
-        }
-        if (data.is_pending !== undefined) {
-            this.isPending = data.is_pending;
-        }
-        if (data.joined_at !== undefined) {
-            this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
-        }
-        if (data.mute !== undefined) {
-            this.mute = data.mute;
-        }
-        if (data.nick !== undefined) {
-            this.nick = data.nick;
-        }
-        if (data.pending !== undefined) {
-            this.pending = data.pending;
-        }
-        if (data.premium_since !== undefined) {
-            this.premiumSince = data.premium_since === null ? null : new Date(data.premium_since);
-        }
-        if (data.roles !== undefined) {
-            this.roles = data.roles;
-        }
-        if (data.user !== undefined) {
-            this.user = this.client.users.update(data.user);
-        }
     }
 
     /** If the user associated with this member is a bot. */
@@ -192,6 +142,58 @@ export default class Member extends Base {
     /** The voice state of this member. */
     get voiceState(): VoiceState | null {
         return this.guild.voiceStates.get(this.id) ?? null;
+    }
+
+    private toggleFlag(flag: GuildMemberFlags, enable: boolean, reason?: string): Promise<Member> {
+        return this.edit({ flags: enable ? this.flags | flag : this.flags & ~flag, reason });
+    }
+
+    protected override update(data: Partial<Types.Guilds.RawMember | Types.Guilds.RESTMember>): void {
+        if (data.avatar !== undefined) {
+            this.avatar = data.avatar;
+        }
+        if (data.avatar_decoration_data !== undefined) {
+            this.avatarDecorationData = data.avatar_decoration_data ? {
+                asset: data.avatar_decoration_data.asset,
+                skuID: data.avatar_decoration_data.sku_id,
+            } : null;
+        }
+        if (data.banner !== undefined) {
+            this.banner = data.banner;
+        }
+        if (data.communication_disabled_until !== undefined) {
+            this.communicationDisabledUntil = data.communication_disabled_until === null ? null : new Date(data.communication_disabled_until);
+        }
+        if (data.deaf !== undefined) {
+            this.deaf = data.deaf;
+        }
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.is_pending !== undefined) {
+            this.isPending = data.is_pending;
+        }
+        if (data.joined_at !== undefined) {
+            this.joinedAt = data.joined_at === null ? null : new Date(data.joined_at);
+        }
+        if (data.mute !== undefined) {
+            this.mute = data.mute;
+        }
+        if (data.nick !== undefined) {
+            this.nick = data.nick;
+        }
+        if (data.pending !== undefined) {
+            this.pending = data.pending;
+        }
+        if (data.premium_since !== undefined) {
+            this.premiumSince = data.premium_since === null ? null : new Date(data.premium_since);
+        }
+        if (data.roles !== undefined) {
+            this.roles = data.roles;
+        }
+        if (data.user !== undefined) {
+            this.user = this.client.users.update(data.user);
+        }
     }
 
     /**
@@ -292,22 +294,22 @@ export default class Member extends Base {
     override toJSON(): Types.JSON.JSONMember {
         return {
             ...super.toJSON(),
-            avatar:                     this.avatar,
-            avatarDecorationData:       this.avatarDecorationData,
-            banner:                     this.banner,
+            avatar: this.avatar,
+            avatarDecorationData: this.avatarDecorationData,
+            banner: this.banner,
             communicationDisabledUntil: this.communicationDisabledUntil?.getTime() ?? null,
-            deaf:                       this.deaf,
-            flags:                      this.flags,
-            guildID:                    this.guildID,
-            isPending:                  this.isPending,
-            joinedAt:                   this.joinedAt?.getTime() ?? null,
-            mute:                       this.mute,
-            nick:                       this.nick,
-            pending:                    this.pending,
-            premiumSince:               this.premiumSince?.getTime() ?? null,
-            presence:                   this.presence,
-            roles:                      this.roles,
-            user:                       this.user.toJSON()
+            deaf: this.deaf,
+            flags: this.flags,
+            guildID: this.guildID,
+            isPending: this.isPending,
+            joinedAt: this.joinedAt?.getTime() ?? null,
+            mute: this.mute,
+            nick: this.nick,
+            pending: this.pending,
+            premiumSince: this.premiumSince?.getTime() ?? null,
+            presence: this.presence,
+            roles: this.roles,
+            user: this.user.toJSON(),
         };
     }
 

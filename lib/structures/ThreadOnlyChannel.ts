@@ -1,23 +1,25 @@
 /** @module ThreadOnlyChannel */
-import GuildChannel from "./GuildChannel";
-import PermissionOverwrite from "./PermissionOverwrite";
-import type PublicThreadChannel from "./PublicThreadChannel";
-import type Member from "./Member";
-import Permission from "./Permission";
-import type Webhook from "./Webhook";
-import type { InviteWithMetadata } from "./Invite";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
 import {
     AllPermissions,
     Permissions,
     type SortOrderTypes,
     type ForumLayoutTypes,
-    type ThreadAutoArchiveDuration
+    type ThreadAutoArchiveDuration,
 } from "../Constants";
-import { UncachedError } from "../util/Errors";
 import Collection from "../util/Collection";
+import { UncachedError } from "../util/Errors";
+import TypedCollection from "../util/TypedCollection";
+
+import GuildChannel from "./GuildChannel";
+import Permission from "./Permission";
+import PermissionOverwrite from "./PermissionOverwrite";
+
+import type { InviteWithMetadata } from "./Invite";
+import type Member from "./Member";
+import type PublicThreadChannel from "./PublicThreadChannel";
+import type Webhook from "./Webhook";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a thread only channel. */
 export default class ThreadOnlyChannel extends GuildChannel {
@@ -50,7 +52,7 @@ export default class ThreadOnlyChannel extends GuildChannel {
         super(data, client);
         this.availableTags = [];
         this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
-        this.defaultForumLayout =  data.default_forum_layout;
+        this.defaultForumLayout = data.default_forum_layout;
         this.defaultReactionEmoji = null;
         this.defaultSortOrder = null;
         this.defaultThreadRateLimitPerUser = data.default_thread_rate_limit_per_user;
@@ -64,21 +66,31 @@ export default class ThreadOnlyChannel extends GuildChannel {
         this.update(data);
     }
 
+    /** The most recently created thread. */
+    get lastThread(): PublicThreadChannel | null {
+        return this.lastThreadID === null ? null : this.guild.threads.get(this.lastThreadID) as PublicThreadChannel;
+    }
+
+    /** The threads in this channel. The returned collection is disposable. */
+    get threads(): Collection<string, PublicThreadChannel> {
+        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as PublicThreadChannel]));
+    }
+
     protected override update(data: Partial<Types.Channels.RawThreadOnlyChannel>): void {
         super.update(data);
         if (data.available_tags !== undefined) {
             this.availableTags = data.available_tags.map(tag => ({
-                emoji:     tag.emoji_id === null && tag.emoji_name === null ? null : { id: tag.emoji_id, name: tag.emoji_name },
-                id:        tag.id,
+                emoji: tag.emoji_id === null && tag.emoji_name === null ? null : { id: tag.emoji_id, name: tag.emoji_name },
+                id: tag.id,
                 moderated: tag.moderated,
-                name:      tag.name
+                name: tag.name,
             }));
         }
         if (data.default_auto_archive_duration !== undefined) {
             this.defaultAutoArchiveDuration = data.default_auto_archive_duration;
         }
         if (data.default_forum_layout !== undefined) {
-            this.defaultForumLayout =  data.default_forum_layout;
+            this.defaultForumLayout = data.default_forum_layout;
         }
         if (data.default_reaction_emoji !== undefined) {
             this.defaultReactionEmoji = data.default_reaction_emoji === null || (data.default_reaction_emoji.emoji_id === null && data.default_reaction_emoji.emoji_name === null) ? null : { id: data.default_reaction_emoji.emoji_id, name: data.default_reaction_emoji.emoji_name };
@@ -119,16 +131,6 @@ export default class ThreadOnlyChannel extends GuildChannel {
         if (data.topic !== undefined && data.topic !== null) {
             this.topic = data.topic;
         }
-    }
-
-    /** The most recently created thread. */
-    get lastThread(): PublicThreadChannel | null {
-        return this.lastThreadID === null ? null : this.guild.threads.get(this.lastThreadID) as PublicThreadChannel;
-    }
-
-    /** The threads in this channel. The returned collection is disposable. */
-    get threads(): Collection<string, PublicThreadChannel> {
-        return new Collection(this.guild.threads.filter(thread => thread.parentID === this.id).map(thread => [thread.id, thread as PublicThreadChannel]));
     }
 
     /**
@@ -195,6 +197,9 @@ export default class ThreadOnlyChannel extends GuildChannel {
         if (typeof member === "string") {
             member = this.guild.members.get(member)!;
         }
+        // the `!` above lies to the type checker to defer the real null check to here, which throws a
+        // more useful error than a bare TypeError - `.get()` can genuinely return undefined at runtime
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!member) {
             throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
         }
@@ -243,20 +248,20 @@ export default class ThreadOnlyChannel extends GuildChannel {
     override toJSON(): Types.JSON.JSONThreadOnlyChannel {
         return {
             ...super.toJSON(),
-            availableTags:                 this.availableTags,
-            defaultAutoArchiveDuration:    this.defaultAutoArchiveDuration,
-            defaultForumLayout:            this.defaultForumLayout,
-            defaultReactionEmoji:          this.defaultReactionEmoji,
-            defaultSortOrder:              this.defaultSortOrder,
+            availableTags: this.availableTags,
+            defaultAutoArchiveDuration: this.defaultAutoArchiveDuration,
+            defaultForumLayout: this.defaultForumLayout,
+            defaultReactionEmoji: this.defaultReactionEmoji,
+            defaultSortOrder: this.defaultSortOrder,
             defaultThreadRateLimitPerUser: this.defaultThreadRateLimitPerUser,
-            flags:                         this.flags,
-            lastThreadID:                  this.lastThreadID,
-            permissionOverwrites:          this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
-            position:                      this.position,
-            rateLimitPerUser:              this.rateLimitPerUser,
-            threads:                       this.threads.map(thread => thread.id),
-            topic:                         this.topic,
-            type:                          this.type
+            flags: this.flags,
+            lastThreadID: this.lastThreadID,
+            permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
+            position: this.position,
+            rateLimitPerUser: this.rateLimitPerUser,
+            threads: this.threads.map(thread => thread.id),
+            topic: this.topic,
+            type: this.type,
         };
     }
 }

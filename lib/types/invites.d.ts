@@ -30,14 +30,12 @@ export interface RawInvite {
     uses?: number;
 }
 
-
 export interface RawInviteStageInstance {
     members: Array<Types.Guilds.RawMember>;
     participant_count: number;
     speaker_count: number;
     topic: string;
 }
-
 
 export interface InviteStageInstance {
     members: Array<Member>;
@@ -61,7 +59,7 @@ export interface CreateInviteOptions {
     targetType?: InviteTargetTypes;
     /** The ID of the user whose stream to display for this invite. */
     targetUserID?: string;
-    /** The IDs of users able to accept this invite. */
+    /** The IDs of users able to accept this invite. Up to 1000 are sent directly, more than that are uploaded as a CSV file. */
     targetUsers?: Array<string>;
     /** If the invite should be temporary. */
     temporary?: boolean;
@@ -86,7 +84,6 @@ export interface InviteTargetUsersJobStatusResponse {
     status: InviteTargetUsersJobStatus;
     totalUsers: number;
 }
-
 
 export interface GetInviteOptions {
     /** The id of the guild scheduled event to include with the invite. */

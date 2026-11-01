@@ -1,14 +1,16 @@
 /** @module CategoryChannel */
-import PermissionOverwrite from "./PermissionOverwrite";
-import GuildChannel from "./GuildChannel";
-import type Member from "./Member";
-import Permission from "./Permission";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import { AllPermissions, Permissions, type ChannelTypes } from "../Constants";
-import TypedCollection from "../util/TypedCollection";
-import { UncachedError } from "../util/Errors";
 import Collection from "../util/Collection";
+import { UncachedError } from "../util/Errors";
+import TypedCollection from "../util/TypedCollection";
+
+import GuildChannel from "./GuildChannel";
+import Permission from "./Permission";
+import PermissionOverwrite from "./PermissionOverwrite";
+
+import type Member from "./Member";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild category channel. */
 export default class CategoryChannel extends GuildChannel {
@@ -22,6 +24,11 @@ export default class CategoryChannel extends GuildChannel {
         this.permissionOverwrites = new TypedCollection(PermissionOverwrite, client);
         this.position = data.position;
         this.update(data);
+    }
+
+    /** The channels in this category. The returned collection is disposable. */
+    get channels(): Collection<string, GuildChannel> {
+        return new Collection(this.guild.channels.filter(channel => channel.parentID === this.id).map(channel => [channel.id, channel as GuildChannel]));
     }
 
     protected override update(data: Partial<Types.Channels.RawCategoryChannel>): void {
@@ -40,11 +47,6 @@ export default class CategoryChannel extends GuildChannel {
                 this.permissionOverwrites.update(overwrite);
             }
         }
-    }
-
-    /** The channels in this category. The returned collection is disposable. */
-    get channels(): Collection<string, GuildChannel> {
-        return new Collection(this.guild.channels.filter(channel => channel.parentID === this.id).map(channel => [channel.id, channel as GuildChannel]));
     }
 
     /**
@@ -71,11 +73,13 @@ export default class CategoryChannel extends GuildChannel {
      */
     permissionsOf(member: string | Member): Permission {
         if (typeof member === "string") {
-            member = this.guild.members.get(member)!;
+            const guildMember = this.guild.members.get(member);
+            if (!guildMember) {
+                throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
+            }
+            member = guildMember;
         }
-        if (!member) {
-            throw new UncachedError(`Cannot use ${this.constructor.name}#permissionsOf with an ID when the member is not cached.`);
-        }
+
         let permission = this.guild.permissionsOf(member).allow;
         if (permission & Permissions.ADMINISTRATOR) {
             return new Permission(AllPermissions);
@@ -104,10 +108,10 @@ export default class CategoryChannel extends GuildChannel {
     override toJSON(): Types.JSON.JSONCategoryChannel {
         return {
             ...super.toJSON(),
-            channels:             this.channels.map(channel => channel.id),
+            channels: this.channels.map(channel => channel.id),
             permissionOverwrites: this.permissionOverwrites.map(overwrite => overwrite.toJSON()),
-            position:             this.position,
-            type:                 this.type
+            position: this.position,
+            type: this.type,
         };
     }
 }

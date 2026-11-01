@@ -1,12 +1,14 @@
 /** @module RequestHandler */
-import SequentialBucket from "./SequentialBucket";
-import DiscordRESTError from "./DiscordRESTError";
-import DiscordHTTPError from "./DiscordHTTPError";
-import type RESTManager from "./RESTManager";
-import type * as Types from "../types/namespaced";
 import { API_URL, RESTMethods, USER_AGENT, type RESTMethod } from "../Constants";
 import Base from "../structures/Base";
 import { RateLimitedError } from "../util/Errors";
+
+import DiscordHTTPError from "./DiscordHTTPError";
+import DiscordRESTError from "./DiscordRESTError";
+import SequentialBucket from "./SequentialBucket";
+
+import type RESTManager from "./RESTManager";
+import type * as Types from "../types/namespaced";
 
 /**
  * Latency & ratelimit related things lovingly borrowed from eris
@@ -22,35 +24,34 @@ export default class RequestHandler {
     ratelimits: Record<string, SequentialBucket> = {};
     readyQueue: Array<() => void> = [];
     constructor(manager: RESTManager, options: Types.Client.RESTOptions = {}) {
-        if (options && options.baseURL && options.baseURL.endsWith("/")) {
+        if (options.baseURL?.endsWith("/")) {
             options.baseURL = options.baseURL.slice(0, -1);
         }
         this._manager = manager;
         this.options = {
-            agent:                      options.agent,
-            baseURL:                    options.baseURL ?? API_URL,
+            agent: options.agent,
+            baseURL: options.baseURL ?? API_URL,
             disableLatencyCompensation: !!options.disableLatencyCompensation,
-            followRedirects:            !!options.followRedirects,
-            host:                       options.host ?? (options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host),
-            latencyThreshold:           options.latencyThreshold ?? 30000,
-            maxRatelimitRetryWindow:    options.maxRatelimitRetryWindow ?? 30000,
-            ratelimiterOffset:          options.ratelimiterOffset ?? 0,
-            requestTimeout:             options.requestTimeout ?? 15000,
-            superProperties:            options.superProperties ?? null,
-            userAgent:                  options.userAgent ?? USER_AGENT
+            followRedirects: !!options.followRedirects,
+            host: options.host ?? (options.baseURL ? new URL(options.baseURL).host : new URL(API_URL).host),
+            latencyThreshold: options.latencyThreshold ?? 30000,
+            maxRatelimitRetryWindow: options.maxRatelimitRetryWindow ?? 30000,
+            ratelimiterOffset: options.ratelimiterOffset ?? 0,
+            requestTimeout: options.requestTimeout ?? 15000,
+            superProperties: options.superProperties ?? null,
+            userAgent: options.userAgent ?? USER_AGENT,
         };
         this.latencyRef = {
             lastTimeOffsetCheck: 0,
-            latency:             options.ratelimiterOffset ?? 0,
-            raw:                 Array.from({ length: 10 }).fill(options.ratelimiterOffset ?? 0) as Array<number>,
-            timeOffsets:         Array.from({ length: 10 }).fill(0) as Array<number>,
-            timeoffset:          0
+            latency: options.ratelimiterOffset ?? 0,
+            raw: Array.from({ length: 10 }).fill(options.ratelimiterOffset ?? 0) as Array<number>,
+            timeOffsets: Array.from({ length: 10 }).fill(0) as Array<number>,
+            timeoffset: 0,
         };
-
     }
 
     private getRoute(path: string, method: string): string {
-        let route = path.replaceAll(/\/([a-z-]+)\/\d{15,21}/g, function(match, p) {
+        let route = path.replaceAll(/\/([a-z-]+)\/\d{15,21}/g, function (match, p) {
             return p === "channels" || p === "guilds" || p === "webhooks" ? match : `/${p as string}/:id`;
         }).replaceAll(/\/reactions\/[^/]+/g, "/reactions/:id").replaceAll(/\/reactions\/:id\/[^/]+/g, "/reactions/:id/:userID").replace(/^\/webhooks\/(\d+)\/[\w-]{64,}/, "/webhooks/$1/:token");
         if (method === "DELETE" && route.endsWith("/messages/:id")) {
@@ -86,7 +87,7 @@ export default class RequestHandler {
     async authRequest<T = unknown>(options: Omit<Types.RequestHandler.RequestOptions, "auth">): Promise<T> {
         return this.request<T>({
             ...options,
-            auth: true
+            auth: true,
         });
     }
 
@@ -105,6 +106,7 @@ export default class RequestHandler {
             options.path = `/${options.path}`;
         }
         const route = options.route ?? this.getRoute(options.path, options.method);
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!this.ratelimits[route]) {
             this.ratelimits[route] = new SequentialBucket(1, this.latencyRef);
         }
@@ -136,10 +138,11 @@ export default class RequestHandler {
                                 if (file.index !== undefined) {
                                     index = file.index;
                                 }
+                                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                                 if (!file.contents) {
                                     continue;
                                 }
-                                data.set(file.field || `files[${index}]`, new Blob([file.contents]), file.name);
+                                data.set(file.field ?? `files[${index}]`, new Blob([file.contents]), file.name);
                             }
                             if (stringBody) {
                                 data.set("payload_json", stringBody);
@@ -162,15 +165,15 @@ export default class RequestHandler {
                     const controller = new AbortController();
                     let timeout: NodeJS.Timeout | undefined;
                     if (this.options.requestTimeout > 0 && this.options.requestTimeout !== Infinity) {
-                        timeout = setTimeout(() => controller.abort(), this.options.requestTimeout);
+                        timeout = setTimeout(() => { controller.abort(); }, this.options.requestTimeout);
                     }
                     const res = await fetch(url, {
-                        method:     options.method,
+                        method: options.method,
                         headers,
-                        body:       reqBody,
-                        dispatcher: this.options.agent || undefined,
-                        signal:     controller.signal,
-                        redirect:   this.options.followRedirects ? "follow" : "manual"
+                        body: reqBody,
+                        dispatcher: this.options.agent ?? undefined,
+                        signal: controller.signal,
+                        redirect: this.options.followRedirects ? "follow" : "manual",
                     });
                     if (timeout) {
                         clearTimeout(timeout);
@@ -198,12 +201,12 @@ export default class RequestHandler {
                     }
 
                     this._manager.client.emit("request", {
-                        method:       options.method,
-                        path:         options.path,
+                        method: options.method,
+                        path: options.path,
                         route,
-                        withAuth:     !!options.auth,
-                        requestBody:  reqBody,
-                        responseBody: resBody
+                        withAuth: !!options.auth,
+                        requestBody: reqBody,
+                        responseBody: resBody,
                     });
                     const headerNow = Date.parse(res.headers.get("date")!);
                     const now = Date.now();
@@ -229,13 +232,15 @@ export default class RequestHandler {
                             `x-ratelimit-global = ${res.headers.get("x-ratelimit-global") ?? "null"}`].join("\n"));
                     }
 
-                    this.ratelimits[route].remaining = res.headers.has("x-ratelimit-remaining") ? Number(res.headers.get("x-ratelimit-remaining")) ?? 0 : 1;
+                    this.ratelimits[route].remaining = res.headers.has("x-ratelimit-remaining") ? Number(res.headers.get("x-ratelimit-remaining") ?? 0) : 1;
                     const retryAfter = Number(res.headers.get("x-ratelimit-reset-after") ?? res.headers.get("retry-after") ?? 0) * 1000;
                     if (retryAfter >= 0) {
                         if (res.headers.has("x-ratelimit-global")) {
                             this.globalBlock = true;
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                             setTimeout(this.globalUnblock.bind(this), retryAfter ?? 1);
                         } else {
+                            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                             this.ratelimits[route].reset = (retryAfter ?? 1) + now;
                         }
                     } else if (res.headers.has("x-ratelimit-reset")) {
@@ -255,9 +260,10 @@ export default class RequestHandler {
                             let delay = retryAfter;
                             if (res.headers.get("x-ratelimit-scope") === "shared") {
                                 try {
-                                    delay = (resBody as { retry_after: number; }).retry_after * 1000;
-                                } catch (err) {
+                                    delay = (resBody as { retry_after: number }).retry_after * 1000;
+                                } catch (err: unknown) {
                                     cb();
+                                    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
                                     reject(err);
                                 }
                             }
@@ -266,11 +272,11 @@ export default class RequestHandler {
                             if (delay) {
                                 if (delay > this.options.maxRatelimitRetryWindow) {
                                     cb();
-                                    return reject(new RateLimitedError(`Ratelimit on "${options.method} ${route}" exceeds the maximum retry window (${delay} > ${this.options.maxRatelimitRetryWindow})`, delay));
+                                    reject(new RateLimitedError(`Ratelimit on "${options.method} ${route}" exceeds the maximum retry window (${delay} > ${this.options.maxRatelimitRetryWindow})`, delay)); return;
                                 }
                                 setTimeout(() => {
                                     cb();
-                                    // eslint-disable-next-line prefer-rest-params, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, prefer-spread
+
                                     this.request<T>(options).then(resolve).catch(reject);
                                 }, delay);
                                 return;
@@ -284,10 +290,10 @@ export default class RequestHandler {
                             setTimeout(() => {
                                 this.request<T>(options).then(resolve).catch(reject);
                             }, Math.floor(Math.random() * 1900 + 100));
-                            return cb();
+                            cb(); return;
                         }
                         cb();
-                        let { stack } = _stackHolder as { stack: string; };
+                        let { stack } = _stackHolder as { stack: string };
                         if (stack.startsWith("Error\n")) {
                             stack = stack.slice(6);
                         }

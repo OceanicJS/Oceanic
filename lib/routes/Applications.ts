@@ -1,16 +1,17 @@
 /** @module REST/ApplicationCommands */
-import * as Routes from "../util/Routes";
-import type * as Types from "../types/namespaced";
-import ApplicationCommand from "../structures/ApplicationCommand";
-import type RESTManager from "../rest/RESTManager";
-import SKU from "../structures/SKU";
-import type Entitlement from "../structures/Entitlement";
-import TestEntitlement from "../structures/TestEntitlement";
-import ClientApplication from "../structures/ClientApplication";
 import Application from "../structures/Application";
-import Subscription from "../structures/Subscription";
-import QueryBuilder from "../util/QueryBuilder";
+import ApplicationCommand from "../structures/ApplicationCommand";
 import Attachment from "../structures/Attachment";
+import ClientApplication from "../structures/ClientApplication";
+import SKU from "../structures/SKU";
+import Subscription from "../structures/Subscription";
+import TestEntitlement from "../structures/TestEntitlement";
+import QueryBuilder from "../util/QueryBuilder";
+import * as Routes from "../util/Routes";
+
+import type RESTManager from "../rest/RESTManager";
+import type Entitlement from "../structures/Entitlement";
+import type * as Types from "../types/namespaced";
 
 /** Various methods for interacting with application commands. Located at {@link Client#rest | Client#rest}{@link RESTManager#applications | .applications}. */
 export default class Applications {
@@ -29,21 +30,21 @@ export default class Applications {
         const opts = options as Array<Types.Applications.CreateChatInputApplicationCommandOptions>;
         return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
             method: "PUT",
-            path:   Routes.APPLICATION_COMMANDS(applicationID),
-            json:   opts.map(opt => ({
-                contexts:                   opt.contexts,
-                description:                opt.description,
+            path: Routes.APPLICATION_COMMANDS(applicationID),
+            json: opts.map(opt => ({
+                contexts: opt.contexts,
+                description: opt.description,
                 default_member_permissions: opt.defaultMemberPermissions,
-                description_localizations:  opt.descriptionLocalizations,
-                dm_permission:              opt.dmPermission,
-                handler:                    (opt as unknown as Types.Applications.CreatePrimaryEntryPointApplicationCommandOptions).handler,
-                integration_types:          opt.integrationTypes,
-                name:                       opt.name,
-                name_localizations:         opt.nameLocalizations,
-                nsfw:                       opt.nsfw,
-                options:                    opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
-                type:                       opt.type
-            }))
+                description_localizations: opt.descriptionLocalizations,
+                dm_permission: opt.dmPermission,
+                handler: (opt as unknown as Types.Applications.CreatePrimaryEntryPointApplicationCommandOptions).handler,
+                integration_types: opt.integrationTypes,
+                name: opt.name,
+                name_localizations: opt.nameLocalizations,
+                nsfw: opt.nsfw,
+                options: opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
+                type: opt.type,
+            })),
         }).then(data => data.map(d => new ApplicationCommand(d, this._manager.client)));
     }
 
@@ -58,19 +59,19 @@ export default class Applications {
         const opts = this._manager.client.util._freeze(options) as Array<Types.Applications.CreateChatInputApplicationCommandOptions>;
         return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
             method: "PUT",
-            path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
-            json:   opts.map(opt => ({
-                id:                         opt.id,
+            path: Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
+            json: opts.map(opt => ({
+                id: opt.id,
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:                opt.description,
-                description_localizations:  opt.descriptionLocalizations,
-                dm_permission:              opt.dmPermission,
-                name:                       opt.name,
-                name_localizations:         opt.nameLocalizations,
-                nsfw:                       opt.nsfw,
-                options:                    opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
-                type:                       opt.type
-            }))
+                description: opt.description,
+                description_localizations: opt.descriptionLocalizations,
+                dm_permission: opt.dmPermission,
+                name: opt.name,
+                name_localizations: opt.nameLocalizations,
+                nsfw: opt.nsfw,
+                options: opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
+                type: opt.type,
+            })),
         }).then(data => data.map(d => new ApplicationCommand(d, this._manager.client)));
     }
 
@@ -80,9 +81,10 @@ export default class Applications {
      * @param entitlementID The ID of the entitlement to consume.
      */
     async consumeEntitlement(applicationID: string, entitlementID: string): Promise<void> {
+        // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- explicit <void> call-site generic, not covered by allowInGenericTypeArguments
         await this._manager.authRequest<void>({
             method: "POST",
-            path:   Routes.CONSUME_ENTITLEMENT(applicationID, entitlementID)
+            path: Routes.CONSUME_ENTITLEMENT(applicationID, entitlementID),
         });
     }
 
@@ -101,11 +103,11 @@ export default class Applications {
 
         return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
             method: "POST",
-            path:   Routes.APPLICATION_EMOJIS(applicationID),
-            json:   {
+            path: Routes.APPLICATION_EMOJIS(applicationID),
+            json: {
                 name: options.name,
-                image
-            }
+                image,
+            },
         }).then(emoji => this._manager.client.util.convertApplicationEmoji(emoji));
     }
 
@@ -119,21 +121,21 @@ export default class Applications {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.CreateChatInputApplicationCommandOptions;
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "POST",
-            path:   Routes.APPLICATION_COMMANDS(applicationID),
-            json:   {
-                contexts:                   opt.contexts,
+            path: Routes.APPLICATION_COMMANDS(applicationID),
+            json: {
+                contexts: opt.contexts,
                 default_member_permissions: opt.defaultMemberPermissions,
-                description_localizations:  opt.descriptionLocalizations,
-                description:                opt.description,
-                dm_permission:              opt.dmPermission,
-                handler:                    (opt as unknown as Types.Applications.CreatePrimaryEntryPointApplicationCommandOptions).handler,
-                integration_types:          opt.integrationTypes,
-                name_localizations:         opt.nameLocalizations,
-                name:                       opt.name,
-                nsfw:                       opt.nsfw,
-                options:                    opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
-                type:                       opt.type
-            }
+                description_localizations: opt.descriptionLocalizations,
+                description: opt.description,
+                dm_permission: opt.dmPermission,
+                handler: (opt as unknown as Types.Applications.CreatePrimaryEntryPointApplicationCommandOptions).handler,
+                integration_types: opt.integrationTypes,
+                name_localizations: opt.nameLocalizations,
+                name: opt.name,
+                nsfw: opt.nsfw,
+                options: opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
+                type: opt.type,
+            },
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
     }
 
@@ -148,18 +150,18 @@ export default class Applications {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.CreateChatInputApplicationCommandOptions;
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "POST",
-            path:   Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
-            json:   {
+            path: Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
+            json: {
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:                opt.description,
-                description_localizations:  opt.descriptionLocalizations,
-                dm_permission:              opt.dmPermission,
-                name:                       opt.name,
-                name_localizations:         opt.nameLocalizations,
-                nsfw:                       opt.nsfw,
-                options:                    opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
-                type:                       opt.type
-            }
+                description: opt.description,
+                description_localizations: opt.descriptionLocalizations,
+                dm_permission: opt.dmPermission,
+                name: opt.name,
+                name_localizations: opt.nameLocalizations,
+                nsfw: opt.nsfw,
+                options: opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
+                type: opt.type,
+            },
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
     }
 
@@ -172,12 +174,12 @@ export default class Applications {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Applications.RawTestEntitlement>({
             method: "POST",
-            path:   Routes.ENTITLEMENTS(applicationID),
-            json:   {
-                owner_id:   options.ownerID,
+            path: Routes.ENTITLEMENTS(applicationID),
+            json: {
+                owner_id: options.ownerID,
                 owner_type: options.ownerType,
-                sku_id:     options.skuID
-            }
+                sku_id: options.skuID,
+            },
         }).then(data => new TestEntitlement(data, this._manager.client));
     }
 
@@ -190,7 +192,7 @@ export default class Applications {
     async deleteEmoji(applicationID: string, emojiID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.APPLICATION_EMOJI(applicationID, emojiID)
+            path: Routes.APPLICATION_EMOJI(applicationID, emojiID),
         });
     }
 
@@ -203,7 +205,7 @@ export default class Applications {
     async deleteGlobalCommand(applicationID: string, commandID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.APPLICATION_COMMAND(applicationID, commandID)
+            path: Routes.APPLICATION_COMMAND(applicationID, commandID),
         });
     }
 
@@ -217,7 +219,7 @@ export default class Applications {
     async deleteGuildCommand(applicationID: string, guildID: string, commandID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID)
+            path: Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
         });
     }
 
@@ -229,7 +231,7 @@ export default class Applications {
     async deleteTestEntitlement(applicationID: string, entitlementID: string): Promise<void> {
         await this._manager.authRequest<null>({
             method: "DELETE",
-            path:   Routes.ENTITLEMENT(applicationID, entitlementID)
+            path: Routes.ENTITLEMENT(applicationID, entitlementID),
         });
     }
 
@@ -251,22 +253,22 @@ export default class Applications {
 
         return this._manager.authRequest<Types.Applications.RESTApplication>({
             method: "PATCH",
-            path:   Routes.APPLICATION("@me"),
-            json:   {
-                cover_image:                       coverImage,
-                custom_install_url:                options.customInstallURL,
-                description:                       options.description,
-                event_webhooks_status:             options.eventWebhooksStatus,
-                event_webhooks_types:              options.eventWebhooksTypes,
-                event_webhooks_url:                options.eventWebhooksURL,
-                flags:                             options.flags,
+            path: Routes.APPLICATION("@me"),
+            json: {
+                cover_image: coverImage,
+                custom_install_url: options.customInstallURL,
+                description: options.description,
+                event_webhooks_status: options.eventWebhooksStatus,
+                event_webhooks_types: options.eventWebhooksTypes,
+                event_webhooks_url: options.eventWebhooksURL,
+                flags: options.flags,
                 icon,
-                install_params:                    options.installParams,
-                integration_types_config:          options.integrationTypesConfig,
-                interactions_endpoint_url:         options.interactionsEndpointURL,
+                install_params: options.installParams,
+                integration_types_config: options.integrationTypesConfig,
+                interactions_endpoint_url: options.interactionsEndpointURL,
                 role_connections_verification_url: options.roleConnectionsVerificationURL,
-                tags:                              options.tags
-            }
+                tags: options.tags,
+            },
         }).then(data => new Application(data, this._manager.client));
     }
 
@@ -281,8 +283,8 @@ export default class Applications {
         options = this._manager.client.util._freeze(options);
         return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
             method: "PATCH",
-            path:   Routes.APPLICATION_EMOJI(applicationID, emojiID),
-            json:   { name: options.name }
+            path: Routes.APPLICATION_EMOJI(applicationID, emojiID),
+            json: { name: options.name },
         }).then(emoji => this._manager.client.util.convertApplicationEmoji(emoji));
     }
 
@@ -297,19 +299,19 @@ export default class Applications {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.EditChatInputApplicationCommandOptions;
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "PATCH",
-            path:   Routes.APPLICATION_COMMAND(applicationID, commandID),
-            json:   {
-                contexts:                   opt.contexts,
+            path: Routes.APPLICATION_COMMAND(applicationID, commandID),
+            json: {
+                contexts: opt.contexts,
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:                opt.description,
-                description_localizations:  opt.descriptionLocalizations,
-                dm_permission:              opt.dmPermission,
-                integration_types:          opt.integrationTypes,
-                name:                       opt.name,
-                name_localizations:         opt.nameLocalizations,
-                nsfw:                       opt.nsfw,
-                options:                    opt.options?.map(o => this._manager.client.util.optionToRaw(o))
-            }
+                description: opt.description,
+                description_localizations: opt.descriptionLocalizations,
+                dm_permission: opt.dmPermission,
+                integration_types: opt.integrationTypes,
+                name: opt.name,
+                name_localizations: opt.nameLocalizations,
+                nsfw: opt.nsfw,
+                options: opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
+            },
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
     }
 
@@ -325,17 +327,17 @@ export default class Applications {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.EditChatInputApplicationCommandOptions;
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
             method: "PATCH",
-            path:   Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
-            json:   {
+            path: Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
+            json: {
                 default_member_permissions: opt.defaultMemberPermissions,
-                description:                opt.description,
-                description_localizations:  opt.descriptionLocalizations,
-                dm_permission:              opt.dmPermission,
-                name:                       opt.name,
-                name_localizations:         opt.nameLocalizations,
-                nsfw:                       opt.nsfw,
-                options:                    opt.options?.map(o => this._manager.client.util.optionToRaw(o))
-            }
+                description: opt.description,
+                description_localizations: opt.descriptionLocalizations,
+                dm_permission: opt.dmPermission,
+                name: opt.name,
+                name_localizations: opt.nameLocalizations,
+                nsfw: opt.nsfw,
+                options: opt.options?.map(o => this._manager.client.util.optionToRaw(o)),
+            },
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
     }
 
@@ -349,20 +351,17 @@ export default class Applications {
      */
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: Types.Applications.EditApplicationCommandPermissionsOptions): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         options = this._manager.client.util._freeze(options);
-        return (options.accessToken ? this._manager.request.bind(this._manager) : this._manager.authRequest.bind(this._manager))({
-            method: "PUT",
-            path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
-            json:   { permissions: options.permissions },
-            auth:   options.accessToken
-        } as Omit<Types.RequestHandler.RequestOptions, "auth">).then(data => {
-            const d = data as Types.Applications.RawGuildApplicationCommandPermissions;
-            return {
-                applicationID: d.application_id,
-                guildID:       d.guild_id,
-                id:            d.id,
-                permissions:   d.permissions
-            };
-        });
+        const path = Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID);
+        const json = { permissions: options.permissions };
+        return (options.accessToken
+            ? this._manager.request<Types.Applications.RawGuildApplicationCommandPermissions>({ method: "PUT", path, json, auth: options.accessToken })
+            : this._manager.authRequest<Types.Applications.RawGuildApplicationCommandPermissions>({ method: "PUT", path, json })
+        ).then(d => ({
+            applicationID: d.application_id,
+            guildID: d.guild_id,
+            id: d.id,
+            permissions: d.permissions,
+        }));
     }
 
     /**
@@ -374,7 +373,7 @@ export default class Applications {
     async get(applicationID: string): Promise<Application> {
         return this._manager.authRequest<Types.Applications.RESTApplication>({
             method: "GET",
-            path:   Routes.APPLICATION(applicationID)
+            path: Routes.APPLICATION(applicationID),
         }).then(data => new Application(data, this._manager.client));
     }
 
@@ -386,18 +385,18 @@ export default class Applications {
     async getActivityInstance(applicationID: string, instanceID: string): Promise<Types.Applications.ActivityInstance> {
         return this._manager.authRequest<Types.Applications.RawActivityInstance>({
             method: "GET",
-            path:   Routes.APPLICATION_ACTIVITY_INSTANCE(applicationID, instanceID)
+            path: Routes.APPLICATION_ACTIVITY_INSTANCE(applicationID, instanceID),
         }).then(data => ({
             applicationID: data.application_id,
-            instanceID:    data.instance_id,
-            launchID:      data.launch_id,
-            location:      {
+            instanceID: data.instance_id,
+            launchID: data.launch_id,
+            location: {
                 channelID: data.location.channel_id,
-                guildID:   data.location.guild_id,
-                id:        data.location.id,
-                kind:      data.location.kind
+                guildID: data.location.guild_id,
+                id: data.location.id,
+                kind: data.location.kind,
             },
-            users: data.users
+            users: data.users,
         }));
     }
 
@@ -408,7 +407,7 @@ export default class Applications {
     async getClient(): Promise<ClientApplication> {
         return this._manager.authRequest<Types.Applications.RawClientApplication>({
             method: "GET",
-            path:   Routes.APPLICATION("@me")
+            path: Routes.APPLICATION("@me"),
         }).then(data => new ClientApplication(data, this._manager.client));
     }
 
@@ -429,7 +428,7 @@ export default class Applications {
     async getEmoji(applicationID: string, emojiID: string): Promise<Types.Applications.ApplicationEmoji> {
         return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
             method: "GET",
-            path:   Routes.APPLICATION_EMOJI(applicationID, emojiID)
+            path: Routes.APPLICATION_EMOJI(applicationID, emojiID),
         }).then(emoji => this._manager.client.util.convertApplicationEmoji(emoji));
     }
 
@@ -441,9 +440,9 @@ export default class Applications {
     async getEmojis(applicationID: string): Promise<Types.Applications.ApplicationEmojis> {
         return this._manager.authRequest<Types.Applications.RawApplicationEmojis>({
             method: "GET",
-            path:   Routes.APPLICATION_EMOJIS(applicationID)
+            path: Routes.APPLICATION_EMOJIS(applicationID),
         }).then(({ items }) => ({
-            items: items.map(item => this._manager.client.util.convertApplicationEmoji(item))
+            items: items.map(item => this._manager.client.util.convertApplicationEmoji(item)),
         }));
     }
 
@@ -457,7 +456,7 @@ export default class Applications {
     async getEntitlement(applicationID: string, entitlementID: string): Promise<Entitlement | TestEntitlement> {
         return this._manager.authRequest<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>({
             method: "GET",
-            path:   Routes.ENTITLEMENT(applicationID, entitlementID)
+            path: Routes.ENTITLEMENT(applicationID, entitlementID),
         }).then(data => this._manager.client.util.updateEntitlement(data));
     }
 
@@ -481,8 +480,8 @@ export default class Applications {
         query.setIfPresent("user_id", options.userID);
         return this._manager.authRequest<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
             method: "GET",
-            path:   Routes.ENTITLEMENTS(applicationID),
-            query
+            path: Routes.ENTITLEMENTS(applicationID),
+            query,
         }).then(data => data.map(d => this._manager.client.util.updateEntitlement(d)));
     }
 
@@ -498,10 +497,10 @@ export default class Applications {
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
-            method:  "GET",
-            path:    Routes.APPLICATION_COMMAND(applicationID, commandID),
+            method: "GET",
+            path: Routes.APPLICATION_COMMAND(applicationID, commandID),
             query,
-            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale },
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
     }
 
@@ -516,10 +515,10 @@ export default class Applications {
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
-            method:  "GET",
-            path:    Routes.APPLICATION_COMMANDS(applicationID),
+            method: "GET",
+            path: Routes.APPLICATION_COMMANDS(applicationID),
             query,
-            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale },
         }).then(data => data.map(d => new ApplicationCommand(d, this._manager.client)) as never);
     }
 
@@ -536,10 +535,10 @@ export default class Applications {
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Types.Applications.RawApplicationCommand>({
-            method:  "GET",
-            path:    Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
+            method: "GET",
+            path: Routes.GUILD_APPLICATION_COMMAND(applicationID, guildID, commandID),
             query,
-            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale },
         }).then(data => new ApplicationCommand(data, this._manager.client) as never);
     }
 
@@ -555,10 +554,10 @@ export default class Applications {
         const query = new QueryBuilder();
         query.setIfPresent("with_localizations", options?.withLocalizations);
         return this._manager.authRequest<Array<Types.Applications.RawApplicationCommand>>({
-            method:  "GET",
-            path:    Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
+            method: "GET",
+            path: Routes.GUILD_APPLICATION_COMMANDS(applicationID, guildID),
             query,
-            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale }
+            headers: options?.locale === undefined ? undefined : { "X-Discord-Locale": options.locale },
         }).then(data => data.map(d => new ApplicationCommand(d, this._manager.client)) as never);
     }
 
@@ -572,12 +571,12 @@ export default class Applications {
     async getGuildPermission(applicationID: string, guildID: string, commandID: string): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         return this._manager.authRequest<Types.Applications.RawGuildApplicationCommandPermissions>({
             method: "GET",
-            path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID)
+            path: Routes.GUILD_APPLICATION_COMMAND_PERMISSION(applicationID, guildID, commandID),
         }).then(data => ({
             applicationID: data.application_id,
-            guildID:       data.guild_id,
-            id:            data.id,
-            permissions:   data.permissions
+            guildID: data.guild_id,
+            id: data.id,
+            permissions: data.permissions,
         }));
     }
 
@@ -590,13 +589,24 @@ export default class Applications {
     async getGuildPermissions(applicationID: string, guildID: string): Promise<Array<Types.Applications.RESTGuildApplicationCommandPermissions>> {
         return this._manager.authRequest<Array<Types.Applications.RawGuildApplicationCommandPermissions>>({
             method: "GET",
-            path:   Routes.GUILD_APPLICATION_COMMAND_PERMISSIONS(applicationID, guildID)
+            path: Routes.GUILD_APPLICATION_COMMAND_PERMISSIONS(applicationID, guildID),
         }).then(data => data.map(d => ({
             applicationID: d.application_id,
-            guildID:       d.guild_id,
-            id:            d.id,
-            permissions:   d.permissions
+            guildID: d.guild_id,
+            id: d.id,
+            permissions: d.permissions,
         })));
+    }
+
+    /**
+     * Get the SKUs for an application.
+     * @param applicationID The ID of the application to get the SKUs of.
+     */
+    async getSKUs(applicationID: string): Promise<Array<SKU>> {
+        return this._manager.authRequest<Array<Types.Applications.RawSKU>>({
+            method: "GET",
+            path: Routes.SKUS(applicationID),
+        }).then(data => data.map(d => new SKU(d, this._manager.client)));
     }
 
     /**
@@ -607,7 +617,7 @@ export default class Applications {
     async getSKUSubscription(skuID: string, subscriptionID: string): Promise<Subscription> {
         return this._manager.authRequest<Types.Applications.RawSubscription>({
             method: "GET",
-            path:   Routes.SKU_SUBSCRIPTION(skuID, subscriptionID)
+            path: Routes.SKU_SUBSCRIPTION(skuID, subscriptionID),
         }).then(data => new Subscription(data, this._manager.client));
     }
 
@@ -625,20 +635,9 @@ export default class Applications {
         query.setIfPresent("user_id", options.userID);
         return this._manager.authRequest<Array<Types.Applications.RawSubscription>>({
             method: "GET",
-            path:   Routes.SKU_SUBSCRIPTIONS(skuID),
-            query
+            path: Routes.SKU_SUBSCRIPTIONS(skuID),
+            query,
         }).then(data => data.map(d => new Subscription(d, this._manager.client)));
-    }
-
-    /**
-     * Get the SKUs for an application.
-     * @param applicationID The ID of the application to get the SKUs of.
-     */
-    async getSKUs(applicationID: string): Promise<Array<SKU>> {
-        return this._manager.authRequest<Array<Types.Applications.RawSKU>>({
-            method: "GET",
-            path:   Routes.SKUS(applicationID)
-        }).then(data => data.map(d => new SKU(d, this._manager.client)));
     }
 
     /**
@@ -658,9 +657,9 @@ export default class Applications {
         const auth = options.accessToken.startsWith("Bearer ") ? options.accessToken : `Bearer ${options.accessToken}`;
         return this._manager.request<Types.Applications.RawApplicationAttachmentResponse>({
             method: "POST",
-            path:   Routes.APPLICATION_ATTACHMENT(applicationID),
-            files:  [{ ...options.file, field: "file" }],
-            auth
+            path: Routes.APPLICATION_ATTACHMENT(applicationID),
+            files: [{ ...options.file, field: "file" }],
+            auth,
         }).then(data => new Attachment(data.attachment, this._manager.client));
     }
 }

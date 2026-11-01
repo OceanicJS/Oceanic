@@ -1,8 +1,10 @@
 /** @module Channel */
-import Base from "./Base";
-import type * as Types from "../types/namespaced";
 import { ChannelTypes } from "../Constants";
+
+import Base from "./Base";
+
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a channel. */
 export default class Channel extends Base {
@@ -60,15 +62,15 @@ export default class Channel extends Base {
         }
     }
 
+    /** A string that will mention this channel. */
+    get mention(): string {
+        return `<#${this.id}>`;
+    }
+
     protected override update(data: Partial<Types.Channels.RawChannel>): void {
         if (data.flags !== undefined) {
             this.flags = data.flags;
         }
-    }
-
-    /** A string that will mention this channel. */
-    get mention(): string {
-        return `<#${this.id}>`;
     }
 
     /**
@@ -82,13 +84,14 @@ export default class Channel extends Base {
         return {
             ...super.toJSON(),
             flags: this.flags,
-            type:  this.type
+            type: this.type,
         };
     }
 }
 
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const TextChannel = (require("./TextChannel") as typeof import("./TextChannel")).default;
 const PrivateChannel = (require("./PrivateChannel") as typeof import("./PrivateChannel")).default;
 const VoiceChannel = (require("./VoiceChannel") as typeof import("./VoiceChannel")).default;
@@ -101,4 +104,3 @@ const AnnouncementThreadChannel = (require("./AnnouncementThreadChannel") as typ
 const StageChannel = (require("./StageChannel") as typeof import("./StageChannel")).default;
 const ForumChannel = (require("./ForumChannel") as typeof import("./ForumChannel")).default;
 const MediaChannel = (require("./MediaChannel") as typeof import("./MediaChannel")).default;
-/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

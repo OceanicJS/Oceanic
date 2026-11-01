@@ -1,18 +1,18 @@
 /** @module Types/OAuth */
-import type * as Types from "./namespaced";
 import { type Locale } from "./applications";
+
+import type * as Types from "./namespaced";
 import type {
     ConnectionService,
     PermissionName,
     RoleConnectionMetadataTypes,
     ConnectionVisibilityTypes,
-    ApplicationIntegrationTypes
+    ApplicationIntegrationTypes,
 } from "../Constants";
+import type Integration from "../structures/Integration";
 import type PartialApplication from "../structures/PartialApplication";
 import type User from "../structures/User";
 import type Webhook from "../structures/Webhook";
-import type Integration from "../structures/Integration";
-
 
 export interface InstallParams {
     permissions: Array<PermissionName>;
@@ -151,6 +151,8 @@ export interface GetCurrentGuildsOptions {
     before?: string;
     /** Max number of guilds to return (1-200). */
     limit?: number;
+    /** Only return guilds in this shard (`0` to `max_concurrency - 1`). Required for bots using large bot sharding. This is not the same as the gateway shard ID. */
+    shard?: number;
     /** Whether to include approximate member and presence counts. */
     withCounts?: boolean;
 }

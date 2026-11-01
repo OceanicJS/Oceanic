@@ -1,7 +1,8 @@
 /** @module UnavailableGuild */
 import Base from "./Base";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild that is unavailable. */
 export default class UnavailableGuild extends Base {
@@ -14,7 +15,7 @@ export default class UnavailableGuild extends Base {
     override toJSON(): Types.JSON.JSONUnavailableGuild {
         return {
             ...super.toJSON(),
-            unavailable: this.unavailable
+            unavailable: this.unavailable,
         };
     }
 }

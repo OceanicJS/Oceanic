@@ -1,12 +1,6 @@
 /** @module Util */
-import { CDN_URL } from "./Routes";
-import { FrozenModificationError } from "./Errors";
-import { fromRaw as messageComponentsFromRaw, toRaw as messageComponentsToRaw } from "./parsing/message-components";
-import { fromRaw as modalSubmitComponentsFromRaw, toRaw as modalSubmitComponentsToRaw } from "./parsing/modal-components";
-import { fromRaw as embedFromRaw, toRaw as embedToRaw } from "./parsing/embeds";
-import { fromRaw as applicationCommandOptionFromRaw, toRaw as applicationCommandOptionToRaw } from "./parsing/application-command-options";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
+import { types } from "node:util";
+
 import {
     ImageFormats,
     MEDIA_PROXY_SIZES,
@@ -16,16 +10,25 @@ import {
     Intents,
     PrivilegedIntentMapping,
     type ApplicationFlags,
-    type PrivilegedIntentNames
+    type PrivilegedIntentNames,
 } from "../Constants";
-import Member from "../structures/Member";
 import Channel from "../structures/Channel";
-import Message from "../structures/Message";
 import Entitlement from "../structures/Entitlement";
-import TestEntitlement from "../structures/TestEntitlement";
-import type Poll from "../structures/Poll";
+import Member from "../structures/Member";
+import Message from "../structures/Message";
 import Subscription from "../structures/Subscription";
-import { types } from "node:util";
+import TestEntitlement from "../structures/TestEntitlement";
+
+import { FrozenModificationError } from "./Errors";
+import { fromRaw as applicationCommandOptionFromRaw, toRaw as applicationCommandOptionToRaw } from "./parsing/application-command-options";
+import { fromRaw as embedFromRaw, toRaw as embedToRaw } from "./parsing/embeds";
+import { fromRaw as messageComponentsFromRaw, toRaw as messageComponentsToRaw } from "./parsing/message-components";
+import { fromRaw as modalSubmitComponentsFromRaw, toRaw as modalSubmitComponentsToRaw } from "./parsing/modal-components";
+import { CDN_URL } from "./Routes";
+
+import type Client from "../Client";
+import type Poll from "../structures/Poll";
+import type * as Types from "../types/namespaced";
 
 /** A general set of utilities. These are intentionally poorly documented, as they serve almost no usefulness to outside developers. */
 export default class Util {
@@ -64,10 +67,10 @@ export default class Util {
     /** @hidden intentionally not documented - this is an internal function */
     _arrayToCSVFile(data: Array<string>, name: string, header?: string): Types.RequestHandler.File {
         return {
-            name:     `${name}.csv`,
-            field:    name,
+            name: `${name}.csv`,
+            field: name,
             contents: this._arrayToCSV(data, header),
-            index:    undefined
+            index: undefined,
         } satisfies Types.Shared.KeysExist<Types.RequestHandler.File>;
     }
 
@@ -102,7 +105,7 @@ export default class Util {
             set: (target, prop, value, receiver): boolean => {
                 this._client.emit("error", new FrozenModificationError(message, prop));
                 return Reflect.set(target, prop, value, receiver);
-            }
+            },
         });
     }
 
@@ -112,13 +115,14 @@ export default class Util {
         if (typeof opt === "number") {
             return opt;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         return (id === undefined ? undefined : opt[id]) ?? opt.default ?? Infinity;
     }
 
     /** @hidden intended for internal use only */
     _isModuleInstalled(name: string): boolean {
         try {
-            // eslint-disable-next-line unicorn/prefer-module
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
             require(name);
             return true;
         } catch {
@@ -138,6 +142,14 @@ export default class Util {
         return values;
     }
 
+    componentsToParsed<T extends Types.Channels.AnyRawBaseComponent>(components: Array<T>): Array<Types.Channels.ToComponentFromRaw<T>> {
+        return components.map(component => this.componentToParsed(component));
+    }
+
+    componentsToRaw<T extends Types.Channels.MessageComponent | Types.Channels.ModalComponent>(components: Array<T>): Array<T extends Types.Channels.MessageComponent ? Types.Channels.RawMessageComponent : T extends Types.Channels.ModalComponent ? Types.Channels.RawModalComponent : never> {
+        return components.map(component => this.componentToRaw(component)) as never;
+    }
+
     componentToParsed<T extends Types.Channels.RawComponent>(component: T): Types.Channels.ToComponentFromRaw<T> {
         return messageComponentsFromRaw<T>(component);
     }
@@ -146,28 +158,20 @@ export default class Util {
         return messageComponentsToRaw<T>(component);
     }
 
-    componentsToParsed<T extends Types.Channels.AnyRawBaseComponent>(components: Array<T>): Array<Types.Channels.ToComponentFromRaw<T>> {
-        return components.map(component => this.componentToParsed(component)) as never;
-    }
-
-    componentsToRaw<T extends Types.Channels.MessageComponent | Types.Channels.ModalComponent>(components: Array<T>): Array<T extends Types.Channels.MessageComponent ? Types.Channels.RawMessageComponent : T extends Types.Channels.ModalComponent ? Types.Channels.RawModalComponent : never> {
-        return components.map(component => this.componentToRaw(component)) as never;
-    }
-
     convertApplicationEmoji(raw: Types.Applications.RawApplicationEmoji): Types.Applications.ApplicationEmoji {
         return this.convertGuildEmoji(raw);
     }
 
     convertGuildEmoji(raw: Types.Guilds.RawGuildEmoji): Types.Guilds.GuildEmoji {
         return {
-            animated:      raw.animated,
-            available:     raw.available,
-            id:            raw.id,
-            managed:       raw.managed,
-            name:          raw.name,
+            animated: raw.animated,
+            available: raw.available,
+            id: raw.id,
+            managed: raw.managed,
+            name: raw.name,
             requireColons: raw.require_colons,
-            roles:         raw.roles,
-            user:          raw.user ? this._client.users.update(raw.user) : undefined
+            roles: raw.roles,
+            user: raw.user ? this._client.users.update(raw.user) : undefined,
         } satisfies Types.Shared.KeysExist<Types.Guilds.GuildEmoji>;
     }
 
@@ -185,7 +189,7 @@ export default class Util {
                 // 52 49 46 46 ?? ?? ?? ?? 57 45 42 50
                 ["image/webp", /^52494646\d{8}57454250/],
                 // 02 27 62 20 22 0 - lottie JSON (assuming all files will start with {"v":")
-                ["application/json", /^02276220220/]
+                ["application/json", /^02276220220/],
             ];
             for (const format of magicMap) {
                 if (format[1].test(this.getMagic(img, 16))) {
@@ -203,11 +207,11 @@ export default class Util {
 
     convertScheduledEventException(raw: Types.ScheduledEvents.RawScheduledEventException): Types.ScheduledEvents.ScheduledEventException {
         return {
-            eventExceptionID:   raw.event_exception_id,
-            eventID:            raw.event_id,
-            isCanceled:         raw.is_canceled,
-            scheduledEndTime:   raw.scheduled_end_time === null ? null : new Date(raw.scheduled_end_time),
-            scheduledStartTime: raw.scheduled_start_time === null ? null : new Date(raw.scheduled_start_time)
+            eventExceptionID: raw.event_exception_id,
+            eventID: raw.event_id,
+            isCanceled: raw.is_canceled,
+            scheduledEndTime: raw.scheduled_end_time === null ? null : new Date(raw.scheduled_end_time),
+            scheduledStartTime: raw.scheduled_start_time === null ? null : new Date(raw.scheduled_start_time),
         } satisfies Types.Shared.KeysExist<Types.ScheduledEvents.ScheduledEventException>;
     }
 
@@ -221,7 +225,7 @@ export default class Util {
                 // FF FB
                 ["audio/mpeg", /^FFFB/],
                 // 4F 67 67 53
-                ["audio/ogg", /^4F676753/]
+                ["audio/ogg", /^4F676753/],
             ];
             for (const format of magicMap) {
                 if (format[1].test(this.getMagic(audio, 16))) {
@@ -239,29 +243,29 @@ export default class Util {
 
     convertSticker(raw: Types.Guilds.RawSticker): Types.Guilds.Sticker {
         return {
-            asset:       raw.asset,
-            available:   raw.available,
+            asset: raw.asset,
+            available: raw.available,
             description: raw.description,
-            formatType:  raw.format_type,
-            guildID:     raw.guild_id,
-            id:          raw.id,
-            name:        raw.name,
-            packID:      raw.pack_id,
-            sortValue:   raw.sort_value,
-            tags:        raw.tags,
-            type:        raw.type,
-            user:        raw.user ? this._client.users.update(raw.user) : undefined
+            formatType: raw.format_type,
+            guildID: raw.guild_id,
+            id: raw.id,
+            name: raw.name,
+            packID: raw.pack_id,
+            sortValue: raw.sort_value,
+            tags: raw.tags,
+            type: raw.type,
+            user: raw.user ? this._client.users.update(raw.user) : undefined,
         } satisfies Types.Shared.KeysExist<Types.Guilds.Sticker>;
     }
 
     async detectMissingPrivilegedIntents(intents?: number): Promise<Array<PrivilegedIntentNames>> {
-        const application = this._client["_application"] || await this._client.rest.applications.getClient();
+        const application = this._client["_application"] ?? await this._client.rest.applications.getClient();
         intents ??= this._client.shards.options.intents;
         this._client["_application"] ??= application;
 
         const missing: Array<PrivilegedIntentNames> = [];
         const check = (intent: Intents, allowed: Array<ApplicationFlags>): void => {
-            if ((intents! & intent) === intent && !allowed.some(flag => (application.flags & flag) === flag)) {
+            if ((intents & intent) === intent && !allowed.some(flag => (application.flags & flag) === flag)) {
                 missing.push(Intents[intent] as PrivilegedIntentNames);
             }
         };
@@ -282,10 +286,10 @@ export default class Util {
 
     formatAllowedMentions(allowed?: Types.Channels.AllowedMentions | null): Types.Channels.RawAllowedMentions {
         const result: Types.Channels.RawAllowedMentions = {
-            parse:        [],
+            parse: [],
             replied_user: undefined,
-            roles:        undefined,
-            users:        undefined
+            roles: undefined,
+            users: undefined,
         } satisfies Types.Shared.KeysExist<Types.Channels.RawAllowedMentions>;
 
         if (!allowed) {
@@ -348,19 +352,17 @@ export default class Util {
     /** @internal */
     replacePollAnswer(poll: Poll, answerID: number, count: number, users?: Array<string>): void {
         let answerCount = poll.results.answerCounts.find(a => a.id === answerID);
-        if (!answerCount) {
-            answerCount = {
-                count,
-                id:      answerID,
-                users:   [],
-                meVoted: false
-            } satisfies Types.Shared.KeysExist<Types.Channels.PollAnswerCount>;
-        }
+        answerCount ??= {
+            count,
+            id: answerID,
+            users: [],
+            meVoted: false,
+        } satisfies Types.Shared.KeysExist<Types.Channels.PollAnswerCount>;
 
         answerCount.count = count;
         if (users) {
             answerCount.users = users;
-            answerCount.meVoted = (this._client["_user"] && users.includes(this._client["_user"]?.id)) ?? false;
+            answerCount.meVoted = (this._client["_user"] && users.includes(this._client["_user"].id)) ?? false;
         }
     }
 
@@ -388,10 +390,10 @@ export default class Util {
 
     /** @internal */
     updateEntitlement<T extends Entitlement | TestEntitlement = Entitlement | TestEntitlement>(data: Types.Applications.RawBaseEntitlement): T {
-        if (this._client["_application"] === undefined || data.application_id !== this._client["_application"]!.id) {
-            return "subscription_id" in data && data.subscription_id ?
-                new Entitlement(data as Types.Applications.RawEntitlement, this._client) as T :
-                new TestEntitlement(data as Types.Applications.RawTestEntitlement, this._client) as T;
+        if (data.application_id !== this._client["_application"]?.id) {
+            return "subscription_id" in data && data.subscription_id
+                ? new Entitlement(data as Types.Applications.RawEntitlement, this._client) as T
+                : new TestEntitlement(data, this._client) as T;
         } else {
             return this._client.application.entitlements.update(data) as T;
         }
@@ -431,9 +433,9 @@ export default class Util {
 
             answerCount = {
                 count,
-                id:      answerID,
-                users:   user ? [user] : [],
-                meVoted: user === this._client["_user"]?.id
+                id: answerID,
+                users: user ? [user] : [],
+                meVoted: user === this._client["_user"]?.id,
             } satisfies Types.Shared.KeysExist<Types.Channels.PollAnswerCount>;
             poll.results.answerCounts.push(answerCount);
             return;

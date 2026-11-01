@@ -1,17 +1,19 @@
 /** @module RESTManager */
-import RequestHandler from "./RequestHandler";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
+import Applications from "../routes/Applications";
 import Channels from "../routes/Channels";
 import Guilds from "../routes/Guilds";
-import Users from "../routes/Users";
-import OAuth from "../routes/OAuth";
-import Webhooks from "../routes/Webhooks";
-import Applications from "../routes/Applications";
 import Interactions from "../routes/Interactions";
-import * as Routes from "../util/Routes";
-import Miscellaneous from "../routes/Miscellaneous";
 import Lobbies from "../routes/Lobbies";
+import Miscellaneous from "../routes/Miscellaneous";
+import OAuth from "../routes/OAuth";
+import Users from "../routes/Users";
+import Webhooks from "../routes/Webhooks";
+import * as Routes from "../util/Routes";
+
+import RequestHandler from "./RequestHandler";
+
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** A manager for all rest actions. */
 export default class RESTManager {
@@ -43,6 +45,7 @@ export default class RESTManager {
     get client(): Client {
         return this._client;
     }
+
     get options(): Types.Client.RESTOptions {
         return this.handler.options;
     }
@@ -58,16 +61,16 @@ export default class RESTManager {
     async getBotGateway(): Promise<Types.Gateway.GetBotGatewayResponse> {
         return this.authRequest<Types.Gateway.RawGetBotGatewayResponse>({
             method: "GET",
-            path:   Routes.GATEWAY_BOT
+            path: Routes.GATEWAY_BOT,
         }).then(data => ({
-            url:               data.url,
-            shards:            data.shards,
+            url: data.url,
+            shards: data.shards,
             sessionStartLimit: {
-                total:          data.session_start_limit.total,
-                remaining:      data.session_start_limit.remaining,
-                resetAfter:     data.session_start_limit.reset_after,
-                maxConcurrency: data.session_start_limit.max_concurrency
-            }
+                total: data.session_start_limit.total,
+                remaining: data.session_start_limit.remaining,
+                resetAfter: data.session_start_limit.reset_after,
+                maxConcurrency: data.session_start_limit.max_concurrency,
+            },
         }));
     }
 
@@ -77,7 +80,7 @@ export default class RESTManager {
     async getGateway(): Promise<Types.Gateway.GetGatewayResponse> {
         return this.request<Types.Gateway.GetGatewayResponse>({
             method: "GET",
-            path:   Routes.GATEWAY
+            path: Routes.GATEWAY,
         });
     }
 

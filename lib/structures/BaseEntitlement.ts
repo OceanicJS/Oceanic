@@ -1,7 +1,8 @@
 import Base from "./Base";
-import type * as Types from "../types/namespaced";
-import type { EntitlementTypes } from "../Constants";
+
 import type Client from "../Client";
+import type { EntitlementTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a base entitlement. See {@link TestEntitlement | TestEntitlement} and {@link Entitlement | Entitlement}. */
 export default class BaseEntitlement extends Base {
@@ -36,14 +37,14 @@ export default class BaseEntitlement extends Base {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
-            consumed:      this.consumed,
-            deleted:       this.deleted,
+            consumed: this.consumed,
+            deleted: this.deleted,
             giftCodeFlags: this.giftCodeFlags,
-            guildID:       this.guildID,
-            promotionID:   this.promotionID,
-            skuID:         this.skuID,
-            type:          this.type,
-            userID:        this.userID
+            guildID: this.guildID,
+            promotionID: this.promotionID,
+            skuID: this.skuID,
+            type: this.type,
+            userID: this.userID,
         };
     }
 }

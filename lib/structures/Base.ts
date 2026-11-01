@@ -1,7 +1,8 @@
 /** @module Base */
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import { inspect } from "node:util";
+
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 const DISCORD_EPOCH = 1420070400000n;
 /** A base class which most other classes extend. */
@@ -11,10 +12,10 @@ export default abstract class Base {
     constructor(id: string, client: Client) {
         this.id = id;
         Object.defineProperty(this, "client", {
-            value:        client,
-            enumerable:   false,
-            writable:     false,
-            configurable: false
+            value: client,
+            enumerable: false,
+            writable: false,
+            configurable: false,
         });
     }
 
@@ -34,12 +35,12 @@ export default abstract class Base {
         return Number(BigInt(id) / 4194304n);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
-    protected update(data: unknown): void {}
-
     get createdAt(): Date {
         return Base.getCreatedAt(this.id);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+    protected update(data: unknown): void {}
 
     /** @hidden */
     [inspect.custom](): this {
@@ -51,14 +52,13 @@ export default abstract class Base {
             }
         }
 
-
         return copy;
     }
 
-    toJSON(): Types.JSON.JSONBase{
+    toJSON(): Types.JSON.JSONBase {
         return {
             createdAt: this.createdAt.getTime(),
-            id:        this.id
+            id: this.id,
         };
     }
 

@@ -1,10 +1,12 @@
 /** @module Role */
+import { UncachedError } from "../util/Errors";
+
 import Base from "./Base";
 import Permission from "./Permission";
+
 import type Guild from "./Guild";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a role in a guild. */
 export default class Role extends Base {
@@ -42,67 +44,21 @@ export default class Role extends Base {
         super(data.id, client);
         this.color = data.color;
         this.colors = {
-            primaryColor:   data.colors.primary_color,
+            primaryColor: data.colors.primary_color,
             secondaryColor: data.colors.secondary_color,
-            tertiaryColor:  data.colors.tertiary_color
+            tertiaryColor: data.colors.tertiary_color,
         };
         this.flags = data.flags;
         this.guildID = guildID;
-        this.hoist = !!data.hoist;
+        this.hoist = data.hoist;
         this.icon = null;
-        this.managed = !!data.managed;
-        this.mentionable = !!data.mentionable;
+        this.managed = data.managed;
+        this.mentionable = data.mentionable;
         this.name = data.name;
         this.permissions = new Permission(data.permissions);
         this.position = data.position;
         this.unicodeEmoji = null;
         this.update(data);
-    }
-
-    protected override update(data: Partial<Types.Guilds.RawRole>): void {
-        if (data.flags !== undefined) {
-            this.flags = data.flags;
-        }
-        if (data.color !== undefined) {
-            this.color = data.color;
-        }
-        if (data.colors !== undefined) {
-            this.colors = {
-                primaryColor:   data.colors.primary_color,
-                secondaryColor: data.colors.secondary_color,
-                tertiaryColor:  data.colors.tertiary_color
-            };
-        }
-        if (data.hoist !== undefined) {
-            this.hoist = data.hoist;
-        }
-        if (data.icon !== undefined) {
-            this.icon = data.icon ?? null;
-        }
-        if (data.mentionable !== undefined) {
-            this.mentionable = data.mentionable;
-        }
-        if (data.name !== undefined) {
-            this.name = data.name;
-        }
-        if (data.permissions !== undefined) {
-            this.permissions = new Permission(data.permissions);
-        }
-        if (data.position !== undefined) {
-            this.position = data.position;
-        }
-        if (data.unicode_emoji !== undefined) {
-            this.unicodeEmoji = data.unicode_emoji ?? null;
-        }
-
-        this.tags = {
-            availableForPurchase:  data.tags?.available_for_purchase === null,
-            guildConnections:      data.tags?.guild_connections === null,
-            botID:                 data.tags?.bot_id,
-            integrationID:         data.tags?.integration_id,
-            premiumSubscriber:     data.tags?.premium_subscriber === null,
-            subscriptionListingID: data.tags?.subscription_listing_id
-        };
     }
 
     /** The guild this role is in. This will throw an error if the guild is not cached. */
@@ -128,6 +84,52 @@ export default class Role extends Base {
         return `<@&${this.id}>`;
     }
 
+    protected override update(data: Partial<Types.Guilds.RawRole>): void {
+        if (data.flags !== undefined) {
+            this.flags = data.flags;
+        }
+        if (data.color !== undefined) {
+            this.color = data.color;
+        }
+        if (data.colors !== undefined) {
+            this.colors = {
+                primaryColor: data.colors.primary_color,
+                secondaryColor: data.colors.secondary_color,
+                tertiaryColor: data.colors.tertiary_color,
+            };
+        }
+        if (data.hoist !== undefined) {
+            this.hoist = data.hoist;
+        }
+        if (data.icon !== undefined) {
+            this.icon = data.icon ?? null;
+        }
+        if (data.mentionable !== undefined) {
+            this.mentionable = data.mentionable;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.permissions !== undefined) {
+            this.permissions = new Permission(data.permissions);
+        }
+        if (data.position !== undefined) {
+            this.position = data.position;
+        }
+        if (data.unicode_emoji !== undefined) {
+            this.unicodeEmoji = data.unicode_emoji ?? null;
+        }
+
+        this.tags = {
+            availableForPurchase: data.tags?.available_for_purchase === null,
+            guildConnections: data.tags?.guild_connections === null,
+            botID: data.tags?.bot_id,
+            integrationID: data.tags?.integration_id,
+            premiumSubscriber: data.tags?.premium_subscriber === null,
+            subscriptionListingID: data.tags?.subscription_listing_id,
+        };
+    }
+
     /**
      * Delete this role.
      * @param reason The reason for deleting the role.
@@ -147,18 +149,18 @@ export default class Role extends Base {
     override toJSON(): Types.JSON.JSONRole {
         return {
             ...super.toJSON(),
-            color:        this.color,
-            colors:       this.colors,
-            guildID:      this.guildID,
-            hoist:        this.hoist,
-            icon:         this.icon,
-            managed:      this.managed,
-            mentionable:  this.mentionable,
-            name:         this.name,
-            permissions:  this.permissions.toJSON(),
-            position:     this.position,
-            tags:         this.tags,
-            unicodeEmoji: this.unicodeEmoji
+            color: this.color,
+            colors: this.colors,
+            guildID: this.guildID,
+            hoist: this.hoist,
+            icon: this.icon,
+            managed: this.managed,
+            mentionable: this.mentionable,
+            name: this.name,
+            permissions: this.permissions.toJSON(),
+            position: this.position,
+            tags: this.tags,
+            unicodeEmoji: this.unicodeEmoji,
         };
     }
 }

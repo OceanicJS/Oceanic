@@ -1,14 +1,18 @@
 /** @module GuildChannel */
-import Channel from "./Channel";
-import type Guild from "./Guild";
-import type CategoryChannel from "./CategoryChannel";
-import type TextChannel from "./TextChannel";
-import type AnnouncementChannel from "./AnnouncementChannel";
-import type ForumChannel from "./ForumChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypeMap } from "../Constants";
-import type Client from "../Client";
+import { ChannelFlags } from "../Constants";
 import { UncachedError } from "../util/Errors";
+
+import Channel from "./Channel";
+
+import type AnnouncementChannel from "./AnnouncementChannel";
+import type CategoryChannel from "./CategoryChannel";
+import type ForumChannel from "./ForumChannel";
+import type Guild from "./Guild";
+import type Permission from "./Permission";
+import type TextChannel from "./TextChannel";
+import type Client from "../Client";
+import type { ChannelTypeMap } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild channel. */
 export default class GuildChannel extends Channel {
@@ -28,19 +32,6 @@ export default class GuildChannel extends Channel {
         this.parentID = data.parent_id;
     }
 
-    protected override update(data: Partial<Types.Channels.RawGuildChannel>): void {
-        super.update(data);
-        if (data.guild_id !== undefined) {
-            this.guildID = data.guild_id;
-        }
-        if (data.name !== undefined) {
-            this.name = data.name;
-        }
-        if (data.parent_id !== undefined) {
-            this.parentID = data.parent_id;
-        }
-    }
-
     /** The guild associated with this channel. This will throw an error if the guild is not cached. */
     get guild(): Guild {
         this._cachedGuild ??= this.client.guilds.get(this.guildID);
@@ -57,6 +48,11 @@ export default class GuildChannel extends Channel {
         }
 
         return this._cachedGuild;
+    }
+
+    /** If this channel's metadata has been obfuscated because the client can't view it. Requires the {@link Constants~GatewayCapabilities.CHANNEL_OBFUSCATION | CHANNEL_OBFUSCATION } capability. */
+    get isObfuscated(): boolean {
+        return (this.flags & ChannelFlags.CHANNEL_OBFUSCATED) === ChannelFlags.CHANNEL_OBFUSCATED;
     }
 
     /**
@@ -82,6 +78,19 @@ export default class GuildChannel extends Channel {
         return undefined;
     }
 
+    protected override update(data: Partial<Types.Channels.RawGuildChannel>): void {
+        super.update(data);
+        if (data.guild_id !== undefined) {
+            this.guildID = data.guild_id;
+        }
+        if (data.name !== undefined) {
+            this.name = data.name;
+        }
+        if (data.parent_id !== undefined) {
+            this.parentID = data.parent_id;
+        }
+    }
+
     /**
      * Edit this channel.
      * @param options The options for editing the channel.
@@ -91,13 +100,31 @@ export default class GuildChannel extends Channel {
         return this.client.rest.channels.edit<ChannelTypeMap[this["type"]]>(this.id, options) as unknown as Promise<this>;
     }
 
+    /**
+     * Get the computed permissions of a member in this channel, including their roles and member-specific overwrites. Requires the `VIEW_CHANNEL` permission, and `CONNECT` for voice and stage channels.
+     * @param userID The ID of the member.
+     * @param options The options for getting the permissions.
+     */
+    async getMemberPermissions(userID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
+        return this.client.rest.channels.getMemberPermissions(this.id, userID, options);
+    }
+
+    /**
+     * Get the permissions granted by a role together with `@everyone` in this channel, applying their overwrites. Requires the `VIEW_CHANNEL` permission, and `CONNECT` for voice and stage channels.
+     * @param roleID The ID of the role.
+     * @param options The options for getting the permissions.
+     */
+    async getRolePermissions(roleID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
+        return this.client.rest.channels.getRolePermissions(this.id, roleID, options);
+    }
+
     override toJSON(): Types.JSON.JSONGuildChannel {
         return {
             ...super.toJSON(),
-            guildID:  this.guildID,
-            name:     this.name,
+            guildID: this.guildID,
+            name: this.name,
             parentID: this.parentID,
-            type:     this.type
+            type: this.type,
         };
     }
 }

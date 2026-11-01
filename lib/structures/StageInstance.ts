@@ -1,12 +1,14 @@
 /** @module StageInstance */
+import { UncachedError } from "../util/Errors";
+
 import Base from "./Base";
-import type StageChannel from "./StageChannel";
+
 import type Guild from "./Guild";
 import type GuildScheduledEvent from "./GuildScheduledEvent";
-import type * as Types from "../types/namespaced";
+import type StageChannel from "./StageChannel";
 import type Client from "../Client";
 import type { StageInstancePrivacyLevels } from "../Constants";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a stage instance. */
 export default class StageInstance extends Base {
@@ -28,30 +30,12 @@ export default class StageInstance extends Base {
     constructor(data: Types.Guilds.RawStageInstance, client: Client) {
         super(data.id, client);
         this.channelID = data.channel_id;
-        this.discoverableDisabled = !!data.discoverable_disabled;
+        this.discoverableDisabled = data.discoverable_disabled;
         this.guildID = data.guild_id;
         this.privacyLevel = data.privacy_level;
         this.scheduledEventID = data.guild_scheduled_event_id;
         this.topic = data.topic;
         this.update(data);
-    }
-
-    protected override update(data: Partial<Types.Guilds.RawStageInstance>): void {
-        if (data.channel_id !== undefined) {
-            this.channelID = data.channel_id;
-        }
-        if (data.discoverable_disabled !== undefined) {
-            this.discoverableDisabled = data.discoverable_disabled;
-        }
-        if (data.guild_scheduled_event_id !== undefined) {
-            this.scheduledEventID = data.guild_scheduled_event_id;
-        }
-        if (data.privacy_level !== undefined) {
-            this.privacyLevel = data.privacy_level;
-        }
-        if (data.topic !== undefined) {
-            this.topic = data.topic;
-        }
     }
 
     /** The associated stage channel. */
@@ -90,15 +74,33 @@ export default class StageInstance extends Base {
         return this._cachedScheduledEvent === null ? this._cachedScheduledEvent : (this._cachedScheduledEvent = null);
     }
 
+    protected override update(data: Partial<Types.Guilds.RawStageInstance>): void {
+        if (data.channel_id !== undefined) {
+            this.channelID = data.channel_id;
+        }
+        if (data.discoverable_disabled !== undefined) {
+            this.discoverableDisabled = data.discoverable_disabled;
+        }
+        if (data.guild_scheduled_event_id !== undefined) {
+            this.scheduledEventID = data.guild_scheduled_event_id;
+        }
+        if (data.privacy_level !== undefined) {
+            this.privacyLevel = data.privacy_level;
+        }
+        if (data.topic !== undefined) {
+            this.topic = data.topic;
+        }
+    }
+
     override toJSON(): Types.JSON.JSONStageInstance {
         return {
             ...super.toJSON(),
-            channelID:            this.channelID,
+            channelID: this.channelID,
             discoverableDisabled: this.discoverableDisabled,
-            guildID:              this.guildID,
-            privacyLevel:         this.privacyLevel,
-            scheduledEventID:     this.scheduledEventID,
-            topic:                this.topic
+            guildID: this.guildID,
+            privacyLevel: this.privacyLevel,
+            scheduledEventID: this.scheduledEventID,
+            topic: this.topic,
         };
     }
 }

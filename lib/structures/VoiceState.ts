@@ -1,11 +1,13 @@
 /** @module VoiceState */
-import Base from "./Base";
-import type Member from "./Member";
-import type Guild from "./Guild";
-import type User from "./User";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import { UncachedError } from "../util/Errors";
+
+import Base from "./Base";
+
+import type Guild from "./Guild";
+import type Member from "./Member";
+import type User from "./User";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild member's voice state. */
 export default class VoiceState<T extends Types.Channels.AnyVoiceChannel = Types.Channels.AnyVoiceChannel> extends Base {
@@ -53,46 +55,6 @@ export default class VoiceState<T extends Types.Channels.AnyVoiceChannel = Types
         this.update(data);
     }
 
-    protected override update(data: Partial<Types.Voice.RawVoiceState>): void {
-        if (data.channel_id !== undefined) {
-            this.channelID = data.channel_id;
-            this._cachedChannel = null;
-        }
-        if (data.deaf !== undefined) {
-            this.deaf = data.deaf;
-        }
-        if (data.guild_id !== undefined) {
-            this.guildID = data.guild_id;
-        }
-        if (data.member !== undefined) {
-            this._cachedMember = this.client.util.updateMember(data.guild_id!, this.id, data.member);
-        }
-        if (data.mute !== undefined) {
-            this.mute = data.mute;
-        }
-        if (data.request_to_speak_timestamp !== undefined) {
-            this.requestToSpeakTimestamp = data.request_to_speak_timestamp  === null ? null : new Date(data.request_to_speak_timestamp);
-        }
-        if (data.self_deaf !== undefined) {
-            this.selfDeaf = data.self_deaf;
-        }
-        if (data.self_mute !== undefined) {
-            this.selfMute = data.self_mute;
-        }
-        if (data.self_stream !== undefined) {
-            this.selfStream = data.self_stream;
-        }
-        if (data.self_video !== undefined) {
-            this.selfVideo = data.self_video;
-        }
-        if (data.suppress !== undefined) {
-            this.suppress = data.suppress;
-        }
-        if (data.user_id !== undefined) {
-            this.userID = data.user_id;
-        }
-    }
-
     /** The channel the user is connected to. */
     get channel(): T | null | undefined {
         if (this.channelID !== null) {
@@ -130,22 +92,65 @@ export default class VoiceState<T extends Types.Channels.AnyVoiceChannel = Types
         return this._cachedUser ?? (this._cachedUser = this.client.users.get(this.userID));
     }
 
+    protected override update(data: Partial<Types.Voice.RawVoiceState>): void {
+        if (data.channel_id !== undefined) {
+            this.channelID = data.channel_id;
+            this._cachedChannel = null;
+        }
+        if (data.deaf !== undefined) {
+            this.deaf = data.deaf;
+        }
+        if (data.guild_id !== undefined) {
+            this.guildID = data.guild_id;
+        }
+        if (data.member !== undefined) {
+            this._cachedMember = this.client.util.updateMember(data.guild_id!, this.id, data.member);
+        }
+        if (data.mute !== undefined) {
+            this.mute = data.mute;
+        }
+        if (data.request_to_speak_timestamp !== undefined) {
+            this.requestToSpeakTimestamp = data.request_to_speak_timestamp === null ? null : new Date(data.request_to_speak_timestamp);
+        }
+        if (data.self_deaf !== undefined) {
+            this.selfDeaf = data.self_deaf;
+        }
+        if (data.self_mute !== undefined) {
+            this.selfMute = data.self_mute;
+        }
+        if (data.self_stream !== undefined) {
+            this.selfStream = data.self_stream;
+        }
+        if (data.self_video !== undefined) {
+            this.selfVideo = data.self_video;
+        }
+        if (data.suppress !== undefined) {
+            this.suppress = data.suppress;
+        }
+        if (data.user_id !== undefined) {
+            this.userID = data.user_id;
+        }
+    }
+
     override toJSON(): Types.JSON.JSONVoiceState {
         return {
             ...super.toJSON(),
-            channelID:               this.channelID,
-            deaf:                    this.deaf,
-            guildID:                 this.guildID ?? undefined,
-            member:                  this.member?.toJSON(),
-            mute:                    this.mute,
+            channelID: this.channelID,
+            deaf: this.deaf,
+            // the `!` in the constructor forces a possibly-absent raw `guild_id` into `string` - this
+            // un-asserts that lie back to optional for JSON output fidelity
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+            guildID: this.guildID ?? undefined,
+            member: this.member?.toJSON(),
+            mute: this.mute,
             requestToSpeakTimestamp: this.requestToSpeakTimestamp ? this.requestToSpeakTimestamp.getTime() : null,
-            selfDeaf:                this.selfDeaf,
-            selfMute:                this.selfMute,
-            selfStream:              this.selfStream,
-            selfVideo:               this.selfVideo,
-            sessionID:               this.sessionID,
-            suppress:                this.suppress,
-            user:                    this.user?.toJSON()
+            selfDeaf: this.selfDeaf,
+            selfMute: this.selfMute,
+            selfStream: this.selfStream,
+            selfVideo: this.selfVideo,
+            sessionID: this.sessionID,
+            suppress: this.suppress,
+            user: this.user?.toJSON(),
         };
     }
 }

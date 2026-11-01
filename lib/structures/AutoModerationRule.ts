@@ -1,11 +1,13 @@
 /** @module AutoModerationRule */
+import { UncachedError } from "../util/Errors";
+
 import Base from "./Base";
-import type User from "./User";
+
 import type Guild from "./Guild";
-import type * as Types from "../types/namespaced";
+import type User from "./User";
 import type Client from "../Client";
 import type { AutoModerationEventTypes, AutoModerationTriggerTypes } from "../Constants";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents an auto moderation rule. */
 export default class AutoModerationRule extends Base {
@@ -36,11 +38,11 @@ export default class AutoModerationRule extends Base {
         super(data.id, client);
         this.actions = data.actions.map(a => ({
             metadata: {
-                channelID:       a.metadata.channel_id,
-                customMessage:   a.metadata.custom_message,
-                durationSeconds: a.metadata.duration_seconds
+                channelID: a.metadata.channel_id,
+                customMessage: a.metadata.custom_message,
+                durationSeconds: a.metadata.duration_seconds,
             },
-            type: a.type
+            type: a.type,
         }));
         this.creator = client.users.get(data.creator_id);
         this.creatorID = data.creator_id;
@@ -51,26 +53,36 @@ export default class AutoModerationRule extends Base {
         this.guildID = data.guild_id;
         this.name = data.name;
         this.triggerMetadata = {
-            allowList:                    data.trigger_metadata.allow_list,
-            keywordFilter:                data.trigger_metadata.keyword_filter,
+            allowList: data.trigger_metadata.allow_list,
+            keywordFilter: data.trigger_metadata.keyword_filter,
             mentionRaidProtectionEnabled: data.trigger_metadata.mention_raid_protection_enabled,
-            mentionTotalLimit:            data.trigger_metadata.mention_total_limit,
-            presets:                      data.trigger_metadata.presets,
-            regexPatterns:                data.trigger_metadata.regex_patterns
+            mentionTotalLimit: data.trigger_metadata.mention_total_limit,
+            presets: data.trigger_metadata.presets,
+            regexPatterns: data.trigger_metadata.regex_patterns,
         };
         this.triggerType = data.trigger_type;
         this.update(data);
+    }
+
+    /** The guild this rule is in. This will throw an error if the guild is not cached. */
+    get guild(): Guild {
+        this._cachedGuild ??= this.client.guilds.get(this.guildID);
+        if (!this._cachedGuild) {
+            throw new UncachedError(this, "guild", "GUILDS", this.client);
+        }
+
+        return this._cachedGuild;
     }
 
     protected override update(data: Partial<Types.AutoModeration.RawAutoModerationRule>): void {
         if (data.actions !== undefined) {
             this.actions = data.actions.map(a => ({
                 metadata: {
-                    channelID:       a.metadata.channel_id,
-                    customMessage:   a.metadata.custom_message,
-                    durationSeconds: a.metadata.duration_seconds
+                    channelID: a.metadata.channel_id,
+                    customMessage: a.metadata.custom_message,
+                    durationSeconds: a.metadata.duration_seconds,
                 },
-                type: a.type
+                type: a.type,
             }));
         }
         if (data.enabled !== undefined) {
@@ -90,26 +102,16 @@ export default class AutoModerationRule extends Base {
         }
         if (data.trigger_metadata !== undefined) {
             this.triggerMetadata = {
-                allowList:         data.trigger_metadata.allow_list,
-                keywordFilter:     data.trigger_metadata.keyword_filter,
+                allowList: data.trigger_metadata.allow_list,
+                keywordFilter: data.trigger_metadata.keyword_filter,
                 mentionTotalLimit: data.trigger_metadata.mention_total_limit,
-                presets:           data.trigger_metadata.presets,
-                regexPatterns:     data.trigger_metadata.regex_patterns
+                presets: data.trigger_metadata.presets,
+                regexPatterns: data.trigger_metadata.regex_patterns,
             };
         }
         if (data.trigger_type !== undefined) {
             this.triggerType = data.trigger_type;
         }
-    }
-
-    /** The guild this rule is in. This will throw an error if the guild is not cached. */
-    get guild(): Guild {
-        this._cachedGuild ??= this.client.guilds.get(this.guildID);
-        if (!this._cachedGuild) {
-            throw new UncachedError(this, "guild", "GUILDS", this.client);
-        }
-
-        return this._cachedGuild;
     }
 
     /**
@@ -131,16 +133,16 @@ export default class AutoModerationRule extends Base {
     override toJSON(): Types.JSON.JSONAutoModerationRule {
         return {
             ...super.toJSON(),
-            actions:         this.actions,
-            creatorID:       this.creatorID,
-            enabled:         this.enabled,
-            eventType:       this.eventType,
-            exemptChannels:  this.exemptChannels,
-            exemptRoles:     this.exemptRoles,
-            guildID:         this.guildID,
-            name:            this.name,
+            actions: this.actions,
+            creatorID: this.creatorID,
+            enabled: this.enabled,
+            eventType: this.eventType,
+            exemptChannels: this.exemptChannels,
+            exemptRoles: this.exemptRoles,
+            guildID: this.guildID,
+            name: this.name,
             triggerMetadata: this.triggerMetadata,
-            triggerType:     this.triggerType
+            triggerType: this.triggerType,
         };
     }
 }

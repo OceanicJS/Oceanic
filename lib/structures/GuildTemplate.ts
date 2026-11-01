@@ -1,9 +1,10 @@
 /** @module GuildTemplate */
+import { UncachedError } from "../util/Errors";
+
 import type Guild from "./Guild";
 import type User from "./User";
-import type * as Types from "../types/namespaced";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild template. */
 export default class GuildTemplate {
@@ -31,10 +32,10 @@ export default class GuildTemplate {
     usageCount: number;
     constructor(data: Types.GuildTemplate.RawGuildTemplate, client: Client) {
         Object.defineProperty(this, "client", {
-            value:        client,
-            enumerable:   false,
-            writable:     false,
-            configurable: false
+            value: client,
+            enumerable: false,
+            writable: false,
+            configurable: false,
         });
         this.code = data.code;
         this.createdAt = new Date(data.created_at);
@@ -47,6 +48,24 @@ export default class GuildTemplate {
         this.updatedAt = new Date(data.updated_at);
         this.usageCount = data.usage_count;
         this.update(data);
+    }
+
+    /** The source guild of this template. This will throw an error if the guild is not cached. */
+    get sourceGuild(): Guild {
+        this._cachedSourceGuild ??= this.client.guilds.get(this.sourceGuildID);
+        if (!this._cachedSourceGuild) {
+            if (this.client.options.restMode) {
+                throw new UncachedError(`${this.constructor.name}#sourceGuild is not present when rest mode is enabled.`);
+            }
+
+            if (!this.client.shards.connected) {
+                throw new UncachedError(`${this.constructor.name}#sourceGuild is not present without a gateway connection.`);
+            }
+
+            throw new UncachedError(`${this.constructor.name}#sourceGuild is not present.`);
+        }
+
+        return this._cachedSourceGuild;
     }
 
     protected update(data: Partial<Types.GuildTemplate.RawGuildTemplate>): void {
@@ -73,24 +92,6 @@ export default class GuildTemplate {
         }
     }
 
-    /** The source guild of this template. This will throw an error if the guild is not cached. */
-    get sourceGuild(): Guild {
-        this._cachedSourceGuild ??= this.client.guilds.get(this.sourceGuildID);
-        if (!this._cachedSourceGuild) {
-            if (this.client.options.restMode) {
-                throw new UncachedError(`${this.constructor.name}#sourceGuild is not present when rest mode is enabled.`);
-            }
-
-            if (!this.client.shards.connected) {
-                throw new UncachedError(`${this.constructor.name}#sourceGuild is not present without a gateway connection.`);
-            }
-
-            throw new UncachedError(`${this.constructor.name}#sourceGuild is not present.`);
-        }
-
-        return this._cachedSourceGuild;
-    }
-
     /**
      * Delete this template.
      */
@@ -115,16 +116,16 @@ export default class GuildTemplate {
 
     toJSON(): Types.JSON.JSONGuildTemplate {
         return {
-            code:                  this.code,
-            createdAt:             this.createdAt.getTime(),
-            creator:               this.creator.toJSON(),
-            description:           this.description,
-            isDirty:               this.isDirty,
-            name:                  this.name,
+            code: this.code,
+            createdAt: this.createdAt.getTime(),
+            creator: this.creator.toJSON(),
+            description: this.description,
+            isDirty: this.isDirty,
+            name: this.name,
             serializedSourceGuild: this.serializedSourceGuild,
-            sourceGuildID:         this.sourceGuildID,
-            updatedAt:             this.updatedAt.getTime(),
-            usageCount:            this.usageCount
+            sourceGuildID: this.sourceGuildID,
+            updatedAt: this.updatedAt.getTime(),
+            usageCount: this.usageCount,
         };
     }
 }

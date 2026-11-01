@@ -1,8 +1,9 @@
 /** @module VoiceChannel */
 import TextableVoiceChannel from "./TextableVoiceChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes } from "../Constants";
+
 import type Client from "../Client";
+import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild voice channel. */
 export default class VoiceChannel extends TextableVoiceChannel<VoiceChannel> {
@@ -41,7 +42,7 @@ export default class VoiceChannel extends TextableVoiceChannel<VoiceChannel> {
         return {
             ...super.toJSON(),
             status: this.status,
-            type:   this.type
+            type: this.type,
         };
     }
 }

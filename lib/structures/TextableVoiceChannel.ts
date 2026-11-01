@@ -1,11 +1,13 @@
 /** @module TextableVoiceChannel */
+import TypedCollection from "../util/TypedCollection";
+
 import Member from "./Member";
 import TextableChannel from "./TextableChannel";
+
 import type VoiceState from "./VoiceState";
-import type * as Types from "../types/namespaced";
-import type { VideoQualityModes } from "../Constants";
 import type Client from "../Client";
-import TypedCollection from "../util/TypedCollection";
+import type { VideoQualityModes } from "../Constants";
+import type * as Types from "../types/namespaced";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import type { VoiceConnection } from "@discordjs/voice";
@@ -32,6 +34,11 @@ export default class TextableVoiceChannel<T extends Types.Channels.AnyVoiceChann
         this.update(data);
     }
 
+    /** The voice states related to this channel. */
+    get voiceStates(): Array<VoiceState<T>> {
+        return (this["_cachedGuild"]?.voiceStates.filter(state => state.channelID === this.id) ?? []) as Array<VoiceState<T>>;
+    }
+
     protected override update(data: Partial<Types.Channels.RawVoiceChannel | Types.Channels.RawStageChannel>): void {
         super.update(data);
         if (data.bitrate !== undefined) {
@@ -48,40 +55,34 @@ export default class TextableVoiceChannel<T extends Types.Channels.AnyVoiceChann
         }
     }
 
-    /** The voice states related to this channel. */
-    get voiceStates(): Array<VoiceState<T>> {
-        return this["_cachedGuild"]?.voiceStates.filter(state => state.channelID === this.id) as Array<VoiceState<T>> ?? [];
-    }
-
     /**
      * Join this stage channel.
      * @param options The options to join the channel with.
      */
     join(options: Omit<Types.Voice.JoinVoiceChannelOptions, "guildID" | "channelID" | "voiceAdapterCreator">): VoiceConnection {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument
         return this.client.joinVoiceChannel({
             ...options,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
             voiceAdapterCreator: this.guild.voiceAdapterCreator,
-            guildID:             this.guildID,
-            channelID:           this.id
+            guildID: this.guildID,
+            channelID: this.id,
         });
     }
 
     /** Leave this stage channel. */
     leave(): void {
-        return this.client.leaveVoiceChannel(this.guildID);
+        this.client.leaveVoiceChannel(this.guildID);
     }
 
     override toJSON(): Types.JSON.JSONTextableVoiceChannel {
         return {
             ...super.toJSON(),
-            bitrate:          this.bitrate,
-            rtcRegion:        this.rtcRegion,
-            type:             this.type,
-            userLimit:        this.userLimit,
+            bitrate: this.bitrate,
+            rtcRegion: this.rtcRegion,
+            type: this.type,
+            userLimit: this.userLimit,
             videoQualityMode: this.videoQualityMode,
-            voiceMembers:     this.voiceMembers.map(member => member.id)
+            voiceMembers: this.voiceMembers.map(member => member.id),
         };
     }
 }

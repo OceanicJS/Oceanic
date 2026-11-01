@@ -1,7 +1,7 @@
 import type { RawGuildChannel } from "./channels";
 import type * as Types from "./namespaced";
-import type LobbyMessageStructure from "../structures/LobbyMessage";
 import type { MessageTypes } from "../Constants";
+import type LobbyMessageStructure from "../structures/LobbyMessage";
 
 export interface RawLobby {
     application_id: string;

@@ -1,32 +1,35 @@
 /** @module Client */
-import type * as Types from "./types/namespaced";
-import RESTManager from "./rest/RESTManager";
-import TypedCollection from "./util/TypedCollection";
-import PrivateChannel from "./structures/PrivateChannel";
-import GroupChannel from "./structures/GroupChannel";
-import User from "./structures/User";
-import Guild from "./structures/Guild";
-import TypedEmitter from "./util/TypedEmitter";
-import type ClientApplication from "./structures/ClientApplication";
+import { isDeepStrictEqual } from "node:util";
+
 import ShardManager from "./gateway/ShardManager";
+import RESTManager from "./rest/RESTManager";
+import GroupChannel from "./structures/GroupChannel";
+import Guild from "./structures/Guild";
+import PrivateChannel from "./structures/PrivateChannel";
 import UnavailableGuild from "./structures/UnavailableGuild";
-import type ExtendedUser from "./structures/ExtendedUser";
-import Util from "./util/Util";
+import User from "./structures/User";
 import { DependencyError, UncachedError } from "./util/Errors";
-import type OAuthHelper from "./rest/OAuthHelper";
-import { warning, WarningCodes } from "./util/warning";
 import Time from "./util/Time";
-/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+import TypedCollection from "./util/TypedCollection";
+import TypedEmitter from "./util/TypedEmitter";
+import Util from "./util/Util";
+import { warning, WarningCodes } from "./util/warning";
+
+import type OAuthHelper from "./rest/OAuthHelper";
+import type ClientApplication from "./structures/ClientApplication";
+import type ExtendedUser from "./structures/ExtendedUser";
+import type * as Types from "./types/namespaced";
+/* eslint-disable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports */
 // @ts-ignore optional dependency
 import type { DiscordGatewayAdapterLibraryMethods, VoiceConnection } from "@discordjs/voice";
-import { isDeepStrictEqual } from "node:util";
 
 // @ts-ignore optional dependency
 let DiscordJSVoice: typeof import("@discordjs/voice") | undefined;
 try {
     DiscordJSVoice = require("@discordjs/voice");
+// eslint-disable-next-line no-empty
 } catch {}
-/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment, unicorn/prefer-module */
+/* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports */
 
 /** The primary class for interfacing with Discord. See {@link Types.Events.ClientEvents | Client Events} for a list of events. */
 export default class Client<E extends Types.Events.ClientEvents = Types.Events.ClientEvents> extends TypedEmitter<E> {
@@ -35,8 +38,8 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
     /** A key-value mapping of channel IDs to guild IDs. In most cases, every channel listed here should be cached in their respective guild's {@link Guild#channels | channels collection}. */
     channelGuildMap = new Map<string, string>();
     groupChannels: TypedCollection<Types.Channels.RawGroupChannel, GroupChannel>;
-    guildShardMap = new Map<string, number>();
     guilds: TypedCollection<Types.Guilds.RawGuild, Guild, [rest?: boolean]>;
+    guildShardMap = new Map<string, number>();
     options: Types.Client.ClientInstanceOptions;
     privateChannels: TypedCollection<Types.Channels.RawPrivateChannel, PrivateChannel>;
     ready: boolean;
@@ -58,27 +61,27 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         this.time.set("start", Date.now());
         const disableCache = options?.disableCache === true || options?.disableCache === "no-warning";
         const colZero = {
-            auditLogEntries:     0,
+            auditLogEntries: 0,
             autoModerationRules: 0,
-            channels:            0,
-            emojis:              0,
-            groupChannels:       0,
-            guilds:              0,
-            guildThreads:        0,
-            integrations:        0,
-            invites:             0,
-            members:             0,
-            messages:            0,
-            privateChannels:     0,
-            roles:               0,
-            scheduledEvents:     0,
-            soundboardSounds:    0,
-            stageInstances:      0,
-            stickers:            0,
-            unavailableGuilds:   0,
-            users:               0,
-            voiceMembers:        0,
-            voiceStates:         0
+            channels: 0,
+            emojis: 0,
+            groupChannels: 0,
+            guilds: 0,
+            guildThreads: 0,
+            integrations: 0,
+            invites: 0,
+            members: 0,
+            messages: 0,
+            privateChannels: 0,
+            roles: 0,
+            scheduledEvents: 0,
+            soundboardSounds: 0,
+            stageInstances: 0,
+            stickers: 0,
+            unavailableGuilds: 0,
+            users: 0,
+            voiceMembers: 0,
+            voiceStates: 0,
         } satisfies Required<Types.Client.CollectionLimitsOptions>;
 
         if (options?.token) {
@@ -89,44 +92,45 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
 
         this.options = {
             allowedMentions: options?.allowedMentions ?? {
-                everyone:    false,
+                everyone: false,
                 repliedUser: false,
-                users:       true,
-                roles:       true
+                users: true,
+                roles: true,
             },
-            auth:             options?.auth ?? null,
+            auth: options?.auth ?? null,
             collectionLimits: disableCache ? colZero : {
-                auditLogEntries:     this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
+                auditLogEntries: this.util._setLimit(options?.collectionLimits?.auditLogEntries, 50),
                 autoModerationRules: this.util._setLimit(options?.collectionLimits?.autoModerationRules, Infinity),
-                channels:            this.util._setLimit(options?.collectionLimits?.channels, Infinity),
-                emojis:              this.util._setLimit(options?.collectionLimits?.emojis, Infinity),
-                groupChannels:       options?.collectionLimits?.groupChannels ?? 10,
-                guilds:              options?.collectionLimits?.guilds ?? Infinity,
-                guildThreads:        this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
-                integrations:        this.util._setLimit(options?.collectionLimits?.integrations, Infinity),
-                invites:             this.util._setLimit(options?.collectionLimits?.invites, Infinity),
-                members:             this.util._setLimit(options?.collectionLimits?.members, Infinity),
-                messages:            this.util._setLimit(options?.collectionLimits?.messages, 100),
-                privateChannels:     options?.collectionLimits?.privateChannels ?? 25,
-                roles:               this.util._setLimit(options?.collectionLimits?.roles, Infinity),
-                scheduledEvents:     this.util._setLimit(options?.collectionLimits?.scheduledEvents, Infinity),
-                soundboardSounds:    this.util._setLimit(options?.collectionLimits?.soundboardSounds, Infinity),
-                stageInstances:      this.util._setLimit(options?.collectionLimits?.stageInstances, Infinity),
-                stickers:            this.util._setLimit(options?.collectionLimits?.stickers, Infinity),
-                unavailableGuilds:   options?.collectionLimits?.unavailableGuilds ?? Infinity,
-                users:               options?.collectionLimits?.users ?? Infinity,
-                voiceMembers:        this.util._setLimit(options?.collectionLimits?.voiceMembers, Infinity),
-                voiceStates:         this.util._setLimit(options?.collectionLimits?.voiceStates, Infinity)
+                channels: this.util._setLimit(options?.collectionLimits?.channels, Infinity),
+                emojis: this.util._setLimit(options?.collectionLimits?.emojis, Infinity),
+                groupChannels: options?.collectionLimits?.groupChannels ?? 10,
+                guilds: options?.collectionLimits?.guilds ?? Infinity,
+                guildThreads: this.util._setLimit(options?.collectionLimits?.guildThreads, Infinity),
+                integrations: this.util._setLimit(options?.collectionLimits?.integrations, Infinity),
+                invites: this.util._setLimit(options?.collectionLimits?.invites, Infinity),
+                members: this.util._setLimit(options?.collectionLimits?.members, Infinity),
+                messages: this.util._setLimit(options?.collectionLimits?.messages, 100),
+                privateChannels: options?.collectionLimits?.privateChannels ?? 25,
+                roles: this.util._setLimit(options?.collectionLimits?.roles, Infinity),
+                scheduledEvents: this.util._setLimit(options?.collectionLimits?.scheduledEvents, Infinity),
+                soundboardSounds: this.util._setLimit(options?.collectionLimits?.soundboardSounds, Infinity),
+                stageInstances: this.util._setLimit(options?.collectionLimits?.stageInstances, Infinity),
+                stickers: this.util._setLimit(options?.collectionLimits?.stickers, Infinity),
+                unavailableGuilds: options?.collectionLimits?.unavailableGuilds ?? Infinity,
+                users: options?.collectionLimits?.users ?? Infinity,
+                voiceMembers: this.util._setLimit(options?.collectionLimits?.voiceMembers, Infinity),
+                voiceStates: this.util._setLimit(options?.collectionLimits?.voiceStates, Infinity),
             },
-            defaultImageFormat:        options?.defaultImageFormat ?? "png",
-            defaultImageSize:          options?.defaultImageSize ?? 4096,
+            defaultImageFormat: options?.defaultImageFormat ?? "png",
+            defaultImageSize: options?.defaultImageSize ?? 4096,
             disableMemberLimitScaling: options?.disableMemberLimitScaling ?? false,
-            restMode:                  false,
-            disableCache
+            restMode: false,
+            disableCache,
         };
         if (options?.disableCache === true) {
             warning(WarningCodes.OCEANIC_CACHE_DISABLED);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (disableCache && options?.collectionLimits !== undefined && !isDeepStrictEqual(options.collectionLimits, colZero)) {
             warning(WarningCodes.OCEANIC_COLLECTIONS_LIMIT_WITH_CACHE_DISABLED);
         }
@@ -172,7 +176,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+
         return DiscordJSVoice.getVoiceConnections();
     }
 
@@ -187,7 +191,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
             throw new TypeError("Rest mode has been enabled on this client. You cannot connect to the gateway.");
         }
 
-        if (!this.options.auth || !this.options.auth.startsWith("Bot ")) {
+        if (!this.options.auth?.startsWith("Bot ")) {
             throw new TypeError("You must provide a bot token to connect. Make sure it has been prefixed with `Bot `.");
         }
 
@@ -199,7 +203,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      * @param reconnect If shards should be reconnected. Defaults to {@link Types/Gateway~GatewayOptions#autoReconnect | GatewayOptions#autoReconnect}
      */
     disconnect(reconnect = this.shards.options.autoReconnect): void {
-        return this.shards.disconnect(reconnect);
+        this.shards.disconnect(reconnect);
     }
 
     /**
@@ -207,7 +211,7 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      * @param status The status.
      * @param activities An array of activities.
      */
-    async editStatus(status: Types.Gateway.SendStatuses, activities: Array<Types.Gateway.BotActivity> = []): Promise<void>{
+    async editStatus(status: Types.Gateway.SendStatuses, activities: Array<Types.Gateway.BotActivity> = []): Promise<void> {
         for (const [,shard] of this.shards) await shard.editStatus(status, activities);
     }
 
@@ -236,12 +240,12 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      * Get a voice connection.
      * @param guildID The ID of the guild the voice channel belongs to.
      */
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+
     getVoiceConnection(guildID: string): VoiceConnection | undefined {
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+
         return DiscordJSVoice.getVoiceConnection(guildID);
     }
 
@@ -253,15 +257,15 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
         if (!DiscordJSVoice) {
             throw new DependencyError("Voice is only supported with @discordjs/voice installed.");
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+
         return DiscordJSVoice.joinVoiceChannel({
-            channelId:      options.channelID,
-            guildId:        options.guildID,
-            debug:          options.debug,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            channelId: options.channelID,
+            guildId: options.guildID,
+            debug: options.debug,
+
             adapterCreator: options.voiceAdapterCreator,
-            selfDeaf:       options.selfDeaf,
-            selfMute:       options.selfMute
+            selfDeaf: options.selfDeaf,
+            selfMute: options.selfMute,
         });
     }
 
@@ -270,7 +274,6 @@ export default class Client<E extends Types.Events.ClientEvents = Types.Events.C
      * @param guildID The ID of the guild the voice channel belongs to.
      */
     leaveVoiceChannel(guildID: string): void {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
         return this.getVoiceConnection(guildID)?.destroy();
     }
 

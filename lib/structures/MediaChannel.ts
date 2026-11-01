@@ -1,8 +1,9 @@
 /** @module MediaChannel */
 import ThreadOnlyChannel from "./ThreadOnlyChannel";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
 import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a media channel. */
 export default class MediaChannel extends ThreadOnlyChannel {
@@ -14,7 +15,7 @@ export default class MediaChannel extends ThreadOnlyChannel {
     override toJSON(): Types.JSON.JSONMediaChannel {
         return {
             ...super.toJSON(),
-            type: this.type
+            type: this.type,
         };
     }
 }

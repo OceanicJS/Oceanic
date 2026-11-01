@@ -1,31 +1,30 @@
 /** @module Events */
 import type * as Types from "./namespaced";
-import type Guild from "../structures/Guild";
-import type UnavailableGuild from "../structures/UnavailableGuild";
-import type AutoModerationRule from "../structures/AutoModerationRule";
+import type { JSONChannelTypeMap } from "../Constants";
+import type Shard from "../gateway/Shard";
 import type AnnouncementThreadChannel from "../structures/AnnouncementThreadChannel";
-import type PublicThreadChannel from "../structures/PublicThreadChannel";
-import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
-import type VoiceChannel from "../structures/VoiceChannel";
-import type StageChannel from "../structures/StageChannel";
-import type User from "../structures/User";
-import type Member from "../structures/Member";
-import type Role from "../structures/Role";
+import type AuditLogEntry from "../structures/AuditLogEntry";
+import type AutoModerationRule from "../structures/AutoModerationRule";
+import type Entitlement from "../structures/Entitlement";
+import type GroupChannel from "../structures/GroupChannel";
+import type Guild from "../structures/Guild";
 import type GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import type Integration from "../structures/Integration";
 import type Invite from "../structures/Invite";
+import type Member from "../structures/Member";
 import type Message from "../structures/Message";
 import type PrivateChannel from "../structures/PrivateChannel";
-import type StageInstance from "../structures/StageInstance";
-import type AuditLogEntry from "../structures/AuditLogEntry";
-import type GroupChannel from "../structures/GroupChannel";
-import type Entitlement from "../structures/Entitlement";
-import type TestEntitlement from "../structures/TestEntitlement";
-import type { JSONChannelTypeMap } from "../Constants";
+import type PrivateThreadChannel from "../structures/PrivateThreadChannel";
+import type PublicThreadChannel from "../structures/PublicThreadChannel";
+import type Role from "../structures/Role";
 import type Soundboard from "../structures/Soundboard";
+import type StageChannel from "../structures/StageChannel";
+import type StageInstance from "../structures/StageInstance";
 import type Subscription from "../structures/Subscription";
-import type Shard from "../gateway/Shard";
-
+import type TestEntitlement from "../structures/TestEntitlement";
+import type UnavailableGuild from "../structures/UnavailableGuild";
+import type User from "../structures/User";
+import type VoiceChannel from "../structures/VoiceChannel";
 
 export interface ClientEvents {
     /** @event Emitted when an application command's permissions are updated. */
@@ -115,10 +114,10 @@ export interface ClientEvents {
     guildSoundboardSoundCreate: [soundboardSound: Soundboard];
     /** @event Emitted when a guild's soundboard sound is deleted. Requires the `GUILD_EXPRESSIONS` intent. */
     guildSoundboardSoundDelete: [soundboardSound: Soundboard | Types.Shared.Uncached];
-    /** @event Emitted when a guild's soundboard sound is updated. Requires the `GUILD_EXPRESSIONS` intent. */
-    guildSoundboardSoundUpdate: [soundboardSound: Soundboard, oldSoundboardSound: Types.JSON.JSONSoundboard | null];
     /** @event Emitted when multiple guild's soundboard sounds are updated. Requires the `GUILD_EXPRESSIONS` intent. */
     guildSoundboardSoundsUpdate: [soundboardSounds: Array<Soundboard>, oldSoundboardSounds: Array<Types.JSON.JSONSoundboard | null>, guildID: string];
+    /** @event Emitted when a guild's soundboard sound is updated. Requires the `GUILD_EXPRESSIONS` intent. */
+    guildSoundboardSoundUpdate: [soundboardSound: Soundboard, oldSoundboardSound: Types.JSON.JSONSoundboard | null];
     /** @event Emitted when a guild's stickers are updated. Requires the `GUILD_EXPRESSIONS` intent. */
     guildStickersUpdate: [guild: Guild | Types.Shared.Uncached, stickers: Array<Types.Guilds.Sticker>, oldStickers: Array<Types.Guilds.Sticker> | null];
     /** @event Emitted when a guild becomes unavailable. Requires the `GUILDS` intent. */
@@ -149,11 +148,11 @@ export interface ClientEvents {
     /** @event Emitted when messages are bulk deleted. Requires the `GUILD_MESSAGES` intent. The `MESSAGE_CONTENT` intent is required for `content`, `embeds`, and similar to be present on most messages. */
     messageDeleteBulk: [messages: Array<Types.Channels.PossiblyUncachedMessage>];
     /** @event Emitted when a vote is added to a poll. Requires the `GUILD_MESSAGE_POLLS` for guild messages, and `DIRECT_MESSAGE_POLLS` for direct messages. */
-    messagePollVoteAdd: [message: Types.Channels.PossiblyUncachedMessage, user: User | Types.Shared.Uncached, answer: Types.Channels.PollAnswer | { answerID: number; }];
+    messagePollVoteAdd: [message: Types.Channels.PossiblyUncachedMessage, user: User | Types.Shared.Uncached, answer: Types.Channels.PollAnswer | { answerID: number }];
     /** @event Emitted when a vote is added to a poll. Requires the `GUILD_MESSAGE_POLLS` for guild messages, and `DIRECT_MESSAGE_POLLS` for direct messages. */
-    messagePollVoteRemove: [message: Types.Channels.PossiblyUncachedMessage, user: User | Types.Shared.Uncached, answer: Types.Channels.PollAnswer | { answerID: number; }];
+    messagePollVoteRemove: [message: Types.Channels.PossiblyUncachedMessage, user: User | Types.Shared.Uncached, answer: Types.Channels.PollAnswer | { answerID: number }];
     /** @event Emitted when a reaction is added to a message. For uncached messages, `author` will not be present if the reaction was added to a webhook message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
-    messageReactionAdd: [message: Types.Channels.PossiblyUncachedMessage & { author?: User | Types.Shared.Uncached; member?: Member | Types.Shared.Uncached; }, reactor: Member | User | Types.Shared.Uncached, reaction: Types.Channels.EventReaction];
+    messageReactionAdd: [message: Types.Channels.PossiblyUncachedMessage & { author?: User | Types.Shared.Uncached; member?: Member | Types.Shared.Uncached }, reactor: Member | User | Types.Shared.Uncached, reaction: Types.Channels.EventReaction];
     /** @event Emitted when a reaction is removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
     messageReactionRemove: [message: Types.Channels.PossiblyUncachedMessage, reactor: Member | User | Types.Shared.Uncached, reaction: Types.Channels.EventReaction];
     /** @event Emitted when all reactions are removed from a message. Requires the `GUILD_MESSAGE_REACTIONS` for guild messages, and `DIRECT_MESSAGE_REACTIONS` for direct messages. */
@@ -215,10 +214,10 @@ export interface ClientEvents {
     threadDelete: [thread: Types.Channels.PossiblyUncachedThread];
     /** @event Emitted when a guild's threads are synced. Requires the `GUILDS` intent. */
     threadListSync: [threads: Array<Types.Channels.AnyThreadChannel>, members: Array<Types.Channels.ThreadMember>];
-    /** @event Emitted when the client's thread member is updated. Requires the `GUILDS` intent. */
-    threadMemberUpdate: [thread: Types.Channels.MinimalPossiblyUncachedThread, member: Types.Channels.ThreadMember, oldMember: Types.Channels.ThreadMember | null];
     /** @event Emitted when the members of a thread are updated. Requires the `GUILDS` intent. The received information will be different if `GUILD_MEMBERS` is also used. */
     threadMembersUpdate: [thread: Types.Channels.MinimalPossiblyUncachedThread, addedMembers: Array<Types.Channels.ThreadMember>, removedMembers: Array<Types.Channels.ThreadMember | Types.Channels.UncachedThreadMember>];
+    /** @event Emitted when the client's thread member is updated. Requires the `GUILDS` intent. */
+    threadMemberUpdate: [thread: Types.Channels.MinimalPossiblyUncachedThread, member: Types.Channels.ThreadMember, oldMember: Types.Channels.ThreadMember | null];
     /** @event Emitted when a thread is updated. Requires the `GUILDS` intent. */
     threadUpdate: [thread: AnnouncementThreadChannel, oldThread: Types.JSON.JSONAnnouncementThreadChannel | null] | [thread: PublicThreadChannel, oldThread: Types.JSON.JSONPublicThreadChannel | null] | [thread: PrivateThreadChannel, oldThread: Types.JSON.JSONPrivateThreadChannel | null];
     /** @event Emitted when a user starts typing. Requires the `GUILD_MESSAGE_TYPING` for guilds, and `DIRECT_MESSAGE_TYPING` for direct messages. */
@@ -228,7 +227,7 @@ export interface ClientEvents {
     /** @event Emitted when a user is updated. */
     userUpdate: [user: User, oldUser: Types.JSON.JSONUser | null];
     /** @event Emitted when a user uses an effect in a voice channel. Requires the `GUILD_VOICE_STATES` event. */
-    voiceChannelEffectSend: [channel: Types.Channels.AnyVoiceChannel | (Types.Shared.Uncached & { guild: Guild | Types.Shared.Uncached; }), user: Member | User | Types.Shared.Uncached, effect: Types.Gateway.VoiceChannelEffect];
+    voiceChannelEffectSend: [channel: Types.Channels.AnyVoiceChannel | (Types.Shared.Uncached & { guild: Guild | Types.Shared.Uncached }), user: Member | User | Types.Shared.Uncached, effect: Types.Gateway.VoiceChannelEffect];
     /** @event Emitted when a user joins a voice channel. Requires the `GUILD_VOICE_STATES` intent. */
     voiceChannelJoin: [member: Member, channel: VoiceChannel | StageChannel | Types.Shared.Uncached];
     /** @event Emitted when a user leaves a voice channel. Requires the `GUILD_VOICE_STATES` intent. */

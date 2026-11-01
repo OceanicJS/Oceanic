@@ -1,11 +1,13 @@
 /** @module OAuthGuild */
+import * as Routes from "../util/Routes";
+
 import Base from "./Base";
 import Permission from "./Permission";
+
 import type Guild from "./Guild";
-import type * as Types from "../types/namespaced";
-import type { GuildFeature, ImageFormat } from "../Constants";
 import type Client from "../Client";
-import * as Routes from "../util/Routes";
+import type { GuildFeature, ImageFormat } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a guild retrieved via oauth. */
 export default class OAuthGuild extends Base {
@@ -64,14 +66,14 @@ export default class OAuthGuild extends Base {
     override toJSON(): Types.JSON.JSONOAuthGuild {
         return {
             ...super.toJSON(),
-            approximateMemberCount:   this.approximateMemberCount,
+            approximateMemberCount: this.approximateMemberCount,
             approximatePresenceCount: this.approximatePresenceCount,
-            banner:                   this.banner,
-            features:                 this.features,
-            icon:                     this.icon,
-            name:                     this.name,
-            owner:                    this.owner,
-            permissions:              this.permissions.toJSON()
+            banner: this.banner,
+            features: this.features,
+            icon: this.icon,
+            name: this.name,
+            owner: this.owner,
+            permissions: this.permissions.toJSON(),
         };
     }
 }

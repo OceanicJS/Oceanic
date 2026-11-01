@@ -22,7 +22,6 @@ export interface HeartbeatPacket {
     op: GatewayOPCodes.HEARTBEAT;
 }
 
-
 export interface ReconnectPacket {
     d: null;
     op: GatewayOPCodes.RECONNECT;
@@ -34,7 +33,7 @@ export interface InvalidSessionPacket {
 }
 
 export interface HelloPacket {
-    d: { heartbeat_interval: number; };
+    d: { heartbeat_interval: number };
     op: GatewayOPCodes.HELLO;
     s: null;
     t: null;
@@ -68,7 +67,7 @@ export interface GuildCreatePacket extends BaseDispatchPacket {
 }
 
 export interface GuildDeletePacket extends BaseDispatchPacket {
-    d: { id: string; unavailable?: true; };
+    d: { id: string; unavailable?: true };
     t: "GUILD_DELETE";
 }
 
@@ -143,13 +142,13 @@ export interface ThreadListSyncPacket extends BaseDispatchPacket {
 }
 
 export interface ThreadMemberUpdatePacket extends BaseDispatchPacket {
-    d: Types.Channels.RawThreadMember & { guild_id: string; };
+    d: Types.Channels.RawThreadMember & { guild_id: string };
     t: "THREAD_MEMBER_UPDATE";
 }
 
 export interface ThreadMembersUpdatePacket extends BaseDispatchPacket {
     d: {
-        added_members?: Array<Types.Channels.RawThreadMember & { member: Types.Guilds.RawMember; presence: Types.Gateway.PresenceUpdate | null; }>;
+        added_members?: Array<Types.Channels.RawThreadMember & { member: Types.Guilds.RawMember; presence: Types.Gateway.PresenceUpdate | null }>;
         guild_id: string;
         id: string;
         member_count: number;
@@ -207,7 +206,7 @@ export interface GuildIntegrationsUpdatePacket extends BaseDispatchPacket {
 }
 
 export interface GuildMemberAddPacket extends BaseDispatchPacket {
-    d: Types.Guilds.RawMember & { guild_id: string; };
+    d: Types.Guilds.RawMember & { guild_id: string };
     t: "GUILD_MEMBER_ADD";
 }
 
@@ -309,7 +308,7 @@ export interface GuildScheduledEventUserRemovePacket extends BaseDispatchPacket 
 }
 
 export interface GuildSoundboardSoundCreatePacket extends BaseDispatchPacket {
-    d: Types.Channels.RawSoundboard & { guild_id: string; };
+    d: Types.Channels.RawSoundboard & { guild_id: string };
     t: "GUILD_SOUNDBOARD_SOUND_CREATE";
 }
 
@@ -322,20 +321,20 @@ export interface GuildSoundboardSoundDeletePacket extends BaseDispatchPacket {
 }
 
 export interface GuildSoundboardSoundUpdatePacket extends BaseDispatchPacket {
-    d: Types.Channels.RawSoundboard & { guild_id: string; };
+    d: Types.Channels.RawSoundboard & { guild_id: string };
     t: "GUILD_SOUNDBOARD_SOUND_UPDATE";
 }
 
 export interface GuildSoundboardSoundsUpdatePacket extends BaseDispatchPacket {
     d: {
         guild_id: string;
-        soundboard_sounds: Array<Types.Channels.RawSoundboard & { guild_id: string; }>;
+        soundboard_sounds: Array<Types.Channels.RawSoundboard & { guild_id: string }>;
     };
     t: "GUILD_SOUNDBOARD_SOUNDS_UPDATE";
 }
 
 export interface IntegrationCreatePacket extends BaseDispatchPacket {
-    d: Types.Guilds.RawIntegration & { guild_id: string; };
+    d: Types.Guilds.RawIntegration & { guild_id: string };
     t: "INTEGRATION_CREATE";
 }
 
@@ -349,7 +348,7 @@ export interface IntegrationDeletePacket extends BaseDispatchPacket {
 }
 
 export interface IntegrationUpdatePacket extends BaseDispatchPacket {
-    d: Types.Guilds.RawIntegration & { guild_id: string; };
+    d: Types.Guilds.RawIntegration & { guild_id: string };
     t: "INTEGRATION_UPDATE";
 }
 
@@ -381,7 +380,7 @@ export interface InviteDeletePacket extends BaseDispatchPacket {
 }
 
 export interface MessageCreatePacket extends BaseDispatchPacket {
-    d: Types.Channels.RawMessage & { guild_id?: string; };
+    d: Types.Channels.RawMessage & { guild_id?: string };
     t: "MESSAGE_CREATE";
 }
 
@@ -404,7 +403,7 @@ export interface MessageDeleteBulkPacket extends BaseDispatchPacket {
 }
 
 export interface MessageUpdatePacket extends BaseDispatchPacket {
-    d: Partial<Omit<Types.Channels.RawMessage, "id" | "channel_id">> & { channel_id: string; guild_id?: string; id: string; };
+    d: Partial<Omit<Types.Channels.RawMessage, "id" | "channel_id">> & { channel_id: string; guild_id?: string; id: string };
     t: "MESSAGE_UPDATE";
 }
 
@@ -529,7 +528,7 @@ export interface StageInstanceUpdatePacket extends BaseDispatchPacket {
 }
 
 export interface GuildAuditLogEntryCreatePacket extends BaseDispatchPacket {
-    d: Types.AuditLog.RawAuditLogEntry & { guild_id: string; };
+    d: Types.AuditLog.RawAuditLogEntry & { guild_id: string };
     t: "GUILD_AUDIT_LOG_ENTRY_CREATE";
 }
 
@@ -539,7 +538,7 @@ export interface VoiceChannelEffectSendPacket extends BaseDispatchPacket {
 }
 
 export interface VoiceChannelStatusUpdatePacket extends BaseDispatchPacket {
-    d: { guild_id: string; id: string; status: string | null; };
+    d: { guild_id: string; id: string; status: string | null };
     t: "VOICE_CHANNEL_STATUS_UPDATE";
 }
 
@@ -577,7 +576,7 @@ export interface ChannelInfoPacket extends BaseDispatchPacket {
 }
 
 export interface VoiceChannelStartTimeUpdatePacket extends BaseDispatchPacket {
-    d: { guild_id: string; id: string; voice_start_time?: number | null; };
+    d: { guild_id: string; id: string; voice_start_time?: number | null };
     t: "VOICE_CHANNEL_START_TIME_UPDATE";
 }
 
@@ -601,19 +600,19 @@ export interface RateLimitedPacket extends BaseDispatchPacket {
     t: "RATE_LIMITED";
 }
 
-export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket | RateLimitedPacket | ChannelInfoPacket |
-GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket |
-AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket |
-ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket |
-ThreadCreatePacket | ThreadDeletePacket | ThreadUpdatePacket | ThreadListSyncPacket | ThreadMemberUpdatePacket | ThreadMembersUpdatePacket |
-GuildBanAddPacket | GuildBanRemovePacket | GuildEmojisUpdatePacket | GuildStickersUpdatePacket | GuildIntegrationsUpdatePacket |
-GuildMemberAddPacket | GuildMemberRemovePacket | GuildMemberUpdatePacket | GuildMembersChunkPacket |
-GuildRoleCreatePacket | GuildRoleDeletePacket | GuildRoleUpdatePacket |
-GuildScheduledEventCreatePacket | GuildScheduledEventDeletePacket | GuildScheduledEventUpdatePacket | GuildScheduledEventUserAddPacket | GuildScheduledEventUserRemovePacket | GuildSoundboardSoundCreatePacket | GuildSoundboardSoundDeletePacket | GuildSoundboardSoundUpdatePacket | GuildSoundboardSoundsUpdatePacket |
-IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket |
-InviteCreatePacket | InviteDeletePacket |
-MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket |
-TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceChannelStartTimeUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket |
-EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket |
-MessagePollVoteAddPacket | MessagePollVoteRemovePacket |
-SubscriptionCreatePacket | SubscriptionDeletePacket | SubscriptionUpdatePacket;
+export type AnyDispatchPacket = PresenceUpdatePacket | ReadyPacket | ResumedPacket | RateLimitedPacket | ChannelInfoPacket
+    | GuildCreatePacket | GuildDeletePacket | GuildUpdatePacket | ApplicationCommandPermissionsUpdatePacket | GuildAuditLogEntryCreatePacket
+    | AutoModerationRuleCreatePacket | AutoModerationRuleDeletePacket | AutoModerationRuleUpdatePacket | AutoModerationActionExecutionPacket
+    | ChannelCreatePacket | ChannelDeletePacket | ChannelUpdatePacket | ChannelPinsUpdatePacket
+    | ThreadCreatePacket | ThreadDeletePacket | ThreadUpdatePacket | ThreadListSyncPacket | ThreadMemberUpdatePacket | ThreadMembersUpdatePacket
+    | GuildBanAddPacket | GuildBanRemovePacket | GuildEmojisUpdatePacket | GuildStickersUpdatePacket | GuildIntegrationsUpdatePacket
+    | GuildMemberAddPacket | GuildMemberRemovePacket | GuildMemberUpdatePacket | GuildMembersChunkPacket
+    | GuildRoleCreatePacket | GuildRoleDeletePacket | GuildRoleUpdatePacket
+    | GuildScheduledEventCreatePacket | GuildScheduledEventDeletePacket | GuildScheduledEventUpdatePacket | GuildScheduledEventUserAddPacket | GuildScheduledEventUserRemovePacket | GuildSoundboardSoundCreatePacket | GuildSoundboardSoundDeletePacket | GuildSoundboardSoundUpdatePacket | GuildSoundboardSoundsUpdatePacket
+    | IntegrationCreatePacket | IntegrationDeletePacket | IntegrationUpdatePacket
+    | InviteCreatePacket | InviteDeletePacket
+    | MessageCreatePacket | MessageDeletePacket | MessageDeleteBulkPacket | MessageUpdatePacket | MessageReactionAddPacket | MessageReactionRemovePacket | MessageReactionRemoveAllPacket | MessageReactionRemoveEmojiPacket
+    | TypingStartPacket | UserUpdatePacket | VoiceStateUpdatePacket | VoiceChannelEffectSendPacket | VoiceChannelStatusUpdatePacket | VoiceChannelStartTimeUpdatePacket | VoiceServerUpdatePacket | WebhooksUpdatePacket | InteractionCreatePacket | SoundboardSoundsPacket | StageInstanceCreatePacket | StageInstanceDeletePacket | StageInstanceUpdatePacket
+    | EntitlementCreatePacket | EntitlementUpdatePacket | EntitlementDeletePacket
+    | MessagePollVoteAddPacket | MessagePollVoteRemovePacket
+    | SubscriptionCreatePacket | SubscriptionDeletePacket | SubscriptionUpdatePacket;

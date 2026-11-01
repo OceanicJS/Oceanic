@@ -1,5 +1,6 @@
-import type Collection from "../Collection";
 import { WrapperError } from "../Errors";
+
+import type Collection from "../Collection";
 
 /**
  * Maps raw select menu values to resolved objects.
@@ -10,10 +11,10 @@ export function mapRawToResolved<T, R extends Collection<string, T>>(
     type: string,
     raw: Array<string>,
     resolved: R,
-    ensurePresent = false
+    ensurePresent = false,
 ): Array<T> {
     return raw
-        .map(id => {
+        .map((id) => {
             const value = resolved.get(id);
             if (!value && ensurePresent) {
                 throw new WrapperError(`Failed to find ${type} in resolved data: ${id}`);

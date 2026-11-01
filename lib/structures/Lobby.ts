@@ -2,6 +2,7 @@
 import Base from "./Base";
 import GuildChannel from "./GuildChannel";
 import LobbyMember from "./LobbyMember";
+
 import type Client from "../Client";
 import type * as Types from "../types/namespaced";
 
@@ -114,10 +115,10 @@ export default class Lobby extends Base {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
-            flags:         this.flags,
+            flags: this.flags,
             linkedChannel: this.linkedChannel ? (this.linkedChannel instanceof GuildChannel ? this.linkedChannel.toJSON() : this.linkedChannel) : undefined,
-            members:       this.members.map(member => member.toJSON()),
-            metadata:      this.metadata
+            members: this.members.map(member => member.toJSON()),
+            metadata: this.metadata,
         };
     }
 

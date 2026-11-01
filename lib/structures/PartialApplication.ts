@@ -1,9 +1,11 @@
 /** @module PartialApplication */
+import * as Routes from "../util/Routes";
+
 import Base from "./Base";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
 import type { ImageFormat } from "../Constants";
-import * as Routes from "../util/Routes";
+import type * as Types from "../types/namespaced";
 
 /** Represents a partial application. */
 export default class PartialApplication extends Base {
@@ -28,7 +30,7 @@ export default class PartialApplication extends Base {
         this.update(data);
     }
 
-    protected override update(data: Types.Applications.RawPartialApplication): void {
+    protected override update(data: Partial<Types.Applications.RawPartialApplication>): void {
         if (data.bot_public !== undefined) {
             this.botPublic = data.bot_public;
         }
@@ -58,12 +60,12 @@ export default class PartialApplication extends Base {
     override toJSON(): Types.JSON.JSONPartialApplication {
         return {
             ...super.toJSON(),
-            botPublic:           this.botPublic,
+            botPublic: this.botPublic,
             botRequireCodeGrant: this.botRequireCodeGrant,
-            description:         this.description,
-            icon:                this.icon,
-            name:                this.name,
-            verifyKey:           this.verifyKey
+            description: this.description,
+            icon: this.icon,
+            name: this.name,
+            verifyKey: this.verifyKey,
         };
     }
 }

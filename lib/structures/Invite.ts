@@ -1,15 +1,18 @@
 /** @module Invite */
+import { DMInviteChannelTypes, type InviteTargetTypes, type InviteTypes } from "../Constants";
+import { warning, WarningCodes } from "../util/warning";
+
 import Channel from "./Channel";
 import Guild from "./Guild";
+import GuildChannel from "./GuildChannel";
 import GuildScheduledEvent from "./GuildScheduledEvent";
-import type User from "./User";
-import PartialApplication from "./PartialApplication";
 import InviteGuild from "./InviteGuild";
 import InviteRole from "./InviteRole";
-import GuildChannel from "./GuildChannel";
-import type * as Types from "../types/namespaced";
+import PartialApplication from "./PartialApplication";
+
+import type User from "./User";
 import type Client from "../Client";
-import { DMInviteChannelTypes, type InviteTargetTypes, type InviteTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents an invite. */
 export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel> {
@@ -59,10 +62,10 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
     uses: number | undefined;
     constructor(data: Types.Invites.RawInvite, client: Client) {
         Object.defineProperty(this, "client", {
-            value:        client,
-            enumerable:   false,
-            writable:     false,
-            configurable: false
+            value: client,
+            enumerable: false,
+            writable: false,
+            configurable: false,
         });
         this.channelID = (data.channel_id ?? data.channel?.id) ?? null;
         this.code = data.code;
@@ -89,6 +92,21 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
 
     static withScheduledEvent<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(data: Types.Invites.RawInvite, client: Client): InviteWithScheduledEvent<CH> {
         return new Invite<CH>(data, client) as InviteWithScheduledEvent<CH>;
+    }
+
+    /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name`, and `type`. */
+    get channel(): (CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) | null {
+        if (this.channelID !== null) {
+            if (this._cachedChannel instanceof Channel) {
+                return this._cachedChannel;
+            }
+
+            const cachedChannel = this.client.getChannel<Types.Channels.AnyInviteChannel>(this.channelID);
+
+            return cachedChannel ? (this._cachedChannel = cachedChannel as CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) : this._cachedChannel;
+        }
+
+        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
     }
 
     protected update(data: Partial<Types.Invites.RawInvite>): void {
@@ -133,14 +151,14 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
             this.inviter = this.client.users.update(data.inviter);
         }
         if (data.roles !== undefined) {
-            this.roles = data.roles?.map(role => new InviteRole(role, this.client, data.guild_id!, this.guild!));
+            this.roles = data.roles.map(role => new InviteRole(role, this.client, data.guild_id!, this.guild!));
         }
         if (data.stage_instance !== undefined) {
             this.stageInstance = {
-                members:          data.stage_instance.members.map(member => this.client.util.updateMember(this.guildID!, member.user!.id, member)),
+                members: data.stage_instance.members.map(member => this.client.util.updateMember(this.guildID!, member.user!.id, member)),
                 participantCount: data.stage_instance.participant_count,
-                speakerCount:     data.stage_instance.speaker_count,
-                topic:            data.stage_instance.topic
+                speakerCount: data.stage_instance.speaker_count,
+                topic: data.stage_instance.topic,
             };
         }
         if (data.target_application !== undefined) {
@@ -171,19 +189,28 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
         }
     }
 
-    /** The channel this invite leads to. If the channel is not cached, this will be a partial with only `id`, `name`, and `type`. */
-    get channel(): (CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) | null {
-        if (this.channelID !== null) {
-            if (this._cachedChannel instanceof Channel) {
-                return this._cachedChannel;
-            }
+    /**
+     * Add a target user to this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userID The ID of the user to add.
+     */
+    async addTargetUser(userID: string): Promise<void> {
+        return this.client.rest.channels.addInviteTargetUser(this.code, userID);
+    }
 
-            const cachedChannel = this.client.getChannel<Types.Channels.AnyInviteChannel>(this.channelID);
+    /**
+     * Add multiple target users to this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userIDs The IDs of the users to add. Max 1000.
+     */
+    async bulkAddTargetUsers(userIDs: Array<string>): Promise<void> {
+        return this.client.rest.channels.bulkAddInviteTargetUsers(this.code, userIDs);
+    }
 
-            return cachedChannel ? (this._cachedChannel = cachedChannel as CH extends Types.Channels.AnyInviteChannel ? CH : Types.Channels.PartialInviteChannel) : this._cachedChannel;
-        }
-
-        return this._cachedChannel === null ? this._cachedChannel : (this._cachedChannel = null);
+    /**
+     * Remove multiple target users from this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userIDs The IDs of the users to remove. Max 1000.
+     */
+    async bulkRemoveTargetUsers(userIDs: Array<string>): Promise<void> {
+        return this.client.rest.channels.bulkRemoveInviteTargetUsers(this.code, userIDs);
     }
 
     /**
@@ -199,7 +226,7 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
         return this.client.rest.channels.getInviteTargetUsers(this.code);
     }
 
-    /** et the target users job status for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
+    /** Get the target users job status for this invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission. */
     async getTargetUsersJobStatus(): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
         return this.client.rest.channels.getInviteTargetUsersJobStatus(this.code);
     }
@@ -217,40 +244,58 @@ export default class Invite<CH extends Types.Invites.InviteChannel = Types.Invit
         return this.channel !== null && DMInviteChannelTypes.includes(this.channel.type as never);
     }
 
+    /**
+     * Remove a target user from this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param userID The ID of the user to remove.
+     */
+    async removeTargetUser(userID: string): Promise<void> {
+        return this.client.rest.channels.removeInviteTargetUser(this.code, userID);
+    }
+
     toJSON(): Types.JSON.JSONInvite {
         return {
-            approximateMemberCount:   this.approximateMemberCount,
+            approximateMemberCount: this.approximateMemberCount,
             approximatePresenceCount: this.approximatePresenceCount,
-            channelID:                this.channelID ?? undefined,
-            code:                     this.code,
-            createdAt:                this.createdAt?.getTime(),
-            expiresAt:                this.expiresAt?.getTime(),
-            guild:                    this.guild?.toJSON(),
-            guildID:                  this.guildID ?? undefined,
-            guildScheduledEvent:      this.guildScheduledEvent?.toJSON(),
-            inviter:                  this.inviter?.toJSON(),
-            maxAge:                   this.maxAge,
-            maxUses:                  this.maxUses,
-            roles:                    this.roles?.map(role => role.toJSON()),
-            stageInstance:            this.stageInstance ? {
-                members:          this.stageInstance.members.map(member => member.id),
+            channelID: this.channelID ?? undefined,
+            code: this.code,
+            createdAt: this.createdAt?.getTime(),
+            expiresAt: this.expiresAt?.getTime(),
+            guild: this.guild?.toJSON(),
+            guildID: this.guildID ?? undefined,
+            guildScheduledEvent: this.guildScheduledEvent?.toJSON(),
+            inviter: this.inviter?.toJSON(),
+            maxAge: this.maxAge,
+            maxUses: this.maxUses,
+            roles: this.roles?.map(role => role.toJSON()),
+            stageInstance: this.stageInstance ? {
+                members: this.stageInstance.members.map(member => member.id),
                 participantCount: this.stageInstance.participantCount,
-                speakerCount:     this.stageInstance.speakerCount,
-                topic:            this.stageInstance.topic
+                speakerCount: this.stageInstance.speakerCount,
+                topic: this.stageInstance.topic,
             } : undefined,
             targetApplication: this.targetApplication?.toJSON(),
-            targetType:        this.targetType,
-            targetUser:        this.targetUser?.toJSON(),
-            temporary:         this.temporary,
-            uses:              this.uses
+            targetType: this.targetType,
+            targetUser: this.targetUser?.toJSON(),
+            temporary: this.temporary,
+            uses: this.uses,
         };
     }
 
     /**
      * Update the target users for this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
      * @param users The IDs of the users to allow accepting the invite.
+     * @deprecated Use {@link Invite#updateTargetUsers | updateTargetUsers} instead. This will be removed in `1.17.0`.
      */
     async updateInviteTargetUsers(users: Array<string>): Promise<null> {
+        warning(WarningCodes.OCEANIC_INVITE_UPDATE_INVITE_TARGET_USERS_DEPRECATED);
+        return this.updateTargetUsers(users);
+    }
+
+    /**
+     * Update the target users for this invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
+     * @param users The IDs of the users to allow accepting the invite.
+     */
+    async updateTargetUsers(users: Array<string>): Promise<null> {
         return this.client.rest.channels.updateInviteTargetUsers(this.code, users);
     }
 }

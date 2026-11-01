@@ -1,7 +1,8 @@
 import Base from "./Base";
-import type * as Types from "../types/namespaced";
+
 import type Client from "../Client";
 import type { SubscriptionStatuses } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 export default class Subscription extends Base {
     /** When the subscription was canceled. */
@@ -20,7 +21,7 @@ export default class Subscription extends Base {
     skuIDs: Array<string>;
     /** Current status of the subscription. */
     status: SubscriptionStatuses;
-    /**	ID of the user who is subscribed. */
+    /** ID of the user who is subscribed. */
     userID: string;
     constructor(data: Types.Applications.RawSubscription, client: Client) {
         super(data.id, client);
@@ -38,15 +39,15 @@ export default class Subscription extends Base {
     override toJSON(): Types.JSON.JSONSubscription {
         return {
             ...super.toJSON(),
-            canceledAt:         this.canceledAt?.getTime() ?? null,
-            country:            this.country,
-            currentPeriodEnd:   this.currentPeriodEnd.getTime(),
+            canceledAt: this.canceledAt?.getTime() ?? null,
+            country: this.country,
+            currentPeriodEnd: this.currentPeriodEnd.getTime(),
             currentPeriodStart: this.currentPeriodStart.getTime(),
-            entitlementIDs:     this.entitlementIDs,
-            renewalSKUIDs:      this.renewalSKUIDs,
-            skuIDs:             this.skuIDs,
-            status:             this.status,
-            userID:             this.userID
+            entitlementIDs: this.entitlementIDs,
+            renewalSKUIDs: this.renewalSKUIDs,
+            skuIDs: this.skuIDs,
+            status: this.status,
+            userID: this.userID,
         };
     }
 }

@@ -1,12 +1,14 @@
 /** @module GroupChannel */
-import Channel from "./Channel";
-import User from "./User";
-import type ClientApplication from "./ClientApplication";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes, ImageFormat } from "../Constants";
-import type Client from "../Client";
 import * as Routes from "../util/Routes";
 import TypedCollection from "../util/TypedCollection";
+
+import Channel from "./Channel";
+import User from "./User";
+
+import type ClientApplication from "./ClientApplication";
+import type Client from "../Client";
+import type { ChannelTypes, ImageFormat } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a group direct message. */
 export default class GroupChannel extends Channel {
@@ -45,7 +47,7 @@ export default class GroupChannel extends Channel {
         this.owner = this.client.users.get(data.owner_id);
         this.ownerID = data.owner_id;
         this.recipients = new TypedCollection(User, client, Infinity, {
-            construct: (user): User => client.users.update(user)
+            construct: (user): User => client.users.update(user),
         });
         for (const r of data.recipients) this.recipients.update(r);
         this.update(data);
@@ -92,7 +94,6 @@ export default class GroupChannel extends Channel {
             for (const r of data.recipients) {
                 this.recipients.update(r);
             }
-
         }
     }
 
@@ -139,16 +140,16 @@ export default class GroupChannel extends Channel {
     override toJSON(): Types.JSON.JSONGroupChannel {
         return {
             ...super.toJSON(),
-            applicationID:    this.applicationID,
-            icon:             this.icon,
-            lastMessageID:    this.lastMessageID,
+            applicationID: this.applicationID,
+            icon: this.icon,
+            lastMessageID: this.lastMessageID,
             lastPinTimestamp: this.lastPinTimestamp,
-            managed:          this.managed,
-            name:             this.name,
-            nicks:            this.nicks,
-            ownerID:          this.ownerID,
-            recipients:       this.recipients.map(user => user.toJSON()),
-            type:             this.type
+            managed: this.managed,
+            name: this.name,
+            nicks: this.nicks,
+            ownerID: this.ownerID,
+            recipients: this.recipients.map(user => user.toJSON()),
+            type: this.type,
         };
     }
 }

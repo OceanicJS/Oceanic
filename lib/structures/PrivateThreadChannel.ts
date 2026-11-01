@@ -1,8 +1,9 @@
 /** @module PrivateThreadChannel */
 import ThreadChannel from "./ThreadChannel";
-import type * as Types from "../types/namespaced";
-import type { ChannelTypes } from "../Constants";
+
 import type Client from "../Client";
+import type { ChannelTypes } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** Represents a private thread channel.. */
 export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadChannel> {
@@ -24,7 +25,7 @@ export default class PrivateThreadChannel extends ThreadChannel<PrivateThreadCha
         return {
             ...super.toJSON(),
             threadMetadata: this.threadMetadata,
-            type:           this.type
+            type: this.type,
         };
     }
 }

@@ -1,7 +1,10 @@
-import Compressor from "./base";
-import type Shard from "../Shard";
-import { GatewayError } from "../../util/Errors";
 import { createInflate, type Inflate } from "node:zlib";
+
+import { GatewayError } from "../../util/Errors";
+
+import Compressor from "./base";
+
+import type Shard from "../Shard";
 
 export default class ZlibNativeCompressor extends Compressor {
     _chunks: Array<Buffer>;
@@ -12,7 +15,7 @@ export default class ZlibNativeCompressor extends Compressor {
         this._chunks = [];
         this._decompressQueue = Promise.resolve();
         this.stream = createInflate();
-        this.stream.on("error", err => {
+        this.stream.on("error", (err) => {
             this.shard.client.emit("error", new GatewayError(`zlib error: ${String(err)}`, 0));
         });
     }
@@ -20,13 +23,12 @@ export default class ZlibNativeCompressor extends Compressor {
     async decompress(data: Buffer): Promise<Buffer | null> {
         const isComplete = data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xFFFF;
         let result: Buffer | null = null;
-        this._decompressQueue = this._decompressQueue.then(async() => new Promise<void>(resolve => {
-            // eslint-disable-next-line unicorn/consistent-function-scoping
+        this._decompressQueue = this._decompressQueue.then(async () => new Promise<void>((resolve) => {
             const onData = (chunk: Buffer): void => {
                 this._chunks.push(chunk);
             };
             this.stream.on("data", onData);
-            this.stream.write(data, error => {
+            this.stream.write(data, (error) => {
                 this.stream.off("data", onData);
                 if (error) {
                     this.shard.client.emit("error", new GatewayError(`Failed to decompress zlib: ${String(error)}`, 0));

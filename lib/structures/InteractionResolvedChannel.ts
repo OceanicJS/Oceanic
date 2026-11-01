@@ -1,13 +1,15 @@
 /** @module InteractionResolvedChannel */
-import type AnnouncementChannel from "./AnnouncementChannel";
-import type TextChannel from "./TextChannel";
-import Permission from "./Permission";
+import { UncachedError } from "../util/Errors";
+
 import Channel from "./Channel";
+import Permission from "./Permission";
+
+import type AnnouncementChannel from "./AnnouncementChannel";
 import type ForumChannel from "./ForumChannel";
 import type Guild from "./Guild";
-import type * as Types from "../types/namespaced";
+import type TextChannel from "./TextChannel";
 import type Client from "../Client";
-import { UncachedError } from "../util/Errors";
+import type * as Types from "../types/namespaced";
 
 /** Represents a channel from an interaction option. This can be any guild channel, or a direct message. */
 export default class InteractionResolvedChannel extends Channel {
@@ -52,13 +54,13 @@ export default class InteractionResolvedChannel extends Channel {
         this.position = data.position;
         this.rateLimitPerUser = data.rate_limit_per_user;
         this.threadMetadata = data.thread_metadata ? {
-            archiveTimestamp:    new Date(data.thread_metadata.archive_timestamp),
-            archived:            !!data.thread_metadata.archived,
+            archiveTimestamp: new Date(data.thread_metadata.archive_timestamp),
+            archived: data.thread_metadata.archived,
             autoArchiveDuration: data.thread_metadata.auto_archive_duration,
-            createTimestamp:     data.thread_metadata.create_timestamp ? new Date(data.thread_metadata.create_timestamp) : null,
-            locked:              !!data.thread_metadata.locked,
-            invitable:           data.thread_metadata.invitable
-        } :  null;
+            createTimestamp: data.thread_metadata.create_timestamp ? new Date(data.thread_metadata.create_timestamp) : null,
+            locked: data.thread_metadata.locked,
+            invitable: data.thread_metadata.invitable,
+        } : null;
         this.topic = data.topic;
     }
 
@@ -99,11 +101,11 @@ export default class InteractionResolvedChannel extends Channel {
         return {
             ...super.toJSON(),
             appPermissions: this.appPermissions.toJSON(),
-            name:           this.name,
-            parentID:       this.parentID,
-            permissions:    this.permissions.toJSON(),
+            name: this.name,
+            parentID: this.parentID,
+            permissions: this.permissions.toJSON(),
             threadMetadata: this.threadMetadata,
-            type:           this.type
+            type: this.type,
         };
     }
 }

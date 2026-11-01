@@ -1,15 +1,16 @@
 /** @module Interaction */
-import Base from "./Base";
-import type ClientApplication from "./ClientApplication";
-import type ICommandInteraction from "./CommandInteraction";
-import type IModalSubmitInteraction from "./ModalSubmitInteraction";
-import type IPingInteraction from "./PingInteraction";
-import type IComponentInteraction from "./ComponentInteraction";
-import type IAutocompleteInteraction from "./AutocompleteInteraction";
-import type * as Types from "../types/namespaced";
-import type Client from "../Client";
 import { InteractionTypes } from "../Constants";
 
+import Base from "./Base";
+
+import type IAutocompleteInteraction from "./AutocompleteInteraction";
+import type ClientApplication from "./ClientApplication";
+import type ICommandInteraction from "./CommandInteraction";
+import type IComponentInteraction from "./ComponentInteraction";
+import type IModalSubmitInteraction from "./ModalSubmitInteraction";
+import type IPingInteraction from "./PingInteraction";
+import type Client from "../Client";
+import type * as Types from "../types/namespaced";
 
 /** Represents an interaction. */
 export default class Interaction extends Base {
@@ -34,7 +35,6 @@ export default class Interaction extends Base {
         this.type = data.type;
         this.version = data.version;
     }
-
 
     static from<T extends Types.Interactions.AnyInteraction = Types.Interactions.AnyInteraction>(data: Types.Interactions.RawInteraction, client: Client): T {
         switch (data.type) {
@@ -88,18 +88,17 @@ export default class Interaction extends Base {
         return {
             ...super.toJSON(),
             applicationID: this.applicationID,
-            type:          this.type,
-            version:       this.version
+            type: this.type,
+            version: this.version,
         };
     }
 }
 
-
 // Yes this sucks, but it works. That's the important part. Circular imports are hell.
-/* eslint-disable @typescript-eslint/no-var-requires, unicorn/prefer-module */
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const AutocompleteInteraction = (require("./AutocompleteInteraction") as typeof import("./AutocompleteInteraction")).default;
 const CommandInteraction = (require("./CommandInteraction") as typeof import("./CommandInteraction")).default;
 const ComponentInteraction = (require("./ComponentInteraction") as typeof import("./ComponentInteraction")).default;
 const ModalSubmitInteraction = (require("./ModalSubmitInteraction") as typeof import("./ModalSubmitInteraction")).default;
 const PingInteraction = (require("./PingInteraction") as typeof import("./PingInteraction")).default;
-/* eslint-enable @typescript-eslint/no-var-requires, unicorn/prefer-module */

@@ -1,7 +1,8 @@
 /** @module DiscordHTTPError */
 import DiscordRESTError from "./DiscordRESTError";
-import type * as Types from "../types/namespaced";
+
 import type { RESTMethod } from "../Constants";
+import type * as Types from "../types/namespaced";
 
 /** An HTTP error received from Discord. */
 export default class DiscordHTTPError extends Error {
@@ -10,21 +11,20 @@ export default class DiscordHTTPError extends Error {
     resBody!: Record<string, unknown> | null;
     response!: Response;
     constructor(res: Response, resBody: unknown, method: RESTMethod, stack?: string) {
-        // eslint-disable-next-line unicorn/custom-error-definition
         super();
         Object.defineProperties(this, {
             method: {
-                value:      method,
-                enumerable: false
+                value: method,
+                enumerable: false,
             },
             response: {
-                value:      res,
-                enumerable: false
+                value: res,
+                enumerable: false,
             },
             resBody: {
-                value:      resBody,
-                enumerable: false
-            }
+                value: resBody,
+                enumerable: false,
+            },
         });
 
         let message = `${res.status} ${res.statusText} on ${this.method} ${this.path}`;
@@ -44,12 +44,15 @@ export default class DiscordHTTPError extends Error {
     get headers(): Headers {
         return this.response.headers;
     }
+
     get path(): string {
         return new URL(this.response.url).pathname;
     }
+
     get status(): number {
         return this.response.status;
     }
+
     get statusText(): string {
         return this.response.statusText;
     }
@@ -57,10 +60,10 @@ export default class DiscordHTTPError extends Error {
     toJSON(): Types.JSON.JSONDiscordHTTPError {
         return {
             message: this.message,
-            method:  this.method,
-            name:    this.name,
+            method: this.method,
+            name: this.name,
             resBody: this.resBody,
-            stack:   this.stack ?? ""
+            stack: this.stack ?? "",
         };
     }
 }
