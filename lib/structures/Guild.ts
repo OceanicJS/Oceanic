@@ -1237,6 +1237,14 @@ export default class Guild extends Base {
     }
 
     /**
+     * Get the computed permissions of a member in this guild, combining their roles with `@everyone`.
+     * @param userID The ID of the member.
+     */
+    async getMemberPermissions(userID: string): Promise<Permission> {
+        return this.client.rest.guilds.getMemberPermissions(this.id, userID);
+    }
+
+    /**
      * Get this guild's members. This requires the `GUILD_MEMBERS` intent.
      * @param options The options for getting the members.
      */
@@ -1286,6 +1294,14 @@ export default class Guild extends Base {
      */
     async getRoleMemberCounts(): Promise<Record<string, number>> {
         return this.client.rest.guilds.getRoleMemberCounts(this.id);
+    }
+
+    /**
+     * Get the combined permissions of a role and `@everyone` in this guild. Other roles and member-specific restrictions are not included.
+     * @param roleID The ID of the role.
+     */
+    async getRolePermissions(roleID: string): Promise<Permission> {
+        return this.client.rest.guilds.getRolePermissions(this.id, roleID);
     }
 
     /**

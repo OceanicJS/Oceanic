@@ -8,6 +8,7 @@ import type AnnouncementChannel from "./AnnouncementChannel";
 import type CategoryChannel from "./CategoryChannel";
 import type ForumChannel from "./ForumChannel";
 import type Guild from "./Guild";
+import type Permission from "./Permission";
 import type TextChannel from "./TextChannel";
 import type Client from "../Client";
 import type { ChannelTypeMap } from "../Constants";
@@ -97,6 +98,24 @@ export default class GuildChannel extends Channel {
     async edit(options: Types.Channels.EditChannelOptionsMap[this["type"]]): Promise<this> {
         // edit is called down the chain
         return this.client.rest.channels.edit<ChannelTypeMap[this["type"]]>(this.id, options) as unknown as Promise<this>;
+    }
+
+    /**
+     * Get the computed permissions of a member in this channel, including their roles and member-specific overwrites. Requires the `VIEW_CHANNEL` permission, and `CONNECT` for voice and stage channels.
+     * @param userID The ID of the member.
+     * @param options The options for getting the permissions.
+     */
+    async getMemberPermissions(userID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
+        return this.client.rest.channels.getMemberPermissions(this.id, userID, options);
+    }
+
+    /**
+     * Get the permissions granted by a role together with `@everyone` in this channel, applying their overwrites. Requires the `VIEW_CHANNEL` permission, and `CONNECT` for voice and stage channels.
+     * @param roleID The ID of the role.
+     * @param options The options for getting the permissions.
+     */
+    async getRolePermissions(roleID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
+        return this.client.rest.channels.getRolePermissions(this.id, roleID, options);
     }
 
     override toJSON(): Types.JSON.JSONGuildChannel {

@@ -50,12 +50,14 @@ export const GUILD_CHANNELS = (guildID: string) => encode`/guilds/${guildID}/cha
 export const GUILD_ACTIVE_THREADS = (guildID: string) => encode`/guilds/${guildID}/threads/active`;
 export const GUILD_MEMBERS = (guildID: string) => encode`/guilds/${guildID}/members`;
 export const GUILD_MEMBER = (guildID: string, userID: string) => encode`/guilds/${guildID}/members/${userID}`;
+export const GUILD_MEMBER_PERMISSIONS = (guildID: string, userID: string) => encode`/guilds/${guildID}/permissions/member/${userID}`;
 export const GUILD_MESSAGES_SEARCH = (guildID: string) => encode`/guilds/${guildID}/messages/search`;
 export const GUILD_SEARCH_MEMBERS = (guildID: string) => encode`/guilds/${guildID}/members/search`;
 export const GUILD_MEMBERS_SEARCH = (guildID: string) => encode`/guilds/${guildID}/members-search`;
 export const GUILD_MEMBER_ROLE = (guildID: string, userID: string, roleID: string) => encode`/guilds/${guildID}/members/${userID}/roles/${roleID}`;
 export const GUILD_ROLES = (guildID: string) => encode`/guilds/${guildID}/roles`;
 export const GUILD_ROLE = (guildID: string, roleID: string) => encode`/guilds/${guildID}/roles/${roleID}`;
+export const GUILD_ROLE_PERMISSIONS = (guildID: string, roleID: string) => encode`/guilds/${guildID}/permissions/role/${roleID}`;
 export const GUILD_ROLE_MEMBER_COUNTS = (guildID: string) => encode`/guilds/${guildID}/roles/member-counts`;
 export const GUILD_PRUNE = (guildID: string) => encode`/guilds/${guildID}/prune`;
 export const GUILD_INVITES = (guildID: string) => encode`/guilds/${guildID}/invites`;
@@ -91,6 +93,8 @@ export const CHANNEL_MESSAGES = (channelID: string) => encode`/channels/${channe
 export const CHANNEL_MESSAGES_CROSSPOST = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/crosspost`;
 export const CHANNEL_MESSAGE_THREADS = (channelID: string, messageID: string) => encode`/channels/${channelID}/messages/${messageID}/threads`;
 export const CHANNEL_PERMISSION = (channelID: string, overwriteID: string) => encode`/channels/${channelID}/permissions/${overwriteID}`;
+export const CHANNEL_MEMBER_PERMISSIONS = (channelID: string, userID: string) => encode`/channels/${channelID}/permissions/member/${userID}`;
+export const CHANNEL_ROLE_PERMISSIONS = (channelID: string, roleID: string) => encode`/channels/${channelID}/permissions/role/${roleID}`;
 export const CHANNEL_PINNED_MESSAGE = (channelID: string, messageID: string) => encode`/channels/${channelID}/pins/${messageID}`;
 export const CHANNEL_PINS = (channelID: string) => encode`/channels/${channelID}/pins`;
 export const CHANNEL_PRIVATE_ARCHIVED_THREADS = (channelID: string) => encode`/channels/${channelID}/threads/archived/private`;

@@ -9,6 +9,7 @@ import Invite, {
     type InviteWithCounts,
     type InviteWithScheduledEvent,
 } from "../structures/Invite";
+import Permission from "../structures/Permission";
 import StageInstance from "../structures/StageInstance";
 import QueryBuilder from "../util/QueryBuilder";
 import * as Routes from "../util/Routes";
@@ -677,6 +678,23 @@ export default class Channels {
     }
 
     /**
+     * Get the computed permissions of a member in a channel, including their roles and member-specific overwrites. Threads use their parent channel's overwrites. Requires the `VIEW_CHANNEL` permission, and `CONNECT` for voice and stage channels.
+     * @param channelID The ID of the channel.
+     * @param userID The ID of the member.
+     * @param options The options for getting the permissions.
+     * @caching This method **does not** cache its result.
+     */
+    async getMemberPermissions(channelID: string, userID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
+        const query = new QueryBuilder();
+        query.setIfPresent("implicit", options?.implicit);
+        return this._manager.authRequest<Types.Channels.RawPermissionsResponse>({
+            method: "GET",
+            path: Routes.CHANNEL_MEMBER_PERMISSIONS(channelID, userID),
+            query,
+        }).then(data => new Permission(data.permissions));
+    }
+
+    /**
      * Get a message in a channel.
      * @param channelID The ID of the channel the message is in
      * @param messageID The ID of the message to get.
@@ -1091,6 +1109,23 @@ export default class Channels {
         }
 
         return reactions;
+    }
+
+    /**
+     * Get the permissions granted by a role together with `@everyone` in a channel, applying their overwrites. Other roles and member-specific overwrites are not included. Threads use their parent channel's overwrites. Requires the `VIEW_CHANNEL` permission, and `CONNECT` for voice and stage channels.
+     * @param channelID The ID of the channel.
+     * @param roleID The ID of the role.
+     * @param options The options for getting the permissions.
+     * @caching This method **does not** cache its result.
+     */
+    async getRolePermissions(channelID: string, roleID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
+        const query = new QueryBuilder();
+        query.setIfPresent("implicit", options?.implicit);
+        return this._manager.authRequest<Types.Channels.RawPermissionsResponse>({
+            method: "GET",
+            path: Routes.CHANNEL_ROLE_PERMISSIONS(channelID, roleID),
+            query,
+        }).then(data => new Permission(data.permissions));
     }
 
     /**

@@ -1102,6 +1102,15 @@ export interface MessagePollOptions {
     question: PollQuestion;
 }
 
+export interface GetChannelPermissionsOptions {
+    /** Whether to apply implicit permission masking for a missing `VIEW_CHANNEL`, or `CONNECT` in voice and stage channels. Not applied when the member is a bot. Defaults to true. */
+    implicit?: boolean;
+}
+
+export interface RawPermissionsResponse {
+    permissions: string;
+}
+
 export interface GetPollAnswerUsersOptions {
     /** Get members after this member id. */
     after?: string;

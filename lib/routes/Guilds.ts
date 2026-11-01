@@ -12,6 +12,7 @@ import GuildScheduledEvent from "../structures/GuildScheduledEvent";
 import GuildTemplate from "../structures/GuildTemplate";
 import Integration from "../structures/Integration";
 import Invite, { type InviteWithMetadata } from "../structures/Invite";
+import Permission from "../structures/Permission";
 import Role from "../structures/Role";
 import Soundboard from "../structures/Soundboard";
 import VoiceState from "../structures/VoiceState";
@@ -1422,6 +1423,19 @@ export default class Guilds {
     }
 
     /**
+     * Get the computed permissions of a member in a guild, combining their roles with `@everyone`.
+     * @param guildID The ID of the guild.
+     * @param userID The ID of the member.
+     * @caching This method **does not** cache its result.
+     */
+    async getMemberPermissions(guildID: string, userID: string): Promise<Permission> {
+        return this._manager.authRequest<Types.Channels.RawPermissionsResponse>({
+            method: "GET",
+            path: Routes.GUILD_MEMBER_PERMISSIONS(guildID, userID),
+        }).then(data => new Permission(data.permissions));
+    }
+
+    /**
      * Get a guild's members. This requires the `GUILD_MEMBERS` intent.
      * @param guildID The ID of the guild.
      * @param options The options for getting the members.
@@ -1559,6 +1573,19 @@ export default class Guilds {
             method: "GET",
             path: Routes.GUILD_ROLE_MEMBER_COUNTS(guildID),
         });
+    }
+
+    /**
+     * Get the combined permissions of a role and `@everyone` in a guild. Other roles and member-specific restrictions are not included.
+     * @param guildID The ID of the guild.
+     * @param roleID The ID of the role.
+     * @caching This method **does not** cache its result.
+     */
+    async getRolePermissions(guildID: string, roleID: string): Promise<Permission> {
+        return this._manager.authRequest<Types.Channels.RawPermissionsResponse>({
+            method: "GET",
+            path: Routes.GUILD_ROLE_PERMISSIONS(guildID, roleID),
+        }).then(data => new Permission(data.permissions));
     }
 
     /**
