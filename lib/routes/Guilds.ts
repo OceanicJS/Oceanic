@@ -674,19 +674,21 @@ export default class Guilds {
      * Edit the positions of channels in a guild.
      * @param guildID The ID of the guild.
      * @param options The channels to move. Unedited channels do not need to be specified.
+     * @param reason The reason to be displayed in the audit log.
      * @caching This method **does not** cache its result.
      */
-    async editChannelPositions(guildID: string, options: Array<Types.Guilds.ModifyChannelPositionsEntry>): Promise<void> {
+    async editChannelPositions(guildID: string, options: Array<Types.Guilds.ModifyChannelPositionsEntry>, reason?: string): Promise<void> {
         options = this._manager.client.util._freeze(options);
         await this._manager.authRequest<null>({
             method: "PATCH",
             path: Routes.GUILD_CHANNELS(guildID),
             json: options.map(o => ({
                 id: o.id,
-                // lock_permissions: o.lockPermissions ?? null,
-                // parent_id:        o.parentID ?? null,
-                position: o.position ?? null,
+                lock_permissions: o.lockPermissions,
+                parent_id: o.parentID,
+                position: o.position,
             })),
+            reason,
         });
     }
 

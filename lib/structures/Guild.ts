@@ -940,9 +940,10 @@ export default class Guild extends Base {
     /**
      * Edit the positions of channels in this guild.
      * @param options The channels to move. Unedited channels do not need to be specified.
+     * @param reason The reason to be displayed in the audit log.
      */
-    async editChannelPositions(options: Array<Types.Guilds.ModifyChannelPositionsEntry>): Promise<void> {
-        return this.client.rest.guilds.editChannelPositions(this.id, options);
+    async editChannelPositions(options: Array<Types.Guilds.ModifyChannelPositionsEntry>, reason?: string): Promise<void> {
+        return this.client.rest.guilds.editChannelPositions(this.id, options, reason);
     }
 
     /**

@@ -62,13 +62,13 @@ export interface RawAuditLogEntryOptions {
 export interface AuditLogEntryOptions {
     /** ID of the app whose permissions were targeted - valid for: `APPLICATION_COMMAND_PERMISSION_UPDATE` */
     applicationID?: string;
-    /** Name of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED` */
+    /** Name of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER` */
     autoModerationRuleName?: string;
-    /** Trigger type of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED` */
+    /** Trigger type of the auto moderation rule that was triggered - valid for: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER` */
     autoModerationRuleTriggerType?: string;
-    /** Channel in which the entities were targeted - valid for: `MEMBER_MOVE`,  `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE` */
+    /** Channel in which the entities were targeted - valid for: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`, `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`, `AUTO_MODERATION_QUARANTINE_USER` */
     channelID?: string;
-    /** Number of entities that were targeted - valid for: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE` */
+    /** Number of entities that were targeted, or number of position updates - valid for: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`, `CHANNEL_POSITION_UPDATE`, `ROLE_POSITION_UPDATE` */
     count?: number;
     /** Number of days after which inactive members were kicked - valid for: `MEMBER_PRUNE` */
     deleteMemberDays?: number;

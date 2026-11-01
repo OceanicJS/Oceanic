@@ -1342,6 +1342,8 @@ export enum AuditLogActionTypes {
     CHANNEL_OVERWRITE_UPDATE = 14,
     /** Permission overwrite was deleted from a channel */
     CHANNEL_OVERWRITE_DELETE = 15,
+    /** Channels were reordered */
+    CHANNEL_POSITION_UPDATE = 16,
 
     /** Member was removed from guild */
     MEMBER_KICK = 20,
@@ -1368,6 +1370,8 @@ export enum AuditLogActionTypes {
     ROLE_UPDATE = 31,
     /** Role was deleted */
     ROLE_DELETE = 32,
+    /** Roles were reordered */
+    ROLE_POSITION_UPDATE = 33,
 
     /** Guild invite was created */
     INVITE_CREATE = 40,
