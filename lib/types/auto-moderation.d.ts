@@ -39,7 +39,7 @@ export interface RawActionMetadata {
     /** `SEND_ALERT_MESSAGE` */
     channel_id?: string;
     /** `BLOCK_MESSAGE` */
-    custom_message?: string;
+    custom_message?: string | null;
     /** `TIMEOUT` */
     duration_seconds?: number;
 }
@@ -70,7 +70,7 @@ export interface ActionMetadata {
     /** The ID of the channel to send the message to. Valid for `SEND_ALERT_MESSAGE`. */
     channelID?: string;
     /** The custom message to send. Valid for `BLOCK_MESSAGE`. */
-    customMessage?: string;
+    customMessage?: string | null;
     /** The duration of the timeout in seconds. Valid for `TIMEOUT`. */
     durationSeconds?: number;
 }
