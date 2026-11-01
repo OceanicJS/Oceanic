@@ -23,6 +23,7 @@ export default class Users {
      * Edit the currently authenticated user.
      * @param options The options to edit with.
      * @caching This method **does not** cache its result.
+     * @see [Modify Current User](https://discord.com/developers/docs/resources/user#modify-current-user)
      */
     async editSelf(options: Types.Users.EditSelfUserOptions): Promise<ExtendedUser> {
         options = this._manager.client.util._freeze(options);
@@ -54,6 +55,7 @@ export default class Users {
      * @param userID the ID of the user
      * @caching This method **does** cache its result.
      * @caches {@link Client#users | Client#users}
+     * @see [Get User](https://discord.com/developers/docs/resources/user#get-user)
      */
     async get(userID: string): Promise<User> {
         return this._manager.authRequest<Types.Users.RawUser>({
@@ -66,6 +68,7 @@ export default class Users {
      * Leave a guild.
      * @param guildID The ID of the guild to leave.
      * @caching This method **does not** cache its result.
+     * @see [Leave Guild](https://discord.com/developers/docs/resources/user#leave-guild)
      */
     async leaveGuild(guildID: string): Promise<void> {
         await this._manager.authRequest<null>({

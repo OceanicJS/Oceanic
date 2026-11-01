@@ -1,0 +1,21 @@
+name: Check Doc Links
+permissions:
+    contents: read
+on: [push, pull_request]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            # cache keys can't be overwritten, so each run saves a new one and restores the latest
+            - uses: actions/cache@v4
+              with:
+                  path: node_modules/.cache/oceanic-doc-links.json
+                  key: doc-links-${{ github.run_id }}
+                  restore-keys: doc-links-
+
+            # the script has no dependencies, so there's nothing to install
+            - name: Check Doc Links
+              run: node scripts/check-doc-links.mjs

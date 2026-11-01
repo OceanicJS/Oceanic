@@ -39,6 +39,7 @@ export default class Guilds {
      * @param options The options for actioning the join request.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     * @see [Action Guild Join Request (docs.discord.food)](https://docs.discord.food/resources/guild#action-guild-join-request)
      */
     async actionJoinRequest(guildID: string, requestID: string, options: Types.Guilds.ActionGuildJoinRequestOptions): Promise<Types.Guilds.GuildJoinRequest> {
         options = this._manager.client.util._freeze(options);
@@ -61,6 +62,7 @@ export default class Guilds {
      * @param options The options for adding the member.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
+     * @see [Add Guild Member](https://discord.com/developers/docs/resources/guild#add-guild-member)
      */
     async addMember(guildID: string, userID: string, options: Types.Guilds.AddMemberOptions): Promise<Member | undefined> {
         options = this._manager.client.util._freeze(options);
@@ -84,6 +86,7 @@ export default class Guilds {
      * @param roleID The ID of the role to add.
      * @param reason The reason for adding the role.
      * @caching This method **does not** cache its result.
+     * @see [Add Guild Member Role](https://discord.com/developers/docs/resources/guild#add-guild-member-role)
      */
     async addMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -98,6 +101,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for the prune.
      * @caching This method **does not** cache its result.
+     * @see [Begin Guild Prune](https://discord.com/developers/docs/resources/guild#begin-guild-prune)
      */
     async beginPrune(guildID: string, options?: Types.Guilds.BeginPruneOptions): Promise<number | null> {
         options = this._manager.client.util._freeze(options);
@@ -119,6 +123,7 @@ export default class Guilds {
      * The bot user is ignored.
      * @param guildID The ID of the guild.
      * @param options The options for banning.
+     * @see [Bulk Guild Ban](https://discord.com/developers/docs/resources/guild#bulk-guild-ban)
      */
     async bulkBan(guildID: string, options: Types.Guilds.BulkBanOptions): Promise<Types.Guilds.BulkBanResponse> {
         options = this._manager.client.util._freeze(options);
@@ -142,6 +147,7 @@ export default class Guilds {
      * @param options The options for creating the rule.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
+     * @see [Create Auto Moderation Rule](https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule)
      */
     async createAutoModerationRule(guildID: string, options: Types.AutoModeration.CreateAutoModerationRuleOptions): Promise<AutoModerationRule> {
         options = this._manager.client.util._freeze(options);
@@ -182,6 +188,7 @@ export default class Guilds {
      * @param userID The ID of the user to ban.
      * @param options The options for creating the ban.
      * @caching This method **does not** cache its result.
+     * @see [Create Guild Ban](https://discord.com/developers/docs/resources/guild#create-guild-ban)
      */
     async createBan(guildID: string, userID: string, options?: Types.Guilds.CreateBanOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -203,6 +210,7 @@ export default class Guilds {
      * @param options The options for creating the channel.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}
+     * @see [Create Guild Channel](https://discord.com/developers/docs/resources/guild#create-guild-channel)
      */
     async createChannel<T extends Types.Channels.GuildChannelsWithoutThreads>(guildID: string, type: T, options: Omit<Types.Guilds.CreateChannelOptions, "type">): Promise<ChannelTypeMap[T]> {
         options = this._manager.client.util._freeze(options);
@@ -243,6 +251,7 @@ export default class Guilds {
      * @param options The options for creating the emoji.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis}<br>{@link Client#users | Client#users} (creator, if applicable)
+     * @see [Create Guild Emoji](https://discord.com/developers/docs/resources/emoji#create-guild-emoji)
      */
     async createEmoji(guildID: string, options: Types.Guilds.CreateGuildEmojiOptions): Promise<Types.Guilds.GuildEmoji> {
         options = this._manager.client.util._freeze(options);
@@ -268,6 +277,7 @@ export default class Guilds {
      * @param options The options for creating the role.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
+     * @see [Create Guild Role](https://discord.com/developers/docs/resources/guild#create-guild-role)
      */
     async createRole(guildID: string, options?: Types.Guilds.CreateRoleOptions): Promise<Role> {
         options = this._manager.client.util._freeze(options);
@@ -301,6 +311,7 @@ export default class Guilds {
      * @param options The options for creating the scheduled event.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
+     * @see [Create Guild Scheduled Event](https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event)
      */
     async createScheduledEvent(guildID: string, options: Types.ScheduledEvents.CreateScheduledEventOptions): Promise<GuildScheduledEvent> {
         options = this._manager.client.util._freeze(options);
@@ -333,6 +344,7 @@ export default class Guilds {
      * @param options The options for creating the scheduled event exception.
      * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
      * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     * @see [Create Guild Scheduled Event Exception (docs.discord.food)](https://docs.discord.food/resources/guild-scheduled-event#create-guild-scheduled-event-exception)
      */
     async createScheduledEventException(guildID: string, eventID: string, options: Types.ScheduledEvents.CreateScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
         options = this._manager.client.util._freeze(options);
@@ -367,6 +379,7 @@ export default class Guilds {
      * @param options The options for creating the soundboard sound
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
+     * @see [Create Guild Soundboard Sound](https://discord.com/developers/docs/resources/soundboard#create-guild-soundboard-sound)
      */
     async createSoundboardSound(guildID: string, options: Types.Guilds.CreateSoundboardSoundOptions): Promise<Soundboard> {
         options = this._manager.client.util._freeze(options);
@@ -394,6 +407,7 @@ export default class Guilds {
      * @param options The options for creating the sticker.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers}<br>{@link Client#users | Client#users} (creator, if applicable)
+     * @see [Create Guild Sticker](https://discord.com/developers/docs/resources/sticker#create-guild-sticker)
      */
     async createSticker(guildID: string, options: Types.Guilds.CreateStickerOptions): Promise<Types.Guilds.Sticker> {
         options = this._manager.client.util._freeze(options);
@@ -428,6 +442,7 @@ export default class Guilds {
      * Create a guild template.
      * @param guildID The ID of the guild to create a template from.
      * @param options The options for creating the template.
+     * @see [Create Guild Template](https://discord.com/developers/docs/resources/guild-template#create-guild-template)
      */
     async createTemplate(guildID: string, options: Types.GuildTemplate.CreateTemplateOptions): Promise<GuildTemplate> {
         options = this._manager.client.util._freeze(options);
@@ -447,6 +462,7 @@ export default class Guilds {
      * @param ruleID The ID of the rule to delete.
      * @param reason The reason for deleting the rule.
      * @caching This method **does not** cache its result.
+     * @see [Delete Auto Moderation Rule](https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule)
      */
     async deleteAutoModerationRule(guildID: string, ruleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -462,6 +478,7 @@ export default class Guilds {
      * @param emojiID The ID of the emoji.
      * @param reason The reason for deleting the emoji.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Emoji](https://discord.com/developers/docs/resources/emoji#delete-guild-emoji)
      */
     async deleteEmoji(guildID: string, emojiID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -477,6 +494,7 @@ export default class Guilds {
      * @param integrationID The ID of the integration.
      * @param reason The reason for deleting the integration.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Integration](https://discord.com/developers/docs/resources/guild#delete-guild-integration)
      */
     async deleteIntegration(guildID: string, integrationID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -492,6 +510,7 @@ export default class Guilds {
      * @param roleID The ID of the role to delete.
      * @param reason The reason for deleting the role.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Role](https://discord.com/developers/docs/resources/guild#delete-guild-role)
      */
     async deleteRole(guildID: string, roleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -507,6 +526,7 @@ export default class Guilds {
      * @param eventID The ID of the scheduled event.
      * @param reason The reason for deleting the scheduled event. Discord's docs do not explicitly state a reason can be provided, so it may not be used.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Scheduled Event](https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event)
      */
     async deleteScheduledEvent(guildID: string, eventID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -524,6 +544,7 @@ export default class Guilds {
      * @param reason The reason for deleting the scheduled event exception.
      * @caching This method **may** remove the result from cache. The result will not be removed if the scheduled event is not cached.
      * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     * @see [Delete Guild Scheduled Event Exception (docs.discord.food)](https://docs.discord.food/resources/guild-scheduled-event#delete-guild-scheduled-event-exception)
      */
     async deleteScheduledEventException(guildID: string, eventID: string, exceptionID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -543,6 +564,7 @@ export default class Guilds {
      * @param soundID The ID of the soundboard sound to delete.
      * @param reason The reason for deleting the soundboard sound.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Soundboard Sound](https://discord.com/developers/docs/resources/soundboard#delete-guild-soundboard-sound)
      */
     async deleteSoundboardSound(guildID: string, soundID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -558,6 +580,7 @@ export default class Guilds {
      * @param stickerID The ID of the sticker to delete.
      * @param reason The reason for deleting the sticker.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Sticker](https://discord.com/developers/docs/resources/sticker#delete-guild-sticker)
      */
     async deleteSticker(guildID: string, stickerID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -572,6 +595,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param code The code of the template.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Template](https://discord.com/developers/docs/resources/guild-template#delete-guild-template)
      */
     async deleteTemplate(guildID: string, code: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -586,6 +610,7 @@ export default class Guilds {
      * @param options The options for editing the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not already cached.
      * @caches {@link Client#guilds | Client#guilds}
+     * @see [Modify Guild](https://discord.com/developers/docs/resources/guild#modify-guild)
      */
     async edit(guildID: string, options: Types.Guilds.EditGuildOptions): Promise<Guild> {
         options = this._manager.client.util._freeze(options);
@@ -638,6 +663,7 @@ export default class Guilds {
      * @param options The options for editing the rule.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
+     * @see [Modify Auto Moderation Rule](https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule)
      */
     async editAutoModerationRule(guildID: string, ruleID: string, options: Types.AutoModeration.EditAutoModerationRuleOptions): Promise<AutoModerationRule> {
         options = this._manager.client.util._freeze(options);
@@ -677,6 +703,7 @@ export default class Guilds {
      * @param options The channels to move. Unedited channels do not need to be specified.
      * @param reason The reason to be displayed in the audit log.
      * @caching This method **does not** cache its result.
+     * @see [Modify Guild Channel Positions](https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions)
      */
     async editChannelPositions(guildID: string, options: Array<Types.Guilds.ModifyChannelPositionsEntry>, reason?: string): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -699,6 +726,7 @@ export default class Guilds {
      * @param options The options for editing the member.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}<br>{@link Guild#clientMember | Guild#clientMember}
+     * @see [Modify Current Member](https://discord.com/developers/docs/resources/guild#modify-current-member)
      */
     async editCurrentMember(guildID: string, options: Types.Guilds.EditCurrentMemberOptions): Promise<Member> {
         options = this._manager.client.util._freeze(options);
@@ -727,6 +755,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for editing the voice state.
      * @caching This method **does not** cache its result.
+     * @see [Modify Current User Voice State](https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state)
      */
     async editCurrentUserVoiceState(guildID: string, options: Types.Guilds.EditCurrentUserVoiceStateOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -747,6 +776,7 @@ export default class Guilds {
      * @param options The options for editing the emoji.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis}
+     * @see [Modify Guild Emoji](https://discord.com/developers/docs/resources/emoji#modify-guild-emoji)
      */
     async editEmoji(guildID: string, emojiID: string, options: Types.Guilds.EditGuildEmojiOptions): Promise<Types.Guilds.GuildEmoji> {
         options = this._manager.client.util._freeze(options);
@@ -766,6 +796,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for editing the incident actions.
      * @caching This method **does not** cache its result.
+     * @see [Modify Guild Incident Actions](https://discord.com/developers/docs/resources/guild#modify-guild-incident-actions)
      */
     async editIncidentActions(guildID: string, options: Types.Guilds.EditIncidentActionsOptions): Promise<Types.Guilds.IncidentActions> {
         options = this._manager.client.util._freeze(options);
@@ -790,6 +821,7 @@ export default class Guilds {
      * @param options The options for editing the member.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
+     * @see [Modify Guild Member](https://discord.com/developers/docs/resources/guild#modify-guild-member)
      */
     async editMember(guildID: string, memberID: string, options: Types.Guilds.EditMemberOptions): Promise<Member> {
         options = this._manager.client.util._freeze(options);
@@ -814,6 +846,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for editing the onboarding configuration.
      * @caching This method **does not** cache its result.
+     * @see [Modify Guild Onboarding](https://discord.com/developers/docs/resources/guild#modify-guild-onboarding)
      */
     async editOnboarding(guildID: string, options: Types.Guilds.EditOnboardingOptions): Promise<Types.Guilds.Onboarding> {
         options = this._manager.client.util._freeze(options);
@@ -870,6 +903,7 @@ export default class Guilds {
      * @param options The options for editing the role.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
+     * @see [Modify Guild Role](https://discord.com/developers/docs/resources/guild#modify-guild-role)
      */
     async editRole(guildID: string, roleID: string, options: Types.Guilds.EditRoleOptions): Promise<Role> {
         options = this._manager.client.util._freeze(options);
@@ -903,6 +937,7 @@ export default class Guilds {
      * @param options The roles to move.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
+     * @see [Modify Guild Role Positions](https://discord.com/developers/docs/resources/guild#modify-guild-role-positions)
      */
     async editRolePositions(guildID: string, options: Array<Types.Guilds.EditRolePositionsEntry>, reason?: string): Promise<Array<Role>> {
         options = this._manager.client.util._freeze(options);
@@ -925,6 +960,7 @@ export default class Guilds {
      * @param options The options for editing the scheduled event.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
+     * @see [Modify Guild Scheduled Event](https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event)
      */
     async editScheduledEvent(guildID: string, scheduledEventID: string, options: Types.ScheduledEvents.EditScheduledEventOptions): Promise<GuildScheduledEvent> {
         options = this._manager.client.util._freeze(options);
@@ -959,6 +995,7 @@ export default class Guilds {
      * @param options The options for editing the scheduled event exception.
      * @caching This method **may** cache its result. The result will not be cached if the scheduled event is not cached.
      * @caches {@link GuildScheduledEvent#exceptions | GuildScheduledEvent#exceptions}
+     * @see [Modify Guild Scheduled Event Exception (docs.discord.food)](https://docs.discord.food/resources/guild-scheduled-event#modify-guild-scheduled-event-exception)
      */
     async editScheduledEventException(guildID: string, eventID: string, exceptionID: string, options: Types.ScheduledEvents.EditScheduledEventExceptionOptions): Promise<Types.ScheduledEvents.ScheduledEventException> {
         options = this._manager.client.util._freeze(options);
@@ -993,6 +1030,7 @@ export default class Guilds {
      * @param options The options for editing the soundboard sound.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
+     * @see [Modify Guild Soundboard Sound](https://discord.com/developers/docs/resources/soundboard#modify-guild-soundboard-sound)
      */
     async editSoundboardSound(guildID: string, soundID: string, options: Types.Guilds.EditSoundboardSoundOptions): Promise<Soundboard> {
         options = this._manager.client.util._freeze(options);
@@ -1015,6 +1053,7 @@ export default class Guilds {
      * @param options The options for editing the sticker.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers}
+     * @see [Modify Guild Sticker](https://discord.com/developers/docs/resources/sticker#modify-guild-sticker)
      */
     async editSticker(guildID: string, stickerID: string, options: Types.Guilds.EditStickerOptions): Promise<Types.Guilds.Sticker> {
         options = this._manager.client.util._freeze(options);
@@ -1036,6 +1075,7 @@ export default class Guilds {
      * @param code The code of the template.
      * @param options The options for editing the template.
      * @caching This method **does not** cache its result.
+     * @see [Modify Guild Template](https://discord.com/developers/docs/resources/guild-template#modify-guild-template)
      */
     async editTemplate(guildID: string, code: string, options: Types.GuildTemplate.EditGuildTemplateOptions): Promise<GuildTemplate> {
         options = this._manager.client.util._freeze(options);
@@ -1056,6 +1096,7 @@ export default class Guilds {
      * @param memberID The ID of the member.
      * @param options The options for editing the voice state.
      * @caching This method **does not** cache its result.
+     * @see [Modify User Voice State](https://discord.com/developers/docs/resources/voice#modify-user-voice-state)
      */
     async editUserVoiceState(guildID: string, memberID: string, options: Types.Guilds.EditUserVoiceStateOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -1074,6 +1115,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for editing the welcome screen.
      * @caching This method **does not** cache its result.
+     * @see [Modify Guild Welcome Screen](https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen)
      */
     async editWelcomeScreen(guildID: string, options: Types.Guilds.EditWelcomeScreenOptions): Promise<Types.Guilds.WelcomeScreen> {
         options = this._manager.client.util._freeze(options);
@@ -1107,6 +1149,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for editing the widget.
      * @caching This method **does not** cache its result.
+     * @see [Modify Guild Widget](https://discord.com/developers/docs/resources/guild#modify-guild-widget)
      */
     async editWidget(guildID: string, options: Types.Guilds.WidgetSettings): Promise<Types.Guilds.WidgetSettings> {
         options = this._manager.client.util._freeze(options);
@@ -1129,6 +1172,7 @@ export default class Guilds {
      * @param withCounts If the approximate number of members and online members should be included.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not already cached.
      * @caches {@link Client#guilds | Client#guilds}
+     * @see [Get Guild](https://discord.com/developers/docs/resources/guild#get-guild)
      */
     async get(guildID: string, withCounts?: boolean): Promise<Guild> {
         const query = new QueryBuilder();
@@ -1145,6 +1189,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [List Active Guild Threads](https://discord.com/developers/docs/resources/guild#list-active-guild-threads)
      */
     async getActiveThreads(guildID: string): Promise<Types.Guilds.GetActiveThreadsResponse> {
         return this._manager.authRequest<{ members: Array<Types.Channels.RawThreadMember>; threads: Array<Types.Channels.RawThreadChannel> }>({
@@ -1167,6 +1212,7 @@ export default class Guilds {
      * @param options The options for getting the audit logs.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}<br>{@link Guild#scheduledEvents | Guild#scheduledEvents}<br>{@link Guild#integrations | Guild#integrations}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#users | Client#users}
+     * @see [Get Guild Audit Log](https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log)
      */
     async getAuditLog(guildID: string, options?: Types.AuditLog.GetAuditLogOptions): Promise<Types.AuditLog.AuditLog> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1197,6 +1243,7 @@ export default class Guilds {
      * @param ruleID The ID of the rule to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
+     * @see [Get Auto Moderation Rule](https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule)
      */
     async getAutoModerationRule(guildID: string, ruleID: string): Promise<AutoModerationRule> {
         return this._manager.authRequest<Types.AutoModeration.RawAutoModerationRule>({
@@ -1210,6 +1257,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#autoModerationRules | Guild#autoModerationRules}
+     * @see [List Auto Moderation Rules for Guild](https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild)
      */
     async getAutoModerationRules(guildID: string): Promise<Array<AutoModerationRule>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1225,6 +1273,7 @@ export default class Guilds {
      * @param userID The ID of the user to get the ban of.
      * @caching This method **does** cache part of its result.
      * @caches {@link Client#users | Client#users}
+     * @see [Get Guild Ban](https://discord.com/developers/docs/resources/guild#get-guild-ban)
      */
     async getBan(guildID: string, userID: string): Promise<Types.Guilds.Ban> {
         return this._manager.authRequest<Types.Guilds.RawBan>({
@@ -1242,6 +1291,7 @@ export default class Guilds {
      * @param options The options for getting the bans.
      * @caching This method **does** cache part of its result.
      * @caches {@link Client#users | Client#users}
+     * @see [Get Guild Bans](https://discord.com/developers/docs/resources/guild#get-guild-bans)
      */
     async getBans(guildID: string, options?: Types.Guilds.GetBansOptions): Promise<Array<Types.Guilds.Ban>> {
         const _getBans = async (_options?: Types.Guilds.GetBansOptions): Promise<Array<Types.Guilds.Ban>> => {
@@ -1300,6 +1350,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}
+     * @see [Get Guild Channels](https://discord.com/developers/docs/resources/guild#get-guild-channels)
      */
     async getChannels(guildID: string): Promise<Array<Types.Channels.AnyGuildChannelWithoutThreads>> {
         return this._manager.authRequest<Array<Types.Channels.RawGuildChannel>>({
@@ -1314,6 +1365,7 @@ export default class Guilds {
      * @param emojiID The ID of the emoji to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis}
+     * @see [Get Guild Emoji](https://discord.com/developers/docs/resources/emoji#get-guild-emoji)
      */
     async getEmoji(guildID: string, emojiID: string): Promise<Types.Guilds.GuildEmoji> {
         return this._manager.authRequest<Types.Guilds.RawGuildEmoji>({
@@ -1327,6 +1379,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#emojis | Guild#emojis} (will be completely cleared and refilled)
+     * @see [List Guild Emojis](https://discord.com/developers/docs/resources/emoji#list-guild-emojis)
      */
     async getEmojis(guildID: string): Promise<Array<Types.Guilds.GuildEmoji>> {
         return this._manager.authRequest<Array<Types.Guilds.RawGuildEmoji>>({
@@ -1344,6 +1397,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#integrations | Guild#integrations}
+     * @see [Get Guild Integrations](https://discord.com/developers/docs/resources/guild#get-guild-integrations)
      */
     async getIntegrations(guildID: string): Promise<Array<Integration>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1358,6 +1412,7 @@ export default class Guilds {
      * @param guildID The ID of the guild to get the invites of.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#invites | Guild#invites}
+     * @see [Get Guild Invites](https://discord.com/developers/docs/resources/guild#get-guild-invites)
      */
     async getInvites<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(guildID: string): Promise<Array<InviteWithMetadata<CH>>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1374,6 +1429,7 @@ export default class Guilds {
      * @param options The options for getting join requests.
      * @caching This method **may** cache its result. The results will not be cached if the guild is not cached.
      * @caches {@link Guild#joinRequests | Guild#joinRequests}
+     * @see [List Guild Join Requests (docs.discord.food)](https://docs.discord.food/resources/guild#list-guild-join-requests)
      */
     async getJoinRequests(guildID: string, options: Types.Guilds.GetGuildJoinRequestsOptions): Promise<Types.Guilds.GuildJoinRequests> {
         options = this._manager.client.util._freeze(options);
@@ -1401,6 +1457,7 @@ export default class Guilds {
      * @param memberID The ID of the member.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
+     * @see [Get Guild Member](https://discord.com/developers/docs/resources/guild#get-guild-member)
      */
     async getMember(guildID: string, memberID: string): Promise<Member> {
         return this._manager.authRequest<Types.Guilds.RESTMember>({
@@ -1414,6 +1471,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param userID The ID of the member.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Member Permissions](https://discord.com/developers/docs/resources/guild#get-guild-member-permissions)
      */
     async getMemberPermissions(guildID: string, userID: string): Promise<Permission> {
         return this._manager.authRequest<Types.Channels.RawPermissionsResponse>({
@@ -1428,6 +1486,7 @@ export default class Guilds {
      * @param options The options for getting the members.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}}
+     * @see [List Guild Members](https://discord.com/developers/docs/resources/guild#list-guild-members)
      */
     async getMembers(guildID: string, options?: Types.Guilds.GetMembersOptions): Promise<Array<Member>> {
         const query = new QueryBuilder();
@@ -1444,6 +1503,7 @@ export default class Guilds {
      * Get a guild's new member welcome info.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild New Member Welcome (docs.discord.food)](https://docs.discord.food/resources/guild#get-guild-new-member-welcome)
      */
     async getNewMemberWelcome(guildID: string): Promise<Types.Guilds.NewMemberWelcome | null> {
         return this._manager.authRequest<Types.Guilds.RawNewMemberWelcome | null>({
@@ -1478,6 +1538,7 @@ export default class Guilds {
      * Get a guild's onboarding info.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Onboarding](https://discord.com/developers/docs/resources/guild#get-guild-onboarding)
      */
     async getOnboarding(guildID: string): Promise<Types.Guilds.Onboarding> {
         return this._manager.authRequest<Types.Guilds.RawOnboarding>({
@@ -1510,6 +1571,7 @@ export default class Guilds {
      * Get a preview of a guild. If the client is not already in this guild, the guild must be lurkable.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Preview](https://discord.com/developers/docs/resources/guild#get-guild-preview)
      */
     async getPreview(guildID: string): Promise<GuildPreview> {
         return this._manager.authRequest<Types.Guilds.RawGuildPreview>({
@@ -1523,6 +1585,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param options The options for getting the prune count.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Prune Count](https://discord.com/developers/docs/resources/guild#get-guild-prune-count)
      */
     async getPruneCount(guildID: string, options?: Types.Guilds.GetPruneCountOptions): Promise<number> {
         const query = new QueryBuilder();
@@ -1541,6 +1604,7 @@ export default class Guilds {
      * @param roleID The ID of the role to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
+     * @see [Get Guild Role](https://discord.com/developers/docs/resources/guild#get-guild-role)
      */
     async getRole(guildID: string, roleID: string): Promise<Role> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1554,6 +1618,7 @@ export default class Guilds {
      * Get the member count of the roles in a guild. The result is a key-value map of role id to member count.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Role Member Counts](https://discord.com/developers/docs/resources/guild#get-guild-role-member-counts)
      */
     async getRoleMemberCounts(guildID: string): Promise<Record<string, number>> {
         return this._manager.authRequest<Record<string, number>>({
@@ -1567,6 +1632,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param roleID The ID of the role.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Role Permissions](https://discord.com/developers/docs/resources/guild#get-guild-role-permissions)
      */
     async getRolePermissions(guildID: string, roleID: string): Promise<Permission> {
         return this._manager.authRequest<Types.Channels.RawPermissionsResponse>({
@@ -1580,6 +1646,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#roles | Guild#roles}
+     * @see [Get Guild Roles](https://discord.com/developers/docs/resources/guild#get-guild-roles)
      */
     async getRoles(guildID: string): Promise<Array<Role>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1596,6 +1663,7 @@ export default class Guilds {
      * @param withUserCount If the number of users subscribed to the event should be included.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
+     * @see [Get Guild Scheduled Event](https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event)
      */
     async getScheduledEvent(guildID: string, eventID: string, withUserCount?: number): Promise<GuildScheduledEvent> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1616,6 +1684,7 @@ export default class Guilds {
      * @param options The options for getting the users.
      * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
      * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
+     * @see [List Guild Scheduled Event Exception Users (docs.discord.food)](https://docs.discord.food/resources/guild-scheduled-event#list-guild-scheduled-event-exception-users)
      */
     async getScheduledEventExceptionUsers(guildID: string, eventID: string, exceptionID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1645,6 +1714,7 @@ export default class Guilds {
      * @param withUserCount If the number of users subscribed to the event should be included.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#scheduledEvents | Guild#scheduledEvents}
+     * @see [List Scheduled Events for Guild](https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild)
      */
     async getScheduledEvents(guildID: string, withUserCount?: number): Promise<Array<GuildScheduledEvent>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1664,6 +1734,7 @@ export default class Guilds {
      * @param options The options for getting the user counts.
      * @caching This method **may** cache the event user count. The count will not be cached if the scheduled event is not cached.
      * @caches {@link GuildScheduledEvent#userCount | GuildScheduledEvent#userCount}
+     * @see [Get Guild Scheduled Event User Count (docs.discord.food)](https://docs.discord.food/resources/guild-scheduled-event#get-guild-scheduled-event-user-count)
      */
     async getScheduledEventUserCounts(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUserCountsOptions): Promise<Types.ScheduledEvents.ScheduledEventUserCounts> {
         const query = new QueryBuilder();
@@ -1693,6 +1764,7 @@ export default class Guilds {
      * @param options The options for getting the users.
      * @caching This method **does** cache part of its result. Members will not be cached if the guild is not cached.
      * @caches {@link Client#users | Client#users}<br>{@link Guild#members | Guild#members}
+     * @see [Get Guild Scheduled Event Users](https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users)
      */
     async getScheduledEventUsers(guildID: string, eventID: string, options?: Types.ScheduledEvents.GetScheduledEventUsersOptions): Promise<Array<Types.ScheduledEvents.ScheduledEventUser>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1722,6 +1794,7 @@ export default class Guilds {
      * @param soundID The ID of the soundboard sound to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
+     * @see [Get Guild Soundboard Sound](https://discord.com/developers/docs/resources/soundboard#get-guild-soundboard-sound)
      */
     async getSoundboardSound(guildID: string, soundID: string): Promise<Soundboard> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1736,6 +1809,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#soundboardSounds | Guild#soundboardSounds}
+     * @see [List Guild Soundboard Sounds](https://discord.com/developers/docs/resources/soundboard#list-guild-soundboard-sounds)
      */
     async getSoundboardSounds(guildID: string): Promise<Array<Soundboard>> {
         const guild = this._manager.client.guilds.get(guildID);
@@ -1751,6 +1825,7 @@ export default class Guilds {
      * @param stickerID The ID of the sticker to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers}
+     * @see [Get Guild Sticker](https://discord.com/developers/docs/resources/sticker#get-guild-sticker)
      */
     async getSticker(guildID: string, stickerID: string): Promise<Types.Guilds.Sticker> {
         return this._manager.authRequest<Types.Guilds.RawSticker>({
@@ -1764,6 +1839,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#stickers | Guild#stickers} (will be completely cleared and refilled)
+     * @see [List Guild Stickers](https://discord.com/developers/docs/resources/sticker#list-guild-stickers)
      */
     async getStickers(guildID: string): Promise<Array<Types.Guilds.Sticker>> {
         return this._manager.authRequest<Array<Types.Guilds.RawSticker>>({
@@ -1780,6 +1856,7 @@ export default class Guilds {
      * Get a guild template.
      * @param code The code of the template to get.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Template](https://discord.com/developers/docs/resources/guild-template#get-guild-template)
      */
     async getTemplate(code: string): Promise<GuildTemplate> {
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({
@@ -1792,6 +1869,7 @@ export default class Guilds {
      * Get a guild's templates.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Templates](https://discord.com/developers/docs/resources/guild-template#get-guild-templates)
      */
     async getTemplates(guildID: string): Promise<Array<GuildTemplate>> {
         return this._manager.authRequest<Array<Types.GuildTemplate.RawGuildTemplate>>({
@@ -1804,6 +1882,7 @@ export default class Guilds {
      * Get the vanity url of a guild.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Vanity URL](https://discord.com/developers/docs/resources/guild#get-guild-vanity-url)
      */
     async getVanityURL(guildID: string): Promise<Types.Guilds.GetVanityURLResponse> {
         return this._manager.authRequest<Types.Guilds.GetVanityURLResponse>({
@@ -1816,6 +1895,7 @@ export default class Guilds {
      * Get the list of usable voice regions for a guild. This will return VIP servers when the guild is VIP-enabled.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Voice Regions](https://discord.com/developers/docs/resources/guild#get-guild-voice-regions)
      */
     async getVoiceRegions(guildID: string): Promise<Array<Types.Voice.VoiceRegion>> {
         return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
@@ -1830,6 +1910,7 @@ export default class Guilds {
      * @param memberID The ID of the member. Use `@me` for the bot user.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#voiceStates | Guild#voiceStates}
+     * @see [Get User Voice State](https://discord.com/developers/docs/resources/voice#get-user-voice-state)
      */
     async getVoiceState(guildID: string, memberID: string): Promise<VoiceState> {
         return this._manager.authRequest<Types.Voice.RawVoiceState>({
@@ -1842,6 +1923,7 @@ export default class Guilds {
      * Get the welcome screen for a guild.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Welcome Screen](https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen)
      */
     async getWelcomeScreen(guildID: string): Promise<Types.Guilds.WelcomeScreen> {
         return this._manager.authRequest<Types.Guilds.RawWelcomeScreen>({
@@ -1862,6 +1944,7 @@ export default class Guilds {
      * Get the widget of a guild.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Widget Settings](https://discord.com/developers/docs/resources/guild#get-guild-widget-settings)
      */
     async getWidget(guildID: string): Promise<Types.Guilds.Widget> {
         return this._manager.authRequest<Types.Guilds.RawWidget>({
@@ -1891,6 +1974,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param style The style of the image.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Widget Image](https://discord.com/developers/docs/resources/guild#get-guild-widget-image)
      */
     async getWidgetImage(guildID: string, style?: Types.Guilds.WidgetImageStyle): Promise<Buffer> {
         const query = new QueryBuilder();
@@ -1906,6 +1990,7 @@ export default class Guilds {
      * Get the raw JSON widget of a guild.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Widget](https://discord.com/developers/docs/resources/guild#get-guild-widget)
      */
     async getWidgetJSON(guildID: string): Promise<Types.Guilds.RawWidget> {
         return this._manager.request<Types.Guilds.RawWidget>({
@@ -1918,6 +2003,7 @@ export default class Guilds {
      * Get a guild's widget settings.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Widget Settings](https://discord.com/developers/docs/resources/guild#get-guild-widget-settings)
      */
     async getWidgetSettings(guildID: string): Promise<Types.Guilds.WidgetSettings> {
         return this._manager.authRequest<Types.Guilds.RawWidgetSettings>({
@@ -1936,6 +2022,7 @@ export default class Guilds {
      * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
+     * @see [Search Guild Members (docs.discord.food)](https://docs.discord.food/resources/guild#search-guild-members)
      */
     async memberSearch(guildID: string, options?: Types.Guilds.MemberSearchOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MemberSearchResults> {
         /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -2027,6 +2114,7 @@ export default class Guilds {
      * @param userID The ID of the user to remove the ban from.
      * @param reason The reason for removing the ban.
      * @caching This method **does not** cache its result.
+     * @see [Remove Guild Ban](https://discord.com/developers/docs/resources/guild#remove-guild-ban)
      */
     async removeBan(guildID: string, userID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -2042,6 +2130,7 @@ export default class Guilds {
      * @param memberID The ID of the user to remove.
      * @param reason The reason for the removal.
      * @caching This method **does not** cache its result.
+     * @see [Remove Guild Member](https://discord.com/developers/docs/resources/guild#remove-guild-member)
      */
     async removeMember(guildID: string, memberID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -2058,6 +2147,7 @@ export default class Guilds {
      * @param roleID The ID of the role to remove.
      * @param reason The reason for removing the role.
      * @caching This method **does not** cache its result.
+     * @see [Remove Guild Member Role](https://discord.com/developers/docs/resources/guild#remove-guild-member-role)
      */
     async removeMemberRole(guildID: string, memberID: string, roleID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -2073,6 +2163,7 @@ export default class Guilds {
      * @param options The options to search with.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#members | Guild#members}
+     * @see [Search Guild Members](https://discord.com/developers/docs/resources/guild#search-guild-members)
      */
     async searchMembers(guildID: string, options: Types.Guilds.SearchMembersOptions): Promise<Array<Member>> {
         options = this._manager.client.util._freeze(options);
@@ -2093,6 +2184,7 @@ export default class Guilds {
      * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
      * @caching This method **may** cache its result. The messages, channels, and threads will not be cached if the guild is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}
+     * @see [Search Guild Messages](https://discord.com/developers/docs/resources/message#search-guild-messages)
      */
     async searchMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(guildID: string, options?: Types.Guilds.SearchMessagesOptions, retryOnIndexNotAvailable = true): Promise<Types.Guilds.MessageSearchResults<T>> {
         options = this._manager.client.util._freeze(options);
@@ -2164,6 +2256,7 @@ export default class Guilds {
      * @param guildID The ID of the guild.
      * @param code The code of the template to sync.
      * @caching This method **does not** cache its result.
+     * @see [Sync Guild Template](https://discord.com/developers/docs/resources/guild-template#sync-guild-template)
      */
     async syncTemplate(guildID: string, code: string): Promise<GuildTemplate> {
         return this._manager.authRequest<Types.GuildTemplate.RawGuildTemplate>({

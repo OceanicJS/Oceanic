@@ -21,6 +21,7 @@
     "test:build": "pnpm run prepare",
     "test:esm": "node --no-warnings --no-deprecation --experimental-specifier-resolution=node esm.mjs",
     "test:docs": "rimraf docs && npx --yes typedoc --options static/typedoc.json",
+    "test:doc-links": "node scripts/check-doc-links.mjs",
     "test": "pnpm run lint && pnpm run test:build && pnpm run test:esm && pnpm run test:docs"
   },
   "repository": {

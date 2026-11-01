@@ -20,6 +20,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param options The options for creating the followup message.
      * @caching This method **does not** cache its result.
+     * @see [Create Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message)
      */
     async createFollowupMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, options: Types.Interactions.InteractionContent): Promise<Message<T>> {
         return this._manager.webhooks.execute<T>(applicationID, interactionToken, options as Types.Webhooks.ExecuteWebhookWaitOptions);
@@ -32,6 +33,7 @@ export default class Interactions {
      * @param options The options for creating the interaction response.
      * @param withResponse Whether to include the response in the result.
      * @caching This method **does not** cache its result.
+     * @see [Create Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response)
      */
     async createInteractionResponse(interactionID: string, interactionToken: string, options: Types.Interactions.InteractionResponse, withResponse?: false): Promise<null>;
     async createInteractionResponse<CH extends Types.Channels.AnyInteractionChannel | Types.Shared.Uncached = Types.Channels.AnyInteractionChannel | Types.Shared.Uncached>(interactionID: string, interactionToken: string, options: Types.Interactions.InteractionResponse, withResponse: true): Promise<Types.Interactions.InteractionCallbackResponse<CH>>;
@@ -132,6 +134,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.
      * @caching This method **does not** cache its result.
+     * @see [Delete Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message)
      */
     async deleteFollowupMessage(applicationID: string, interactionToken: string, messageID: string): Promise<void> {
         await this._manager.webhooks.deleteMessage(applicationID, interactionToken, messageID);
@@ -142,6 +145,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @caching This method **does not** cache its result.
+     * @see [Delete Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response)
      */
     async deleteOriginalMessage(applicationID: string, interactionToken: string): Promise<void> {
         await this.deleteFollowupMessage(applicationID, interactionToken, "@original");
@@ -154,6 +158,7 @@ export default class Interactions {
      * @param messageID The ID of the message.
      * @param options The options for editing the followup message.
      * @caching This method **does not** cache its result.
+     * @see [Edit Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message)
      */
     async editFollowupMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, messageID: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
         return this._manager.webhooks.editMessage<T>(applicationID, interactionToken, messageID, options);
@@ -165,6 +170,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param options The options for editing the original message.
      * @caching This method **does not** cache its result.
+     * @see [Edit Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response)
      */
     async editOriginalMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, options: Types.Interactions.EditInteractionContent): Promise<Message<T>> {
         return this.editFollowupMessage<T>(applicationID, interactionToken, "@original", options);
@@ -176,6 +182,7 @@ export default class Interactions {
      * @param interactionToken The token of the interaction.
      * @param messageID The ID of the message.
      * @caching This method **does not** cache its result.
+     * @see [Get Followup Message](https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message)
      */
     async getFollowupMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string, messageID: string): Promise<Message<T>> {
         return this._manager.webhooks.getMessage<T>(applicationID, interactionToken, messageID);
@@ -186,6 +193,7 @@ export default class Interactions {
      * @param applicationID The ID of the application.
      * @param interactionToken The token of the interaction.
      * @caching This method **does not** cache its result.
+     * @see [Get Original Interaction Response](https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response)
      */
     async getOriginalMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(applicationID: string, interactionToken: string): Promise<Message<T>> {
         return this.getFollowupMessage(applicationID, interactionToken, "@original");

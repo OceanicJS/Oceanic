@@ -25,6 +25,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param options The commands.
      * @caching This method **does not** cache its result.
+     * @see [Bulk Overwrite Global Application Commands](https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands)
      */
     async bulkEditGlobalCommands(applicationID: string, options: Array<Types.Applications.CreateApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
         const opts = options as Array<Types.Applications.CreateChatInputApplicationCommandOptions>;
@@ -54,6 +55,7 @@ export default class Applications {
      * @param guildID The ID of the guild.
      * @param options The commands.
      * @caching This method **does not** cache its result.
+     * @see [Bulk Overwrite Guild Application Commands](https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands)
      */
     async bulkEditGuildCommands(applicationID: string, guildID: string, options: Array<Types.Applications.CreateGuildApplicationCommandOptions>): Promise<Array<ApplicationCommand>> {
         const opts = this._manager.client.util._freeze(options) as Array<Types.Applications.CreateChatInputApplicationCommandOptions>;
@@ -79,6 +81,7 @@ export default class Applications {
      * Mark an entitlement as consumed.
      * @param applicationID The ID of the application to the entitlement is for.
      * @param entitlementID The ID of the entitlement to consume.
+     * @see [Consume an Entitlement](https://discord.com/developers/docs/resources/entitlement#consume-an-entitlement)
      */
     async consumeEntitlement(applicationID: string, entitlementID: string): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- explicit <void> call-site generic, not covered by allowInGenericTypeArguments
@@ -93,6 +96,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param options The options for creating the emoji.
      * @caching This method **does not** cache its result.
+     * @see [Create Application Emoji](https://discord.com/developers/docs/resources/emoji#create-application-emoji)
      */
     async createEmoji(applicationID: string, options: Types.Applications.CreateApplicationEmojiOptions): Promise<Types.Applications.ApplicationEmoji> {
         options = this._manager.client.util._freeze(options);
@@ -116,6 +120,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param options The options for the command.
      * @caching This method **does not** cache its result.
+     * @see [Create Global Application Command](https://discord.com/developers/docs/interactions/application-commands#create-global-application-command)
      */
     async createGlobalCommand<T extends Types.Applications.CreateApplicationCommandOptions = Types.Applications.CreateApplicationCommandOptions>(applicationID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.CreateChatInputApplicationCommandOptions;
@@ -145,6 +150,7 @@ export default class Applications {
      * @param guildID The ID of the guild.
      * @param options The options for the command.
      * @caching This method **does not** cache its result.
+     * @see [Create Guild Application Command](https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command)
      */
     async createGuildCommand<T extends Types.Applications.CreateGuildApplicationCommandOptions = Types.Applications.CreateGuildApplicationCommandOptions>(applicationID: string, guildID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.CreateChatInputApplicationCommandOptions;
@@ -169,6 +175,7 @@ export default class Applications {
      * Create a test entitlement.
      * @param applicationID The ID of the application to create the entitlement for.
      * @param options The options for creating the test entitlement.
+     * @see [Create Test Entitlement](https://discord.com/developers/docs/resources/entitlement#create-test-entitlement)
      */
     async createTestEntitlement(applicationID: string, options: Types.Applications.CreateTestEntitlementOptions): Promise<TestEntitlement> {
         options = this._manager.client.util._freeze(options);
@@ -188,6 +195,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param emojiID The ID of the emoji to be deleted.
      * @caching This method **does not** cache its result.
+     * @see [Delete Application Emoji](https://discord.com/developers/docs/resources/emoji#delete-application-emoji)
      */
     async deleteEmoji(applicationID: string, emojiID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -201,6 +209,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param commandID The ID the command to delete.
      * @caching This method **does not** cache its result.
+     * @see [Delete Global Application Command](https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command)
      */
     async deleteGlobalCommand(applicationID: string, commandID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -215,6 +224,7 @@ export default class Applications {
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command to delete.
      * @caching This method **does not** cache its result.
+     * @see [Delete Guild Application Command](https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command)
      */
     async deleteGuildCommand(applicationID: string, guildID: string, commandID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -227,6 +237,7 @@ export default class Applications {
      * Delete an entitlement.
      * @param applicationID The ID of the application to delete the entitlement from.
      * @param entitlementID The ID of the entitlement to delete.
+     * @see [Delete Test Entitlement](https://discord.com/developers/docs/resources/entitlement#delete-test-entitlement)
      */
     async deleteTestEntitlement(applicationID: string, entitlementID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -239,6 +250,7 @@ export default class Applications {
      * Edit the currently authenticated bot's application info.
      * @param options The options for editing the application.
      * @caching This method **does not** cache its result.
+     * @see [Edit Current Application](https://discord.com/developers/docs/resources/application#edit-current-application)
      */
     async editCurrent(options: Types.Applications.EditApplicationOptions): Promise<Application> {
         options = this._manager.client.util._freeze(options);
@@ -278,6 +290,7 @@ export default class Applications {
      * @param emojiID The ID of the emoji to be edited.
      * @param options The options for editing the emoji.
      * @caching This method **does not** cache its result.
+     * @see [Modify Application Emoji](https://discord.com/developers/docs/resources/emoji#modify-application-emoji)
      */
     async editEmoji(applicationID: string, emojiID: string, options: Types.Applications.EditApplicationEmojiOptions): Promise<Types.Applications.ApplicationEmoji> {
         options = this._manager.client.util._freeze(options);
@@ -294,6 +307,7 @@ export default class Applications {
      * @param commandID The ID of the command to edit.
      * @param options The options for editing the command.
      * @caching This method **does not** cache its result.
+     * @see [Edit Global Application Command](https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command)
      */
     async editGlobalCommand<T extends Types.Applications.EditApplicationCommandOptions = Types.Applications.EditApplicationCommandOptions>(applicationID: string, commandID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.EditChatInputApplicationCommandOptions;
@@ -322,6 +336,7 @@ export default class Applications {
      * @param commandID The ID of the command to edit.
      * @param options The options for editing the command.
      * @caching This method **does not** cache its result.
+     * @see [Edit Guild Application Command](https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command)
      */
     async editGuildCommand<T extends Types.Applications.EditGuildApplicationCommandOptions = Types.Applications.EditGuildApplicationCommandOptions>(applicationID: string, guildID: string, commandID: string, options: T): Promise<Types.Applications.ApplicationCommandOptionConversion<T>> {
         const opt = this._manager.client.util._freeze(options) as Types.Applications.EditChatInputApplicationCommandOptions;
@@ -348,6 +363,7 @@ export default class Applications {
      * @param commandID The ID of the command.
      * @param options The options for editing the permissions.
      * @caching This method **does not** cache its result.
+     * @see [Edit Application Command Permissions](https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions)
      */
     async editGuildCommandPermissions(applicationID: string, guildID: string, commandID: string, options: Types.Applications.EditApplicationCommandPermissionsOptions): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         options = this._manager.client.util._freeze(options);
@@ -369,6 +385,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @caching This method **does not** cache its result.
      * @note This generally cannot be used on any application except the authenticated bot.
+     * @see [Get Application (docs.discord.food)](https://docs.discord.food/resources/application#get-application)
      */
     async get(applicationID: string): Promise<Application> {
         return this._manager.authRequest<Types.Applications.RESTApplication>({
@@ -381,6 +398,7 @@ export default class Applications {
      * Get an activity instance.
      * @param applicationID The ID of the application.
      * @param instanceID The ID of the instance.
+     * @see [Get Application Activity Instance](https://discord.com/developers/docs/resources/application#get-application-activity-instance)
      */
     async getActivityInstance(applicationID: string, instanceID: string): Promise<Types.Applications.ActivityInstance> {
         return this._manager.authRequest<Types.Applications.RawActivityInstance>({
@@ -403,6 +421,7 @@ export default class Applications {
     /**
      * Get the currently authenticated bot's application info as a bare {@link ClientApplication | ClientApplication}.
      * @caching This method **does not** cache its result.
+     * @see [Get Current Application](https://discord.com/developers/docs/resources/application#get-current-application)
      */
     async getClient(): Promise<ClientApplication> {
         return this._manager.authRequest<Types.Applications.RawClientApplication>({
@@ -414,6 +433,7 @@ export default class Applications {
     /**
      * Get the currently authenticated bot's application info.
      * @caching This method **does not** cache its result.
+     * @see [Get Current Application](https://discord.com/developers/docs/resources/application#get-current-application)
      */
     async getCurrent(): Promise<Application> {
         return this.get("@me");
@@ -424,6 +444,7 @@ export default class Applications {
      * @param applicationID The ID of the application to get the emojis of.
      * @param emojiID The ID of the emoji to get.
      * @caching This method **does not** cache its result.
+     * @see [Get Application Emoji](https://discord.com/developers/docs/resources/emoji#get-application-emoji)
      */
     async getEmoji(applicationID: string, emojiID: string): Promise<Types.Applications.ApplicationEmoji> {
         return this._manager.authRequest<Types.Applications.RawApplicationEmoji>({
@@ -436,6 +457,7 @@ export default class Applications {
      * Get the emojis for an application.
      * @param applicationID The ID of the application to get the emojis of.
      * @caching This method **does not** cache its result.
+     * @see [List Application Emojis](https://discord.com/developers/docs/resources/emoji#list-application-emojis)
      */
     async getEmojis(applicationID: string): Promise<Types.Applications.ApplicationEmojis> {
         return this._manager.authRequest<Types.Applications.RawApplicationEmojis>({
@@ -452,6 +474,7 @@ export default class Applications {
      * @param entitlementID The ID of the entitlement.
      * @caching This method **may** cache its result. If the entitlement's application id is the client's application id.
      * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     * @see [Get Entitlement](https://discord.com/developers/docs/resources/entitlement#get-entitlement)
      */
     async getEntitlement(applicationID: string, entitlementID: string): Promise<Entitlement | TestEntitlement> {
         return this._manager.authRequest<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>({
@@ -466,6 +489,7 @@ export default class Applications {
      * @param options The options for getting the entitlements.
      * @caching This method **may** cache its result. If an entitlement's application id is the client's application id.
      * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     * @see [List Entitlements](https://discord.com/developers/docs/resources/entitlement#list-entitlements)
      */
     async getEntitlements(applicationID: string, options: Types.Applications.SearchEntitlementsOptions = {}): Promise<Array<Entitlement | TestEntitlement>> {
         options = this._manager.client.util._freeze(options);
@@ -491,6 +515,7 @@ export default class Applications {
      * @param commandID The ID of the command.
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
+     * @see [Get Global Application Command](https://discord.com/developers/docs/interactions/application-commands#get-global-application-command)
      */
     async getGlobalCommand<T extends Types.Applications.AnyApplicationCommand = Types.Applications.AnyApplicationCommand>(applicationID: string, commandID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
@@ -509,6 +534,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
+     * @see [Get Global Application Commands](https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands)
      */
     async getGlobalCommands(applicationID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<Array<Types.Applications.AnyApplicationCommand>> {
         options = this._manager.client.util._freeze(options);
@@ -529,6 +555,7 @@ export default class Applications {
      * @param commandID The ID of the command.
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Application Command](https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command)
      */
     async getGuildCommand<T extends Types.Applications.AnyApplicationCommand = Types.Applications.AnyApplicationCommand>(applicationID: string, guildID: string, commandID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
@@ -548,6 +575,7 @@ export default class Applications {
      * @param guildID The ID of the guild.
      * @param options The options for getting the command.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Application Commands](https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands)
      */
     async getGuildCommands(applicationID: string, guildID: string, options?: Types.Applications.GetApplicationCommandOptions): Promise<Array<Types.Applications.AnyApplicationCommand>> {
         options = this._manager.client.util._freeze(options);
@@ -567,6 +595,7 @@ export default class Applications {
      * @param guildID The ID of the guild.
      * @param commandID The ID of the command.
      * @caching This method **does not** cache its result.
+     * @see [Get Application Command Permissions](https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions)
      */
     async getGuildPermission(applicationID: string, guildID: string, commandID: string): Promise<Types.Applications.RESTGuildApplicationCommandPermissions> {
         return this._manager.authRequest<Types.Applications.RawGuildApplicationCommandPermissions>({
@@ -585,6 +614,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param guildID The ID of the guild.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Application Command Permissions](https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions)
      */
     async getGuildPermissions(applicationID: string, guildID: string): Promise<Array<Types.Applications.RESTGuildApplicationCommandPermissions>> {
         return this._manager.authRequest<Array<Types.Applications.RawGuildApplicationCommandPermissions>>({
@@ -601,6 +631,7 @@ export default class Applications {
     /**
      * Get the SKUs for an application.
      * @param applicationID The ID of the application to get the SKUs of.
+     * @see [List SKUs](https://discord.com/developers/docs/resources/sku#list-skus)
      */
     async getSKUs(applicationID: string): Promise<Array<SKU>> {
         return this._manager.authRequest<Array<Types.Applications.RawSKU>>({
@@ -613,6 +644,7 @@ export default class Applications {
      * Get the subscription for an SKU.
      * @param skuID The ID of the SKU to get the subscription of.
      * @param subscriptionID The ID of the subscription to get.
+     * @see [Get SKU Subscription](https://discord.com/developers/docs/resources/subscription#get-sku-subscription)
      */
     async getSKUSubscription(skuID: string, subscriptionID: string): Promise<Subscription> {
         return this._manager.authRequest<Types.Applications.RawSubscription>({
@@ -625,6 +657,7 @@ export default class Applications {
      * Get the subscriptions for an SKU.
      * @param skuID The ID of the SKU to get the subscriptions of.
      * @param options The options for getting the subscriptions.
+     * @see [List SKU Subscriptions](https://discord.com/developers/docs/resources/subscription#list-sku-subscriptions)
      */
     async getSKUSubscriptions(skuID: string, options: Types.Applications.SearchSKUSubscriptions): Promise<Array<Subscription>> {
         options = this._manager.client.util._freeze(options);
@@ -651,6 +684,7 @@ export default class Applications {
      * @param applicationID The ID of the application.
      * @param options The options for uploading the attachment.
      * @caching This method **does not** cache its result.
+     * @see [Create Application Attachment (docs.discord.food)](https://docs.discord.food/resources/application#create-application-attachment)
      */
     async uploadAttachment(applicationID: string, options: Types.Applications.UploadApplicationAttachmentOptions): Promise<Attachment> {
         options = this._manager.client.util._freeze(options);

@@ -52,6 +52,29 @@ export default defineConfig(
         },
     },
     {
+        // every rest method links to the docs for its endpoint, validated by `pnpm test:doc-links`
+        files: ["lib/routes/*.ts", "lib/rest/OAuthHelper.ts"],
+        rules: {
+            "jsdoc/no-restricted-syntax": [
+                "error",
+                {
+                    contexts: [
+                        {
+                            comment: "JsdocBlock:not(:has(JsdocTag[tag=\"see\"])):not(:has(JsdocTag[tag=\"deprecated\"]))",
+                            context: "MethodDefinition[kind=\"method\"], TSDeclareMethod",
+                            message: "REST methods must link to their documentation with @see.",
+                        },
+                        {
+                            comment: "JsdocBlock:has(JsdocTag[tag=\"see\"]:not([name=/^\\[[^\\]]+\\]\\((?:https:\\/\\/discord\\.com\\/developers\\/docs\\/|https:\\/\\/docs\\.discord\\.food\\/)[^)\\s#]+#[^)\\s]+\\)$/]))",
+                            context: "MethodDefinition[kind=\"method\"], TSDeclareMethod",
+                            message: "@see must be a markdown link to discord.com/developers/docs or docs.discord.food with an anchor, e.g. [Get Channel](https://discord.com/developers/docs/resources/channel#get-channel).",
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
         // flags above bit 31 need 2 ** n, which is not considered a literal
         files: ["lib/Constants.ts"],
         rules: {

@@ -38,6 +38,7 @@ export default class Channels {
      * @param groupID The ID of the group to add the user to.
      * @param options The options for adding the recipient.
      * @caching This method **does not** cache its result.
+     * @see [Group DM Add Recipient](https://discord.com/developers/docs/resources/channel#group-dm-add-recipient)
      */
     async addGroupRecipient(groupID: string, options: Types.Channels.AddGroupRecipientOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -56,6 +57,7 @@ export default class Channels {
      * @param code The code of the invite.
      * @param userID The ID of the user to add.
      * @caching This method **does not** cache its result.
+     * @see [Add Target User](https://discord.com/developers/docs/resources/invite#add-target-user)
      */
     async addInviteTargetUser(code: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -69,6 +71,7 @@ export default class Channels {
      * @param channelID The ID of the thread to add them to.
      * @param userID The ID of the user to add to the thread.
      * @caching This method **does not** cache its result.
+     * @see [Add Thread Member](https://discord.com/developers/docs/resources/channel#add-thread-member)
      */
     async addThreadMember(channelID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -82,6 +85,7 @@ export default class Channels {
      * @param code The code of the invite.
      * @param userIDs The IDs of the users to add. Max 1000.
      * @caching This method **does not** cache its result.
+     * @see [Bulk-Add Target Users](https://discord.com/developers/docs/resources/invite#bulk-add-target-users)
      */
     async bulkAddInviteTargetUsers(code: string, userIDs: Array<string>): Promise<void> {
         await this._manager.authRequest<null>({
@@ -96,6 +100,7 @@ export default class Channels {
      * @param code The code of the invite.
      * @param userIDs The IDs of the users to remove. Max 1000.
      * @caching This method **does not** cache its result.
+     * @see [Bulk-Delete Target Users](https://discord.com/developers/docs/resources/invite#bulk-delete-target-users)
      */
     async bulkRemoveInviteTargetUsers(code: string, userIDs: Array<string>): Promise<void> {
         await this._manager.authRequest<null>({
@@ -110,6 +115,7 @@ export default class Channels {
      * @param recipient The ID of the recipient of the direct message.
      * @caching This method **does** cache its result.
      * @caches {@link Client#privateChannels | Client#privateChannels}
+     * @see [Create DM](https://discord.com/developers/docs/resources/user#create-dm)
      */
     async createDM(recipient: string): Promise<PrivateChannel> {
         let cache: PrivateChannel | undefined;
@@ -129,6 +135,7 @@ export default class Channels {
      * @param options The options for creating the group dm.
      * @caching This method **does** cache its result.
      * @caches {@link Client#groupChannels | Client#groupChannels}
+     * @see [Create Group DM](https://discord.com/developers/docs/resources/user#create-group-dm)
      */
     async createGroupDM(options: Types.Users.CreateGroupChannelOptions): Promise<GroupChannel> {
         options = this._manager.client.util._freeze(options);
@@ -147,6 +154,7 @@ export default class Channels {
      * @param channelID The ID of the channel to create an invite for.
      * @param options The options for creating the invite.
      * @caching This method **does not** cache its result.
+     * @see [Create Channel Invite](https://discord.com/developers/docs/resources/channel#create-channel-invite)
      */
     async createInvite<CH extends Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached>(channelID: string, options: Types.Invites.CreateInviteOptions): Promise<InviteWithMetadata<CH>> {
         options = this._manager.client.util._freeze(options);
@@ -178,6 +186,7 @@ export default class Channels {
      * @param options The options for creating the message.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Create Message](https://discord.com/developers/docs/resources/message#create-message)
      */
     async createMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options: Types.Channels.CreateMessageOptions): Promise<Message<T>> {
         options = this._manager.client.util._freeze(options);
@@ -227,6 +236,7 @@ export default class Channels {
      * @param messageID The ID of the message to add a reaction to.
      * @param emoji The reaction to add to the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @caching This method **does not** cache its result.
+     * @see [Create Reaction](https://discord.com/developers/docs/resources/message#create-reaction)
      */
     async createReaction(channelID: string, messageID: string, emoji: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -240,6 +250,7 @@ export default class Channels {
      * @param channelID The ID of the channel to create the stage instance on.
      * @param options The options for creating the stage instance.
      * @caching This method **does not** cache its result.
+     * @see [Create Stage Instance](https://discord.com/developers/docs/resources/stage-instance#create-stage-instance)
      */
     async createStageInstance(channelID: string, options: Types.Guilds.CreateStageInstanceOptions): Promise<StageInstance> {
         options = this._manager.client.util._freeze(options);
@@ -262,6 +273,7 @@ export default class Channels {
      * @param messageID The ID of the message to crosspost.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Crosspost Message](https://discord.com/developers/docs/resources/message#crosspost-message)
      */
     async crosspostMessage<T extends AnnouncementChannel | Types.Shared.Uncached = AnnouncementChannel | Types.Shared.Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this._manager.authRequest<Types.Channels.RawMessage>({
@@ -275,6 +287,7 @@ export default class Channels {
      * @param channelID The ID of the channel to delete or close.
      * @param reason The reason to be displayed in the audit log.
      * @caching This method **does not** cache its result.
+     * @see [Delete/Close Channel](https://discord.com/developers/docs/resources/channel#delete/close-channel)
      */
     async delete(channelID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<Types.Channels.RawChannel>({
@@ -289,6 +302,7 @@ export default class Channels {
      * @param code The code of the invite to delete.
      * @param reason The reason for deleting the invite.
      * @caching This method **does not** cache its result.
+     * @see [Delete Invite](https://discord.com/developers/docs/resources/invite#delete-invite)
      */
     async deleteInvite<T extends Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached = Types.Channels.AnyInviteChannel | Types.Channels.PartialInviteChannel | Types.Shared.Uncached>(code: string, reason?: string): Promise<Invite<T>> {
         return this._manager.authRequest<Types.Invites.RawInvite>({
@@ -303,6 +317,7 @@ export default class Channels {
      * @param channelID The ID of the channel to delete the message in.
      * @param messageID The ID of the message to delete.
      * @caching This method **does not** cache its result.
+     * @see [Delete Message](https://discord.com/developers/docs/resources/message#delete-message)
      */
     async deleteMessage(channelID: string, messageID: string): Promise<void>;
     /** @deprecated Discord no longer supports audit log reasons for deleting messages. This will be removed in `1.17.0`. */
@@ -320,6 +335,7 @@ export default class Channels {
      * @param messageIDs The IDs of the messages to delete. Any duplicates or messages older than two weeks will cause an error.
      * @param reason The reason for deleting the messages.
      * @caching This method **does not** cache its result.
+     * @see [Bulk Delete Messages](https://discord.com/developers/docs/resources/message#bulk-delete-messages)
      */
     async deleteMessages(channelID: string, messageIDs: Array<string>, reason?: string): Promise<number> {
         const chunks: Array<Array<string>> = [];
@@ -360,6 +376,7 @@ export default class Channels {
      * @param overwriteID The ID of the permission overwrite to delete.
      * @param reason The reason for deleting the permission overwrite.
      * @caching This method **does not** cache its result.
+     * @see [Delete Channel Permission](https://discord.com/developers/docs/resources/channel#delete-channel-permission)
      */
     async deletePermission(channelID: string, overwriteID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -376,6 +393,7 @@ export default class Channels {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param user The user to remove the reaction from, `@me` for the current user (default).
      * @caching This method **does not** cache its result.
+     * @see [Delete User Reaction](https://discord.com/developers/docs/resources/message#delete-user-reaction)
      */
     async deleteReaction(channelID: string, messageID: string, emoji: string, user = "@me"): Promise<void> {
         await this._manager.authRequest<null>({
@@ -390,6 +408,8 @@ export default class Channels {
      * @param messageID The ID of the message to remove reactions from.
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis. Omit to remove all reactions.
      * @caching This method **does not** cache its result.
+     * @see [Delete All Reactions for Emoji](https://discord.com/developers/docs/resources/message#delete-all-reactions-for-emoji)
+     * @see [Delete All Reactions](https://discord.com/developers/docs/resources/message#delete-all-reactions)
      */
     async deleteReactions(channelID: string, messageID: string, emoji?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -403,6 +423,7 @@ export default class Channels {
      * @param channelID The ID of the channel to delete the stage instance on.
      * @param reason The reason for deleting the stage instance.
      * @caching This method **does not** cache its result.
+     * @see [Delete Stage Instance](https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance)
      */
     async deleteStageInstance(channelID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -418,6 +439,7 @@ export default class Channels {
      * @param options The options for editing the channel.
      * @caching This method **may** cache its result. If a guild channel, the result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#groupChannels | Client#groupChannels}
+     * @see [Modify Channel](https://discord.com/developers/docs/resources/channel#modify-channel)
      */
     async edit<T extends Types.Channels.AnyEditableChannel = Types.Channels.AnyEditableChannel>(channelID: string, options: Types.Channels.EditChannelOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
@@ -477,6 +499,7 @@ export default class Channels {
      * @param options The options for editing the message.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Edit Message](https://discord.com/developers/docs/resources/message#edit-message)
      */
     async editMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, messageID: string, options: Types.Channels.EditMessageOptions): Promise<Message<T>> {
         options = this._manager.client.util._freeze(options);
@@ -508,6 +531,7 @@ export default class Channels {
      * @param overwriteID The ID of the permission overwrite to edit.
      * @param options The options for editing the permission overwrite.
      * @caching This method **does not** cache its result.
+     * @see [Edit Channel Permissions](https://discord.com/developers/docs/resources/channel#edit-channel-permissions)
      */
     async editPermission(channelID: string, overwriteID: string, options: Types.Channels.EditPermissionOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -528,6 +552,7 @@ export default class Channels {
      * @param channelID The ID of the channel to edit the stage instance on.
      * @param options The options for editing the stage instance.
      * @caching This method **does not** cache its result.
+     * @see [Modify Stage Instance](https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance)
      */
     async editStageInstance(channelID: string, options: Types.Guilds.EditStageInstanceOptions): Promise<StageInstance> {
         options = this._manager.client.util._freeze(options);
@@ -548,6 +573,7 @@ export default class Channels {
      * @param channelID The ID of the channel the poll is in.
      * @param messageID The ID of the message the poll is on.
      * @caching This method **does not** cache its result.
+     * @see [End Poll](https://discord.com/developers/docs/resources/poll#end-poll)
      */
     async expirePoll(channelID: string, messageID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -562,6 +588,7 @@ export default class Channels {
      * @param webhookChannelID The ID of the channel crossposted messages should be sent to. The client must have the `MANAGE_WEBHOOKS` permission in this channel.
      * @param reason The reason for following the announcement channel.
      * @caching This method **does not** cache its result.
+     * @see [Follow Announcement Channel](https://discord.com/developers/docs/resources/channel#follow-announcement-channel)
      */
     async followAnnouncement(channelID: string, webhookChannelID: string, reason?: string): Promise<Types.Channels.FollowedChannel> {
         return this._manager.authRequest<Types.Channels.RawFollowedChannel>({
@@ -580,6 +607,7 @@ export default class Channels {
      * @param channelID The ID of the channel to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#channels | Guild#channels}<br>{@link Guild#threads | Guild#threads}<br>{@link Client#privateChannels | Client#privateChannels}<br>{@link Client#groupChannels | Client#groupChannels}
+     * @see [Get Channel](https://discord.com/developers/docs/resources/channel#get-channel)
      */
     async get<T extends Types.Channels.AnyChannel = Types.Channels.AnyChannel>(channelID: string): Promise<T> {
         return this._manager.authRequest<Types.Channels.RawChannel>({
@@ -593,6 +621,7 @@ export default class Channels {
      * @param code The code of the invite to get.
      * @param options The options for getting the invite.
      * @caching This method **does not** cache its result.
+     * @see [Get Invite](https://discord.com/developers/docs/resources/invite#get-invite)
      */
     async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.InviteChannel>(code: string, options?: Types.Invites.GetInviteWithNoneOptions): Promise<InviteWithoutCounts<CH>>;
     async getInvite<CH extends Types.Invites.InviteChannel = Types.Invites.GuildInviteChannel | Types.Invites.DMInviteChannel>(code: string, options: Types.Invites.GetInviteWithCountsOptions): Promise<InviteWithCounts<CH>>;
@@ -614,6 +643,7 @@ export default class Channels {
      * Get the invites of a channel.
      * @param channelID The ID of the channel to get the invites of.
      * @caching This method **does not** cache its result.
+     * @see [Get Channel Invites](https://discord.com/developers/docs/resources/channel#get-channel-invites)
      */
     async getInvites<CH extends Types.Invites.GuildInviteChannel = Types.Invites.GuildInviteChannel>(channelID: string): Promise<Array<InviteWithMetadata<CH>>> {
         return this._manager.authRequest<Array<Types.Invites.RawInvite>>({
@@ -625,6 +655,7 @@ export default class Channels {
     /**
      * Get the target users for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
      * @param code The code of the invite.
+     * @see [Get Target Users](https://discord.com/developers/docs/resources/invite#get-target-users)
      */
     async getInviteTargetUsers(code: string): Promise<Array<string>> {
         return this._manager.authRequest<Buffer>({
@@ -636,6 +667,7 @@ export default class Channels {
     /**
      * Get the target users job status for an invite. Requires being the inviter or having the `MANAGE_GUILD` or `VIEW_AUDIT_LOG` permission.
      * @param code The code of the invite.
+     * @see [Get Target Users Job Status](https://discord.com/developers/docs/resources/invite#get-target-users-job-status)
      */
     async getInviteTargetUsersJobStatus(code: string): Promise<Types.Invites.InviteTargetUsersJobStatusResponse> {
         return this._manager.authRequest<Types.Invites.RawInviteTargetUsersJobStatusResponse>({
@@ -657,6 +689,7 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [List Joined Private Archived Threads](https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads)
      */
     async getJoinedPrivateArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         options = this._manager.client.util._freeze(options);
@@ -685,6 +718,7 @@ export default class Channels {
      * @param userID The ID of the member.
      * @param options The options for getting the permissions.
      * @caching This method **does not** cache its result.
+     * @see [Get Channel Member Permissions](https://discord.com/developers/docs/resources/channel#get-channel-member-permissions)
      */
     async getMemberPermissions(channelID: string, userID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
         const query = new QueryBuilder();
@@ -702,6 +736,7 @@ export default class Channels {
      * @param messageID The ID of the message to get.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Get Channel Message](https://discord.com/developers/docs/resources/message#get-channel-message)
      */
     async getMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, messageID: string): Promise<Message<T>> {
         return this._manager.authRequest<Types.Channels.RawMessage>({
@@ -716,6 +751,7 @@ export default class Channels {
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Get Channel Messages](https://discord.com/developers/docs/resources/message#get-channel-messages)
      */
     async getMessages<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelMessagesOptions<T>): Promise<Array<Message<T>>> {
         options = this._manager.client.util._freeze(options);
@@ -778,6 +814,7 @@ export default class Channels {
      * @param options The options for getting messages. `before`, `after`, and `around `All are mutually exclusive.
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Get Channel Messages](https://discord.com/developers/docs/resources/message#get-channel-messages)
      */
     getMessagesIterator<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelMessagesIteratorOptions<T>): Types.Channels.MessagesIterator<T> {
         options = this._manager.client.util._freeze(options);
@@ -832,6 +869,7 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
      * @deprecated Use {@link Channels#getPins | getPins} instead.
+     * @see [Get Pinned Messages (deprecated)](https://discord.com/developers/docs/resources/message#get-pinned-messages-deprecated)
      */
     async getPinnedMessages<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string): Promise<Array<Message<T>>> {
         return this._manager.authRequest<Array<Types.Channels.RawMessage>>({
@@ -846,6 +884,7 @@ export default class Channels {
      * @param options The options for getting pins.
      * @caching This method **may** cache its result. The messages will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Get Channel Pins](https://discord.com/developers/docs/resources/message#get-channel-pins)
      */
     async getPins<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelPinsOptions<T>): Promise<Array<Types.Channels.MessagePin<T>>> {
         options = this._manager.client.util._freeze(options);
@@ -897,6 +936,7 @@ export default class Channels {
      * @param options The options for getting pins.
      * @caching This method **may** cache its result. The messages will not be cached if the channel is not cached.
      * @caches {@link TextableChannel#messages | TextableChannel#messages}<br>{@link ThreadChannel#messages | ThreadChannel#messages}<br>{@link PrivateChannel#messages | PrivateChannel#messages}
+     * @see [Get Channel Pins](https://discord.com/developers/docs/resources/message#get-channel-pins)
      */
     getPinsIterator<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached = Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(channelID: string, options?: Types.Channels.GetChannelPinsIteratorOptions<T>): Types.Channels.MessagePinsIterator<T> {
         options = this._manager.client.util._freeze(options);
@@ -959,6 +999,7 @@ export default class Channels {
      * @param options The options for getting the voters.
      * @caching This method **does** cache its result.
      * @caches {@link Client#users | Client#users}
+     * @see [Get Answer Voters](https://discord.com/developers/docs/resources/poll#get-answer-voters)
      */
     async getPollAnswerUsers(channelID: string, messageID: string, answerID: number, options?: Types.Channels.GetPollAnswerUsersOptions): Promise<Array<User>> {
         options = this._manager.client.util._freeze(options);
@@ -985,6 +1026,7 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [List Private Archived Threads](https://discord.com/developers/docs/resources/channel#list-private-archived-threads)
      */
     async getPrivateArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         options = this._manager.client.util._freeze(options);
@@ -1014,6 +1056,7 @@ export default class Channels {
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
      * @deprecated Use {@link Channels#getJoinedPrivateArchivedThreads | getJoinedPrivateArchivedThreads} instead. This will be removed in `1.17.0`.
+     * @see [List Joined Private Archived Threads](https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads)
      */
     async getPrivateJoinedArchivedThreads(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<PrivateThreadChannel>> {
         warning(WarningCodes.OCEANIC_CHANNELS_GET_PRIVATE_JOINED_ARCHIVED_THREADS_DEPRECATED);
@@ -1026,6 +1069,7 @@ export default class Channels {
      * @param options The options for getting the archived threads.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [List Public Archived Threads](https://discord.com/developers/docs/resources/channel#list-public-archived-threads)
      */
     async getPublicArchivedThreads<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, options?: Types.Channels.GetArchivedThreadsOptions): Promise<Types.Channels.ArchivedThreads<T>> {
         options = this._manager.client.util._freeze(options);
@@ -1055,6 +1099,7 @@ export default class Channels {
      * @param emoji The reaction to remove from the message. `name:id` for custom emojis, and the unicode codepoint for default emojis.
      * @param options The options for getting the reactions.
      * @caching This method **does not** cache its result.
+     * @see [Get Reactions](https://discord.com/developers/docs/resources/message#get-reactions)
      */
     async getReactions(channelID: string, messageID: string, emoji: string, options?: Types.Channels.GetReactionsOptions): Promise<Array<User>> {
         options = this._manager.client.util._freeze(options);
@@ -1104,6 +1149,7 @@ export default class Channels {
      * @param roleID The ID of the role.
      * @param options The options for getting the permissions.
      * @caching This method **does not** cache its result.
+     * @see [Get Channel Role Permissions](https://discord.com/developers/docs/resources/channel#get-channel-role-permissions)
      */
     async getRolePermissions(channelID: string, roleID: string, options?: Types.Channels.GetChannelPermissionsOptions): Promise<Permission> {
         const query = new QueryBuilder();
@@ -1119,6 +1165,7 @@ export default class Channels {
      * Get the stage instance associated with a channel.
      * @param channelID The ID of the channel to get the stage instance on.
      * @caching This method **does not** cache its result.
+     * @see [Get Stage Instance](https://discord.com/developers/docs/resources/stage-instance#get-stage-instance)
      */
     async getStageInstance(channelID: string): Promise<StageInstance> {
         return this._manager.authRequest<Types.Guilds.RawStageInstance>({
@@ -1132,6 +1179,7 @@ export default class Channels {
      * @param channelID The ID of the thread.
      * @param userID The ID of the user to get the thread member of.
      * @caching This method **does not** cache its result.
+     * @see [Get Thread Member](https://discord.com/developers/docs/resources/channel#get-thread-member)
      */
     async getThreadMember(channelID: string, userID: string): Promise<Types.Channels.ThreadMember> {
         return this._manager.authRequest<Types.Channels.RawThreadMember>({
@@ -1150,6 +1198,7 @@ export default class Channels {
      * @param channelID The ID of the thread.
      * @param options The options for getting the thread members.
      * @caching This method **does not** cache its result.
+     * @see [List Thread Members](https://discord.com/developers/docs/resources/channel#list-thread-members)
      */
     async getThreadMembers(channelID: string, options?: Types.Channels.GetThreadMembersOptions): Promise<Array<Types.Channels.ThreadMember>> {
         options = this._manager.client.util._freeze(options);
@@ -1186,6 +1235,7 @@ export default class Channels {
      * Join a thread.
      * @param channelID The ID of the thread to join.
      * @caching This method **does not** cache its result.
+     * @see [Join Thread](https://discord.com/developers/docs/resources/channel#join-thread)
      */
     async joinThread(channelID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1198,6 +1248,7 @@ export default class Channels {
      * Leave a thread.
      * @param channelID The ID of the thread to leave.
      * @caching This method **does not** cache its result.
+     * @see [Leave Thread](https://discord.com/developers/docs/resources/channel#leave-thread)
      */
     async leaveThread(channelID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1212,6 +1263,7 @@ export default class Channels {
      * @param messageID The ID of the message to pin.
      * @param reason The reason for pinning the message.
      * @caching This method **does not** cache its result.
+     * @see [Pin Message](https://discord.com/developers/docs/resources/message#pin-message)
      */
     async pinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1226,6 +1278,8 @@ export default class Channels {
      * @param channelID The ID of the channel to purge.
      * @param options The options to purge. `before`, `after`, and `around `All are mutually exclusive.
      * @caching This method **does not** cache its result.
+     * @see [Get Channel Messages](https://discord.com/developers/docs/resources/message#get-channel-messages)
+     * @see [Bulk Delete Messages](https://discord.com/developers/docs/resources/message#bulk-delete-messages)
      */
     async purgeMessages<T extends Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached = Types.Channels.AnyTextableGuildChannel | Types.Shared.Uncached>(channelID: string, options: Types.Channels.PurgeOptions<T>): Promise<number> {
         options = this._manager.client.util._freeze(options);
@@ -1287,6 +1341,7 @@ export default class Channels {
      * @param groupID The ID of the group to remove the user from.
      * @param userID The ID of the user to remove.
      * @caching This method **does not** cache its result.
+     * @see [Group DM Remove Recipient](https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient)
      */
     async removeGroupRecipient(groupID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1300,6 +1355,7 @@ export default class Channels {
      * @param code The code of the invite.
      * @param userID The ID of the user to remove.
      * @caching This method **does not** cache its result.
+     * @see [Remove Target User](https://discord.com/developers/docs/resources/invite#remove-target-user)
      */
     async removeInviteTargetUser(code: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1313,6 +1369,7 @@ export default class Channels {
      * @param channelID The ID of the thread to remove them from.
      * @param userID The ID of the user to remove from the thread.
      * @caching This method **does not** cache its result.
+     * @see [Remove Thread Member](https://discord.com/developers/docs/resources/channel#remove-thread-member)
      */
     async removeThreadMember(channelID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1328,6 +1385,7 @@ export default class Channels {
      * @param retryOnIndexNotAvailable If the search should be retried if Discord replies with an index unavailable response. This will retry at most one time, waiting for `retry_after` or 15-45 seconds.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}<br>{@link ThreadChannel#messages | ThreadChannel#messages}
+     * @see [Search Threads (docs.discord.food)](https://docs.discord.food/resources/channel#search-threads)
      */
     async searchThreads<T extends Types.Channels.AnyThreadChannel = Types.Channels.AnyThreadChannel>(channelID: string, options?: Types.Channels.SearchThreadsOptions, retryOnIndexNotAvailable = true): Promise<Types.Channels.ThreadSearchResults<T>> {
         options = this._manager.client.util._freeze(options);
@@ -1393,6 +1451,7 @@ export default class Channels {
      * @param channelID The ID of the channel to send the soundboard sound to.
      * @param options The options for sending the soundboard sound.
      * @caching This method **does not** cache its result.
+     * @see [Send Soundboard Sound](https://discord.com/developers/docs/resources/soundboard#send-soundboard-sound)
      */
     async sendSoundboardSound(channelID: string, options: Types.Channels.SendSoundboardSoundOptions): Promise<void> {
         options = this._manager.client.util._freeze(options);
@@ -1407,6 +1466,7 @@ export default class Channels {
      * Show a typing indicator in a channel. How long users see this varies from client to client.
      * @param channelID The ID of the channel to show the typing indicator in.
      * @caching This method **does not** cache its result.
+     * @see [Trigger Typing Indicator](https://discord.com/developers/docs/resources/channel#trigger-typing-indicator)
      */
     async sendTyping(channelID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1419,6 +1479,7 @@ export default class Channels {
      * Set a voice status in a channel.
      * @param channelID The ID of the channel to set the voice status in.
      * @param status The voice status to set.
+     * @see [Set Voice Channel Status](https://discord.com/developers/docs/resources/channel#set-voice-channel-status)
      */
     async setVoiceStatus(channelID: string, status: string | null): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1435,6 +1496,7 @@ export default class Channels {
      * @param options The options for starting the thread.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [Start Thread from Message](https://discord.com/developers/docs/resources/channel#start-thread-from-message)
      */
     async startThreadFromMessage<T extends AnnouncementThreadChannel | PublicThreadChannel = AnnouncementThreadChannel | PublicThreadChannel>(channelID: string, messageID: string, options: Types.Channels.StartThreadFromMessageOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
@@ -1456,6 +1518,7 @@ export default class Channels {
      * @param options The options for starting the thread.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [Start Thread in Forum or Media Channel](https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel)
      */
     async startThreadInThreadOnlyChannel(channelID: string, options: Types.Channels.StartThreadInThreadOnlyChannelOptions): Promise<PublicThreadChannel> {
         options = this._manager.client.util._freeze(options);
@@ -1488,6 +1551,7 @@ export default class Channels {
      * @param options The options for starting the thread.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached.
      * @caches {@link Guild#threads | Guild#threads}
+     * @see [Start Thread without Message](https://discord.com/developers/docs/resources/channel#start-thread-without-message)
      */
     async startThreadWithoutMessage<T extends AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel = AnnouncementThreadChannel | PublicThreadChannel | PrivateThreadChannel>(channelID: string, options: Types.Channels.StartThreadWithoutMessageOptions): Promise<T> {
         options = this._manager.client.util._freeze(options);
@@ -1511,6 +1575,7 @@ export default class Channels {
      * @param messageID The ID of the message to unpin.
      * @param reason The reason for unpinning the message.
      * @caching This method **does not** cache its result.
+     * @see [Unpin Message](https://discord.com/developers/docs/resources/message#unpin-message)
      */
     async unpinMessage(channelID: string, messageID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -1524,6 +1589,7 @@ export default class Channels {
      * Update the target users for an invite. Requires being the inviter or having the `MANAGE_GUILD` permission.
      * @param code The code of the invite.
      * @param users The IDs of the users to allow accepting the invite.
+     * @see [Update Target Users](https://discord.com/developers/docs/resources/invite#update-target-users)
      */
     async updateInviteTargetUsers(code: string, users: Array<string>): Promise<null> {
         return this._manager.authRequest<null>({

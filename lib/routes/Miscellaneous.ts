@@ -15,6 +15,7 @@ export default class Miscellaneous {
     /**
      * Get the default soundboard sounds.
      * @caching This method **does not** cache its result.
+     * @see [List Default Soundboard Sounds](https://discord.com/developers/docs/resources/soundboard#list-default-soundboard-sounds)
      */
     async getDefaultSoundboardSounds(): Promise<Array<Soundboard>> {
         return this._manager.authRequest<Array<Types.Channels.RawSoundboard>>({
@@ -28,6 +29,7 @@ export default class Miscellaneous {
      * @param stickerID The ID of the sticker to get.
      * @caching This method **may** cache its result. The result will not be cached if the guild is not cached, or if the sticker is not a guild sticker.
      * @caches {@link Guild#stickers | Guild#stickers}
+     * @see [Get Sticker](https://discord.com/developers/docs/resources/sticker#get-sticker)
      */
     async getSticker(stickerID: string): Promise<Types.Guilds.Sticker> {
         return this._manager.authRequest<Types.Guilds.RawSticker>({
@@ -39,6 +41,7 @@ export default class Miscellaneous {
     /**
      * Get a default sticker pack.
      * @caching This method **does not** cache its result.
+     * @see [Get Sticker Pack](https://discord.com/developers/docs/resources/sticker#get-sticker-pack)
      */
     async getStickerPack(stickerPackID: string): Promise<Types.Guilds.StickerPack> {
         return this._manager.authRequest<Types.Guilds.RawStickerPack>({
@@ -58,6 +61,7 @@ export default class Miscellaneous {
     /**
      * Get the default sticker packs.
      * @caching This method **does not** cache its result.
+     * @see [List Sticker Packs](https://discord.com/developers/docs/resources/sticker#list-sticker-packs)
      */
     async getStickerPacks(): Promise<Array<Types.Guilds.StickerPack>> {
         return this._manager.authRequest<{ sticker_packs: Array<Types.Guilds.RawStickerPack> }>({
@@ -77,6 +81,7 @@ export default class Miscellaneous {
     /**
      * Get the list of usable voice regions.
      * @caching This method **does not** cache its result.
+     * @see [List Voice Regions](https://discord.com/developers/docs/resources/voice#list-voice-regions)
      */
     async getVoiceRegions(): Promise<Array<Types.Voice.VoiceRegion>> {
         return this._manager.authRequest<Array<Types.Voice.VoiceRegion>>({
@@ -88,6 +93,7 @@ export default class Miscellaneous {
     /**
      * Refresh expired attachment URLs.
      * @param urls The CDN urls to refresh.
+     * @see [Refresh Attachment URLs (docs.discord.food)](https://docs.discord.food/topics/cloud-uploads#refresh-attachment-urls)
      */
     async refreshAttachmentURLs(urls: Array<string>): Promise<Types.Misc.RefreshAttachmentURLsResponse> {
         return this._manager.authRequest<Types.Misc.RawRefreshAttachmentURLsResponse>({

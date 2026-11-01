@@ -25,6 +25,7 @@ export default class OAuthHelper {
     /**
      * Construct an oauth authorization url.
      * @param options The options to construct the url with.
+     * @see [Authorization Code Grant](https://discord.com/developers/docs/topics/oauth2#authorization-code-grant)
      */
     static constructURL(options: Types.OAuth.OAuthURLOptions): string {
         const params: Array<string> = [
@@ -64,6 +65,7 @@ export default class OAuthHelper {
      * Delete the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
      * @param applicationID The ID of the application.
      * @caching This method **does not** cache its result.
+     * @see [Delete Current User Application Role Connection](https://discord.com/developers/docs/resources/user#delete-current-user-application-role-connection)
      */
     async deleteRoleConnection(applicationID: string): Promise<void> {
         await this._manager.request<null>({
@@ -75,6 +77,7 @@ export default class OAuthHelper {
 
     /**
      * Get the current OAuth2 application's information.
+     * @see [Get Current Bot Application Information](https://discord.com/developers/docs/topics/oauth2#get-current-bot-application-information)
      */
     async getApplication(): Promise<OAuthApplication> {
         return this._manager.request<Types.Applications.RESTOAuthApplication>({
@@ -86,6 +89,7 @@ export default class OAuthHelper {
 
     /**
      * Get information about the current authorization.
+     * @see [Get Current Authorization Information](https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information)
      */
     async getCurrentAuthorizationInformation(): Promise<Types.OAuth.AuthorizationInformation> {
         return this._manager.request<Types.OAuth.RawAuthorizationInformation>({
@@ -104,6 +108,7 @@ export default class OAuthHelper {
      * Get the connections of the currently authenticated user.
      *
      * Note: Requires the `connections` scope.
+     * @see [Get Current User Connections](https://discord.com/developers/docs/resources/user#get-current-user-connections)
      */
     async getCurrentConnections(): Promise<Array<Types.OAuth.Connection>> {
         return this._manager.request<Array<Types.OAuth.RawConnection>>({
@@ -129,6 +134,7 @@ export default class OAuthHelper {
      *
      * Note: Requires the `guilds.members.read` scope.
      * @param guild the ID of the guild
+     * @see [Get Current User Guild Member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member)
      */
     async getCurrentGuildMember(guild: string): Promise<Member> {
         return this._manager.request<Types.Guilds.RESTMember>({
@@ -140,6 +146,7 @@ export default class OAuthHelper {
 
     /**
      * Get the currently authenticated user's guilds. Note these are missing several properties gateway guilds have.
+     * @see [Get Current User Guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds)
      */
     async getCurrentGuilds(): Promise<Array<OAuthGuild>> {
         return this._manager.request<Array<Types.Guilds.RawOAuthGuild>>({
@@ -153,6 +160,7 @@ export default class OAuthHelper {
      * Get the currently authenticated user's information.
      *
      * Note: This does not touch the client's cache in any way.
+     * @see [Get Current User](https://discord.com/developers/docs/resources/user#get-current-user)
      */
     async getCurrentUser(): Promise<ExtendedUser> {
         return this._manager.request<Types.Users.RawOAuthUser>({
@@ -166,6 +174,7 @@ export default class OAuthHelper {
      * Get the currently authenticated user's entitlements for an application.
      * @caching This method **does not** cache its result. If an entitlement's application id is the client's application id.
      * @caches {@link ClientApplication#entitlements | ClientApplication#entitlements}
+     * @see [List User Application Entitlements (docs.discord.food)](https://docs.discord.food/resources/entitlement#list-user-application-entitlements)
      */
     async getEntitlements(applicationID: string): Promise<Array<Entitlement | TestEntitlement>> {
         return this._manager.request<Array<Types.Applications.RawEntitlement | Types.Applications.RawTestEntitlement>>({
@@ -179,6 +188,7 @@ export default class OAuthHelper {
      * Get the OIDC userinfo.
      *
      * Note: requires the `openid` scope.
+     * @see [Get OpenID User Information (docs.discord.food)](https://docs.discord.food/topics/oauth2#get-openid-user-information)
      */
     async getOIDCUserInfo(): Promise<Types.OAuth.OIDCUserInfo> {
         return this._manager.request<Types.OAuth.RawOIDCUserInfo>({
@@ -199,6 +209,7 @@ export default class OAuthHelper {
     /**
      * Revoke the used access token.
      * @param options The options for revoking the token.
+     * @see [Token Revocation](https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-token-revocation-example)
      */
     async revokeToken(options: Omit<Types.OAuth.RevokeTokenOptions, "token">): Promise<void> {
         const form = new FormData();
@@ -216,6 +227,7 @@ export default class OAuthHelper {
      * Update the authenticated user's role connection object for an application. This requires the `role_connections.write` scope.
      * @param applicationID The ID of the application.
      * @param data The metadata to update.
+     * @see [Update Current User Application Role Connection](https://discord.com/developers/docs/resources/user#update-current-user-application-role-connection)
      */
     async updateRoleConnection(applicationID: string, data: Types.OAuth.UpdateUserApplicationRoleConnectionOptions): Promise<Types.OAuth.RoleConnection> {
         return this._manager.request<Types.OAuth.RawRoleConnection>({

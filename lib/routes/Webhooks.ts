@@ -19,6 +19,7 @@ export default class Webhooks {
      * @param channelID The ID of the channel to create the webhook in.
      * @param options The options to create the webhook with.
      * @caching This method **does not** cache its result.
+     * @see [Create Webhook](https://discord.com/developers/docs/resources/webhook#create-webhook)
      */
     async create(channelID: string, options: Types.Webhooks.CreateWebhookOptions): Promise<Webhook> {
         options = this._manager.client.util._freeze(options);
@@ -42,6 +43,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param reason The reason for deleting the webhook.
      * @caching This method **does not** cache its result.
+     * @see [Delete Webhook](https://discord.com/developers/docs/resources/webhook#delete-webhook)
      */
     async delete(webhookID: string, reason?: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -58,6 +60,7 @@ export default class Webhooks {
      * @param messageID The ID of the message.
      * @param options The options for deleting the message.
      * @caching This method **does not** cache its result.
+     * @see [Delete Webhook Message](https://discord.com/developers/docs/resources/webhook#delete-webhook-message)
      */
     async deleteMessage(webhookID: string, token: string, messageID: string, options?: Types.Webhooks.DeleteWebhookMessageOptions): Promise<void> {
         const query = new QueryBuilder();
@@ -74,6 +77,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @caching This method **does not** cache its result.
+     * @see [Delete Webhook with Token](https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token)
      */
     async deleteToken(webhookID: string, token: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -87,6 +91,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param options The options for editing the webhook.
      * @caching This method **does not** cache its result.
+     * @see [Modify Webhook](https://discord.com/developers/docs/resources/webhook#modify-webhook)
      */
     async edit(webhookID: string, options: Types.Webhooks.EditWebhookOptions): Promise<Webhook> {
         options = this._manager.client.util._freeze(options);
@@ -113,6 +118,7 @@ export default class Webhooks {
      * @param messageID The ID of the message to edit.
      * @param options The options for editing the message.
      * @caching This method **does not** cache its result.
+     * @see [Edit Webhook Message](https://discord.com/developers/docs/resources/webhook#edit-webhook-message)
      */
     async editMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(webhookID: string, token: string, messageID: string, options: Types.Webhooks.EditWebhookMessageOptions): Promise<Message<T>> {
         options = this._manager.client.util._freeze(options);
@@ -148,6 +154,7 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param options The options for editing the webhook.
      * @caching This method **does not** cache its result.
+     * @see [Modify Webhook with Token](https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token)
      */
     async editToken(webhookID: string, token: string, options: Types.Webhooks.EditWebhookTokenOptions): Promise<Webhook> {
         options = this._manager.client.util._freeze(options);
@@ -171,6 +178,7 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param options The options for executing the webhook.
      * @caching This method **does not** cache its result.
+     * @see [Execute Webhook](https://discord.com/developers/docs/resources/webhook#execute-webhook)
      */
     async execute<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(webhookID: string, token: string, options: Types.Webhooks.ExecuteWebhookWaitOptions): Promise<Message<T>>;
     async execute(webhookID: string, token: string, options: Types.Webhooks.ExecuteWebhookOptions): Promise<void>;
@@ -215,6 +223,7 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param options The options to send. See GitHub's documentation for more information.
      * @caching This method **does not** cache its result.
+     * @see [Execute GitHub-Compatible Webhook](https://discord.com/developers/docs/resources/webhook#execute-github-compatible-webhook)
      */
     async executeGithub(webhookID: string, token: string, options: Record<string, unknown> & { wait: false }): Promise<void>;
     async executeGithub<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true }): Promise<Message<T>>;
@@ -236,6 +245,7 @@ export default class Webhooks {
      * @param token The token of the webhook.
      * @param options The options to send. See [Slack's Documentation](https://api.slack.com/incoming-webhooks) for more information.
      * @caching This method **does not** cache its result.
+     * @see [Execute Slack-Compatible Webhook](https://discord.com/developers/docs/resources/webhook#execute-slack-compatible-webhook)
      */
     async executeSlack(webhookID: string, token: string, options: Record<string, unknown> & { wait: false }): Promise<void>;
     async executeSlack<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(webhookID: string, token: string, options: Record<string, unknown> & { wait?: true }): Promise<Message<T>>;
@@ -256,6 +266,8 @@ export default class Webhooks {
      * @param webhookID The ID of the webhook.
      * @param token The token of the webhook.
      * @caching This method **does not** cache its result.
+     * @see [Get Webhook](https://discord.com/developers/docs/resources/webhook#get-webhook)
+     * @see [Get Webhook with Token](https://discord.com/developers/docs/resources/webhook#get-webhook-with-token)
      */
     async get(webhookID: string, token?: string): Promise<Webhook> {
         return this._manager.authRequest<Types.Webhooks.RawWebhook>({
@@ -268,6 +280,7 @@ export default class Webhooks {
      * Get the webhooks in the specified channel.
      * @param channelID The ID of the channel to get the webhooks of.
      * @caching This method **does not** cache its result.
+     * @see [Get Channel Webhooks](https://discord.com/developers/docs/resources/webhook#get-channel-webhooks)
      */
     async getForChannel(channelID: string): Promise<Array<Webhook>> {
         return this._manager.authRequest<Array<Types.Webhooks.RawWebhook>>({
@@ -280,6 +293,7 @@ export default class Webhooks {
      * Get the webhooks in the specified guild.
      * @param guildID The ID of the guild to get the webhooks of.
      * @caching This method **does not** cache its result.
+     * @see [Get Guild Webhooks](https://discord.com/developers/docs/resources/webhook#get-guild-webhooks)
      */
     async getForGuild(guildID: string): Promise<Array<Webhook>> {
         return this._manager.authRequest<Array<Types.Webhooks.RawWebhook>>({
@@ -295,6 +309,7 @@ export default class Webhooks {
      * @param messageID The ID of the message.
      * @param threadID The ID of the thread the message is in.
      * @caching This method **does not** cache its result.
+     * @see [Get Webhook Message](https://discord.com/developers/docs/resources/webhook#get-webhook-message)
      */
     async getMessage<T extends Types.Channels.AnyTextableChannel | Types.Shared.Uncached>(webhookID: string, token: string, messageID: string, threadID?: string): Promise<Message<T>> {
         const query = new QueryBuilder();

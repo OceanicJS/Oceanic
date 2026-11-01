@@ -37,6 +37,7 @@ export default class Lobbies {
      * @param lobbyID The ID of the lobby to add the member to.
      * @param userID The ID of the user to add to the lobby.
      * @param options The options for adding the member to the lobby.
+     * @see [Add a Member to a Lobby](https://discord.com/developers/docs/resources/lobby#add-a-member-to-a-lobby)
      */
     async addMember(lobbyID: string, userID: string, options?: AddLobbyMemberOptions): Promise<LobbyMember> {
         options = this._manager.client.util._freeze(options);
@@ -55,6 +56,7 @@ export default class Lobbies {
      * Bulk update members in a lobby.
      * @param lobbyID The ID of the lobby to update members in.
      * @param members The members to update.
+     * @see [Bulk Update Lobby Members](https://discord.com/developers/docs/resources/lobby#bulk-update-lobby-members)
      */
     async bulkUpdateMembers(lobbyID: string, members: Array<Types.Lobbies.BulkUpdateLobbyMemberOptions>): Promise<Array<LobbyMember>> {
         members = this._manager.client.util._freeze(members);
@@ -72,6 +74,7 @@ export default class Lobbies {
      * Create a new lobby.
      * @param options The options for creating the lobby.
      * @caching This method **does not** cache its result.
+     * @see [Create Lobby](https://discord.com/developers/docs/resources/lobby#create-lobby)
      */
     async create(options?: CreateLobbyOptions): Promise<Lobby> {
         options = this._manager.client.util._freeze(options);
@@ -91,6 +94,7 @@ export default class Lobbies {
      * Create an invite for the current user to join a lobby's linked channel. This requires bearer token authentication.
      * @param lobbyID The ID of the lobby to create the invite for.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Create Lobby Channel Invite for Self](https://discord.com/developers/docs/resources/lobby#create-lobby-channel-invite-for-self)
      */
     async createCurrentUserInvite(lobbyID: string, accessToken?: string): Promise<Types.Lobbies.LobbyInvite> {
         return this._manager.request<Types.Lobbies.RawLobbyInvite>({
@@ -105,6 +109,7 @@ export default class Lobbies {
      * @param lobbyID The ID of the lobby to create the invite for.
      * @param userID The ID of the user to create the invite for.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Create Lobby Channel Invite for User](https://discord.com/developers/docs/resources/lobby#create-lobby-channel-invite-for-user)
      */
     async createInvite(lobbyID: string, userID: string, accessToken?: string): Promise<Types.Lobbies.LobbyInvite> {
         return this._manager.request<Types.Lobbies.RawLobbyInvite>({
@@ -119,6 +124,7 @@ export default class Lobbies {
      * @param lobbyID The ID of the lobby to create the message in.
      * @param options The options for creating the message.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Send Lobby Message](https://discord.com/developers/docs/resources/lobby#send-lobby-message)
      */
     async createMessage(lobbyID: string, options: Types.Lobbies.CreateLobbyMessageOptions, accessToken?: string): Promise<Types.Lobbies.LobbyMessage> {
         options = this._manager.client.util._freeze(options);
@@ -137,6 +143,7 @@ export default class Lobbies {
     /**
      * Delete a lobby.
      * @param lobbyID The ID of the lobby to delete.
+     * @see [Delete Lobby](https://discord.com/developers/docs/resources/lobby#delete-lobby)
      */
     async delete(lobbyID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -149,6 +156,7 @@ export default class Lobbies {
      * Edit a lobby.
      * @param lobbyID The ID of the lobby to edit.
      * @param options The options for editing the lobby.
+     * @see [Modify Lobby](https://discord.com/developers/docs/resources/lobby#modify-lobby)
      */
     async edit(lobbyID: string, options: EditLobbyOptions): Promise<Lobby> {
         options = this._manager.client.util._freeze(options);
@@ -167,6 +175,7 @@ export default class Lobbies {
     /**
      * Get a lobby.
      * @param lobbyID The ID of the lobby to retrieve.
+     * @see [Get Lobby](https://discord.com/developers/docs/resources/lobby#get-lobby)
      */
     async get(lobbyID: string): Promise<Lobby> {
         return this._manager.authRequest<RawLobby>({
@@ -180,6 +189,7 @@ export default class Lobbies {
      * @param lobbyID The ID of the lobby to get messages from.
      * @param options The options for getting the messages.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Get Lobby Messages](https://discord.com/developers/docs/resources/lobby#get-lobby-messages)
      */
     async getMessages(lobbyID: string, options?: Types.Lobbies.GetLobbyMessagesOptions, accessToken?: string): Promise<Array<Types.Lobbies.LobbyMessage>> {
         options = this._manager.client.util._freeze(options);
@@ -197,6 +207,7 @@ export default class Lobbies {
      * Join an existing lobby or create a new lobby.
      * @param options The options for joining or creating the lobby.
      * @caching This method **does not** cache its result.
+     * @see [Create or Join Lobby](https://discord.com/developers/docs/resources/lobby#create-or-join-lobby)
      */
     async joinOrCreate(options: Types.Lobbies.JoinLobbyOptions): Promise<Lobby> {
         options = this._manager.client.util._freeze(options);
@@ -225,6 +236,7 @@ export default class Lobbies {
      * Leave a lobby. This requires bearer token authentication.
      * @param lobbyID The ID of the lobby to leave.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Leave Lobby](https://discord.com/developers/docs/resources/lobby#leave-lobby)
      */
     async leave(lobbyID: string, accessToken?: string): Promise<void> {
         await this._manager.request<null>({
@@ -239,6 +251,7 @@ export default class Lobbies {
      * @param lobbyID The ID of the lobby to link the channel to.
      * @param channelID The ID of the channel to link the lobby to.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Link Channel to Lobby](https://discord.com/developers/docs/resources/lobby#link-channel-to-lobby)
      */
     async linkChannel(lobbyID: string, channelID: string | undefined, accessToken?: string): Promise<Lobby> {
         return this._manager.request<RawLobby>({
@@ -253,6 +266,7 @@ export default class Lobbies {
      * Remove a member from a lobby.
      * @param lobbyID The ID of the lobby to remove the member from.
      * @param userID The ID of the user to remove from the lobby.
+     * @see [Remove a Member from a Lobby](https://discord.com/developers/docs/resources/lobby#remove-a-member-from-a-lobby)
      */
     async removeMember(lobbyID: string, userID: string): Promise<void> {
         await this._manager.authRequest<null>({
@@ -265,6 +279,7 @@ export default class Lobbies {
      * Unlink a lobby from a channel. This requires bearer token authentication and the `CAN_LINK_LOBBY` flag on the member.
      * @param lobbyID The ID of the lobby to unlink the channel from.
      * @param accessToken An optional access token to use instead of the client's token. This overrides the client's auth.
+     * @see [Unlink Channel from Lobby](https://discord.com/developers/docs/resources/lobby#unlink-channel-from-lobby)
      */
     async unlinkChannel(lobbyID: string, accessToken?: string): Promise<Lobby> {
         return this.linkChannel(lobbyID, undefined, accessToken);
@@ -275,6 +290,7 @@ export default class Lobbies {
      * @param lobbyID The ID of the lobby the message is in.
      * @param messageID The ID of the message to update the metadata for.
      * @param metadata The metadata to set for the message.
+     * @see [Update Lobby Message Moderation Metadata](https://discord.com/developers/docs/resources/lobby#update-lobby-message-moderation-metadata)
      */
     async updateMessageModerationMetadata(lobbyID: string, messageID: string, metadata: Record<string, string>): Promise<void> {
         await this._manager.authRequest<null>({
