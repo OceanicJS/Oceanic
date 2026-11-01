@@ -1221,6 +1221,8 @@ export enum MessageActivityTypes {
     WATCH = 4,
     /** Join request activity invite. */
     JOIN_REQUEST = 5,
+    /** Stream request activity invite. */
+    STREAM_REQUEST = 6,
 }
 
 export enum InteractionTypes {
