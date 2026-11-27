@@ -114,6 +114,7 @@ export default class RequestHandler {
         return new Promise<T>((resolve, reject) => {
             async function attempt(this: RequestHandler, cb: () => void): Promise<void> {
                 const headers: Record<string, string> = options.headers ?? {};
+                let timeout: NodeJS.Timeout | undefined;
                 try {
                     if (typeof options.auth === "string") {
                         headers.Authorization = options.auth;
@@ -163,7 +164,6 @@ export default class RequestHandler {
                     const url = `${this.options.baseURL}${options.path}${options.query && Array.from(options.query.keys()).length !== 0 ? `?${options.query.toString()}` : ""}`;
                     let latency = Date.now();
                     const controller = new AbortController();
-                    let timeout: NodeJS.Timeout | undefined;
                     if (this.options.requestTimeout > 0 && this.options.requestTimeout !== Infinity) {
                         timeout = setTimeout(() => { controller.abort(); }, this.options.requestTimeout);
                     }
@@ -305,9 +305,16 @@ export default class RequestHandler {
                     cb();
                     resolve(resBody as T);
                 } catch (err) {
+                    // A fetch that fails before a response (DNS failure, connection refused or reset)
+                    // lands here too: clear the abort timer and settle the request either way.
+                    if (timeout) {
+                        clearTimeout(timeout);
+                    }
                     cb();
                     if (err instanceof Error && err.constructor.name === "DOMException" && err.name === "AbortError") {
                         reject(new Error(`Request Timed Out (>${this.options.requestTimeout}ms) on ${options.method} ${options.path}`));
+                    } else {
+                        reject(err instanceof Error ? err : new Error(String(err)));
                     }
                     this._manager.client.emit("error", err as Error);
                 }
