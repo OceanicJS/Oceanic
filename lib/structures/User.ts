@@ -130,6 +130,9 @@ export default class User extends Base {
         if (data.global_name !== undefined) {
             this.globalName = data.global_name;
         }
+        if (data.public_flags !== undefined) {
+            this.publicFlags = data.public_flags;
+        }
         if (data.username !== undefined) {
             this.username = data.username;
         }
