@@ -406,6 +406,8 @@ export interface EmbedBase extends EmbedOptionsBase {
 }
 
 export interface RawEmbed extends EmbedBase {
+    /** The audio of the embed. Present on `audio` type embeds. */
+    audio?: RawEmbedAudio;
     author?: RawEmbedAuthor;
     /** The components that make up the embed. Only present on `components` type embeds. */
     components?: Array<RawContainerComponent>;
@@ -420,6 +422,8 @@ export interface RawEmbed extends EmbedBase {
 }
 
 export interface Embed extends EmbedBase {
+    /** The audio of the embed. Present on `audio` type embeds. */
+    audio?: EmbedAudio;
     author?: EmbedAuthor;
     /** The components that make up the embed. Only present on `components` type embeds. */
     components?: Array<ContainerComponent>;
@@ -433,7 +437,7 @@ export interface Embed extends EmbedBase {
     video?: EmbedVideo;
 }
 
-export type EmbedType = "rich" | "image" | "video" | "gifv" | "article" | "link" | "poll_result" | "components";
+export type EmbedType = "rich" | "image" | "video" | "audio" | "gifv" | "article" | "link" | "poll_result" | "components";
 
 export interface EmbedAuthorBase {
     name: string;
@@ -522,6 +526,22 @@ export interface RawEmbedVideo extends EmbedVideoBase {
 }
 
 export interface EmbedVideo extends EmbedVideoBase {
+    proxyURL?: string;
+}
+
+export interface EmbedAudioBase {
+    description?: string;
+    url?: string;
+}
+
+export interface RawEmbedAudio extends EmbedAudioBase {
+    content_type?: string;
+    proxy_url?: string;
+}
+
+export interface EmbedAudio extends EmbedAudioBase {
+    /** The [media type](https://en.wikipedia.org/wiki/Media_type) of the audio. */
+    contentType?: string;
     proxyURL?: string;
 }
 

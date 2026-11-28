@@ -4,6 +4,12 @@ import type * as Types from "../../types/namespaced";
 
 export function fromRaw(embed: Types.Channels.RawEmbed): Types.Channels.Embed {
     return {
+        audio: embed.audio === undefined ? undefined : {
+            contentType: embed.audio.content_type,
+            description: embed.audio.description,
+            proxyURL: embed.audio.proxy_url,
+            url: embed.audio.url,
+        },
         author: embed.author === undefined ? undefined : {
             name: embed.author.name,
             iconURL: embed.author.icon_url,
